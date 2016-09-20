@@ -1,6 +1,7 @@
 PREFIX deich: <__ONTOLOGY__>
 PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
+PREFIX   afn: <http://jena.apache.org/ARQ/function#>
 
 CONSTRUCT {
         <__PUBLICATIONURI__> a deich:Publication ;
@@ -8,7 +9,8 @@ CONSTRUCT {
                deich:partTitle ?pubPartTitle ;
                deich:norwegianTitle ?norwegianTitle ;
                deich:englishTitle ?enlishTitle ;
-               deich:language ?language ;
+               deich:languages ?language ;
+               deich:language ?langCode ;
                deich:format ?format ;
                deich:publicationYear ?pubPublicationYear ;
                deich:firstPublicationYear ?workPublicationYear ;
@@ -56,7 +58,9 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
   UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
-  UNION { <__PUBLICATIONURI__> deich:language ?languageO . BIND(str(?languageO) AS ?language) }
+  UNION { <__PUBLICATIONURI__> deich:language ?languageO .
+          BIND(str(?languageO) AS ?language) .
+          BIND(afn:substr(?language, 29) AS ?langCode) }
   UNION { <__PUBLICATIONURI__> deich:format ?formatO . BIND(str(?formatO) AS ?format) }
   UNION { <__PUBLICATIONURI__> deich:format ?formatURI .
           ?formatURI rdfs:label ?formatNoLang .

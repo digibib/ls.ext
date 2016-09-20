@@ -27,8 +27,9 @@
     },
     "Publication": "deichman:Publication",
     "partTitle": "deichman:partTitle",
+    "language": "deichman:language",
     "languages": {
-      "@id": "deichman:language",
+      "@id": "deichman:languages",
       "@container": "@set"
     },
     "type": "@type",

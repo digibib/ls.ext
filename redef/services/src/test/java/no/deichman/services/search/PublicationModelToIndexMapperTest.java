@@ -46,6 +46,7 @@ public class PublicationModelToIndexMapperTest {
             + "       \"uri\": \"http://data.deichman.no/mediaType#Book\","
             + "       \"formats\": [\"http://data.deichman.no/format#Book\",\"http://data.deichman.no/format#E-Book\"]}],\n"
             + "    \"languages\": [\"http://lexvo.org/id/iso639-3/ita\"],\n"
+            + "    \"language\": \"ita\",\n"
             + "    \"mainTitle\": \"La casa delle bugie\",\n"
             + "    \"partTitle\": \"abc\",\n"
             + "    \"title\": [\"La casa delle bugie\", \"abc\", \"xyz\"],\n"
@@ -158,7 +159,8 @@ public class PublicationModelToIndexMapperTest {
                 + "<http://data.deichman.no/format#E-Book> rdfs:label \"E-bok\"@no ."
                 + "\n"
                 + "<http://data.deichman.no/serial/s1> rdf:type ns2:Serial ;\n"
-                + "     ns2:mainTitle \"italiano norveigano\" .";
+                + "     ns2:mainTitle \"italiano norveigano\" .\n"
+                + "<http://lexvo.org/id/iso639-3/ita> rdfs:label \"Italiensk\"@no, \"Italian\"@en ";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication").createIndexDocument(model, publicationXuri1);
