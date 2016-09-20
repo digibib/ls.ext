@@ -1,16 +1,18 @@
 <span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
 {{#if nonEditable || suggested}}
-<span>{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
+<span {{#if !nonEditable }} style="display:none;" {{/if}}>{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
 {{else}}
-<select
-        class="authorized" style="width: 100%;"
-        decorator="multi:{select2:[{{#if !multiple || input.isSubInput}}'singleSelect'{{/if}}], detectChange:[], handleAddNewBySelect2:[]}"
-        value="{{./current.value}}"
-        data-automation-id="{{dataAutomationId || ../../dataAutomationId}}"
-        multiple="multiple" {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
-    {{#each predefinedValues[../../fragment]}}
-    <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["label"])}}</option>
-    {{/each}}
-</select>
+<span {{#if nonEditable}} style="display:none;" {{/if}}>
+    <select
+            class="authorized" style="width: 100%;"
+            decorator="multi:{select2:[{{#if !multiple || input.isSubInput}}'singleSelect'{{/if}}], detectChange:[], handleAddNewBySelect2:[]}"
+            value="{{./current.value}}"
+            data-automation-id="{{dataAutomationId || ../../dataAutomationId}}"
+            multiple="multiple" {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
+        {{#each predefinedValues[../../fragment]}}
+        <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["label"])}}</option>
+        {{/each}}
+    </select>
+</span>
 {{/if}}
 </span>

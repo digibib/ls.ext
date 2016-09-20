@@ -653,7 +653,9 @@
                   })
                 }
                 if (input.isSubInput) {
-                  //               input.values[ rootIndex ].nonEditable = true
+                  if (input.subInputIndex == 0) {
+                    input.values[ rootIndex ].nonEditable = true
+                  }
                   input.values = input.values || []
                   input.values[ rootIndex ] = input.values[ rootIndex ] || {}
                   input.values[ rootIndex ].subjectType = type
@@ -988,7 +990,7 @@
         if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
           currentInput.subjectType = currentInput.subjectTypes[ 0 ]
         }
-        _.each(compoundInput.subInputs.inputs, function (subInput) {
+        _.each(compoundInput.subInputs.inputs, function (subInput, subInputIndex) {
           if (!subInput.rdfProperty) {
             throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
           }
@@ -1017,7 +1019,8 @@
               required: subInput.required,
               searchable: type === 'searchable-with-result-in-side-panel',
               showOnlyWhen: subInput.showOnlyWhen,
-              isTitleSource: subInput.isTitleSource
+              isTitleSource: subInput.isTitleSource,
+              subInputIndex: subInputIndex
             }),
             parentInput: currentInput
           }
@@ -2808,13 +2811,12 @@
         }
 
         var initInputInterDependencies = function (applicationData) {
+          let setInputVisibility = function (inputKeypath, visible) {
+            ractive.set(`${inputKeypath}.visible`, new Boolean(visible).valueOf())
+              .then(positionSupportPanels)
+              .then(Main.repositionSupportPanelsHorizontally)
+          }
           allGroupInputs(function (input) {
-            function setInputVisibility (inputKeypath, visible) {
-              ractive.set(`${inputKeypath}.visible`, visible)
-                .then(positionSupportPanels)
-                .then(Main.repositionSupportPanelsHorizontally)
-            }
-
             if (input.showOnlyWhen) {
               if (!input.id) {
                 throw new Error(`Input "${input.label}" should have its own id attribute in order to handle dependency of input with id "${input.showOnlyWhen.inputId}"`)
