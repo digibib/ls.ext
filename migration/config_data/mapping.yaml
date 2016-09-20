@@ -2895,11 +2895,11 @@
             't':
               conditions:
                 indicator:
-                  default: "ONTOLOGY.basedOn"
+                  default: "MIGRATION.basedOn"
                   indicator2:
                     subs:
-                      '0': "ONTOLOGY.basedOn"
-                      '2': "ONTOLOGY.hasPart"
+                      '0': "MIGRATION.basedOn"
+                      '2': "MIGRATION.hasPart"
                     orig: "0|2"
               object:
                 datatype: "uri"
