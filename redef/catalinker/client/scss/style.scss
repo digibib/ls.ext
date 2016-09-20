@@ -66,7 +66,7 @@ body {
   }
   .input-wrapper .select2-container {
     .select2-selection {
-      background-position: 267px 10px;
+      background-position: 99% 6px;
     }
   }
   #home {
@@ -260,10 +260,12 @@ body {
                 min-height: 66px;
               }
               min-height: 66px;
-              max-height: 525px;
               .search-result-box {
                 max-height: 450px;
                 overflow-y: auto;
+              }
+              .add-new-btn-row {
+                padding: 19px 0px 8px 8px;
               }
             }
             .field {
@@ -392,7 +394,7 @@ body {
           width: 100%;
         }
         .add-new-btn-row {
-          padding: 19px 0px 8px 8px;
+          padding: 19px 13px 8px 8px;
           a, button, span {
             float: right;
             width: auto;
@@ -474,6 +476,9 @@ body {
         }
 
         .search-result {
+          .field {
+            margin-bottom: 10px;
+          }
           background: white;
           padding: 0.5em;
           min-height: 65px;
@@ -531,7 +536,7 @@ body {
         }
         .default-non-editable {
           min-height: 60px;
-          margin-bottom: 44px;
+//          margin-bottom: 44px;
           padding: 8px;
           .inputs {
             display: block;
