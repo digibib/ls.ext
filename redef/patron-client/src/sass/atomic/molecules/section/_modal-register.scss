@@ -1,72 +1,105 @@
 .register-modal {
-  width: 95%;
-  height: auto;
-  padding: rhythm(6);
-  background: $white;
-  margin: 5% auto;
-  border-radius: 5px;
+  @include container;
+  @include modal-content;
 
-  @include breakpoint($small){
-    width: 40%;
-  }
-
-  h1 {
-    text-align: center;
-    @include semiBoldFont;
-  }
-
-  h2 {
-    @include regularFont;
-    margin-bottom: rhythm(1);
-  }
-
-  h3 {
-    @include regularFontSize;
-    text-align: center;
-  }
-
-  h4 {
-    color: $darkGreyColor;
-    text-align: left;
+  fieldset {
+    border: none;
     margin: 0;
-    font-size: 95%
+    padding: 0;
   }
 
-  input[type=text] {
-    width: 240px;
+  .form-item {
+    @include span(12);
+    @include container;
   }
 
-  @include breakpoint($xlarge){
-    #address {
-      width: 500px;
-      display: block;
-    }
+  label {
+    @include span(8);
+    @include push(2);
   }
 
-
-  button {
-    width: 100%;
+  input {
+    @include span(8);
+    @include push(2);
+    font-size: rhythm(3);
   }
 
-  .date-of-birth {
-    .item {
-      display: inline-block;
-      
-      input {
-        margin-right: rhythm(4);
-        width: 80px;
-      }
-      
-    }
-  }
-
-  .select-container {
-    max-width: 240px;
-    border-width: 1px;
-  }
-
-  input[type=radio] p {
-    display: inline-block !important;
+  p {
+    @include span(8);
+    @include push(2);
   }
 
 }
+
+// .register-modal {
+//   width: 95%;
+//   height: auto;
+//   padding: rhythm(6);
+//   background: $white;
+//   margin: 5% auto;
+//   border-radius: 5px;
+
+//   @include breakpoint($small){
+//     width: 40%;
+//   }
+
+//   h1 {
+//     text-align: center;
+//     @include semiBoldFont;
+//   }
+
+//   h2 {
+//     @include regularFont;
+//     margin-bottom: rhythm(1);
+//   }
+
+//   h3 {
+//     @include regularFontSize;
+//     text-align: center;
+//   }
+
+//   h4 {
+//     color: $darkGreyColor;
+//     text-align: left;
+//     margin: 0;
+//     font-size: 95%
+//   }
+
+//   input[type=text] {
+//     width: 240px;
+//   }
+
+//   @include breakpoint($xlarge){
+//     #address {
+//       width: 500px;
+//       display: block;
+//     }
+//   }
+
+
+//   button {
+//     width: 100%;
+//   }
+
+//   .date-of-birth {
+//     .item {
+//       display: inline-block;
+      
+//       input {
+//         margin-right: rhythm(4);
+//         width: 80px;
+//       }
+      
+//     }
+//   }
+
+//   .select-container {
+//     max-width: 240px;
+//     border-width: 1px;
+//   }
+
+//   input[type=radio] p {
+//     display: inline-block !important;
+//   }
+
+// }

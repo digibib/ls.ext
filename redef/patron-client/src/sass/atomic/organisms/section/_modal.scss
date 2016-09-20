@@ -1,33 +1,32 @@
-.display-inline {
-  display: inline-block;
+// .display-inline {
+//   display: inline-block;
 
 
-  input {
-    width: 120px;
-    margin-right: rhythm(4);
-  }
-}
+//   input {
+//     width: 120px;
+//     margin-right: rhythm(4);
+//   }
+// }
 
+// .error-msg {
+//   width: 95%;
+//   height: auto;
+//   padding: rhythm(2);
+//   background: $white;
+//   margin: rhythm(2) auto;
+//   margin-bottom: -2%;
+//   border: 2px solid $redColor;
+//   border-radius: 5px;
+//   text-align: center;
 
-.error-msg {
-  width: 95%;
-  height: auto;
-  padding: rhythm(2);
-  background: $white;
-  margin: rhythm(2) auto;
-  margin-bottom: -2%;
-  border: 2px solid $redColor;
-  border-radius: 5px;
-  text-align: center;
+//   @include breakpoint($small){
+//     width: 40%;
+//     margin-bottom: -4%;
+//   }
 
-  @include breakpoint($small){
-    width: 40%;
-    margin-bottom: -4%;
-  }
+//   p {
+//     color: $redColor;
+//     margin-bottom: 0;
+//   }
 
-  p {
-    color: $redColor;
-    margin-bottom: 0;
-  }
-
-}
+// }
