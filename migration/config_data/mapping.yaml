@@ -2680,33 +2680,6 @@
       '699':
         subfields:
           -
-            'a':
-              predicate: "MIGRATION.BsSubject"
-              object:
-                datatype: "uri"
-                combinestring: "_"
-                md5: true
-                combine:
-                  - "a"
-                  - "q"
-                prefix: "http://data.deichman.no/subject/s"
-              relation:
-                subfields:
-                  -
-                    'a':
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                  -
-                    'q':
-                      predicate: "ONTOLOGY.specification"
-                      object:
-                        datatype: "literal"
-                class: "ONTOLOGY.Subject"
-    -
-      '699':
-        subfields:
-          -
             a:
               predicate: "MIGRATION.subjectAuthority"
               object:
