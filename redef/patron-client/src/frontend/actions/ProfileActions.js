@@ -168,7 +168,6 @@ export function postProfileInfo (successAction) {
       },
       body: JSON.stringify(profileInfo)
     })
-
       .then(response => {
         if (response.status === 200) {
           dispatch(postProfileInfoSuccess())
