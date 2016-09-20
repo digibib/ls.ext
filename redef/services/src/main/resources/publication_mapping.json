@@ -92,6 +92,10 @@
       "type": "string",
       "index": "not_analyzed"
     },
+    "litform": {
+      "type": "string",
+      "analyzer": "litform_analyzer"
+    },
     "format": {
       "type": "string",
       "analyzer": "format_analyzer"

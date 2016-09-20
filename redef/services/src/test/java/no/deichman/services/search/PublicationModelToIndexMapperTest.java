@@ -57,6 +57,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"subject\": [\"Trondheim\"],\n"
             + "    \"genre\": [\"Krim (spesial)\"],\n"
             + "    \"dewey\": \"929.209484213\", \n"
+            + "    \"litform\": \"Roman\",\n"
             + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
 
@@ -125,8 +126,7 @@ public class PublicationModelToIndexMapperTest {
                 + "            ns2:agent <http://data.deichman.no/person/h10834700> ;\n"
                 + "            ns2:role ns5:author ] ;\n"
                 + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
-                + "    ns2:literaryForm <http://data.deichman.no/literaryForm#fiction>,\n"
-                + "        <http://data.deichman.no/literaryForm#novel> ;\n"
+                + "    ns2:literaryForm <http://data.deichman.no/literaryForm#novel> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
                 + "    ns2:genre <http://deichman.no/genre/g1> ;\n"
@@ -160,7 +160,7 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/serial/s1> rdf:type ns2:Serial ;\n"
                 + "     ns2:mainTitle \"italiano norveigano\" .\n"
-                + "<http://lexvo.org/id/iso639-3/ita> rdfs:label \"Italiensk\"@no, \"Italian\"@en ";
+                + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en ";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication").createIndexDocument(model, publicationXuri1);

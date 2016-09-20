@@ -56,6 +56,7 @@ public final class EntityServiceImpl implements EntityService {
     private static final String FORMAT_TTL_FILE = "format.ttl";
     private static final String NATIONALITY_TTL_FILE = "nationality.ttl";
     private static final String MEDIATYPE_TTL_FILE = "mediaType.ttl";
+    private static final String LITERARYFORM_TTL_FILE = "literaryForm.ttl";
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final Property mainTitleProperty;
@@ -161,6 +162,10 @@ public final class EntityServiceImpl implements EntityService {
         return getLinkedResource(input, "mediaType", MEDIATYPE_TTL_FILE);
     }
 
+    private Model getLinkedLiteraryFormResource(Model input) {
+        return getLinkedResource(input, "literaryForm", LITERARYFORM_TTL_FILE);
+    }
+
     private Model getLinkedResource(Model input, String path, String filename) {
         NodeIterator objects = input.listObjects();
         if (objects.hasNext()) {
@@ -207,6 +212,7 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedAudienceResource(m);
         m = getLinkedNationalityResource(m);
         m = getLinkedMediaTypeResource(m);
+        m = getLinkedLiteraryFormResource(m);
         return m;
     }
 

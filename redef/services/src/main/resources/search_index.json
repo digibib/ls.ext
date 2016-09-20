@@ -2,6 +2,27 @@
   "settings": {
     "analysis": {
       "filter": {
+        "litform_synonym_filter": {
+          "type": "synonym",
+          "synonyms": [
+            "r, novel => roman",
+            "n, fortelling, short story =>novelle",
+            "d, poem => dikt",
+            "s, drama => skuespill",
+            "t, comic book => tegneserie",
+            "a, anthology => antologi",
+            "l, text book => lærebok",
+            "p, pointing book => pekebok",
+            "b, picture book => bildebok",
+            "dictionary => ordbok",
+            "reference work => oppslagsverk",
+            "biography => biografi",
+            "feature film => spillefilm",
+            "animated film => animasjonsfilm",
+            "tv series => tv-serie",
+            "short film => kortfilm"
+          ]
+        },
         "language_synonym_filter": {
           "type": "synonym",
           "synonyms": [
@@ -193,6 +214,14 @@
           "filter": [
             "lowercase",
             "language_synonym_filter"
+          ]
+        },
+        "litform_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "litform_synonym_filter"
           ]
         }
       }
