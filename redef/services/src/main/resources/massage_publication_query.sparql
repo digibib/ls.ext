@@ -37,7 +37,8 @@ CONSTRUCT {
                deich:title ?pubMainTitle ;
                deich:title ?pubPartTitle ;
                deich:title ?pubSubtitle ;
-               deich:litform ?litform .
+               deich:litform ?litform ;
+               deich:subtitles ?subtitles .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -62,6 +63,9 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:language ?languageO .
           BIND(str(?languageO) AS ?language) .
           BIND(afn:substr(?language, 29) AS ?langCode) }
+  UNION { <__PUBLICATIONURI__> deich:hasSubtitles ?subLang .
+            BIND(str(?subLang) AS ?subLangStr) .
+            BIND(afn:substr(?subLangStr, 29) AS ?subtitles) }
   UNION { <__PUBLICATIONURI__> deich:format ?formatO . BIND(str(?formatO) AS ?format) }
   UNION { <__PUBLICATIONURI__> deich:format ?formatURI .
           ?formatURI rdfs:label ?formatNoLang .

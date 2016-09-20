@@ -57,6 +57,10 @@
     "subtitle": {
       "type": "string"
     },
+    "subtitles": {
+      "type": "string",
+      "analyzer": "language_analyzer"
+    },
     "norwegianTitle": {
       "type": "string",
       "index": "no"
