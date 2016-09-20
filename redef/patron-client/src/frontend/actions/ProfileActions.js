@@ -150,15 +150,16 @@ export function postProfileInfoSuccess () {
 export function postProfileInfo (successAction) {
   const url = '/api/v1/profile/info'
   return (dispatch, getState) => {
-    const { userInfo: { address, zipcode, city, country, mobile, email } } = getState().form
+    const { userInfo: { values: { address, zipcode, city, country, mobile, email } } } = getState().form
     const profileInfo = {
-      address: address.value,
-      zipcode: zipcode.value,
-      city: city.value,
-      country: country.value,
-      mobile: mobile.value,
-      email: email.value
+      address: address,
+      zipcode: zipcode,
+      city: city,
+      country: country,
+      mobile: mobile,
+      email: email
     }
+    debugger
     dispatch(requestPostProfileInfo())
     return fetch(url, {
       method: 'POST',
@@ -257,7 +258,7 @@ export function changePasswordSuccess () {
 
 export function changePasswordFromForm (successAction) {
   return (dispatch, getState) => {
-    const {changePin: {values: {currentPin, newPin}}} = getState().form
+    const { changePin: { values: { currentPin, newPin } } } = getState().form
     console.log('pins', currentPin, newPin)
     dispatch(changePassword(currentPin, newPin, successAction))
   }

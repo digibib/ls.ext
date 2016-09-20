@@ -75,13 +75,13 @@ class UserInfoForm extends React.Component {
         </div>
 
         <div className="col">
-          <FormInputFieldWithTopLabelContainer fieldName="mobile" fieldType="number" fieldHeaderType="h2"
+          <FormInputFieldWithTopLabelContainer fieldName="mobile" fieldType="text" fieldHeaderType="h2"
                                                fieldMessage={messages.mobile} containerTag="div" formName={formName}
                                                getFieldValidator={this.getValidator}
                                                containerProps={{ className: 'cell-phone' }}
                                                placeholder={messages.mobile} />
 
-          <FormInputFieldWithTopLabelContainer fieldName="telephone" fieldType="number" fieldHeaderType="h2"
+          <FormInputFieldWithTopLabelContainer fieldName="telephone" fieldType="text" fieldHeaderType="h2"
                                                fieldMessage={messages.telephone} containerTag="div" formName={formName}
                                                getFieldValidator={this.getValidator} placeholder={messages.telephone}
                                                containerProps={{ className: 'phone' }} />
