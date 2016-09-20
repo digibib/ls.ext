@@ -28,7 +28,7 @@ CONSTRUCT {
                ?contribRoleURI ?contribAgentName ;
                deich:mainEntryName ?mainEntryName ;
                deich:recordID ?recordId ;
-               deich:abstract ?abstract ;
+               deich:summary ?summary ;
                deich:formatNo ?formatNo ;
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
@@ -75,7 +75,7 @@ WHERE {
           FILTER(lang(?formatNoLang) = "no") }
   UNION { <__PUBLICATIONURI__> deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
   UNION { <__PUBLICATIONURI__> deich:hasImage ?img }
-  UNION { <__PUBLICATIONURI__> deich:abstract ?abstract }
+  UNION { <__PUBLICATIONURI__> deich:hasSummary ?summary }
   UNION { <__PUBLICATIONURI__> deich:ageLimit ?maybeAgeLimit . BIND(IF(BOUND(?maybeAgeLimit), ?maybeAgeLimit, "0") AS ?ageLimit) }
 
   UNION { <__PUBLICATIONURI__> deich:inSerial ?serialBnode .

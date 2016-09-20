@@ -186,7 +186,7 @@
     "mainEntryName": {
       "type": "string"
     },
-    "abstract": {
+    "summary": {
       "type": "string",
       "index": "no"
     },

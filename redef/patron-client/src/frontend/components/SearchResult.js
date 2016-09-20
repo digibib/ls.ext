@@ -197,9 +197,9 @@ class SearchResult extends React.Component {
             : null
           }
 
-          {result.publication.abstract
+          {result.publication.summary
             ? <div>
-            <p>{result.publication.abstract}</p>
+            <p>{result.publication.summary}</p>
           </div>
             : null
           }

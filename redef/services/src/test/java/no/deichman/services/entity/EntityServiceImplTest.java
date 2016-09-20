@@ -700,7 +700,7 @@ public class EntityServiceImplTest {
                 + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
                 + "    ns2:subtitle \"roman\" ;\n"
                 + "    ns2:ageLimit \"75\" ;\n"
-                + "    ns2:abstract \"abc\";\n"
+                + "    ns2:hasSummary \"abc\";\n"
                 + "    ns2:hasPlaceOfPublication <http://deichman.no/place/p1> ;"
                 + "    ns4:locationSignature \"Rag\" ;\n"
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
