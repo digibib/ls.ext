@@ -13,7 +13,7 @@ INSERT {
 WHERE {
       ?publication :publicationOf ?work ;
                    ?p ?o .
-      VALUES ?p { :audience :literaryForm :genre :subject :hasWorkType :hasCompositionType }
+      VALUES ?p { :audience :literaryForm :genre :subject :hasWorkType :hasCompositionType migration:nationOfOrigin }
 }
 ;
 
@@ -58,6 +58,14 @@ PREFIX : <http://data.deichman.no/ontology#>
 WITH <http://deichman.no/migration>
 DELETE { ?publication :hasCompositionType ?o .}
 WHERE { ?publication :publicationOf ?work ; :hasCompositionType ?o }
+;
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+WITH <http://deichman.no/migration>
+DELETE { ?publication migration:nationOfOrigin ?o .}
+WHERE { ?publication :publicationOf ?work ; migration:nationOfOrigin ?o }
 ;
 
 # 2b)
