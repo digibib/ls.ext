@@ -50,22 +50,8 @@ class LoginForm extends React.Component {
 
         <form onSubmit={this.handleLogin}>
           <h1>Logg inn for å reservere</h1>
-          <FormInputField name="username"
-                          type="text"
-                          message={this.props.messages.username}
-                          headerType=""
-                          isLabelOverInput="true"
-                          hasLabel="hasLabel"
-                          formName={formName}
-          />
-          <FormInputField name="password"
-                          type="password"
-                          message={this.props.messages.password}
-                          headerType=""
-                          isLabelOverInput="true"
-                          hasLabel="hasLabel"
-                          formName={formName}
-          />
+          <FormInputField name="username" message={this.props.messages.username} type="text" formName={formName} />
+          <FormInputField name="password" message={this.props.messages.password} type="password" formName={formName} />
           <p className="forgot-pin">
             <Link to="#">Glemt PIN-kode?</Link>
           </p>

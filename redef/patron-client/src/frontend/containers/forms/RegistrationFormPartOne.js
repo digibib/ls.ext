@@ -10,7 +10,7 @@ import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
-import FormInputFieldWithBottomLabelContainer from '../../components/FormInputFieldWithBottomLabelContainer'
+import FormInputField from '../../components/FormInputField'
 
 const formName = 'registrationPartOne'
 
@@ -104,35 +104,26 @@ class RegistrationFormPartOne extends React.Component {
     return (
       <form onSubmit={this.props.handleSubmit(this.props.registrationActions.checkForExistingUser)}>
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
-          <FormInputFieldWithBottomLabelContainer fieldName="firstName" fieldType="text" fieldHeaderType="h4"
-                                                  fieldMessage={messages.firstName} containerTag="span"
-                                                  containerProps={{ className: 'display-inline' }} formName={formName}
-                                                  getFieldValidator={this.getValidator} headerTag="h1"
-                                                  headerMessage={messages.registerAsLoaner} />
-
-          <FormInputFieldWithBottomLabelContainer fieldName="lastName" fieldType="text" fieldHeaderType="h4"
-                                                  fieldMessage={messages.lastName} containerTag="span"
-                                                  containerProps={{ className: 'display-inline' }} formName={formName}
-                                                  getFieldValidator={this.getValidator} />
+          <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
+          <FormInputField name="firstName" message={messages.firstName} formName={formName}
+                          getValidator={this.getValidator} headerType="h4" excludeLabel />
+          <FormInputField name="lastName" message={messages.lastName} formName={formName}
+                          getValidator={this.getValidator} headerType="h4" excludeLabel />
         </fieldset>
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.personInfoLegend} /></legend>
           <div className="date-of-birth">
-            <FormInputFieldWithBottomLabelContainer fieldName="day" fieldType="text" fieldHeaderType="h4"
-                                                    fieldMessage={messages.day} containerTag="div"
-                                                    containerProps={{ className: 'item' }} formName={formName}
-                                                    getFieldValidator={this.getValidator} headerTag="h2"
-                                                    headerMessage={messages.birthdate} />
+            <h2><FormattedMessage {...messages.birthdate} /></h2>
 
-            <FormInputFieldWithBottomLabelContainer fieldName="month" fieldType="text" fieldHeaderType="h4"
-                                                    fieldMessage={messages.month} containerTag="div"
-                                                    containerProps={{ className: 'item' }} formName={formName}
-                                                    getFieldValidator={this.getValidator} />
+            <FormInputField name="day" message={messages.day} formName={formName}
+                            getValidator={this.getValidator} headerType="h4" excludeLabel />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="year" fieldType="text" fieldHeaderType="h4"
-                                                    fieldMessage={messages.year} containerTag="div"
-                                                    containerProps={{ className: 'item' }} formName={formName}
-                                                    getFieldValidator={this.getValidator} />
+            <FormInputField name="month" message={messages.month} formName={formName}
+                            getValidator={this.getValidator} headerType="h4" excludeLabel />
+
+            <FormInputField name="year" message={messages.year} formName={formName}
+                            getValidator={this.getValidator} headerType="h4" excludeLabel />
+
           </div>
           <div className="ssn-info">
             <h3><a onClick={this.props.registrationActions.showSSNInfo}
@@ -140,11 +131,9 @@ class RegistrationFormPartOne extends React.Component {
             </h3>
             {this.props.showSSNInfo ? this.renderSSNInfo() : ''}
           </div>
-          <FormInputFieldWithBottomLabelContainer fieldName="ssn" fieldType="text" fieldHeaderType="h4"
-                                                  fieldMessage={messages.ssn} containerTag="span"
-                                                  containerProps={{ className: 'display-inline' }} formName={formName}
-                                                  getFieldValidator={this.getValidator} headerTag="h2"
-                                                  headerMessage={messages.ssnHeader} />
+          <h2><FormattedMessage {...messages.ssnHeader} /></h2>
+          <FormInputField name="ssn" message={messages.ssn} formName={formName}
+                          getValidator={this.getValidator} headerType="h4" excludeLabel />
 
           {this.props.isCheckingForExistingUser ? this.renderCheckingForExistingUser() : ''}
           {/* TODO: also handle all fields empty */}

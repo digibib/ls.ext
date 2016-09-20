@@ -10,7 +10,7 @@ import * as LoginActions from '../../actions/LoginActions'
 import fields from '../../../common/forms/userInfoForm'
 import ValidationMessage from '../../components/ValidationMessage'
 import asyncValidate from '../../utils/asyncValidate'
-import FormInputFieldWithTopLabelContainer from '../../components/FormInputFieldWithTopLabelContainer'
+import FormInputField from '../../components/FormInputField'
 import validate from '../../../common/validation/validator'
 
 const formName = 'userInfo'
@@ -44,45 +44,34 @@ class UserInfoForm extends React.Component {
       <form name="change-user-details" id="change-user-details">
         <div className="address col">
           <address typeof="schema:PostalAddress">
-            <FormInputFieldWithTopLabelContainer fieldName="address" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={messages.address} containerTag="span"
-                                                 getFieldValidator={this.getValidator} formName={formName}
-                                                 containerProps={{ property: 'schema:streetAddress' }}
-                                                 placeholder={messages.address} />
+            <FormInputField name="address" message={messages.address} formName={formName}
+                            getValidator={this.getValidator} headerType="h2" excludeLabel
+                            placeholder={messages.address} />
             <br />
-            <FormInputFieldWithTopLabelContainer fieldName="zipcode" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={messages.zipcode} containerTag="span"
-                                                 getFieldValidator={this.getValidator} containerProps={{
-                                                   property: 'schema:postalCode',
-                                                   className: 'display-inline'
-                                                 }} formName={formName} placeholder={messages.zipcode} />
+            <FormInputField name="zipcode" message={messages.zipcode} formName={formName}
+                            getValidator={this.getValidator} headerType="h2" excludeLabel
+                            placeholder={messages.zipcode} />
 
-            <FormInputFieldWithTopLabelContainer fieldName="city" fieldType="text" fieldHeaderType="h2"
-                                                 fieldMessage={messages.city} containerTag="span"
-                                                 getFieldValidator={this.getValidator} containerProps={{
-                                                   property: 'schema:addressLocality',
-                                                   className: 'display-inline'
-                                                 }} formName={formName} placeholder={messages.city} />
+            <FormInputField name="city" message={messages.city} formName={formName}
+                            getValidator={this.getValidator} headerType="h2" excludeLabel
+                            placeholder={messages.city} />
+
             <br />
           </address>
         </div>
 
         <div className="col">
-          <FormInputFieldWithTopLabelContainer fieldName="email" fieldType="email" fieldHeaderType="h2"
-                                               fieldMessage={messages.email} containerTag="div" formName={formName}
-                                               getFieldValidator={this.getValidator} placeholder={messages.email}
-                                               containerProps={{ className: 'email' }} />
+          <FormInputField name="email" message={messages.email} formName={formName}
+                          getValidator={this.getValidator} headerType="h2" excludeLabel
+                          placeholder={messages.email} type="email" />
 
-          <FormInputFieldWithTopLabelContainer fieldName="mobile" fieldType="text" fieldHeaderType="h2"
-                                               fieldMessage={messages.mobile} containerTag="div" formName={formName}
-                                               getFieldValidator={this.getValidator}
-                                               containerProps={{ className: 'cell-phone' }}
-                                               placeholder={messages.mobile} />
+          <FormInputField name="mobile" message={messages.mobile} formName={formName}
+                          getValidator={this.getValidator} headerType="h2" excludeLabel
+                          placeholder={messages.mobile} />
 
-          <FormInputFieldWithTopLabelContainer fieldName="telephone" fieldType="text" fieldHeaderType="h2"
-                                               fieldMessage={messages.telephone} containerTag="div" formName={formName}
-                                               getFieldValidator={this.getValidator} placeholder={messages.telephone}
-                                               containerProps={{ className: 'phone' }} />
+          <FormInputField name="telephone" message={messages.telephone} formName={formName}
+                          getValidator={this.getValidator} headerType="h2" excludeLabel
+                          placeholder={messages.telephone} />
         </div>
       </form>
     )

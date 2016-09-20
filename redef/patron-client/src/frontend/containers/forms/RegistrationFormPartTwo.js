@@ -10,7 +10,6 @@ import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartTwo'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
-import FormInputFieldWithBottomLabelContainer from '../../components/FormInputFieldWithBottomLabelContainer'
 import FormInputField from '../../components/FormInputField'
 import FormInputFieldTermsAndConditions from '../../components/FormInputFieldTermsAndConditions'
 import FormSelectFieldLibrary from '../../components/FormSelectFieldLibrary'
@@ -70,42 +69,33 @@ class RegistrationFormPartTwo extends React.Component {
       <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
         <fieldset>
           <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
-          <FormInputFieldWithBottomLabelContainer fieldName="email" fieldType="email" fieldHeaderType="h4"
-                                                  fieldMessage={messages.email} containerTag="span"
-                                                  containerProps={{ className: 'display-inline' }} formName={formName}
-                                                  getFieldValidator={this.getValidator} />
+          <FormInputField name="email" message={messages.email} formName={formName} type="email"
+                          getValidator={this.getValidator} headerType="h4" excludeLabel />
 
-          <FormInputFieldWithBottomLabelContainer fieldName="mobile" fieldType="text" fieldHeaderType="h4"
-                                                  fieldMessage={messages.mobile} containerTag="span"
-                                                  containerProps={{ className: 'display-inline' }} formName={formName}
-                                                  getFieldValidator={this.getValidator} />
+          <FormInputField name="mobile" message={messages.mobile} formName={formName}
+                          getValidator={this.getValidator} headerType="h4" excludeLabel />
+
           <address>
-            <FormInputField name="address" type="text" message={messages.address}
-                            hasLabel headerType="h4" formName={formName} getValidator={this.getValidator} />
+            <FormInputField name="address" message={messages.address} excludeLabel
+                            headerType="h4" formName={formName} getValidator={this.getValidator} />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="zipcode" fieldType="number" fieldHeaderType="h4"
-                                                    fieldMessage={messages.zipcode} containerTag="span"
-                                                    containerProps={{ className: 'display-inline' }} formName={formName}
-                                                    getFieldValidator={this.getValidator} />
+            <FormInputField name="zipcode" message={messages.zipcode} formName={formName}
+                            getValidator={this.getValidator} headerType="h4" excludeLabel />
 
-            <FormInputFieldWithBottomLabelContainer fieldName="city" fieldType="text" fieldHeaderType="h4"
-                                                    fieldMessage={messages.city} containerTag="span"
-                                                    containerProps={{ className: 'display-inline' }} formName={formName}
-                                                    getFieldValidator={this.getValidator} />
+            <FormInputField name="city" message={messages.city} formName={formName}
+                            getValidator={this.getValidator} headerType="h4" excludeLabel />
 
           </address>
         </fieldset>
 
         <fieldset>
           <legend><FormattedMessage {...messages.personSettingsLegend} /></legend>
-          <FormInputFieldWithBottomLabelContainer fieldName="pin" fieldType="password" fieldHeaderType="h4"
-                                                  fieldMessage={messages.pin} containerTag="span"
-                                                  containerProps={{}} formName={formName}
-                                                  headerMessage={messages.choosePin}
-                                                  getFieldValidator={this.getValidator} headerTag="h2" />
+          <h2><FormattedMessage {...messages.choosePin} /></h2>
+          <FormInputField name="pin" message={messages.pin} formName={formName} type="password"
+                          getValidator={this.getValidator} headerType="h4" excludeLabel />
 
-          <FormInputField name="repeatPin" type="password" message={messages.repeatPin}
-                          hasLabel headerType="h4" formName={formName} getValidator={this.getValidator} />
+          <FormInputField name="repeatPin" type="password" message={messages.repeatPin} excludeLabel
+                          headerType="h4" formName={formName} getValidator={this.getValidator} />
 
           <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} headerTag="h2"
                                   name="chooseBranch" />
