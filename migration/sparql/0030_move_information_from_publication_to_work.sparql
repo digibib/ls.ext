@@ -13,7 +13,11 @@ INSERT {
 WHERE {
       ?publication :publicationOf ?work ;
                    ?p ?o .
+<<<<<<< Updated upstream
       VALUES ?p { :audience :literaryForm :genre :subject :hasWorkType :hasCompositionType }
+=======
+      VALUES ?p { :audience :literaryForm :genre :subject :hasWorkType :hasCompositionType migration:nationOfOrigin}
+>>>>>>> Stashed changes
 }
 ;
 
