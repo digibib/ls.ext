@@ -18,7 +18,7 @@ class FormInputField extends React.Component {
     const formattedHeaderMessage = <FormattedMessage {...this.props.message} />
     const header = this.props.headerType ? createElement(this.props.headerType, {}, formattedHeaderMessage) : null
     return (
-      <div className={`form-item ${field.meta.error ? 'error' : null}`}>
+      <div className={`form-item ${field.meta.error && field.meta.touched ? 'error' : ''}`}>
         {header}
         {!this.props.excludeLabel && !this.props.isLabelUnderInput
           ? <label htmlFor={field.name}><FormattedMessage {...this.props.message} /></label> : null}
