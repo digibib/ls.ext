@@ -203,7 +203,7 @@ class SearchResult extends React.Component {
         </article>
 
         <aside className="entry-link">
-          <a href={this.getResultUrl(result)} alt={result.displayTitle}><div className="caret" /></a>
+          <a href={this.getResultUrl(result)} alt={result.displayTitle}><i className="icon-angle-wide" /></a>
         </aside>
 
         {this.shouldShowStatus()
