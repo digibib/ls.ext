@@ -176,6 +176,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Så ombestemmer jeg meg
     Så fjerner jeg hovedinnførselen
