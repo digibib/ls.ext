@@ -9,7 +9,7 @@ const SearchFilterBoxItem = ({ filter, toggleFilter, intl }) => {
                 <span className="filter-label" data-automation-id="filter_label">
                     {intl.formatMessage({ id: filter.bucket })}{/* ({filter.count}) */}
                 </span>
-        <span className="remove">X</span>
+        <span className="remove"><i className="icon-cancel-1" /></span>
       </li>
     </ClickableElement>
   )
