@@ -7,7 +7,7 @@ global.window = document.defaultView
 global.navigator = global.window.navigator
 global.localStorage = {}
 
-let findElementsByDataAutomationId = (root, dataAutomationId, startsWith) => {
+const findElementsByDataAutomationId = (root, dataAutomationId, startsWith) => {
   return TestUtils.findAllInRenderedTree(root, (inst) => {
     if (TestUtils.isDOMComponent(inst)) {
       const node = ReactDOM.findDOMNode(inst)
@@ -21,8 +21,8 @@ let findElementsByDataAutomationId = (root, dataAutomationId, startsWith) => {
   })
 }
 
-let findElementByDataAutomationId = (root, dataAutomationId, startsWith) => {
-  let all = findElementsByDataAutomationId(root, dataAutomationId, startsWith)
+const findElementByDataAutomationId = (root, dataAutomationId, startsWith) => {
+  const all = findElementsByDataAutomationId(root, dataAutomationId, startsWith)
   if (all.length !== 1) {
     throw new Error(
       `Did not find exactly one match (found: ${all.length}) for data automation id: ${dataAutomationId}`
@@ -34,7 +34,7 @@ let findElementByDataAutomationId = (root, dataAutomationId, startsWith) => {
 global.findElementsByDataAutomationId = findElementsByDataAutomationId
 global.findElementByDataAutomationId = findElementByDataAutomationId
 
-let error = console.error
+const error = console.error
 console.error = warning => {
   if (/(Invalid prop|Failed propType|flattenChildren|React Intl|)/.test(warning)) {
     throw new Error(`Test failed because of warning (warnings not allowed): ${warning}`)

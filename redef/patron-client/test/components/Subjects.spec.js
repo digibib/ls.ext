@@ -33,7 +33,7 @@ describe('components', () => {
   describe('Subjects', () => {
     it('should render all subjects', () => {
       const { node, props } = setup()
-      let text = node.querySelector("[data-automation-id='work_subjects']").textContent
+      const text = node.querySelector("[data-automation-id='work_subjects']").textContent
       props.subjects.forEach(genre => {
         expect(text).toContain(genre.prefLabel)
         expect(text).toContain(genre.specification)

@@ -51,7 +51,7 @@ const getFiles = (directory, done) => {
 const parseFile = (filePath) => {
   const file = require(filePath)
   if (file.messages) {
-    let messagesFromFiles = {}
+    const messagesFromFiles = {}
     Object.keys(file.messages).forEach(key => {
       const id = file.messages[ key ].id
       messagesFromFiles[ id ] = filePath
@@ -63,8 +63,8 @@ const parseFile = (filePath) => {
 const compareTranslations = (messages) => {
   const norwegianMessages = require(path.join(__dirname, '../src/frontend/i18n/no.js')).default
   const englishKeys = Object.keys(messages)
-  let norCopy = JSON.parse(JSON.stringify(norwegianMessages))
-  let engCopy = JSON.parse(JSON.stringify(messages))
+  const norCopy = JSON.parse(JSON.stringify(norwegianMessages))
+  const engCopy = JSON.parse(JSON.stringify(messages))
   englishKeys.forEach(key => {
     if (norwegianMessages[ key ]) {
       delete norCopy[ key ]
@@ -78,7 +78,7 @@ const compareTranslations = (messages) => {
 
 module.exports.validate = () => {
   getFiles(startPath, (res) => {
-    let messages = {}
+    const messages = {}
     res.forEach(filePath => {
       const fileParts = filePath.split('/')
       const fileName = fileParts[ fileParts.length - 1 ]

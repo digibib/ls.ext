@@ -40,9 +40,9 @@ class Search extends React.Component {
   }
 
   handlePageClick (data) {
-    let page = String(data.selected + 1)
+    const page = String(data.selected + 1)
     if (page !== this.props.location.query.page) {
-      let newQuery = {
+      const newQuery = {
         ...this.props.location.query,
         page: page
       }

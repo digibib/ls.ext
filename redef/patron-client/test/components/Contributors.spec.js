@@ -54,7 +54,7 @@ describe('components', () => {
         }
       })
 
-      let link = node.querySelector("[data-automation-id='work_contributor_link']")
+      const link = node.querySelector("[data-automation-id='work_contributor_link']")
       expect(link.textContent).toBe('name')
       expect(link.getAttribute('href')).toBe('relativeUri')
     })

@@ -32,7 +32,7 @@ class Work extends React.Component {
   }
 
   renderTitle (work) {
-    let title = work.mainTitle
+    const title = work.mainTitle
     /* Removing this, as its supposed to be on a seperate line with seperate styling
      keeping for reference for now. */
     /*

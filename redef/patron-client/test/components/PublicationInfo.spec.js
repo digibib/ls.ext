@@ -50,7 +50,7 @@ describe('components', () => {
   describe('PublicationInfo', () => {
     it('should send call to close panel when close element is clicked', () => {
       const { output, props } = setup()
-      let closeButton = findElementByDataAutomationId(output, `close_publication_info_${props.publication.uri}`)
+      const closeButton = findElementByDataAutomationId(output, `close_publication_info_${props.publication.uri}`)
       TestUtils.Simulate.click(closeButton)
       expect(props.expandSubResource).toHaveBeenCalled()
       expect(props.expandSubResource.calls[ 0 ].arguments[ 0 ]).toBe(null)

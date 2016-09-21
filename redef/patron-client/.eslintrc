@@ -15,6 +15,7 @@
     "react/jsx-indent": 0,
     "no-return-assign": 0,
     "jsx-quotes": ["error", "prefer-double"],
-    "no-var": 1
+    "no-var": 1,
+    "prefer-const": 1
   }
 }

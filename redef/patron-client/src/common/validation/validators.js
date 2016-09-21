@@ -83,7 +83,7 @@ function validateFNumber (ssn) {
 }
 
 function isValidFNumberChecksum (ssn) {
-  let digits = []
+  const digits = []
   for (let i = 0; i < ssn.length; i++) {
     digits.push(parseInt(ssn.charAt(i)))
   }

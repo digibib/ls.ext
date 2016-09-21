@@ -14,8 +14,8 @@ function groupBy (xs, key) {
 }
 
 export function groupByBranch (items) {
-  let groups = groupBy(items, 'branch')
-  let res = []
+  const groups = groupBy(items, 'branch')
+  const res = []
   Object.keys(groups).forEach(branch => {
     res.push({branch: branch, items: groups[branch]})
   })

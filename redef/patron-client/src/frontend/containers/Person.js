@@ -29,7 +29,7 @@ class Person extends React.Component {
   }
 
   renderWorks (person) {
-    let workTitle = work => {
+    const workTitle = work => {
       let title = work.mainTitle
       if (Object.keys(work.partTitle).length > 0) {
         title += ` —  ${work.partTitle}`
@@ -63,7 +63,7 @@ class Person extends React.Component {
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let person = this.props.resources[ this.props.params.personId ]
+    const person = this.props.resources[ this.props.params.personId ]
     if (!person) {
       return this.renderNoPerson()
     }

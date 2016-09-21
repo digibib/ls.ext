@@ -58,20 +58,20 @@ class Publications extends React.Component {
   renderPublications (publications, publicationsPerRow) {
     const publicationsCopy = [ ...publications ]
     let filteredPublications = []
-    let filteredPublicationsRest = []
+    const filteredPublicationsRest = []
     const filters = getCategorizedFilters(this.props.locationQuery)
     if (filters.branch || filters.language || filters.format || filters.audience) {
       publicationsCopy.forEach(publication => {
         const formats = filters.format
         const languages = filters.language
         const audiences = filters.audience
-        let branches = []
+        const branches = []
         if (filters.branch) {
           filters.branch.forEach((branch) => {
             branches.push(this.props.libraries[ branch ])
           })
         }
-        let branchesFromPublication = []
+        const branchesFromPublication = []
         for (let i = 0; i < publication.items.length; i++) {
           branchesFromPublication.push(publication.items[ i ].branch)
         }

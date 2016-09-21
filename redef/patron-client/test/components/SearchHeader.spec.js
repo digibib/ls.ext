@@ -51,7 +51,7 @@ describe('components', () => {
   describe('SearchHeader', () => {
     it('should search initial value from locationQuery', () => {
       const { output, props } = setup({ locationQuery: { query: 'testvalue' } })
-      let searchButton = findElementByDataAutomationId(output, 'search_button')
+      const searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
       expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[0]).toEqual({ pathname: '/search', query: { query: 'testvalue' } })
@@ -59,9 +59,9 @@ describe('components', () => {
 
     it('should search with value set from input', () => {
       const { output, props } = setup()
-      let searchInput = TestUtils.findRenderedDOMComponentWithTag(output, 'input')
+      const searchInput = TestUtils.findRenderedDOMComponentWithTag(output, 'input')
       ReactDOM.findDOMNode(searchInput).value = 'testvalue'
-      let searchButton = findElementByDataAutomationId(output, 'search_button')
+      const searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
       expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[0]).toEqual({ pathname: '/search', query: { query: 'testvalue' } })

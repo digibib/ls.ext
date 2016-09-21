@@ -80,20 +80,20 @@ function isAdvancedQuery (queryString) {
 }
 
 function simpleSearchBuilder (queryString) {
-  let query = initCommonQuery()
+  const query = initCommonQuery()
   query.query = initSimpleQuery(queryString)
   return query
 }
 
 function advancedSearchBuilder (queryString) {
-  let query = initCommonQuery()
+  const query = initCommonQuery()
   query.query = initAdvancedQuery(queryString)
   return query
 }
 
 function parseFilters (filtersFromLocationQuery) {
   const filterableFields = Constants.filterableFields
-  let filterBuckets = {}
+  const filterBuckets = {}
   if (!Array.isArray(filtersFromLocationQuery)) {
     filtersFromLocationQuery = [filtersFromLocationQuery]
   }
@@ -108,7 +108,7 @@ function parseFilters (filtersFromLocationQuery) {
     filterBuckets[aggregation].push(val)
   })
 
-  let filters = []
+  const filters = []
   Object.keys(filterBuckets).forEach(aggregation => {
     filters.push({ aggregation: aggregation, bucket: filterBuckets[aggregation] })
   })
@@ -134,7 +134,7 @@ module.exports.buildQuery = function (urlQueryString) {
     elasticSearchQuery = simpleSearchBuilder(queryString)
   }
   const filters = parseFilters(params.filter || [])
-  let musts = {}
+  const musts = {}
   filters.forEach(filter => {
     const aggregation = filter.aggregation
     const must = createMust(aggregation, filter.bucket)
@@ -162,7 +162,7 @@ module.exports.buildQuery = function (urlQueryString) {
       }
     }
 
-    let aggregationMusts = []
+    const aggregationMusts = []
     Object.keys(musts).forEach(aggregation => {
       const must = musts[aggregation]
       if (aggregation !== fieldName) {

@@ -172,7 +172,7 @@ module.exports = (app) => {
   // Return age in years given date of birth
   function getAge (dateOfBirth) {
     const ageMS = Date.now() - Date.parse(dateOfBirth)
-    let age = new Date()
+    const age = new Date()
     age.setTime(ageMS)
     const ageYear = age.getFullYear() - 1970
 

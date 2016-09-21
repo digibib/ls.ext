@@ -29,7 +29,7 @@ describe('reducers', () => {
     })
 
     it(`should handle ${types.RECEIVE_TRANSLATION}`, () => {
-      let messages = { 'testkey': 'testvalue' }
+      const messages = { 'testkey': 'testvalue' }
       expect(
         application(undefined, {
           type: types.RECEIVE_TRANSLATION,

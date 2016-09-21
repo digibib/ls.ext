@@ -4,7 +4,7 @@ import Constants from '../constants/Constants'
 
 export function getCategorizedFilters (query) {
   const filters = getFiltersFromQuery(query)
-  let categorizedFilters = []
+  const categorizedFilters = []
   filters.forEach(filter => {
     const filterType = filter.id.split('_')[ 0 ]
     if (categorizedFilters[ filterType ]) {
