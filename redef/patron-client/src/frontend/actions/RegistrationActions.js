@@ -126,7 +126,7 @@ export function postRegistration (successAction) {
   return (dispatch, getState) => {
     const {
       registrationPartOne: { values: { firstName, lastName, day, month, year, ssn } },
-      registrationPartTwo: { values: { email, mobile, address, zipcode, city, country, /* gender, */ pin, repeatPin, library } }
+      registrationPartTwo: { values: { email, mobile, address, zipcode, city, country, /* gender, */ pin, repeatPin, library, acceptTerms } }
     } = getState().form
     const registrationInfo = {
       firstName: firstName,
@@ -144,7 +144,8 @@ export function postRegistration (successAction) {
       /* gender: gender.value, */
       pin: pin,
       repeatPin: repeatPin,
-      library: library
+      library: library,
+      acceptTerms: acceptTerms
     }
     dispatch(requestPostRegistration())
     return fetch(url, {
