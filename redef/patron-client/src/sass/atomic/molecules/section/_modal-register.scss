@@ -87,7 +87,27 @@
 
   }
 
+  /**
+   * Max width for input fields
+   */
+  input {
+
+    &#mobile, &#ssn {
+      max-width: 8em;
+    }
+
+    &#pin, &#repeatPin {
+      max-width: 4em;
+    }
+
+    &#day, &#month, &#year, &#zipcode {
+      max-width: 5em;
+    }
+
+  }
+
 }
+
 
 @include breakpoint($small) {
 
@@ -145,6 +165,25 @@
       }
 
     }
+
+    /**
+   * Max width for input fields
+   */
+  input {
+
+    &#mobile, &#ssn {
+      max-width: 8em;
+    }
+
+    &#pin, &#repeatPin {
+      max-width: 4em;
+    }
+
+    &#day, &#month, &#year, &#zipcode {
+      max-width: auto;
+    }
+
+  }
 
   }
 
