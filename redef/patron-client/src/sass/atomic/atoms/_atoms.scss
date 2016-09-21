@@ -3,11 +3,6 @@
 @import "global/hidden";
 @import "global/show";
 @import "global/table";
-@import "global/checkbox";
-@import "global/input";
-@import "global/label";
-@import "global/select";
-@import "global/radio";
 @import "global/digibib-icons";
 
 @import "images/img";
@@ -30,3 +25,10 @@
 @import "text/tags";
 @import "text/strong";
 @import "text/entry-content-icon";
+
+@import "forms/input";
+@import "forms/label";
+@import "forms/select";
+@import "forms/radio";
+@import "forms/error";
+@import "forms/checkbox";

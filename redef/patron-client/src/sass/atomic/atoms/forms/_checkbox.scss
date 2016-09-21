@@ -1,28 +1,20 @@
 input[type="checkbox"] {
   display:none;
-  +label {
+  + label {
     position: relative;
-    max-width: 90%;
     cursor: pointer;
-    h2 {
-      max-width: 90%;
-    }
-    img {
-      width:19px;
-      height:19px;
-      margin:-1px 4px 0 0;
+    i {
       display: none;
-      vertical-align: middle;
       &.checkbox-unchecked {
-        display: inline-block;
+        display: block;
       }
     }
   }
   &:checked {
     +label {
-      img {
+      i {
         &.checkbox-checked {
-          display: inline-block;
+          display: block;
         }
         &.checkbox-unchecked {
           display: none;

@@ -19,11 +19,11 @@ class SearchFilterItem extends React.Component {
     return (
       <li onClick={this.handleClick}
           data-automation-id={id}>
-        <input type="checkbox" id={id} name="filter" readOnly checked={filter.active} />
+        <input type="checkbox" id={id} name="filter" checked={filter.active} />
         <label htmlFor={id}>
           <div className="checkbox-wrapper">
-            <img className="checkbox-unchecked" src="/images/checkbox-unchecked.png" aria-hidden="true" />
-            <img className="checkbox-checked" src="/images/checkbox-checked.png" aria-hidden="true" />
+            <i className="icon-check-empty checkbox-unchecked" aria-hidden="true"></i>
+            <i className="icon-ok-squared checkbox-checked" aria-hidden="true"></i>
           </div>
           <h2 className="filter_label" data-automation-id="filter_label">
             {this.props.intl.formatMessage({ id: filter.bucket })}{/* ({filter.count}) */}

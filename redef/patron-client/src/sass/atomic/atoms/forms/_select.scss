@@ -1,8 +1,8 @@
 .select-container {
   overflow: hidden;
-  background: url(/images/btn-search-sorting.svg) no-repeat right;
+  background: url(/images/btn-search-sorting.svg) no-repeat right $white;
   background-position: 95%;
-  border: 3px solid #212121;
+  border: 1px solid $blackColor;
 
   select {
     background: transparent;
@@ -17,5 +17,6 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     -o-appearance: none;
+    appearance: none;
   }
 }
