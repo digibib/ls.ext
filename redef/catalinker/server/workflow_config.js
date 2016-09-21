@@ -480,6 +480,24 @@ module.exports = (app) => {
           showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             { rdfProperty: 'publicationOf', type: 'entity' },
+/*            {
+              rdfProperty: 'publicationOf',
+              id: 'publicationOfInput',
+              type: 'searchable-with-result-in-side-panel',
+              indexTypes: 'work',
+              authority: true,
+              nameProperties: [ 'mainTitle', 'subtitle' ],
+              widgetOptions: {
+                // make it possible to create a work resource if necessary,
+                enableCreateNewResource: {
+                  formRefs: [ {
+                    formId: 'create-work-form',
+                    targetType: 'work'
+                  } ]
+                }
+              }
+            },
+*/
             {
               rdfProperty: 'mainTitle',
               id: 'publicationMainTitle',

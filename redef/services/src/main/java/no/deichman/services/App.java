@@ -13,10 +13,13 @@ import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
 import no.deichman.services.version.VersionResource;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.Slf4jRequestLog;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerWrapper;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.Configuration;
@@ -86,7 +89,7 @@ public final class App {
         HandlerCollection handlers = new HandlerCollection();
 
 
-        handlers.addHandler(new HandlerWrapper(){
+        handlers.addHandler(new HandlerWrapper() {
             @Override
             public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
                 Monitor monitor = MonitorFactory.start(
@@ -141,6 +144,14 @@ public final class App {
                         Datasource.class.getCanonicalName()
                 )));
 
+        HandlerCollection collection = new HandlerCollection();
+        RequestLogHandler rlh = new RequestLogHandler();
+        // Slf4j - who uses anything else?
+        Slf4jRequestLog requestLog = new Slf4jRequestLog();
+        requestLog.setExtended(false);
+        rlh.setRequestLog(requestLog);
+        collection.setHandlers(new Handler[]{context, rlh});
+        jettyServer.setHandler(collection);
         jettyServer.start();
         LOG.info("App started on port: " + port);
     }
