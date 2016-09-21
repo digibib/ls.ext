@@ -80,8 +80,8 @@ class SearchFilter extends React.Component {
           <h1>{this.renderTitle()}</h1>
           <button onClick={this.handleCollapse} className="single-filter-close" type="button">
             {this.isCollapsed()
-              ? <img src="/images/btn-single-filter-open.svg" alt="Black circle with plus" />
-              : <img src="/images/btn-single-filter-close.svg" alt="Black circle with dash" />}
+              ? <i className="icon-plus" alt="" />
+              : <i className="icon-minus" alt="" />}
           </button>
         </header>
         {this.isCollapsed() ? null

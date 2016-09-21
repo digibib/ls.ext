@@ -15,6 +15,20 @@
     @include span(2 last);
     cursor: pointer;
     margin-top: 0.2em;
+
+    i {
+      border: 1px solid #212121;
+      padding: 3px;
+      border-radius: 50%;
+
+      &:hover {
+        background: $darkGreyColor;
+        cursor: pointer;
+        color: $white;
+      }
+
+    }
+
   }
 
   img {
