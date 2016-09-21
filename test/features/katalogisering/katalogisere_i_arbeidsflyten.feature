@@ -154,6 +154,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så jeg skriver verdien på tittelnummer i feltet som heter "Utgivelser" og trykker enter
     Så velger jeg en utgivelse fra treffliste fra utgivelsesregisteret
+    Og jeg venter litt
+    Og jeg venter litt
     Så trykker jeg på "Slett utgivelsen"-knappen
     Så trykker jeg på "Slett"-knappen i dialogen
     Så trykker jeg på "Ok"-knappen i dialogen

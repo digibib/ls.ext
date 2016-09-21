@@ -24,7 +24,7 @@ end
 
 When(/^jeg legger inn forfatternavnet på startsida$/) do
   @site.WorkFlow.visit
-  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']/input")
+  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']//input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end
@@ -387,7 +387,7 @@ end
 
 When(/^jeg legger inn et nytt navn$/) do
   @context[:person_name] = generateRandomString
-  creator_name_field = @browser.text_field(:xpath => "//*[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0' or @data-automation-id='PublicationPart_http://data.deichman.no/ontology#agent_0']/input")
+  creator_name_field = @browser.text_field(:xpath => "//*[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0' or @data-automation-id='PublicationPart_http://data.deichman.no/ontology#agent_0']//input")
   creator_name_field.set(@context[:person_name])
   creator_name_field.send_keys :enter
 end

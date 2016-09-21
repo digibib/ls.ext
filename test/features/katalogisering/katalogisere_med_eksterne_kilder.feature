@@ -12,6 +12,7 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg venter litt
     Så Sjekker jeg at det vises treff fra preferert ekstern kilde
     Så trykker jeg på "Bruk forslag"-knappen
+    Og jeg venter litt
     Så åpner jeg listen med eksterne forslag fra andre kilder for agent som skal knyttes til bidrag og velger det første forslaget
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
