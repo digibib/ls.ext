@@ -63,6 +63,7 @@ WHERE {
       (format:Microfiche              mediaType:Other)
       (format:MicrofilmReel           mediaType:Other)
       (format:Map                     mediaType:Other)
+      (format:CD-ROM                  mediaType:Other)
     }
 }
 ;
@@ -139,7 +140,26 @@ WHERE {
 ;
 
 
-# 5) Construct work type based on media type
+# 5) Remove Other where another media type is also present
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+  ?pub :hasMediaType mediaType:Other
+
+WHERE {
+    ?pub :hasMediaType mediatype:Other ;
+      :hasMediaType ?mediatype .
+    FILTER (?mediatype != mediatype:Other)
+}
+;
+
+
+# 6) Construct work type based on media type
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
@@ -172,7 +192,7 @@ WHERE {
 ;
 
 
-# 6) Delete redundant formats
+# 7) Delete redundant formats
 SPARQL
 DEFINE sql:log-enable 2
 PREFIX : <http://data.deichman.no/ontology#>
