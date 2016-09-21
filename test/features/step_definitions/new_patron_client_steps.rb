@@ -330,17 +330,15 @@ When(/^jeg fyller inn resten av skjemaet$/) do
   @browser.text_field(name: 'mobile').set '%08d' % rand(10**8)
   @browser.text_field(name: 'address').set generateRandomString
   @browser.text_field(name: 'zipcode').set '%04d' % rand(10000)
-  @browser.text_field(name: 'city').set generateRandomString
-  @browser.text_field(name: 'country').set generateRandomString
+  @browser.text_field(name: 'city').set (0...8).map { (65 + rand(26)).chr }.join
   #@browser.select_list(data_automation_id: 'gender_selection').select_value 'female' # TODO: Must be fixed in patron-client
   @browser.text_field(name: 'pin').set '1234'
   @browser.text_field(name: 'repeatPin').set '1234'
 end
 
 When(/^jeg godtar lånerreglementet$/) do
-  # TODO broken, checkbox is missing
   # Need to hijack element because watir refuses to click hidden elements (checkbox hidden due to styling)
-  # @browser.execute_script("document.getElementById('acceptTerms').click()")
+  @browser.execute_script("document.getElementById('acceptTerms').click()")
 end
 
 When(/^jeg trykker på registreringsknappen$/) do
