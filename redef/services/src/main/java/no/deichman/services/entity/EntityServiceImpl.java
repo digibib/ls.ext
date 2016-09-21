@@ -223,6 +223,7 @@ public final class EntityServiceImpl implements EntityService {
     public Model retrieveWorkWithLinkedResources(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
         m.add(repository.retrieveWorkAndLinkedResourcesByURI(xuri));
+        m = addInversePublicationRelations(m, xuri);
         m = getLinkedLexvoResource(m);
         m = getLinkedFormatResource(m);
         m = getLinkedAudienceResource(m);
@@ -232,6 +233,12 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedContentAdaptationResource(m);
         m = getLinkedFormatAdaptationResource(m);
         return m;
+    }
+
+    private Model addInversePublicationRelations(Model input, XURI workUri) {
+        SPARQLQueryBuilder sparqlQueryBuilder = new SPARQLQueryBuilder();
+        Query query = sparqlQueryBuilder.constructInversePublicationRelations(workUri);
+        return input.add(QueryExecutionFactory.create(query).execConstruct(input));
     }
 
     @Override

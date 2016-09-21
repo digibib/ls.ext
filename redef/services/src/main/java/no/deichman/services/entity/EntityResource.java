@@ -144,6 +144,26 @@ public final class EntityResource extends ResourceBase {
         return ok().entity(getJsonldCreator().asJSONLD(model)).build();
     }
 
+    @GET
+    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
+    @Produces(NTRIPLES + MimeType.UTF_8)
+    public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        Model model;
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+
+        if ("work".equals(type)) {
+            model = getEntityService().retrieveWorkWithLinkedResources(xuri);
+        } else if ("person".equals(type)) {
+            model = getEntityService().retrievePersonWithLinkedResources(xuri);
+        } else {
+            model = getEntityService().retrieveById(xuri);
+        }
+        if (model.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return ok().entity(getJsonldCreator().asJSONLD(model)).build();
+    }
+
     @DELETE
     @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
