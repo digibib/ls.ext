@@ -150,9 +150,10 @@ WITH <http://deichman.no/migration>
 
 DELETE {
   ?pub :hasMediaType mediaType:Other
+}
 
 WHERE {
-    ?pub :hasMediaType mediatype:Other ;
+    ?pub :hasMediaType mediaType:Other ;
       :hasMediaType ?mediaType .
     FILTER (?mediaType != mediaType:Other)
 }
