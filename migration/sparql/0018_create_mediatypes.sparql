@@ -153,8 +153,8 @@ DELETE {
 
 WHERE {
     ?pub :hasMediaType mediatype:Other ;
-      :hasMediaType ?mediatype .
-    FILTER (?mediatype != mediatype:Other)
+      :hasMediaType ?mediaType .
+    FILTER (?mediaType != mediaType:Other)
 }
 ;
 
