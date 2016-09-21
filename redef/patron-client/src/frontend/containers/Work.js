@@ -34,12 +34,12 @@ class Work extends React.Component {
   renderTitle (work) {
     let title = work.mainTitle
     /* Removing this, as its supposed to be on a seperate line with seperate styling
-      keeping for reference for now. */
+     keeping for reference for now. */
     /*
-      if (work.partTitle) {
-        title += ` — ${work.partTitle}`
-      }
-    */
+     if (work.partTitle) {
+     title += ` — ${work.partTitle}`
+     }
+     */
     return title
   }
 
@@ -56,7 +56,7 @@ class Work extends React.Component {
   }
 
   renderPartTitle (work) {
-    if(work.partTitle) {
+    if (work.partTitle) {
       return (
         <h2>{work.partTitle}</h2>
       )
@@ -64,7 +64,6 @@ class Work extends React.Component {
   }
 
   render () {
-
     // TODO Better renderEmpty and showing something while it loads the resource.
     if (this.props.isRequesting) {
       return this.renderEmpty()
@@ -80,8 +79,7 @@ class Work extends React.Component {
       const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
       if (chosenPublication) {
         work.mainTitle = chosenPublication.mainTitle
-        //work.partTitle = chosenPublication.partTitle
-        work.partTitle = 'This is the part title'
+        work.partTitle = chosenPublication.partTitle
       }
     }
     const { back } = this.props.location.query
@@ -146,7 +144,7 @@ class Work extends React.Component {
                       toggleParameterValue={this.props.parameterActions.toggleParameterValue}
                       workLanguage={work.language}
                       libraries={this.props.libraries}
-                      audiences={Array.isArray(this.props.resources[this.props.params.workId].audience) ? this.props.resources[this.props.params.workId].audience : [this.props.resources[this.props.params.workId].audience]}
+                      audiences={Array.isArray(this.props.resources[ this.props.params.workId ].audience) ? this.props.resources[ this.props.params.workId ].audience : [ this.props.resources[ this.props.params.workId ].audience ]}
         />
 
       </div>
