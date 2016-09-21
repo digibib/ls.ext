@@ -159,8 +159,8 @@
         }
       })
       ractive.update()
-      ractive.set('targetUri.' + domainType, null)
-      updateBrowserLocationWithUri(domainType, null)
+      ractive.set('targetUri.' + domainType, undefined)
+      updateBrowserLocationWithUri(domainType, undefined)
     }
 
     var deleteResource = function (uri, deleteConfig, success) {
@@ -222,6 +222,32 @@
         open: function () {
           $(`#${idPrefix}-ok-del`).hide()
         }
+      })
+    }
+
+    var enableSpecialInput = function (enableSpecialInputSpec) {
+      ractive.set('confirmEnableSpecialInputDialog.confirmLabel', enableSpecialInputSpec.confirmLabel)
+      let keypath = ractive.get(`inputLinks.${enableSpecialInputSpec.inputId}`)
+      $('#confirm-enable-special-input-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        title: enableSpecialInputSpec.buttonLabel,
+        buttons: [
+          {
+            text: 'Fortsett',
+            click: function () {
+              ractive.set(`${keypath}.visible`, true)
+              $(this).dialog('close')
+            }
+          },
+          {
+            text: 'Avbryt',
+            click: function () {
+              $(this).dialog('close')
+            }
+          }
+        ]
       })
     }
 
@@ -528,7 +554,7 @@
 
     function withPublicationOfWorkInput (handler) {
       var publicationOfInput = _.find(allInputs(), function (input) {
-        return (input.fragment === 'publicationOf' && input.domain === 'deichman:Publication' && input.type === 'entity')
+        return (input.fragment === 'publicationOf' && input.domain === 'deichman:Publication' && input.type === 'searchable-with-result-in-side-panel')
       })
       if (publicationOfInput) {
         handler(publicationOfInput)
@@ -799,7 +825,7 @@
       if (prop.type) {
         input.type = prop.type
       }
-      input.visible = (prop.type !== 'entity' && prop.type !== 'hidden-url-query-value')
+      input.visible = (prop.type !== 'entity' && prop.type !== 'hidden-url-query-value' && !prop.initiallyHidden)
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
       }
@@ -834,6 +860,9 @@
       }
       if (prop.isTitleSource) {
         input.isTitleSource = prop.isTitleSource
+      }
+      if (prop.dependentResourceTypes) {
+        input.dependentResourceTypes = prop.dependentResourceTypes
       }
     }
 
@@ -1166,6 +1195,9 @@
         if (inputGroup.deleteResource) {
           group.deleteResource = inputGroup.deleteResource
         }
+        if (inputGroup.enableSpecialInput) {
+          group.enableSpecialInput = inputGroup.enableSpecialInput
+        }
 
         markFirstAndLastInputsInGroup(group)
         inputGroups.push(group)
@@ -1411,6 +1443,7 @@
           'publication',
           'delete-publication-dialog',
           'delete-work-dialog',
+          'confirm-enable-special-input-dialog',
           'accordion-header-for-collection'
         ]
         // window.onerror = function (message, url, line) {
@@ -2542,6 +2575,9 @@
                   }
                 })
                 ractive.update()
+              },
+              enableSpecialInput: function (event) {
+                enableSpecialInput(event.context)
               }
             }
           )
@@ -2588,6 +2624,16 @@
 
           ractive.observe('applicationData.inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
             checkRequiredSubInput(newValue, keypath)
+          })
+
+          ractive.observe('applicationData.inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
+            if (!newValue || newValue === '') {
+              var inputKeypath = grandParentOf(grandParentOf(keypath))
+              let dependentResourceTypes = ractive.get(`${inputKeypath}.dependentResourceTypes`)
+              _.each(dependentResourceTypes, function (resourceType) {
+                unloadResourceForDomain(resourceType)
+              })
+            }
           })
 
           ractive.observe('applicationData.inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {

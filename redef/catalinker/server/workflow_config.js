@@ -479,25 +479,6 @@ module.exports = (app) => {
           label: 'Beskriv utgivelse',
           showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
-            { rdfProperty: 'publicationOf', type: 'entity' },
-/*            {
-              rdfProperty: 'publicationOf',
-              id: 'publicationOfInput',
-              type: 'searchable-with-result-in-side-panel',
-              indexTypes: 'work',
-              authority: true,
-              nameProperties: [ 'mainTitle', 'subtitle' ],
-              widgetOptions: {
-                // make it possible to create a work resource if necessary,
-                enableCreateNewResource: {
-                  formRefs: [ {
-                    formId: 'create-work-form',
-                    targetType: 'work'
-                  } ]
-                }
-              }
-            },
-*/
             {
               rdfProperty: 'mainTitle',
               id: 'publicationMainTitle',
@@ -689,6 +670,26 @@ module.exports = (app) => {
                 queryParameter: 'hasMediaType',
                 prefix: 'http://data.deichman.no/mediaType#'
               }
+            },
+            {
+              rdfProperty: 'publicationOf',
+              id: 'publicationOfInput',
+              type: 'searchable-with-result-in-side-panel',
+              indexTypes: 'work',
+              authority: true,
+              nameProperties: [ 'mainTitle', 'subtitle' ],
+              label: '',
+              initiallyHidden: true,
+              dependentResourceTypes: [ 'Work' ], // unload work if this is cleared
+              widgetOptions: {
+                // make it possible to create a work resource if necessary,
+                enableCreateNewResource: {
+                  formRefs: [ {
+                    formId: 'create-work-form',
+                    targetType: 'work'
+                  } ]
+                }
+              }
             }
           ],
           nextStep: {
@@ -709,6 +710,11 @@ module.exports = (app) => {
               gotoTab: 0,
               setResourceInDocumentUrlFromTargetUri: 'Work'
             }
+          },
+          enableSpecialInput: {
+            inputId: 'publicationOfInput',
+            buttonLabel: 'Endre verk for utgivelse',
+            confirmLabel: 'Er du sikker på at du vil endre verksknytningen for denne utgivelsen?',
           }
         },
         {

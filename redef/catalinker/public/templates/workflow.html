@@ -62,6 +62,15 @@
                                 </div>
                             </div>
                             {{/deleteResource}}
+                            {{#enableSpecialInput}}
+                            <div class="pure-g">
+                                <div class="pure-u-1-2">
+                                    <button class="pure-button pure-button-primary next-step-button"
+                                            title="{{./buttonLabel}}" on-click="enableSpecialInput:{{./inputId}}">{{buttonLabel}}
+                                    </button>
+                                </div>
+                            </div>
+                            {{/enableSpecialInput}}
                             </div>
                         </div>
                     {{/if}}
@@ -92,5 +101,6 @@
 <span style="display: none">
  {{>delete-publication-dialog}}
  {{>delete-work-dialog}}
+ {{>confirm-enable-special-input-dialog}}
 </span>
 
