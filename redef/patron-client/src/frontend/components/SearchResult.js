@@ -57,15 +57,15 @@ class SearchResult extends React.Component {
   }
 
   subjectSearchLink (subject) {
-    return '/search?query=subject%3A' + subject
+    return `/search?query=subject%3A${subject}`
   }
 
   genreSearchLink (genre) {
-    return '/search?query=genre%3A' + genre
+    return `/search?query=genre%3A${genre}`
   }
 
   seriesSearchLink (series) {
-    return '/search?query=series%3A' + series
+    return `/search?query=series%3A${series}`
   }
 
   renderSubjects (result) {

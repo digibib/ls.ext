@@ -20,7 +20,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.REQUEST_SEARCH, () => {
+    it(`should handle ${types.REQUEST_SEARCH}`, () => {
       expect(
         search({}, {
           type: types.REQUEST_SEARCH,
@@ -34,7 +34,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.RECEIVE_SEARCH, () => {
+    it(`should handle ${types.RECEIVE_SEARCH}`, () => {
       expect(
         search({}, {
           type: types.RECEIVE_SEARCH,
@@ -55,7 +55,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.SEARCH_FAILURE, () => {
+    it(`should handle ${types.SEARCH_FAILURE}`, () => {
       expect(
         search({}, {
           type: types.SEARCH_FAILURE,

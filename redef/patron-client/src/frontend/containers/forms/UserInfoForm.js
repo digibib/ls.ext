@@ -125,16 +125,6 @@ export const messages = defineMessages({
     id: 'UserInfoForm.email',
     description: 'The label for the email',
     defaultMessage: 'Email'
-  },
-  required: {
-    id: 'UserInfoForm.required',
-    description: 'Displayed below a field when not filled out',
-    defaultMessage: 'Required'
-  },
-  invalidEmail: {
-    id: 'UserInfoForm.invalidEmail',
-    description: 'Displayed when the email is not valid',
-    defaultMessage: 'Invalid email address'
   }
 })
 

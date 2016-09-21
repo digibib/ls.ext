@@ -30,7 +30,7 @@ export function getFiltersFromQuery (query) {
 }
 
 export function parseFilters (filters) {
-  let parsedFilters = []
+  const parsedFilters = []
   if (filters) {
     if (!Array.isArray(filters)) {
       filters = [ filters ]
@@ -42,7 +42,7 @@ export function parseFilters (filters) {
       const parsedFilter = {
         active: true,
         bucket: Constants.filterableFields[ filterType ].prefix + filterValue,
-        id: filterType + '_' + filterValue
+        id: `${filterType}_${filterValue}`
       }
       parsedFilters.push(parsedFilter)
     })

@@ -20,8 +20,7 @@ export function toggleParameterValue (queryParamName, value, locationQuery, shou
     const locationQuery = locationQuery || { ...getState().routing.locationBeforeTransitions.query }
     let queryParam = locationQuery[ queryParamName ] || []
     if (shouldRemoveInBackString) {
-      const newParamString = queryParam.replace(nameToReplace + '=' + value + '&', '')
-      locationQuery[ queryParamName ] = newParamString
+      locationQuery[ queryParamName ] = queryParam.replace(`${nameToReplace}=${value}&`, '')
     } else {
       if (!Array.isArray(queryParam)) {
         queryParam = [ queryParam ]

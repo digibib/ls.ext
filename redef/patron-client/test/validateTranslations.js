@@ -73,7 +73,7 @@ const compareTranslations = (messages) => {
   })
   if (norCopy !== {})console.log('Unused norwegian translations in i18n: \n', norCopy, '\n')
   if (engCopy !== {})console.log('Messages missing norwegian translation in i18n: \n', engCopy)
-  module.exports.hasUntranslatedMessages = norCopy === {} && engCopy === {}
+  module.exports.hasUntranslatedMessages = Object.keys(norCopy).length === 0 && Object.keys(engCopy).length === 0
 }
 
 module.exports.validate = () => {

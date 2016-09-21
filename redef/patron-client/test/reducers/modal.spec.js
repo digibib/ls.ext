@@ -14,7 +14,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.SHOW_MODAL, () => {
+    it(`should handle ${types.SHOW_MODAL}`, () => {
       expect(
         modal({}, {
           type: types.SHOW_MODAL,
@@ -29,7 +29,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.HIDE_MODAL, () => {
+    it(`should handle ${types.HIDE_MODAL}`, () => {
       expect(
         modal({}, {
           type: types.HIDE_MODAL

@@ -28,7 +28,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.RECEIVE_TRANSLATION, () => {
+    it(`should handle ${types.RECEIVE_TRANSLATION}`, () => {
       let messages = { 'testkey': 'testvalue' }
       expect(
         application(undefined, {

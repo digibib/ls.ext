@@ -60,7 +60,7 @@ describe('components', () => {
           items: []
         }
       })
-      expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(props.publication.mainTitle + ' — ' + props.publication.partTitle)
+      expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(`${props.publication.mainTitle} — ${props.publication.partTitle}`)
     })
   })
 })

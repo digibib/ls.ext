@@ -18,7 +18,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.REQUEST_RESERVE_PUBLICATION, () => {
+    it(`should handle ${types.REQUEST_RESERVE_PUBLICATION}`, () => {
       expect(
         reservation({}, {
           type: types.REQUEST_RESERVE_PUBLICATION
@@ -29,7 +29,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.RESERVE_PUBLICATION_SUCCESS, () => {
+    it(`should handle ${types.RESERVE_PUBLICATION_SUCCESS}`, () => {
       expect(
         reservation({}, {
           type: types.RESERVE_PUBLICATION_SUCCESS
@@ -40,7 +40,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.RESERVE_PUBLICATION_FAILURE, () => {
+    it(`should handle ${types.RESERVE_PUBLICATION_FAILURE}`, () => {
       expect(
         reservation({}, {
           type: types.RESERVE_PUBLICATION_FAILURE,
@@ -55,7 +55,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.REQUEST_EXTEND_LOAN, () => {
+    it(`should handle ${types.REQUEST_EXTEND_LOAN}`, () => {
       expect(
         reservation({}, {
           type: types.REQUEST_EXTEND_LOAN
@@ -66,7 +66,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.EXTEND_LOAN_SUCCESS, () => {
+    it(`should handle ${types.EXTEND_LOAN_SUCCESS}`, () => {
       expect(
         reservation({}, {
           type: types.EXTEND_LOAN_SUCCESS
@@ -77,7 +77,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.EXTEND_LOAN_FAILURE, () => {
+    it(`should handle ${types.EXTEND_LOAN_FAILURE}`, () => {
       expect(
         reservation({}, {
           type: types.EXTEND_LOAN_FAILURE,

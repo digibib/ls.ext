@@ -14,7 +14,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.REQUEST_RESOURCE, () => {
+    it(`should handle ${types.REQUEST_RESOURCE}`, () => {
       expect(
         resources(undefined, {
           type: types.REQUEST_RESOURCE
@@ -36,7 +36,7 @@ describe('reducers', () => {
       })
     })
 
-    it('should handle ' + types.RECEIVE_RESOURCE, () => {
+    it(`should handle ${types.RECEIVE_RESOURCE}`, () => {
       expect(
         resources(undefined, {
           type: types.RECEIVE_RESOURCE,
