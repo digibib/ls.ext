@@ -359,6 +359,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
     Så krysser jeg av i avkrysningboksen for "Ikke eget verk"
     Og bekrefter for å gå videre til "Beskriv utgivelse"
