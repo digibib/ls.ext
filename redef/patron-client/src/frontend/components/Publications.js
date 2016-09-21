@@ -225,7 +225,7 @@ class Publications extends React.Component {
           const mediaTypeFragment = getFragment(mediaTypeUri)
           const mediaType = {uri: mediaTypeUri}
           return (
-            <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[mediaTypeUri]}>
+            <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[mediaTypeUri]} key={mediaTypeUri}>
               <div><MediaType key={mediaTypeUri} mediaType={mediaType} /></div>
             </ClickableElement>
           )

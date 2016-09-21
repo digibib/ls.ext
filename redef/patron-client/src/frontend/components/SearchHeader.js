@@ -99,6 +99,7 @@
             <ReactCSSTransitionGroup
               transitionName="fade-in"
               transitionAppear={true}
+              transitionAppearTimeout={10000}
               transitionEnterTimeout={500}
               transitionLeaveTimeout={500}
               component="header"
@@ -133,6 +134,7 @@
           <ReactCSSTransitionGroup
             transitionName="fade-in"
             transitionAppear={true}
+            transitionAppearTimeout={10000}
             transitionEnterTimeout={500}
             transitionLeaveTimeout={500}
             component="section"

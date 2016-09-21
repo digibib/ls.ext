@@ -8,6 +8,7 @@ import Items, { __RewireAPI__ as DefaultExportItemsRewireApi } from '../../src/f
 
 function setup (propOverrides) {
   const props = {
+    publication: {},
     items: [
       { barcode: 'item_barcode1' }, { barcode: 'item_barcode2' }, { barcode: 'item_barcode3' }
     ],
@@ -29,13 +30,7 @@ function setup (propOverrides) {
 
 describe('components', () => {
   before(() => {
-    DefaultExportItemsRewireApi.__Rewire__('Item', React.createClass({
-      render () {
-        return (
-          <tr />
-        )
-      }
-    }))
+    DefaultExportItemsRewireApi.__Rewire__('Item', () => <tr />)
   })
 
   after(() => {

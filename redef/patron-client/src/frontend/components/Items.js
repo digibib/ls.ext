@@ -10,6 +10,7 @@ class Items extends React.Component {
   }
 
   renderItems () {
+    const { publication } = this.props
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
@@ -26,7 +27,7 @@ class Items extends React.Component {
         </tr>
         </thead>
         <tbody data-automation-id="work_items">
-        {this.props.items.map(item => <Item key={item.barcode} item={item} />)}
+        {this.props.items.map(item => <Item key={item.barcode} publication={publication} item={item} />)}
         </tbody>
       </ReactCSSTransitionGroup>
     )
@@ -40,6 +41,7 @@ class Items extends React.Component {
 }
 
 Items.propTypes = {
+  publication: PropTypes.object.isRequired,
   items: PropTypes.array.isRequired
 }
 

@@ -20,6 +20,7 @@ class PublicationInfo extends React.Component {
         <ReactCSSTransitionGroup
           transitionName="fade-in"
           transitionAppear={true}
+          transitionAppearTimeout={10000}
           transitionEnterTimeout={500}
           transitionLeaveTimeout={300}
           component="table"
@@ -56,6 +57,7 @@ class PublicationInfo extends React.Component {
       <ReactCSSTransitionGroup
         transitionName="fade-in"
         transitionAppear={true}
+        transitionAppearTimeout={10000}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={300}
         component="section"

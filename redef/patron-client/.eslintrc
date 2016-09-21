@@ -14,8 +14,17 @@
     "react/jsx-indent-props": 0,
     "react/jsx-indent": 0,
     "no-return-assign": 0,
-    "jsx-quotes": ["error", "prefer-double"],
+    "jsx-quotes": [
+      "error",
+      "prefer-double"
+    ],
     "no-var": 1,
-    "prefer-const": 1
+    "prefer-const": 1,
+    "prefer-arrow-callback": [
+      "error",
+      {
+        "allowNamedFunctions": true
+      }
+    ]
   }
 }

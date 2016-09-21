@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
 
 import Contributors from '../components/Contributors'
@@ -30,13 +30,13 @@ class Work extends React.Component {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
   }
 
-  toggleAditionalInfo(event) {
+  toggleAditionalInfo (event) {
     event.preventDefault()
     event.stopPropagation()
     if (this.state.showAdditionalInfo) {
-      this.setState({showAdditionalInfo: false})
+      this.setState({ showAdditionalInfo: false })
     } else {
-      this.setState({showAdditionalInfo: true})
+      this.setState({ showAdditionalInfo: true })
     }
   }
 
@@ -45,6 +45,7 @@ class Work extends React.Component {
       <ReactCSSTransitionGroup
         transitionName="fade-in"
         transitionAppear={true}
+        transitionAppearTimeout={10000}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
@@ -59,6 +60,7 @@ class Work extends React.Component {
       <ReactCSSTransitionGroup
         transitionName="fade-in"
         transitionAppear={true}
+        transitionAppearTimeout={10000}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
@@ -70,25 +72,11 @@ class Work extends React.Component {
     )
   }
 
-  renderTitle (work) {
-    const title = work.mainTitle
-    /* Removing this, as its supposed to be on a seperate line with seperate styling
-     keeping for reference for now. */
-    /*
-     if (work.partTitle) {
-     title += ` — ${work.partTitle}`
-     }
-     */
-    return (
-      <h1 data-automation-id="work_title">{title}</h1>
-    )
-  }
-
   renderYear (work) {
     if (work.publicationYear) {
       return (
         <div className="meta-item">
-          <span className="meta-label"><FormattedMessage {...messages.labelOriginalReleaseDate} /></span>
+          <span className="meta-label"><FormattedMessage {...messages.labelOriginalReleaseDate} />: </span>
           <span className="meta-content" data-automation-id="work_date">{work.publicationYear}</span>
         </div>
       )
@@ -96,17 +84,11 @@ class Work extends React.Component {
     return <span data-automation-id="work_date" />
   }
 
-  renderPartTitle (work) {
-    return (
-      <h2>placeholder deltittel + delnr</h2>
-    )
-  }
-
   renderOriginalTitle (work) {
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelOriginalTitle} />: </span>
-        <span className="meta-content">Placholder original title</span>
+        <span className="meta-content">{work.mainTitle}</span>
       </div>
     )
   }
@@ -115,7 +97,8 @@ class Work extends React.Component {
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelOriginalLanguage} />: </span>
-        <span className="meta-content">Placholder original language</span>
+        <span
+          className="meta-content">{work.languages.map(language => this.props.intl.formatMessage({ id: language }))}</span>
       </div>
     )
   }
@@ -133,19 +116,14 @@ class Work extends React.Component {
     return (
       <div className="meta-item author">
         <span className="meta-label"><FormattedMessage {...messages.labelBy} />: </span>
-        <span className="meta-content">Placholder author</span>
+        <span className="meta-content">{work.by}</span>
       </div>
     )
   }
 
   renderExcerpt (work) {
     return (
-      <p className="work-excerpt">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget massa
-        id mauris maximus porta. In dignissim, metus in elementum ultrices, erat velit gravida turpis, id
-        efficitur nunc est vitae purus. Aliquam ornare efficitur tellus sit amet dapibus. Aliquam ultrices,
-        sapien in volutpat vehicula, lacus nunc pretium leo, quis dignissim arcu nisl vitae velit.
-      </p>
+      <p className="work-excerpt">{work.hasSummary}</p>
     )
   }
 
@@ -153,7 +131,8 @@ class Work extends React.Component {
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelTargetAudience} />: </span>
-        <span className="meta-content">Placholder target audience</span>
+        <span
+          className="meta-content">{work.audience ? this.props.intl.formatMessage({ id: work.audience }) : null}</span>
       </div>
     )
   }
@@ -162,39 +141,37 @@ class Work extends React.Component {
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelSeries} />: </span>
-        <span className="meta-content">Placholder part of series</span>
+        <span
+          className="meta-content">{work.serials.join(', ')}</span>
       </div>
     )
   }
 
+  /*
   renderRelations (work) {
     return (
       <div>
-        {/*foreach relation*/}
-        {this.renderRelation(work)}
+        {work.isRelatedTo.map(relation => (
+          <div className="meta-item" key={relation.hasRelationType}>
+            <span className="meta-label">{this.props.intl.formatMessage({ id: relation.hasRelationType })}: </span>
+            <span className="meta-content">Navn på relasjon</span>
+          </div>
+        ))}
       </div>
     )
   }
-
-  renderRelation (work) {
-    return (
-      <div className="meta-item">
-        <span className="meta-label"><FormattedMessage {...messages.labelRelation} />: </span>
-        <span className="meta-content">Placholder relation</span>
-      </div>
-    )
-  }
+  */
 
   renderDeweynr (work) {
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelDeweynr} />: </span>
-        <span className="meta-content">Placeholder Dewey</span>
+        <span className="meta-content">{work.deweyNumber}</span>
       </div>
     )
   }
 
-  renderAdditionalInfo(work) {
+  renderAdditionalInfo (work) {
     if (this.state.showAdditionalInfo) {
       return (
         <div className="additional-info">
@@ -215,19 +192,20 @@ class Work extends React.Component {
     }
   }
 
-  renderAdditionalInfoContent(work) {
+  renderAdditionalInfoContent (work) {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
         transitionAppear={true}
         transitionLeave={true}
+        transitionAppearTimeout={10000}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
         className="additional-info">
         {this.renderTargetAudience(work)}
         {this.renderPartOfSeries(work)}
-        {this.renderRelations(work)}
+        {/* this.renderRelations(work) */}
         {this.renderDeweynr(work)}
         <Subjects subjects={work.subjects} />
         <Genres genres={work.genres} />
@@ -235,18 +213,18 @@ class Work extends React.Component {
     )
   }
 
-  renderAvailableMediaTypes(publications) {
+  renderAvailableMediaTypes (publications) {
     var mediaTypes = [];
-    publications.forEach(function(publication) {
-      publication.mediaTypes.forEach(function(mediaType) {
+    publications.forEach(function (publication) {
+      publication.mediaTypes.forEach(function (mediaType) {
         if (mediaTypes.indexOf(mediaType.split(".no/").pop()) < 0) mediaTypes.push(mediaType.split(".no/").pop());
       });
     });
     return (
       <ul>
         <li>Here they come</li>
-        {mediaTypes.map(function(mediaType){
-            return <li><Link to={mediaType}>{mediaType}</Link></li>;
+        {mediaTypes.map(function (mediaType) {
+          return <li><Link to={mediaType}>{mediaType}</Link></li>;
         })}
       </ul>
     )
@@ -256,6 +234,19 @@ class Work extends React.Component {
     //       {mediaTypes.map(medaType) => {<li>{mediaType}</li>}}
     //   </ul>
     // )
+  }
+
+  getMainTitleAndPartTitle (work) {
+    let mainTitle = work.mainTitle
+    let partTitle = work.partTitle
+    if (this.props.params.publicationId) {
+      const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
+      if (chosenPublication) {
+        mainTitle = chosenPublication.mainTitle
+        partTitle = chosenPublication.partTitle
+      }
+    }
+    return { mainTitle, partTitle }
   }
 
   render () {
@@ -270,13 +261,13 @@ class Work extends React.Component {
       work = { ...work }
     }
 
-    if (this.props.params.publicationId) {
-      const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
-      if (chosenPublication) {
-        work.mainTitle = chosenPublication.mainTitle
-        work.partTitle = chosenPublication.partTitle
-      }
-    }
+    const publicationsWithItems = work.publications.map(publication => {
+      const newPublication = { ...publication, items: this.props.items[ publication.recordId ] || [] }
+      newPublication.available = newPublication.items.filter(item => item.status === 'Ledig').length > 0
+      return newPublication
+    })
+
+    const { mainTitle, partTitle } = this.getMainTitleAndPartTitle(work)
     const { back } = this.props.location.query
 
     return (
@@ -284,52 +275,53 @@ class Work extends React.Component {
         <ReactCSSTransitionGroup
           transitionName="fade-in"
           transitionAppear={true}
+          transitionAppearTimeout={10000}
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="article"
           className="work-entry">
-            {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
-              ? (
-              <header className="back-to-results">
-                <Link to={this.props.location.query.back} alt="Back to search page">
-                  <i className="icon-angle-double-left" />Tilbake til søkeresultat
-                </Link>
-              </header>
-            ) : ''}
+          {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
+            ? (
+            <header className="back-to-results">
+              <Link to={this.props.location.query.back} alt="Back to search page">
+                <i className="icon-angle-double-left" />Tilbake til søkeresultat
+              </Link>
+            </header>
+          ) : ''}
 
-            <section className="work-information">
-              {this.renderTitle(work)}
-              {this.renderPartTitle(work)}
-              {this.renderAuthor(work)}
-              {this.renderOriginalTitle(work)}
-              {this.renderOriginalLanguage(work)}
-              {this.renderYear(work)}
-              {/*this.renderOriginalReleaseDate(work)*/}
-              <Contributors contributors={work.contributors} />
-              {this.renderExcerpt(work)}
-              <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
-                {this.renderAdditionalInfo(work)}
-              </MediaQuery>
-            </section>
-
-            <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
-              {this.renderAdditionalInfoContent(work)}
+          <section className="work-information">
+            <h1 data-automation-id="work_title">{mainTitle}</h1>
+            <h2>{work.partTitle ? `${work.partTitle} ${work.partNumber}` : work.partNumber}</h2>
+            {this.renderAuthor(work)}
+            {this.renderOriginalTitle(work)}
+            {this.renderOriginalLanguage(work)}
+            {this.renderYear(work)}
+            {/*this.renderOriginalReleaseDate(work)*/}
+            <Contributors contributors={work.contributors} />
+            {this.renderExcerpt(work)}
+            <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
+              {this.renderAdditionalInfo(work)}
             </MediaQuery>
+          </section>
 
-            {/*this.renderAvailableMediaTypes(work.publications)*/}
+          <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
+            {this.renderAdditionalInfoContent(work)}
+          </MediaQuery>
 
-            <Publications locationQuery={this.props.location.query}
-                          expandSubResource={this.props.resourceActions.expandSubResource}
-                          publications={work.publications}
-                          startReservation={this.props.reservationActions.startReservation}
-                          toggleParameterValue={this.props.parameterActions.toggleParameterValue}
-                          workLanguage={work.language}
-                          libraries={this.props.libraries}
-                          audiences={Array.isArray(this.props.resources[ this.props.params.workId ].audience) ? this.props.resources[ this.props.params.workId ].audience : [ this.props.resources[ this.props.params.workId ].audience ]}
-                          searchFilterActions={this.props.searchFilterActions}
-                          query={this.props.query} />
+          {/*this.renderAvailableMediaTypes(work.publications)*/}
 
-          </ReactCSSTransitionGroup>
+          <Publications locationQuery={this.props.location.query}
+                        expandSubResource={this.props.resourceActions.expandSubResource}
+                        publications={publicationsWithItems}
+                        startReservation={this.props.reservationActions.startReservation}
+                        toggleParameterValue={this.props.parameterActions.toggleParameterValue}
+                        workLanguage={work.language}
+                        libraries={this.props.libraries}
+                        audiences={Array.isArray(this.props.resources[ this.props.params.workId ].audience) ? this.props.resources[ this.props.params.workId ].audience : [ this.props.resources[ this.props.params.workId ].audience ]}
+                        searchFilterActions={this.props.searchFilterActions}
+                        query={this.props.query} />
+
+        </ReactCSSTransitionGroup>
 
       </div>
     )
@@ -348,6 +340,8 @@ Work.propTypes = {
   query: PropTypes.object.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
   libraries: PropTypes.object.isRequired,
+  items: PropTypes.object.isRequired,
+  intl: intlShape.isRequired,
   audiences: PropTypes.array
 }
 
@@ -419,7 +413,8 @@ function mapStateToProps (state) {
     resources: state.resources.resources,
     isRequesting: state.resources.isRequesting,
     query: state.routing.locationBeforeTransitions.query,
-    libraries: state.application.libraries
+    libraries: state.application.libraries,
+    items: state.resources.items
   }
 }
 
@@ -436,4 +431,4 @@ function mapDispatchToProps (dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Work)
+)(injectIntl(Work))
