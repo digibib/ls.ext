@@ -116,7 +116,7 @@ export default {
   'RegistrationFormPartTwo.personSettingsLegend': 'Personlige instillinger',
   'RegistrationFormPartTwo.yesOption': 'Ja',
   'RegistrationFormPartTwo.noOption': 'Nei',
-  'RegistrationFormPartTwo.chooseBranch': 'Velg "Din filial"',
+  'RegistrationFormPartTwo.chooseBranch': 'Velg ditt bibliotek',
   'RegistrationFormPartTwo.acceptTermsLink': 'Åpne brukervilkårene i et nytt vindu',
   'RegistrationFormPartTwo.acceptTermsLabel': 'Jeg godtar brukervilkårene som låner i biblioteket',
   'RegistrationFormPartTwo.cancel': 'Avbryt',
