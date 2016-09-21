@@ -657,15 +657,6 @@
                     }
                   })
                 }
-                if (input.isSubInput) {
-                  input.values[ index ] = input.values[ index ] || {}
-                  if (input.subInputIndex == 0) {
-                    input.values[ index ].nonEditable = true
-                  }
-                  input.values = input.values || []
-                  input.values[ index ].subjectType = type
-                  input.parentInput.allowAddNewButton = true
-                }
                 rootIndex++
               }
             })
@@ -2817,7 +2808,7 @@
 
         var initInputInterDependencies = function (applicationData) {
           let setInputVisibility = function (inputKeypath, visible) {
-            ractive.set(`${inputKeypath}.visible`, new Boolean(visible).valueOf())
+            ractive.set(`${inputKeypath}.visible`, Boolean(visible).valueOf())
               .then(positionSupportPanels)
               .then(Main.repositionSupportPanelsHorizontally)
           }
