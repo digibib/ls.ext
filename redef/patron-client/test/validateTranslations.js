@@ -71,8 +71,8 @@ const compareTranslations = (messages) => {
       delete engCopy[ key ]
     }
   })
-  if (norCopy !== {})console.log('Unused norwegian translations in i18n: \n', norCopy, '\n')
-  if (engCopy !== {})console.log('Messages missing norwegian translation in i18n: \n', engCopy)
+  if (Object.keys(norCopy).length !== 0) console.log('Unused norwegian translations in i18n: \n', norCopy, '\n')
+  if (Object.keys(engCopy).length !== 0) console.log('Messages missing norwegian translation in i18n: \n', engCopy)
   module.exports.hasUntranslatedMessages = Object.keys(norCopy).length === 0 && Object.keys(engCopy).length === 0
 }
 
