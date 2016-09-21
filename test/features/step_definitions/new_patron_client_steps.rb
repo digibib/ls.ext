@@ -1,4 +1,5 @@
 require 'cgi'
+require_relative '../support/ssn.rb'
 
 When(/^at jeg er i søkegrensesnittet$/) do
   @site.SearchPatronClient.visit
@@ -312,7 +313,7 @@ When(/^jeg legger inn mine personalia som "(barn|voksen)"$/) do |category|
   @browser.text_field(id: 'day').set '%02d' % (rand(29)+1)
   @browser.text_field(id: 'month').set '%02d' % (rand(11)+1)
   @browser.text_field(id: 'year').set category == 'barn' ? juvenile_age : adult_age
-  @browser.text_field(id: 'ssn').set '%011d' % rand(10**11)
+  @browser.text_field(id: 'ssn').set SSN.generate(category == 'barn' ? juvenile_age : adult_age)
 end
 
 When(/^jeg trykker på knappen for å sjekke om jeg er registrert fra før$/) do
