@@ -24,6 +24,9 @@ body {
   [class^='select2'] {
     border-radius: 2px !important;
   }
+  .select2-selection__choice {
+    margin-top: 7px !important;
+  }
   .ui-timepicker-wrapper {
     display: none !important;
   }
@@ -381,7 +384,7 @@ body {
           }
           &[type=search] {
             height: 28px;
-            padding-right: 16px;
+            margin-right: 16px;
           }
           &[type=number] {
             text-align: right;
@@ -439,7 +442,7 @@ body {
         //  padding-right: 1.5em;
         //}
         .searchable {
-          padding-right: 1.5em;
+          padding-right: 13px;
         }
         span.legend {
           display: none;
