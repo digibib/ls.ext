@@ -65,7 +65,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class AppTest {
     private static final int ONE_SECOND = 1000;
@@ -221,95 +220,6 @@ public class AppTest {
                 .body(body);
     }
 
-    private void doSearchForWorkWithFormat(String name, String format) throws UnirestException, InterruptedException {
-        boolean foundWorkInIndex;
-        boolean foundFormatInIndex;
-        int attempts = TEN_TIMES;
-        do {
-            HttpRequest request = Unirest
-                    .get(appURI + "search/work/_search").queryString("q", "work.mainTitle=" + name);
-            HttpResponse<?> response = request.asJson();
-            assertResponse(Status.OK, response);
-            String responseBody = response.getBody().toString();
-            foundWorkInIndex = responseBody.contains(name);
-            foundFormatInIndex = responseBody.contains(format);
-            if (!foundWorkInIndex || !foundFormatInIndex) {
-                LOG.info("Work with given format not found in index yet, waiting one second.");
-                Thread.sleep(ONE_SECOND);
-            }
-        } while ((!foundWorkInIndex || !foundFormatInIndex) && attempts-- > 0);
-        if (foundWorkInIndex && foundFormatInIndex) {
-            assertTrue("Work with given format found in index", true);
-        } else if (foundWorkInIndex) {
-            fail("Work found in index, but not with the correct format.");
-        } else {
-            fail("Work not found in index.");
-        }
-    }
-
-    private void doSearchForWorksWithHoldingbranch(String name, String branch) throws UnirestException, InterruptedException {
-        boolean foundWorkInIndex;
-        boolean foundBranchInIndex;
-        int attempts = TEN_TIMES;
-        do {
-            HttpRequest request = Unirest
-                    .get(appURI + "search/work/_search").queryString("q", "work.mainTitle=" + name);
-            HttpResponse<?> response = request.asJson();
-            assertResponse(Status.OK, response);
-            String responseBody = response.getBody().toString();
-            foundWorkInIndex = responseBody.contains(name);
-            foundBranchInIndex = responseBody.contains(branch);
-            if (!foundWorkInIndex || !foundBranchInIndex) {
-                LOG.info("Work with given branch not found in index yet, waiting one second.");
-                Thread.sleep(ONE_SECOND);
-            }
-        } while ((!foundWorkInIndex || !foundBranchInIndex) && attempts-- > 0);
-        if (foundWorkInIndex && foundBranchInIndex) {
-            assertTrue("Work with given branch found in index", true);
-        } else if (foundWorkInIndex) {
-            fail("Work found in index, but not with the correct branch.");
-        } else {
-            fail("Work not found in index.");
-        }
-    }
-
-    @Test
-    public void test_update_work_index_when_publication_is_updated() throws Exception {
-        kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addCreateNewBiblioExpectation(FIRST_BIBLIO_ID);
-
-        final HttpResponse<JsonNode> createWorkResponse = buildEmptyCreateRequest(appURI + "work").asJson();
-        assertResponse(CREATED, createWorkResponse);
-        final String workUri = getLocation(createWorkResponse);
-        final JsonArray addNameToWorkPatch =
-                buildLDPatch(buildPatchStatement("add", workUri, BaseURI.ontology("mainTitle"), "Paris"));
-        final HttpResponse<String> patchAddNameToWorkPatchResponse = buildPatchRequest(resolveLocally(workUri), addNameToWorkPatch).asString();
-        assertResponse(Status.OK, patchAddNameToWorkPatchResponse);
-
-        final HttpResponse<JsonNode> createPublicationResponse = buildEmptyCreateRequest(appURI + "publication").asJson();
-
-        assertResponse(CREATED, createPublicationResponse);
-        final String publicationUri = getLocation(createPublicationResponse);
-        assertIsUri(publicationUri);
-        assertThat(publicationUri, startsWith(BaseURI.publication()));
-
-        kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
-        final JsonArray addPublicationOfToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, BaseURI.ontology("publicationOf"), workUri, ANY_URI));
-        final HttpResponse<String> patchAddPublicationOfToPublicationPatchResponse = buildPatchRequest(resolveLocally(publicationUri), addPublicationOfToPublicationPatch).asString();
-        assertResponse(Status.OK, patchAddPublicationOfToPublicationPatchResponse);
-
-        kohaSvcMock.addLenientUpdateExpectation(FIRST_BIBLIO_ID);
-        final JsonArray addFormatToPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, BaseURI.ontology("format"), "http://data.deichman.no/format#Audiobook", ANY_URI));
-        final HttpResponse<String> patchAddFormatToPublicationPatchResponse = buildPatchRequest(resolveLocally(publicationUri), addFormatToPublicationPatch).asString();
-        assertResponse(Status.OK, patchAddFormatToPublicationPatchResponse);
-
-        final JsonArray addNameToWorkPatch1 = buildLDPatch(buildPatchStatement("add", workUri, BaseURI.ontology("partTitle"), "Paris"));
-        final HttpResponse<String> patchAddNameToWorkPatchResponse1 = buildPatchRequest(resolveLocally(workUri), addNameToWorkPatch1).asString();
-        assertResponse(Status.OK, patchAddNameToWorkPatchResponse1);
-
-
-        doSearchForWorkWithFormat("Paris", "Audiobook");
-    }
 
     @Test
     public void happy_day_scenario() throws Exception {
@@ -1249,14 +1159,6 @@ public class AppTest {
         HttpResponse<String> stringHttpResponse = Unirest.put(appURI + resolveLocally(workUri) + "/index").asString();
         assertNotNull(stringHttpResponse);
 
-        doSearchForWorksWithHoldingbranch("Hunger", "hutl");
-
-        stringHttpResponse = Unirest.post(appURI + "search/work/reindex")
-                .queryString("recordId", FIRST_BIBLIO_ID)
-                .queryString("branches", "fgry").asString();
-        assertNotNull(stringHttpResponse);
-
-        doSearchForWorksWithHoldingbranch("Hunger", "fgry");
     }
 
     @Test
@@ -1292,7 +1194,7 @@ public class AppTest {
         assertFalse(resourceIsIndexed(persUri2));
         assertFalse(resourceIsIndexed(subjUri));
 
-        // 3) Patch work, and verify that work and its publications getByIsbn indexed within 2 seconds:
+        // 3) Patch work, and verify that work and its publications gets indexed within 2 seconds:
 
         buildPatchRequest(
                 resolveLocally(workUri),
@@ -1303,17 +1205,7 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 2));
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 2));
 
-        // 4) Patch publication, and verify that publication and work getByIsbn reindexed within 2 seconds:
-
-        buildPatchRequest(
-                resolveLocally(pubUri1),
-                buildLDPatch(
-                        buildPatchStatement("add", pubUri1, BaseURI.ontology("hasHoldingBranch"), "branch_xyz123"))).asString();
-
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "branch_xyz123", 2));
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "branch_xyz123", 2));
-
-        // 5) Patch person, and verify that work and publications getByIsbn reindexed within few seconds
+        // 4) Patch person, and verify that work and publications gets reindexed within few seconds
         buildPatchRequest(
                 resolveLocally(persUri1),
                 buildLDPatch(

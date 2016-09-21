@@ -1,14 +1,5 @@
 {
   "type": "Work",
-  "publications": {
-    "type": "Publication",
-    "contributors": {
-    "type": "Contribution",
-    "agent": {
-      "type": "Agent"
-    }
-  }
-  },
   "contributors": {
     "type": "Contribution",
     "agent": {
@@ -20,16 +11,6 @@
       "@id": "deichman:contributor",
       "@container": "@set"
     },
-    "formats": {
-      "@id": "deichman:format",
-      "@container": "@set"
-    },
-    "branches": {
-      "@id": "deichman:hasHoldingBranch",
-      "@container": "@set"
-    },
-    "Publication": "deichman:Publication",
-    "partTitle": "deichman:partTitle",
     "languages": {
       "@id": "deichman:language",
       "@container": "@set"
@@ -62,10 +43,8 @@
     "role": "deichman:role",
     "mainEntry": "deichman:mainEntry",
     "author": "http://data.deichman.no/role#author",
-    "translator": "http://data.deichman.no/role#translator",
     "agent": "deichman:agent",
     "Contribution": "deichman:Contribution",
-    "Agent": "deichman:Agent",
-    "image": "deichman:hasImage"
+    "Agent": "deichman:Agent"
   }
 }
