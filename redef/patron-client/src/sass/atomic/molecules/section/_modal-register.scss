@@ -44,7 +44,6 @@
 
   }
 
-
   p {
     @include registration-grid-component(false);
   }
@@ -93,6 +92,32 @@
 @include breakpoint($small) {
 
   .register-modal {
+
+    address {
+      @include registration-grid-component(true);
+
+      .form-item {
+
+        &:first-child {
+          @include span(12);
+        }
+
+        &:nth-child(2) {
+         @include span(3);
+        }
+
+        &:nth-child(3) {
+          @include span(9 last);
+        }
+
+        label, input, .feedback {
+          @include push(0);
+          @include span(12);
+        }
+
+      }
+
+    }
 
     .date-of-birth {
       @include registration-grid-component(true);
