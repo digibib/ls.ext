@@ -5,6 +5,17 @@
   .form-item {
     @include span(12);
     @include container;
+
+    &.error {
+
+      input {
+        border-width: 2px;
+        border-color: $redColor;
+        background: rgba(255,0,0,0.05);
+      }
+
+    }
+
   }
 
   label {
@@ -25,10 +36,6 @@
 
   .forgot-pin {
     font-size: rhythm(2.5);
-  }
-
-  .cancel-link {
-    margin-left: rhythm(5);
   }
 
 }

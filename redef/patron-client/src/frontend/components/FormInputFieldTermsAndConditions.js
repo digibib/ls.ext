@@ -11,12 +11,21 @@ class FormInputFieldTermsAndConditions extends React.Component {
   renderTermsAndConditions (field) {
     return (
       <div className="terms_and_conditions">
-        <input data-automation-id="accept_terms" onClick={this.props.handleAcceptTerms} id={field.name} {...field.input}
-               type={field.type} />
-        <label htmlFor={field.name}><span>{/* Helper for checkbox styling */}</span></label>
-        <a href="/terms" title="termslink" target="_blank">
-          <FormattedMessage {...this.props.message} />
-        </a>
+        <input data-automation-id="accept_terms"
+               onClick={this.props.handleAcceptTerms}
+               id={field.name}
+               {...field.input}
+               type={field.type}
+        />
+        <label htmlFor={field.name}>
+          <span className="checkbox-wrapper">
+            <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
+            <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+          </span>
+          <span className="checkbox-desc">
+            <FormattedMessage {...this.props.message} />
+          </span>
+        </label>
         {this.props.getValidator(field)}
       </div>
     )

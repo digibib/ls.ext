@@ -10,12 +10,12 @@
 
   &:hover {
     background: $darkGreyColor;
+    cursor: pointer;
   }
 
   a, a:hover {
     text-decoration: none;
     color: $white;
   }
-
 
 }

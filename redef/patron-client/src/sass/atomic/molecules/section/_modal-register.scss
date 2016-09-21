@@ -1,3 +1,11 @@
+@mixin registration-grid-component($container) {
+  @include span(10);
+    @if $container {
+      @include container;
+    }
+  @include push(1);
+}
+
 .register-modal {
   @include container;
   @include modal-content;
@@ -6,100 +14,139 @@
     border: none;
     margin: 0;
     padding: 0;
+
+    &:disabled {
+
+      label {
+        opacity: 0.35;
+      }
+
+      input {
+        opacity: 0.35;
+      }
+
+    }
+
   }
 
   .form-item {
     @include span(12);
     @include container;
+
+    > label {
+      @include registration-grid-component(false);
+    }
+
+    > input, > .select-container {
+      @include registration-grid-component(false);
+      font-size: rhythm(3);
+    }
+
   }
 
-  label {
-    @include span(8);
-    @include push(2);
-  }
-
-  input {
-    @include span(8);
-    @include push(2);
-    font-size: rhythm(3);
-  }
 
   p {
-    @include span(8);
-    @include push(2);
+    @include registration-grid-component(false);
+  }
+
+  legend {
+    @include registration-grid-component(false);
+    margin-top: rhythm(2);
+    text-align: center;
+    font-size: rhythm(4);
+  }
+
+  .feedback {
+    @include registration-grid-component(false);
+    color: $redColor;
+    font-size: rhythm(2.5);
+  }
+
+  .select-container {
+    padding: rhythm(1.5);
+    margin-bottom: rhythm(3);
+  }
+
+  .terms_and_conditions {
+    @include registration-grid-component(true);
+
+    .checkbox-wrapper {
+      @include span(2);
+    }
+
+    .checkbox-desc {
+      @include span(10 last);
+    }
+
+    input[type="checkbox"] {
+      + label {
+        i {
+          font-size: rhythm(4);
+        }
+      }
+    }
+
   }
 
 }
 
-// .register-modal {
-//   width: 95%;
-//   height: auto;
-//   padding: rhythm(6);
-//   background: $white;
-//   margin: 5% auto;
-//   border-radius: 5px;
+@include breakpoint($small) {
 
-//   @include breakpoint($small){
-//     width: 40%;
-//   }
+  .register-modal {
 
-//   h1 {
-//     text-align: center;
-//     @include semiBoldFont;
-//   }
-
-//   h2 {
-//     @include regularFont;
-//     margin-bottom: rhythm(1);
-//   }
-
-//   h3 {
-//     @include regularFontSize;
-//     text-align: center;
-//   }
-
-//   h4 {
-//     color: $darkGreyColor;
-//     text-align: left;
-//     margin: 0;
-//     font-size: 95%
-//   }
-
-//   input[type=text] {
-//     width: 240px;
-//   }
-
-//   @include breakpoint($xlarge){
-//     #address {
-//       width: 500px;
-//       display: block;
-//     }
-//   }
-
-
-//   button {
-//     width: 100%;
-//   }
-
-//   .date-of-birth {
-//     .item {
-//       display: inline-block;
+    .date-of-birth {
+      @include registration-grid-component(true);
       
-//       input {
-//         margin-right: rhythm(4);
-//         width: 80px;
-//       }
-      
-//     }
-//   }
+      .form-item {
+        @include span(4);
 
-//   .select-container {
-//     max-width: 240px;
-//     border-width: 1px;
-//   }
+        &:nth-child(3) {
+          @include span(4 last);
+        }
 
-//   input[type=radio] p {
-//     display: inline-block !important;
-//   }
+      }
 
-// }
+    }
+
+    .terms_and_conditions {
+
+      .checkbox-wrapper {
+        @include span(1);
+      }
+
+      .checkbox-desc {
+        @include span(11 last);
+        padding-top: 0.25em;
+      }
+
+    }
+
+  }
+
+}
+
+@include breakpoint($medium) {
+
+  .registration-modal-wrapper {
+
+    .modal-content {
+      @include span(8);
+      @include push(2);
+    }
+
+  }
+
+}
+
+@include breakpoint($large) {
+
+  .registration-modal-wrapper {
+
+    .modal-content {
+      @include span(6);
+      @include push(3);
+    }
+
+  }
+
+}

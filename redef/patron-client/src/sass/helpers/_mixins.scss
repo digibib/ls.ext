@@ -50,6 +50,14 @@
     margin-bottom: rhythm(1);
   }
 
+  a:hover {
+    cursor: pointer;
+  }
+
+  .cancel-link {
+    margin-left: rhythm(5);
+  }
+
 }
 
 @mixin wrapper-container() {

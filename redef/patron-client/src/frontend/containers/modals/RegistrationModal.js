@@ -66,14 +66,15 @@ class RegistrationModal extends React.Component {
       return this.renderSuccess()
     }
     return (
-      <div>
-        <section className="register-modal">
-          <div data-automation-id="registration_modal">
-            <NameAndSsnForm />
-            {this.props.checkForExistingUserSuccess ? <FormPartTwo /> : null}
-          </div>
-        </section>
-      </div>
+      <section className="register-modal">
+        <button className="close-modal-button" onClick={this.props.modalActions.hideModal}>
+          <i className="icon-cancel" />
+        </button>
+        <div data-automation-id="registration_modal">
+          <NameAndSsnForm />
+          {this.props.checkForExistingUserSuccess ? <FormPartTwo /> : null}
+        </div>
+      </section>
     )
   }
 }

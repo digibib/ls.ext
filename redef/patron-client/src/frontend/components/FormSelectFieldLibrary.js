@@ -1,4 +1,4 @@
-import React, { createElement, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl'
 import { Field } from 'redux-form'
 
@@ -19,16 +19,17 @@ class FormSelectFieldLibrary extends React.Component {
   }
 
   render () {
-    const formattedHeaderMsg = <FormattedMessage {...this.props.message} />
-    const header = createElement(this.props.headerTag, {}, formattedHeaderMsg)
     return (
       <div className="form-item">
-        {header}
+        {!this.props.excludeLabel && !this.props.isLabelUnderInput
+          ? <label htmlFor={this.props.name}><FormattedMessage {...this.props.message} /></label> : null}
         <div className="select-container">
           <Field name={this.props.name} component="select">
             {this.renderLibraryOptions()}
           </Field>
         </div>
+        {!this.props.excludeLabel && this.props.isLabelUnderInput
+          ? <label htmlFor={this.props.name}><FormattedMessage {...this.props.message} /></label> : null}
       </div>
     )
   }
@@ -37,9 +38,11 @@ class FormSelectFieldLibrary extends React.Component {
 FormSelectFieldLibrary.propTypes = {
   libraries: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired,
-  headerTag: PropTypes.string.isRequired,
+  headerTag: PropTypes.string,
   name: PropTypes.string.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  isLabelUnderInput: PropTypes.bool,
+  excludeLabel: PropTypes.bool
 }
 
 export default injectIntl(FormSelectFieldLibrary)
