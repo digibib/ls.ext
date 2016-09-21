@@ -3783,22 +3783,22 @@
         subfields:
           -
             a:
-              predicate: "RAW.locationCategory"
-              object:
-                datatype: "literal"
-          -
-            c:
-              predicate: "RAW.locationDewey"
+              predicate: "MIGRATION.locationCategory"
               object:
                 datatype: "literal"
           -
             b:
-              predicate: "RAW.locationFormat"
+              predicate: "ONTOLOGY.locationFormat"
+              object:
+                datatype: "literal"
+          -
+            c:
+              predicate: "ONTOLOGY.locationClassNumber"
               object:
                 datatype: "literal"
           -
             d:
-              predicate: "RAW.locationSignature"
+              predicate: "ONTOLOGY.locationSignature"
               object:
                 datatype: "literal"
     -

@@ -1,0 +1,42 @@
+# 1) Merge locationCategory code 'a' into locationFormat
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE { 
+  ?publication :locationFormat ?format .
+}
+
+INSERT {
+  ?publication :locationFormat `concat("a",str(?format))` .
+}
+
+WHERE {
+  ?publication migration:locationCategory "a" ;
+    a :Publication .
+  OPTIONAL {?publication :locationFormat ?format .}
+}
+;
+
+
+# 2) Remove locationCategory
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+
+WITH <http://deichman.no/migration>
+
+DELETE { 
+  ?publication migration:locationCategory ?category .
+}
+
+WHERE {
+  ?publication migration:locationCategory ?category ;
+    a :Publication .
+}
+;
