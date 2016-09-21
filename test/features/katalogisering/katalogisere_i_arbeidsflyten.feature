@@ -122,6 +122,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at det finnes et verk med forfatter
     Når jeg legger inn forfatternavnet på startsida
     Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
     Så klikker jeg på fanen "Beskriv verk"
     Så trykker jeg på "Slett verket"-knappen
     Så trykker jeg på "Slett"-knappen i dialogen
@@ -138,6 +139,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at det finnes et verk med forfatter
     Når jeg legger inn forfatternavnet på startsida
     Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg venter litt
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter
@@ -158,6 +160,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Slett"-knappen i dialogen
     Så trykker jeg på "Ok"-knappen i dialogen
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og jeg venter litt
     Så jeg skriver verdien på tittelnummer i feltet som heter "Utgivelser" og trykker enter
     Så får jeg ingen treff
 
@@ -191,7 +194,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig organisasjon i feltet "Utgitt av" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen
+    Og jeg venter litt
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så fjerner jeg valgt verdi i feltet "Utgitt av"
     Så velger jeg aktørtype "Person"
     Og at jeg skriver inn tilfeldig person i feltet "Utgitt av" og trykker enter
