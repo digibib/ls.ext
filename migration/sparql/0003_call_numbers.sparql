@@ -31,7 +31,7 @@ PREFIX migration: <http://migration.deichman.no/>
 
 WITH <http://deichman.no/migration>
 
-DELETE { 
+DELETE {
   ?publication migration:locationCategory ?category .
 }
 
