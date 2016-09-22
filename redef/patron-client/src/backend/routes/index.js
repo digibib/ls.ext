@@ -39,6 +39,7 @@ module.exports = (app) => {
               <RouterContext {...renderProps} />
             </IntlProvider>
           </Provider>)
+        const bundle = process.env.NODE_ENV === 'production' ? 'bundle.min.js' : 'bundle.js'
         const HTML =
           `<!DOCTYPE html>
             <html lang="no">
@@ -50,7 +51,7 @@ module.exports = (app) => {
             </head>
             <body>
             <div id="app">${componentHTML}</div>
-            <script type="text/javascript" src="/dist/bundle.js"></script></body>
+            <script type="text/javascript" src="/dist/${bundle}"></script></body>
             </html>`
         res.end(HTML)
       } else {
