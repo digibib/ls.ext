@@ -33,7 +33,8 @@ export function receiveTranslation (locale, messages) {
 export function loadLanguage (locale) {
   return (dispatch, getState) => {
     locale = locale || getState().application.locale
-    const url = `${Constants.backendUri}/translations/${locale}`
+    //isomorphic fetch requires absolute urls
+    const url = `${Constants.baseURL}${Constants.backendUri}/translations/${locale}`
     dispatch(requestTranslation(locale))
     return fetch(url, {
       method: 'GET',

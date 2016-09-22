@@ -3,6 +3,7 @@ import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
 import { processSearchResponse } from '../utils/searchResponseParser'
 import { toggleParameterValue } from './ParameterActions'
+import Constants from '../constants/Constants'
 
 export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
@@ -43,8 +44,8 @@ export function search () {
 
     const inputQuery = locationQuery.query
     dispatch(requestSearch(inputQuery))
-
-    return fetch(`/q${getState().routing.locationBeforeTransitions.search}`, {
+    //isomorphic fetch requires absolute urls
+    return fetch(`${Constants.baseURL}/q${getState().routing.locationBeforeTransitions.search}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json'

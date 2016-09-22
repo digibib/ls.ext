@@ -4,6 +4,7 @@ import * as types from '../constants/ActionTypes'
 import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
+import Constants from '../constants/Constants'
 
 export function requestLogin (username) {
   return {
@@ -48,7 +49,8 @@ export function showLoginDialog (successAction) {
 }
 
 export function login (username, password, successActions = []) {
-  const url = '/api/v1/login'
+  //isomorphic fetch requires absolute urls
+  const url = `${Constants.baseURL}/api/v1/login`
   return dispatch => {
     dispatch(requestLogin(username))
     return fetch(url, {
@@ -98,7 +100,8 @@ export function logoutFailure (error) {
 }
 
 export function logout () {
-  const url = '/api/v1/logout'
+  //isomorphic fetch requires absolute urls
+  const url = `${Constants.baseURL}/api/v1/logout`
   return dispatch => {
     dispatch(requestLogout())
     return fetch(url, {
@@ -141,7 +144,8 @@ export function loginStatusFailure (error) {
 }
 
 export function updateLoginStatus () {
-  const url = '/api/v1/loginStatus'
+  //isomorphic fetch requires absolute urls
+  const url = `${Constants.baseURL}/api/v1/loginStatus`
   return dispatch => {
     dispatch(requestLoginStatus())
     return fetch(url, {
@@ -161,7 +165,8 @@ export function requireLoginBeforeAction (successAction) {
 }
 
 export function updateLoginStatusBeforeAction (successAction) {
-  const url = '/api/v1/loginStatus'
+  //isomorphic fetch requires absolute urls
+  const url = `${Constants.baseURL}/api/v1/loginStatus`
   return dispatch => {
     dispatch(requestLoginStatus())
     return fetch(url, {

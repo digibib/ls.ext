@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
 import { mapLibraries } from '../utils/libraryMapper'
+import Constants from '../constants/Constants'
 
 export function requestLibraries () {
   return {
@@ -31,7 +32,7 @@ export function librariesFailure (error) {
 export function fetchLibraries () {
   return dispatch => {
     dispatch(requestLibraries())
-    return fetch('/api/v1/libraries', {
+    return fetch(`${Constants.baseURL}/api/v1/libraries`, {
       method: 'GET'
     })
       .then(response => {

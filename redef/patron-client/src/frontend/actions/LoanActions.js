@@ -5,6 +5,7 @@ import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
 import * as ProfileActions from './ProfileActions'
+import Constants from '../constants/Constants'
 
 export function startExtendLoan (checkoutId) {
   return requireLoginBeforeAction(showModal(ModalComponents.EXTEND_LOAN, { checkoutId: checkoutId }))
@@ -46,7 +47,8 @@ export function extendLoanFailure (error, checkoutId) {
 }
 
 export function extendLoan (checkoutId) {
-  const url = '/api/v1/checkouts'
+  //isomorphic fetch requires absolute urls
+  const url = `${Constants.baseURL}/api/v1/checkouts`
   return dispatch => {
     dispatch(requestExtendLoan(checkoutId))
     return fetch(url, {

@@ -1,8 +1,10 @@
 import fetch from 'isomorphic-fetch'
+import Constants from '../constants/Constants'
 
 export default (values) => {
   return new Promise((resolve, reject) => {
-    fetch('/api/v1/validation', {
+    //isomorphic fetch requires absolute urls
+    fetch(`${Constants.baseURL}/api/v1/validation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

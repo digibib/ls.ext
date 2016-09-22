@@ -3,6 +3,7 @@ import * as types from '../constants/ActionTypes'
 import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import * as LoginActions from './LoginActions'
+import Constants from '../constants/Constants'
 
 export function startRegistration () {
   return showModal(ModalComponents.REGISTRATION, {})
@@ -43,8 +44,8 @@ export function postRegistrationSuccess (username, password, categoryCode) {
 }
 
 export function checkForExistingUser () {
-  console.log('checkforexistinguser')
-  const url = '/api/v1/checkforexistinguser'
+  //isomorphic fetch requires absolute urls
+  const url = `${Constants.baseURL}/api/v1/checkforexistinguser`
   return (dispatch, getState) => {
     const { registrationPartOne: { values: { firstName, lastName, day, month, year, ssn } } } = getState().form
     const registrationInfo = {
@@ -122,7 +123,8 @@ export function toggleAcceptTerms () {
 }
 
 export function postRegistration (successAction) {
-  const url = '/api/v1/registration'
+  //isomorphic fetch requires absolute urls
+  const url = `${Constants.baseURL}/api/v1/registration`
   return (dispatch, getState) => {
     const {
       registrationPartOne: { values: { firstName, lastName, day, month, year, ssn } },
