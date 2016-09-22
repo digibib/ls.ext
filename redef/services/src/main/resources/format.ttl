@@ -67,11 +67,6 @@ format:DAISY a duo:Format ;
   rdfs:label "DAISY"@no ;
   rdfs:label "DAISY"@en .
 
-format:EBokBib a duo:Format ;
-  duo:code "nb" ;
-  rdfs:label "eBokBib"@no ;
-  rdfs:label "eBokBib"@en .
-
 format:ComputerFile a duo:Format ;
   duo:code "na" ;
   rdfs:label "Nedlastbar fil"@no ;
@@ -135,17 +130,6 @@ format:Diapositive a duo:Format ;
   rdfs:label "Dias"@no ;
   rdfs:label "Diapositive"@en .
 
-format:Microfiche a duo:Format ;
-  duo:code "ic" ;
-  rdfs:label "Mikrofiche"@no ;
-  rdfs:label "Microfiche"@en .
-
-format:MicrofilmReel a duo:Format ;
-  duo:code "ib" ;
-  rdfs:label "Mikrofilm"@no ;
-  rdfs:label "Microfilm reel"@en .
-
-format:Poster a duo:Format ;
-  duo:code "fm" ;
-  rdfs:label "Plansje"@no ;
-  rdfs:label "Poster"@en .
+format:MusicalInstrument a duo:Format ;
+  rdfs:label "Musikkinstrument"@no ;
+  rdfs:label "Musical instrument"@en .
