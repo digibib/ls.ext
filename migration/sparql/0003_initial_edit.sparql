@@ -24,12 +24,41 @@ WHERE {
 ;
 
 
-# 2) Remove locationCategory
+# 2) Add parent titles
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
+
 WITH <http://deichman.no/migration>
-DELETE { ?publication migration:locationCategory ?o .}
-WHERE { ?publication migration:locationCategory ?o .}
+
+INSERT {
+	?publication :mainTitle ?title .
+}
+
+WHERE {
+	?publication migration:parentRecordTitle ?title .
+	MINUS {?publication :mainTitle ?o .}
+}
+;
+
+
+# 3) Add main titles from parent records
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+	?publication :mainTitle ?title .
+}
+
+WHERE {
+	?publication migration:parentRecordId ?id .
+	MINUS {?publication :mainTitle ?o .}
+	?parent :recordId ?id ;
+		:mainTitle ?title .
+}
 ;
