@@ -1,5 +1,16 @@
 const requestProxy = require('express-request-proxy')
 const path = require('path')
+const reactDomServer = require('react-dom/server')
+const reactRouter = require('react-router')
+const match = reactRouter.match
+const RouterContext = reactRouter.RouterContext
+const routes = require('../../frontend/routes').Routes
+import { Provider } from 'react-redux'
+import store from '../../frontend/store'
+import { IntlProvider } from 'react-intl'
+import Root from '../../frontend/containers/Root'
+const Route = reactRouter.Route
+import React from 'react'
 
 module.exports = (app) => {
   require('./auth')(app)
@@ -17,7 +28,38 @@ module.exports = (app) => {
     timeout: 30 * 1000 // 30 seconds
   }))
 
-  app.get('*', (request, response) => {
-    response.sendFile(path.resolve(__dirname, '..', '..', '..', 'public', 'dist', 'index.html'))
+  app.use((req, res) => {
+    match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+      if (error) {
+        res.status(500).send(error.message)
+      } else if (redirectLocation) {
+        res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+      } else if (renderProps) {
+        console.log('renderProps', renderProps)
+        const componentHTML = reactDomServer.renderToString(<Provider store={store}><IntlProvider key="intl"
+                                                                                                  locale="en"><RouterContext {...renderProps} /></IntlProvider></Provider>)
+        const HTML =
+          `<!DOCTYPE html>
+            <html lang="no">
+            <head>
+                <meta charset="utf-8" />
+                <meta http-equiv="x-ua-compatible" content="ie=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                <title>Deichmanske bibliotek - søk</title>
+            </head>
+            <body>
+            <div id="app">${componentHTML}</div>
+            <script type="text/javascript" src="/dist/bundle.js"></script></body>
+            </html>`
+        res.end(HTML)
+      } else {
+        res.status(404).send('Not found')
+      }
+    })
   })
+
+  /*app.get('*', (request, response) => {
+    response.sendFile(path.resolve(__dirname, '..', '..', '..', 'public', 'dist', 'index.html'))
+   })*/
+
 }

@@ -36,7 +36,7 @@ export function searchFailure (error) {
 
 export function search () {
   return (dispatch, getState) => {
-    const locationQuery = getState().routing.locationBeforeTransitions.query
+    const locationQuery = getState().routing.locationBeforeTransitions ? getState().routing.locationBeforeTransitions.query : null
     if (!locationQuery || !locationQuery.query) {
       return
     }

@@ -1,9 +1,11 @@
 'use strict'
+require('babel-register')
 const express = require('express')
 const session = require('express-session')
 const uuid = require('node-uuid')
 const port = process.env.PORT || 8000
 const app = express()
+require('localstorage-polyfill')
 
 app.use(session({
   genid: req => uuid.v4(),

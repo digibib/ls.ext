@@ -158,7 +158,7 @@ function mapStateToProps (state) {
     isSearching: state.search.isSearching,
     searchError: state.search.searchError,
     filters: state.search.filters,
-    locationQuery: state.routing.locationBeforeTransitions.query,
+    locationQuery: state.routing.locationBeforeTransitions ? state.routing.locationBeforeTransitions.query : {},
     resources: state.resources.resources
   }
 }

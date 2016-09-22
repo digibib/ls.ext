@@ -8,19 +8,27 @@ import adapter from 'redux-localstorage/lib/adapters/localStorage'
 import filter from 'redux-localstorage-filter'
 import rootReducer from '../reducers'
 
-const storage = compose(
+const storage = typeof window !== 'undefined' ? compose(
   filter([ 'application.locale' ])
-)(adapter(window.localStorage))
+)(adapter(window.localStorage)) : null
 
 const reduxRouterMiddleware = routerMiddleware(browserHistory)
 const loggerMiddleware = createLogger()
-const createPersistentStoreWithMiddleware = compose(
+const createPersistentStoreWithMiddleware = typeof window !== 'undefined'
+  ? compose(
   applyMiddleware(
     thunkMiddleware,
     loggerMiddleware,
     reduxRouterMiddleware
   ),
   persistState(storage, 'patron-client')
+)(createStore)
+  : compose(
+  applyMiddleware(
+    thunkMiddleware,
+    loggerMiddleware,
+    reduxRouterMiddleware
+  )
 )(createStore)
 const store = createPersistentStoreWithMiddleware(rootReducer)
 
