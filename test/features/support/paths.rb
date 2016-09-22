@@ -35,7 +35,7 @@ module Paths
   end
 
   def opac
-    "http://koha:#{port(:koha_opac)}"
+    "http://xkoha:#{port(:koha_opac)}"
   end
 
   def intranet(path=nil)
@@ -83,7 +83,7 @@ module Paths
       :koha_rest_api => "/api/v1/"
       }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
-    "http://koha:#{port(:koha_intra)}#{paths[path.to_sym]}"
+    "http://xkoha:#{port(:koha_intra)}#{paths[path.to_sym]}"
   end
 
   def catalinker(path=nil)

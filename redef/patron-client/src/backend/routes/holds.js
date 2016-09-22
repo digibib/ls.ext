@@ -4,7 +4,7 @@ const jsonParser = bodyParser.json()
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
   app.post('/api/v1/holds', jsonParser, (request, response) => {
-    fetch('http://koha:8081/api/v1/holds', {
+    fetch('http://xkoha:8081/api/v1/holds', {
       method: 'POST',
       body: JSON.stringify({
         borrowernumber: Number(request.session.borrowerNumber),
@@ -26,7 +26,7 @@ module.exports = (app) => {
   })
 
   app.delete('/api/v1/holds', jsonParser, (request, response) => {
-    fetch(`http://koha:8081/api/v1/holds/${request.body.reserveId}`, {
+    fetch(`http://xkoha:8081/api/v1/holds/${request.body.reserveId}`, {
       method: 'DELETE'
     }).then(res => {
       if (res.status === 200) {

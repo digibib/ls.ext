@@ -144,7 +144,7 @@ delete_koha: stop_koha
 	$(CMD) -c 'sudo docker rm koha'
 
 rebuild_zebra:
-	$(CMD) -c 'sudo docker exec koha koha-rebuild-zebra -full -v -b name'
+	$(CMD) -c 'sudo docker exec xkoha koha-rebuild-zebra -full -v -b name'
 
 stop_ship:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"

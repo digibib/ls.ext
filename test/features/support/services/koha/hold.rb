@@ -20,7 +20,7 @@ module KohaRESTAPI
         'Content-Type' => 'application/json'
       }
 
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI(intranet(:koha_rest_api) + "holds")
       res = http.post(uri, params.to_json, headers)
       expect(res.code).to eq("201"), "got unexpected #{res.code} when adding hold.\nResponse body: #{res.body}"
@@ -35,7 +35,7 @@ module KohaRESTAPI
         'Cookie' => @context[:koha_rest_api_cookie],
         'Content-Type' => 'application/json'
       }
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI("#{intranet(:koha_rest_api)}holds/#{params[:reserve_id]}")
       res = http.put(uri, params.to_json, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when updating reserve.\nResponse body: #{res.body}"
@@ -47,7 +47,7 @@ module KohaRESTAPI
         'Cookie' => @context[:koha_rest_api_cookie],
         'Content-Type' => 'application/json'
       }
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI("#{intranet(:koha_rest_api)}holds/#{reserve_id}")
       res = http.delete(uri, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when deleting reserve.\nResponse body: #{res.body}"

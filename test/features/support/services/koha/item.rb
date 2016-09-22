@@ -14,7 +14,7 @@ module KohaRESTAPI
     end
 
     def get_extended_biblio(itemnumber)
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI(intranet(:koha_rest_api) + "items/#{itemnumber}/biblio")
       res = http.get(uri)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when listing extended item with biblio.\nResponse body: #{res.body}"

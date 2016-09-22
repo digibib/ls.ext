@@ -7,7 +7,7 @@ networks:
 
 services:
   koha:
-    container_name: koha
+    container_name: xkoha
     image: "digibib/koha:${KOHA_IMAGE_TAG}"
     networks:
       - backend
@@ -16,7 +16,7 @@ services:
       - koha_index
       - sms
       - smtp
-      - sip
+      - sip_proxy
     cap_add:
       - SYS_NICE
       - DAC_READ_SEARCH
@@ -201,7 +201,7 @@ services:
         max-size: "1m"
         max-file: "2"
 
-  sip:
+  sip_proxy:
     container_name: sip_proxy
     image: "digibib/tcp-proxy:14dc5417bf211317351a0bae084db12c64a1dd45"
     networks:
@@ -212,7 +212,7 @@ services:
       - "/app/tcp-proxy"
       - "-vv"
       - "-r"
-      - "koha:${SIP_PORT}"
+      - "xkoha:${SIP_PORT}"
       - "-replace=AB100301~AB0301"
     logging:
       driver: "json-file"
@@ -233,8 +233,8 @@ services:
     ports:
       - "8010:8010"
     environment:
-      KOHA_OPAC_PORT: "http://koha:8080"
-      KOHA_INTRA_PORT: "http://koha:8081"
+      KOHA_OPAC_PORT: "http://xkoha:8080"
+      KOHA_INTRA_PORT: "http://xkoha:8081"
       SERVICES_PORT: "http://services:8005"
     logging:
       driver: "json-file"

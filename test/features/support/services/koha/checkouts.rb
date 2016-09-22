@@ -19,7 +19,7 @@ module KohaRESTAPI
         'Content-Type' => 'application/json'
       }
 
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI(intranet(:koha_rest_api) + "checkouts?borrowernumber=#{borrowernumber.to_i}")
       res = http.get(uri, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when listing checkouts.\nResponse body: #{res.body}"

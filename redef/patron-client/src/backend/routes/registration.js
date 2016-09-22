@@ -15,7 +15,7 @@ module.exports = (app) => {
       ssn: request.body.ssn
     }
 
-    fetch(`http://koha:8081/api/v1/checkexistinguser?${querystring.stringify(params)}`, {})
+    fetch(`http://xkoha:8081/api/v1/checkexistinguser?${querystring.stringify(params)}`, {})
     .then(res => {
       if (res.status === 200) {
         return res.json()
@@ -75,7 +75,7 @@ module.exports = (app) => {
 
   function registerPatron (patron) {
     // ssn is needed only for NL sync, so exclude it from POST request
-    return fetch('http://koha:8081/api/v1/patrons', {
+    return fetch('http://xkoha:8081/api/v1/patrons', {
       method: 'POST',
       body: JSON.stringify(patron, (k, v) => k === 'ssn' ? undefined : v)
     }).then(res => {
@@ -112,7 +112,7 @@ module.exports = (app) => {
         }
       }
     }))
-    return fetch(`http://koha:8081/api/v1/messagepreferences/${patron.borrowernumber}`, {
+    return fetch(`http://xkoha:8081/api/v1/messagepreferences/${patron.borrowernumber}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json'
@@ -132,7 +132,7 @@ module.exports = (app) => {
 
   function setDefaultSyncStatusAndAttributes (patron) {
     // TODO: standardize Koha API on PUT params in body?
-    return fetch(`http://koha:8081/api/v1/patronsyncdefaults/${patron.borrowernumber}?ssn=${patron.ssn}&password=${patron.password}`, {
+    return fetch(`http://xkoha:8081/api/v1/patronsyncdefaults/${patron.borrowernumber}?ssn=${patron.ssn}&password=${patron.password}`, {
       method: 'PUT'
     }).then(res => {
       if (res.status === 200) {
@@ -144,7 +144,7 @@ module.exports = (app) => {
   }
 
   function sendAccountDetailsByMail (patron) {
-    return fetch(`http://koha:8081/api/v1/messaging/patrons/${patron.borrowernumber}/accountdetails`, {
+    return fetch(`http://xkoha:8081/api/v1/messaging/patrons/${patron.borrowernumber}/accountdetails`, {
       method: 'PUT'
     }).then(res => {
       if (res.status === 200) {

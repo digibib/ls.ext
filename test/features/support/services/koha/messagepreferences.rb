@@ -14,7 +14,7 @@ module KohaRESTAPI
 	      'Cookie' => @context[:koha_rest_api_cookie],
 	      'Content-Type' => 'application/json'
 	    }
-	    http = Net::HTTP.new("koha", 8081)
+	    http = Net::HTTP.new("xkoha", 8081)
 	    uri = URI("#{intranet(:koha_rest_api)}messagepreferences/#{borrowernumber}")
 	    res = http.get(uri, headers)
 	    expect(res.code).to eq("200"), "got unexpected #{res.code} when listing borrower message preferences.\nResponse body: #{res.body}"
@@ -35,7 +35,7 @@ module KohaRESTAPI
         'Cookie' => @context[:koha_rest_api_cookie],
         'Content-Type' => 'application/json'
       }
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI("#{intranet(:koha_rest_api)}messagepreferences/#{borrowernumber}")
       res = http.put(uri, params.to_json, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when updating borrower message preferences.\nResponse body: #{res.body}"

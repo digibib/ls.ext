@@ -5,8 +5,7 @@ require "net/http"
 require "uri"
 
 Ports = {
-  :koha_opac =>  { :host => "koha", :port => "8080", :path =>'/' },
-  :koha_intra => { :host => "koha", :port => "8081", :path =>'/' },
+  :koha_intra => { :host => "xkoha", :port => "8081", :path =>'/' },
   :services => { :host => "services", :port => "8005", :path =>'/application.wadl?detail=true' },
   :patron_client_search => { :host => "patron_client", :port => "8000", :path =>'/' },
   :patron_client_person => { :host => "patron_client", :port => "8000", :path =>'/person/dummyid' },

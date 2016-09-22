@@ -14,7 +14,7 @@ module KohaRESTAPI
         'Cookie' => @context[:koha_rest_api_cookie],
         'Content-Type' => 'application/json'
       }
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI("#{intranet(:koha_rest_api)}biblios/#{biblionumber}")
       res = http.get(uri, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when fetching biblio.\nResponse body: #{res.body}"
@@ -27,7 +27,7 @@ module KohaRESTAPI
         'Content-Type' => 'text/xml'
       }
 
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI(intranet(:koha_rest_api) + "biblios")
       res = http.post(uri, marcxml, headers)
       expect(res.code).to eq("201"), "got unexpected #{res.code} when adding biblio.\nResponse body: #{res.body}"
@@ -44,7 +44,7 @@ module KohaRESTAPI
         'Cookie' => @context[:koha_rest_api_cookie],
         'Content-Type' => 'application/json'
       }
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI("#{intranet(:koha_rest_api)}biblios/#{biblionumber}")
       res = http.delete(uri, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when deleting biblio.\nResponse body: #{res.body}"

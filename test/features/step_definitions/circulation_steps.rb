@@ -194,17 +194,17 @@ When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
 end
 
 When(/^reserveringskøen kjøres$/) do
-  `docker exec koha koha-foreach --enabled /usr/share/koha/bin/cronjobs/holds/build_holds_queue.pl`
+  `docker exec xkoha koha-foreach --enabled /usr/share/koha/bin/cronjobs/holds/build_holds_queue.pl`
   STDERR.puts "build_holds_queue.pl has returned"
 end
 
 When(/^katalogen reindekseres$/) do
-  `docker exec koha koha-rebuild-zebra -v -b --wait-for-lock #{ENV['KOHA_INSTANCE']}`
+  `docker exec xkoha koha-rebuild-zebra -v -b --wait-for-lock #{ENV['KOHA_INSTANCE']}`
   STDERR.puts "koha-rebuild-zebra has returned"
 end
 
 When(/^meldingskøen kjøres$/) do
-  `docker exec koha koha-foreach --enabled /usr/share/koha/bin/cronjobs/process_message_queue.pl`
+  `docker exec xkoha koha-foreach --enabled /usr/share/koha/bin/cronjobs/process_message_queue.pl`
   STDERR.puts "process_message_queue.pl has returned"
 end
 

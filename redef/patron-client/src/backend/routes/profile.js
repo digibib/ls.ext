@@ -8,7 +8,7 @@ const extendedValidator = require('../utils/extendedValidator')(userInfoForm)
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
   app.get('/api/v1/profile/info', (request, response) => {
-    fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`)
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
@@ -40,7 +40,7 @@ module.exports = (app) => {
       email: request.body.email
     }
 
-    fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
       method: 'PUT',
       body: JSON.stringify(patron)
     }).then(res => {
@@ -95,7 +95,7 @@ module.exports = (app) => {
   })
 
   function fetchAllHoldsAndPickups (request) {
-    return fetch(`http://koha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`)
+    return fetch(`http://xkoha:8081/api/v1/holds?borrowernumber=${request.session.borrowerNumber}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
@@ -111,7 +111,7 @@ module.exports = (app) => {
   }
 
   function fetchHoldFromBiblioNumber (hold, request) {
-    return fetch(`http://koha:8081/api/v1/biblios/${hold.biblionumber}`)
+    return fetch(`http://xkoha:8081/api/v1/biblios/${hold.biblionumber}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
@@ -140,7 +140,7 @@ module.exports = (app) => {
   }
 
   function fetchAllCheckouts (request) {
-    return fetch(`http://koha:8081/api/v1/checkouts?borrowernumber=${request.session.borrowerNumber}`)
+    return fetch(`http://xkoha:8081/api/v1/checkouts?borrowernumber=${request.session.borrowerNumber}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
@@ -156,7 +156,7 @@ module.exports = (app) => {
   }
 
   function fetchLoanFromItemNumber (loan, request) {
-    return fetch(`http://koha:8081/api/v1/items/${loan.itemnumber}/biblio`)
+    return fetch(`http://xkoha:8081/api/v1/items/${loan.itemnumber}/biblio`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
@@ -177,7 +177,7 @@ module.exports = (app) => {
   }
 
   app.post('/api/v1/profile/settings', jsonParser, (request, response) => {
-    fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
+    fetch(`http://xkoha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json'
@@ -198,7 +198,7 @@ module.exports = (app) => {
 
   app.put('/api/v1/profile/settings/password', jsonParser, (request, response) => {
     if (bcrypt.compareSync(request.body.currentPassword, request.session.passwordHash)) {
-      fetch(`http://koha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+      fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
         method: 'PUT',
         headers: {
           'Content-type': 'application/json'
@@ -222,7 +222,7 @@ module.exports = (app) => {
   })
 
   app.get('/api/v1/profile/settings', (request, response) => {
-    return fetch(`http://koha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`)
+    return fetch(`http://xkoha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()

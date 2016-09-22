@@ -37,7 +37,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
     private NewCookie sessionCookie;
 
     public KohaAdapterImpl(String kohaPort) {
-        this.kohaPort = kohaPort != null ? kohaPort : System.getProperty("KOHA_PORT", "http://koha:8081");
+        this.kohaPort = kohaPort != null ? kohaPort : System.getProperty("KOHA_PORT", "http://xkoha:8081");
         log.info("Koha adapter started with kohaPort: " + this.kohaPort);
     }
 

@@ -4,7 +4,7 @@ const jsonParser = bodyParser.json()
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
   app.get('/api/v1/libraries', jsonParser, (request, response) => {
-    fetch('http://koha:8081/api/v1/libraries')
+    fetch('http://xkoha:8081/api/v1/libraries')
     .then(res => {
       if (res.status === 200) {
         return res.json()

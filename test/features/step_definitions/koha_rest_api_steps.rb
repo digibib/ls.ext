@@ -189,7 +189,7 @@ Then(/^kan jeg følge lenken og finne den bibliografiske posten$/) do
     'Cookie' => @context[:koha_rest_api_cookie],
     'Content-Type' => 'application/json'
   }
-  http = Net::HTTP.new("koha", 8081)
+  http = Net::HTTP.new("xkoha", 8081)
   uri = URI(@context[:biblio_api_response][:url])
   res = http.get(uri, headers)
   expect(res.code).to eq("200"), "got unexpected #{res.code} when fetching biblio.\nResponse body: #{res.body}"

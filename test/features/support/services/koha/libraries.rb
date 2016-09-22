@@ -14,7 +14,7 @@ module KohaRESTAPI
 	      'Cookie' => @context[:koha_rest_api_cookie],
 	      'Content-Type' => 'application/json'
 	    }
-	    http = Net::HTTP.new("koha", 8081)
+	    http = Net::HTTP.new("xkoha", 8081)
 	    uri = URI("#{intranet(:koha_rest_api)}libraries/#{branchcode}")
 	    res = http.get(uri, headers)
 	    expect(res.code).to eq("200"), "got unexpected #{res.code} when listing checkouts.\nResponse body: #{res.body}"
@@ -26,7 +26,7 @@ module KohaRESTAPI
         'Cookie' => @context[:koha_rest_api_cookie],
         'Content-Type' => 'application/json'
       }
-      http = Net::HTTP.new("koha", 8081)
+      http = Net::HTTP.new("xkoha", 8081)
       uri = URI(intranet(:koha_rest_api) + "libraries")
       res = http.get(uri, headers)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when listing checkouts.\nResponse body: #{res.body}"

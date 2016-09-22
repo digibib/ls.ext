@@ -8,7 +8,7 @@ module.exports = (app) => {
     if (!request.body.username || !request.body.password) {
       return response.sendStatus(403)
     }
-    fetch('http://koha:8081/api/v1/auth/session',
+    fetch('http://xkoha:8081/api/v1/auth/session',
       {
         method: 'POST',
         headers: {
@@ -19,7 +19,7 @@ module.exports = (app) => {
       })
       .then(res => {
         if (res.status === 201) {
-          fetch(`http://koha:8081/api/v1/patrons?userid=${request.body.username}`)
+          fetch(`http://xkoha:8081/api/v1/patrons?userid=${request.body.username}`)
             .then(res => res.json())
             .then(json => {
               request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]

@@ -91,15 +91,15 @@ out/done.migrate_catalogue_to_koha: out/done.setup_koha
 ifndef NOKOHA
 	@echo "   Migration catalogue with items into Koha"
 	@echo "-- Stopping Cron"
-	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop cron'
+	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop cron'
 	@echo "-- Stopping Zebra indexer"
-	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop zebra_indexer'
+	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop zebra_indexer'
 	@echo "-- Clearing Zebra index"
-	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios"' 2> /dev/null
-	-@sudo docker exec koha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
+	-@sudo docker exec xkoha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg drop biblios"' 2> /dev/null
+	-@sudo docker exec xkoha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
 	@sudo docker run --net=dockercompose_backend --rm -v dockercompose_koha_state:/data -v $(shell pwd)/out:/out busybox cp /out/catalogue.mrc /data/
 	@echo "-- Importing to Koha with bulkmarcimport"
-	@sudo docker exec koha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
+	@sudo docker exec xkoha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
 	@echo "OK Done importing catalogue into Koha\n"
 endif
 	@touch out/done.migrate_catalogue_to_koha
@@ -115,7 +115,7 @@ ifndef NOKOHA
 	@echo "-- Populating zebra queue"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
 	@echo "-- Starting Cron"
-	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start cron'
+	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start cron'
 	@echo "OK Done messing with catalogue\n"
 endif
 	@touch out/done.messing_with_migrated_catalogue
@@ -200,7 +200,7 @@ endif
 	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
 	@echo "-- Enabeling koha email sending"
-	@sudo docker exec koha /bin/sh -c 'koha-email-enable $$KOHA_INSTANCE'
+	@sudo docker exec xkoha /bin/sh -c 'koha-email-enable $$KOHA_INSTANCE'
 	@echo "   Migration is complete. Goodbye!"
 	@echo "!! TODO stop running virtuoso container (left up for debugging)"
 
@@ -208,7 +208,7 @@ out/done.migrate_patrons: out/done.setup_koha
 ifdef MIGRATE_PATRONS
 	@echo "   Migrating patrons to Koha"
 	@echo "-- Disabeling koha email sending"
-	@sudo docker exec koha /bin/sh -c 'koha-email-disable $$KOHA_INSTANCE'
+	@sudo docker exec xkoha /bin/sh -c 'koha-email-disable $$KOHA_INSTANCE'
 	@echo "-- Merging information from laaner, lmarc and lnel dumps"
 	@$(MIGRATION_RUN_CMD) "patronmassage -lmarc=/data/$(LMARC) -laaner=/data/$(LAANER) -lnel=/data/$(LNEL) -outdir=/out"
 	@echo "-- Inserting patron categories into MySQL"
@@ -259,7 +259,7 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL AND categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\");"'	@echo "OK Done migrating loands and holds\n"
 endif
 	@echo "-- Starting Zebra indexer"
-	@sudo docker exec koha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
+	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
 	@touch out/done.migrate_loans
 
 ifdef MIGRATE_PATRONS
