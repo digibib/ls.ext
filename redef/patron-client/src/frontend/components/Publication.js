@@ -16,10 +16,7 @@ class Publication extends React.Component {
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
     const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: this.renderTitle(publication) })
-
     return (
-      <ClickableElement onClickAction={this.props.expandSubResource}
-                        onClickArguments={[ this.props.publication.id, true ]}>
         <article onClick={this.handleClick}
                  className={this.props.open ? 'single-publication open' : 'single-publication'}
                  data-automation-id={`publication_${publication.uri}`}>
@@ -27,49 +24,43 @@ class Publication extends React.Component {
             {publication.image ? <img src={publication.image} alt={coverAltText} /> : null}
           </div>
           <div className="publication-text-container">
-              <span data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
-            <p
-              className="free"><FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} /></p>
-            </span>
-            <h2>
-            <span data-automation-id="publication_title">
-              {this.renderTitle(publication)}
-            </span>
-            </h2>
-            <p>
-              <span data-automation-id="publication_year">
-                {publication.publicationYear}
-              </span>
-            </p>
-            <p>
-            <span data-automation-id="publication_languages">
-              {languages.join(', ')}
-            </span>
-            </p>
-            <p>
-            <span data-automation-id="publication_formats">
-              {formats.join(', ')}
-            </span>
-            </p>
+            <div className="availability" data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
+              <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
+            </div>
+            <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
+            <div className="meta-item">
+              <span data-automation-id="publication_year">{publication.publicationYear}, </span>
+              <span data-automation-id="publication_languages">{languages.join(', ')}</span>
+            </div>
             { publication.items.length > 0 ? (
-              <p>
+              <div className="reserve-button">
                 <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
                   <button className="black-btn" type="button"
                           data-automation-id={`recordId_${publication.recordId}`}>
                     <span data-automation-id="publication_order"><FormattedMessage {...messages.reserve} /></span>
                   </button>
                 </ClickableElement>
-              </p>
+              </div>
             ) : null }
           </div>
           <div className="show-status">
-            <strong><FormattedMessage {...messages.showStatus} /></strong>
-            <button className="show-status-arrow" type="button">
-              <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" />
-            </button>
+              {this.props.open ? (
+                <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>
+                  <button>
+                    <FormattedMessage {...messages.hideInfo} />
+                    <i className="icon-up-open" />
+                  </button>
+                </ClickableElement>
+              ) : (
+                <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
+                  <button type="button">
+                    <FormattedMessage {...messages.showInfo} />
+                    <i className="icon-down-open" />
+                  </button>
+                </ClickableElement>
+              )}
           </div>
         </article>
-      </ClickableElement>
     )
   }
 }
@@ -107,6 +98,16 @@ export const messages = defineMessages({
     id: 'Publication.showStatus',
     description: 'Label used on mobile to indicate that status can be shown',
     defaultMessage: 'Show status'
+  },
+  showInfo: {
+    id: 'Publication.showInfo',
+    description: 'Clickable item to expand info about a publication',
+    defaultMessage: 'Show info about this publication'
+  },
+  hideInfo: {
+    id: 'Publication.hideInfo',
+    description: 'Clickable item to collapse info about a publication',
+    defaultMessage: 'Hide info about this publication'
   }
 })
 

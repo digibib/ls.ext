@@ -1,106 +1,75 @@
-.borrow-number {
-  @include span(12 of 12);
-}
+.user-info {
+  @include span(12);
+  @include container;
 
-.user-details {
-  @include span(12 of 12);
-  margin-bottom: rhythm(2);
-  @include border-top;
-  @include border-bottom;
-  
-  .col {
+  header {
+    border-bottom: 4px solid $blackColor;
+    padding-bottom: rhythm(1);
+    margin-bottom: rhythm(3);
+  }
 
-    @include breakpoint($small){
-      @include span(5 of 12);
+  h1 {
+    @include span(12);
+    margin-top: rhythm(4);
+    font-size: rhythm(3);
+    font-weight: bold;
+    margin-bottom: 0;
+    padding-bottom: rhythm(1);
+  }
+
+  .meta-item {
+    @include span(12);
+    @include container;
+    font-size: rhythm(2.5);
+  }
+
+  .meta-label {
+    @include span(12);
+    font-weight: bold;
+  }
+
+  .meta-content {
+    @include span(12);
+    margin-bottom: rhythm(2);
+  }
+
+  footer {
+    @include span(12);
+    @include container;
+
+    button {
+      @include span(12);
     }
 
-    
-    h2 {
-      @include regularFont;
-      margin-bottom: rhythm(1);
+    .last-updated {
+      @include span(12);
+      text-align: center;
+      margin-top: rhythm(2);
+      font-size: rhythm(2);
     }
 
-    p, address {
-      @include semiBoldFont;
-      font-style: normal;
+    .green-text {
+      color: $green;
     }
 
-  }
-
-  input {
-    margin: rhythm(1);
-    margin-left: 0;
-    width: 260px;
-  }
-
-}
-
-
-
-
-.change-information {
-  @include span(12 of 12);
-  
-  @include breakpoint($small){
-    margin-top: rhythm(6);
-  }
-  
-  button {
-    width: 100%;
-    
-    @include breakpoint($small){
-       width: auto;
-    }
-  }
-
-}
-
-.last-updated {
-  @include span(12 of 12);
-  margin-top: rhythm(2);
-  margin-bottom: rhythm(2);
-  text-align: center;
-  
-  @include breakpoint($small){
-     text-align: left;
-  }
-
-  
-  .green-text {
-    color: $green;
-    @include semiBoldFont;
   }
 
 }
 
-#change-user-details {
-  margin-bottom: rhythm(2);
+@include breakpoint($small) {
 
-  @include breakpoint($small){
-    @include span(3.5 of 12);
+  .user-info {
 
-    .address {
-      float: none;
-      width: 100%;
+    footer {
+      @include span(5);
 
-      span {
-        display: block;
-
-        input {
-          width: 260px;
-          margin-right: 20px;
-        }
-
+      .last-updated {
+        text-align: left;
+        font-size: rhythm(3);
       }
 
-      .display-inline {
-        display: inline-block;
-        margin-top: -20px;
-
-        input {
-          width: 120px;
-        }
-      }
     }
+
   }
+
 }

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 class Footer extends React.Component {
   constructor (props) {
@@ -13,7 +14,14 @@ class Footer extends React.Component {
 
   render () {
     return (
-      <footer className="main-footer">
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionAppearTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="footer"
+        className="main-footer">
         <nav className="secondary-navigation" type="navigation">
           <ul>
             <li><FormattedMessage {...messages.contactUs} /></li>
@@ -30,7 +38,7 @@ class Footer extends React.Component {
         <div className="footer-icon">
           <img src="/images/footer-icon.svg" alt="White box with black circle" />
         </div>
-      </footer>
+      </ReactCSSTransitionGroup>
     )
   }
 }

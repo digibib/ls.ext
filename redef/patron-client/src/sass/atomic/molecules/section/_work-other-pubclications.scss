@@ -1,14 +1,15 @@
 .other-publications {
-  @include span(12 of 12);
 
-  .other-publications-title {
-    @include border-bottom;
-    margin-bottom: rhythm(2);
+  .mediatype-group {
+    border-top: 4px solid $blackColor;
+  }
+
+  > header {
 
     h2 {
-      margin: 0;
-      @include regularFont;
+      font-size: rhythm(2.5);
     }
 
   }
+
 }

@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
@@ -44,108 +45,150 @@ class UserSettings extends React.Component {
       return <FormattedMessage {...messages.settingsError} />
     }
     return (
-      <div className="user-settings">
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="section"
+        className="user-settings">
 
         <header>
           <h1><FormattedMessage {...messages.alerts} /></h1>
         </header>
 
-        <section className="user-reminders">
-          <div className="reminders col">
-            <h2><FormattedMessage {...messages.reminderOfDueDate} /></h2>
+        <div className="reminders-group">
+          <h2><FormattedMessage {...messages.reminderOfDueDate} /></h2>
 
-            <ul>
-              <li>
-
-                <input data-automation-id="UserSettings_reminderOfDueDateSms"
-                       type="checkbox" name="user-settings-sms-reminder" id="user-settings-sms-reminder"
-                       ref={e => this.reminderOfDueDateSmsCheckbox = e}
-                       defaultChecked={settings.alerts.reminderOfDueDate.sms} />
-                <label htmlFor="user-settings-sms-reminder"><span />
-                  <FormattedMessage {...messages.bySms} /></label>
-              </li>
-              <li>
-
-                <input data-automation-id="UserSettings_reminderOfDueDateEmail"
-                       type="checkbox" name="user-settings-reminder-email"
-                       id="user-settings-reminder-email"
-                       ref={e => this.reminderOfDueDateEmailCheckbox = e}
-                       defaultChecked={settings.alerts.reminderOfDueDate.email} />
-                <label
-                  htmlFor="user-settings-reminder-email"><span />
-                  <FormattedMessage {...messages.byEmail} /></label>
-
-              </li>
-              {/* <li className="patron-placeholder">
-
-               <input data-automation-id="??"
-               type="checkbox" name="user-settings-reminder-dont-send"
-               id="user-settings-reminder-dont-send"
-               ref={e => this.reminderOfDueDateEmailCheckbox = e}
-               defaultChecked={settings.alerts.reminderOfDueDate.email} />
-               <label
-               htmlFor="user-settings-reminder-email"><span></span>
-               <span>Nei, ikke send</span></label>
-
-               </li> */}
-            </ul>
+          <div className="reminder-item">
+            <input data-automation-id="UserSettings_reminderOfDueDateSms"
+                   type="checkbox"
+                   name="user-settings-sms-reminder"
+                   id="user-settings-sms-reminder"
+                   ref={e => this.reminderOfDueDateSmsCheckbox = e}
+                   defaultChecked={settings.alerts.reminderOfDueDate.sms} />
+            <label htmlFor="user-settings-sms-reminder">
+              <span className="checkbox-wrapper">
+                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
+                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+              </span>
+              <FormattedMessage {...messages.bySms} />
+            </label>
           </div>
 
-          <div className="reminders col">
-            <h2><FormattedMessage {...messages.reminderOfPickup} /></h2>
-            <ul>
-              <li>
+          <div className="reminder-item">
+            <input data-automation-id="UserSettings_reminderOfDueDateEmail"
+                   type="checkbox"
+                   name="user-settings-reminder-email"
+                   id="user-settings-reminder-email"
+                   ref={e => this.reminderOfDueDateEmailCheckbox = e}
+                   defaultChecked={settings.alerts.reminderOfDueDate.email} />
 
-                <input data-automation-id="UserSettings_reminderOfPickupSms"
-                       type="checkbox" name="user-settings-delivery-reminder-sms"
-                       id="user-settings-delivery-reminder-sms"
-                       ref={e => this.reminderOfPickupSmsCheckbox = e}
-                       defaultChecked={settings.alerts.reminderOfPickup.sms} />
-                <label htmlFor="user-settings-delivery-reminder-sms"><span />
-                  <FormattedMessage {...messages.bySms} /></label>
-              </li>
-              <li>
-                <input data-automation-id="UserSettings_reminderOfPickupEmail"
-                       type="checkbox" name="user-settings-delivery-reminder-email"
-                       id="user-settings-delivery-reminder-email"
-                       ref={e => this.reminderOfPickupEmailCheckbox = e}
-                       defaultChecked={settings.alerts.reminderOfPickup.email} />
-                <label htmlFor="user-settings-delivery-reminder-email"><span />
-                  <FormattedMessage {...messages.byEmail} /></label>
-              </li>
-            </ul>
+            <label htmlFor="user-settings-reminder-email">
+              <span className="checkbox-wrapper">
+                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
+                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+              </span>
+              <FormattedMessage {...messages.byEmail} />
+            </label>
           </div>
 
-          <div className="receipt col">
-            <h2><FormattedMessage {...messages.receipts} /></h2>
-            <ul>
-              <li>
-                <input data-automation-id="UserSettings_receiptOnLoansEmail"
-                       type="checkbox" name="receipt-loans-email" id="receipt-loans-email"
-                       ref={e => this.receiptOnLoansEmailCheckbox = e}
-                       defaultChecked={settings.receipts.loans.email} />
-                <label htmlFor="receipt-loans-email"><span />
-                  <FormattedMessage {...messages.loanReceipt} /></label>
-              </li>
-              <li>
-                <input data-automation-id="UserSettings_receiptOnReturnsEmail"
-                       type="checkbox" name="receipt-returns-email" id="receipt-returns-email"
-                       ref={e => this.receiptOnReturnsEmailCheckbox = e}
-                       defaultChecked={settings.receipts.returns.email} />
-                <label htmlFor="receipt-returns-email"><span />
-                  <FormattedMessage {...messages.returnReceipt} /></label>
-              </li>
-            </ul>
+            {/* "patron-placeholder"
+             <input data-automation-id="??"
+             type="checkbox" name="user-settings-reminder-dont-send"
+             id="user-settings-reminder-dont-send"
+             ref={e => this.reminderOfDueDateEmailCheckbox = e}
+             defaultChecked={settings.alerts.reminderOfDueDate.email} />
+             <label
+             htmlFor="user-settings-reminder-email"><span></span>
+             <span>Nei, ikke send</span></label> */}
+
+        </div>
+
+        <div className="reminders-group">
+          <h2><FormattedMessage {...messages.reminderOfPickup} /></h2>
+          <div className="reminder-item">
+            <input data-automation-id="UserSettings_reminderOfPickupSms"
+                   type="checkbox"
+                   name="user-settings-delivery-reminder-sms"
+                   id="user-settings-delivery-reminder-sms"
+                   ref={e => this.reminderOfPickupSmsCheckbox = e}
+                   defaultChecked={settings.alerts.reminderOfPickup.sms} />
+            <label htmlFor="user-settings-delivery-reminder-sms">
+              <span className="checkbox-wrapper">
+                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
+                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+              </span>
+              <FormattedMessage {...messages.bySms} />
+            </label>
           </div>
-        </section>
+          <div className="reminder-item">
+            <input data-automation-id="UserSettings_reminderOfPickupEmail"
+                   type="checkbox" name="user-settings-delivery-reminder-email"
+                   id="user-settings-delivery-reminder-email"
+                   ref={e => this.reminderOfPickupEmailCheckbox = e}
+                   defaultChecked={settings.alerts.reminderOfPickup.email} />
+            <label htmlFor="user-settings-delivery-reminder-email">
+              <span className="checkbox-wrapper">
+                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
+                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+              </span>
+              <FormattedMessage {...messages.byEmail} />
+            </label>
+          </div>
+        </div>
+
+        <div className="reminders-group">
+          <h2><FormattedMessage {...messages.receipts} /></h2>
+          <div className="reminder-item">
+            <input data-automation-id="UserSettings_receiptOnLoansEmail"
+                   type="checkbox"
+                   name="receipt-loans-email"
+                   id="receipt-loans-email"
+                   ref={e => this.receiptOnLoansEmailCheckbox = e}
+                   defaultChecked={settings.receipts.loans.email} />
+            <label htmlFor="receipt-loans-email">
+              <span className="checkbox-wrapper">
+                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
+                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+              </span>
+              <FormattedMessage {...messages.loanReceipt} />
+            </label>
+          </div>
+
+          <div className="reminder-item">
+            <input data-automation-id="UserSettings_receiptOnReturnsEmail"
+                   type="checkbox"
+                   name="receipt-returns-email"
+                   id="receipt-returns-email"
+                   ref={e => this.receiptOnReturnsEmailCheckbox = e}
+                   defaultChecked={settings.receipts.returns.email} />
+            <label htmlFor="receipt-returns-email">
+              <span className="checkbox-wrapper">
+                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
+                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+              </span>
+              <FormattedMessage {...messages.returnReceipt} />
+            </label>
+          </div>
+
+        </div>
 
         <footer>
-          <button className="black-btn" type="button" data-automation-id="UserSettings_saveButton"
-                  onClick={this.handleSaveClick}><FormattedMessage {...messages.save} /></button>
+          <button className="black-btn"
+                  type="button"
+                  data-automation-id="UserSettings_saveButton"
+                  onClick={this.handleSaveClick}>
+            <FormattedMessage {...messages.save} />
+          </button>
+          <div className="disclaimer">
+            <FormattedMessage {...messages.disclaimer} />
+          </div>
         </footer>
 
         <ChangePin />
-      </div>
+
+      </ReactCSSTransitionGroup>
     )
   }
 }
@@ -208,6 +251,11 @@ export const messages = defineMessages({
     id: 'UserSettings.byEmail',
     description: 'The label for the by email option',
     defaultMessage: 'By email'
+  },
+  disclaimer: {
+    id: 'UserSettings.disclaimer',
+    description: 'Disclaimer below submit button',
+    defaultMessage: 'Note that all notifications and receipts are free of charge.'
   },
   settingsError: {
     id: 'UserSettings.settingsError',

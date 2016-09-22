@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 
 class Tab extends React.Component {
   constructor (props) {
@@ -11,9 +12,11 @@ class Tab extends React.Component {
   }
 
   render () {
-    const { className, tab } = this.props
+    const { className, tab, ariaSelected } = this.props
     return (
-      <li className={className} onClick={this.handleClick}>{tab.label}</li>
+      <li className={className} onClick={this.handleClick} role="presentation">
+        <Link to="#" role="tab" aria-selected={ariaSelected}>{tab.label}</Link>
+      </li>
     )
   }
 }
@@ -21,7 +24,8 @@ class Tab extends React.Component {
 Tab.propTypes = {
   tab: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
-  className: PropTypes.string.isRequired
+  className: PropTypes.string.isRequired,
+  ariaSelected: PropTypes.isrequired
 }
 
 export default Tab

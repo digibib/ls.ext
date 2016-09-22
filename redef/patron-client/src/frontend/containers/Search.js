@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react'
+import ReactDOM from 'react-dom'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactPaginate from 'react-paginate'
@@ -47,6 +49,7 @@ class Search extends React.Component {
         page: page
       }
       this.props.dispatch(push({ pathname: '/search', query: newQuery }))
+      ReactDOM.findDOMNode(this).scrollIntoView();
     }
   }
 
@@ -76,7 +79,13 @@ class Search extends React.Component {
 
   render () {
     return (
-      <div className="wrapper">
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="div"
+        className="wrapper">
           {this.props.locationQuery.query
             ? (<div className="search-results-header">
                 <div className="search-results-summary">
@@ -111,7 +120,8 @@ class Search extends React.Component {
                                toggleFilter={this.props.searchFilterActions.toggleFilter}
                                toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
                                toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
-                               toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter} />,
+                               toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                               scrollTargetNode={this} />,
             <SearchResults key="searchResults"
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
@@ -124,7 +134,7 @@ class Search extends React.Component {
             /> ]
             : null}
           {this.renderPagination()}
-      </div>
+      </ReactCSSTransitionGroup>
     )
   }
 }

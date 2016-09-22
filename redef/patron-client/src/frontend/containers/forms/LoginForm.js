@@ -45,7 +45,7 @@ class LoginForm extends React.Component {
       <div data-automation-id="login_modal">
 
         <button className="close-modal-button" onClick={this.props.modalActions.hideModal}>
-          <i className="icon-cancel" />
+          <i className="icon-cancel-1" />
         </button>
 
         <form onSubmit={this.handleLogin}>

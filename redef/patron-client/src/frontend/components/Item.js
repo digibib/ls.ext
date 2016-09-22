@@ -9,8 +9,10 @@ class Item extends React.Component {
     const mediaType = item.mediaType ? this.props.intl.formatMessage({ id: item.mediaType }) : ''
     return (
       <tr about={item.barcode}>
-        <td className="entry-content-icon-single" data-automation-id="item_media_type"><img style={{maxWidth: '20px', marginRight: '0.5em'}} src={`/images/icon-${Constants.mediaTypeIcons[item.mediaType]}.svg`} />{mediaType}</td>
-        <td data-automation-id="item_languages">{languages.join(', ')}</td>
+        <td className="entry-content-icon-single" data-automation-id="item_media_type">
+          <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} />{mediaType}
+        </td>
+        <td data-automation-id="item_languages">{item.mediaType} {languages.join(', ')}</td>
         <td data-automation-id="item_shelfmark">{/* item.location */}{item.shelfmark}</td>
         <td data-automation-id="item_status">{item.available} av {item.total} ledige</td>
       </tr>

@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchResult from './SearchResult'
 import Constants from '../constants/Constants'
@@ -15,7 +16,13 @@ class SearchResults extends React.Component {
     const from = Constants.maxSearchResultsPerPage * (this.props.page - 1)
     const to = from + Constants.maxSearchResultsPerPage
     return (
-      <section className="search-results">
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="section"
+        className="search-results">
         <div data-automation-id="search-result-entries">
           {this.props.locationQuery.query
             ? this.props.searchResults.slice(from, to).map(result => (
@@ -28,7 +35,7 @@ class SearchResults extends React.Component {
             />
           )) : null}
         </div>
-      </section>
+      </ReactCSSTransitionGroup>
     )
   }
 }

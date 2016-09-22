@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
 import Item from './Item'
@@ -10,7 +11,12 @@ class Items extends React.Component {
 
   renderItems () {
     return (
-      <table>
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+        component="table">
         <thead>
         <tr>
           <th><FormattedMessage {...messages.mediaType} /></th>
@@ -22,7 +28,7 @@ class Items extends React.Component {
         <tbody data-automation-id="work_items">
         {this.props.items.map(item => <Item key={item.barcode} item={item} />)}
         </tbody>
-      </table>
+      </ReactCSSTransitionGroup>
     )
   }
 

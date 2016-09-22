@@ -1,15 +1,13 @@
 .work-subjects, .work-genres {
-  @include span(12 of 12);
-  margin-bottom: rhythm(2);
-  @include border-top;
 
-  @include breakpoint($small){
-    @include span(3 of 12);
-    margin-right: 0;
+  &:first-of-type {
+    margin-top: rhythm(2);
   }
 
   h2 {
+    @include semiBoldFont;
     margin-bottom: 0;
+    font-size: rhythm(2.5);
   }
 
   ul {
@@ -20,20 +18,21 @@
 
   li {
     display: inline-block;
-    padding: rhythm(0.5);
-    padding-bottom: 0;
-    padding-left: 0;
+    padding: 0;
+
+    &:after {
+        content: '|';
+        display: inline-block;
+        padding-left: 0.25em;
+        padding-right: 0.25em;
+      }
+
+      &:last-child:after {
+        content: '';
+        display: none;
+        padding: 0;
+      }
+
   }
 
-  
-  @include breakpoint($small){
-     float: right;
-  }
-
-}
-
-.work-subjects {
-  @include breakpoint($small){
-    margin-top: -190px;
-  }
 }

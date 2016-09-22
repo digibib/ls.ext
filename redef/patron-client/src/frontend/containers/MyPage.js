@@ -35,8 +35,11 @@ class MyPage extends React.Component {
       { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' }
     ]
     return (
-      <div data-automation-id="profile_page">
-        <Tabs tabList={tabList} currentPath={this.props.location.pathname} push={this.props.routerActions.push} />
+      <div data-automation-id="profile_page" className="mypage-wrapper">
+        <Tabs label={this.props.intl.formatMessage(messages.profileMenuLabel)}
+              tabList={tabList}
+              currentPath={this.props.location.pathname}
+              push={this.props.routerActions.push} />
         <hr />
         {this.props.children}
       </div>
@@ -57,6 +60,11 @@ MyPage.propTypes = {
 }
 
 export const messages = defineMessages({
+  profileMenuLabel: {
+    id: 'MyPage.profileMenuLabel',
+    description: 'The label on the profile menu',
+    defaultMessage: 'Profile menu'
+  },
   loansAndReservations: {
     id: 'MyPage.loansAndReservations',
     description: 'The label on the loans and reservations tab',

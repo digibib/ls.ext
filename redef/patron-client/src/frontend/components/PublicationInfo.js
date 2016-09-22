@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import Items from './Items'
 import { groupByBranch } from '../utils/sorting'
@@ -15,62 +16,67 @@ class PublicationInfo extends React.Component {
 
   renderItems (items) {
     if (items) {
-      return groupByBranch(items).map(el => {
-        return (
-          <div key={el.branch} className="items-by-branch">
-            <h1>{el.branch}</h1>
-            <Items items={el.items} />
-            <p style={{clear: 'both'}} />
-          </div>
-          )
-      })
+      return (
+        <ReactCSSTransitionGroup
+          transitionName="fade-in"
+          transitionAppear={true}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}
+          component="table"
+          className="items-by-branch">
+          {this.renderItemsByBranchRow(groupByBranch(items))}
+        </ReactCSSTransitionGroup>
+      )
+    }
+  }
+
+  renderItemsByBranchRow(items) {
+    console.log(this.flattenItems(items))
+  }
+
+  flattenItems(items) {
+    return items
+  }
+
+  renderMetaItem(label, value) {
+    if(value) {
+      return (
+        <div className="meta-info">
+          <div className="meta-label">{label}</div>
+          <div className="meta-content">{value}</div>
+        </div>
+      )
     }
   }
 
   render () {
     const { publication, publication: { items } } = this.props
+    //console.log(publication)
     return (
-      <div>
-        <section className="publication-info" data-automation-id={`publication_info_${publication.uri}`}>
-
-          <div className="close-publication-info"
-               data-automation-id={`close_publication_info_${publication.uri}`}
-               onClick={this.handleClick}>
-            <button className="close" type="button">
-              <img src="/images/btn-x.svg" alt="Large X" />
-            </button>
-          </div>
-
-          <div className="title"><h2><FormattedMessage {...messages.about} /></h2></div>
-          <div className="entry-content">
-            <div className="col">
-              <ul>
-                <li><strong><FormattedMessage {...messages.isbn} /></strong>
-                  &nbsp;<span>{publication.isbn}</span>
-                </li>
-                <li><strong><FormattedMessage {...messages.numberOfPages} /></strong>
-                  &nbsp;<span>{publication.numberOfPages}</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col">
-              <ul>
-                <li><strong><FormattedMessage {...messages.edition} /></strong>
-                  &nbsp;<span>{publication.edition}</span>
-                </li>
-                <li><strong><FormattedMessage {...messages.binding} /></strong>
-                  &nbsp;
-                  <span>{publication.binding ? this.props.intl.formatMessage({ id: publication.binding }) : ''}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="title"><h2><FormattedMessage {...messages.items} /></h2></div>
-          <div className="entry-content">{this.renderItems(items)}</div>
-        </section>
-      </div>
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+        component="section"
+        className="publication-info"
+        data-automation-id={`publication_info_${publication.uri}`}>
+        {/* Missing data: Author / bidragsytere */}
+        {this.renderMetaItem(this.props.intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
+        {this.renderMetaItem(this.props.intl.formatMessage(messages.edition), publication.edition)}
+        {/* Missing data: Publisher */}
+        {/* Missing data: Published location */}
+        {this.renderMetaItem(this.props.intl.formatMessage(messages.isbn), publication.isbn)}
+        {this.renderMetaItem(this.props.intl.formatMessage(messages.biblionr), publication.recordID)}
+        {/* Missing data: "forlagsserie" */}
+        {/* Missing data: "Deler av utgivelse" */}
+        {/* Missing data: "Tilpasning" */}
+        {this.renderMetaItem(this.props.intl.formatMessage(messages.binding), publication.binding ? this.props.intl.formatMessage({ id: publication.binding }) : '')}
+        <div className="meta-label"><FormattedMessage {...messages.note} /></div>
+        <p className="note">Lorem upsim missing data; note {/* Missing data: Note */}</p>
+        <h2><FormattedMessage {...messages.items} /></h2>
+        <div className="entry-items">{this.renderItems(items)}</div>
+      </ReactCSSTransitionGroup>
     )
   }
 }
@@ -93,6 +99,9 @@ export const messages = defineMessages({
   isbn: {
     id: 'PublicationInfo.isbn', description: 'Header for the ISBN column', defaultMessage: 'ISBN:'
   },
+  biblionr: {
+    id: 'PublicationInfo.biblionr', description: 'Header for the BiblioNR/recordID column', defaultMessage: 'RecordID:'
+  },
   numberOfPages: {
     id: 'PublicationInfo.numberOfPages',
     description: 'Header for the number of items column',
@@ -103,6 +112,9 @@ export const messages = defineMessages({
   },
   binding: {
     id: 'PublicationInfo.binding', description: 'Header for the binding column', defaultMessage: 'Binding:'
+  },
+  note: {
+    id: 'PublicationInfo.note', description: 'Header for the note column', defaultMessage: 'Note:'
   }
 })
 

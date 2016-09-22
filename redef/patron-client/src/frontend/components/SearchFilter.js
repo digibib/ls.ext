@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import ReactDOM from 'react-dom'
 import Constants from '../constants/Constants'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
@@ -13,6 +15,7 @@ class SearchFilter extends React.Component {
 
   handleShowAllClick () {
     this.props.toggleFilterVisibility(this.props.aggregation)
+    ReactDOM.findDOMNode(this).scrollIntoView();
   }
 
   renderEmpty () {
@@ -41,7 +44,8 @@ class SearchFilter extends React.Component {
         return (
           <SearchFilterItem key={filter.id}
                             filter={filter}
-                            toggleFilter={this.props.toggleFilter} />
+                            toggleFilter={this.props.toggleFilter}
+                            scrollTargetNode={this.props.scrollTargetNode} />
         )
       })
   }
@@ -74,8 +78,14 @@ class SearchFilter extends React.Component {
       return this.renderEmpty()
     }
     return (
-      <div className="filter-group"
-           data-automation-id={`filter_${this.props.aggregation}`}>
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="div"
+        className="filter-group"
+        data-automation-id={`filter_${this.props.aggregation}`}>
         <header className="filterTitle">
           <h1>{this.renderTitle()}</h1>
           <button onClick={this.handleCollapse} className="single-filter-close" type="button">
@@ -89,7 +99,7 @@ class SearchFilter extends React.Component {
           <ul className="searchfilters">{this.renderFilters()}</ul>
         </section>,
           <footer key="searchfilter_footer">{this.renderShowMore()}</footer> ]}
-      </div>
+      </ReactCSSTransitionGroup>
     )
   }
 }
@@ -101,7 +111,8 @@ SearchFilter.propTypes = {
   toggleFilterVisibility: PropTypes.func.isRequired,
   toggleCollapseFilter: PropTypes.func.isRequired,
   locationQuery: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  scrollTargetNode: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({

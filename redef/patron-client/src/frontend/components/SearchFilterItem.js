@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import { injectIntl, intlShape } from 'react-intl'
 
 class SearchFilterItem extends React.Component {
@@ -11,6 +12,7 @@ class SearchFilterItem extends React.Component {
     event.preventDefault()
     const { filter: { id } } = this.props
     this.props.toggleFilter(id)
+    ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView();
   }
 
   render () {
@@ -36,7 +38,8 @@ class SearchFilterItem extends React.Component {
 SearchFilterItem.propTypes = {
   filter: PropTypes.object.isRequired,
   toggleFilter: PropTypes.func.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  scrollTargetNode: PropTypes.object.isRequired
 }
 
 export default injectIntl(SearchFilterItem)

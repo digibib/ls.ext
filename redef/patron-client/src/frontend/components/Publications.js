@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 import firstBy from 'thenby'
+import { Link } from 'react-router'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
@@ -10,8 +13,17 @@ import ClickableElement from './ClickableElement'
 import { getCategorizedFilters } from '../utils/filterParser'
 import Constants from '../constants/Constants'
 import ShowFilteredPublicationsLabel from '../components/ShowFilteredPublicationsLabel'
+import SearchFilterBox from '../components/SearchFilterBox'
+import MediaType from '../components/MediaType'
 
 class Publications extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.mediaTypeUri = {}
+    this.handleAnchorClick = this.handleAnchorClick.bind(this)
+  }
+
   componentWillMount () {
     if (this.props.publications.length === 1) {
       this.props.expandSubResource(this.props.publications[ 0 ].id, true)
@@ -201,6 +213,28 @@ class Publications extends React.Component {
     return publicationHoldersByMediaType
   }
 
+  handleAnchorClick(mediaTypeUri) {
+    ReactDOM.findDOMNode(this.mediaTypeUri[mediaTypeUri]).scrollIntoView();
+  }
+
+  renderMediaTypeAnchors (publicationHoldersByMediaType) {
+    return (
+      <div className="mediatype-selector">
+      {
+        Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
+          const mediaTypeFragment = getFragment(mediaTypeUri)
+          const mediaType = {uri: mediaTypeUri}
+          return (
+            <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[mediaTypeUri]}>
+              <div><MediaType key={mediaTypeUri} mediaType={mediaType} /></div>
+            </ClickableElement>
+          )
+        })
+      }
+      </div>
+    )
+  }
+
   render () {
     const publicationHoldersByMediaType = this.getSortedPublicationHolders()
     let { locationQuery: { collapsePublications } } = this.props
@@ -212,43 +246,54 @@ class Publications extends React.Component {
     }
 
     return (
-      <footer className="other-publications">
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionAppearTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="section"
+        className="other-publications">
+        <header>
+          <h2>Gå til</h2>
+          {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
+          <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl} query={this.props.query} />
+        </header>
         {
           Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
             const mediaTypeFragment = getFragment(mediaTypeUri)
             return (
-              <div key={mediaTypeUri} data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
+              <section className="mediatype-group" ref={e=> this.mediaTypeUri[mediaTypeUri] = e} key={mediaTypeUri} data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
                 <header className="other-publications-title">
-                  <h2>{this.props.intl.formatMessage({ id: mediaTypeUri })}</h2>
+                  <ClickableElement
+                    onClickAction={this.props.toggleParameterValue}
+                    onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
+                    <h2>
+                      <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} />
+                      {this.props.intl.formatMessage({ id: mediaTypeUri })}
+                      {collapsePublications.includes(mediaTypeFragment)
+                        ? <i className="icon-down-open last" />
+                        : <i className="icon-up-open last" />}
+                    </h2>
+                  </ClickableElement>
                 </header>
-
-                <div className="entry-content-icon patron-placeholder">
-                  <div className="entry-content-icon-single">
-                    <img src="/images/icon-audiobook.svg" alt="Black speaker with audio waves" />
-                    <p>Lydbok </p>
-                  </div>
-                </div>
-
-                <ClickableElement onClickAction={this.props.toggleParameterValue}
-                                  onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
-                  <div className="arrow-close">
-                    {collapsePublications.includes(mediaTypeFragment)
-                      ? <img src="/images/btn-arrow-open.svg" alt="Black arrow pointing down" />
-                      : <img src="/images/btn-arrow-close.svg" alt="Black arrow pointing up" />}
-                  </div>
-                </ClickableElement>
-                <div className="other-publications-entry-content">
-                  <p>&nbsp;{/* Temporary placeholder to work around CSS placement issue */}</p>
+                <ReactCSSTransitionGroup
+                  transitionName="fade-in"
+                  transitionAppear={true}
+                  transitionAppearTimeout={500}
+                  transitionEnterTimeout={500}
+                  transitionLeaveTimeout={500}
+                  component="div"
+                  className="other-publications-entry-content">
                   {collapsePublications.includes(mediaTypeFragment)
                     ? null
                     : this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaTypeUri ].map(publicationHolder => publicationHolder.original))}
-                </div>
-              </div>
+                </ReactCSSTransitionGroup>
+              </section>
             )
           })
         }
-      </footer>
-
+      </ReactCSSTransitionGroup>
     )
   }
 }

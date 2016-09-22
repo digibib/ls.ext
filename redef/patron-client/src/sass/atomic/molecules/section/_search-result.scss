@@ -14,8 +14,16 @@
     }
 
     img {
-      max-width: 100%;
+      max-width: 95%;
       display: inline-block;
+      transition: all 0.5s;
+      margin-top: 10px;
+
+      &:hover {
+        max-width: 100%;
+        margin-top: 0;
+      }
+
     }
 
   }
@@ -23,7 +31,7 @@
 }
 
 .entry-content {
-  @include span(8);
+  @include span(9 last);
   @include container;
   font-size: rhythm(2);
 
@@ -33,9 +41,40 @@
 
   h1 {
     @include span(12);
+    @include container;
     font-size: rhythm(4);
     margin-top: 0;
     margin-bottom: rhythm(0.2);
+
+    .title-text {
+      @include span(11);
+    }
+
+    .caret {
+      @include span(1 last);
+      text-align: right;
+      font-size: 2.75em;
+
+      i {
+        margin-left: -0.25em;
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+
+        &:before {
+          margin: 0;
+
+        }
+
+      }
+
+    }
+
+    &:hover .caret i {
+      margin-left: 0;
+    }
+
   }
 
   > p {
@@ -53,34 +92,6 @@
 
     strong {
       font-size: rhythm(2.5);
-    }
-
-  }
-
-}
-
-.entry-link {
-  @include span(1 last);
-  font-size: 3.5em;
-
-  i {
-
-    &::before {
-      margin-right: 0;
-      width: 100%;
-      margin-left: -0.25em;
-      -webkit-transition: all 0.5s ease-in-out;
-      -moz-transition: all 0.5s ease-in-out;
-      -o-transition: all 0.5s ease-in-out;
-      transition: all 0.5s ease-in-out;
-    }
-
-    &:hover, &:active, &:focus {
-
-      &::before {
-        margin-left: -0em;
-      }
-
     }
 
   }
@@ -128,14 +139,6 @@
 
     .book-cover {
       @include span(3);
-    }
-
-    .entry-content {
-      @include span(8);
-    }
-
-    .entry-link {
-      @include span(1 last);
     }
 
   }

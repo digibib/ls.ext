@@ -1,57 +1,159 @@
 .user-settings {
-  h1 {
-    @include regularFont;
-    margin-bottom: rhythm(1);
-    font-size: 1em;
-  }
-}
-
-.change-pin-container {
-  margin-top: rhythm(4);
+  @include span(12);
+  @include container;
   margin-bottom: rhythm(4);
-}
 
-.user-reminders, .change-pin {
-  @include span(12 of 12);
-  margin-bottom: rhythm(2);
-  @include border-top;
-  
-  .important {
-    @include breakpoint($small){
-      @include span(6 of 12);
-      margin-top: rhythm(2);
-    }
-  }
-  
-  .change-pin-fields {
-    @include span(12 of 12);
-    
-    h2 {
-      @include regularFont;
-      @include regularFontSize;
-      margin-bottom: rhythm(1);
-    }
+  header {
+    border: none;
+    @include span(12);
   }
 
-  .col {
-    @include breakpoint($small){
-      @include span(4 of 12);
+  h1 {
+    @include span(12);
+    margin-top: rhythm(4);
+    font-size: rhythm(3);
+    font-weight: normal;
+    border-bottom: 4px solid $blackColor;
+    padding-bottom: rhythm(1);
+  }
 
-      &:last-child {
-        margin-right: 0;
+  h2 {
+    @include span(12);
+    font-weight: bold;
+    font-size: rhythm(3);
+    margin-bottom: 0;
+  }
+
+  .reminders-group {
+    @include span(12);
+    @include container;
+  }
+
+  .reminder-item {
+    @include span(12);
+    @include container;
+    margin-top: rhythm(2);
+
+    label {
+      @include span(12);
+      @include container;
+    }
+
+    span {
+      @include span(11 last);
+
+      &.checkbox-wrapper {
+        @include span(1);
       }
+
     }
+
+  }
+
+  footer {
+    @include span(12);
+    margin-top: rhythm(4);
+
+    button {
+      @include span(12);
+    }
+
+    .disclaimer {
+      @include span(12);
+      text-align: center;
+      margin-top: rhythm(2);
+      font-size: rhythm(2.5);
+    }
+
+  }
+
+  .change-pin-container {
+    @include span(12);
+    @include container;
+  }
+
+  .change-pin {
+    @include span(12);
+    @include container;
+  }
+
+  .important {
 
     p {
-      @include semiBoldFont;
-      font-style: normal;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
-    ul, li {
-      list-style-type: none;
-      margin-left: 0;
-      padding-left: 0;
+  }
+
+  .change-pin-fields {
+    @include span(12);
+    @include container;
+    margin-top: rhythm(4);
+
+    .form-item {
+      @include span(12);
+      @include container;
     }
+
+    label {
+      @include span(12);
+      margin-top: rhythm(2);
+    }
+
+    input {
+      @include span(12);
+      font-size: rhythm(3);
+      margin-top: rhythm(2);
+      max-width: 4em;
+    }
+
+  }
+
+}
+
+@include breakpoint($small) {
+
+  .user-settings {
+
+    footer {
+
+      button {
+        @include span(4);
+      }
+
+      .disclaimer {
+        @include span(12);
+        text-align: left;
+      }
+
+    }
+
+  }
+
+}
+
+@include breakpoint($medium) {
+
+  .user-settings {
+
+    .reminders-group {
+      @include span(4);
+
+      &:nth-child(3) {
+        @include span(4 last);
+      }
+
+    }
+
+    footer {
+
+      button {
+        @include span(3);
+      }
+
+    }
+
   }
 
 }

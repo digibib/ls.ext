@@ -18,13 +18,12 @@ class Subjects extends React.Component {
   render () {
     const subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
     return (
-      <div>
+       <aside className="work-subjects">
         <h2><FormattedMessage {...messages.subjects} /></h2>
         <ul data-automation-id="work_subjects">
           {subjects.map(subject => <li key={subject}><Link to={this.searchLink(subject)} >{subject}</Link></li>)}
         </ul>
-        <a className="patron-placeholder" href="#" alt="More subjects">Se flere emner</a>
-      </div>
+      </aside>
     )
   }
 }

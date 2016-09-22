@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { Link } from 'react-router'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchFilter from './SearchFilter'
@@ -30,7 +31,13 @@ class SearchFilters extends React.Component {
       })
 
       return (
-        <aside className="filters">
+        <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="aside"
+        className="filters">
           <div className="limit-filters">
             <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
             {this.props.locationQuery.hideFilters === null
@@ -56,11 +63,12 @@ class SearchFilters extends React.Component {
                   toggleFilter={this.props.toggleFilter}
                   toggleFilterVisibility={this.props.toggleFilterVisibility}
                   toggleCollapseFilter={this.props.toggleCollapseFilter}
+                  scrollTargetNode={this.props.scrollTargetNode}
                 />
               )
             })}
           </section>
-        </aside>
+        </ReactCSSTransitionGroup>
       )
     } else {
       return this.renderEmpty()
@@ -74,7 +82,8 @@ SearchFilters.propTypes = {
   toggleFilter: PropTypes.func.isRequired,
   toggleFilterVisibility: PropTypes.func.isRequired,
   toggleAllFiltersVisibility: PropTypes.func.isRequired,
-  toggleCollapseFilter: PropTypes.func.isRequired
+  toggleCollapseFilter: PropTypes.func.isRequired,
+  scrollTargetNode: PropTypes.object.isRequired
 }
 
 SearchFilters.defaultProps = { filters: [] }

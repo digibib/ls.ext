@@ -48,39 +48,53 @@ class ChangePinForm extends React.Component {
       changePasswordSuccess
     } = this.props
     return (
-      <div className="change-pin-container">
-        <form onSubmit={handleSubmit(this.handleChangePin)}>
+      <form onSubmit={handleSubmit(this.handleChangePin)}>
 
-          <header>
-            <h1><FormattedMessage {...messages.changePin} /></h1>
-          </header>
+        <header>
+          <h1><FormattedMessage {...messages.changePin} /></h1>
+        </header>
 
-          <section className="change-pin">
-            <div className="important">
-              <p><FormattedMessage {...messages.pinInfo} /></p>
-            </div>
+        <section className="change-pin">
+          <div className="important">
+            <p>
+              <strong><FormattedMessage {...messages.pinInfoHeader} /></strong>
+            </p>
+            <p>
+              <FormattedMessage {...messages.pinInfo} />
+            </p>
+          </div>
 
-            <div className="change-pin-fields">
-              <FormInputField name="currentPin" message={messages.currentPin} headerType="h2" type="password"
-                              formName={formName} getValidator={this.getValidator} excludeLabel />
-
-              {this.renderError()}
-
-              <FormInputField name="newPin" message={messages.newPin} headerType="h2" type="password"
-                              formName={formName} getValidator={this.getValidator} excludeLabel />
-
-              <FormInputField name="repeatPin" message={messages.repeatPin} headerType="h2" type="password"
-                              formName={formName} getValidator={this.getValidator} excludeLabel />
-            </div>
-          </section>
-          <footer>
-            <button className="black-btn" type="submit" disabled={submitting}>
-              <FormattedMessage {...messages.changePin} /><br /></button>
-            {changePasswordSuccess
-              ? <div style={{ color: 'green' }}><FormattedMessage {...messages.changePinSuccess} /></div> : null}
-          </footer>
-        </form>
-      </div>
+          <div className="change-pin-fields">
+            <FormInputField name="currentPin"
+                            message={messages.currentPin}
+                            headerType=""
+                            type="password"
+                            formName={formName}
+                            getValidator={this.getValidator} />
+            {this.renderError()}
+            <FormInputField name="newPin"
+                            message={messages.newPin}
+                            headerType=""
+                            type="password"
+                            formName={formName}
+                            getValidator={this.getValidator} />
+            <FormInputField name="repeatPin"
+                            message={messages.repeatPin}
+                            headerType=""
+                            type="password"
+                            formName={formName}
+                            getValidator={this.getValidator} />
+          </div>
+        </section>
+        <footer>
+          <button className="black-btn" type="submit" disabled={submitting}>
+            <FormattedMessage {...messages.changePin} /><br />
+          </button>
+          {changePasswordSuccess ? <div style={{ color: 'green' }}>
+            <FormattedMessage {...messages.changePinSuccess} />
+          </div> : null}
+        </footer>
+      </form>
     )
   }
 }
@@ -91,10 +105,15 @@ export const messages = defineMessages({
     description: 'The change PIN code header and button text',
     defaultMessage: 'Change PIN code'
   },
+  pinInfoHeader: {
+    id: 'ChangePinForm.pinInfoHeader',
+    description: 'Important information about PIN codes, header',
+    defaultMessage: 'Important information, read this:'
+  },
   pinInfo: {
     id: 'ChangePinForm.pinInfo',
     description: 'Important information about PIN codes',
-    defaultMessage: 'Important information, read this: New passwords must be provided in the form of a 4 digit PIN code. Do not use PIN codes that you have used other places. Choose a PIN code that noone can guess. Avoid PINs such as 1111 and 1234.'
+    defaultMessage: 'New passwords must be provided in the form of a 4 digit PIN code. Do not use PIN codes that you have used other places. Choose a PIN code that noone can guess. Avoid PINs such as 1111 and 1234.'
   },
   currentPin: {
     id: 'ChangePinForm.currentPin',

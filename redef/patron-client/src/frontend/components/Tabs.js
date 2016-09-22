@@ -6,12 +6,13 @@ import Tab from './Tab'
 class Tabs extends React.Component {
   render () {
     return (
-      <div className="row">
-        <ul className={this.props.tabBarClass} data-automation-id="tabs">
+      <div role="menubar">
+        <ul className={this.props.tabBarClass} data-automation-id="tabs" role="menu" aria-label={this.props.label}>
           {this.props.tabList.map(tab => (
             <Tab key={tab.label}
                  tab={tab}
                  className={matchPattern(tab.path, this.props.currentPath) ? `${this.props.tabClass} ${this.props.tabActiveClass}` : this.props.tabClass}
+                 ariaSelected={matchPattern(tab.path, this.props.currentPath) ? 'true' : 'false'}
                  push={this.props.push} />
           ))}
         </ul>
@@ -21,6 +22,7 @@ class Tabs extends React.Component {
 }
 
 Tabs.propTypes = {
+  label: PropTypes.string.isRequired,
   tabList: PropTypes.array.isRequired,
   push: PropTypes.func.isRequired,
   currentPath: PropTypes.string.isRequired,

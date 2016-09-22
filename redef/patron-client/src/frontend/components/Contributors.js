@@ -5,17 +5,22 @@ import { injectIntl, intlShape } from 'react-intl'
 class Contributors extends React.Component {
   render () {
     return (
-      <div>
+      <ul className="contributors">
         {Object.keys(this.props.contributors).map(role => (
-          <p key={role}>
-            <strong>{this.props.intl.formatMessage({ id: role })}</strong>:&nbsp;
+          <li key={role}>
+            <span className="label">{this.props.intl.formatMessage({ id: role })}</span>:&nbsp;
             {this.props.contributors[ role ].map(person =>
-              <Link data-automation-id="work_contributor_link" key={person.relativeUri + role}
-                    to={person.relativeUri}>{person.name}</Link>
+              <span className="content">
+                <Link
+                  data-automation-id="work_contributor_link"
+                  key={person.relativeUri + role}
+                  to={person.relativeUri}>{person.name}
+                </Link>
+              </span>
             )}
-          </p>
+          </li>
         ))}
-      </div>
+      </ul>
     )
   }
 }

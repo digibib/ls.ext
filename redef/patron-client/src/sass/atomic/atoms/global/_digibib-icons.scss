@@ -42,21 +42,18 @@
 .icon-up:before { content: '\e806'; } /* '' */
 .icon-cancel-1:before { content: '\e807'; } /* '' */
 .icon-angle-wide:before { content: '\e808'; } /* '' */
-.icon-btn-arrow-close:before { content: '\e809'; } /* '' */
-.icon-btn-arrow-open:before { content: '\e80a'; } /* '' */
-.icon-btn-limit-filter-close:before { content: '\e80b'; } /* '' */
-.icon-btn-limit-filter-open:before { content: '\e80c'; } /* '' */
-.icon-btn-red-arrow-close:before { content: '\e80d'; } /* '' */
-.icon-btn-red-arrow-open:before { content: '\e80e'; } /* '' */
+.icon-attention:before { content: '\e809'; } /* '' */
+.icon-help:before { content: '\e80a'; } /* '' */
 .icon-btn-search-sorting:before { content: '\e80f'; } /* '' */
 .icon-btn-triangle-up:before { content: '\e810'; } /* '' */
-.icon-icon-audiobook:before { content: '\e811'; } /* '' */
-.icon-icon-book:before { content: '\e812'; } /* '' */
-.icon-icon-movie:before { content: '\e813'; } /* '' */
-.icon-icon-music-note:before { content: '\e814'; } /* '' */
-.icon-icon-music:before { content: '\e815'; } /* '' */
+.icon-audiobook:before { content: '\e811'; } /* '' */
+.icon-book:before { content: '\e812'; } /* '' */
+.icon-movie:before { content: '\e813'; } /* '' */
+.icon-music-note:before { content: '\e814'; } /* '' */
+.icon-music:before { content: '\e815'; } /* '' */
 .icon-minus:before { content: '\e816'; } /* '' */
 .icon-plus-1:before { content: '\e817'; } /* '' */
+.icon-cd:before { content: '\e818'; } /* '' */
 .icon-btn-mobile:before { content: '\e81a'; } /* '' */
 .icon-btn-single-filter-close:before { content: '\e81b'; } /* '' */
 .icon-btn-single-filter-open:before { content: '\e81c'; } /* '' */
@@ -72,6 +69,13 @@
 .icon-angle-double-up:before { content: '\f102'; } /* '' */
 .icon-angle-double-down:before { content: '\f103'; } /* '' */
 .icon-ok-squared:before { content: '\f14a'; } /* '' */
+
+/*
+  Hack to support slighlty wider icon
+*/
+.icon-movie:before {
+  width: 1.3em;
+}
 
 /*
    Animation example, for spinners

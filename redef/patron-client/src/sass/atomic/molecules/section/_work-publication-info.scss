@@ -1,71 +1,104 @@
-.publication-info {
-  background: $greyColor;
-  @include span(12 of 12);
-  margin-top: -10px;
+.single-publication {
+  border-bottom: 1px solid $darkGreyColor;
+  padding-bottom: rhythm(2);
   margin-bottom: rhythm(2);
-  @include border-bottom;
-  
-  @include breakpoint($small){
+
+  &.open {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 
-  .title {
-    @include span(10 of 12);
-    padding:rhythm(2);
+  .book-cover {
+    @include span(3);
   }
 
-  .close {
-    @include span(0.5 of 12);
-    float: right;
-    margin-top: rhythm(6);
+  .publication-text-container {
+    @include span(9 last);
+    @include container;
+
   }
 
-  .entry-content {
-    @include span(12 of 12);
+  .availability {
+    @include span(12);
+    font-size: rhythm(2);
+    text-transform: uppercase;
+  }
 
-    .col {
-      @include span(12 of 12);
-      padding:rhythm(2);
+  h2 {
+    @include span(12);
+    margin: rhythm(1) 0;
+    font-size: rhythm(2.5);
+    font-weight: bold;
+  }
 
-      ul, li {
-        list-style: none;
-        padding: 0;
-      }
+  .meta-item {
+    @include span(12);
+    font-size: rhythm(2);
+  }
 
-      @include breakpoint($small){
-         @include span(6 of 12);
-        &:nth-child(2) {
-          margin-right: 0;
-        }
-      }
+  .reserve-button {
+    @include span(12);
+    margin-top: rhythm(2);
+  }
 
+  .show-status {
+    @include span(12);
+    @include container;
+    margin-top: rhythm(4);
+
+    button {
+      @include span (12);
+      width: 100%;
+      font-size: rhythm(2.5);
+      color: $redColor;
+      cursor: pointer;
+      font-weight: bold;
     }
 
-    table {
-      @include span(12 of 12);
-      border-collapse: collapse;
-
-      th, tr {
-        padding: rhythm(1);
-      }
-
-      th, td {
-        padding: 0.5rem;
-
-        @include breakpoint($small){
-          padding: 0.5rem 1rem;
-        }
-      }
-
-      th {
-        @include semiBoldFont;
-        text-align: left;
-        text-transform: capitalize;
-      }
-
-      tr:nth-child(odd) {
-        background: $white;
-      }
+    span {
+      float: left;
     }
+
+    i {
+      float: right;
+    }
+
   }
+
+}
+
+.publication-info {
+  border-bottom: 1px solid $darkGreyColor;
+  padding-bottom: rhythm(2);
+  margin-bottom: rhythm(2);
+  background: $greyColor;
+
+  .meta-info {
+    @include span(12);
+  }
+
+  .meta-label {
+    padding-right: rhythm(1);
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  .meta-content {
+    display: inline-block;
+  }
+
+  .note {
+    margin-top: rhythm(1);
+  }
+
+  h2 {
+    @include span(12);
+    font-size: rhythm(4);
+    font-weight: bold;
+  }
+
+}
+
+.entry-items {
 
 }

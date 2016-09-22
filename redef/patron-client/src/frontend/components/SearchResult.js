@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import Items from '../components/Items'
@@ -36,11 +38,12 @@ class SearchResult extends React.Component {
 
   renderDisplayTitle (result) {
     return (
-      <h1 className="workTitle" data-automation-id="work-title">
-        <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
-          {result.displayTitle}
-        </Link>
-      </h1>
+      <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
+        <h1 className="workTitle" data-automation-id="work-title">
+          <span className="title-text">{result.displayTitle}</span>
+          <span className="caret"><i className="icon-angle-wide" /></span>
+        </h1>
+      </Link>
     )
   }
 
@@ -167,7 +170,14 @@ class SearchResult extends React.Component {
     const missingCoverImage = '/images/no-cover.png'
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
     return (
-      <div className="single-entry" data-formats={formats.join(', ')}>
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="div"
+        className="single-entry"
+        data-formats={formats.join(', ')}>
         <aside className="book-cover">
           <Link to={this.getResultUrl(result)} className="book-cover-item">
             {result.image ? <img src={result.image} alt={coverAltText} />
@@ -202,10 +212,6 @@ class SearchResult extends React.Component {
           {this.renderGenres(result.publication)}
         </article>
 
-        <aside className="entry-link">
-          <a href={this.getResultUrl(result)} alt={result.displayTitle}><i className="icon-angle-wide" /></a>
-        </aside>
-
         {this.shouldShowStatus()
           ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}>
           <p><FormattedMessage {...messages.hideStatus} /></p>
@@ -223,7 +229,7 @@ class SearchResult extends React.Component {
         </div>)
         }
 
-      </div>
+      </ReactCSSTransitionGroup>
     )
   }
 }

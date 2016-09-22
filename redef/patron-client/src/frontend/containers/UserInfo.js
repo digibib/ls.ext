@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
@@ -56,11 +57,8 @@ class UserInfo extends React.Component {
 
   renderEditInfo (editable) {
     return (
-      <section className="user-details">
+      <section className="user-info-form">
         <UserInfoForm />
-
-        {this.renderButtonAndLastUpdated(editable, [ 'hidden-desktop' ])}
-
         {this.renderStaticInfo()}
       </section>
     )
@@ -69,53 +67,56 @@ class UserInfo extends React.Component {
   renderInfo (editable) {
     const { personalInformation } = this.props
     return (
-      <section className="user-details">
-        <div className="address col">
-
-          <h2><FormattedMessage {...messages.address} /></h2>
-          <address typeof="schema:PostalAddress">
-            <span data-automation-id="UserInfo_address"
-                  property="schema:streetAddress">{personalInformation.address}</span><br />
-            <span data-automation-id="UserInfo_zipcode"
-                  property="schema:postalCode">{personalInformation.zipcode}</span>
-            <span data-automation-id="UserInfo_city" property="schema:addressLocality">{personalInformation.city}</span><br />
-            <span data-automation-id="UserInfo_country"
-                  property="schema:addressCountry">{personalInformation.country}</span><br />
-          </address>
-
-          <div className="cell-phone">
-            <h2><FormattedMessage {...messages.mobile} /></h2>
-            <p data-automation-id="UserInfo_mobile">{personalInformation.mobile}</p>
-          </div>
-
-          <div className="email">
-            <h2><FormattedMessage {...messages.email} /></h2>
-            <p data-automation-id="UserInfo_email">{personalInformation.email}</p>
+      <div>
+        <div className="meta-item">
+          <div className="meta-label"><FormattedMessage {...messages.address} /></div>
+          <div className="meta-content">
+            <address typeof="schema:PostalAddress">
+              <span data-automation-id="UserInfo_address" property="schema:streetAddress" className="address-street">
+                {personalInformation.address}
+              </span><br />
+              <span data-automation-id="UserInfo_zipcode" property="schema:postalCode" className="address-zip">
+                {personalInformation.zipcode}&nbsp;
+              </span>
+              <span data-automation-id="UserInfo_city" property="schema:addressLocality" className="address-city">
+                {personalInformation.city}
+              </span><br />
+              <span data-automation-id="UserInfo_country" property="schema:addressCountry" className="address-country">
+                {personalInformation.country}
+              </span>
+            </address>
           </div>
         </div>
-
-        {this.renderButtonAndLastUpdated(editable, [ 'hidden-desktop' ])}
-
+        <div className="meta-item">
+          <div className="meta-label"><FormattedMessage {...messages.mobile} /></div>
+          <div className="meta-content" data-automation-id="UserInfo_mobile">
+            {personalInformation.mobile}
+          </div>
+        </div>
+        <div className="meta-item">
+          <div className="meta-label"><FormattedMessage {...messages.email} /></div>
+          <div className="meta-content" data-automation-id="UserInfo_email">
+            {personalInformation.email}
+          </div>
+        </div>
         {this.renderStaticInfo()}
-      </section>
+      </div>
     )
   }
 
   renderButtonAndLastUpdated (editable, classNames) {
     return (
       <footer className={classNames.join(' ')}>
-        <div className="change-information">
-          {editable
-            ? <button className="black-btn" type="button" onClick={this.handleSubmit}>
-            <FormattedMessage {...messages.saveChanges} /></button>
-            : <button className="black-btn" type="button" onClick={this.handleChangeClick}>
-            <FormattedMessage {...messages.editPersonalInfo} /></button>}
-        </div>
-
+        {editable
+          ? <button className="black-btn" type="button" onClick={this.handleSubmit}>
+          <FormattedMessage {...messages.saveChanges} /></button>
+          : <button className="black-btn" type="button" onClick={this.handleChangeClick}>
+          <FormattedMessage {...messages.editPersonalInfo} /></button>}
         <div className="last-updated">
           <FormattedMessage {...messages.lastUpdated} />:&nbsp;
-            <span data-automation-id="UserInfo_lastUpdated"
-                  className="green-text">{this.props.personalInformation.lastUpdated}</span>
+            <span data-automation-id="UserInfo_lastUpdated" className="green-text">
+              {this.props.personalInformation.lastUpdated}
+            </span>
         </div>
       </footer>
     )
@@ -131,19 +132,21 @@ class UserInfo extends React.Component {
     const { personalInformation } = this.props
 
     return (
-      <div>
-        <header>
-          <h1 data-automation-id="UserInfo_name">{personalInformation.name}</h1>
-
-          <div className="card-number"><FormattedMessage {...messages.cardNumber} />: <span
-            data-automation-id="UserInfo_cardNumber">{personalInformation.cardNumber}</span></div>
-        </header>
-
-        {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}
-
-        {this.renderButtonAndLastUpdated(editable, [ 'hidden-mobile', 'hidden-tablet' ])}
-
-      </div>
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="section"
+        className="user-info">
+          <header>
+            <h1 data-automation-id="UserInfo_name">{personalInformation.name}</h1>
+            <div className="card-number"><FormattedMessage {...messages.cardNumber} />: <span
+              data-automation-id="UserInfo_cardNumber">{personalInformation.cardNumber}</span></div>
+          </header>
+          {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}
+          {this.renderButtonAndLastUpdated(editable, [ '' ])}
+      </ReactCSSTransitionGroup>
     )
   }
 }

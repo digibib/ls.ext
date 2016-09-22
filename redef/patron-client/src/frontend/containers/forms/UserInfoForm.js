@@ -35,44 +35,49 @@ class UserInfoForm extends React.Component {
 
   getValidator (field) {
     if (field.meta.touched && field.meta.error) {
-      return <div style={{ color: 'red', fontSize: '12px' }}><ValidationMessage message={field.meta.error} /></div>
+      return <div className="feedback"><ValidationMessage message={field.meta.error} /></div>
     }
   }
 
   render () {
     return (
       <form name="change-user-details" id="change-user-details">
-        <div className="address col">
-          <address typeof="schema:PostalAddress">
-            <FormInputField name="address" message={messages.address} formName={formName}
-                            getValidator={this.getValidator} headerType="h2" excludeLabel
-                            placeholder={messages.address} />
-            <br />
-            <FormInputField name="zipcode" message={messages.zipcode} formName={formName}
-                            getValidator={this.getValidator} headerType="h2" excludeLabel
-                            placeholder={messages.zipcode} />
-
-            <FormInputField name="city" message={messages.city} formName={formName}
-                            getValidator={this.getValidator} headerType="h2" excludeLabel
-                            placeholder={messages.city} />
-
-            <br />
-          </address>
-        </div>
-
-        <div className="col">
-          <FormInputField name="email" message={messages.email} formName={formName}
-                          getValidator={this.getValidator} headerType="h2" excludeLabel
-                          placeholder={messages.email} type="email" />
-
-          <FormInputField name="mobile" message={messages.mobile} formName={formName}
-                          getValidator={this.getValidator} headerType="h2" excludeLabel
-                          placeholder={messages.mobile} />
-
-          <FormInputField name="telephone" message={messages.telephone} formName={formName}
-                          getValidator={this.getValidator} headerType="h2" excludeLabel
-                          placeholder={messages.telephone} />
-        </div>
+        <FormInputField name="address"
+                        message={messages.address}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.address} />
+        <FormInputField name="zipcode"
+                        message={messages.zipcode}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.zipcode} />
+        <FormInputField name="city"
+                        message={messages.city}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.city} />
+        <FormInputField name="email"
+                        message={messages.email}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.email} type="email" />
+        <FormInputField name="mobile"
+                        message={messages.mobile}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.mobile} />
+        <FormInputField name="telephone"
+                        message={messages.telephone}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.telephone} />
       </form>
     )
   }

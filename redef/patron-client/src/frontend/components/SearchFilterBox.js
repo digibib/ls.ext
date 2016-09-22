@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import SearchFilterBoxItem from '../components/SearchFilterBoxItem'
 import { getFiltersFromQuery } from '../utils/filterParser'
@@ -8,13 +9,21 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
    : <FormattedMessage {...messages.titleSearch} />
   if (getFiltersFromQuery(query).length > 0) {
-    return (<div className="active-filters">
-      <div className="label">{filterText}</div>
-      <ul>
-        {getFiltersFromQuery(query).filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
-          key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
-      </ul>
-    </div>)
+    return (
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="div"
+        className="active-filters">
+        <div className="label">{filterText}</div>
+        <ul>
+          {getFiltersFromQuery(query).filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
+            key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
+        </ul>
+      </ReactCSSTransitionGroup>
+    )
   } else {
     return null
   }

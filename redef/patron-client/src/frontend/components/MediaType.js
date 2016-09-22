@@ -23,8 +23,8 @@ class MediaType extends React.Component {
     const mediaType = this.props.mediaType
     return (
       <div key={mediaType.uri} className="entry-content-icon-single">
-        <img src={`/images/icon-${Constants.mediaTypeIcons[ mediaType.uri ]}.svg`} aria-hidden="true" />
-        <span>{this.props.intl.formatMessage({ id: mediaType.uri })}</span>
+        <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} />
+        {this.props.intl.formatMessage({ id: mediaType.uri })}
         {/* Im unsure if this is needed, leaving it commented out for now. It renders an empty <p> for me */}
         {/* <div>{this.renderFormats(mediaType.uri, mediaType.formats)}</div> */}
       </div>

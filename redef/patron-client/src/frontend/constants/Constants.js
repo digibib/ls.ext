@@ -39,6 +39,16 @@ module.exports = {
     'http://data.deichman.no/mediaType#Game': 'play',
     'http://data.deichman.no/mediaType#ComicBook': 'book',
     'http://data.deichman.no/mediaType#Map': 'book',
-    'http://data.deichman.no/mediaType#Periodical': 'book'
+    'http://data.deichman.no/mediaType#Periodical': 'book',
+    '': 'undefined'
+  },
+  mediaTypeIconsMap: {
+    'book': 'icon-book',
+    'audiobook': 'icon-audiobook',
+    'music': 'icon-music',
+    'music-note': 'icon-music',
+    'movie': 'icon-movie',
+    'play': 'icon-cd',
+    'undefined': 'icon-help'
   }
 }

@@ -1,4 +1,5 @@
   import React, { PropTypes } from 'react'
+  import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
   import { Link } from 'react-router'
   import { push } from 'react-router-redux'
   import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
@@ -95,8 +96,13 @@
       const mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
       return (
         <div>
-
-            <header className="wrapper">
+            <ReactCSSTransitionGroup
+              transitionName="fade-in"
+              transitionAppear={true}
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={500}
+              component="header"
+              className="wrapper">
 
               <div className="logo">
                 <Link to="/">
@@ -116,7 +122,7 @@
                 </nav>
               </MediaQuery>
 
-            </header>
+            </ReactCSSTransitionGroup>
 
           <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
             <nav className={mobileNavClass}>
@@ -124,7 +130,13 @@
             </nav>
           </MediaQuery>
 
-          <section className="search-box-wrapper">
+          <ReactCSSTransitionGroup
+            transitionName="fade-in"
+            transitionAppear={true}
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={500}
+            component="section"
+            className="search-box-wrapper">
             <div className="search-box">
               <form onSubmit={this.handleSearch}>
                 <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>
@@ -147,7 +159,7 @@
                 </div>
               </form>
             </div>
-          </section>
+          </ReactCSSTransitionGroup>
         </div>
       )
     }

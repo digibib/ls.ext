@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 
@@ -7,10 +8,22 @@ class SearchResultsText extends React.Component {
     if (!this.props.locationQuery.query) {
       return null
     } else if (this.props.isSearching) {
-      return <p data-automation-id="is_searching"><FormattedMessage {...messages.searching} /></p>
-    } else {
       return (
         <div className="search-results-number">
+          <span data-automation-id="is_searching" className="loading-spinner">
+            <i className="icon-spin4 animate-spin" /> <FormattedMessage {...messages.searching} />
+          </span>
+        </div>
+      )
+    } else {
+      return (
+        <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear={true}
+        transtionLeave={false}
+        transitionEnterTimeout={500}
+        component="div"
+        className="search-results-number">
           <MediaQuery query="(min-width: 668px)" values={{...this.props.mediaQueryValues}}>
             <FormattedHTMLMessage {...messages.totalHits}
               values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
@@ -19,7 +32,7 @@ class SearchResultsText extends React.Component {
             <FormattedHTMLMessage {...messages.totalHitsMobile}
               values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
           </MediaQuery>
-        </div>
+        </ReactCSSTransitionGroup>
       )
     }
   }

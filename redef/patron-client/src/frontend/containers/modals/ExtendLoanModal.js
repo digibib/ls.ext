@@ -60,8 +60,8 @@ class ExtendLoanModal extends React.Component {
       return this.renderSuccess()
     }
     return (
-      <div data-automation-id="extend_loan_modal" className="default-modal">
-        <h2>{this.props.message}</h2>
+      <section data-automation-id="extend_loan_modal" className="modal-inner extend-loan-modal default-modal">
+        <h2>{this.props.message}Forny</h2>
         <button className="black-btn" disabled={this.props.isRequestingExtendLoan} onClick={this.handleExtendLoan}
                 data-automation-id="confirm_button">
           <FormattedMessage {...messages.extendLoan} />
@@ -70,7 +70,7 @@ class ExtendLoanModal extends React.Component {
                 data-automation-id="cancel_button">
           <FormattedMessage {...messages.cancel} />
         </button>
-      </div>
+      </section>
     )
   }
 }
