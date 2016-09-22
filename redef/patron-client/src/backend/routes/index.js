@@ -1,9 +1,7 @@
 const requestProxy = require('express-request-proxy')
-const reactDomServer = require('react-dom/server')
-const reactRouter = require('react-router')
-const match = reactRouter.match
-const RouterContext = reactRouter.RouterContext
-const routes = require('../../frontend/routes').Routes
+import { renderToString } from 'react-dom/server'
+import  { RouterContext, match } from 'react-router'
+import { routes } from '../../frontend/routes/index'
 import { Provider } from 'react-redux'
 import store from '../../frontend/store'
 import { IntlProvider } from 'react-intl'
@@ -33,7 +31,7 @@ module.exports = (app) => {
         res.redirect(302, redirectLocation.pathname + redirectLocation.search)
       } else if (renderProps) {
         console.log('renderProps', renderProps)
-        const componentHTML = reactDomServer.renderToString(
+        const componentHTML = renderToString(
           <Provider store={store}>
             <IntlProvider key="intl" locale="en">
               <RouterContext {...renderProps} />

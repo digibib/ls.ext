@@ -38,7 +38,7 @@ const routes = (
   </Route>
 )
 
-export { routes as Routes }
+export { routes as routes }
 
 export default (
   <Router history={history}>
