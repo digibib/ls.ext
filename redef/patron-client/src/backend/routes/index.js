@@ -30,7 +30,6 @@ module.exports = (app) => {
       } else if (redirectLocation) {
         res.redirect(302, redirectLocation.pathname + redirectLocation.search)
       } else if (renderProps) {
-        console.log('renderProps', renderProps)
         const componentHTML = renderToString(
           <Provider store={store}>
             <IntlProvider key="intl" locale="en">
