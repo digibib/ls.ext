@@ -3350,6 +3350,10 @@
       '760':
         subfields:
           -
+            t:
+              predicate: "MIGRATION.parentRecordTitle"
+              object:
+                datatype: "literal"
             w:
               predicate: "MIGRATION.parentRecordId"
               object:

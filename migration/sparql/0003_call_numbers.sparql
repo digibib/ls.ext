@@ -1,4 +1,5 @@
 # 1) Merge locationCategory code 'a' into locationFormat
+
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
@@ -28,15 +29,7 @@ WHERE {
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
 PREFIX migration: <http://migration.deichman.no/>
-
 WITH <http://deichman.no/migration>
-
-DELETE {
-  ?publication migration:locationCategory ?category .
-}
-
-WHERE {
-  ?publication migration:locationCategory ?category ;
-    a :Publication .
-}
+DELETE { ?publication migration:locationCategory ?o .}
+WHERE { ?publication migration:locationCategory ?o .}
 ;
