@@ -45,7 +45,6 @@ WHERE {
 
     VALUES (?format ?mediaType) {
       (format:DAISY                   mediaType:Audiobook)
-      (format:EBokBib                 mediaType:E-book)
       (format:ComputerFile            mediaType:E-book)
       (format:Videotape               mediaType:Film)
       (format:DVD                     mediaType:Film)
@@ -60,8 +59,6 @@ WHERE {
       (format:NintendoDSGame          mediaType:Game)
       (format:NintendoWiiGame         mediaType:Game)
       (format:Diapositive             mediaType:Other)
-      (format:Microfiche              mediaType:Other)
-      (format:MicrofilmReel           mediaType:Other)
       (format:Map                     mediaType:Other)
       (format:CD-ROM                  mediaType:Other)
     }
@@ -140,7 +137,81 @@ WHERE {
 ;
 
 
-# 5) Remove Other where another media type is also present
+# 5) Add media type and format for musical instruments
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX tag: <http://data.deichman.no/tag/>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?pub :format format:PhysicalBody .
+}
+
+INSERT {
+  ?pub :hasMediaType mediaType:Other ;
+    :format format:MusicalInstrument .
+}
+
+WHERE {
+  ?pub :tag tag:xmusikkinstrumenter ;
+    :format format:PhysicalBody ;
+    a :Publication .
+}
+;
+
+
+#6) Prepare deleting physical objects
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?pub :format format:PhysicalBody .
+}
+
+INSERT {
+  ?pub :format format:toBeDeleted .
+}
+
+WHERE {
+  ?pub :format format:PhysicalBody ;
+    a :Publication .
+}
+;
+
+
+#7 ) Delete items with certain formats
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+  ?pub ?p ?o .
+}
+
+WHERE {
+    ?pub :format format:toBeDeleted ;
+      a :Publication ;
+      ?p ?o .
+}
+;
+
+
+# 8) Remove Other where another media type is also present
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
@@ -160,7 +231,31 @@ WHERE {
 ;
 
 
-# 6) Construct work type based on media type
+# 9) Remove redundant media types
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+  ?pub :hasMediaType ?delete .
+}
+
+WHERE {
+    ?pub :hasMediaType ?delete ;
+      :hasMediaType ?keep .
+
+    VALUES (?delete ?keep) {
+      (mediaType:Book               mediaType:LanguageCourse)
+      (mediaType:MusicRecording     mediaType:Film)
+    }
+}
+;
+
+
+# 10) Construct work type based on media type
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
@@ -193,7 +288,7 @@ WHERE {
 ;
 
 
-# 7) Delete redundant formats
+# 11) Delete redundant formats
 SPARQL
 DEFINE sql:log-enable 2
 PREFIX : <http://data.deichman.no/ontology#>
