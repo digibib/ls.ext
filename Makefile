@@ -57,7 +57,7 @@ export GITREF=$(shell git rev-parse HEAD)
 endif
 
 wait_until_ready:					## Checks if koha is up and running
-	$(CMD) -c 'sudo docker exec -t koha ./wait_until_ready.py'
+	$(CMD) -c 'sudo docker exec -t xkoha ./wait_until_ready.py'
 
 ifdef TESTPROFILE
 CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
