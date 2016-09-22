@@ -1,6 +1,6 @@
 import { browserHistory } from 'react-router'
 
-let createPath = undefined
+let createPath
 
 if (typeof window !== 'undefined') {
   createPath = browserHistory.createPath

@@ -1,5 +1,4 @@
 const requestProxy = require('express-request-proxy')
-const path = require('path')
 const reactDomServer = require('react-dom/server')
 const reactRouter = require('react-router')
 const match = reactRouter.match
@@ -8,8 +7,6 @@ const routes = require('../../frontend/routes').Routes
 import { Provider } from 'react-redux'
 import store from '../../frontend/store'
 import { IntlProvider } from 'react-intl'
-import Root from '../../frontend/containers/Root'
-const Route = reactRouter.Route
 import React from 'react'
 
 module.exports = (app) => {
@@ -36,8 +33,12 @@ module.exports = (app) => {
         res.redirect(302, redirectLocation.pathname + redirectLocation.search)
       } else if (renderProps) {
         console.log('renderProps', renderProps)
-        const componentHTML = reactDomServer.renderToString(<Provider store={store}><IntlProvider key="intl"
-                                                                                                  locale="en"><RouterContext {...renderProps} /></IntlProvider></Provider>)
+        const componentHTML = reactDomServer.renderToString(
+          <Provider store={store}>
+            <IntlProvider key="intl" locale="en">
+              <RouterContext {...renderProps} />
+            </IntlProvider>
+          </Provider>)
         const HTML =
           `<!DOCTYPE html>
             <html lang="no">
@@ -57,9 +58,4 @@ module.exports = (app) => {
       }
     })
   })
-
-  /*app.get('*', (request, response) => {
-    response.sendFile(path.resolve(__dirname, '..', '..', '..', 'public', 'dist', 'index.html'))
-   })*/
-
 }
