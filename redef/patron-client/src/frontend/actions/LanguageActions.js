@@ -20,7 +20,12 @@ export function translationFailure (error) {
   }
 }
 
-export function receiveTranslation (locale, messages) {
+export function receiveTranslation (locale, messages, fromStorage) {
+  if (process.env.NODE_ENV !== 'server' && sessionStorage && !fromStorage) {
+    const translations = {}
+    translations[ locale ] = messages
+    sessionStorage.setItem('translations', JSON.stringify(translations))
+  }
   return {
     type: types.RECEIVE_TRANSLATION,
     payload: {
@@ -35,14 +40,21 @@ export function loadLanguage (locale) {
     locale = locale || getState().application.locale
     const url = `${Constants.backendUri}/translations/${locale}`
     dispatch(requestTranslation(locale))
-    return fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(json => dispatch(receiveTranslation(locale, json)))
-      .catch(error => dispatch(translationFailure(error)))
+    if (process.env.NODE_ENV !== 'server' &&
+      sessionStorage &&
+      sessionStorage.translations &&
+      JSON.parse(sessionStorage.translations)[ locale ]) {
+      return dispatch(receiveTranslation(locale, JSON.parse(sessionStorage.translations)[ locale ], true))
+    } else {
+      return fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(json => dispatch(receiveTranslation(locale, json)))
+        .catch(error => dispatch(translationFailure(error)))
+    }
   }
 }

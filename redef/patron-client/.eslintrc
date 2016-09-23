@@ -17,5 +17,8 @@
     "jsx-quotes": ["error", "prefer-double"],
     "no-var": 1,
     "prefer-const": 1
+  },
+  "globals": {
+    "sessionStorage": true
   }
 }

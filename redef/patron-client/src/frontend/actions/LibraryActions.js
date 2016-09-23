@@ -8,8 +8,8 @@ export function requestLibraries () {
   }
 }
 
-export function receiveLibraries (libraries) {
-  if (process.env.NODE_ENV !== 'server' && sessionStorage) {
+export function receiveLibraries (libraries, fromStorage) {
+  if (process.env.NODE_ENV !== 'server' && sessionStorage && !fromStorage) {
     sessionStorage.setItem('libraries', JSON.stringify(libraries))
   }
   return {
@@ -36,8 +36,7 @@ export function fetchLibraries () {
     dispatch(requestLibraries())
 
     if (process.env.NODE_ENV !== 'server' && sessionStorage && sessionStorage.libraries !== undefined) {
-      console.log('--------Using libraries from sessionstorage------------', sessionStorage.libraries)
-      return dispatch(receiveLibraries(JSON.parse(sessionStorage.libraries)))
+      return dispatch(receiveLibraries(JSON.parse(sessionStorage.libraries), true))
     } else {
       return fetch('/api/v1/libraries', {
         method: 'GET'
