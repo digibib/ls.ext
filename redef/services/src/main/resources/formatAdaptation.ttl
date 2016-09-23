@@ -19,5 +19,5 @@ adaptation:tactile a duo:FormatAdaptation ;
   rdfs:label "Tactile"@en .
 adaptation:capitalLetters a duo:FormatAdaptation ;
   duo:code "tj" ;
-  rdfs:label "Store bokstaver"@no ;
+  rdfs:label "Blokkbokstaver"@no ;
   rdfs:label "Capital letters only"@en .

@@ -123,8 +123,8 @@ duo:WorkType a rdfs:Class ;
   rdfs:label "Verkstype"@no .
 
 duo:LiteraryForm a rdfs:Class ;
-  rdfs:label "Literary form"@en ;
-  rdfs:label "Litterær form"@no .
+  rdfs:label "Form"@en ;
+  rdfs:label "Form"@no .
 
 duo:ContentAdaptation a rdfs:Class ;
   rdfs:label "Content adaptation"@en ;

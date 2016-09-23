@@ -416,7 +416,7 @@ module.exports = (app) => {
               // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
             },
             {
-              label: "Verket er ikke et selvstendig verk",
+              label: "Skal ikke vises som verk",
               rdfProperty: 'improperWork',
             },
             {
@@ -737,7 +737,7 @@ module.exports = (app) => {
             { rdfProperty: 'publicationYear' },
             { rdfProperty: 'language', multiple: true },
             {
-              includeOnlyWhen: { hasWorkType: 'Literature' },
+              includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] },
               rdfProperty: 'literaryForm',
               multiple: true,
               headlinePart: {

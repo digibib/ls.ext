@@ -231,7 +231,7 @@ WHERE {
 ;
 
 
-# 9) Remove redundant media types
+# 9) Choose media type from publications with two or more
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
