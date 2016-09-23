@@ -13,5 +13,5 @@ surname,cardnumber,userid,password,branchcode,categorycode,flags,dateexpiry
 "Automat Stovner","A111","autostv","$SIP_AUTOPASS_ENCRYPTED","fsto","AUTO",18",2999-01-01"
 "Automat Torshov","A112","autotor","$SIP_AUTOPASS_ENCRYPTED","ftor","AUTO",18",2999-01-01"
 "Automat Tøyen","A113","autotoy","$SIP_AUTOPASS_ENCRYPTED","fgam","AUTO",18",2999-01-01"
-"Automat Hovedbiblioteket","A114","autohb","$SIP_AUTOPASS_ENCRYPTED","hbib","AUTO",18",2999-01-01"
+"Automat Hovedbiblioteket","A114","autohb","$SIP_AUTOPASS_ENCRYPTED","hutl","AUTO",18",2999-01-01"
 "Døråpner Majorstuen","D101","doormajor","$SIP_AUTOPASS_ENCRYPTED","fmaj","DOOR",18",2999-01-01"
