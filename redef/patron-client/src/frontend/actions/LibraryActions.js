@@ -9,6 +9,9 @@ export function requestLibraries () {
 }
 
 export function receiveLibraries (libraries) {
+  if (process.env.NODE_ENV !== 'server' && sessionStorage) {
+    sessionStorage.setItem('libraries', JSON.stringify(libraries))
+  }
   return {
     type: types.RECEIVE_LIBRARIES,
     payload: {
@@ -31,17 +34,23 @@ export function librariesFailure (error) {
 export function fetchLibraries () {
   return dispatch => {
     dispatch(requestLibraries())
-    return fetch('/api/v1/libraries', {
-      method: 'GET'
-    })
-      .then(response => {
-        if (response.status === 200) {
-          return response.json()
-        } else {
-          throw Error('Error fetching libraries')
-        }
+
+    if (process.env.NODE_ENV !== 'server' && sessionStorage && sessionStorage.libraries !== undefined) {
+      console.log('--------Using libraries from sessionstorage------------', sessionStorage.libraries)
+      return dispatch(receiveLibraries(JSON.parse(sessionStorage.libraries)))
+    } else {
+      return fetch('/api/v1/libraries', {
+        method: 'GET'
       })
-      .then(json => dispatch(receiveLibraries(mapLibraries(json))))
-      .catch(error => dispatch(librariesFailure(error)))
+        .then(response => {
+          if (response.status === 200) {
+            return response.json()
+          } else {
+            throw Error('Error fetching libraries')
+          }
+        })
+        .then(json => dispatch(receiveLibraries(mapLibraries(json))))
+        .catch(error => dispatch(librariesFailure(error)))
+    }
   }
 }
