@@ -138,20 +138,20 @@ test_one:						## Run 'utlaan_via_adminbruker'.
 
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
-	$(CMD) -c 'sudo docker stop koha'
+	$(CMD) -c 'sudo docker stop xkoha'
 
 delete_koha: stop_koha
-	$(CMD) -c 'sudo docker rm koha'
+	$(CMD) -c 'sudo docker rm xkoha'
 
 rebuild_zebra:
 	$(CMD) -c 'sudo docker exec xkoha koha-rebuild-zebra -full -v -b name'
 
 stop_ship:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
-	$(CMD) -c '(sudo docker stop koha || true) && sudo docker stop koha_mysql'
+	$(CMD) -c '(sudo docker stop xkoha || true) && sudo docker stop koha_mysql'
 
 delete_ship: stop_ship
-	$(CMD) -c '(sudo docker rm koha || true) && sudo docker rm -v koha_mysql'
+	$(CMD) -c '(sudo docker rm xkoha || true) && sudo docker rm -v koha_mysql'
 
 delete_db: stop_ship
 	$(CMD) -c 'sudo docker rm koha_mysql_data'
