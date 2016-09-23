@@ -139,7 +139,7 @@ MODIFY
 
 DELETE {
     ?doc :subject `IRI(CONCAT("http://data.deichman.no/subject/s", MD5(?label)))` ;
-        :subject `IRI(CONCAT("http://data.deichman.no/subject/s", MD5(?spec)))` .
+        :subject `IRI(CONCAT("http://data.deichman.no/subject/s", MD5(?specLabel)))` .
 }
 
 INSERT { ?doc :subject `IRI(CONCAT("http://data.deichman.no/place/g", MD5(CONCAT(?label, "_", ?spec))))` . }
@@ -149,7 +149,6 @@ WHERE {
         a migration:SubjectAuthorityM651 ;
         migration:mainLabel ?label .
     ?subAuth migration:subdivision ?label ;
-        a migration:SubjectAuthorityM650 ;
         migration:subdivision ?specLabel .
     FILTER (?specLabel = CONCAT("(", ?spec, ")")) .
     ?doc migration:subjectAuthority ?subAuth ;

@@ -231,7 +231,7 @@ WHERE {
 ;
 
 
-# 9) Choose media type from publications with two or more
+# 9) Choose media type from publications with more than one
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
@@ -250,6 +250,18 @@ WHERE {
     VALUES (?delete ?keep) {
       (mediaType:Book               mediaType:LanguageCourse)
       (mediaType:MusicRecording     mediaType:Film)
+      (mediaType:Book               mediaType:Audiobook)
+      (mediaType:E-book             mediaType:Audiobook)
+      (mediaType:Audiobook          mediaType:Film)
+      (mediaType:Film               mediaType:Book)
+      (mediaType:SheetMusic         mediaType:Film)
+      (mediaType:Audiobook          mediaType:Game)
+      (mediaType:MusicRecording     mediaType:Game)
+      (mediaType:Audiobook          mediaType:LanguageCourse)
+      (mediaType:MusicRecording     mediaType:Audiobook)
+      (mediaType:MusicRecording     mediaType:Book)
+      (mediaType:MusicRecording     mediaType:SheetMusic)
+      (mediaType:SheetMusic         mediaType:Book)
     }
 }
 ;
