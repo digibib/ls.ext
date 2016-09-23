@@ -23,7 +23,7 @@ function setup (propOverrides) {
     'branchCode_1': 'library_1',
     'branchCode_2': 'library_2'
   }
-  store.dispatch(LibraryActions.receiveLibraries(libraries))
+  store.dispatch(LibraryActions.receiveLibraries(libraries, true))
   const loansAndReservations = {
     pickups: [
       {

@@ -21,7 +21,7 @@ export function translationFailure (error) {
 }
 
 export function receiveTranslation (locale, messages, fromStorage) {
-  if (process.env.NODE_ENV !== 'server' && sessionStorage && !fromStorage) {
+  if (!fromStorage && process.env.NODE_ENV !== 'server' && sessionStorage) {
     const translations = {}
     translations[ locale ] = messages
     sessionStorage.setItem('translations', JSON.stringify(translations))
