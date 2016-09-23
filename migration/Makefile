@@ -256,6 +256,8 @@ ifdef MIGRATE_PATRONS
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/holds.sql'
 	@echo "-- Setting reserves.found to NULL when not found"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE reserves SET found=NULL WHERE found=\"\""'
+	@echo "-- Storing Bibliofil user ID as extended patron attribute"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_attributes (borrowernumber, code, attribute) SELECT borrowernumber, \"old_lnr\", userid  FROM borrowers WHERE categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\"); "'
 	@echo "-- Setting userid=cardid"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL AND categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\");"'	@echo "OK Done migrating loands and holds\n"
 endif
