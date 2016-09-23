@@ -148,11 +148,13 @@ WHERE {
       ?work deich:subject ?subject .
       ?subject a deich:Subject ;
               deich:prefLabel ?subjectName  .
+      OPTIONAL { ?subject deich:specification ?subjectSpec }
     } UNION {
       <__PUBLICATIONURI__> deich:publicationOf ?work .
       ?work deich:subject ?subject .
             ?subject a deich:Place ;
                     deich:prefLabel ?subjectName  .
+      OPTIONAL { ?subject deich:specification ?subjectSpec }
     } UNION {
       <__PUBLICATIONURI__> deich:publicationOf ?work .
       ?work deich:subject ?subject .
@@ -163,10 +165,7 @@ WHERE {
       ?work deich:subject ?subject .
       ?subject a deich:Person ;
               deich:name ?subjectName  .
-    } UNION {
-    <__PUBLICATIONURI__> deich:publicationOf ?work .
-    ?work deich:subject ?subject .
-    ?subject deich:specification ?subjectSpec
+      OPTIONAL { ?subject deich:specification ?subjectSpec }
     }
     BIND(IF(BOUND(?subjectSpec), CONCAT(?subjectName, " (", ?subjectSpec, ")"), ?subjectName) AS ?subjectLabel)
   }
