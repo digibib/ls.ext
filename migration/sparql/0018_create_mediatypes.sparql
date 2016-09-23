@@ -262,6 +262,7 @@ WHERE {
       (mediaType:MusicRecording     mediaType:Book)
       (mediaType:MusicRecording     mediaType:SheetMusic)
       (mediaType:SheetMusic         mediaType:Book)
+      (mediaType:MusicRecording     mediaType:ComicBook)
     }
 }
 ;
