@@ -33,6 +33,9 @@ export function receiveTranslation (locale, messages) {
 export function loadLanguage (locale) {
   return (dispatch, getState) => {
     locale = locale || getState().application.locale
+    if (process.env.NODE_ENV !== 'server' && navigator.cookieEnabled) {
+      document.cookie = `locale=${locale}`
+    }
     //isomorphic fetch requires absolute urls
     const url = `${Constants.baseURL}${Constants.backendUri}/translations/${locale}`
     dispatch(requestTranslation(locale))

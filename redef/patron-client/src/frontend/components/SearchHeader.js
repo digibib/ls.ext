@@ -109,12 +109,13 @@
                   <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars" onClick={this.toggleMobileNav} />
                 </div>
               </MediaQuery>
-
-              <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
+              {/* If rendered by server render navigationlinks regardless of screen-size (server does not have a screen) */}
+              {process.env.NODE_ENV === 'server' ? <nav className="primary-menu">{this.renderNavigationLinks()}</nav>
+                : <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
                 <nav className="primary-menu">
                   {this.renderNavigationLinks()}
                 </nav>
-              </MediaQuery>
+              </MediaQuery>}
 
             </header>
 

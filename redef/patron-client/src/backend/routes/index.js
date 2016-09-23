@@ -1,11 +1,16 @@
 const requestProxy = require('express-request-proxy')
 import { renderToString } from 'react-dom/server'
-import  { RouterContext, match } from 'react-router'
+import  { match } from 'react-router'
 import { routes } from '../../frontend/routes/index'
-import { Provider } from 'react-redux'
-import store from '../../frontend/store'
-import { IntlProvider } from 'react-intl'
 import React from 'react'
+import no from 'react-intl/locale-data/no'
+import { addLocaleData } from 'react-intl'
+import App from '../components/App'
+import { Provider } from 'react-redux'
+import store from '../../frontend/store/index'
+import cookieParser from 'cookie-parser'
+
+addLocaleData(no)
 
 module.exports = (app) => {
   require('./auth')(app)
@@ -23,6 +28,8 @@ module.exports = (app) => {
     timeout: 30 * 1000 // 30 seconds
   }))
 
+  app.use(cookieParser())
+
   app.use((req, res) => {
     match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
       if (error) {
@@ -30,12 +37,13 @@ module.exports = (app) => {
       } else if (redirectLocation) {
         res.redirect(302, redirectLocation.pathname + redirectLocation.search)
       } else if (renderProps) {
-        const componentHTML = renderToString(
+        const locale = req.cookies && req.cookies.locale ? req.cookies.locale : 'no'
+        const connectedApp = (
           <Provider store={store}>
-            <IntlProvider key="intl" locale="en">
-              <RouterContext {...renderProps} />
-            </IntlProvider>
-          </Provider>)
+            <App renderProps={renderProps} locale={locale} />
+          </Provider>
+        )
+        const componentHTML = renderToString(connectedApp)
         const bundle = process.env.NODE_ENV === 'production' ? 'bundle.min.js' : 'bundle.js'
         const HTML =
           `<!DOCTYPE html>
