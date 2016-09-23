@@ -2678,20 +2678,9 @@
             a:
               predicate: "ONTOLOGY.tag"
               object:
-                datatype: "uri"
+                datatype: "literal"
                 regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
-                prefix: "http://data.deichman.no/tag/x"
                 regex_split: " "
-                urlize: true
-              relation:
-                subfields:
-                  -
-                    a:
-                      predicate: "ONTOLOGY.prefLabel"
-                      object:
-                        datatype: "literal"
-                        lang: "no"
-                class: "ONTOLOGY.Tag"
     -
       '699':
         subfields:
@@ -3783,6 +3772,14 @@
                       object:
                         datatype: "literal"
     -
+      '084':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.musicClass"
+              object:
+                datatype: "literal"
+    -
       '090':
         subfields:
           -
@@ -3806,11 +3803,19 @@
               object:
                 datatype: "literal"
     -
+      '091':
+        subfields:
+          -
+            a:
+              predicate: "RAW.correctedRecordNote"
+              object:
+                datatype: "literal"
+    -
       '092':
         subfields:
           -
             '3':
-              predicate: "RAW.location"
+              predicate: "MIGRATION.location"
               object:
                 datatype: "uri"
                 prefix: "http://data.deichman.no/location/x"
@@ -3821,11 +3826,3 @@
                       predicate: "ONTOLOGY.label"
                       object:
                         datatype: "literal"
-    -
-      '084':
-        subfields:
-          -
-            a:
-              predicate: "RAW.musicClass"
-              object:
-                datatype: "literal"
