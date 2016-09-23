@@ -2,7 +2,6 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import Errors from '../constants/Errors'
-import Constants from '../constants/Constants'
 
 export function requestProfileSettings () {
   return {
@@ -30,8 +29,7 @@ export function receiveProfileSettings (settings) {
 
 export function fetchProfileSettings () {
   return (dispatch) => {
-    //isomorphic fetch requires absolute urls
-    const url = `${Constants.baseURL}/api/v1/profile/settings`
+    const url = '/api/v1/profile/settings'
     dispatch(requestProfileSettings())
     return fetch(url, {
       method: 'GET',
@@ -72,8 +70,7 @@ export function receiveProfileLoans (loans) {
 
 export function fetchProfileLoans () {
   return (dispatch) => {
-    //isomorphic fetch requires absolute urls
-    const url = `${Constants.baseURL}/api/v1/profile/loans`
+    const url = '/api/v1/profile/loans'
     dispatch(requestProfileLoans())
     return fetch(url, {
       method: 'GET',
@@ -114,8 +111,7 @@ export function receiveProfileInfo (info) {
 
 export function fetchProfileInfo () {
   return (dispatch) => {
-    //isomorphic fetch requires absolute urls
-    const url = `${Constants.baseURL}/api/v1/profile/info`
+    const url = '/api/v1/profile/info'
     dispatch(requestProfileInfo())
     return fetch(url, {
       method: 'GET',
@@ -152,8 +148,7 @@ export function postProfileInfoSuccess () {
 }
 
 export function postProfileInfo (successAction) {
-  //isomorphic fetch requires absolute urls
-  const url = `${Constants.baseURL}/api/v1/profile/info`
+  const url = '/api/v1/profile/info'
   return (dispatch, getState) => {
     const { userInfo: { values: { address, zipcode, city, country, mobile, email } } } = getState().form
     const profileInfo = {
@@ -210,8 +205,7 @@ export function postProfileSettingsSuccess () {
 }
 
 export function postProfileSettings (profileSettings, successAction) {
-  //isomorphic fetch requires absolute urls
-  const url = `${Constants.baseURL}/api/v1/profile/settings`
+  const url = '/api/v1/profile/settings'
   return dispatch => {
     dispatch(requestPostProfileSettings())
     return fetch(url, {
@@ -270,8 +264,7 @@ export function changePasswordFromForm (successAction) {
 }
 
 export function changePassword (currentPassword, newPassword, successAction) {
-  //isomorphic fetch requires absolute urls
-  const url = `${Constants.baseURL}/api/v1/profile/settings/password`
+  const url = '/api/v1/profile/settings/password'
   return dispatch => {
     dispatch(requestChangePassword())
     return fetch(url, {

@@ -58,8 +58,7 @@ export function fetchPersonResource (personId) {
     if (getState().resources.resources[ personId ]) {
       return
     }
-    //isomorphic fetch requires absolute urls
-    const url = `${Constants.baseURL}${Constants.backendUri}/person/${personId}`
+    const url = `${Constants.backendUri}/person/${personId}`
     dispatch(requestResource(personId))
     return Promise.all([
       fetch(url).then(response => {
@@ -89,8 +88,7 @@ export function fetchWorkResource (workId) {
     if (getState().resources.resources[ workId ]) {
       return
     }
-    //isomorphic fetch requires absolute urls
-    const url = `${Constants.baseURL}${Constants.backendUri}/work/${workId}`
+    const url = `${Constants.backendUri}/work/${workId}`
     dispatch(requestResource(workId))
     return Promise.all([
       fetch(url).then(response => {

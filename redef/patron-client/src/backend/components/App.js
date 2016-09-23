@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
-import  { RouterContext } from 'react-router'
+import { RouterContext } from 'react-router'
 
 const App = ({ messages, locale, renderProps }) => (
   <IntlProvider key="intl" locale={locale} messages={messages[ locale ]}>

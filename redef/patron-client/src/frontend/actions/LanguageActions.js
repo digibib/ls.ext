@@ -36,8 +36,7 @@ export function loadLanguage (locale) {
     if (process.env.NODE_ENV !== 'server' && navigator.cookieEnabled) {
       document.cookie = `locale=${locale}`
     }
-    //isomorphic fetch requires absolute urls
-    const url = `${Constants.baseURL}${Constants.backendUri}/translations/${locale}`
+    const url = `${Constants.backendUri}/translations/${locale}`
     dispatch(requestTranslation(locale))
     return fetch(url, {
       method: 'GET',

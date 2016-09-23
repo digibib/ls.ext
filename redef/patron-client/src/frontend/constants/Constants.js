@@ -1,6 +1,4 @@
 module.exports = {
-  baseURL: true ? 'http://localhost:8000'
-    : '*TODO: Replace this with remote URL, and replace true with condition to check if app is running locally or remote (isomorphic-fetch requires absolute URLs)*',
   backendUri: '/services',
   maxVisibleFilterItems: 5,
   maxSearchResults: 100,

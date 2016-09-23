@@ -1,6 +1,6 @@
 const requestProxy = require('express-request-proxy')
 import { renderToString } from 'react-dom/server'
-import  { match } from 'react-router'
+import { match } from 'react-router'
 import { routes } from '../../frontend/routes/index'
 import React from 'react'
 import no from 'react-intl/locale-data/no'

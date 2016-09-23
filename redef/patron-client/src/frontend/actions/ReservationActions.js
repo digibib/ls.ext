@@ -5,7 +5,6 @@ import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
 import * as ProfileActions from './ProfileActions'
-import Constants from '../constants/Constants'
 
 export function startReservation (recordId) {
   return requireLoginBeforeAction(showModal(ModalComponents.RESERVATION, { recordId: recordId }))
@@ -54,8 +53,7 @@ export function reservePublicationFailure (error, recordId, branchCode) {
 }
 
 export function reservePublication (recordId, branchCode) {
-  //isomorphic fetch requires absolute urls
-  const url = `${Constants.baseURL}/api/v1/holds`
+  const url = '/api/v1/holds'
   return dispatch => {
     dispatch(requestReservePublication(recordId, branchCode))
     return fetch(url, {
@@ -123,8 +121,7 @@ export function cancelReservationFailure (error, reserveId) {
 }
 
 export function cancelReservation (reserveId) {
-  //isomorphic fetch requires absolute urls
-  const url = `${Constants.baseURL}/api/v1/holds`
+  const url = '/api/v1/holds'
   return dispatch => {
     dispatch(requestCancelReservation(reserveId))
     return fetch(url, {
