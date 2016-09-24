@@ -1,6 +1,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 <api>    rdfs:label "Internt API"@no, "Internt API"@en .
-<hbib>   rdfs:label "Hovedbiblioteket"@no, "Hovedbiblioteket"@en .
+<hutl>   rdfs:label "Hovedbiblioteket, voksen"@no, "Hovedbiblioteket, voksen"@en .
+<hvmu>   rdfs:label "Hovedbiblioteket, musikk"@no, "Hovedbiblioteket, musikk"@en .
+<hbar>   rdfs:label "Hovedbiblioteket, barn"@no, "Hovedbiblioteket, barn"@en .
 <fbje>   rdfs:label "Bjerke"@no, "Bjerke"@en .
 <fbjo>   rdfs:label "Bjørnholt"@no, "Bjørnholt"@en .
 <fbol>   rdfs:label "Bøler"@no, "Bøler"@en .

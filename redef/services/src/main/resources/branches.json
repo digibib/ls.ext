@@ -20,7 +20,9 @@
     "fsme": "Smestad",
     "fsto": "Stovner",
     "ftor": "Torshov",
-    "hbib": "Hovedbiblioteket",
+    "hutl": "Hovedbiblioteket, voksen",
+    "hvmu": "Hovedbiblioteket, musikk",
+    "hbar": "Hovedbiblioteket, barn",
     "hsko": "Skoletjenesten",
     "ukjent": "Ukjent avdeling"
 }
