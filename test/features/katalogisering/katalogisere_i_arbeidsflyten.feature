@@ -96,6 +96,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "verket"
     Så så trykker jeg på Legg til ny biinnførsel-knappen
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
+    Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret
     Og jeg velger rollen "Fotograf"
     Og velger radioknappen for "Utgivelse" for å velge "hva rollen gjelder"
@@ -138,6 +139,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg kan legge inn seriens navn
     Og at det finnes et verk med forfatter
     Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
     Og velger verket fra lista tilkoplet forfatteren
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
@@ -178,6 +180,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
     Så ombestemmer jeg meg
     Så fjerner jeg hovedinnførselen
     Og jeg venter litt
@@ -347,6 +350,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg legger til forfatter av det nye verket
     Og jeg kan legge til tittelen for det nye verket
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Og jeg venter litt
     Så ser jeg at det er to treff i resultatlisten
     Og jeg venter litt
     Når jeg legger inn forfatternavnet på startsida

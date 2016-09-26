@@ -566,12 +566,16 @@
       return ractive.get(keypath)
     }
 
+    function typeFromUri (resourceUri) {
+      var typeMap = ractive.get('applicationData.config.typeMap')
+      return typeMap[ resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ] ]
+    }
+
     function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
       var graphData = ensureJSON(response.data)
       var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
-      var typeMap = ractive.get('applicationData.config.typeMap')
-      type = type || typeMap[ resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ] ]
+      type = type || typeFromUri(resourceUri)
       root = root || ldGraph.parse(graphData).byId(resourceUri)
 
       var promises = []
@@ -1343,6 +1347,17 @@
       $.unblockUI()
     }
 
+    function updateInputsForDependentResources (targetType, resourceUri) {
+      allGroupInputs(function (input) {
+        if (input.dependentResourceTypes && _.contains(input.dependentResourceTypes, targetType)) {
+          input.values[ 0 ] = input.values[ 0 ] || {}
+          input.values[ 0 ].current.value = resourceUri
+        } else if (input.predicate === input.predicate && input.rdfType === input.rdfType) {
+          input.values = deepClone(input.values)
+        }
+      })
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -1393,7 +1408,7 @@
               if (keypath) {
                 var cur = ractive.get(keypath + '.current')
                 if (cur) {
-                  ractive.set(keypath + '.old.value', cur.value)
+                  ractive.set(keypath + '.old.value', cur.value || '')
                   ractive.set(keypath + '.old.lang', cur.lang)
                 }
               }
@@ -2187,6 +2202,9 @@
                   ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
                 } else if (input.isMainEntry || options.subItem) {
                   fetchExistingResource(uri)
+                    .then(function () {
+                      updateInputsForDependentResources(typeFromUri(uri), uri)
+                    })
                 } else {
                   ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
                   ractive.set(origin + '.current.value', uri)
@@ -2362,19 +2380,11 @@
                 }
                 var setCreatedResourceValuesInInputs = function (resourceUri) {
                   if (useAfterCreation) {
-                    ractive.set('targetUri.' + event.context.rdfType, resourceUri)
-                    var groupInputs = ractive.get('inputGroups')
-                    _.each(event.context.inputs, function (input) {
-                      _.each(groupInputs, function (group) {
-                        _.each(group.inputs, function (groupInput) {
-                          if (groupInput.predicate === input.predicate && groupInput.rdfType === input.rdfType) {
-                            groupInput.values = deepClone(input.values)
-                          }
-                        })
-                      })
-                    })
+                    let targetType = event.context.rdfType
+                    ractive.set('targetUri.' + targetType, resourceUri)
+                    updateInputsForDependentResources(targetType, resourceUri)
                     ractive.update()
-                    updateBrowserLocationWithUri(event.context.rdfType, resourceUri)
+                    updateBrowserLocationWithUri(targetType, resourceUri)
                   }
                   return resourceUri
                 }
@@ -2547,7 +2557,7 @@
                         if (node.isA('TopBanana')) {
                           _.each(inputsWithValueSuggestionEnabled, function (input) {
                             if (input.suggestValueFrom.domain === domain && !wrapperObject) {
-                              input.values = input.values || [ { current: {} } ]
+                              input.values = input.values || [ { current: {}, old: {} } ]
                               _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
                                 input.values[ index ].current.displayValue = value.value
                               })
@@ -2643,13 +2653,6 @@
                 return
               }
               var parent = grandParentOf(keypath)
-              var uri = _.flatten([ newValue.current.value ])[ 0 ]
-              if (typeof uri === 'string') {
-                var predicate = ractive.get(parent + '.predicate')
-                if (predicate && predicate.indexOf('publicationOf') !== -1 && ractive.get('targetUri.Work') !== uri && !isBlankNodeUri(uri)) {
-                  fetchExistingResource(uri)
-                }
-              }
               var valid = false
               try {
                 valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range)
@@ -2663,19 +2666,6 @@
                 ractive.set(keypath + '.error', 'ugyldig input')
               }
             }
-          }, { init: false })
-
-          ractive.observe('targetUri.Work', function (newValue, oldValue, keypath) {
-            withPublicationOfWorkInput(function (input) {
-              input.values = [
-                {
-                  current: {
-                    value: newValue
-                  }
-                }
-              ]
-              ractive.update()
-            })
           }, { init: false })
 
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
@@ -2787,6 +2777,9 @@
               suggestValueInput.values = [ {
                 current: {
                   value: value
+                },
+                old: {
+                  value: value
                 }
               } ]
               ractive.update()
@@ -2875,6 +2868,20 @@
                 setInputVisibility(applicationData.inputLinks[ input.id ], false)
               }
             }
+            _.each(input.dependentResourceTypes, function (type) {
+              ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
+                if (typeof newValue === 'string' && newValue !== '') {
+                  fetchExistingResource(newValue, { inputs: [ input ] })
+                }
+              })
+              ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
+                if (typeof newValue === 'string' && newValue !== '') {
+                  if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
+                    fetchExistingResource(newValue)
+                  }
+                }
+              }, { init: false })
+            })
           }, { handleInputGroups: true })
           return applicationData
         }
