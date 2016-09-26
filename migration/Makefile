@@ -195,11 +195,14 @@ ifndef NOKOHA
 endif
 	@echo "-- Starting indexing resources in Elasticsearch..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
-	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
-	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
-	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
-	#@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all?ignoreConnectedResources=true'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/person/reindex_all?ignoreConnectedResources=true'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/corporation/reindex_all?ignoreConnectedResources=true'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/serial/reindex_all'
 	@echo "-- Enabeling koha email sending"
 	@sudo docker exec xkoha /bin/sh -c 'koha-email-enable $$KOHA_INSTANCE'
 	@echo "   Migration is complete. Goodbye!"
@@ -276,8 +279,11 @@ verify:
 
 reindex:
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all?ignoreConnectedResources=true'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/person/reindex_all?ignoreConnectedResources=true'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/corporation/reindex_all?ignoreConnectedResources=true'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/place/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/serial/reindex_all'
