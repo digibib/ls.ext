@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 public interface SearchService {
     void index(XURI xuri) throws Exception;
 
+    void indexOnly(XURI xuri) throws Exception;
+
     Response searchWork(String query);
 
     Response searchPerson(String query);

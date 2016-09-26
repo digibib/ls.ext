@@ -120,7 +120,10 @@ public class SearchResource extends ResourceBase {
 
     @POST
     @Path("{type: "+ ALL_TYPES_PATTERN + "}/reindex_all")
-    public final Response reIndex(@PathParam("type") final String type) {
+    public final Response reIndex(
+            @PathParam("type") final String type,
+            @QueryParam("ignoreConnectedResources") boolean ignoreConnectedResources) {
+
         THREADPOOL.execute(new Runnable() {
             @Override
             public void run() {
@@ -128,7 +131,11 @@ public class SearchResource extends ResourceBase {
                 long start = System.currentTimeMillis();
                 getEntityService().retrieveAllWorkUris(type, uri -> CompletableFuture.runAsync(() -> {
                     try {
-                        getSearchService().index(new XURI(uri));
+                        if (ignoreConnectedResources) {
+                            getSearchService().indexOnly(new XURI(uri));
+                        } else {
+                            getSearchService().index(new XURI(uri));
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

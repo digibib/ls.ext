@@ -73,11 +73,28 @@ public class SearchServiceImpl implements SearchService {
     public final void index(XURI xuri) throws Exception {
         switch (xuri.getTypeAsEntityType()) {
             case WORK:
-                doIndexWork(xuri, false);
+                doIndexWork(xuri, false, false);
                 break;
             case PERSON:
             case CORPORATION:
                 doIndexWorkCreator(xuri, false);
+                break;
+            case PUBLICATION:
+                doIndexPublication(xuri);
+                break;
+            default:
+                doIndex(xuri);
+        }
+    }
+
+    public final void indexOnly(XURI xuri) throws Exception {
+        switch (xuri.getTypeAsEntityType()) {
+            case WORK:
+                doIndexWork(xuri, true, true);
+                break;
+            case PERSON:
+            case CORPORATION:
+                doIndexWorkCreator(xuri, true);
                 break;
             case PUBLICATION:
                 doIndexPublication(xuri);
@@ -268,7 +285,7 @@ public class SearchServiceImpl implements SearchService {
         indexDocument(pubUri, publicationModelToIndexMapper.createIndexDocument(pubModel, pubUri));
     }
 
-    private void doIndexWork(XURI xuri, boolean indexedPerson) throws Exception {
+    private void doIndexWork(XURI xuri, boolean indexedPerson, boolean indexedPublication) throws Exception {
 
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(xuri);
         indexDocument(xuri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, xuri));
@@ -282,6 +299,9 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
+        if (indexedPublication) {
+            return;
+        }
         // Index all publications belonging to work
         // TODO instead of iterating over all subjects, find only subjects of triples with publicationOf as predicate
         ResIterator subjectIterator = workModelWithLinkedResources.listSubjects();
@@ -337,7 +357,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {
-        doIndexWork(xuri, true);
+        doIndexWork(xuri, true, false);
     }
 
     private void indexDocument(XURI xuri, String document) {
