@@ -11,6 +11,7 @@ import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryException;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -236,9 +237,13 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     private Model addInversePublicationRelations(Model input, XURI workUri) {
-        SPARQLQueryBuilder sparqlQueryBuilder = new SPARQLQueryBuilder();
-        Query query = sparqlQueryBuilder.constructInversePublicationRelations(workUri);
-        return input.add(QueryExecutionFactory.create(query).execConstruct(input));
+        try {
+            SPARQLQueryBuilder sparqlQueryBuilder = new SPARQLQueryBuilder();
+            Query query = sparqlQueryBuilder.constructInversePublicationRelations(workUri);
+            return input.add(QueryExecutionFactory.create(query).execConstruct(input));
+        } catch (QueryException e) {
+            return input;
+        }
     }
 
     @Override
@@ -429,7 +434,7 @@ public final class EntityServiceImpl implements EntityService {
         updatePublicationInKoha(publication, work);
     }
 
-    private void updatePublicationsByWork(Model work)  {
+    private void updatePublicationsByWork(Model work) {
         streamFrom(work.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
@@ -466,7 +471,7 @@ public final class EntityServiceImpl implements EntityService {
         MarcField field090 = MarcRecord.newDataField(MarcConstants.FIELD_090);
 
         Query query = new SPARQLQueryBuilder().constructInformationForMARC(publication);
-        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
             Model pubModel = qexec.execConstruct();
             StmtIterator iter = pubModel.listStatements();
             while (iter.hasNext()) {

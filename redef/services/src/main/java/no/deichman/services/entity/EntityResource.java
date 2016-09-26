@@ -120,7 +120,7 @@ public final class EntityResource extends ResourceBase {
 
     }
 
-    private Optional<String>  checkForExistingImportedResource(String id, String type) {
+    private Optional<String> checkForExistingImportedResource(String id, String type) {
         return getEntityService().retrieveImportedResource(id, type);
     }
 
@@ -161,7 +161,7 @@ public final class EntityResource extends ResourceBase {
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
-        return ok().entity(getJsonldCreator().asJSONLD(model)).build();
+        return ok().entity(RDFModelUtil.stringFrom(model, Lang.NTRIPLES)).build();
     }
 
     @DELETE
@@ -275,7 +275,7 @@ public final class EntityResource extends ResourceBase {
             throw new BadRequestException("can only sync all on publication");
         }
         CompletableFuture.runAsync(() -> {
-            getEntityService().retrieveAllWorkUris(type, uri ->  {
+            getEntityService().retrieveAllWorkUris(type, uri -> {
                 try {
                     getEntityService().synchronizeKoha(new XURI(uri));
                 } catch (Exception e) {
