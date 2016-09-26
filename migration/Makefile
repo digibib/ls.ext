@@ -237,8 +237,9 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrower_message_preferences SET wants_digest=1 WHERE message_attribute_id=1 OR message_attribute_id=2;"'
 	@echo "-- Inserting extended patron attributes (fnr)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
-	@echo "!! Inserting NL syncrhonization status (TODO needs more investigation)"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_sync (borrowernumber, synctype, sync, syncstatus) SELECT borrowernumber, \"norwegianpatrondb\",1,\"new\" FROM borrower_attributes WHERE code=\"fnr\";"'
+	@echo "-- Inserting NL syncrhonization details in borrower_sync"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/borrowersync.sql'
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/nonlsync.sql'
 ifdef EMAIL
 	@echo "-- Setting email-adress of all users to: $(EMAIL)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET email=\"$(EMAIL)\";"'
