@@ -702,7 +702,7 @@ public class EntityServiceImplTest {
                 + "    ns2:ageLimit \"75\" ;\n"
                 + "    ns2:hasSummary \"abc\";\n"
                 + "    ns2:hasPlaceOfPublication <http://deichman.no/place/p1> ;"
-                + "    ns4:locationSignature \"Rag\" ;\n"
+                + "    ns2:locationSignature \"Rag\" ;\n"
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
                 + "<http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
@@ -755,6 +755,10 @@ public class EntityServiceImplTest {
         // Språk
         MarcField field = MarcRecord.newDataField("041");
         field.addSubfield('a', "nob");
+        want.addMarcField(field);
+        // Plasseringsinfo
+        field = MarcRecord.newDataField("090");
+        field.addSubfield('d', "Rag");
         want.addMarcField(field);
         // Hovedinnførsel:
         field = MarcRecord.newDataField("100");

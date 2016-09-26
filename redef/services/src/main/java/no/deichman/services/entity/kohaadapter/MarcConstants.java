@@ -7,6 +7,7 @@ public final class MarcConstants {
     public static final String FIELD_008 = "008";
     public static final String FIELD_019 = "019";
     public static final String FIELD_041 = "041";
+    public static final String FIELD_090 = "090";
     public static final String FIELD_100 = "100";
     public static final String FIELD_110 = "110";
     public static final String FIELD_260 = "260";
@@ -23,9 +24,10 @@ public final class MarcConstants {
     public static final String FIELD_521 =  "521";
     public static final char SUBFIELD_A = 'a';
     public static final char SUBFIELD_B = 'b';
+    public static final char SUBFIELD_C = 'c';
+    public static final char SUBFIELD_D = 'd';
     public static final char SUBFIELD_P = 'p';
     public static final char SUBFIELD_N = 'n';
-    public static final char SUBFIELD_C = 'c';
     public static final char SUBFIELD_Q = 'q';
 
 

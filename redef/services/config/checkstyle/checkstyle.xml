@@ -92,7 +92,7 @@
             <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
             <property name="max" value="180"/>
         </module>
-        <module name="MethodLength"/>
+       <!-- <module name="MethodLength"/> -->
         <module name="ParameterNumber"/>
 
         <!-- allow suppression for some cases -->

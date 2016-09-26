@@ -83,6 +83,9 @@ public final class EntityServiceImpl implements EntityService {
     private final Property fictionNonFictionProperty;
     private final Property summaryProperty;
     private final Property audienceProperty;
+    private final Property locationFormatProperty;
+    private final Property locationDeweyProperty;
+    private final Property locationSignatureProperty;
 
     private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
     private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
@@ -114,6 +117,9 @@ public final class EntityServiceImpl implements EntityService {
         fictionNonFictionProperty = ResourceFactory.createProperty(BaseURI.ontology("fictionNonfiction"));
         summaryProperty = ResourceFactory.createProperty(BaseURI.ontology("summary"));
         audienceProperty = ResourceFactory.createProperty(BaseURI.ontology("audience"));
+        locationFormatProperty = ResourceFactory.createProperty(BaseURI.ontology("locationFormat"));
+        locationDeweyProperty = ResourceFactory.createProperty(BaseURI.ontology("locationDewey"));
+        locationSignatureProperty = ResourceFactory.createProperty(BaseURI.ontology("locationSignature"));
 
     }
 
@@ -438,6 +444,7 @@ public final class EntityServiceImpl implements EntityService {
         MarcField field245 = MarcRecord.newDataField(MarcConstants.FIELD_245);
         MarcField field260 = MarcRecord.newDataField(MarcConstants.FIELD_260);
         MarcField field041 = MarcRecord.newDataField(MarcConstants.FIELD_041);
+        MarcField field090 = MarcRecord.newDataField(MarcConstants.FIELD_090);
 
         Query query = new SPARQLQueryBuilder().constructInformationForMARC(publication);
         try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
@@ -501,6 +508,12 @@ public final class EntityServiceImpl implements EntityService {
                     marcRecord.addMarcField(MarcConstants.FIELD_385, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(summaryProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_520, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(locationFormatProperty)) {
+                    field090.addSubfield(MarcConstants.SUBFIELD_B, stmt.getLiteral().getString());
+                } else if (pred.equals(locationDeweyProperty)) {
+                    field090.addSubfield(MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
+                } else if (pred.equals(locationSignatureProperty)) {
+                    field090.addSubfield(MarcConstants.SUBFIELD_D, stmt.getLiteral().getString());
                 }
             }
         }
@@ -515,6 +528,10 @@ public final class EntityServiceImpl implements EntityService {
 
         if (field041.size() > 0) {
             marcRecord.addMarcField(field041);
+        }
+
+        if (field090.size() > 0) {
+            marcRecord.addMarcField(field090);
         }
 
         return marcRecord;
