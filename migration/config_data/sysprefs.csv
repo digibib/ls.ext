@@ -10,7 +10,7 @@ variable,value
 "AllowItemsOnHoldCheckout",1
 "AllowOnShelfHolds",1
 "AllowRenewalIfOtherItemsAvailable",1
-"AllowRenewalLimitOverride", 1
+"AllowRenewalLimitOverride",1
 "alphabet","A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å"
 "autoBarcode","OFF"
 "AutoEmailOpacUser",0
@@ -24,8 +24,8 @@ variable,value
 "dateformat","dmydot"
 "DefaultLanguageField008","nor"
 "DefaultLongOverdueChargeValue","Tapt"
-"DefaultLongOverdueDays", "35"
-"DefaultLongOverdueLostValue", "12"
+"DefaultLongOverdueDays","35"
+"DefaultLongOverdueLostValue","12"
 "EnhancedMessagingPreferences",1
 "ExtendedPatronAttributes",1
 "finesCalendar","noFinesWhenClosed"
@@ -35,11 +35,11 @@ variable,value
 "HidePatronName",1
 "IntranetUserCSS",".deichman-hidden { display: none !important; }"
 "IntranetUserJS","$(document).ready(function(){\r\n    if ($(\'div#aai_fnr\')[0]) {\r\n		$(\'div#aai_fnr\')[0].innerHTML = $(\'div#aai_fnr\')[0].innerHTML.replace(/\\d/g\,\'*\');\r\n    }\r\n})\r\n"
-"KohaAdminEmailAddress","digibib2@gmail.com"
+"KohaAdminEmailAddress","digibib@gmail.com"
 "MaxFine","100"
 "maxoutstanding","0"
 "maxreserves","1000"
-"minPasswordLength", "4"
+"minPasswordLength","4"
 "NoIssuesChargeGuarantees",""
 "noItemTypeImages",1
 "NorwegianPatronDBEnable",1
@@ -49,13 +49,13 @@ variable,value
 "NorwegianPatronDBUsername","${NLBASEUSER}"
 "OpacRenewalAllowed",1
 "OverdueNoticeCalendar",1
-"OverduesBlockRenewing", "allow"
-"RenewalPeriodBase","date_due",
-"rfidhuburl","ws://${HOST}:8899/ws"
+"OverduesBlockRenewing","allow"
+"RenewalPeriodBase","date_due"
+"RFIDHubURL","ws://${HOST}:8899/ws"
+"UseRFIDHub",1
 "SearchEngine","Zebra"
 "SessionRestrictionByIP",0
 "SMSSendDriver","NO::LinkMobilityHTTP"
 "StoreLastBorrower",1
-"userfidhub",1
 "virtualshelves",0
 "WhenLostChargeReplacementFee",1
