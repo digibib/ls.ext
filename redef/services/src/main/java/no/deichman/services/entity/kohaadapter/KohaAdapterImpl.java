@@ -46,6 +46,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     private void login() {
+        log.info("Creating/Renewing sessions to Koha REST API");
         String url = kohaPort + "/api/v1/auth/session";
 
         Form form = new Form();
@@ -147,7 +148,13 @@ public final class KohaAdapterImpl implements KohaAdapter {
     @Override
     public Response updateRecord(String recordId, MarcRecord marcRecord) {
         String url = kohaPort + "/api/v1/biblios/" + recordId;
-        return sendMarcRecord("PUT", url, marcRecord);
+        Response response = sendMarcRecord("PUT", url, marcRecord);
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = sendMarcRecord("PUT", url, marcRecord);
+        }
+        return response;
     }
 
     @Override
