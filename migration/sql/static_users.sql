@@ -15,7 +15,11 @@ DELETE FROM borrowers WHERE userid IN (
 	"autotor",
 	"autotoy",
 	"autohb",
-	"doormajor"
+	"doormajor",
+	"doorfuru",
+	"doortoy",
+	"doorboler"
+	"doorlamb"
 );
 /*!40000 ALTER TABLE `borrowers` DISABLE KEYS */;
 
