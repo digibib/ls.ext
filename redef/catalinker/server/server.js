@@ -22,10 +22,18 @@ if (app.get('env') === 'development') {
 var Server
 
 app.use(logger('dev'))
-app.use(express.static(path.join(__dirname, '/../public')))
+app.use(express.static(path.join(__dirname, '/../public'), { maxage: '1d' }))
 
 app.set('views', './views')
 app.set('view-engine', 'ejs')
+
+app.get('/*', function (req, res, next) {
+  if (req.url.indexOf("config") !== 0 || req.url.indexOf(".png") !== 0 || req.url.indexOf("css") !== 0 || req.url.indexOf("html") !== 0 || req.url.indexOf("authorized_values") !== 0) {
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.setHeader("Expires", new Date(Date.now() + 86400000).toUTCString());
+  }
+  next();
+});
 
 app.get('/js/bundle.js',
   babelify([{ './client/src/bootstrap': { run: true } }])
