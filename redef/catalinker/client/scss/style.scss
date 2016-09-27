@@ -167,6 +167,20 @@ body {
   }
 
   .tab-content {
+    &.maintenance-inputs {
+      .panel-part {
+        &:first-child {
+          border-top: 1px solid lightgrey;
+        }
+        &:last-child {
+          border-bottom: 1px solid lightgrey;
+          padding-bottom: 15px;
+        }
+        &:last-child:not(.last-one):after {
+          display: none !important;
+        }
+      }
+    }
     margin-top: -1px;
     width: 712px;
     select {
@@ -217,8 +231,24 @@ body {
           padding: 12px 12px 4px 0px;
         }
         .panel-part {
-          &.for-checkbox{
+          &.for-checkbox {
             display: flex;
+          }
+          &.first {
+            border-top: 1px solid lightgrey;
+          }
+          &:last-child:not(.last-one):after {
+            display: block;
+            height: 2px;
+            //            width: 100%;
+            background: lightgrey;
+            content: "";
+            margin: 0px 12px 0px 12px;
+            order:1000;
+          }
+          &.last-one:not(first) {
+            border-bottom: 1px solid lightgrey;
+            padding-bottom: 15px;
           }
           &.ui-accordion {
             .ui-accordion-icons {
@@ -296,22 +326,6 @@ body {
           border-left: 1px solid lightgrey;
           border-right: 1px solid lightgrey;
           background: white;
-          &.first {
-            border-top: 1px solid lightgrey;
-          }
-          &:last-child:not(.last):after {
-            display: block;
-            height: 2px;
-            //            width: 100%;
-            background: lightgrey;
-            content: "";
-            margin: 0px 12px 0px 12px;
-            order:1000;
-          }
-          &:last-child.last {
-            border-bottom: 1px solid lightgrey;
-            padding-bottom: 15px;
-          }
           div.external-source-results {
             span {
               width: 100%;

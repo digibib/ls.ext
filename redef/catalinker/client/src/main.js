@@ -391,6 +391,25 @@
       return /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString)
     }
 
+    function checkShouldInclude (input) {
+      var shouldInclude = true
+      if (input.includeOnlyWhen) {
+        _.each(_.keys(input.includeOnlyWhen), function (property) {
+          let includeWhenValues = _.flatten([ input.includeOnlyWhen[ property ] ])
+          allGroupInputs(function (input1) {
+            if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
+                propertyName(URI.parseQuery(document.location.href)[ property ] ||
+                  input1.values[ 0 ].current.value)
+              ])[ 0 ])) {
+              shouldInclude = false
+              return true
+            }
+          })
+        })
+      }
+      return shouldInclude
+    }
+
     function advancedSearchCharacters () {
       return ':+-^()´"*'
     }
@@ -874,7 +893,15 @@
       return lastIndexOfVisible === -1 ? numberOfInputs - 1 : lastIndexOfVisible
     }
 
-    function markFirstAndLastInputsInGroup (group) {
+    var markFirstAndLastInputsInGroup = function (group) {
+      for (var ix = 0; ix < group.inputs.length; ix++) {
+        group.inputs[ ix ].firstInGroup = undefined
+        group.inputs[ ix ].lastInGroup = undefined
+      }
+      // _.each(group.inputs, function (input) {
+      //   // delete input.firstInGroup
+      //   // delete input.lastInGroup
+      // })
       (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true;
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
@@ -1738,6 +1765,23 @@
             el: 'container',
             lang: 'no',
             template: applicationData.template,
+            computed: {
+              firstAndLastVisibleInputs: function () {
+                var result = []
+                allGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+                  result[ groupIndex ] = result[ groupIndex ] || { first: 100, last: 0 }
+                  let showIt = (input.visible && checkShouldInclude(input) && !(typeof ractive.get('targetUri.' + input.showOnlyWhenEmpty) !== 'undefined'))
+                  if (showIt && inputIndex < result[ groupIndex ].first) {
+                    result[ groupIndex ].first = inputIndex
+                  }
+                  if (showIt && inputIndex > result[ groupIndex ].last) {
+                    result[ groupIndex ].last = inputIndex
+                  }
+                  return false
+                }, { handleInputGroups: true })
+                return result
+              }
+            },
             data: {
               applicationData: applicationData,
               predefinedValues: applicationData.predefinedValues,
@@ -1875,24 +1919,7 @@
                   return valueIndex + 1
                 }
               },
-              checkShouldInclude: function (input) {
-                var shouldInclude = true
-                if (input.includeOnlyWhen) {
-                  _.each(_.keys(input.includeOnlyWhen), function (property) {
-                    let includeWhenValues = _.flatten([ input.includeOnlyWhen[ property ] ])
-                    allGroupInputs(function (input1) {
-                      if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
-                          propertyName(URI.parseQuery(document.location.href)[ property ] ||
-                            input1.values[ 0 ].current.value)
-                        ])[ 0 ])) {
-                        shouldInclude = false
-                        return true
-                      }
-                    })
-                  })
-                }
-                return shouldInclude
-              }
+              checkShouldInclude: checkShouldInclude
             },
             decorators: {
               multi: require('ractive-multi-decorator'),
@@ -1931,12 +1958,7 @@
                 $(transition.element.node).slideDown()
               },
               slideOut: function (transition) {
-                $(transition.element.node).slideUp({
-                  complete: function () {
-                    $('div.grid-panel-selected span.input-panel span.panel-part:visible').first().addClass('first')
-                    $('div.grid-panel-selected span.input-panel span.panel-part:visible').last().addClass('last')
-                  }
-                })
+                $(transition.element.node).slideUp()
               }
             }
           })
@@ -2668,11 +2690,17 @@
             }
           }, { init: false })
 
+          ractive.observe('xxapplicationData.inputGroups.*.inputs.*.visible', function (newValue, oldValue, keypath) {
+            let inputGroup = ractive.get(parentOf(grandParentOf(keypath)))
+            markFirstAndLastInputsInGroup(inputGroup)
+            ractive.update()
+          }, { init: false })
+
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
             if (newValue === true) {
               updateBrowserLocationWithTab(keypath.split('.')[ 1 ])
             }
-          }, { init: false })
+          }, { init: false, defer: true })
 
           ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
             var openInputForms = ractive.get('openInputForms') || []

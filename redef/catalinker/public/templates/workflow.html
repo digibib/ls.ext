@@ -33,10 +33,10 @@
         </ul>
         <div class="grid-content tab-content">
             <div class="inner-content">
-                {{#each inputGroups}}
+                {{#each inputGroups:groupIndex}}
                     {{#if checkRequiredInputValueForShow(.)}}
                         <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected' : ''}} pure-g">
-                            {{#each inputs}}
+                            {{#each inputs:inputIndex}}
                             {{#visible}}
                             {{>input}}
                             {{/visible}}

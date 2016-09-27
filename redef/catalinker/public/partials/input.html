@@ -1,10 +1,10 @@
 {{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
 <span class="input-panel pure-u-1-1 prop-input" intro='slideIn' outro='slideOut'>
-<span {{#if (type === 'input-boolean')}}class='panel-part pure-u-1-2 for-checkbox'{{/if}}>
-<span class="{{#if (type != 'input-boolean')}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}pure-u-2-3{{/if}} label {{firstInGroup ? 'first':''}} {{(type == 'input-boolean') ? 'for-checkbox' : 'panel-part'}}"
+<span class="{{(type === 'input-boolean') ? 'panel-part  pure-u-1-2  for-checkbox':''}} {{(firstAndLastVisibleInputs[groupIndex].first === inputIndex) ? 'first':''}} {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}">
+<span class="{{#if (type != 'input-boolean')}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}pure-u-2-3{{/if}} label {{(firstAndLastVisibleInputs[groupIndex].first === inputIndex) ? 'first':''}} {{(type == 'input-boolean') ? 'for-checkbox' : 'panel-part'}}"
      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
 </span>
-<span class="{{#if type != 'input-boolean'}}panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}checkbox{{/if}} {{lastInGroup ? 'last':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
+<span class="{{#if type != 'input-boolean'}}panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}checkbox{{/if}} {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
         {{#each values:inputValueIndex}}
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
                 <span class="field {{#if (type != 'input-boolean')}}pure-u-1-1{{/if}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
