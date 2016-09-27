@@ -55,7 +55,9 @@ variable,value
 "UseRFIDHub",1
 "SearchEngine","Zebra"
 "SessionRestrictionByIP",0
+"SessionStorage","tmp"
 "SMSSendDriver","NO::LinkMobilityHTTP"
 "StoreLastBorrower",1
+"timeout","7d"
 "virtualshelves",0
 "WhenLostChargeReplacementFee",1
