@@ -11,21 +11,21 @@
           "type": "synonym",
           "synonyms": [
             "r, novel => roman",
-            "n, fortelling, short story => novelle",
+            "n, fortelling, short story => novelle/fortelling",
             "d, poem => dikt",
             "s, drama => skuespill",
             "t, comic book => tegneserie",
             "a, anthology => antologi",
             "l, text book => lærebok",
             "p, pointing book => pekebok",
-            "b, picture book => bildebok",
-            "dictionary => ordbok",
-            "reference work => oppslagsverk",
-            "biography => biografi",
-            "feature film => spillefilm",
-            "animated film => animasjonsfilm",
-            "tv series => tv-serie",
-            "short film => kortfilm"
+            "bl, picture book => bildebok",
+            "o, dictionary => ordbok",
+            "ref, reference work => oppslagsverk",
+            "bio, biography => biografi",
+            "spf, feature film => spillefilm",
+            "anf, animated film => animasjonsfilm",
+            "tv, tv series => tv-serie",
+            "kort, short film => kortfilm"
           ]
         },
         "language_synonym_filter": {
