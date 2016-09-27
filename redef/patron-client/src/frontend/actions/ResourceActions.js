@@ -88,27 +88,15 @@ export function fetchWorkResource (workId) {
     if (getState().resources.resources[ workId ]) {
       return
     }
-    const url = `${Constants.backendUri}/work/${workId}`
+    const url = `/api/v1/resources/work/${workId}`
     dispatch(requestResource(workId))
-    return Promise.all([
-      fetch(url).then(response => {
-        if (response.status === 200) {
-          return response.json()
-        } else {
-          throw Error('Error fetching work resource')
-        }
-      }),
-      fetch(`${url}/items`).then(response => {
-        if (response.status === 200) {
-          return response.json()
-        } else if (response.status === 204) {
-          return
-        } else {
-          throw Error('Error fetching items for work')
-        }
-      }) ]
-    ).then(([worksResponse, itemsResponse]) => parseWorkResponse(worksResponse, itemsResponse))
-      .then(work => dispatch(receiveResource(workId, work)))
+    return fetch(url).then(response => {
+      if (response.status === 200) {
+        return response.json()
+      } else {
+        throw Error('Error fetching work resource')
+      }
+    }).then(work => dispatch(receiveResource(workId, work)))
       .catch(error => dispatch(resourceFailure(error)))
   }
 }

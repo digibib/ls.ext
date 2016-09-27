@@ -1,0 +1,187 @@
+{
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "deichman": "http://data.deichman.no/ontology#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dro": "http://data.deichman.no/role#",
+    "duo": "http://data.deichman.no/utility#",
+    "raw": "http://data.deichman.no/raw#",
+    "MainEntry": "deichman:MainEntry",
+    "Work": "deichman:Work",
+    "Publication": "deichman:Publication",
+    "Agent": "deichman:Agent",
+    "Person": "deichman:Person",
+    "Corporation": "deichman:Corporation",
+    "Subject": "deichman:Subject",
+    "Concept": "deichman:Concept",
+    "Place": "deichman:Place",
+    "Event": "deichman:Event",
+    "Serial": "deichman:Serial",
+    "Series": "deichman:Series",
+    "SerialIssue": "deichman:SerialIssue",
+    "Issue": "deichman:Issue",
+    "Contribution": "deichman:Contribution",
+    "Role": "deichman:Role",
+    "Genre": "deichman:Genre",
+    "Instrument": "deichman:Instrument",
+    "PublicationPart": "deichman:PublicationPart",
+    "WorkRelation": "deichman:WorkRelation",
+    "RelationType": "deichman:RelationType",
+    "CompositionType": "deichman:CompositionType",
+    "Instrumentation": "deichman:Instrumentation",
+    "ClassificationEntry": "deichman:ClassificationEntry",
+    "ClassificationSource": "deichman:ClassificationSource",
+    "hasNumberOfPerformers": "deichman:hasNumberOfPerformers",
+    "hasInstrument": "deichman:hasInstrument",
+    "hasRelationType": "deichman:hasRelationType",
+    "work": "deichman:work",
+    "isRelatedTo": "deichman:isRelatedTo",
+    "prefLabel": "deichman:prefLabel",
+    "altLabel": "deichman:altLabel",
+    "name": "deichman:name",
+    "alternativeName": "deichman:alternativeName",
+    "ordinal": "deichman:ordinal",
+    "personTitle": "deichman:personTitle",
+    "specification": "deichman:specification",
+    "subject": "deichman:subject",
+    "recordId": "deichman:recordID",
+    "language": "deichman:language",
+    "format": "deichman:format",
+    "hasMediaType": "deichman:hasMediaType",
+    "hasWorkType": "deichman:hasWorkType",
+    "deathYear": "deichman:deathYear",
+    "writingSystem": "deichman:writingSystem",
+    "binding": "deichman:binding",
+    "illustrativeMatter": "deichman:illustrativeMatter",
+    "gender": "deichman:gender",
+    "mainTitle": "deichman:mainTitle",
+    "partTitle": "deichman:partTitle",
+    "subtitle": "deichman:subtitle",
+    "partNumber": "deichman:partNumber",
+    "edition": "deichman:edition",
+    "numberOfPages": "deichman:numberOfPages",
+    "isbn": "deichman:isbn",
+    "literaryForm": "deichman:literaryForm",
+    "audience": "deichman:audience",
+    "biography": "deichman:biography",
+    "hasFormatAdaptation": "deichman:hasFormatAdaptation",
+    "hasContentAdaptation": "deichman:hasContentAdaptation",
+    "hasPlaceOfPublication": "deichman:hasPlaceOfPublication",
+    "publishedBy": "deichman:publishedBy",
+    "inSerial": "deichman:inSerial",
+    "serial": "deichman:serial",
+    "issue": "deichman:issue",
+    "contributor": "deichman:contributor",
+    "role": "deichman:role",
+    "agent": "deichman:agent",
+    "genre": "deichman:genre",
+    "hasPublicationPart": "deichman:hasPublicationPart",
+    "startsAtPage": "deichman:startsAtPage",
+    "endsAtPage": "deichman:endsAtPage",
+    "improperWork": "deichman:improperWork",
+    "duration": "deichman:duration",
+    "missingMainEntry": "deichman:missingMainEntry",
+    "hasEan": "deichman:hasEan",
+    "ageLimit": "deichman:ageLimit",
+    "hasSubtitles": "deichman:hasSubtitles",
+    "hasSummary": "deichman:hasSummary",
+    "hasCompositionType": "deichman:hasCompositionType",
+    "hasClassificationNumber": "deichman:hasClassificationNumber",
+    "hasClassificationSource": "deichman:hasClassificationSource",
+    "hasClassification": "deichman:hasClassification",
+    "inKey": "deichman:inKey",
+    "place": "deichman:place",
+    "date": "deichman:date",
+    "subdivision": "deichman:subdivision",
+    "locationClassNumber": "deichman:locationClassNumber",
+    "locationSignature": "deichman:locationSignature",
+    "locationFormat": "deichman:locationFormat",
+    "hasDescription": "deichman:hasDescription",
+    "hasPublication": "deichman:hasPublication",
+    "publications": {
+      "@id": "hasPublication",
+      "@container": "@set"
+    },
+    "languages": {
+      "@id": "language",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "formats": {
+      "@id": "format",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "contributors": {
+      "@id": "contributor",
+      "@container": "@set"
+    },
+    "mediaTypes": {
+      "@id": "hasMediaType",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "genres": {
+      "@id": "genre",
+      "@container": "@set"
+    },
+    "subjects": {
+      "@id": "subject",
+      "@container": "@set"
+    },
+    "nationality": {
+      "@id": "deichman:nationality",
+      "@type": "@id"
+    },
+    "birthYear": {
+      "@id": "deichman:birthYear",
+      "@type": "xsd:gYear"
+    },
+    "publicationYear": {
+      "@id": "deichman:publicationYear",
+      "@type": "xsd:gYear"
+    },
+    "firstEditionCandidate": {
+      "@id": "raw:firstEditionCandidate",
+      "@type": "xsd:gYear"
+    },
+    "publicationOf": {
+      "@id": "deichman:publicationOf",
+      "@type": "@id"
+    },
+    "fictionNonfiction": {
+      "@id": "deichman:fictionNonfiction",
+      "@type": "@id"
+    }
+  },
+  "@explicit": true,
+  "type": "Work",
+  "publications": {
+    "type": "deichman:Publication",
+    "@embed": "@always",
+    "contributors": {
+      "@embed": "@always",
+      "type": "deichman:Contribution",
+      "deichman:agent": {
+        "nationality": {
+          "@embed": "@never"
+        }
+      },
+      "deichman:role": {}
+    },
+    "languages": {
+      "@embed": "@never"
+    },
+    "formats": {
+      "@embed": "@never"
+    },
+    "genres": {
+      "@embed": "@never"
+    },
+    "mediaTypes": {
+      "@embed": "@never"
+    }
+  }
+
+}

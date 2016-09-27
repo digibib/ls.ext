@@ -240,7 +240,10 @@ public final class EntityServiceImpl implements EntityService {
         try {
             SPARQLQueryBuilder sparqlQueryBuilder = new SPARQLQueryBuilder();
             Query query = sparqlQueryBuilder.constructInversePublicationRelations(workUri);
-            return input.add(QueryExecutionFactory.create(query).execConstruct(input));
+            QueryExecution queryExecution = QueryExecutionFactory.create(query, input);
+            Model model = ModelFactory.createDefaultModel();
+            queryExecution.execConstruct(model);
+            return input.add(model);
         } catch (QueryException e) {
             return input;
         }
