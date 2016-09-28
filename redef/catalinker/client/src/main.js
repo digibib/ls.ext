@@ -908,7 +908,7 @@
       //   // delete input.firstInGroup
       //   // delete input.lastInGroup
       // })
-      (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true
+      (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true;
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
