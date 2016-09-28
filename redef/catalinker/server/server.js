@@ -10,6 +10,8 @@ require('./random_test_data')(app)
 var babelify = require('express-babelify-middleware')
 var url = require('url')
 require('ejs')
+var apicache = require('apicache');
+var cache = apicache.options({ debug: true }).middleware;
 
 if (app.get('env') === 'development') {
   var livereload = require('express-livereload')
@@ -26,6 +28,7 @@ app.use(express.static(path.join(__dirname, '/../public'), { maxage: '1h' }))
 
 app.set('views', './views')
 app.set('view-engine', 'ejs')
+app.enable('etag')
 
 app.get('/*', function (req, res, next) {
   if (req.url.indexOf('config') !== -1 ||
@@ -42,11 +45,11 @@ app.get('/*', function (req, res, next) {
 })
 
 app.get('/js/bundle.js',
-  babelify([{ './client/src/bootstrap': { run: true } }])
+  babelify([ { './client/src/bootstrap': { run: true } } ])
 )
 
 app.get('/js/bundle_for_old.js',
-  babelify([{ './client/src/bootstrap_old': {run: true} }]))
+  babelify([ { './client/src/bootstrap_old': { run: true } } ]))
 
 app.get('/css/vendor/:cssFile', function (request, response) {
   response.sendFile(request.params.cssFile, { root: path.resolve(path.join(__dirname, '/../node_modules/select2/dist/css/')) })
@@ -102,13 +105,23 @@ app.get('/valueSuggestions/demo_:source/:isbn', function (req, res, next) {
 
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
 
-app.use('/services', requestProxy(services, {
-  forwardPath: function (req, res) {
-    return url.parse(req.url).path
+app.use('/services', cache('1 hour', function (req, res) {
+  return req.method === 'GET' || req.method === 'HEAD'
+}), requestProxy(services, {
+    forwardPath: function (req, res) {
+      return url.parse(req.url).path
+    },
+    intercept: function (rsp, data, req, res, callback) {
+      if ([ 'POST', 'PUT', 'PATCH' ].indexOf(rsp.req.method) !== -1) {
+        apicache.clear(rsp.req.url)
+        console.log(`clearing ${rsp.req.url}`)
+      }
+      callback(null, data)
+    }
   }
-}))
+))
 
-app.get('/valueSuggestions/:source/:type/:id', requestProxy(services, {
+app.get('/valueSuggestions/:source/:type/:id', cache('1 hour'), requestProxy(services, {
   forwardPath: function (req, res) {
     var reqUrl = services + '/datasource/' + req.params.source + '/' + req.params.type + '/' + req.params.id.replace(/-/g, '')
     console.log(reqUrl)

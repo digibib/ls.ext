@@ -29,6 +29,7 @@
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
     require('block-ui')
+    let etagData = {}
 
     var deepClone = function (object) {
       var clone = _.clone(object)
@@ -2595,8 +2596,9 @@
                     }
                   })
                 })
-                unblockUI()
+                ractive.update()
                 ractive.set('primarySuggestionAccepted', true)
+                unblockUI()
               },
               useSuggestion: function (event) {
                 event.context.suggested = null
@@ -2959,6 +2961,45 @@
           return applicationData
         }
 
+        let etags = {}
+        axios.interceptors.request.use(function (options) {
+          if (options.method === 'get' || !options.method) {
+            let url = options.url
+            const etag = etags[ url ]
+            const cachedResponse = etagData[ `${url}${etag}` ]
+            if (cachedResponse) {
+              options.cachedResponse = cachedResponse
+            }
+            if (etag) {
+              options.headers[ 'If-None-Match' ] = etag
+            }
+            options.headers[ 'Access-Control-Expose-Headers' ] = 'ETag'
+          }
+          return options;
+        }, function (error) {
+          return Promise.reject(error);
+        });
+
+        axios.interceptors.response.use(function (response) {
+          var etag
+          let url = response.config.url
+          if (response.status === 304 && (etag = response.headers.etag)) {
+            response.status = 200
+            return etagData[ `${url}${etag}` ]
+          }
+          if (response.status === 200) {
+            const responseEtag = response.headers.etag
+
+            if (responseEtag) {
+              etagData[`${url}${responseEtag}`] = deepClone(response)
+              etags[url] = responseEtag
+            }
+          }
+          return response;
+        }, function (error) {
+          return Promise.reject(error);
+        });
+
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
@@ -2991,6 +3032,7 @@
       },
       $: $,
       _: _,
+      etagData: etagData,
       saveSuggestionData: saveSuggestionData,
       checkRangeStart: checkRangeStart,
       checkRangeEnd: checkRangeEnd
