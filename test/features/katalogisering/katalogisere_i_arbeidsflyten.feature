@@ -332,6 +332,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
     Så ser jeg at det står forfatter med navn og levetid i resultatlisten
 
+  @wip
   Scenario: Søke opp verk hvor det finnes to med samme tittel men forskjellig forfatter
     Gitt jeg kan dikte opp en verkstittel
     Og at jeg er i personregistergrensesnittet
@@ -339,6 +340,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg kan legge inn navn fødselsår og dødsår for personen
     Og at jeg er i katalogiseringsgrensesnittet
     Og at systemet har returnert en ny ID for det nye verket
+    Så jeg venter litt
     Og jeg legger til forfatter av det nye verket
     Og jeg kan legge til tittelen for det nye verket
     Og at jeg vil lage en person til
