@@ -10,8 +10,8 @@ require('./random_test_data')(app)
 var babelify = require('express-babelify-middleware')
 var url = require('url')
 require('ejs')
-var apicache = require('apicache');
-var cache = apicache.options({ debug: true }).middleware;
+var apicache = require('apicache')
+var cache = apicache.options({ debug: true }).middleware
 
 if (app.get('env') === 'development') {
   var livereload = require('express-livereload')
