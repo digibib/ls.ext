@@ -29,6 +29,10 @@ class Subjects extends React.Component {
   }
 }
 
+Subjects.defaultProps = {
+  subjects: []
+}
+
 Subjects.propTypes = {
   subjects: PropTypes.array.isRequired
 }

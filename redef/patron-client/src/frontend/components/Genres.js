@@ -29,6 +29,10 @@ class Genres extends React.Component {
   }
 }
 
+Genres.defaultProps = {
+  genres: []
+}
+
 Genres.propTypes = {
   genres: PropTypes.array.isRequired
 }

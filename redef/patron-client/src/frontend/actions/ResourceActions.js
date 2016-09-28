@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 import { push, replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
-import { parsePersonResponse, parseWorkResponse } from '../utils/graphParse'
+import { parsePersonResponse } from '../utils/graphParse'
 import Constants from '../constants/Constants'
 
 export function requestResource (id) {
