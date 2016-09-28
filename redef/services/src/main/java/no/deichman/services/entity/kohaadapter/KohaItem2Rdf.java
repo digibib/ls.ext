@@ -83,12 +83,12 @@ public final class KohaItem2Rdf {
                     )
             );
 
-            if (itemData.has("holdingbranch") && !itemData.get("holdingbranch").isJsonNull()) {
+            if (itemData.has("homebranch") && !itemData.get("homebranch").isJsonNull()) {
                 model.add(
                         createStatement(
                                 subject,
                                 createProperty(ontologyNS + DEICHMAN_BRANCH),
-                                createPlainLiteral(getBranch(itemData.get("holdingbranch").getAsString()))
+                                createPlainLiteral(getBranch(itemData.get("homebranch").getAsString()))
                         )
                 );
             }
