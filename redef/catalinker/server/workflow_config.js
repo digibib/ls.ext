@@ -848,7 +848,7 @@ module.exports = (app) => {
               id: 'compositionTypeInput',
               type: 'searchable-with-result-in-side-panel',
               nameProperties: [ 'prefLabel' ],
-              indexTypes: [ 'compositiontype' ],
+              indexTypes: [ 'compositionType' ],
               labelForCreateButton: 'Opprett ny kompoisjonstype',
               widgetOptions: {
                 enableCreateNewResource: {
