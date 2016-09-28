@@ -72,7 +72,7 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchPublication(query);
             case "instrument":
                 return getSearchService().searchInstrument(query);
-            case "compositiontype":
+            case "compositionType":
                 return getSearchService().searchCompositionType(query);
             case "event":
                 return getSearchService().searchEvent(query);

@@ -60,7 +60,7 @@ public final class EmbeddedElasticsearchServer {
         prepareMappingOf("genre");
         prepareMappingOf("publication");
         prepareMappingOf("instrument");
-        prepareMappingOf("compositiontype");
+        prepareMappingOf("compositionType");
         prepareMappingOf("event");
     }
 

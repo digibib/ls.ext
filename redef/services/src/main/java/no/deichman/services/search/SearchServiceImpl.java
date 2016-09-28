@@ -169,7 +169,7 @@ public class SearchServiceImpl implements SearchService {
             putIndexMapping(httpclient, "genre");
             putIndexMapping(httpclient, "publication");
             putIndexMapping(httpclient, "instrument");
-            putIndexMapping(httpclient, "compositiontype");
+            putIndexMapping(httpclient, "compositionType");
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
@@ -446,7 +446,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     public final URIBuilder getCompositionTypeSearchUriBuilder() {
-        return getIndexUriBuilder().setPath("/search/compositiontype/_search");
+        return getIndexUriBuilder().setPath("/search/compositionType/_search");
     }
 
     private URIBuilder getEventSearchUriBuilder() {

@@ -19,12 +19,12 @@ public enum EntityType {
     SUBJECT("subject"),
     GENRE("genre"),
     MUSICAL_INSTRUMENT("instrument"),
-    MUSICAL_COMPOSITION_TYPE("compositiontype"),
+    MUSICAL_COMPOSITION_TYPE("compositionType"),
     EVENT("event");
 
     // must be handwritten because of stupid Java
     public static final String ALL_TYPES_PATTERN =
-            "(work|publication|person|place|corporation|serial|subject|genre|instrument|compositiontype|event)";
+            "(work|publication|person|place|corporation|serial|subject|genre|instrument|compositionType|event)";
 
     private final String path;
 

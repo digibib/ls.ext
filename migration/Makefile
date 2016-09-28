@@ -206,6 +206,7 @@ endif
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/serial/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/compositionType/reindex_all'
 	@echo "-- Enabeling koha email sending"
 	@sudo docker exec xkoha /bin/sh -c 'koha-email-enable $$KOHA_INSTANCE'
 	@echo "   Migration is complete. Goodbye!"
@@ -291,3 +292,4 @@ reindex:
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/genre/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/serial/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/compositionType/reindex_all'

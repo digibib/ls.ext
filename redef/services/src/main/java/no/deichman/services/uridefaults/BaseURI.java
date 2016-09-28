@@ -67,7 +67,7 @@ public final class BaseURI {
     }
 
     public static String compositionType() {
-        return BASE_URI_ROOT + "compositiontype/";
+        return BASE_URI_ROOT + "compositionType/";
     }
 
     public static String event() {

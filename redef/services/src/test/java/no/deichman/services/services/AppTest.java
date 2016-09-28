@@ -440,7 +440,7 @@ public class AppTest {
 
     @Test
     public void compositiontype_is_searchable() throws UnirestException, InterruptedException {
-        HttpResponse<String> result1 = buildCreateRequest(appURI + "compositiontype", "{}").asString();
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "compositionType", "{}").asString();
 
         String op = "ADD";
         String s = getLocation(result1);
@@ -840,7 +840,7 @@ public class AppTest {
         boolean foundCompositionTypeInIndex;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(appURI + "search/compositiontype/_search").queryString("q", "prefLabel:" + compositionType);
+            HttpRequest request = Unirest.get(appURI + "search/compositionType/_search").queryString("q", "prefLabel:" + compositionType);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundCompositionTypeInIndex = responseBody.contains(compositionType);
