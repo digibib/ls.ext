@@ -30,6 +30,8 @@ function maintenanceInputs (label, type) {
 
 module.exports = (app) => {
   app.get('/config', function (request, response) {
+    response.setHeader("Cache-Control", "public, max-age=3600");
+    response.setHeader("Expires", new Date(Date.now() + 3600000).toUTCString());
     var config =
     {
       kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),

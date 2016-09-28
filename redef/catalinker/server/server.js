@@ -22,15 +22,21 @@ if (app.get('env') === 'development') {
 var Server
 
 app.use(logger('dev'))
-app.use(express.static(path.join(__dirname, '/../public'), { maxage: '1d' }))
+app.use(express.static(path.join(__dirname, '/../public'), { maxage: '1h' }))
 
 app.set('views', './views')
 app.set('view-engine', 'ejs')
 
 app.get('/*', function (req, res, next) {
-  if (req.url.indexOf("config") !== 0 || req.url.indexOf(".png") !== 0 || req.url.indexOf("css") !== 0 || req.url.indexOf("html") !== 0 || req.url.indexOf("authorized_values") !== 0) {
-    res.setHeader("Cache-Control", "public, max-age=86400");
-    res.setHeader("Expires", new Date(Date.now() + 86400000).toUTCString());
+  if (req.url.indexOf("config") !== -1 ||
+    req.url.indexOf(".png") !== -1 ||
+    req.url.indexOf("css") !== -1 ||
+    req.url.indexOf("html") !== -1 ||
+    req.url.indexOf(".js") !== -1 ||
+    req.url.indexOf("ontology") !== -1 ||
+    req.url.indexOf("authorized_values") !== -1) {
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.setHeader("Expires", new Date(Date.now() + 3600000).toUTCString());
   }
   next();
 });
