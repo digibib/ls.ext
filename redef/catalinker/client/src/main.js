@@ -2664,12 +2664,14 @@
           })
 
           ractive.observe('applicationData.inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
-            if (!newValue || newValue === '') {
-              var inputKeypath = grandParentOf(grandParentOf(keypath))
-              let dependentResourceTypes = ractive.get(`${inputKeypath}.dependentResourceTypes`)
-              _.each(dependentResourceTypes, function (resourceType) {
-                unloadResourceForDomain(resourceType)
-              })
+            if (Boolean(newValue) !== Boolean(oldValue)) {
+              if (!newValue || newValue === '') {
+                var inputKeypath = grandParentOf(grandParentOf(keypath))
+                let dependentResourceTypes = ractive.get(`${inputKeypath}.dependentResourceTypes`)
+                _.each(dependentResourceTypes, function (resourceType) {
+                  unloadResourceForDomain(resourceType)
+                })
+              }
             }
           })
 
