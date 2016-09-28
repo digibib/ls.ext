@@ -125,11 +125,13 @@
     }
 
     function clearSupportPanels (options) {
+      var changes = false
       var keepActions = (options || {}).keep || []
       _.each(allInputs(), function (input) {
         _.each(input.values, function (value) {
           if (value.searchResult && !inputHasOpenForm(input)) {
             value.searchResult = null
+            changes = true
           }
         })
       })
@@ -140,6 +142,7 @@
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
                 input.widgetOptions[ action ].showInputs = null
+                changes = true
                 if (!isNaN(Number.parseInt(input.widgetOptions[ action ].showInputs))) {
                   var domainType = input.widgetOptions[ action ].forms[ input.selectedIndexType ].rdfType
                   unloadResourceForDomain(domainType)
@@ -149,7 +152,9 @@
           }
         }
       })
-      ractive.update()
+      if (changes) {
+        ractive.update()
+      }
     }
 
     var unloadResourceForDomain = function (domainType) {
