@@ -31,7 +31,7 @@ WHERE {
 	?publication migration:hasPart ?part .
 	?part migration:agent ?agent ;
 		migration:mainTitle ?mainTitle ;
-		a migration:PublicationPart.
-	?agent duo:bibliofilAuthorityId ?id
+		a migration:PublicationPart .
+	?agent duo:bibliofilAuthorityId ?id .
 }
 ;
