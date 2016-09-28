@@ -3355,6 +3355,9 @@
               conditions:
                 indicator:
                   default: "MIGRATION.addedTitle"
+                  indicator2:
+                    subs:
+                      '0': "MIGRATION.addedTitle"
                       '2': "MIGRATION.analyticalTitle"
                     orig: "0|2"
     -

@@ -11,7 +11,10 @@ WITH <http://deichman.no/migration>
 MODIFY
 
 DELETE {
-	
+	?publication migration:hasPart ?part .
+	?part migration:agent ?agent ;
+		migration:mainTitle ?mainTitle ;
+		a migration:PublicationPart.
 }
 
 INSERT {
@@ -28,20 +31,7 @@ WHERE {
 	?publication migration:hasPart ?part .
 	?part migration:agent ?agent ;
 		migration:mainTitle ?mainTitle ;
-		migration:workID ?workID ;
 		a migration:PublicationPart.
 	?agent duo:bibliofilAuthorityId ?id
-}
-;
-
-
-INSERT {
-	?publication migration:mainEntryRole role:author .
-}
-
-WHERE {
-	?publication :mainEntry ?agent ;
-		a :Publication .
-	MINUS {?publication migration:mainEntryRole ?role .}
 }
 ;
