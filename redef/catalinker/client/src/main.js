@@ -1,5 +1,5 @@
 /*global window,history*/
-;(function (root, factory) {
+(function (root, factory) {
   'use strict'
 
   if (typeof module === 'object' && module.exports) {
@@ -908,7 +908,7 @@
       //   // delete input.firstInGroup
       //   // delete input.lastInGroup
       // })
-      (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true;
+      (_.findWhere(group.inputs, { visible: true }) || {}).firstInGroup = true
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
@@ -2975,10 +2975,10 @@
             }
             options.headers[ 'Access-Control-Expose-Headers' ] = 'ETag'
           }
-          return options;
+          return options
         }, function (error) {
-          return Promise.reject(error);
-        });
+          return Promise.reject(error)
+        })
 
         axios.interceptors.response.use(function (response) {
           var etag
@@ -2995,10 +2995,10 @@
               etags[url] = responseEtag
             }
           }
-          return response;
+          return response
         }, function (error) {
-          return Promise.reject(error);
-        });
+          return Promise.reject(error)
+        })
 
         return axios.get('/config')
           .then(extractConfig)
