@@ -78,7 +78,7 @@ export function parseWorkResponse (workResponse, itemsResponse) {
     populateLiteral(publication, 'numberOfPages', publicationResource)
     populateLiteral(publication, 'edition', publicationResource)
     populateUri(publication, 'binding', publicationResource)
-    populateLiteral(publication, 'recordID', publicationResource, 'recordId')
+    populateLiteral(publication, 'recordId', publicationResource, 'recordId')
     populateUris(publication, 'language', publicationResource, 'languages')
     populateUris(publication, 'format', publicationResource, 'formats')
     populateUris(publication, 'hasMediaType', publicationResource, 'mediaTypes')

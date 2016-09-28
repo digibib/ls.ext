@@ -275,7 +275,7 @@
       }
     },
     {
-      "@id": "deichman:recordID",
+      "@id": "deichman:recordId",
       "@type": "rdfs:Property",
       "rdfs:domain": {
         "@id": "deichman:Publication"

@@ -130,5 +130,5 @@ _:c1 a deichman:Contribution ;
     deichman:role <http://data.deichman.no/role#author> .
 
 <http://data.deichman.no/publication/publication_TEST_KOHA_ITEMS_LINK> a deichman:Publication ;
-  deichman:recordID "626460" ;
+  deichman:recordId "626460" ;
   deichman:publicationOf <http://data.deichman.no/work/w0009112> .

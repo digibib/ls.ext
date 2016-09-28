@@ -489,7 +489,7 @@ public class EntityServiceImplTest {
     private String getTestJSON(String id, String type) {
         String resourceClass = null;
         String resourceURI = null;
-        String recordID = "";
+        String recordId = "";
 
         switch (type.toLowerCase()) {
             case "work":
@@ -499,7 +499,7 @@ public class EntityServiceImplTest {
             case "publication":
                 resourceClass = "Publication";
                 resourceURI = publicationURI;
-                recordID = "\"deichman:recordID\": \"" + A_BIBLIO_ID + "\",";
+                recordId = "\"deichman:recordId\": \"" + A_BIBLIO_ID + "\",";
                 break;
             case "person":
                 resourceClass = "Person";
@@ -550,7 +550,7 @@ public class EntityServiceImplTest {
                 + "{\"@id\": \"" + resourceURI + "" + id + "\","
                 + "\"@type\": \"deichman:" + resourceClass + "\","
                 + "\"rdfs:name\": \"%s Name\","
-                + recordID
+                + recordId
                 + "\"dcterms:identifier\":\"" + id + "\"}}", capitalize(type));
     }
 
@@ -606,7 +606,7 @@ public class EntityServiceImplTest {
         service.patch(publicationUri, getPatch(publicationUri.getUri(), "mainTitle", originalMainTitle, newMainTitle));
         Model publicationModel = service.retrieveById(publicationUri);
 
-        String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
+        String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordId")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newMainTitle, null, partTitle, partNumber, isbn, publicationYear));
     }
 
@@ -665,7 +665,7 @@ public class EntityServiceImplTest {
         service.patch(publicationUri, getPatch(publicationUri.getUri(), "mainTitle", originalPublicationTitle, newPublicationTitle));
         Model publicationModel = service.retrieveById(publicationUri);
 
-        String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordID")).getString();
+        String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordId")).getString();
         verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator));
 
         service.patch(workUri, getPatch(workUri.getUri(), "mainTitle", originalWorkTitle, newWorkTitle));
@@ -695,7 +695,7 @@ public class EntityServiceImplTest {
                 + "    ns2:mainTitle \"Berlinerpoplene\" ; ns2:partTitle \"deltittel\" ;\n"
                 + "    ns2:publicationOf <http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> ;\n"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
-                + "    ns2:recordID \"11\" ;\n"
+                + "    ns2:recordId \"11\" ;\n"
                 + "    ns2:hasImage \"http://static.deichman.no/626460/kr/1_thumb.jpg\" ;\n"
                 + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
                 + "    ns2:subtitle \"roman\" ;\n"

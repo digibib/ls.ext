@@ -59,7 +59,7 @@ module.exports = (app) => {
                     '@type': ['xsd:gYear'],
                     '@value': request.params[0] === 'bibbi' ? '1998' : '2000'
                   },
-                  'deichman:recordID': '202417',
+                  'deichman:recordId': '202417',
                   'http://koha1.deichman.no:8005/raw#locationSignature': 'Dra',
                   'http://koha1.deichman.no:8005/raw#statementOfResponsibility': 'Slavenka Drakulić ; oversatt av Kirsten Korssjøen',
                   'http://migration.deichman.no/binding': 'ib.',

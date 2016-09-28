@@ -264,21 +264,21 @@ module RandomMigrate
       res = RestClient.get "#{proxy_to_services(publication_uri)}"
       publication = JSON.parse(res)
       return {
-        :publication_recordid => publication["deichman:recordID"],
+        :publication_recordid => publication["deichman:recordId"],
         :item_barcode => items["deichman:barcode"]
       }
     end
 
     def get_record_id(uri)
       res = RestClient.get "#{proxy_to_services(uri)}"
-      JSON.parse(res)["deichman:recordID"]
+      JSON.parse(res)["deichman:recordId"]
     end
 
     def get_record_ids
       record_ids = []
       @publication_uris.each do | uri |
         res = RestClient.get "#{proxy_to_services(uri)}"
-        record_ids << JSON.parse(res)["deichman:recordID"]
+        record_ids << JSON.parse(res)["deichman:recordId"]
       end
       record_ids
     end

@@ -152,8 +152,8 @@ public final class EntityResource extends ResourceBase {
             throw new NotFoundException();
         }
         if (xuri.getTypeAsEntityType() == PUBLICATION) {
-            String recordID = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordID"))).next().asLiteral().getString();
-            getKohaAdapter().deleteBiblio(recordID);
+            String recordId = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordId"))).next().asLiteral().getString();
+            getKohaAdapter().deleteBiblio(recordId);
             getEntityService().delete(model);
             getSearchService().delete(xuri);
             Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("publicationOf")));

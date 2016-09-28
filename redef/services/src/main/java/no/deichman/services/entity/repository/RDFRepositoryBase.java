@@ -207,13 +207,13 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final String createPublication(Model inputModel, String recordID) throws Exception {
+    public final String createPublication(Model inputModel, String recordId) throws Exception {
         String type = "Publication";
 
         inputModel.add(tempTypeStatement(type));
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
 
-        inputModel.add(tempRecordIdStatement(recordID));
+        inputModel.add(tempRecordIdStatement(recordId));
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
@@ -221,11 +221,11 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         return uri;
     }
 
-    private Statement tempRecordIdStatement(String recordID) {
+    private Statement tempRecordIdStatement(String recordId) {
         return ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(BaseURI.ontology() + "recordID"),
-                ResourceFactory.createTypedLiteral(recordID, XSDDatatype.XSDstring));
+                ResourceFactory.createProperty(BaseURI.ontology() + "recordId"),
+                ResourceFactory.createTypedLiteral(recordId, XSDDatatype.XSDstring));
     }
 
     private Statement tempTypeStatement(String clazz) {

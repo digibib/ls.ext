@@ -97,7 +97,7 @@ public final class EntityServiceImpl implements EntityService {
         this.kohaAdapter = kohaAdapter;
         mainTitleProperty = ResourceFactory.createProperty(BaseURI.ontology("mainTitle"));
         publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
-        recordIdProperty = ResourceFactory.createProperty(BaseURI.ontology("recordID"));
+        recordIdProperty = ResourceFactory.createProperty(BaseURI.ontology("recordId"));
         partTitleProperty = ResourceFactory.createProperty(BaseURI.ontology("partTitle"));
         partNumberProperty = ResourceFactory.createProperty(BaseURI.ontology("partNumber"));
         isbnProperty = ResourceFactory.createProperty(BaseURI.ontology("isbn"));
@@ -272,7 +272,7 @@ public final class EntityServiceImpl implements EntityService {
         QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
                 "PREFIX  deichman: <" + BaseURI.ontology() + "> "
                         + "SELECT  * "
-                        + "WHERE { ?publicationUri deichman:recordID ?biblioId }"), workModel);
+                        + "WHERE { ?publicationUri deichman:recordId ?biblioId }"), workModel);
         ResultSet publicationSet = queryExecution.execSelect();
 
         while (publicationSet.hasNext()) {

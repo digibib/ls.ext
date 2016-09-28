@@ -8,7 +8,7 @@ WITH <http://deichman.no/migration>
 
 MODIFY
 
-DELETE { 
+DELETE {
   ?publication :locationFormat ?format .
 }
 

@@ -30,7 +30,7 @@ def post_publication_ntriples(publication_title, ntriples)
   response = RestClient.post "http://services:8005/publication", ntriples, :content_type => 'application/n-triples'
   response.code.should == 201
   @context[:publication_identifier] = response.headers[:location]
-  @context[:publication_recordid] = JSON.parse(RestClient.get(proxy_to_services(@context[:publication_identifier])))["deichman:recordID"]
+  @context[:publication_recordid] = JSON.parse(RestClient.get(proxy_to_services(@context[:publication_identifier])))["deichman:recordId"]
   @context[:publication_maintitle] = publication_title
 end
 

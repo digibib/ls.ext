@@ -19,7 +19,7 @@
     "deichman:publicationOf": {
         "@id": "http://192.168.50.12:7000/work/w123456"
     },
-    "deichman:recordID": "123",
+    "deichman:recordId": "123",
     "@context": {
         "deichman": "http://192.168.50.12:7000/ontology#",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#"

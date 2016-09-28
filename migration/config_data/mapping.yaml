@@ -3449,7 +3449,7 @@
     -
       '001':
         titleNumber:
-          predicate: "ONTOLOGY.recordID"
+          predicate: "ONTOLOGY.recordId"
           object:
             datatype: "literal"
             regex_strip: "^0+"

@@ -84,7 +84,7 @@ public class InMemoryRepositoryTest {
         String publication = "{\"@context\": {\"dcterms\": \"http://purl.org/dc/terms/\",\"deichman\": \"http://data.deichman.no/ontology#\"},\"@graph\": {\"@id\": \"http://data.deichman.no/publication/publication_SHOULD_EXIST\",\"@type\": \"deichman:Work\",\"dcterms:identifier\":\"publication_SERVICE_CREATE_WORK\",\"deichman:biblio\":\"1\"}}";
         final Model inputModel = RDFModelUtil.modelFrom(publication, Lang.JSONLD);
         String publicationId = repository.createPublication(inputModel, A_BIBLIO_NO);
-        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + BaseURI.ontology("recordID") + "> ?value .}");
+        Query query = QueryFactory.create("ASK {<" + publicationId + "> <" + BaseURI.ontology("recordId") + "> ?value .}");
         QueryExecution qexec = QueryExecutionFactory.create(query,repository.getModel());
         assertTrue(qexec.execAsk());
     }

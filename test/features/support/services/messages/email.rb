@@ -43,7 +43,7 @@ module Messaging
     def delete_inbox(address)
       self.status
       uri = URI("#{self.api}/inbox/#{address}")
-      
+
       req = Net::HTTP::Delete.new(uri.path)
       res = Net::HTTP.new(uri.host, uri.port).request(req)
       expect(res.code).to eq("200"), "got unexpected #{res.code} when deleting inbox"

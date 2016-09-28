@@ -296,7 +296,7 @@ public class EntityResourceTest {
         assertNotNull(result);
         assertEquals(CREATED.getStatusCode(), createResponse.getStatus());
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(result.getEntity().toString().contains("\"deichman:recordID\""));
+        assertTrue(result.getEntity().toString().contains("\"deichman:recordId\""));
         assertValidJSON(result.getEntity().toString());
     }
 

@@ -1087,7 +1087,7 @@ public class AppTest {
 
         Model model = RDFModelUtil.modelFrom(getPublication.getBody().toString(), Lang.JSONLD);
         final String[] recordId = new String[1];
-        model.listObjectsOfProperty(createProperty(BaseURI.ontology("recordID"))).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
+        model.listObjectsOfProperty(createProperty(BaseURI.ontology("recordId"))).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
 
         kohaSvcMock.addGetBiblioExpectation(recordId[0], resp);
         HttpResponse<String> result = Unirest.get(appURI + "marc/" + recordId[0]).asString();

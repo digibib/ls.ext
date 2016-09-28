@@ -220,16 +220,16 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` a :Work ;
+  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordId)))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordId)))` .
 }
 
 WHERE {
   ?publication :mainTitle ?mainTitle ;
-    :recordID ?recordID ;
+    :recordId ?recordId ;
     a :Publication .
   MINUS { ?publication migration:originalTitle ?originalTitle .}
   MINUS { ?publication migration:workAuthority ?workAuthority .}
@@ -251,16 +251,16 @@ PREFIX duo: <http://data.deichman.no/duo#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` a :Work ;
+  `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordId)))` a :Work ;
     :mainTitle ?mainTitle ;
     :partNumber ?partNumber ;
     :partTitle ?partTitle .
-  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordID)))` .
+  ?publication :publicationOf `IRI(CONCAT(STR("http://data.deichman.no/work/w"), MD5(?recordId)))` .
 }
 
 WHERE {
   ?publication migration:originalTitle ?mainTitle ;
-    :recordID ?recordID ;
+    :recordId ?recordId ;
     a :Publication .
   MINUS { ?publication migration:workAuthority ?workAuthority .}
   OPTIONAL { ?publication migration:originalPartNumber ?partNumber .}

@@ -307,7 +307,7 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX : <%s>\n"
                 + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
                 + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
-                + "WHERE { ?pub :recordID \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
+                + "WHERE { ?pub :recordId \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
                 BaseURI.ontology(), StringUtils.join(branches.split(","),"\",\""), recordId);
         return q;
     }
@@ -316,7 +316,7 @@ public final class SPARQLQueryBuilder {
         String q = String.format(""
                         + "PREFIX : <%s>\n"
                         + "SELECT ?work\n"
-                        + "WHERE { ?pub :recordID \"%s\" .\n"
+                        + "WHERE { ?pub :recordId \"%s\" .\n"
                         + "        ?pub :publicationOf ?work }\n",
                 BaseURI.ontology(), recordId);
         return QueryFactory.create(q);

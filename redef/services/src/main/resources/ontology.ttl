@@ -269,8 +269,8 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Publication, :Work ;
   rdfs:range xsd:gYear .
 
-# Todo: Endres til :hasRecordID
-:recordID a rdfs:Property ;
+# Todo: Endres til :hasRecordId
+:recordId a rdfs:Property ;
   ui:editable false ;
   rdfs:label "Record ID"@en ;
   rdfs:label "Post ID"@no ;

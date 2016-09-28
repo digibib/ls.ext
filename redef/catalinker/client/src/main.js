@@ -541,7 +541,7 @@
 
     function allInputs () {
       var inputs = _.select(ractive.get('inputs'), function (input) {
-        return (input.fragment === 'publicationOf' || input.fragment === 'recordID')
+        return (input.fragment === 'publicationOf' || input.fragment === 'recordId')
       })
 
       var addInput = function (input, groupIndex, inputIndex, subInputIndex) {
@@ -1836,7 +1836,7 @@
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {
                 var publicationIdInput = _.find(ractive.get('inputs'), function (input) {
-                  return input.predicate.indexOf('#recordID') !== -1
+                  return input.predicate.indexOf('#recordId') !== -1
                 })
                 if (publicationIdInput) {
                   return _.first(publicationIdInput.values).current.value

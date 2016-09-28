@@ -21,7 +21,7 @@
     ns2:mainTitle "La casa delle bugie" ;
     ns2:publicationOf <http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> ;
     ns2:publicationYear "2013"^^xsd:gYear ;
-    ns2:recordID "3" ;
+    ns2:recordId "3" ;
     ns2:hasImage "http://static.deichman.no/1549895/bk/1_thumb.jpg" ;
     ns4:locationDewey "ITA" ;
     ns4:locationSignature "Rag" ;
@@ -38,7 +38,7 @@
     ns2:mainTitle "Berlinerpoplene" ;
     ns2:publicationOf <http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> ;
     ns2:publicationYear "2004"^^xsd:gYear ;
-    ns2:recordID "11" ;
+    ns2:recordId "11" ;
     ns2:hasImage "http://static.deichman.no/626460/kr/1_thumb.jpg" ;
     ns2:hasHoldingBranch "hutl", "fgry" ;    ns2:subtitle "roman" ;
     ns4:locationSignature "Rag" ;

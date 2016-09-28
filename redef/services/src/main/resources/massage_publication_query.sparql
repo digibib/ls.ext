@@ -27,7 +27,7 @@ CONSTRUCT {
                deich:agents ?contribAgentName ;
                ?contribRoleURI ?contribAgentName ;
                deich:mainEntryName ?mainEntryName ;
-               deich:recordID ?recordId ;
+               deich:recordId ?recordId ;
                deich:summary ?summary ;
                deich:formatNo ?formatNo ;
                deich:ageLimit ?ageLimit ;
@@ -55,7 +55,7 @@ CONSTRUCT {
 WHERE {
   # 1. Information from publication:
 
-        { <__PUBLICATIONURI__> deich:recordID ?recordId ;
+        { <__PUBLICATIONURI__> deich:recordId ?recordId ;
             deich:publicationOf ?work .
             BIND(str(?work) AS ?workUri ) }
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }

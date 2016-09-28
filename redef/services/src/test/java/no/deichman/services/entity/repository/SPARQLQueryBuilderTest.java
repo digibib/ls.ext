@@ -370,7 +370,7 @@ public class SPARQLQueryBuilderTest {
         String expected = "PREFIX : <" + BaseURI.ontology() + ">\n"
                 + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
                 + "INSERT { ?pub :hasHoldingBranch \"" + quotedBranches + "\" . }\n"
-                + "WHERE { ?pub :recordID \"" + recordId + "\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n";
+                + "WHERE { ?pub :recordId \"" + recordId + "\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String query = sqb.updateHoldingBranches(recordId, branches);
         assertEquals(expected, query);

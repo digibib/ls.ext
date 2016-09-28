@@ -35,7 +35,7 @@
                     <div class="column three-fifths prop-values">
                         {{#each values}}
                         {{>type}}
-                        {{#predicate.endsWith("#recordID") && current.value !== ""}}
+                        {{#predicate.endsWith("#recordId") && current.value !== ""}}
                         <a data-automation-id="biblio_record_link" target="_blank" href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{current.value}}" class="link"></a>
                         {{/}}
                         {{#predicate.endsWith("#publicationOf") && current.value !== ""}}
