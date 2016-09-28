@@ -2912,17 +2912,6 @@
                         datatype: "uri"
                         prefix: "http://data.deichman.no/person/h"
                   -
-                    '3':
-                      predicate: "MIGRATION.workID"
-                      object:
-                        datatype: "literal"
-                        md5: true
-                        lowercase: true
-                        combine:
-                          - "3"
-                          - "t"
-                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
-                  -
                     '7':
                       predicate: "MIGRATION.startsAtPage"
                       object:
