@@ -1,0 +1,47 @@
+# Construct hasPublicationPart bnodes from added entries with titles
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX role: <http://data.deichman.no/role#>
+PREFIX duo: <http://data.deichman.no/duo#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+	
+}
+
+INSERT {
+	?publication :hasPublicationPart [
+		:agent ?agent ;
+		:role role:author ;
+		:mainTitle ?mainTitle ;
+		:publicationOf `IRI(CONCAT("http://data.deichman.no/work/w", MD5(LCASE(CONCAT(?id, ?mainTitle)))))` ;
+		a :PublicationPart
+	] .	
+}
+
+WHERE {
+	?publication migration:hasPart ?part .
+	?part migration:agent ?agent ;
+		migration:mainTitle ?mainTitle ;
+		migration:workID ?workID ;
+		a migration:PublicationPart.
+	?agent duo:bibliofilAuthorityId ?id
+}
+;
+
+
+INSERT {
+	?publication migration:mainEntryRole role:author .
+}
+
+WHERE {
+	?publication :mainEntry ?agent ;
+		a :Publication .
+	MINUS {?publication migration:mainEntryRole ?role .}
+}
+;

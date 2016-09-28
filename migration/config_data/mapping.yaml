@@ -2890,31 +2890,67 @@
                   indicator2:
                     subs:
                       '0': "MIGRATION.basedOn"
+                      '1': "MIGRATION.basedOn"
                       '2': "MIGRATION.hasPart"
-                    orig: "0|2"
+                      '3': "MIGRATION.hasPart"
+                    orig: "0|1|2|3"
               object:
-                datatype: "uri"
-                prefix: "http://data.deichman.no/work/w"
                 md5: true
                 lowercase: true
                 combine:
                   - "3"
                   - "t"
                 regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                datatype: "uri"
+                prefix: "http://data.deichman.no/publicationPart/p"
               relation:
-                subfield:
+                subfields:
                   -
                     '3':
-                      predicate: "MIGRATION.creator"
+                      predicate: "MIGRATION.agent"
                       object:
                         datatype: "uri"
                         prefix: "http://data.deichman.no/person/h"
                   -
-                    t:
-                      predicate: "ONTOLOGY.mainTitle"
+                    '3':
+                      predicate: "MIGRATION.workID"
                       object:
                         datatype: "literal"
-                class: "MIGRATION.Work"
+                        md5: true
+                        lowercase: true
+                        combine:
+                          - "3"
+                          - "t"
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                  -
+                    '7':
+                      predicate: "MIGRATION.startsAtPage"
+                      object:
+                        datatype: "integer"
+                        regex_match: "(\\d+)-"
+                  -
+                    '7':
+                      predicate: "MIGRATION.endsAtPage"
+                      object:
+                        datatype: "integer"
+                        regex_match: "-(\\d+)"
+                  -
+                    '7':
+                      predicate: "MIGRATION.pages"
+                      object:
+                        datatype: "literal"
+                  -
+                    e:
+                      predicate: "MIGRATION.relatorTerm"
+                      object:
+                        lowercase: true
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                        datatype: "literal"
+                    t:
+                      predicate: "MIGRATION.mainTitle"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.PublicationPart"
     -
       '700':
         subfields:
@@ -3329,11 +3365,8 @@
                 datatype: "literal"
               conditions:
                 indicator:
-                  default: "RAW.alternativeTitle"
-                  indicator2:
-                    subs:
-                      '0': "RAW.alternativeTitle"
-                      '2': "RAW.hasPart"
+                  default: "MIGRATION.addedTitle"
+                      '2': "MIGRATION.analyticalTitle"
                     orig: "0|2"
     -
       '760':
