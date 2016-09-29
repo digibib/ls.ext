@@ -375,4 +375,17 @@ public class SPARQLQueryBuilderTest {
         String query = sqb.updateHoldingBranches(recordId, branches);
         assertEquals(expected, query);
     }
+
+    @Test
+    public void test_retrieve_record_ids_by_work_query() throws Exception {
+        XURI xuri = new XURI("http://data.deichman.no/work/w234123");
+        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
+        Query query = sqb.getRecordIdsByWork(xuri);
+        String expected = "SELECT  ?recordId\n"
+                + "WHERE\n"
+                + "  { ?p  <http://data.deichman.no/ontology#publicationOf>  <" + xuri.getUri() + "> ;\n"
+                + "        <http://data.deichman.no/ontology#recordId>  ?recordId\n"
+                + "  }\n";
+        assertEquals(expected, query.toString());
+    }
 }

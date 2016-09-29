@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import com.google.gson.Gson;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.rdf.RDFModelUtil;
@@ -32,6 +33,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -289,4 +291,16 @@ public final class EntityResource extends ResourceBase {
                 .build();
     }
 
+    @GET
+    @Path("{id: w[a-zA-Z0-9_]+}/listRecordIds")
+    public Response getWorkRecordIds(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+        HashMap<String, List<String>> recordIds = new HashMap<>();
+        recordIds.put("recordIds", getEntityService().retrieveWorkRecordIds(xuri));
+
+        Gson gson = new Gson();
+
+        return ok().entity(gson.toJson(recordIds)).build();
+
+    }
 }

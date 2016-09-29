@@ -162,6 +162,14 @@ public class InMemoryRepositoryTest {
         assertTrue(repository.askIfResourceExists(test));
     }
 
+    @Test
+    public void shouldReturnIdOfPublicationsLinkedToWork() throws Exception {
+        repository = repositoryWithDataFrom("work_w87654.ttl");
+        XURI test = new XURI("http://data.deichman.no/work/w87654");
+        List<String> data = repository.retrieveRecordIdsByWork(test);
+        assertTrue(data.contains("80001"));
+    }
+
     public static InMemoryRepository repositoryWithDataFrom(String fileName) {
         final InMemoryRepository repository = new InMemoryRepository();
         Model testDataModel = ModelFactory.createDefaultModel();

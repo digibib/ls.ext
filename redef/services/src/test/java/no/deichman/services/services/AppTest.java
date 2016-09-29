@@ -1235,6 +1235,24 @@ public class AppTest {
         assertEquals(comparisonJson, resultJson);
     }
 
+    @Test
+    public void test_returns_record_ids_by_work() throws UnirestException {
+        kohaSvcMock.addLoginExpectation();
+        setUpKohaExpectation(SECOND_BIBLIO_ID);
+
+        String triples = "<http://data.deichman.no/work/w1> "
+                + "<http://data.deichman.no/ontology#mainTitle> \"Worky Title Titleson\" .\n";
+        HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(appURI + "work", triples).asJson();
+        String workURI = getLocation(createworkResponse);
+        String publicationTriples = "<http://data.deichman.no/publication/p1> "
+                + "<http://data.deichman.no/ontology#publicationOf> <" + workURI + "> .\n";
+        buildCreateRequestNtriples(appURI + "publication", publicationTriples).asJson();
+
+        HttpResponse<String> result = Unirest.get(workURI.replace("http://data.deichman.no/", appURI) + "/listRecordIds").asString();
+        assertEquals("{\"recordIds\":[\"" + SECOND_BIBLIO_ID + "\"]}", result.getBody());
+
+    }
+
     private Boolean resourceIsIndexed(String uri) throws Exception {
         String uriEncoded = URLEncoder.encode(uri, "UTF-8");
         SearchResponse res = EmbeddedElasticsearchServer.getInstance().getClient()

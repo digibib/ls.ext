@@ -70,4 +70,5 @@ public interface RDFRepository {
 
     Model retrieveCorporationAndLinkedResourcesByURI(String uri);
 
+    List<String> retrieveRecordIdsByWork(XURI xuri);
 }

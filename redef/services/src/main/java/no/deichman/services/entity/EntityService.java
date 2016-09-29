@@ -3,6 +3,7 @@ package no.deichman.services.entity;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -35,4 +36,6 @@ public interface EntityService {
     void retrieveAllWorkUris(String type, Consumer<String> uriConsumer);
 
     Optional<String> retrieveImportedResource(String id, String type);
+
+    List<String> retrieveWorkRecordIds(XURI xuri);
 }

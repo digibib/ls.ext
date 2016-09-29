@@ -569,4 +569,10 @@ public final class EntityServiceImpl implements EntityService {
     public Optional<String> retrieveImportedResource(String id, String type) {
         return repository.getResourceURIByBibliofilId(id, type);
     }
+
+    @Override
+    public List<String> retrieveWorkRecordIds(XURI xuri) {
+        return repository.retrieveRecordIdsByWork(xuri);
+    }
+
 }

@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.CORPORATION;
@@ -830,6 +831,23 @@ public class EntityServiceImplTest {
         assertTrue(got.equals(want));
     }
 
+    @Test
+    public void test_retrieves_work_ids() throws Exception {
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
+
+        Model model = modelFrom("<" + workURI + "> <http://www.w3.org/2000/01/rdf-schema#type> <" + ontologyURI + "Work> .", Lang.NTRIPLES);
+        XURI xuri = new XURI(service.create(WORK, model));
+        String testId = "publication_SHOULD_BE_PATCHABLE";
+        String publicationData = getTestJSON(testId, "publication");
+        String added = "<" + publicationURI + "p000> <" + ontologyURI + "publicationOf> <" + xuri.getUri() + "> .";
+        Model inputModel = modelFrom(publicationData, JSONLD);
+        inputModel.add(modelFrom(added, Lang.NTRIPLES));
+        service.create(PUBLICATION, inputModel);
+
+        List<String> result = service.retrieveWorkRecordIds(xuri);
+        assertEquals(A_BIBLIO_ID, result.get(0));
+    }
+
     private MarcRecord getMarcRecord(String mainTitle, String name) {
         MarcRecord marcRecord = new MarcRecord();
         if (mainTitle != null) {
@@ -840,7 +858,6 @@ public class EntityServiceImplTest {
         }
         return marcRecord;
     }
-
 
     private MarcRecord getMarcRecord(String mainTitle, String name, String partTitle, String partNumber, String isbn, String publicationYear) {
         MarcRecord marcRecord = new MarcRecord();

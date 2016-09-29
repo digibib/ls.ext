@@ -318,6 +318,18 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         return res;
     }
 
+    @Override
+    public final List<String> retrieveRecordIdsByWork(XURI xuri) {
+        List<String> recordIDs = new ArrayList<>();
+        log.debug("Attempting to retrieve all recordIDs for " + xuri.getUri());
+        try (QueryExecution qexec = getQueryExecution(sqb.getRecordIdsByWork(xuri))) {
+            disableCompression(qexec);
+            qexec.execSelect().forEachRemaining(
+                    solution -> recordIDs.add(solution.get("recordId").toString())
+            );
+        }
+        return recordIDs;
+    }
 
     private void disableCompression(QueryExecution qexec) {
         if (qexec instanceof QueryEngineHTTP) {

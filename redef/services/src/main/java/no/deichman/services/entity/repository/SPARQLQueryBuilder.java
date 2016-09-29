@@ -443,4 +443,13 @@ public final class SPARQLQueryBuilder {
 
         return QueryFactory.create(q);
     }
+
+    public Query getRecordIdsByWork(XURI xuri) {
+        String queryString = "SELECT ?recordId\n"
+                + "WHERE {\n"
+                + "  ?p <http://data.deichman.no/ontology#publicationOf> <" + xuri.getUri() + "> ;\n"
+                + "     <http://data.deichman.no/ontology#recordId> ?recordId\n"
+                + "}\n";
+        return QueryFactory.create(queryString);
+    }
 }
