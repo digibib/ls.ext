@@ -65,7 +65,7 @@ DELETE {
 INSERT {
 	?publication :isRelatedTo [
 		:work `IRI(CONCAT("http://data.deichman.no/work/w", MD5(LCASE(CONCAT(?id, ?mainTitle)))))` ;
-		:hasRelation relationType:basedOn ;
+		:hasRelationType relationType:basedOn ;
 		a :WorkRelation
 	] .
 	`IRI(CONCAT("http://data.deichman.no/work/w", MD5(LCASE(CONCAT(?id, ?mainTitle)))))` a :Work ;
