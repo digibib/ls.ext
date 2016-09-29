@@ -45,7 +45,9 @@ module.exports = (app) => {
     const dateOfBirth = getDateOfBirth(request.body.year, request.body.month, request.body.day)
     const age = getAge(dateOfBirth)
     const categoryCode = age < 15 ? 'REGBARN' : 'REGVOKSEN'
+    const sex = sexFromSSN(request.body.ssn)
     const patron = {
+      sex: sex,
       firstname: request.body.firstName,
       surname: request.body.lastName,
       dateofbirth: dateOfBirth,
@@ -177,5 +179,16 @@ module.exports = (app) => {
     const ageYear = age.getFullYear() - 1970
 
     return ageYear
+  }
+
+  function sexFromSSN (ssn) {
+    if (ssn.length !== 11) {
+      return
+    }
+    if (parseInt(ssn.charAt(8)) % 2 === 0) {
+      return 'F'
+    } else {
+      return 'M'
+    }
   }
 }
