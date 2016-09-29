@@ -27,7 +27,7 @@ INSERT {
 		:startsAtPage ?startPage ;
 		:endsAtPage ?endPage ;
 		:publicationOf `IRI(CONCAT("http://data.deichman.no/work/w", MD5(LCASE(CONCAT(?id, ?mainTitle)))))` ;
-		a :PublicationPart .
+		a :PublicationPart
 	] .	
 }
 
