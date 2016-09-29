@@ -13,6 +13,25 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.1.5 (2016-09-16) Bugfix release
+
+TAG:  b31510201995ee07c5edb3fc7a0ff1cb1da8abce
+KOHA: 8c3f4d426e6cbac8ef0b89d7be82e2e8e448fea6
+
+- services:
+  - better sync to Koha records
+  patron-client:
+  - validation of all input fields on registration
+  - work page keep filter settings
+  - styling and responsiveness
+  - refactor work page and content
+  - validation of translations
+- koha:
+  - fix hold slip
+  - deichman marc framework
+  - door access (meråpent) setup
+  - print notice send to pidgeon printing service
+
 ## 0.1.4 (2016-09-16) Bugfix release
 
 TAG:  81c564256c71a44b9db92e3c54ecd211e712624d
