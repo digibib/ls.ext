@@ -1418,7 +1418,7 @@
           mainEntryContributor(publicationItem)
           publicationItem.publicationYear = publicationItem.publicationYear ? ` (${publicationItem.publicationYear})` : ''
           if (publicationItem.recordId) {
-            publicationItem.recordId = `tittelnr ${publicationItem.recordId}`
+            publicationItem.recordIdPrefixed = `tittelnr ${publicationItem.recordId}`
           }
           return publicationItem
         }
@@ -2964,6 +2964,9 @@
         let etags = {}
         axios.interceptors.request.use(function (options) {
           if (options.method === 'get' || !options.method) {
+            options.validateStatus = function (status) {
+              return status >= 200 && status < 300 || status === 304
+            }
             let url = options.url
             const etag = etags[ url ]
             const cachedResponse = etagData[ `${url}${etag}` ]

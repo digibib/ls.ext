@@ -1286,7 +1286,7 @@ module.exports = (app) => {
             { field: 'mainEntryName', wildcard: true }
           ],
           legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
-          resultItemLabelProperties: [ 'creator', 'mainTitle', 'subtitle', 'publicationYear', 'recordId' ],
+          resultItemLabelProperties: [ 'creator', 'mainTitle', 'subtitle', 'publicationYear', 'recordIdPrefixed' ],
           itemHandler: 'publicationItemHandler'
         },
         instrument: {

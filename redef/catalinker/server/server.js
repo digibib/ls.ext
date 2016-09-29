@@ -105,9 +105,11 @@ app.get('/valueSuggestions/demo_:source/:isbn', function (req, res, next) {
 
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
 
-app.use('/services', cache('1 hour', function (req, res) {
-  return req.method === 'GET' || req.method === 'HEAD'
-}), requestProxy(services, {
+var cacheableRequestsFilter = function (req, res) {
+  return (req.method === 'GET' || req.method === 'HEAD') && !/^\/search\/.*$/.test(req.url)
+}
+
+app.use('/services', cache('1 hour', cacheableRequestsFilter), requestProxy(services, {
     forwardPath: function (req, res) {
       return url.parse(req.url).path
     },

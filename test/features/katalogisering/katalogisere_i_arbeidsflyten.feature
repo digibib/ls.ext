@@ -155,6 +155,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Så jeg skriver verdien på tittelnummer i feltet som heter "Utgivelser" og trykker enter
+    Og jeg venter litt
     Så velger jeg en utgivelse fra treffliste fra utgivelsesregisteret
     Og jeg venter litt
     Og jeg venter litt
