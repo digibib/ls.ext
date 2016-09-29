@@ -2198,58 +2198,60 @@
                 }
               },
               selectSearchableItem: function (event, origin, displayValue, options) {
-                options = options || {}
-                ractive.set(origin + '.searchResult', null)
-                var inputKeyPath = grandParentOf(origin)
-                var input = ractive.get(inputKeyPath)
-                var uri = event.context.uri
-                var template = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
-                if (template) {
-                  fetchExistingResource(uri).then(function () {
-                    let initOptions = { presetValues: {} }
-                    updateBrowserLocationWithTemplate(template)
-                    allGroupInputs(function (input) {
-                      if (input.type === 'hidden-url-query-value' &&
-                        typeof input.values[ 0 ].current.value === 'string' &&
-                        input.values[ 0 ].current.value !== '') {
-                        let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
-                        initOptions.presetValues[ input.widgetOptions.queryParameter ] = shortValue
-                        updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
-                      }
-                    })
-                    if (uri.indexOf('publication') !== -1) {
-                      updateBrowserLocationWithTab(1)
-                    }
-                    Main.init(initOptions)
-                  })
-                } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
-                  var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
-                  var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
-                  unloadResourceForDomain(rdfType)
-                  fetchExistingResource(uri)
-                  ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
-                } else if (input.isMainEntry || options.subItem) {
-                  fetchExistingResource(uri)
-                    .then(function () {
-                      updateInputsForDependentResources(typeFromUri(uri), uri)
-                    })
-                } else {
-                  ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
-                  ractive.set(origin + '.current.value', uri)
-                  ractive.set(origin + '.current.displayValue', displayValue)
-                  ractive.set(origin + '.deletable', true)
-                  ractive.set(origin + '.searchable', false)
-                  _.each(input.dependentResourceTypes, function (resourceType) {
-                    unloadResourceForDomain(resourceType)
-                  })
-                  if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
-                    ractive.fire('patchResource',
-                      { keypath: origin, context: ractive.get(origin) },
-                      ractive.get(grandParentOf(origin)).predicate,
-                      unPrefix(input.domain))
-                  }
+                if (!eventShouldBeIgnored(event)) {
+                  options = options || {}
                   ractive.set(origin + '.searchResult', null)
-                  ractive.update()
+                  var inputKeyPath = grandParentOf(origin)
+                  var input = ractive.get(inputKeyPath)
+                  var uri = event.context.uri
+                  var template = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
+                  if (template) {
+                    fetchExistingResource(uri).then(function () {
+                      let initOptions = { presetValues: {} }
+                      updateBrowserLocationWithTemplate(template)
+                      allGroupInputs(function (input) {
+                        if (input.type === 'hidden-url-query-value' &&
+                          typeof input.values[ 0 ].current.value === 'string' &&
+                          input.values[ 0 ].current.value !== '') {
+                          let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
+                          initOptions.presetValues[ input.widgetOptions.queryParameter ] = shortValue
+                          updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
+                        }
+                      })
+                      if (uri.indexOf('publication') !== -1) {
+                        updateBrowserLocationWithTab(1)
+                      }
+                      Main.init(initOptions)
+                    })
+                  } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
+                    var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
+                    var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
+                    unloadResourceForDomain(rdfType)
+                    fetchExistingResource(uri)
+                    ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
+                  } else if (input.isMainEntry || options.subItem) {
+                    fetchExistingResource(uri)
+                      .then(function () {
+                        updateInputsForDependentResources(typeFromUri(uri), uri)
+                      })
+                  } else {
+                    ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
+                    ractive.set(origin + '.current.value', uri)
+                    ractive.set(origin + '.current.displayValue', displayValue)
+                    ractive.set(origin + '.deletable', true)
+                    ractive.set(origin + '.searchable', false)
+                    _.each(input.dependentResourceTypes, function (resourceType) {
+                      unloadResourceForDomain(resourceType)
+                    })
+                    if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
+                      ractive.fire('patchResource',
+                        { keypath: origin, context: ractive.get(origin) },
+                        ractive.get(grandParentOf(origin)).predicate,
+                        unPrefix(input.domain))
+                    }
+                    ractive.set(origin + '.searchResult', null)
+                    ractive.update()
+                  }
                 }
               },
               unselectEntity: function (event) {
@@ -2697,12 +2699,6 @@
                 ractive.set(keypath + '.error', 'ugyldig input')
               }
             }
-          }, { init: false })
-
-          ractive.observe('xxapplicationData.inputGroups.*.inputs.*.visible', function (newValue, oldValue, keypath) {
-            let inputGroup = ractive.get(parentOf(grandParentOf(keypath)))
-            markFirstAndLastInputsInGroup(inputGroup)
-            ractive.update()
           }, { init: false })
 
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {

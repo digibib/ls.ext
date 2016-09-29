@@ -10,11 +10,12 @@
                     <div class="pure-g">
                         <div class="pure-u-1-12">
                             {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
-                                <a class="edit-resource" on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}" title="Rediger"/>
+                                <a class="edit-resource" tabindex="0" on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}" title="Rediger"/>
                             {{else}}
-                            <input class="select-result-item-radio" type="radio"
+                                <a class="select-result-item" tabindex="0"
                                    on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}"
-                                   checked="{{isChecked}}"/>
+                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType].resultItemLabelProperties)}}"
+                                   title="Velg"><span/></a>
                             {{/if}}
                         </div>
                         <div class="pure-u-5-6">
