@@ -159,17 +159,18 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/tcp-proxy:14dc5417bf211317351a0bae084db12c64a1dd45"
+    image: "digibib/sip2proxy"
     networks:
       - backend
     ports:
       - "6002:9999"
     command:
-      - "/app/tcp-proxy"
-      - "-vv"
-      - "-r"
-      - "xkoha:${SIP_PORT}"
-      - "-replace=AB100301~AB0301"
+      - "/sip2proxy"
+      - "-from=:9999"
+      - "-to=xkoha:${SIP_PORT}"
+      - "-log-messages=true"
+      - "-replace-10=true"
+      - "-log-metrics-every-s=15"
     logging:
       driver: "journald"
 
