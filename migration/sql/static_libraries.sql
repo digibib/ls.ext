@@ -5,7 +5,6 @@ VALUES
   ("fbjo","Bjørnholt"),
   ("fbol","Bøler"),
   ("ffur","Furuset"),
-  ("fgab","Biblo Tøyen"),
   ("fgam","Tøyen"),
   ("fgry","Grünerløkka"),
   ("fhol","Holmlia"),
