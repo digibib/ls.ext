@@ -420,12 +420,19 @@ public class EntityResourceTest {
     public void should_return_a_list_of_record_ids() throws Exception {
 
         entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w87654.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
-
         XURI xuri = new XURI("http://deichman.no/work/w87654");
-
         Response result = entityResource.getWorkRecordIds(xuri.getType(), xuri.getId());
-
         assertEquals("{\"recordIds\":[\"80001\",\"80002\"]}", result.getEntity());
+    }
+
+    @Test
+    public void should_return_empty_recordId_list_when_no_publications() throws Exception {
+
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w00000891.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://deichman.no/work/w87654");
+        Response result = entityResource.getWorkRecordIds(xuri.getType(), xuri.getId());
+        assertEquals("{\"recordIds\":[]}", result.getEntity());
+
     }
 
     private String createTestRDF(String identifier, String type) throws Exception {

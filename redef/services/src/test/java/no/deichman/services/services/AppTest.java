@@ -1253,6 +1253,18 @@ public class AppTest {
 
     }
 
+    @Test
+    public void test_returns_empty_record_ids_list() throws UnirestException {
+
+        String triples = "<http://data.deichman.no/work/w1> "
+                + "<http://data.deichman.no/ontology#mainTitle> \"Worky Title Titleson\" .\n";
+        HttpResponse<JsonNode> createworkResponse = buildCreateRequestNtriples(appURI + "work", triples).asJson();
+        String workURI = getLocation(createworkResponse);
+
+        HttpResponse<String> result = Unirest.get(workURI.replace("http://data.deichman.no/", appURI) + "/listRecordIds").asString();
+        assertEquals("{\"recordIds\":[]}", result.getBody());
+
+    }
     private Boolean resourceIsIndexed(String uri) throws Exception {
         String uriEncoded = URLEncoder.encode(uri, "UTF-8");
         SearchResponse res = EmbeddedElasticsearchServer.getInstance().getClient()
