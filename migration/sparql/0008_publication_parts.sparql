@@ -14,7 +14,9 @@ DELETE {
 	?publication migration:hasPart ?part .
 	?part migration:agent ?agent ;
 		migration:mainTitle ?mainTitle ;
-		a migration:PublicationPart.
+		migration:startsAtPage ?startPage ;
+		migration:endsAtPage ?endPage ;
+		a migration:PublicationPart .
 }
 
 INSERT {
@@ -22,8 +24,10 @@ INSERT {
 		:agent ?agent ;
 		:role role:author ;
 		:mainTitle ?mainTitle ;
+		:startsAtPage ?startPage ;
+		:endsAtPage ?endPage ;
 		:publicationOf `IRI(CONCAT("http://data.deichman.no/work/w", MD5(LCASE(CONCAT(?id, ?mainTitle)))))` ;
-		a :PublicationPart
+		a :PublicationPart .
 	] .	
 }
 
@@ -33,5 +37,7 @@ WHERE {
 		migration:mainTitle ?mainTitle ;
 		a migration:PublicationPart .
 	?agent duo:bibliofilAuthorityId ?id .
+	OPTIONAL {?part migration:startsAtPage ?startPage .}
+	OPTIONAL {?part migration:endsAtPage ?endPage .}
 }
 ;

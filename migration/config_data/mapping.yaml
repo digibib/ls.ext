@@ -2676,11 +2676,10 @@
         subfields:
           -
             a:
-              predicate: "ONTOLOGY.tag"
+              predicate: "ONTOLOGY.tags"
               object:
                 datatype: "literal"
                 regex_strip: "^[\\.:,;?!_\\-\\/]*|[\\.:,;?!_\\-\\/]*$"
-                regex_split: " "
     -
       '699':
         subfields:
@@ -2923,11 +2922,6 @@
                       object:
                         datatype: "integer"
                         regex_match: "-(\\d+)"
-                  -
-                    '7':
-                      predicate: "MIGRATION.pages"
-                      object:
-                        datatype: "literal"
                   -
                     e:
                       predicate: "MIGRATION.relatorTerm"
