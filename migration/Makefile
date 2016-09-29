@@ -62,6 +62,7 @@ settings:
 	@echo "OK Done setting up Koha\n"
 
 out/done.massage_input_data:
+	@date
 	@echo "   Massaging and transforming input data (Bibliofil exports)"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) "catmassage -outdir=/out -vmarc=/data/$(VMARC) -emarc=/data/$(EMARC) -exemp=/data/$(EXEMP) -limit=$(LIMIT) -skip=$(SKIP)"
 	@echo "OK Done massaging\n"
@@ -69,6 +70,7 @@ out/done.massage_input_data:
 
 out/done.setup_koha: out/done.massage_input_data
 ifndef NOKOHA
+	@date
 	@echo "   Setting up Koha"
 	@echo "-- Populating branches"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/branches.sql'
@@ -93,6 +95,7 @@ endif
 
 out/done.migrate_catalogue_to_koha: out/done.setup_koha
 ifndef NOKOHA
+	@date
 	@echo "   Migration catalogue with items into Koha"
 	@echo "-- Stopping Cron"
 	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS stop cron'
@@ -110,14 +113,13 @@ endif
 
 out/done.messing_with_migrated_catalogue: out/done.migrate_catalogue_to_koha
 ifndef NOKOHA
+	@date
 	@echo "   Messing with the migrated catalogue in Koha"
 	@echo "-- Updating biblionumbers (so that biblionumber=tittelnummer)"
 	@cp sql/*.sql out/
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_biblionumbers.sql'
 	@echo "-- Updating biblioitems.marcxml 999 with changed biblioitemnumber"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/update_marcxml_999.sql'
-	@echo "-- Populating zebra queue"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
 	@echo "-- Starting Cron"
 	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start cron'
 	@echo "OK Done messing with catalogue\n"
@@ -125,6 +127,7 @@ endif
 	@touch out/done.messing_with_migrated_catalogue
 
 out/done.convert_catalogue_to_nt: out/done.massage_input_data
+	@date
 	@echo "   Converting catalogue to RDF with migmarc2rdf"
 	@cp config_data/mapping.yaml out/
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) "cd /usr/src/migmarc2rdf && ruby marc2rdf.rb -m /out/mapping.yaml -i /out/catalogue.marcxml -h data.deichman.no > /out/catalogue.nt"
@@ -133,6 +136,7 @@ out/done.convert_catalogue_to_nt: out/done.massage_input_data
 
 VIRTUOSO=http://$(HOST):8890
 out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
+	@date
 	@echo "   Importing RDF into LSEXT (Fuseki)"
 	@echo "-- Stopping and removing temprorary virtuoso triplestore (if present)"
 	-@sudo docker stop virtuoso > /dev/null
@@ -166,6 +170,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "OK Completed RDF import to Fuseki\n"
 
 virtuoso: out/done.convert_catalogue_to_nt
+	@date
 	@echo "   Importing RDF into Virtuoso (without running SPARQL rules)"
 	@echo "-- Stopping and removing temprorary virtuoso triplestore (if present)"
 	-@sudo docker stop virtuoso > /dev/null
@@ -182,8 +187,9 @@ virtuoso: out/done.convert_catalogue_to_nt
 		-G $(VIRTUOSO)/sparql-graph-crud-auth --data-urlencode graph=http://deichman.no/migration ; sleep 3 ; done
 	@echo "OK Imported RDF to Virtuoso\n"
 
-out/done.koha_fuseki_sync: out/done.migrate_loans out/done.import_into_fuseki
+out/done.koha_fuseki_sync: out/done.import_into_fuseki out/done.messing_with_migrated_catalogue
 ifndef NOKOHA
+	@date
 	@echo "   Syncing Koha and Fuseki"
 	@echo "-- Synchronizing holdingbranches from Koha to Fuseki"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -N -B -e "SELECT biblioitemnumber,GROUP_CONCAT(DISTINCT holdingbranch) FROM items GROUP BY biblioitemnumber ;" > /out/holdingbranches.tsv'
@@ -207,13 +213,16 @@ endif
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/serial/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/compositionType/reindex_all'
-	@echo "-- Enabeling koha email sending"
-	@sudo docker exec xkoha /bin/sh -c 'koha-email-enable $$KOHA_INSTANCE'
+	@echo "-- Start syncing MARC records..."
+	@$(MIGRATION_RUN_CMD) 'curl -s -X PUT services:8005/publication/sync_all'
 	@echo "   Migration is complete. Goodbye!"
+	@date
 	@echo "!! TODO stop running virtuoso container (left up for debugging)"
 
-out/done.migrate_patrons: out/done.setup_koha
-ifdef MIGRATE_PATRONS
+temp:
+	@$(MIGRATION_RUN_CMD) 'curl -s -X PUT services:8005/publication/sync_all'
+
+out/done.migrate_patrons:
 	@echo "   Migrating patrons to Koha"
 	@echo "-- Disabeling koha email sending"
 	@sudo docker exec xkoha /bin/sh -c 'koha-email-disable $$KOHA_INSTANCE'
@@ -250,11 +259,9 @@ ifdef PHONE
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET smsalertnumber=\"$(PHONE)\";"'
 endif
 	@echo "OK Done migrating patrons.\n"
-endif
 	@touch out/done.migrate_patrons
 
-out/done.migrate_loans: out/done.migrate_patrons out/done.messing_with_migrated_catalogue
-ifdef MIGRATE_PATRONS
+transactions: out/done.migrate_patrons
 	@echo "   Migrating loans and holds to Koha"
 	@echo "-- Inserting issues SQL"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
@@ -268,10 +275,15 @@ ifdef MIGRATE_PATRONS
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_attributes (borrowernumber, code, attribute) SELECT borrowernumber, \"old_lnr\", userid  FROM borrowers WHERE categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\"); "'
 	@echo "-- Setting userid=cardid"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL AND categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\");"'	@echo "OK Done migrating loands and holds\n"
-endif
+	@echo "-- Enabeling koha email sending"
+	@sudo docker exec xkoha /bin/sh -c 'koha-email-enable $$KOHA_INSTANCE'
+	@touch out/done.migrate_loans
+
+zebra:
+	@echo "-- Populating zebra queue"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
-	@touch out/done.migrate_loans
 
 ifdef MIGRATE_PATRONS
 NOCIRC=false
