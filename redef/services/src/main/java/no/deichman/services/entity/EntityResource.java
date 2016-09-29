@@ -44,6 +44,7 @@ import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
+import static no.deichman.services.restutils.MimeType.JSON;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
@@ -293,6 +294,7 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("{id: w[a-zA-Z0-9_]+}/listRecordIds")
+    @Produces(JSON + MimeType.UTF_8)
     public Response getWorkRecordIds(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         HashMap<String, List<String>> recordIds = new HashMap<>();
