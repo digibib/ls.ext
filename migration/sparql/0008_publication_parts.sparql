@@ -16,7 +16,7 @@ DELETE {
 		migration:mainTitle ?mainTitle ;
 		migration:startsAtPage ?startPage ;
 		migration:endsAtPage ?endPage ;
-		a migration:PublicationPart .
+		a migration:agentTitleEntry .
 }
 
 INSERT {
@@ -35,7 +35,7 @@ WHERE {
 	?publication migration:hasPart ?part .
 	?part migration:agent ?agent ;
 		migration:mainTitle ?mainTitle ;
-		a migration:PublicationPart .
+		a migration:agentTitleEntry .
 	?agent duo:bibliofilAuthorityId ?id .
 	OPTIONAL {?part migration:startsAtPage ?startPage .}
 	OPTIONAL {?part migration:endsAtPage ?endPage .}

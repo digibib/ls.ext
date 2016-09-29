@@ -2901,7 +2901,7 @@
                   - "t"
                 regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 datatype: "uri"
-                prefix: "http://data.deichman.no/publicationPart/p"
+                prefix: "http://data.deichman.no/agentTitleEntry/p"
               relation:
                 subfields:
                   -
@@ -2933,7 +2933,7 @@
                       predicate: "MIGRATION.mainTitle"
                       object:
                         datatype: "literal"
-                class: "MIGRATION.PublicationPart"
+                class: "MIGRATION.agentTitleEntry"
     -
       '700':
         subfields:
