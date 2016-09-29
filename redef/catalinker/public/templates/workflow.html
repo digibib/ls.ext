@@ -39,6 +39,11 @@
                             {{#each inputs:inputIndex}}
                             {{#visible}}
                             {{>input}}
+                            {{#if (type === 'input-boolean') && !(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.))}}
+                                <span class="prop-input boolean-separator pure-u-1-2 {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}">
+                                    <span class="panel-part boolean-separator pure-u-1-1"> </span>
+                                </span>
+                            {{/if}}
                             {{/visible}}
                             {{/each}}
                             <div class="pure-u-1-1">

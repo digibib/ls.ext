@@ -168,15 +168,13 @@ body {
 
   .tab-content {
     &.maintenance-inputs {
-      .panel-part {
-        &:first-child {
-          border-top: 1px solid lightgrey;
-        }
-        &:last-child {
-          border-bottom: 1px solid lightgrey;
-          padding-bottom: 15px;
-        }
-        &:last-child:not(.last-one):after {
+      .input-panel:first-child .panel-part:first-child {
+        border-top: 1px solid lightgrey;
+      }
+      .input-panel:last-child .panel-part:last-child {
+        border-bottom: 1px solid lightgrey;
+        padding-bottom: 15px;
+        &:not(.last-one):after {
           display: none !important;
         }
       }
@@ -205,6 +203,12 @@ body {
         float: right;
       }
       .prop-input {
+        &.boolean-separator {
+          height: 2px;
+          &.last-one {
+            display: none;
+          }
+        }
         .add-item-button {
           float: right;
           margin-bottom: 12px;
@@ -237,7 +241,10 @@ body {
           &.first {
             border-top: 1px solid lightgrey;
           }
-          &:last-child:not(.last-one):after {
+          &.boolean-separator {
+            height: 2px;
+          }
+          &:last-child:not(.last-one):after, &.boolean-separator:not(last-one):after {
             display: block;
             height: 2px;
             //            width: 100%;
