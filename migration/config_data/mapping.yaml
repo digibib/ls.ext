@@ -2964,7 +2964,7 @@
                 subfields:
                   -
                     '3':
-                      predicate: "MIGRATION.hasPerson"
+                      predicate: "MIGRATION.hasAgent"
                       object:
                         datatype: "uri"
                         prefix: "http://data.deichman.no/person/h"
