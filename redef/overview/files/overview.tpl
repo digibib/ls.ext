@@ -71,9 +71,12 @@
         a:hover { background-color: #eee; }
         .logo { float: right }
 
-        .panel { width: 33%; background: #eee; border:5px solid #fff; padding: 1em; height: 310px;}
-        .panel a { display:block; color: #fff; background-color: #E6A817; font-size: 120%;
+        .panel { width: 33%; border:5px solid #fff; padding: 1em; height: 10em;}
+        .bg-grey { background: #eee; }
+        .bg-pink { background: #ffaeae; }
+        .panel a { display:block; font-size: 120%;
                    text-decoration: none; padding: 0.5em; text-align: center; border: 2px solid #fff;}
+        .bg-yellow { background-color: #E6A817; color: #fff;  }
         .panel a:hover { background-color: #777; }
         .header {
             background: #222;
@@ -105,37 +108,51 @@
     <div class="section">
         <div class="row">
             <img class="logo" src="/logo.gif"/>
-            <h1>Innlogging til nytt biblioteksystem</h1>
+            <h1>Skranken</h1>
         </div>
     </div>
 </div>
 
 <div class="section">
     <div class="row">
-        <div class="col panel">
-            <a href="http://${HOST}:${PATRON_CLIENT_PORT}/search"><h3>Søket</h3></a>
-            <p><strong>Søkegrensesnitt for ansatte og sluttbrukere.</strong></p>
-            <p>Her trenger du ikke å logge deg inn, men får bare tilgang fra Deichman.</p>
-            <p>Søket er under utvikling og vil forandre seg kontinuerlig frem til september. Test i vei!</p>
+        <div class="col panel bg-grey">
+            <h3>Sjekk PIN-kode (TODO)</h3>
         </div>
-        <div class="col panel">
-            <a href="http://${HOST}:${KOHA_INTRA_PORT}"><h3>Koha</h3></a>
-            <p><strong>Ansattes grensesnitt</strong></p>
-            <p>Utlån/innlevering, brukerregistrering , endre reservasjoner osv.</p>
-            <p>Logg inn med Nasjonalt lånernummer og pinkode.</p>
-            <p>Innstillingene endres etter hvordan Deichman ønsker å ha det frem mot september.</p>
+        <div class="col panel bg-grey">
+            <a class="bg-yellow" href="http://${HOST}:${KOHA_INTRA_PORT}/cgi-bin/koha/circ/circulation-home.pl"><h3>Skranke utlån</h3></a>
         </div>
-        <div class="col panel">
-            <a href="http://${HOST}:${CATALINKER_PORT}"><h3>Katalogisering</h3></a>
-            <p><strong>Katalogiseringsverktøy</strong></p>
-            <p>Her trenger du ikke å logge deg inn.</p>
-            <p>Grensesnittet er ikke ferdig og vil utvikles frem mot september.</p>
+        <div class="col panel bg-grey">
+            <a class="bg-yellow" href="http://${HOST}:${KOHA_INTRA_PORT}/cgi-bin/koha/circ/returns.pl"><h3>Skranke innlevering</h3></a>
+        </div>
+        <div class="col panel bg-grey">
+            <a class="bg-yellow"  href="http://${HOST}:${KOHA_INTRA_PORT}/cgi-bin/koha/members/members-home.pl"><h3>Finn bruker</h3></a>
+        </div>
+        <div class="col panel bg-grey">
+            <h3>Prege (TODO)</h3>
+        </div>
+        <div class="col panel bg-grey">
+            <a class="bg-yellow"  href="http://${HOST}:${PATRON_CLIENT_PORT}/"><h3>Websøket</h3></a>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="row"><h1>Nyttige verktøy</h1></div>
+    <div class="row">
+        <div class="col panel bg-pink">
+            <a class="bg-grey" href="http://blogg.deichman.no/koha/"><h3>Læringsportalen</h3></a>
+            <p><strong>Lær!</strong> KUL-epostadresse+passord</p>
+        </div>
+        <div class="col panel bg-pink">
+            <a class="bg-grey" href="https://sites.google.com/site/nyttbib/"><h3>Alt om biblioteksystemet</h3></a>
+            <p><strong>Rutiner og informasjon</strong></p>
+        </div>
+        <div class="col panel bg-pink">
+            <a class="bg-grey" href="http://wiki.deichman.no/index.php/Bibliotekfaglige_lenker"><h3>Bibliotekfaglige lenker</h3></a>
         </div>
     </div>
     <h2>Versjonsinformasjon</h2>
     <p><strong>GITREF:</strong> ${GITREF}</p>
-    <p><strong>Jenkins bygg nr.</strong>${BUILD_TAG}</p>
-
 </div>
 <!-- /container -->
 
