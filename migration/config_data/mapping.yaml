@@ -2901,7 +2901,7 @@
                   - "t"
                 regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 datatype: "uri"
-                prefix: "http://data.deichman.no/agentTitleEntry/p"
+                prefix: "http://data.deichman.no/agentTitleEntry/t"
               relation:
                 subfields:
                   -
@@ -2959,7 +2959,7 @@
                   - "t"
                 regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
                 datatype: "uri"
-                prefix: "http://data.deichman.no/AddedPersonEntry/h"
+                prefix: "http://data.deichman.no/AddedAgentEntry/h"
               relation:
                 subfields:
                   -
@@ -2984,7 +2984,7 @@
                       predicate: "MIGRATION.titleEntry"
                       object:
                         datatype: "literal"
-                class: "MIGRATION.AddedEntry"
+                class: "MIGRATION.AddedAgentEntry"
     -
       '710':
         subfields:
@@ -3116,35 +3116,106 @@
             't':
               conditions:
                 indicator:
-                  default: "ONTOLOGY.basedOn"
+                  default: "MIGRATION.basedOn"
                   indicator2:
                     subs:
-                      '0': "ONTOLOGY.basedOn"
-                      '2': "ONTOLOGY.hasPart"
-                    orig: "0|2"
+                      '0': "MIGRATION.basedOn"
+                      '1': "MIGRATION.basedOn"
+                      '2': "MIGRATION.hasPart"
+                      '3': "MIGRATION.hasPart"
+                    orig: "0|1|2|3"
               object:
-                datatype: "uri"
-                prefix: "http://data.deichman.no/work/w"
                 md5: true
                 lowercase: true
                 combine:
                   - "3"
                   - "t"
                 regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                datatype: "uri"
+                prefix: "http://data.deichman.no/agentTitleEntry/t"
               relation:
-                subfield:
+                subfields:
                   -
                     '3':
-                      predicate: "MIGRATION.creator"
+                      predicate: "MIGRATION.agent"
                       object:
                         datatype: "uri"
                         prefix: "http://data.deichman.no/corporation/c"
                   -
+                    '7':
+                      predicate: "MIGRATION.startsAtPage"
+                      object:
+                        datatype: "integer"
+                        regex_match: "(\\d+)-"
+                  -
+                    '7':
+                      predicate: "MIGRATION.endsAtPage"
+                      object:
+                        datatype: "integer"
+                        regex_match: "-(\\d+)"
+                  -
+                    e:
+                      predicate: "MIGRATION.relatorTerm"
+                      object:
+                        lowercase: true
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                        datatype: "literal"
                     t:
-                      predicate: "ONTOLOGY.mainTitle"
+                      predicate: "MIGRATION.mainTitle"
                       object:
                         datatype: "literal"
-                class: "MIGRATION.Work"
+                class: "MIGRATION.agentTitleEntry"
+    -
+      '710':
+        subfields:
+          -
+            '3':
+              conditions:
+                indicator:
+                  default: "MIGRATION.addedEntry"
+                  indicator2:
+                    subs:
+                      '0': "MIGRATION.addedEntry"
+                      '1': "MIGRATION.addedEntry"
+                      '2': "MIGRATION.analyticalEntry"
+                      '3': "MIGRATION.analyticalEntry"
+                    orig: "0|1|2|3"
+              object:
+                md5: true
+                lowercase: true
+                combine:
+                  - "3"
+                  - "7"
+                  - "e"
+                  - "t"
+                regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                datatype: "uri"
+                prefix: "http://data.deichman.no/AddedAgentEntry/c"
+              relation:
+                subfields:
+                  -
+                    '3':
+                      predicate: "MIGRATION.hasAgent"
+                      object:
+                        datatype: "uri"
+                        prefix: "http://data.deichman.no/corporation/c"
+                  -
+                    '7':
+                      predicate: "MIGRATION.pages"
+                      object:
+                        datatype: "literal"
+                  -
+                    e:
+                      predicate: "MIGRATION.relatorTerm"
+                      object:
+                        lowercase: true
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                        datatype: "literal"
+                    t:
+                      predicate: "MIGRATION.titleEntry"
+                      object:
+                        datatype: "literal"
+                class: "MIGRATION.AddedAgentEntry"
     -
       '711':
         subfields:
