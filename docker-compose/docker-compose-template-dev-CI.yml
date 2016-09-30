@@ -270,13 +270,8 @@ services:
       - "8006:8006"
       - "5070:5070"
     environment:
-      KOHA_MYSQL_USER: "${KOHA_ADMINUSER}"
-      KOHA_MYSQL_PASS: "${KOHA_ADMINPASS}"
-      KOHA_MYSQL_DB: "koha_${KOHA_INSTANCE}"
       KOHA_API_USER: "${KOHA_API_USER}"
       KOHA_API_PASS: "${KOHA_API_PASS}"
-      KOHA_API_PASS_ENCRYPTED: "${KOHA_API_PASS_ENCRYPTED_ESCAPED}" # For mysql regeneration
-      Z3950_PROXY_PORT: "http://z3950proxy:3000"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
     logging:

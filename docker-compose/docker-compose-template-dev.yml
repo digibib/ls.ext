@@ -279,7 +279,7 @@ services:
     container_name: services
     build:
       context: "${LSEXTPATH}/redef/services"
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     networks:
       - backend
     depends_on:
