@@ -282,6 +282,8 @@ transactions: out/done.migrate_patrons
 zebra:
 	@echo "-- Populating zebra queue"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
+	@echo "-- Setting MARC framework code on all biblios to DCHM"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE biblio SET frameworkcode=\"DCHM\";"'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
 
