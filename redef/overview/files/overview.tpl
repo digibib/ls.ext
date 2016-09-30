@@ -76,7 +76,8 @@
         .bg-pink { background: #ffaeae; }
         .panel a { display:block; font-size: 120%;
                    text-decoration: none; padding: 0.5em; text-align: center; border: 2px solid #fff;}
-        .bg-yellow { background-color: #E6A817; color: #fff;  }
+        .bg-yellow { background-color: #E6A817; }
+        .bg-yellow h3 { color: #fff; }
         .panel a:hover { background-color: #777; }
         .header {
             background: #222;
