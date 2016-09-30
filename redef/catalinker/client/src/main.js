@@ -1439,7 +1439,11 @@
           })
             .then(function (response) {
               // successfully patched resource
-              updateInputsForResource(response, subject, { keepDocumentUrl: true })
+              updateInputsForResource(response, subject, {
+                keepDocumentUrl: true, inputs: [_.find(allInputs(), function (input) {
+                  return input.predicate.indexOf('recordId') !== -1
+                })]
+              })
 
               // keep the value in current.old - so we can do create delete triple patches later
               if (keypath) {
