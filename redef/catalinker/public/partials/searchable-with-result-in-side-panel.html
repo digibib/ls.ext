@@ -32,8 +32,12 @@
                 <span class="select2-selection--multiple">
                     <ul class="select2-selection__rendered">
                         <li class="select2-selection__choice">
-                            <span class="select2-selection__choice__remove overrride-outside-detect" on-click="unselectEntity">×</span>
-                            <span class="value">{{current.displayValue}}</span>
+                            {{#if waiting}}
+                                <span class="select2-selection__choice__remove spinner"> </span>
+                            {{else}}
+                                <span class="select2-selection__choice__remove overrride-outside-detect" on-click="unselectEntity">×</span>
+                                <span class="value">{{current.displayValue}}</span>
+                            {{/if}}
                         </li>
                     </ul>
                 </span>

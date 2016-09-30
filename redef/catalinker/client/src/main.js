@@ -383,12 +383,15 @@
         if (root) {
           fromRoot(root)
         }
+        return Promise.resolve()
       } else {
-        axios.get(proxyToServices(uri)).then(function (response) {
+        input.values[ index ].waiting = true
+        ractive.update()
+        return axios.get(proxyToServices(uri)).then(function (response) {
           var graphData = ensureJSON(response.data)
           var root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
-          ractive.update()
+          input.values[ index ].waiting = undefined
         })
       }
     }
@@ -642,7 +645,7 @@
                       index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
                       setIdValue(node.id, input, index)
                       if (!options.onlyValueSuggestions) {
-                        setDisplayValue(input, index, node, options)
+                        promises.push(setDisplayValue(input, index, node, options))
                         if (!isBlankNodeUri(node.id)) {
                           input.values[ index ].deletable = true
                           if (input.isSubInput) {
@@ -657,7 +660,7 @@
                           input.values[ index ].searchable = false
                         }
                       } else {
-                        setDisplayValue(input, index, node, options)
+                        promises.push(setDisplayValue(input, index, node, options))
                         input.values[ index ].searchable = true
                       }
                       input.values[ index ].subjectType = type
@@ -1134,7 +1137,7 @@
         }
       }
 
-      function createInputsForGroup (inputGroup) {
+      function createInputsForGroup (inputGroup, groupIndex) {
         var groupInputs = []
         _.each(inputGroup.inputs, function (input, index) {
           var ontologyInput
@@ -1178,6 +1181,7 @@
             input.inputIndex = index
             if (input.rdfProperty) {
               ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
+              ontologyInput.keypath = `inputGroup.${groupIndex}.inputs.${index}`
               ontologyInput.suggestedValuesForNewResource = []
 
               if (typeof ontologyInput === 'undefined') {
@@ -1218,7 +1222,7 @@
 
       var configInputsForVisibleGroup = function (inputGroup, index) {
         var group = { groupIndex: index }
-        var groupInputs = createInputsForGroup(inputGroup)
+        var groupInputs = createInputsForGroup(inputGroup, index)
         group.inputs = groupInputs
         group.tabLabel = inputGroup.label
         group.tabId = inputGroup.id
@@ -2013,7 +2017,7 @@
                     ractive.set(grandParentOf(event.keypath) + '.' + clearProperty, null)
                   }
                 }
-                ractive.update()
+  //              ractive.update()
               },
               saveObject: function (event, index) {
                 if (eventShouldBeIgnored(event)) return
@@ -2250,7 +2254,6 @@
                         unPrefix(input.domain))
                     }
                     ractive.set(origin + '.searchResult', null)
-                    ractive.update()
                   }
                 }
               },
@@ -2659,15 +2662,15 @@
             }
           }
 
-          ractive.observe('applicationData.inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
+          ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
             checkRequiredSubjectTypeSelection(keypath, newValue)
           }, { init: false })
 
-          ractive.observe('applicationData.inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
             checkRequiredSubInput(newValue, keypath)
           })
 
-          ractive.observe('applicationData.inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
+          ractive.observe('inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
             if (Boolean(newValue) !== Boolean(oldValue)) {
               if (!newValue || newValue === '') {
                 var inputKeypath = grandParentOf(grandParentOf(keypath))
@@ -2679,7 +2682,7 @@
             }
           })
 
-          ractive.observe('applicationData.inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
+          ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
             if (newValue && newValue.current) {
               if (!newValue.current.value) {
                 ractive.set(keypath + '.error', false)

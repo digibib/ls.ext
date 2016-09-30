@@ -20,6 +20,14 @@ $mintgreen: #DCFC9F;
   font-weight: bold;
 }
 
+.spinner {
+  background-image: url(/images/ajax-loader.gif);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 6px;
+  margin: -6px 0px -2px 1px;
+}
+
 body {
   [class^='select2'] {
     border-radius: 2px !important;
