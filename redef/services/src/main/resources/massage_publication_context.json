@@ -75,6 +75,7 @@
       "@id": "deichman:hasMediaTypeAll",
       "@container": "@set"
     },
+    "mediatype": "deichman:mediaType",
     "norwegianTitle": "deichman:norwegianTitle",
     "englishTitle": "deichman:englishTitle",
     "scriptWriter": "http://data.deichman.no/role#scriptWriter",

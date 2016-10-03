@@ -115,6 +115,11 @@ export const messages = defineMessages({
     description: 'Shown when possible to display fewer filters',
     defaultMessage: 'Show less -'
   },
+  mediatype: {
+    id: 'SearchFilter.filter[work.publications.mediatype]',
+    description: 'Label of the mediatype filter',
+    defaultMessage: 'Mediatype'
+  },
   format: {
     id: 'SearchFilter.filter[work.publications.formats]',
     description: 'Label of the format filter',

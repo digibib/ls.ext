@@ -8,6 +8,10 @@ module.exports = {
       name: 'branches',
       prefix: ''
     },
+    mediatype: {
+      name: 'mediatype',
+      prefix: 'http://data.deichman.no/mediaType#'
+    },
     format: {
       name: 'formats',
       prefix: 'http://data.deichman.no/format#'

@@ -38,6 +38,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"translator\": \"Falcinella, Cristina\",\n"
             + "    \"firstPublicationYear\": \"2004\",\n"
             + "    \"norwegianTitle\": \"Berlinerpoplene — deltittel\",\n"
+            + "    \"mediatype\": \"http://data.deichman.no/mediaType#Book\",\n"
             + "    \"format\": \"E-bok\",\n"
             + "    \"formats\": [\"http://data.deichman.no/format#E-Book\"],\n"
             + "    \"image\": \"http://static.deichman.no/1549895/bk/1_thumb.jpg\",\n"
