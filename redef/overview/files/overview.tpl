@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="koha-version" content="${KOHA_IMAGE_TAG}">
@@ -99,11 +99,11 @@
         a.more:visited {
             color: #fff;
         }
+        label { font-weight: bold; display: inline-block; width: 8em; }
 
     </style>
     <title>Oversikt LS.ext</title>
 </head>
-
 <body>
 <div class="header">
     <div class="section">
@@ -117,7 +117,17 @@
 <div class="section">
     <div class="row">
         <div class="col panel bg-grey">
-            <h3>Sjekk PIN-kode (TODO)</h3>
+            <form id="pinsjekk">
+                <p>
+                    <label>Lånenummer:</label>
+                    <input type="string" id="userid"/>
+                </p>
+                <p>
+                    <label>PIN:</label>
+                    <input type="password" id="password"/>
+                </p>
+                <button type="submit">Sjekk PIN</button>
+            </form>
         </div>
         <div class="col panel bg-grey">
             <a class="bg-yellow" href="http://${HOST}:${KOHA_INTRA_PORT}/cgi-bin/koha/circ/circulation-home.pl"><h3>Skranke utlån</h3></a>
@@ -136,7 +146,6 @@
         </div>
     </div>
 </div>
-
 <div class="section">
     <div class="row"><h1>Nyttige verktøy</h1></div>
     <div class="row">
@@ -157,6 +166,36 @@
 </div>
 <!-- /container -->
 
-</body>
 
-</html>
+
+<script>
+    var form = document.getElementById("pinsjekk");
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        var userid = document.getElementById("userid").value;
+        var password = document.getElementById("password").value;
+        if (password === "") {
+            document.getElementById("password").focus()
+            return;
+        }
+        var request = new XMLHttpRequest();
+        request.open('POST', 'http://localhost:8081/api/v1/auth/session', true);
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        request.onload = function() {
+          if (request.status == 201) {
+            // OK!
+            form.style.backgroundColor = "#66FF00";
+          } else {
+            // Not OK
+            form.style.backgroundColor = "red";
+          }
+        };
+
+        request.onerror = function() {
+          form.style.backgroundColor = "yellow";
+        };
+
+        request.send("userid="+userid+"&password="+password);
+    })
+</script>
+</body></html>
