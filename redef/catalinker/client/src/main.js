@@ -1929,7 +1929,9 @@
                   let keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
                   let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
                   let values = ractive.get(`${keyPath}.values`)
-                  let index = _.findIndex(_.sortBy(_.filter(values, function (value) {return value.current.value !== null}), function (val) { return val.current.value }), function (v) {
+                  let index = _.findIndex(_.sortBy(_.filter(values, function (value) {
+                    return value.current.value !== null
+                  }), function (val) { return val.current.value }), function (v) {
                     return v.current.value === value
                   })
                   if (index > -1) {
@@ -2068,7 +2070,6 @@
                   var promises = []
                   promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
                   let subInputsKeypath = grandParentOf(grandParentOf(event.keypath))
-                  let numberOfSubInputs = ractive.get(subInputsKeypath).length
                   _.each(parentInput.subInputs, function (subInput, subInputIndex) {
                     if (_.isArray(subInput.input.values)) {
                       try {
@@ -2084,6 +2085,10 @@
                   }))
                   promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
                   sequentialPromiseResolver(promises)
+                  if (ractive.get(`${subInputsKeypath}.0.input.values`).length === 0) {
+                    var addValueEvent = { keypath: parentOf(subInputsKeypath) }
+                    ractive.fire('addValue', addValueEvent)
+                  }
                 })
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
