@@ -946,7 +946,7 @@ module.exports = (app) => {
               }
             },
             {
-              label: 'Dewey-klassifikasjon',
+              label: 'Klassifikasjon',
               multiple: true,
               addAnotherLabel: 'Legg til en klassifikasjon til',
               subInputs: {
