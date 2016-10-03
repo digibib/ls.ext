@@ -601,13 +601,13 @@ body {
         }
         .default-non-editable {
           min-height: 60px;
-//          margin-bottom: 44px;
           padding: 8px;
           .inputs {
             display: block;
             border: 1px solid lightgrey;
             padding: 5px 13px;
             .input {
+              display: block;
               &[style*="display: inline-block"] {
                 display: block !important;
               }

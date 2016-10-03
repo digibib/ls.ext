@@ -26,6 +26,7 @@
         Forslag fra andre eksterne kilder
     </div>
     {{/if}}
+    {{#if !./unFinished}}
     {{#each subInputs[0].input.values:inputValueIndex}}
         {{#if nonEditable && ../../../../../accordionHeader}}
         <h3 class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
@@ -38,14 +39,13 @@
               {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
             {{#if nonEditable && !suggested}}
             <a class="delete" title="Slett oppføring"
-               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" onclick="main.$(this).closest('.ui-accordion-content').prev().remove();main.$(this).closest('.ui-accordion-content, .field').remove()"></a>
+               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
             {{/if}}
             <span class="input-wrapper">
                 <span class="inputs">
                     {{#each ../../../../../subInputs}}
                         {{#if !(./input.visible === false)}}
-                            <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}"
-                                  intro='slideIn' outro='slideOut'>
+                            <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
                                 <span class="label {{#if !nonEditable && !suggested}}pure-u-1-1{{/if}} {{#if input.type === 'input-boolean'}}for-checkbox{{/if}}"
                                       data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
                                 {{#with input.values[inputValueIndex]}}
@@ -109,6 +109,7 @@
                 {{/if}}
             </div>
 {{/each}}
+{{/if}}
 {{/if}}
 {{#multiple && allowAddNewButton}}
     <span class="pure-u-1-1" style="order: 1000;">

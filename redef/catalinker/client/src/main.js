@@ -130,7 +130,7 @@
       var keepActions = (options || {}).keep || []
       _.each(allInputs(), function (input) {
         _.each(input.values, function (value) {
-          if (value.searchResult && !inputHasOpenForm(input)) {
+          if (value && value.searchResult && !inputHasOpenForm(input)) {
             value.searchResult = null
             changes = true
           }
@@ -265,6 +265,11 @@
       } else {
         return label[ '@value' ]
       }
+    }
+
+    function sequentialPromiseResolver (promises) {
+      let promise = promises.shift()
+      promise.then(promises)
     }
 
     function propertyName (predicate) {
@@ -704,7 +709,7 @@
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset))
                       if (input.isSubInput) {
-                        input.values[ valueIndex ].nonEditable = true
+//                        input.values[ valueIndex ].nonEditable = true
                       }
                     } else {
                       input.suggestedValues = input.suggestedValues || []
@@ -744,7 +749,7 @@
           }
         )
         .catch(function (err) {
-          console.log('HTTP GET existing resource failed with:')
+          console.log(`HTTP GET ${resourceUri} existing resource failed with:`)
           console.log(err)
         })
     }
@@ -1050,7 +1055,8 @@
           inputGroupRequiredVetoes: [],
           accordionHeader: compoundInput.subInputs.accordionHeader,
           orderBy: compoundInput.subInputs.orderBy,
-          id: compoundInput.id
+          id: compoundInput.id,
+          keypath: compoundInput.keypath
         }
         if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
           currentInput.subjectType = currentInput.subjectTypes[ 0 ]
@@ -1085,7 +1091,8 @@
               searchable: type === 'searchable-with-result-in-side-panel',
               showOnlyWhen: subInput.showOnlyWhen,
               isTitleSource: subInput.isTitleSource,
-              subInputIndex: subInputIndex
+              subInputIndex: subInputIndex,
+              keypath: `${compoundInput.keypath}.subInputs.${subInputIndex}.input`
             }),
             parentInput: currentInput
           }
@@ -1192,6 +1199,7 @@
                 ontologyInput.values[ 0 ].searchable = true
               }
             } else if (input.subInputs) {
+              input.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput = createInputForCompoundInput(input, inputGroup, ontologyUri, inputMap)
             } else {
               throw new Error(`Input #${index} of tab or form with id ${inputGroup.id} must have rdfProperty, subInputs or searchMainResource`)
@@ -1440,9 +1448,9 @@
             .then(function (response) {
               // successfully patched resource
               updateInputsForResource(response, subject, {
-                keepDocumentUrl: true, inputs: [_.find(allInputs(), function (input) {
+                keepDocumentUrl: true, inputs: [ _.find(allInputs(), function (input) {
                   return input.predicate.indexOf('recordId') !== -1
-                })]
+                }) ]
               })
 
               // keep the value in current.old - so we can do create delete triple patches later
@@ -1569,7 +1577,7 @@
           }
           _.each(input.subInputs, function (subInput) {
             if (!(subInput.input.visible === false)) {
-              var value = subInput.input.values[ index ].current.value
+              var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
               if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || value.length > 0)) {
                 patch.push({
                   op: operation,
@@ -1921,7 +1929,7 @@
                   let keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
                   let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
                   let values = ractive.get(`${keyPath}.values`)
-                  let index = _.findIndex(_.sortBy(values, function (val) { return val.current.value }), function (v) {
+                  let index = _.findIndex(_.sortBy(_.filter(values, function (value) {return value.current.value !== null}), function (val) { return val.current.value }), function (v) {
                     return v.current.value === value
                   })
                   if (index > -1) {
@@ -1988,17 +1996,24 @@
               addValue: function (event) {
                 if (eventShouldBeIgnored(event)) return
                 var mainInput = ractive.get(event.keypath)
+                let promises = []
+                ractive.set(`${mainInput.keypath}.unFinished`, true)
                 visitInputs(mainInput, function (input, index) {
-                  var length = input.values.length
-                  input.values[ length ] = emptyValues(true, input.type === 'searchable-with-result-in-side-panel')[ 0 ]
+                  let values = emptyValues(input.type === 'select-predefined-value', input.type === 'searchable-with-result-in-side-panel')[ 0 ]
                   if (index === 0) {
-                    input.values[ length ].subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
+                    values.subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
                       ? mainInput.subjectTypes[ 0 ]
                       : null
                   }
+                  try {
+                    promises.push(ractive.push(`${input.keypath}.values`, values))
+                  } catch (e) {
+                    // nop
+                  }
                 })
-                ractive.update()
+                sequentialPromiseResolver(promises)
                 ractive.set(event.keypath + '.allowAddNewButton', false)
+                ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
               },
               // patchResource creates a patch request based on previous and current value of
@@ -2021,7 +2036,7 @@
                     ractive.set(grandParentOf(event.keypath) + '.' + clearProperty, null)
                   }
                 }
-  //              ractive.update()
+                //              ractive.update()
               },
               saveObject: function (event, index) {
                 if (eventShouldBeIgnored(event)) return
@@ -2050,21 +2065,25 @@
               deleteObject: function (event, parentInput, index) {
                 patchObject(parentInput, applicationData, index, 'del').then(function () {
                   ractive.update()
-                  var subInputs = grandParentOf(grandParentOf(event.keypath))
+                  var promises = []
+                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
+                  let subInputsKeypath = grandParentOf(grandParentOf(event.keypath))
+                  let numberOfSubInputs = ractive.get(subInputsKeypath).length
                   _.each(parentInput.subInputs, function (subInput, subInputIndex) {
                     if (_.isArray(subInput.input.values)) {
-                      subInput.input.values.splice(index, 1)
-                      ractive.update()
+                      try {
+                        promises.push(ractive.splice(`${subInputsKeypath}.${subInputIndex}.input.values`, index, 1))
+                      } catch (e) {
+                        // nop
+                      }
                     }
                   })
-                  // $(event.node).closest('.ui-accordion-content').prev().remove()
-                  // $(event.node).closest('.ui-accordion-content, .field').remove()
-                  ractive.update().then(function () {
-                    if (ractive.get(`${subInputs}.0.input.values`).length === 0) {
-                      var addValueEvent = { keypath: parentOf(subInputs) }
-                      ractive.fire('addValue', addValueEvent)
-                    }
-                  })
+                  promises.push(new Promise(function () {
+                    $(event.node).closest('.ui-accordion-content').prev().remove()
+                    $(event.node).closest('.ui-accordion-content, .field').remove()
+                  }))
+                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
+                  sequentialPromiseResolver(promises)
                 })
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
@@ -2990,15 +3009,18 @@
           var etag
           let url = response.config.url
           if (response.status === 304 && (etag = response.headers.etag)) {
-            response.status = 200
-            return etagData[ `${url}${etag}` ]
+            let cachedData = etagData[ `${url}${etag}` ]
+            if (cachedData) {
+              response.status = 200
+            }
+            return cachedData
           }
           if (response.status === 200) {
             const responseEtag = response.headers.etag
 
             if (responseEtag) {
-              etagData[`${url}${responseEtag}`] = deepClone(response)
-              etags[url] = responseEtag
+              etagData[ `${url}${responseEtag}` ] = deepClone(response)
+              etags[ url ] = responseEtag
             }
           }
           return response
