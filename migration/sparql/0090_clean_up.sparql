@@ -1,0 +1,19 @@
+# 1) Fjern genreSplit
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+	?publication migration:genreSplit ?genreSplit .
+	?genreSplit ?p ?o .
+}
+
+WHERE {
+	?publication migration:genreSplit ?genreSplit ;
+	 a :Publication .
+	?genreSplit ?p ?o .
+}
+;
