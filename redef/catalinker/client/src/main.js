@@ -1399,8 +1399,6 @@
         if (input.dependentResourceTypes && _.contains(input.dependentResourceTypes, targetType)) {
           input.values[ 0 ] = input.values[ 0 ] || {}
           input.values[ 0 ].current.value = resourceUri
-        } else if (input.predicate === input.predicate && input.rdfType === input.rdfType) {
-          input.values = deepClone(input.values)
         }
       })
     }
@@ -2443,11 +2441,20 @@
                 }
                 var setCreatedResourceValuesInInputs = function (resourceUri) {
                   if (useAfterCreation) {
-                    let targetType = event.context.rdfType
-                    ractive.set('targetUri.' + targetType, resourceUri)
-                    updateInputsForDependentResources(targetType, resourceUri)
+                    ractive.set('targetUri.' + event.context.rdfType, resourceUri)
+                    var groupInputs = ractive.get('inputGroups')
+                    _.each(event.context.inputs, function (input) {
+                      _.each(groupInputs, function (group) {
+                        _.each(group.inputs, function (groupInput) {
+                          if (groupInput.predicate === input.predicate && groupInput.rdfType === input.rdfType) {
+                            groupInput.values = deepClone(input.values)
+                          }
+                        })
+                      })
+                    })
+                    updateInputsForDependentResources(event.context.rdfType, resourceUri)
                     ractive.update()
-                    updateBrowserLocationWithUri(targetType, resourceUri)
+                    updateBrowserLocationWithUri(event.context.rdfType, resourceUri)
                   }
                   return resourceUri
                 }
