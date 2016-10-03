@@ -75,6 +75,10 @@ class Work extends React.Component {
       work = { ...work }
     }
 
+    const publicationsWithItems = work.publications.map(publication => {
+      return {...publication, items: this.props.items[publication.recordId] || []}
+    })
+
     if (this.props.params.publicationId) {
       const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
       if (chosenPublication) {
@@ -139,7 +143,7 @@ class Work extends React.Component {
 
         <Publications locationQuery={this.props.location.query}
                       expandSubResource={this.props.resourceActions.expandSubResource}
-                      publications={work.publications}
+                      publications={publicationsWithItems}
                       startReservation={this.props.reservationActions.startReservation}
                       toggleParameterValue={this.props.parameterActions.toggleParameterValue}
                       workLanguage={work.language}
@@ -164,6 +168,7 @@ Work.propTypes = {
   query: PropTypes.object.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
   libraries: PropTypes.object.isRequired,
+  items: PropTypes.object.isRequired,
   audiences: PropTypes.array
 }
 
@@ -190,7 +195,8 @@ function mapStateToProps (state) {
     resources: state.resources.resources,
     isRequesting: state.resources.isRequesting,
     query: state.routing.locationBeforeTransitions.query,
-    libraries: state.application.libraries
+    libraries: state.application.libraries,
+    items: state.resources.items
   }
 }
 

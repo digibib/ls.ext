@@ -123,7 +123,7 @@
       "@type": "xsd:gYear"
     },
     "recordId": {
-      "@id": "deichman:recordID"
+      "@id": "deichman:recordId"
     },
     "image": {
       "@id": "deichman:hasImage"
