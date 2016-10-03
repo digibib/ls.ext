@@ -255,7 +255,7 @@
     },
     "hasPublicationPart": {
       "@id": "deichman:hasPublicationPart",
-      "@type": "@id"
+      "@container": "@set"
     },
     "startsAtPage": {
       "@id": "deichman:startsAtPage",
