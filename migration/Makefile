@@ -261,7 +261,7 @@ endif
 	@echo "OK Done migrating patrons.\n"
 	@touch out/done.migrate_patrons
 
-transactions: out/done.migrate_patrons
+transactions: out/done.massage_input_data out/done.migrate_patrons
 	@echo "   Migrating loans and holds to Koha"
 	@echo "-- Inserting issues SQL"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
