@@ -85,7 +85,7 @@
                 {{#targetUri.Work}}
                 <div class="pure-u-1">
                     <a data-automation-id="work_page_link" target="_blank"
-                       href="{{targetUri.Work.replace(':8005', ':8000')}}">Vis siden for verket</a>
+                       href="{{config.patronClientUri + '/work' + targetUri.Work.substring(targetUri.Work.lastIndexOf('/'))}}">Vis siden for verket</a>
                 </div>
                 {{/}}
                 {{#targetUri.Publication}}
