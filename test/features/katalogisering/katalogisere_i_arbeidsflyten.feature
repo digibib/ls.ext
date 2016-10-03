@@ -187,6 +187,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så velger jeg aktørtype "Organisasjon"
     Og jeg venter litt
+    Og jeg venter litt
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen

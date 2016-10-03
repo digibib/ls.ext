@@ -269,7 +269,9 @@
 
     function sequentialPromiseResolver (promises) {
       let promise = promises.shift()
-      promise.then(promises)
+      if (promise) {
+        promise.then(promises)
+      }
     }
 
     function propertyName (predicate) {
@@ -1188,7 +1190,7 @@
             input.inputIndex = index
             if (input.rdfProperty) {
               ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
-              ontologyInput.keypath = `inputGroup.${groupIndex}.inputs.${index}`
+              ontologyInput.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput.suggestedValuesForNewResource = []
 
               if (typeof ontologyInput === 'undefined') {

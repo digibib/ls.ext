@@ -85,7 +85,7 @@
                 currentValue = [currentValue];
             }
             if ((['string', 'number', 'boolean'].indexOf(typeof currentValue) > -1) && currentValue != oldValue) {
-                if (currentValue !== "") {
+                if (currentValue !== "" && (typeof currentValue !== 'boolean' || currentValue !== false)) {
                     var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue, type: datatype}};
                     if (oldAndCurrentValue.current.lang !== "") {
                         addPatch.o.lang = oldAndCurrentValue.current.lang;
