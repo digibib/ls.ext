@@ -123,6 +123,58 @@ WHERE {
     ?agent duo:bibliofilAuthorityId ?id .
 }
 
+# tag: constructWorkFollows
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX relationType: <http://data.deichman.no/relationType#>
+WITH <http://deichman.no/migration>
+CONSTRUCT {
+    <{{.URI}}> :isRelatedTo [
+        :work ?relatedWork ;
+        :hasRelationType relationType:continuationOf ;
+        a :WorkRelation
+    ] .
+    ?relatedWork :isRelatedTo [
+        :work <{{.URI}}> ;
+        :hasRelationType relationType:continuedIn ;
+        a :WorkRelation
+    ] .
+}
+WHERE {
+    ?publication migration:followsRecordId ?id ;
+        :publicationOf <{{.URI}}> ;
+        a :Publication .
+    ?previous :recordId ?id ;
+        a :Publication ;
+        :publicationOf ?relatedWork .
+}
+
+# tag: constructWorkContinues
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX relationType: <http://data.deichman.no/relationType#>
+WITH <http://deichman.no/migration>
+CONSTRUCT {
+    <{{.URI}}> :isRelatedTo [
+        :work ?relatedWork ;
+        :hasRelationType relationType:continuedIn ;
+        a :WorkRelation
+    ] .
+    ?relatedWork :isRelatedTo [
+        :work <{{.URI}}> ;
+        :hasRelationType relationType:continuationOf ;
+        a :WorkRelation
+    ] .
+}
+WHERE {
+    ?publication migration:followedByRecordId ?id ;
+        :publicationOf <{{.URI}}> ;
+        a :Publication .
+    ?next :recordId ?id ;
+        a :Publication ;
+        :publicationOf ?relatedWork .
+}
+
 # tag: constructPublication
 PREFIX          : <http://data.deichman.no/ontology#>
 PREFIX      role: <http://data.deichman.no/role#>
