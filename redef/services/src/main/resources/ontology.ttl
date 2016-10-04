@@ -382,7 +382,7 @@ duo:Biography a rdfs:Class ;
 :subtitle a rdfs:Property ;
   rdfs:label "Subtitle"@en ;
   rdfs:label "Undertittel"@no ;
-  rdfs:domain :Publication, :Work, :PublicationPart, Serial ;
+  rdfs:domain :Publication, :Work, :PublicationPart, :Serial ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartNumber

@@ -260,11 +260,16 @@ module.exports = (app) => {
           rdfType: 'Serial',
           inputs: [
             {
-              label: 'Navn',
-              rdfProperty: 'name',
+              label: 'Hovedtittel',
+              rdfProperty: 'mainTitle',
               type: 'input-string',
               displayValueSource: true,
               preFillFromSearchField: true
+            },
+            {
+              label: 'Undertittel',
+              rdfProperty: 'subtitle',
+              type: 'input-string'
             },
             {
               label: 'Utgiver',
@@ -637,7 +642,7 @@ module.exports = (app) => {
                     rdfProperty: 'serial',
                     id: 'serialInput',
                     indexTypes: 'serial',
-                    nameProperties: [ 'name' ],
+                    nameProperties: [ 'mainTitle', 'subtitle' ],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
                       showSelectItem: false, // show and enable select work radio button
@@ -1272,10 +1277,10 @@ module.exports = (app) => {
           type: 'serial',
           selectIndexLabel: 'Serie',
           queryTerms: [ {
-            field: 'name',
+            field: 'mainTitle',
             wildcard: true
           } ],
-          resultItemLabelProperties: [ 'name' ]
+          resultItemLabelProperties: [ 'mainTitle' ]
         },
         publication: {
           type: 'publication',
