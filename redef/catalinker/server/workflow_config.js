@@ -904,8 +904,7 @@ module.exports = (app) => {
                     rdfProperty: 'hasNumberOfPerformers',
                     widgetOptions: {
                       short: true
-                    },
-                    required: true
+                    }
                   }
                 ]
               },
