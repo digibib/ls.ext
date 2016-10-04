@@ -452,4 +452,10 @@ public final class SPARQLQueryBuilder {
                 + "}\n";
         return QueryFactory.create(queryString);
     }
+
+    public Query constructInversePublicationRelations(XURI workUri) {
+        String query = "PREFIX deichman: <http://data.deichman.no/ontology#>\n"
+                + "CONSTRUCT {<"+ workUri.getUri() +"> deichman:hasPublication ?publication} WHERE {?publication deichman:publicationOf <"+workUri.getUri()+">}";
+        return QueryFactory.create(query);
+    }
 }

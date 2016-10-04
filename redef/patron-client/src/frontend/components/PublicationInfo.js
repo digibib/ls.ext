@@ -18,11 +18,11 @@ class PublicationInfo extends React.Component {
       return groupByBranch(items).map(el => {
         return (
           <div key={el.branch} className="items-by-branch">
-            <h1>{el.branch}</h1>
-            <Items items={el.items} />
-            <p style={{clear: 'both'}} />
+            <h1>{this.props.intl.formatMessage({id: el.branch})}</h1>
+            <Items publication={this.props.publication} items={el.items} />
+            <p style={{ clear: 'both' }} />
           </div>
-          )
+        )
       })
     }
   }

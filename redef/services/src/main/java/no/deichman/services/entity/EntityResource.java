@@ -120,7 +120,7 @@ public final class EntityResource extends ResourceBase {
 
     }
 
-    private Optional<String>  checkForExistingImportedResource(String id, String type) {
+    private Optional<String> checkForExistingImportedResource(String id, String type) {
         return getEntityService().retrieveImportedResource(id, type);
     }
 
@@ -142,6 +142,26 @@ public final class EntityResource extends ResourceBase {
             throw new NotFoundException();
         }
         return ok().entity(getJsonldCreator().asJSONLD(model)).build();
+    }
+
+    @GET
+    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
+    @Produces(NTRIPLES + MimeType.UTF_8)
+    public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        Model model;
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+
+        if ("work".equals(type)) {
+            model = getEntityService().retrieveWorkWithLinkedResources(xuri);
+        } else if ("person".equals(type)) {
+            model = getEntityService().retrievePersonWithLinkedResources(xuri);
+        } else {
+            model = getEntityService().retrieveById(xuri);
+        }
+        if (model.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return ok().entity(RDFModelUtil.stringFrom(model, Lang.NTRIPLES)).build();
     }
 
     @DELETE
@@ -255,7 +275,7 @@ public final class EntityResource extends ResourceBase {
             throw new BadRequestException("can only sync all on publication");
         }
         CompletableFuture.runAsync(() -> {
-            getEntityService().retrieveAllWorkUris(type, uri ->  {
+            getEntityService().retrieveAllWorkUris(type, uri -> {
                 try {
                     getEntityService().synchronizeKoha(new XURI(uri));
                 } catch (Exception e) {

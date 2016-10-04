@@ -11,6 +11,7 @@ import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryException;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -223,6 +224,7 @@ public final class EntityServiceImpl implements EntityService {
     public Model retrieveWorkWithLinkedResources(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
         m.add(repository.retrieveWorkAndLinkedResourcesByURI(xuri));
+        m = addInversePublicationRelations(m, xuri);
         m = getLinkedLexvoResource(m);
         m = getLinkedFormatResource(m);
         m = getLinkedAudienceResource(m);
@@ -232,6 +234,19 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedContentAdaptationResource(m);
         m = getLinkedFormatAdaptationResource(m);
         return m;
+    }
+
+    private Model addInversePublicationRelations(Model input, XURI workUri) {
+        try {
+            SPARQLQueryBuilder sparqlQueryBuilder = new SPARQLQueryBuilder();
+            Query query = sparqlQueryBuilder.constructInversePublicationRelations(workUri);
+            QueryExecution queryExecution = QueryExecutionFactory.create(query, input);
+            Model model = ModelFactory.createDefaultModel();
+            queryExecution.execConstruct(model);
+            return input.add(model);
+        } catch (QueryException e) {
+            return input;
+        }
     }
 
     @Override
@@ -422,7 +437,7 @@ public final class EntityServiceImpl implements EntityService {
         updatePublicationInKoha(publication, work);
     }
 
-    private void updatePublicationsByWork(Model work)  {
+    private void updatePublicationsByWork(Model work) {
         streamFrom(work.listStatements())
                 .collect(groupingBy(Statement::getSubject))
                 .forEach((subject, statements) -> {
@@ -459,7 +474,7 @@ public final class EntityServiceImpl implements EntityService {
         MarcField field090 = MarcRecord.newDataField(MarcConstants.FIELD_090);
 
         Query query = new SPARQLQueryBuilder().constructInformationForMARC(publication);
-        try(QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
             Model pubModel = qexec.execConstruct();
             StmtIterator iter = pubModel.listStatements();
             while (iter.hasNext()) {
