@@ -31,7 +31,7 @@ endif
 # Tasks
 # =====
 
-.PHONY: all clean rebuild verify staff virtuoso reindex settings
+.PHONY: all clean rebuild verify staff virtuoso reindex settings transactions
 
 all: out/done.koha_fuseki_sync
 
@@ -59,6 +59,8 @@ settings:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/static_categories.sql'
 	@echo "-- Importing static users"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/static_users.sql'
+	@echo "-- Populating authorized values"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
 	@echo "OK Done setting up Koha\n"
 
 out/done.massage_input_data:
@@ -241,15 +243,6 @@ out/done.migrate_patrons:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/import_patrons.sql'
 	@echo "-- Setting patron expiry date far into the future"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET dateexpiry=\"2099-01-01\";"'
-	@echo "-- Migrating patron message transport preferences"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/msgprefs.sql'
-	@echo "-- Updating message transport preferences (set want digest for all patrons)"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrower_message_preferences SET wants_digest=1 WHERE message_attribute_id=1 OR message_attribute_id=2;"'
-	@echo "-- Inserting extended patron attributes (fnr)"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
-	@echo "-- Inserting NL syncrhonization details in borrower_sync"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/borrowersync.sql'
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/nonlsync.sql'
 ifdef EMAIL
 	@echo "-- Setting email-adress of all users to: $(EMAIL)"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET email=\"$(EMAIL)\";"'
@@ -273,6 +266,15 @@ transactions: out/done.massage_input_data out/done.migrate_patrons
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE reserves SET found=NULL WHERE found=\"\""'
 	@echo "-- Storing Bibliofil user ID as extended patron attribute"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "INSERT INTO borrower_attributes (borrowernumber, code, attribute) SELECT borrowernumber, \"old_lnr\", userid  FROM borrowers WHERE categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\"); "'
+	@echo "-- Inserting extended patron attributes (fnr)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/ext.sql'
+	@echo "-- Inserting NL syncrhonization details in borrower_sync"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/borrowersync.sql'
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/nonlsync.sql'
+	@echo "-- Migrating patron message transport preferences"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/msgprefs.sql'
+	@echo "-- Updating message transport preferences (set want digest for all patrons)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrower_message_preferences SET wants_digest=1 WHERE message_attribute_id=1 OR message_attribute_id=2;"'
 	@echo "-- Setting userid=cardid"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE borrowers SET userid=cardnumber WHERE cardnumber IS NOT NULL AND categorycode NOT IN (\"API\", \"AUTO\", \"DOOR\");"'	@echo "OK Done migrating loands and holds\n"
 	@echo "-- Enabeling koha email sending"
