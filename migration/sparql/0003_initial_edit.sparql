@@ -74,8 +74,8 @@ PREFIX raw: <http://data.deichman.no/raw#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-	?publication migration:classification `IRI(CONCAT("http://data.deichman.no/classification/x", MD5(STR(?notation)))` .
-	`IRI(CONCAT("http://data.deichman.no/classification/x", MD5(STR(?notation)))` raw:classificationNotation ?notation ;
+	?publication migration:classification `IRI(CONCAT("http://data.deichman.no/classification/x", MD5(STR(?notation))))` .
+	`IRI(CONCAT("http://data.deichman.no/classification/x", MD5(STR(?notation))))` raw:classificationNotation ?notation ;
 		raw:classificationNotation "cdclass" .
 }
 
@@ -96,8 +96,8 @@ PREFIX raw: <http://data.deichman.no/raw#>
 WITH <http://deichman.no/migration>
 
 INSERT {
-	?publication migration:classification `IRI(CONCAT("http://data.deichman.no/classification/x", STR(?notation))` .
-	`IRI(CONCAT("http://data.deichman.no/classification/x", STR(?notation))` raw:classificationNotation ?notation .
+	?publication migration:classification `IRI(CONCAT("http://data.deichman.no/classification/x", STR(?notation)))` .
+	`IRI(CONCAT("http://data.deichman.no/classification/x", STR(?notation)))` raw:classificationNotation ?notation .
 }
 
 WHERE {
