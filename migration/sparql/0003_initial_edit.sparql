@@ -105,3 +105,27 @@ WHERE {
 	FILTER (REGEX(?notation, "^[\\d]{3}"))
 }
 ;
+
+
+# 6) Delete obsolete fiction language classification
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX raw: <http://data.deichman.no/raw#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+	?publication migration:classification ?class .
+	?class ?p ?o
+}
+
+WHERE {
+	?class raw:classificationNotation ?notation ;
+		?p ?o .
+	FILTER (REGEX(?notation, "^[\\d]{2}\\."))
+	?publication migration:classification ?class ;
+		a :Publication
+}
+;
