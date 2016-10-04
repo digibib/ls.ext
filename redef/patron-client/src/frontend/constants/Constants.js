@@ -4,6 +4,10 @@ module.exports = {
   maxSearchResults: 100,
   maxSearchResultsPerPage: 10,
   filterableFields: {
+    fictionNonfiction: {
+      name: 'fictionNonfiction',
+      prefix: 'http://data.deichman.no/fictionNonfiction#'
+    },
     branch: {
       name: 'branches',
       prefix: ''

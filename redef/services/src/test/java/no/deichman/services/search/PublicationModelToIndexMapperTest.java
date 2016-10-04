@@ -60,6 +60,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"dewey\": \"929.209484213\", \n"
             + "    \"litform\": \"Roman\",\n"
             + "    \"isbn\": \"978-88-545-0662-6\",\n"
+            + "    \"fictionNonfiction\": \"http://data.deichman.no/fictionNonfiction#fiction\",\n"
             + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
 
@@ -99,6 +100,7 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:recordId \"3\" ;\n"
                 + "    ns2:hasImage \"http://static.deichman.no/1549895/bk/1_thumb.jpg\" ;\n"
                 + "    ns2:ageLimit \"42\" ;\n"
+                + "    ns2:fictionNonfiction \"http://data.deichman.no/fictionNonfiction#fiction\" ;\n"
                 + "    ns4:locationDewey \"ITA\" ;\n"
                 + "    ns4:locationSignature \"Rag\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne B. Ragde ; traduzione di Cristina Falcinella\" .\n"

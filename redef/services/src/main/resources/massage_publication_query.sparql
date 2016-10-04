@@ -41,7 +41,8 @@ CONSTRUCT {
                deich:litform ?litform ;
                deich:subtitles ?subtitles ;
                deich:isbn ?isbn ;
-               deich:compType ?compTypeLabel .
+               deich:compType ?compTypeLabel ;
+               deich:fictionNonfiction ?fictionNonfiction .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -59,6 +60,7 @@ WHERE {
         { <__PUBLICATIONURI__> deich:recordId ?recordId ;
             deich:publicationOf ?work  .
             BIND(str(?work) AS ?workUri ) }
+  UNION { <__PUBLICATIONURI__> deich:fictionNonfiction ?ficturi .BIND(str(?ficturi) AS ?fictionNonfiction) }
   UNION { <__PUBLICATIONURI__> deich:hasMediaType ?mturi .BIND(str(?mturi) AS ?pubMediaType) }
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }

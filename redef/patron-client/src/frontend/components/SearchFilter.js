@@ -115,6 +115,11 @@ export const messages = defineMessages({
     description: 'Shown when possible to display fewer filters',
     defaultMessage: 'Show less -'
   },
+  fictionNonfiction: {
+    id: 'SearchFilter.filter[work.publications.fictionNonfiction]',
+    description: 'Label of the fictionNonFiction filter',
+    defaultMessage: 'Fiction/nonfiction'
+  },
   mediatype: {
     id: 'SearchFilter.filter[work.publications.mediatype]',
     description: 'Label of the mediatype filter',

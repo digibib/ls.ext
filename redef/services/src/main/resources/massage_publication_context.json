@@ -103,6 +103,7 @@
     "litform": "deichman:litform",
     "subtitles": "deichman:subtitles",
     "isbn": "deichman:isbn",
-    "compType": "deichman:compType"
+    "compType": "deichman:compType",
+    "fictionNonfiction": "deichman:fictionNonfiction"
   }
 }

@@ -140,6 +140,7 @@ export default {
   'ReservationModal.button': 'OK',
   'SearchFilter.showMore': 'Vis flere +',
   'SearchFilter.showLess': 'Vis færre -',
+  'SearchFilter.filter[work.publications.fictionNonfiction]': 'Fag/fiksjon',
   'SearchFilter.filter[work.publications.mediatype]': 'Medietype',
   'SearchFilter.filter[work.publications.formats]': 'Format',
   'SearchFilter.filter[work.publications.languages]': 'Språk',
