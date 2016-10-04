@@ -709,8 +709,7 @@ module.exports = (app) => {
               creator: 'mainEntryPersonInput'
             },
             afterSuccess: {
-              gotoTab: 0,
-              setResourceInDocumentUrlFromTargetUri: 'Work'
+              restart: true
             }
           },
           enableSpecialInput: {
@@ -833,7 +832,7 @@ module.exports = (app) => {
               creator: 'mainEntryPersonInput'
             },
             afterSuccess: {
-              gotoTab: 0
+              restart: true
             }
           }
         },

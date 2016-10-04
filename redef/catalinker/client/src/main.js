@@ -217,7 +217,6 @@
             click: function () {
               $(this).dialog('close')
               ractive.set(deleteConfig.dialogKeypath, null)
-              unloadResourceForDomain(deleteConfig.resourceType)
               if (success) {
                 success()
               }
@@ -1501,6 +1500,11 @@
         })[ 'label' ])
       },
 
+      restart: function () {
+        var url = URI.parse(document.location.href)
+        url.query = {}
+        window.location.replace(URI.build(url))
+      },
       init: function (options) {
         options = options || {}
         let query = URI.parseQuery(URI.parse(document.location.href).query)
@@ -2340,9 +2344,7 @@
               },
               nextStep: function (event) {
                 if (event.context.restart) {
-                  var url = URI.parse(document.location.href)
-                  url.query = {}
-                  window.location.replace(URI.build(url))
+                  this.restart()
                 }
                 var newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get('targetUri.' + newResourceType))) {
@@ -2400,12 +2402,16 @@
               deleteResource: function (event) {
                 var uriToDelete = ractive.get(`targetUri.${event.context.resourceType}`)
                 deleteResource(uriToDelete, event.context, function () {
+                  unloadResourceForDomain(event.context.resourceType)
                   if (event.context.afterSuccess) {
                     if (event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri) {
                       var targetUri = ractive.get(`targetUri.${event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri}`)
                       if (targetUri) {
                         updateBrowserLocationWithUri(event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri, targetUri)
                       }
+                    }
+                    if (event.context.afterSuccess.restart) {
+                      Main.restart()
                     }
                     if (event.context.afterSuccess.gotoTab !== undefined) {
                       ractive.fire('activateTab', { keypath: 'inputGroups.' + (event.context.afterSuccess.gotoTab) })
