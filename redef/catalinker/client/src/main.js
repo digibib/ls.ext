@@ -28,7 +28,6 @@
     var supportPanelWidth
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
-    require('block-ui')
     let etagData = {}
 
     var deepClone = function (object) {
@@ -187,7 +186,6 @@
               ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
               axios.delete(proxyToServices(uri))
                 .then(function (response) {
-                  unloadResourceForDomain(deleteConfig.resourceType)
                   $(`#${idPrefix}-do-del, #${idPrefix}-cancel-del`).hide()
                   $(`#${idPrefix}-ok-del`).show()
                   ractive.set(`${deleteConfig.dialogKeypath}.deleted`, true)
@@ -219,6 +217,7 @@
             click: function () {
               $(this).dialog('close')
               ractive.set(deleteConfig.dialogKeypath, null)
+              unloadResourceForDomain(deleteConfig.resourceType)
               if (success) {
                 success()
               }
@@ -394,7 +393,12 @@
       } else {
         input.values[ index ].waiting = true
         ractive.update()
-        return axios.get(proxyToServices(uri)).then(function (response) {
+        return axios.get(proxyToServices(uri), {
+            headers: {
+              Accept: 'application/ld+json'
+            }
+          }
+        ).then(function (response) {
           var graphData = ensureJSON(response.data)
           var root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
@@ -508,7 +512,12 @@
               fromRoot(root)
             }
           } else {
-            promises.push(axios.get(proxyToServices(uri)).then(function (response) {
+            promises.push(axios.get(proxyToServices(uri), {
+                headers: {
+                  Accept: 'application/ld+json'
+                }
+              }
+            ).then(function (response) {
               var graphData = ensureJSON(response.data)
               var root = ldGraph.parse(graphData).byId(uri)
               fromRoot(root)
@@ -739,13 +748,19 @@
           ractive.set('targetUri.' + type, resourceUri)
           ractive.set('save_status', 'åpnet eksisterende ressurs')
           updateBrowserLocationWithUri(type, resourceUri)
+          unblockUI()
         }
       })
     }
 
     var fetchExistingResource = function (resourceUri, options) {
       options = options || {}
-      return axios.get(proxyToServices(resourceUri))
+      return axios.get(proxyToServices(resourceUri), {
+          headers: {
+            Accept: 'application/ld+json'
+          }
+        }
+      )
         .then(function (response) {
             updateInputsForResource(response, resourceUri, options)
           }
@@ -810,7 +825,12 @@
     }
 
     var loadPredefinedValues = function (url, property) {
-      return axios.get(proxyToServices(url))
+      return axios.get(proxyToServices(url), {
+          headers: {
+            Accept: 'application/ld+json'
+          }
+        }
+      )
         .then(function (response) {
           var values = ensureJSON(response.data)
           // resolve all @id uris
@@ -1303,7 +1323,12 @@
     }
 
     function loadWorksAsSubject (target) {
-      axios.get(proxyToServices(target.uri + '/asSubjectOfWorks')).then(function (response) {
+      axios.get(proxyToServices(target.uri + '/asSubjectOfWorks'), {
+          headers: {
+            Accept: 'application/ld+json'
+          }
+        }
+      ).then(function (response) {
         target.work = _.pluck(_.pluck(ensureJSON(response).data.hits.hits, '_source'), 'work')
         ractive.update()
       })
@@ -1381,17 +1406,12 @@
       return (event.original && event.original.type === 'keyup' && event.original.keyCode !== 13)
     }
 
-    function blockUI () {
-      $.blockUI({
-        message: null,
-        overlayCSS: {
-          opacity: 0.5
-        }
-      })
+    function blockUI (complete) {
+      $('#ui-blocker').fadeIn(100, complete)
     }
 
     function unblockUI () {
-      $.unblockUI()
+      $('#ui-blocker').fadeOut(300)
     }
 
     function updateInputsForDependentResources (targetType, resourceUri) {
@@ -1438,6 +1458,7 @@
       patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
         var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, typesFromRange(datatype).rdfType)
         if (patch && patch.trim() !== '' && patch.trim() !== '[]') {
+          blockUI()
           ractive.set('save_status', 'arbeider...')
           axios.patch(proxyToServices(subject), patch, {
             headers: {
@@ -1463,13 +1484,15 @@
               }
               ractive.set('save_status', 'alle endringer er lagret')
               ractive.update()
+              unblockUI()
             })
-          // .catch(function (response) {
-          //    // failed to patch resource
-          //    console.log('HTTP PATCH failed with: ')
-          //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
-          //    ractive.set('save_status', '')
-          // })
+            .catch(function (response) {
+              // failed to patch resource
+              console.log('HTTP PATCH failed with: ')
+              errors.push('Noe gikk galt! Fikk ikke lagret endringene')
+              ractive.set('save_status', '')
+              unblockUI()
+            })
         }
       },
       predefinedLabelValue: function (type, uri) {
@@ -2042,53 +2065,60 @@
               },
               saveObject: function (event, index) {
                 if (eventShouldBeIgnored(event)) return
-                var input = event.context
-                patchObject(input, applicationData, index, 'add').then(function () {
-                  visitInputs(input, function (input) {
-                    if (input.isSubInput) {
-                      _.each(input.values, function (value, valueIndex) {
-                        if (valueIndex === index) {
-                          value.nonEditable = true
-                        }
-                      })
-                    }
-                  })
-                  input.allowAddNewButton = true
-                  ractive.update()
-                  var subInputs = grandParentOf(event.keypath)
-                  _.each(event.context.subInputs, function (input, subInputIndex) {
-                    if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
-                      var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
-                      loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index)
-                    }
-                  })
+                blockUI(function () {
+                  var input = event.context
+                  patchObject(input, applicationData, index, 'add').then(function () {
+                    visitInputs(input, function (input) {
+                      if (input.isSubInput) {
+                        _.each(input.values, function (value, valueIndex) {
+                          if (valueIndex === index) {
+                            value.nonEditable = true
+                          }
+                        })
+                      }
+                    })
+                    input.allowAddNewButton = true
+                    ractive.update()
+                    var promises = []
+                    var subInputs = grandParentOf(event.keypath)
+                    _.each(event.context.subInputs, function (input, subInputIndex) {
+                      if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
+                        var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
+                        promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
+                      }
+                    })
+                    return Promise.all(promises)
+                  }).then(unblockUI)
                 })
               },
               deleteObject: function (event, parentInput, index) {
-                patchObject(parentInput, applicationData, index, 'del').then(function () {
-                  ractive.update()
-                  var promises = []
-                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
-                  let subInputsKeypath = grandParentOf(grandParentOf(event.keypath))
-                  _.each(parentInput.subInputs, function (subInput, subInputIndex) {
-                    if (_.isArray(subInput.input.values)) {
-                      try {
-                        promises.push(ractive.splice(`${subInputsKeypath}.${subInputIndex}.input.values`, index, 1))
-                      } catch (e) {
-                        // nop
+                blockUI(function () {
+                  patchObject(parentInput, applicationData, index, 'del').then(function () {
+                    ractive.update()
+                    var promises = []
+                    promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
+                    let subInputsKeypath = grandParentOf(grandParentOf(event.keypath))
+                    _.each(parentInput.subInputs, function (subInput, subInputIndex) {
+                      if (_.isArray(subInput.input.values)) {
+                        try {
+                          promises.push(ractive.splice(`${subInputsKeypath}.${subInputIndex}.input.values`, index, 1))
+                        } catch (e) {
+                          // nop
+                        }
                       }
+                    })
+                    promises.push(new Promise(function () {
+                      $(event.node).closest('.ui-accordion-content').prev().remove()
+                      $(event.node).closest('.ui-accordion-content, .field').remove()
+                    }))
+                    promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
+                    promises.push(new Promise(unblockUI))
+                    sequentialPromiseResolver(promises)
+                    if (ractive.get(`${subInputsKeypath}.0.input.values`).length === 0) {
+                      var addValueEvent = { keypath: parentOf(subInputsKeypath) }
+                      ractive.fire('addValue', addValueEvent)
                     }
                   })
-                  promises.push(new Promise(function () {
-                    $(event.node).closest('.ui-accordion-content').prev().remove()
-                    $(event.node).closest('.ui-accordion-content, .field').remove()
-                  }))
-                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
-                  sequentialPromiseResolver(promises)
-                  if (ractive.get(`${subInputsKeypath}.0.input.values`).length === 0) {
-                    var addValueEvent = { keypath: parentOf(subInputsKeypath) }
-                    ractive.fire('addValue', addValueEvent)
-                  }
                 })
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
@@ -2316,40 +2346,42 @@
                 }
                 var newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get('targetUri.' + newResourceType))) {
-                  var inputs = allInputs()
-                  _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
-                    _.each(newResourceType.prefillValuesFromResource[ copyFromType ], function (fragment) {
-                      var sourceInput = _.find(inputs, function (input) {
-                        return (input.fragment === fragment && unPrefix(input.domain) === copyFromType)
-                      })
-                      if (sourceInput) {
-                        var targetInput = _.find(inputs, function (input) {
-                          return (input.fragment === fragment && unPrefix(input.domain) === newResourceType.type)
+                  blockUI(function () {
+                    var inputs = allInputs()
+                    _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
+                      _.each(newResourceType.prefillValuesFromResource[ copyFromType ], function (fragment) {
+                        var sourceInput = _.find(inputs, function (input) {
+                          return (input.fragment === fragment && unPrefix(input.domain) === copyFromType)
                         })
-                        if (targetInput) {
-                          targetInput.datatypes = sourceInput.datatypes
-                          if (targetInput.type === 'select-predefined-value') {
-                            sourceInput.values[ 0 ].current.value = _.union(sourceInput.values[ 0 ].current.value, targetInput.values[ 0 ].current.value)
-                          } else {
-                            _.each(sourceInput.values, function (sourceValue) {
-                              if (!_.some(targetInput.values, function (targetValue) {
-                                  return targetValue.current.value === sourceValue.current.value
-                                })) {
-                                targetInput.values = targetInput.values || []
-                                if (targetInput.values.length === 1 && targetInput.values[ 0 ].current.value === '' || targetInput.values[ 0 ].current.value === null) {
-                                  targetInput.values[ 0 ] = deepClone(sourceValue)
-                                } else {
-                                  targetInput.values.push(deepClone(sourceValue))
+                        if (sourceInput) {
+                          var targetInput = _.find(inputs, function (input) {
+                            return (input.fragment === fragment && unPrefix(input.domain) === newResourceType.type)
+                          })
+                          if (targetInput) {
+                            targetInput.datatypes = sourceInput.datatypes
+                            if (targetInput.type === 'select-predefined-value') {
+                              sourceInput.values[ 0 ].current.value = _.union(sourceInput.values[ 0 ].current.value, targetInput.values[ 0 ].current.value)
+                            } else {
+                              _.each(sourceInput.values, function (sourceValue) {
+                                if (!_.some(targetInput.values, function (targetValue) {
+                                    return targetValue.current.value === sourceValue.current.value
+                                  })) {
+                                  targetInput.values = targetInput.values || []
+                                  if (targetInput.values.length === 1 && targetInput.values[ 0 ].current.value === '' || targetInput.values[ 0 ].current.value === null) {
+                                    targetInput.values[ 0 ] = deepClone(sourceValue)
+                                  } else {
+                                    targetInput.values.push(deepClone(sourceValue))
+                                  }
                                 }
-                              }
-                            })
+                              })
+                            }
                           }
                         }
-                      }
+                      })
                     })
+                    saveNewResourceFromInputs(newResourceType.type)
+                    ractive.update().then(unblockUI)
                   })
-                  saveNewResourceFromInputs(newResourceType.type)
-                  ractive.update()
                 }
                 var foundSelectedTab = false
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
@@ -2408,74 +2440,77 @@
                 ractive.update()
               },
               createNewResource: function (event, origin) {
-                var maintenance = origin.indexOf('maintenanceInputs') !== -1
-                var displayValueInput = _.find(event.context.inputs, function (input) {
-                  return input.displayValueSource === true
-                })
-                var useAfterCreation = ractive.get(grandParentOf(event.keypath)).useAfterCreation
+                blockUI(function () {
+                  var maintenance = origin.indexOf('maintenanceInputs') !== -1
+                  var displayValueInput = _.find(event.context.inputs, function (input) {
+                    return input.displayValueSource === true
+                  })
+                  var useAfterCreation = ractive.get(grandParentOf(event.keypath)).useAfterCreation
 
-                var setCreatedResourceUriInSearchInput = function (resourceUri) {
-                  if (!maintenance) {
-                    ractive.set(origin + '.current.value', resourceUri)
-                    if (displayValueInput) {
-                      ractive.set(origin + '.current.displayValue', displayValueInput.values[ 0 ].current.value)
+                  var setCreatedResourceUriInSearchInput = function (resourceUri) {
+                    if (!maintenance) {
+                      ractive.set(origin + '.current.value', resourceUri)
+                      if (displayValueInput) {
+                        ractive.set(origin + '.current.displayValue', displayValueInput.values[ 0 ].current.value)
+                      }
+                      ractive.set(origin + '.deletable', true)
+                      ractive.set(origin + '.searchable', false)
+                      ractive.set(event.keypath + '.visible', null)
+                    } else {
+                      ractive.set(origin + '.current.value', null)
+                      if (displayValueInput) {
+                        ractive.set(origin + '.current.displayValue', null)
+                      }
                     }
-                    ractive.set(origin + '.deletable', true)
-                    ractive.set(origin + '.searchable', false)
-                    ractive.set(event.keypath + '.visible', null)
-                  } else {
-                    ractive.set(origin + '.current.value', null)
-                    if (displayValueInput) {
-                      ractive.set(origin + '.current.displayValue', null)
+                    ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
+                    return resourceUri
+                  }
+                  var patchMotherResource = function (resourceUri) {
+                    var targetInput = ractive.get(grandParentOf(origin))
+                    if (!useAfterCreation && !targetInput.isSubInput) {
+                      Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                     }
+                    return resourceUri
                   }
-                  ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
-                  return resourceUri
-                }
-                var patchMotherResource = function (resourceUri) {
-                  var targetInput = ractive.get(grandParentOf(origin))
-                  if (!useAfterCreation && !targetInput.isSubInput) {
-                    Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
-                  }
-                  return resourceUri
-                }
-                var setCreatedResourceValuesInInputs = function (resourceUri) {
-                  if (useAfterCreation) {
-                    ractive.set('targetUri.' + event.context.rdfType, resourceUri)
-                    var groupInputs = ractive.get('inputGroups')
-                    _.each(event.context.inputs, function (input) {
-                      _.each(groupInputs, function (group) {
-                        _.each(group.inputs, function (groupInput) {
-                          if (groupInput.predicate === input.predicate && groupInput.rdfType === input.rdfType) {
-                            groupInput.values = deepClone(input.values)
-                          }
+                  var setCreatedResourceValuesInInputs = function (resourceUri) {
+                    if (useAfterCreation) {
+                      ractive.set('targetUri.' + event.context.rdfType, resourceUri)
+                      var groupInputs = ractive.get('inputGroups')
+                      _.each(event.context.inputs, function (input) {
+                        _.each(groupInputs, function (group) {
+                          _.each(group.inputs, function (groupInput) {
+                            if (groupInput.predicate === input.predicate && groupInput.rdfType === input.rdfType) {
+                              groupInput.values = deepClone(input.values)
+                            }
+                          })
                         })
                       })
+                      updateInputsForDependentResources(event.context.rdfType, resourceUri)
+                      ractive.update()
+                      updateBrowserLocationWithUri(event.context.rdfType, resourceUri)
+                    }
+                    return resourceUri
+                  }
+                  var clearInputsAndSearchResult = function () {
+                    if (ractive.get(origin + '.searchResult')) {
+                      ractive.set(origin + '.searchResult', null)
+                    }
+                    _.each(event.context.inputs, function (input, index) {
+                      ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
                     })
-                    updateInputsForDependentResources(event.context.rdfType, resourceUri)
-                    ractive.update()
-                    updateBrowserLocationWithUri(event.context.rdfType, resourceUri)
+                    ractive.set(event.keypath + '.showInputs', false)
+                    ractive.set(grandParentOf(origin) + '.allowAddNewButton', true)
                   }
-                  return resourceUri
-                }
-                var clearInputsAndSearchResult = function () {
-                  if (ractive.get(origin + '.searchResult')) {
-                    ractive.set(origin + '.searchResult', null)
+                  var nop = function (uri) {
+                    return uri
                   }
-                  _.each(event.context.inputs, function (input, index) {
-                    ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
-                  })
-                  ractive.set(event.keypath + '.showInputs', false)
-                  ractive.set(grandParentOf(origin) + '.allowAddNewButton', true)
-                }
-                var nop = function (uri) {
-                  return uri
-                }
-                saveInputs(event.context.inputs, event.context.rdfType)
-                  .then(setCreatedResourceUriInSearchInput)
-                  .then(!maintenance ? patchMotherResource : nop)
-                  .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
-                  .then(clearInputsAndSearchResult)
+                  saveInputs(event.context.inputs, event.context.rdfType)
+                    .then(setCreatedResourceUriInSearchInput)
+                    .then(!maintenance ? patchMotherResource : nop)
+                    .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
+                    .then(clearInputsAndSearchResult)
+                    .then(unblockUI)
+                })
               },
               cancelEdit: function (event) {
                 clearSupportPanels()
@@ -2502,7 +2537,12 @@
                     itemsFromOtherSources: {}
                   }
                   _.each(sources, function (source) {
-                    promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`).then(function (response) {
+                    promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`, {
+                        headers: {
+                          Accept: 'application/ld+json'
+                        }
+                      }
+                    ).then(function (response) {
                       var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
                       var hitsFromPreferredSource = { source: response.data.source, items: [] }
                       _.each(response.data.hits, function (hit) {
@@ -2593,54 +2633,55 @@
                   unPrefix(input.domain))
               },
               acceptExternalItem: function (event) {
-                var inputsWithValueSuggestionEnabled = _.filter(allInputs(), function (input) {
-                    return input.suggestValueFrom
-                  }
-                )
-                blockUI()
-                let prefillValuesFromExternalSources = ractive.get('applicationData.config.prefillValuesFromExternalSources')
-                _.each(prefillValuesFromExternalSources, function (suggestionSpec) {
-                  var domain = suggestionSpec.resourceType
-                  var wrappedIn = suggestionSpec.wrappedIn
-                  var demandTopBanana = false
-                  if (wrappedIn && wrappedIn.substr(0, 1) === '/') {
-                    wrappedIn = wrappedIn.substr(1)
-                    demandTopBanana = true
-                  }
-                  _.each(event.context.graph.byType(wrappedIn || suggestionSpec.resourceType), function (node) {
-                    if (!demandTopBanana || node.isA('TopBanana')) {
-                      var wrapperObject
-                      var nodes = [ node ]
-                      if (suggestionSpec.predicate) {
-                        wrapperObject = node
-                        nodes = node.outAll(suggestionSpec.predicate)
+                blockUI(function () {
+                    var inputsWithValueSuggestionEnabled = _.filter(allInputs(), function (input) {
+                        return input.suggestValueFrom
                       }
-                      _.each(nodes, function (node) {
-                        updateInputsForResource({ data: {} }, null, {
-                          keepDocumentUrl: true,
-                          source: event.context.source,
-                          wrapperObject: wrapperObject,
-                          wrappedIn: wrappedIn,
-                          deferUpdate: true
-                        }, node, domain)
+                    )
+                    let prefillValuesFromExternalSources = ractive.get('applicationData.config.prefillValuesFromExternalSources')
+                    _.each(prefillValuesFromExternalSources, function (suggestionSpec) {
+                      var domain = suggestionSpec.resourceType
+                      var wrappedIn = suggestionSpec.wrappedIn
+                      var demandTopBanana = false
+                      if (wrappedIn && wrappedIn.substr(0, 1) === '/') {
+                        wrappedIn = wrappedIn.substr(1)
+                        demandTopBanana = true
+                      }
+                      _.each(event.context.graph.byType(wrappedIn || suggestionSpec.resourceType), function (node) {
+                        if (!demandTopBanana || node.isA('TopBanana')) {
+                          var wrapperObject
+                          var nodes = [ node ]
+                          if (suggestionSpec.predicate) {
+                            wrapperObject = node
+                            nodes = node.outAll(suggestionSpec.predicate)
+                          }
+                          _.each(nodes, function (node) {
+                            updateInputsForResource({ data: {} }, null, {
+                              keepDocumentUrl: true,
+                              source: event.context.source,
+                              wrapperObject: wrapperObject,
+                              wrappedIn: wrappedIn,
+                              deferUpdate: true
+                            }, node, domain)
 
-                        if (node.isA('TopBanana')) {
-                          _.each(inputsWithValueSuggestionEnabled, function (input) {
-                            if (input.suggestValueFrom.domain === domain && !wrapperObject) {
-                              input.values = input.values || [ { current: {}, old: {} } ]
-                              _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
-                                input.values[ index ].current.displayValue = value.value
+                            if (node.isA('TopBanana')) {
+                              _.each(inputsWithValueSuggestionEnabled, function (input) {
+                                if (input.suggestValueFrom.domain === domain && !wrapperObject) {
+                                  input.values = input.values || [ { current: {}, old: {} } ]
+                                  _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
+                                    input.values[ index ].current.displayValue = value.value
+                                  })
+                                }
                               })
                             }
                           })
                         }
                       })
-                    }
-                  })
-                })
-                ractive.update()
-                ractive.set('primarySuggestionAccepted', true)
-                unblockUI()
+                    })
+                    ractive.set('primarySuggestionAccepted', true)
+                    ractive.update().then(unblockUI)
+                  }
+                )
               },
               useSuggestion: function (event) {
                 event.context.suggested = null
@@ -3042,6 +3083,7 @@
           return Promise.reject(error)
         })
 
+        blockUI()
         return axios.get('/config')
           .then(extractConfig)
           .then(loadTemplate)
@@ -3057,6 +3099,7 @@
           .then(initInputInterDependencies)
           .then(initTitle)
           .then(initValuesFromQuery)
+          .then(unblockUI)
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)
         // })
