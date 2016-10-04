@@ -2,16 +2,16 @@ PREFIX  :     <__ONTOLOGY__>
 
 CONSTRUCT
   { ?serialUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Serial .
-    ?serialUri :name ?name .
+    ?serialUri :mainTitle ?mainTitle .
   }
 WHERE
-  { SELECT DISTINCT  ?serialUri ?name
+  { SELECT DISTINCT  ?serialUri ?mainTitle
     WHERE
       { BIND(uri("__SERIALURI__") AS ?serialUri)
         ?serialUri  a                   :Serial ;
 
         OPTIONAL
-          { ?serialUri  :name  ?name
+          { ?serialUri  :mainTitle  ?mainTitle
           }
       }
   }

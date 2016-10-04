@@ -2,7 +2,7 @@
   "type": "Serial",
   "@context": {
     "deichman": "__ONTOLOGY__",
-    "name": "deichman:name",
+    "mainTitle": "deichman:mainTitle",
     "Serial": "deichman:Serial",
     "type": "@type",
     "uri": "@id",

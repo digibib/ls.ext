@@ -466,7 +466,7 @@ public class AppTest {
 
         String op = "ADD";
         String s = getLocation(result1);
-        String p1 = BaseURI.ontology("name");
+        String p1 = BaseURI.ontology("mainTitle");
         String o1 = "Morgan Kane";
         String type = "http://www.w3.org/2001/XMLSchema#string";
 
@@ -857,7 +857,7 @@ public class AppTest {
         boolean foundSerial;
         int attempts = TEN_TIMES;
         do {
-            HttpRequest request = Unirest.get(appURI + "search/serial/_search").queryString("q", "name:" + name);
+            HttpRequest request = Unirest.get(appURI + "search/serial/_search").queryString("q", "mainTitle:" + name);
             HttpResponse<?> response = request.asJson();
             String responseBody = response.getBody().toString();
             foundSerial = responseBody.contains(name);
