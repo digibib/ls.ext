@@ -844,17 +844,19 @@ module.exports = (app) => {
             {
               includeOnlyWhen: { hasWorkType: 'Music' },
               rdfProperty: 'hasCompositionType',
+              multiple: true,
+              addAnotherLabel: 'Legg til en komposisjonstype til',
               id: 'compositionTypeInput',
               type: 'searchable-with-result-in-side-panel',
               nameProperties: [ 'prefLabel' ],
               indexTypes: [ 'compositionType' ],
-              labelForCreateButton: 'Opprett ny kompoisjonstype',
+              labelForCreateButton: 'Opprett ny komposisjonstype',
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [
                     {
                       formId: 'create-compositiontype-form',
-                      targetType: 'compositiontype'
+                      targetType: 'compositionType'
                     }
                   ]
                 }
@@ -1297,8 +1299,8 @@ module.exports = (app) => {
           } ],
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         },
-        compositiontype: {
-          type: 'compositiontype',
+        compositionType: {
+          type: 'compositionType',
           selectIndexLabel: 'Komposisjonstype',
           queryTerms: [ {
             field: 'prefLabel',
@@ -1320,7 +1322,10 @@ module.exports = (app) => {
         serial: 'Serial',
         corporation: 'Corporation',
         instrument: 'Instrument',
-        compositiontype: 'CompositionType'
+        compositionType: 'CompositionType',
+      },
+      resourceTypeAliases: {
+        'compositiontype': 'compositionType'
       },
       prefillValuesFromExternalSources: [
         { resourceType: 'Work' },

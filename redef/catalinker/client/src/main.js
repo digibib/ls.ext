@@ -781,7 +781,10 @@
         })
       })
       var errors = []
-      return axios.post(ractive.get('config.resourceApiUri') + resourceType.toLowerCase(),
+      let uri = ractive.get('config.resourceApiUri')
+      let lowerCaseResourceType = resourceType.toLowerCase()
+      let resourceTypeAlias = ractive.get('config.resourceTypeAliases')[lowerCaseResourceType] || lowerCaseResourceType
+      return axios.post(`${uri}${resourceTypeAlias}`,
         {}, { headers: { Accept: 'application/ld+json', 'Content-Type': 'application/ld+json' } })
         .then(function (response) {
           var resourceUri = response.headers.location
