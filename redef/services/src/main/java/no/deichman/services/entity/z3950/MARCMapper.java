@@ -43,6 +43,7 @@ public class MARCMapper {
     public static final Predicate<String> EMPTY_VALUES = s -> s != null;
     public static final boolean WRAP = true;
     public static final int THREE = 3;
+    public static final Function<String, String> MUL_FILTER = s -> s.replace("mul", "");
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
     public static final Function<String, String> NOP = s -> s;
@@ -93,7 +94,7 @@ public class MARCMapper {
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
                     setUriObject(controlField, THIRTY_THREE, "fictionNonfiction", work::setFictionNonfiction, FictionNonfiction::translate);
                     setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
-                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, publication::addLanguage, NOP, this::languagePrefix);
+                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, publication::addLanguage, MUL_FILTER, this::languagePrefix);
                     break;
                 default:
             }
@@ -174,10 +175,10 @@ public class MARCMapper {
                     break;
                 case "260":
                     getSubfieldValue(dataField, 'a').ifPresent(place -> {
-                        addExternalObject(graphList, place, PLACE_TYPE, publication::setPlaceOfPublication);
+                        addExternalObject(graphList, place, PLACE_TYPE, publication::setHasPlaceOfPublication);
                     });
                     getSubfieldValue(dataField, 'b').ifPresent(publisher -> {
-                        addNamed(graphList, publisher, CORPORATION_TYPE, publication::setPublisher);
+                        addNamed(graphList, publisher, CORPORATION_TYPE, publication::setPublishedBy);
                     });
                     getSubfieldValue(dataField, 'c').ifPresent(publication::setPublicationYear);
                     break;
@@ -467,11 +468,11 @@ public class MARCMapper {
         return externalDataObject;
     }
 
-    private Named addNamed(Collection<Object> graphList, String name, String type, Consumer<String> addObjectFunction) {
+    private Named addNamed(Collection<Object> graphList, String name, String type, Consumer<ExternalDataObject> addObjectFunction) {
         String objectId = newBlankNodeId();
         Named named = new Named(name, objectId);
         named.setType(type);
-        addObjectFunction.accept(named.getId());
+        addObjectFunction.accept(named);
         graphList.add(named);
         return named;
     }
@@ -553,6 +554,7 @@ public class MARCMapper {
                 .map(String::toLowerCase)
                 .filter(StringUtils::isNotBlank)
                 .map(mapper)
+                .filter(StringUtils::isNotBlank)
                 .map(prefix)
                 .map(this::asExternalObject)
                 .ifPresent(setterFunction);

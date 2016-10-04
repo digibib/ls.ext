@@ -6,7 +6,7 @@
     <record>
         <leader>01016 am a2200193   4500</leader>
         <controlfield tag="001">000001</controlfield>
-        <controlfield tag="008">                      a          1dnob 2</controlfield>
+        <controlfield tag="008">                      a          1dmul 2</controlfield>
         <datafield tag="015" ind1=" " ind2=" ">
             <subfield code="a">0250080</subfield>
             <subfield code="b">BIBBI</subfield>

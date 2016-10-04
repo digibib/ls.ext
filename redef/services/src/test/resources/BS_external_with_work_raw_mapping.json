@@ -153,10 +153,12 @@
           "@id": "http://data.deichman.no/binding#innbundet"
         },
         "deichman:edition": "1. utg.",
-        "deichman:placeOfPublication": {
+        "deichman:hasPlaceOfPublication": {
           "@id": "_:0000000"
         },
-        "deichman:publisher": "_:0000000",
+        "deichman:publishedBy": {
+          "@id": "_:0000000"
+        },
         "deichman:numberOfPages": "191 s.",
         "deichman:hasPublicationPart": [
           {
@@ -246,9 +248,6 @@
         "deichman:mainTitle": "Et eksempel",
         "deichman:subtitle": "roman",
         "deichman:language": [
-          {
-            "@id": "http://lexvo.org/id/iso639-3/nob"
-          },
           {
             "@id": "http://lexvo.org/id/iso639-3/dan"
           },

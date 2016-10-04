@@ -58,10 +58,12 @@
           "deichman:binding": {
             "@id": "http://data.deichman.no/binding#innbundet"
           },
-          "deichman:placeOfPublication": {
+          "deichman:hasPlaceOfPublication": {
             "@id": "_:0000000"
           },
-          "deichman:publisher": "_:0000000",
+          "deichman:publishedBy": {
+            "@id": "_:0000000"
+          },
           "deichman:numberOfPages": "191 s.",
           "deichman:publicationOf": {
             "@id": "_:0000000"

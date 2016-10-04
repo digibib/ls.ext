@@ -24,11 +24,11 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:edition")
     private String edition;
 
-    @SerializedName("deichman:placeOfPublication")
-    private Map<String, String> placeOfPublication;
+    @SerializedName("deichman:hasPlaceOfPublication")
+    private Map<String, String> hasPlaceOfPublication;
 
-    @SerializedName("deichman:publisher")
-    private String publisher;
+    @SerializedName("deichman:publishedBy")
+    private Map<String, String> publishedBy;
 
     @SerializedName("deichman:numberOfPages")
     private String numberOfPages;
@@ -89,16 +89,12 @@ public class Publication extends BibliographicObjectExternal {
         this.edition = edition;
     }
 
-    final void setPlaceOfPublication(ExternalDataObject placeOfPublication) {
-        this.placeOfPublication = of("@id", placeOfPublication.getId());
+    final void setHasPlaceOfPublication(ExternalDataObject hasPlaceOfPublication) {
+        this.hasPlaceOfPublication = of("@id", hasPlaceOfPublication.getId());
     }
 
-    public final String getPublisher() {
-        return publisher;
-    }
-
-    public final void setPublisher(String publisher) {
-        this.publisher = publisher;
+    public final void setPublishedBy(ExternalDataObject publishedBy) {
+        this.publishedBy = of("@id", publishedBy.getId());
     }
 
     final String getNumberOfPages() {
@@ -145,8 +141,8 @@ public class Publication extends BibliographicObjectExternal {
     }
 
 
-    public Map<String, String> getPlaceOfPublication() {
-        return placeOfPublication;
+    public Map<String, String> getHasPlaceOfPublication() {
+        return hasPlaceOfPublication;
     }
 
     public void setIllustrativeMatter(ExternalDataObject illustrativeMatter) {

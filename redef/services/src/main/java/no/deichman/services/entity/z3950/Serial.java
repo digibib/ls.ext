@@ -24,8 +24,8 @@ public class Serial extends Named {
         super(name, id);
     }
 
-    public final void setPublisher(String publisherId) {
-        publishedBy = of("@id", publisherId);
+    public final void setPublisher(ExternalDataObject publisher) {
+        publishedBy = of("@id", publisher.getId());
     }
 
     public final void setOrdinal(String ordinal) {
