@@ -74,19 +74,18 @@
         },
 
         // createPatch creates a patch request for a given subject, predicate and value (el)
-        // as it is represented in the client UI.
         createPatch: function (subject, predicate, oldAndCurrentValue, datatype) {
             var addPatches = [],
-                delPatches = [];
+              delPatches = [];
 
             var currentValue = oldAndCurrentValue.current.value;
             var oldValue = oldAndCurrentValue.old.value;
             if (_.isArray(oldValue) && !_.isArray(currentValue)) {
-                currentValue = [currentValue];
+                currentValue = [ currentValue ];
             }
-            if ((['string', 'number', 'boolean'].indexOf(typeof currentValue) > -1) && currentValue != oldValue) {
+            if (([ 'string', 'number', 'boolean' ].indexOf(typeof currentValue) > -1) && currentValue != oldValue) {
                 if (currentValue !== "" && (typeof currentValue !== 'boolean' || currentValue !== false)) {
-                    var addPatch = {op: "add", s: subject, p: predicate, o: {value: currentValue, type: datatype}};
+                    var addPatch = { op: "add", s: subject, p: predicate, o: { value: currentValue, type: datatype } };
                     if (oldAndCurrentValue.current.lang !== "") {
                         addPatch.o.lang = oldAndCurrentValue.current.lang;
                     }
@@ -94,7 +93,7 @@
                 }
 
                 if (oldValue !== "" && oldValue !== null) {
-                    var delPatch = {op: "del", s: subject, p: predicate, o: {value: oldValue}};
+                    var delPatch = { op: "del", s: subject, p: predicate, o: { value: oldValue } };
                     if (oldAndCurrentValue.old.lang !== "") {
                         delPatch.o.lang = oldAndCurrentValue.old.lang;
                     }
@@ -106,17 +105,20 @@
                 if (_.isArray(currentValue) || _.isArray(oldValue)) {
                     var addValues = _.difference(currentValue, oldValue);
                     _.each(_.compact(addValues), function (value) {
-                        addPatches.push({op: "add", s: subject, p: predicate, o: {value: value, type: datatype}});
+                        addPatches.push({ op: "add", s: subject, p: predicate, o: { value: value, type: datatype } });
                     });
 
                     var delValues = _.difference(oldValue, currentValue);
                     _.each(_.compact(delValues), function (value) {
-                        delPatches.push({op: "del", s: subject, p: predicate, o: {value: value, type: datatype}});
+                        delPatches.push({ op: "del", s: subject, p: predicate, o: { value: value, type: datatype } });
                     });
                 }
             }
-
-            return JSON.stringify(_.union(delPatches, addPatches));
+            return _.union(delPatches, addPatches)
+        },
+        createPatchAsString: function (subject, predicate, oldAndCurrentValue, datatype) {
+            var patches = this.createPatch(subject, predicate, oldAndCurrentValue, datatype)
+            return JSON.stringify(patches);
         },
 
         // extractValues extracts the values (properties) from the given resource in JSON-LD format,

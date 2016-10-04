@@ -399,7 +399,7 @@
                                 return;
                             }
                             var datatype = event.keypath.substr(0, event.keypath.indexOf("values")) + "datatype";
-                            var patch = Ontology.createPatch(ractive.get("resource_uri"), predicate, event.context, ractive.get(datatype));
+                            var patch = Ontology.createPatchAsString(ractive.get("resource_uri"), predicate, event.context, ractive.get(datatype));
                             if (patch.trim() != "") {
                                 axios.patch(proxyToServices(ractive.get('resource_uri')), patch, {
                                         headers: {

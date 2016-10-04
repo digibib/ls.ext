@@ -783,18 +783,25 @@
       var errors = []
       let uri = ractive.get('config.resourceApiUri')
       let lowerCaseResourceType = resourceType.toLowerCase()
-      let resourceTypeAlias = ractive.get('config.resourceTypeAliases')[lowerCaseResourceType] || lowerCaseResourceType
+      let resourceTypeAlias = ractive.get('config.resourceTypeAliases')[ lowerCaseResourceType ] || lowerCaseResourceType
       return axios.post(`${uri}${resourceTypeAlias}`,
         {}, { headers: { Accept: 'application/ld+json', 'Content-Type': 'application/ld+json' } })
         .then(function (response) {
           var resourceUri = response.headers.location
+          let patchBatch = []
           _.each(inputsToSave, function (input) {
             var predicate = input.predicate
             _.each(input.values, function (value) {
-              Main.patchResourceFromValue(resourceUri, predicate, value, input.datatypes[ 0 ], errors)
+              var patches = Ontology.createPatch(resourceUri, predicate, value, input.datatypes[ 0 ])
+              _.each(patches, function (patch) {
+                patchBatch.push(patch)
+              })
               value.old = deepClone(value.current)
             })
           })
+          if (patchBatch.length > 0) {
+            executePatch(resourceUri, patchBatch, undefined, errors)
+          }
           ractive.update()
           return resourceUri
         })
@@ -1425,6 +1432,44 @@
       })
     }
 
+    function executePatch (subject, patches, keypath, errors) {
+      blockUI()
+      ractive.set('save_status', 'arbeider...')
+      axios.patch(proxyToServices(subject), JSON.stringify(patches, undefined, 2), {
+        headers: {
+          Accept: 'application/ld+json',
+          'Content-Type': 'application/ldpatch+json'
+        }
+      })
+        .then(function (response) {
+          // successfully patched resource
+          updateInputsForResource(response, subject, {
+            keepDocumentUrl: true, inputs: [ _.find(allInputs(), function (input) {
+              return input.predicate.indexOf('recordId') !== -1
+            }) ]
+          })
+
+          // keep the value in current.old - so we can do create delete triple patches later
+          if (keypath) {
+            var cur = ractive.get(keypath + '.current')
+            if (cur) {
+              ractive.set(keypath + '.old.value', cur.value || '')
+              ractive.set(keypath + '.old.lang', cur.lang)
+            }
+          }
+          ractive.set('save_status', 'alle endringer er lagret')
+          ractive.update()
+          unblockUI()
+        })
+        .catch(function (response) {
+          // failed to patch resource
+          console.log('HTTP PATCH failed with: ')
+          errors.push('Noe gikk galt! Fikk ikke lagret endringene')
+          ractive.set('save_status', '')
+          unblockUI()
+        })
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -1458,43 +1503,9 @@
         }
       },
       patchResourceFromValue: function (subject, predicate, oldAndcurrentValue, datatype, errors, keypath) {
-        var patch = Ontology.createPatch(subject, predicate, oldAndcurrentValue, typesFromRange(datatype).rdfType)
-        if (patch && patch.trim() !== '' && patch.trim() !== '[]') {
-          blockUI()
-          ractive.set('save_status', 'arbeider...')
-          axios.patch(proxyToServices(subject), patch, {
-            headers: {
-              Accept: 'application/ld+json',
-              'Content-Type': 'application/ldpatch+json'
-            }
-          })
-            .then(function (response) {
-              // successfully patched resource
-              updateInputsForResource(response, subject, {
-                keepDocumentUrl: true, inputs: [ _.find(allInputs(), function (input) {
-                  return input.predicate.indexOf('recordId') !== -1
-                }) ]
-              })
-
-              // keep the value in current.old - so we can do create delete triple patches later
-              if (keypath) {
-                var cur = ractive.get(keypath + '.current')
-                if (cur) {
-                  ractive.set(keypath + '.old.value', cur.value || '')
-                  ractive.set(keypath + '.old.lang', cur.lang)
-                }
-              }
-              ractive.set('save_status', 'alle endringer er lagret')
-              ractive.update()
-              unblockUI()
-            })
-            .catch(function (response) {
-              // failed to patch resource
-              console.log('HTTP PATCH failed with: ')
-              errors.push('Noe gikk galt! Fikk ikke lagret endringene')
-              ractive.set('save_status', '')
-              unblockUI()
-            })
+        var patches = Ontology.createPatch(subject, predicate, oldAndcurrentValue, typesFromRange(datatype).rdfType)
+        if (patches.length > 0) {
+          executePatch(subject, patches, keypath, errors)
         }
       },
       predefinedLabelValue: function (type, uri) {
