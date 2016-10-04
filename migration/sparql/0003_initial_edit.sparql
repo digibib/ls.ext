@@ -62,3 +62,46 @@ WHERE {
 		:mainTitle ?title .
 }
 ;
+
+
+# 4) Construct music cd classification with source
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX raw: <http://data.deichman.no/raw#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+	?publication migration:classification `IRI(CONCAT("http://data.deichman.no/classification/x", MD5(STR(?notation)))` .
+	`IRI(CONCAT("http://data.deichman.no/classification/x", MD5(STR(?notation)))` raw:classificationNotation ?notation ;
+		raw:classificationNotation "cdclass" .
+}
+
+WHERE {
+	?publication migration:musicClass ?notation .
+	FILTER (!REGEX(?notation, "^[\\d]{3}"))
+}
+;
+
+
+# 5) Construct music dewey classification
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX raw: <http://data.deichman.no/raw#>
+
+WITH <http://deichman.no/migration>
+
+INSERT {
+	?publication migration:classification `IRI(CONCAT("http://data.deichman.no/classification/x", STR(?notation))` .
+	`IRI(CONCAT("http://data.deichman.no/classification/x", STR(?notation))` raw:classificationNotation ?notation .
+}
+
+WHERE {
+	?publication migration:musicClass ?notation .
+	FILTER (REGEX(?notation, "^[\\d]{3}"))
+}
+;
