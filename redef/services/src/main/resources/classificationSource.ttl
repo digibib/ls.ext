@@ -10,6 +10,10 @@ classificationSource:ddk23 a duo:ClassificationSource ;
   duo:code "23/nor" ;
   rdfs:label "DDK 23"@en ;
   rdfs:label "DDK 23"@no .
+classificationSource:ddc22 a duo:ClassificationSource ;
+  duo:code "DDC23" ;
+  rdfs:label "DDC 22"@en ;
+  rdfs:label "DDC 22"@no .
 classificationSource:ddc23 a duo:ClassificationSource ;
   duo:code "DDC23" ;
   rdfs:label "DDC 23"@en ;
