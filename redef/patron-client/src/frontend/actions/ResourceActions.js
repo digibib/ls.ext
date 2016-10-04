@@ -2,15 +2,36 @@ import fetch from 'isomorphic-fetch'
 import { push, replace } from 'react-router-redux'
 
 import * as types from '../constants/ActionTypes'
-import { parsePersonResponse } from '../utils/graphParse'
+import { parsePersonResponse, parseWorkResponse } from '../utils/graphParse'
 import Constants from '../constants/Constants'
-import { action, errorAction } from './GenericActions'
 
-export const requestResource = id => action(types.REQUEST_RESOURCE, { id })
+export function requestResource (id) {
+  return {
+    type: types.REQUEST_RESOURCE,
+    payload: {
+      id: id
+    }
+  }
+}
 
-export const receiveResource = (id, resource) => action(types.RECEIVE_RESOURCE, { id, resource })
+export function receiveResource (id, resource) {
+  return {
+    type: types.RECEIVE_RESOURCE,
+    payload: {
+      id: id,
+      resource: resource
+    }
+  }
+}
 
-export const resourceFailure = error => errorAction(types.RESOURCE_FAILURE, error)
+export function resourceFailure (error) {
+  console.log(error)
+  return {
+    type: types.RESOURCE_FAILURE,
+    payload: error,
+    error: true
+  }
+}
 
 export function expandSubResource (id, replacePath) {
   return (dispatch, getState) => {
@@ -67,37 +88,27 @@ export function fetchWorkResource (workId) {
     if (getState().resources.resources[ workId ]) {
       return
     }
-    const url = `/api/v1/resources/work/${workId}`
+    const url = `${Constants.backendUri}/work/${workId}`
     dispatch(requestResource(workId))
-    return fetch(url).then(response => {
-      if (response.status === 200) {
-        return response.json()
-      } else {
-        throw Error('Error fetching work resource')
-      }
-    }).then(work => dispatch(receiveResource(workId, work)))
-      .then(() => dispatch(fetchWorkItems(workId)))
+    return Promise.all([
+      fetch(url).then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else {
+          throw Error('Error fetching work resource')
+        }
+      }),
+      fetch(`${url}/items`).then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else if (response.status === 204) {
+          return
+        } else {
+          throw Error('Error fetching items for work')
+        }
+      }) ]
+    ).then(([worksResponse, itemsResponse]) => parseWorkResponse(worksResponse, itemsResponse))
+      .then(work => dispatch(receiveResource(workId, work)))
       .catch(error => dispatch(resourceFailure(error)))
-  }
-}
-
-export const requestItems = workId => action(types.REQUEST_ITEMS, { workId })
-
-export const receiveItems = (workId, items) => action(types.RECEIVE_ITEMS, { workId, items })
-
-export const itemsFailure = error => errorAction(types.ITEMS_FAILURE, error)
-
-export function fetchWorkItems (workId) {
-  return dispatch => {
-    const url = `/api/v1/resources/work/${workId}/items`
-    dispatch(requestItems(workId))
-    return fetch(url).then(response => {
-      if (response.status === 200) {
-        return response.json()
-      } else {
-        throw Error('Error fetching items for work')
-      }
-    }).then(items => dispatch(receiveItems(workId, items)))
-      .catch(error => dispatch(itemsFailure(error)))
   }
 }

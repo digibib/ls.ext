@@ -9,12 +9,8 @@ describe('reducers', () => {
       expect(
         resources(undefined, {})
       ).toEqual({
-        error: false,
         isRequesting: false,
-        resources: {},
-        isRequestingItems: false,
-        items: {},
-        itemsError: false
+        resources: {}
       })
     })
 
@@ -24,12 +20,8 @@ describe('reducers', () => {
           type: types.REQUEST_RESOURCE
         })
       ).toEqual({
-        error: false,
         isRequesting: true,
-        resources: {},
-        isRequestingItems: false,
-        items: {},
-        itemsError: false
+        resources: {}
       })
       expect(
         resources({
@@ -56,10 +48,7 @@ describe('reducers', () => {
       ).toEqual({
         error: false,
         isRequesting: false,
-        resources: { 'test uri': 'test resource' },
-        isRequestingItems: false,
-        items: {},
-        itemsError: false
+        resources: { 'test uri': 'test resource' }
       })
       expect(
         resources({

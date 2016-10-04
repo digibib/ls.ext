@@ -9,7 +9,6 @@ class Items extends React.Component {
   }
 
   renderItems () {
-    const { publication } = this.props
     return (
       <table>
         <thead>
@@ -21,7 +20,7 @@ class Items extends React.Component {
         </tr>
         </thead>
         <tbody data-automation-id="work_items">
-        {this.props.items.map(item => <Item key={item.barcode} publication={publication} item={item} />)}
+        {this.props.items.map(item => <Item key={item.barcode} item={item} />)}
         </tbody>
       </table>
     )
@@ -35,7 +34,6 @@ class Items extends React.Component {
 }
 
 Items.propTypes = {
-  publication: PropTypes.object.isRequired,
   items: PropTypes.array.isRequired
 }
 

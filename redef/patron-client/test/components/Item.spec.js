@@ -45,14 +45,12 @@ describe('components', () => {
   describe('Item', () => {
     it('should render one unavailable item', () => {
       const { node, props } = setup({
-        publication: {
-          mediaTypes: [ 'test_media_type' ],
-          languages: []
-        },
         item: {
+          mediaType: 'test_media_type',
           shelfmark: 'shelfmark',
           total: 1,
-          available: 0
+          available: 0,
+          languages: []
         }
       })
 

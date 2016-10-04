@@ -20,10 +20,6 @@ class Contributors extends React.Component {
   }
 }
 
-Contributors.defaultProps = {
-  contributors: {}
-}
-
 Contributors.propTypes = {
   contributors: PropTypes.object.isRequired,
   intl: intlShape.isRequired

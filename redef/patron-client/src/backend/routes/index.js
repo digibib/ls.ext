@@ -8,7 +8,6 @@ module.exports = (app) => {
   require('./profile')(app)
   require('./libraries')(app)
   require('./registration')(app)
-  require('./resources')(app)
   require('./search')(app)
   require('./validation')(app)
   require('./terms')(app)
