@@ -3468,8 +3468,24 @@
       '780':
         subfields:
           -
+            t:
+              predicate: "MIGRATION.followsTitle"
+              object:
+                datatype: "literal"
+    -
+      '780':
+        subfields:
+          -
             w:
               predicate: "MIGRATION.followsRecordId"
+              object:
+                datatype: "literal"
+    -
+      '785':
+        subfields:
+          -
+            t:
+              predicate: "MIGRATION.followedByTitle"
               object:
                 datatype: "literal"
     -
