@@ -76,7 +76,9 @@ class Work extends React.Component {
     }
 
     const publicationsWithItems = work.publications.map(publication => {
-      return {...publication, items: this.props.items[publication.recordId] || []}
+      const newPublication = {...publication, items: this.props.items[publication.recordId] || []}
+      newPublication.available = newPublication.items.filter(item => item.status === 'Ledig').length > 0
+      return newPublication
     })
 
     if (this.props.params.publicationId) {

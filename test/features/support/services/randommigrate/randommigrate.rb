@@ -191,7 +191,7 @@ module RandomMigrate
       publication_5.add_literal('mainTitle', "pubprefix0#{@id} #{@id}cze")
       publication_5.add_literal('publicationYear', '1900')
       publication_5.add_authorized('language', 'http://lexvo.org/id/iso639-3/cze')
-      publication_5.add_authorized('format', 'http://data.deichman.no/format#Microfiche')
+      publication_5.add_authorized('format', 'http://data.deichman.no/format#MP3-CD')
       publication_5.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_5.to_ntriples)
 
@@ -209,7 +209,7 @@ module RandomMigrate
       publication_7.add_literal('mainTitle', "pubprefix2#{@id} #{@id}cze")
       publication_7.add_literal('publicationYear', '2000')
       publication_7.add_authorized('language', 'http://lexvo.org/id/iso639-3/cze')
-      publication_7.add_authorized('format', 'http://data.deichman.no/format#Microfiche')
+      publication_7.add_authorized('format', 'http://data.deichman.no/format#MP3-CD')
       publication_7.add_authorized('hasMediaType', 'http://data.deichman.no/mediaType#Book')
       @publication_uris << post_ntriples('publication', publication_7.to_ntriples)
 
@@ -277,7 +277,7 @@ module RandomMigrate
     def get_record_ids
       record_ids = []
       @publication_uris.each do | uri |
-        res = RestClient.get "#{proxy_to_services(uri)}"
+        res = RestClient.get "#{proxy_to_services(uri)}", {'accept': 'application/ld+json;charset=utf-8'}
         record_ids << JSON.parse(res)["deichman:recordId"]
       end
       record_ids
