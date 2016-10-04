@@ -23,6 +23,11 @@
                       object:
                         datatype: "literal"
                   -
+                    b:
+                      predicate: "ONTOLOGY.ordinal"
+                      object:
+                        datatype: "literal"
+                  -
                     c:
                       predicate: "ONTOLOGY.specification"
                       object:
@@ -223,24 +228,22 @@
                         datatype: "literal"
                   -
                     b:
-                      predicate: "MIGRATION.subdivision"
+                      predicate: "ONTOLOGY.subdivision"
                       object:
                         datatype: "literal"
                   -
                     c:
-                      predicate: "ONTOLOGY.place"
-                      object:
-                        datatype: "literal"
-                  -
-                    d:
-                      predicate: "RAW.date"
+                      predicate: "MIGRATION.place"
                       object:
                         datatype: "literal"
                   -
                     j:
-                      predicate: "RAW.nationality"
+                      predicate: "ONTOLOGY.nationality"
                       object:
-                        datatype: "literal"
+                        datatype: "uri"
+                        regex_strip: "[\\.\\s]+"
+                        prefix: "http://data.deichman.no/nationality#"
+                        regex_split: "[\\-]+"
                   -
                     q:
                       predicate: "ONTOLOGY.specification"
@@ -407,22 +410,22 @@
                         datatype: "literal"
                   -
                     a:
-                      predicate: "ONTOLOGY.name"
+                      predicate: "ONTOLOGY.prefLabel"
                       object:
                         datatype: "literal"
                   -
                     c:
-                      predicate: "ONTOLOGY.place"
+                      predicate: "MIGRATION.place"
                       object:
                         datatype: "literal"
                   -
                     d:
-                      predicate: "RAW.date"
+                      predicate: "ONTOLOGY.date"
                       object:
                         datatype: "literal"
                   -
                     n:
-                      predicate: "RAW.number"
+                      predicate: "ONTOLOGY.ordinal"
                       object:
                         datatype: "literal"
                   -
@@ -524,8 +527,20 @@
                       object:
                         datatype: "literal"
                   -
+                    n:
+                      predicate: "ONTOLOGY.partNumber"
+                      object:
+                        datatype: "literal"
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                  -
                     p:
                       predicate: "ONTOLOGY.partTitle"
+                      object:
+                        datatype: "literal"
+                        regex_strip: "^[\\[\\.:,;?!_\\-\\/]*|[\\]\\.:,;?!_\\-\\/]*$"
+                  -
+                    w:
+                      predicate: "RAW.sortingForm"
                       object:
                         datatype: "literal"
               class: "MIGRATION.Work"
@@ -907,6 +922,11 @@
                       object:
                         datatype: "literal"
                   -
+                    b:
+                      predicate: "ONTOLOGY.ordinal"
+                      object:
+                        datatype: "literal"
+                  -
                     c:
                       predicate: "ONTOLOGY.specification"
                       object:
@@ -1094,24 +1114,22 @@
                         datatype: "literal"
                   -
                     b:
-                      predicate: "MIGRATION.corporationSubdivision"
+                      predicate: "ONTOLOGY.subdivision"
                       object:
                         datatype: "literal"
                   -
                     c:
-                      predicate: "ONTOLOGY.place"
-                      object:
-                        datatype: "literal"
-                  -
-                    d:
-                      predicate: "RAW.date"
+                      predicate: "MIGRATION.place"
                       object:
                         datatype: "literal"
                   -
                     j:
-                      predicate: "MIGRATION.nationality"
+                      predicate: "ONTOLOGY.nationality"
                       object:
-                        datatype: "literal"
+                        datatype: "uri"
+                        regex_strip: "[\\.\\s]+"
+                        prefix: "http://data.deichman.no/nationality#"
+                        regex_split: "[\\-]+"
                   -
                     q:
                       predicate: "ONTOLOGY.specification"
@@ -1275,19 +1293,17 @@
                         datatype: "literal"
                   -
                     c:
-                      predicate: "ONTOLOGY.place"
+                      predicate: "MIGRATION.place"
                       object:
-                        datatype: "uri"
-                        md5: true
-                        prefix: "http://data.deichman.no/place/g"
+                        datatype: "literal"
                   -
                     d:
-                      predicate: "MIGRATION.date"
+                      predicate: "ONTOLOGY.date"
                       object:
                         datatype: "literal"
                   -
                     n:
-                      predicate: "RAW.number"
+                      predicate: "ONTOLOGY.ordinal"
                       object:
                         datatype: "literal"
                   -
@@ -2757,6 +2773,11 @@
                       object:
                         datatype: "literal"
                   -
+                    b:
+                      predicate: "ONTOLOGY.ordinal"
+                      object:
+                        datatype: "literal"
+                  -
                     c:
                       predicate: "ONTOLOGY.specification"
                       object:
@@ -3065,24 +3086,22 @@
                         datatype: "literal"
                   -
                     b:
-                      predicate: "MIGRATION.subdivision"
+                      predicate: "ONTOLOGY.subdivision"
                       object:
                         datatype: "literal"
                   -
                     c:
-                      predicate: "ONTOLOGY.place"
-                      object:
-                        datatype: "literal"
-                  -
-                    d:
-                      predicate: "RAW.date"
+                      predicate: "MIGRATION.place"
                       object:
                         datatype: "literal"
                   -
                     j:
-                      predicate: "RAW.nationality"
+                      predicate: "ONTOLOGY.nationality"
                       object:
-                        datatype: "literal"
+                        datatype: "uri"
+                        regex_strip: "[\\.\\s]+"
+                        prefix: "http://data.deichman.no/nationality#"
+                        regex_split: "[\\-]+"
                   -
                     q:
                       predicate: "ONTOLOGY.specification"
@@ -3291,22 +3310,22 @@
                         datatype: "literal"
                   -
                     a:
-                      predicate: "ONTOLOGY.name"
+                      predicate: "ONTOLOGY.prefLabel"
                       object:
                         datatype: "literal"
                   -
                     c:
-                      predicate: "ONTOLOGY.place"
+                      predicate: "MIGRATION.place"
                       object:
                         datatype: "literal"
                   -
                     d:
-                      predicate: "RAW.date"
+                      predicate: "ONTOLOGY.date"
                       object:
                         datatype: "literal"
                   -
                     n:
-                      predicate: "RAW.number"
+                      predicate: "ONTOLOGY.ordinal"
                       object:
                         datatype: "literal"
                   -
