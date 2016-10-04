@@ -36,7 +36,6 @@ module.exports = (app) => {
     {
       kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
       kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
-      patronClientUri: (process.env.HOST + "8000" || 'http://192.168.50.12:8000').replace(/^tcp\//, 'http:/'),
       ontologyUri: '/services/ontology',
       resourceApiUri: '/services/',
       inputForms: [
