@@ -219,7 +219,7 @@ duo:Biography a rdfs:Class ;
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;
-  rdfs:domain :Person, :Serial, :Corporation, :Subject, :Genre ;
+  rdfs:domain :Person, :Corporation ;
   rdfs:range xsd:string .
 
 :alternativeName a rdfs:Property ;
@@ -368,7 +368,7 @@ duo:Biography a rdfs:Class ;
 :mainTitle a rdfs:Property ;
   rdfs:label "Main title"@en ;
   rdfs:label "Hovedtittel"@no ;
-  rdfs:domain :Work, :Publication, :PublicationPart ;
+  rdfs:domain :Work, :Publication, :PublicationPart, :Serial ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartTitle
@@ -382,7 +382,7 @@ duo:Biography a rdfs:Class ;
 :subtitle a rdfs:Property ;
   rdfs:label "Subtitle"@en ;
   rdfs:label "Undertittel"@no ;
-  rdfs:domain :Publication, :Work ;
+  rdfs:domain :Publication, :Work, :PublicationPart, Serial ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartNumber
@@ -492,7 +492,7 @@ duo:Biography a rdfs:Class ;
   rdfs:label "Issue"@en ;
   rdfs:label "Nummer i serie"@no ;
   rdfs:domain :SerialIssue ;
-  rdfs:range xsd:nonNegativeInteger .
+  rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasContributor
 :contributor a rdfs:Property ;
