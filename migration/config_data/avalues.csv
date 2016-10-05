@@ -2,6 +2,7 @@ category,authorised_value,lib
 "DAMAGED","1","Skadd eksemplar"
 "DAMAGED","2","Menes levert"
 "DAMAGED","3","Menes ikke lånt"
+"DAMAGED","4","Regning"
 "LOST","1","Tapt"
 "LOST","4","Ikke på plass"
 "LOST","8","Tapt, regning betalt"
