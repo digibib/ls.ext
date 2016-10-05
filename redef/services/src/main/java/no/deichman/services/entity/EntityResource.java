@@ -42,7 +42,6 @@ import java.util.concurrent.CompletableFuture;
 import static javax.ws.rs.core.Response.accepted;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
-import static no.deichman.services.entity.EntityResource.RESOURCE_TYPE_PREFIXES_PATTERN;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
 import static no.deichman.services.restutils.MimeType.DEFAULT;
@@ -50,7 +49,7 @@ import static no.deichman.services.restutils.MimeType.JSON;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
-import static no.deichman.services.restutils.MimeType.QS_7;
+import static no.deichman.services.restutils.MimeType.QS_0_7;
 
 /**
  * Responsibility: Expose entities as r/w REST resources.
@@ -149,7 +148,7 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
-    @Produces(NTRIPLES + MimeType.UTF_8 + QS_7)
+    @Produces(NTRIPLES + MimeType.UTF_8 + QS_0_7)
     public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         Model model;
         XURI xuri = new XURI(BaseURI.root(), type, id);
