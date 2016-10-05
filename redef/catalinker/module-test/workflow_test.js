@@ -33,8 +33,8 @@ describe("Catalinker", function () {
           return Promise.resolve({data: {
             kohaOpacUri: "http://koha.deichman.no",
             kohaIntraUri: "http://koha.deichman.no",
-            ontologyUri: "http://192.168.50.12:7000/ontology",
-            resourceApiUri: "http://192.168.50.12:7000/",
+            ontologyUri: "/services/ontology",
+            resourceApiUri: "/services/",
             tabs: [
               {
                 id: "confirm-person",
@@ -61,21 +61,21 @@ describe("Catalinker", function () {
           }});
         case "/main_template.html":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template.html", "UTF-8") });
-        case "http://192.168.50.12:7000/ontology":
+        case "/services/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
-        case "http://192.168.50.12:7000/work/w123456":
+        case "/services/work/w123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/w123456.json", "UTF-8") });
-        case "http://192.168.50.12:7000/person/h123456":
+        case "/services/person/h123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/h123456.json", "UTF-8") });
-        case "http://192.168.50.12:7000/publication/p123456":
+        case "/services/publication/p123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/p123456.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/language":
+        case "/services/authorized_values/language":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_language.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/format":
+        case "/services/authorized_values/format":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_format.json", "UTF-8") });
-        case "http://192.168.50.12:7000/authorized_values/nationality":
+        case "/services/authorized_values/nationality":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/authorized_nationality.json", "UTF-8") });
-        case "http://192.168.50.12:7000/genre/m123456":
+        case "/services/genre/m123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/m123456.json", "UTF-8") });
         default:
           if (/^\/(partials|templates)\//.test(path)) {

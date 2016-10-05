@@ -436,7 +436,7 @@
               // TODO: searchType should be deferred from predicate, fetched from ontology by rdfs:range
               var searchType = "person";
               var searchURI = ractive.get("config.resourceApiUri") + "search/" + searchType + "/_search/?q=" + searchString;
-              axios.get(searchURI)
+              axios.get(proxyToServices(searchURI))
                 .then(function (response) {
                   var results = ensureJSON(response.data);
                   ractive.set("search_result", { origin: event.keypath, predicate: predicate, results: results });
@@ -492,7 +492,7 @@
         });
     },
     loadOntology: function () {
-      return axios.get(ractive.get("config.ontologyUri"), {
+      return axios.get(proxyToServices(ractive.get("config.ontologyUri")), {
         headers: {
           Accept: 'application/ld+json'
         }

@@ -42,13 +42,13 @@ describe("Catalinker", function () {
           }});
         case "/main_template_old.html":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/../public/main_template_old.html", "UTF-8") });
-        case "http://192.168.50.12:7000/ontology":
+        case "/services/ontology":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/ontology.json", "UTF-8") });
-        case "http://192.168.50.12:7000/work/w123456":
+        case "/services/work/w123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/w123456.json", "UTF-8") });
-        case "http://192.168.50.12:7000/search/person/_search/?q=Monkey":
+        case "/services/search/person/_search/?q=Monkey":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/person_search_hit.json", "UTF-8") });
-        case "http://192.168.50.12:7000/person/h123456":
+        case "/services/person/h123456":
           return Promise.resolve({data: fs.readFileSync(__dirname + "/mocks/h123456.json", "UTF-8") });
       }
       });
