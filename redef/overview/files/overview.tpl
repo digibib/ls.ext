@@ -179,7 +179,7 @@
             return;
         }
         var request = new XMLHttpRequest();
-        request.open('POST', 'http://localhost:8081/api/v1/auth/session', true);
+        request.open('POST', 'http://${HOST}:${KOHA_INTRA_PORT}/api/v1/auth/session', true);
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
         request.onload = function() {
           if (request.status == 201) {
