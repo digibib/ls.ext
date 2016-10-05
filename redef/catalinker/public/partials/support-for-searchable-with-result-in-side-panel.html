@@ -10,7 +10,10 @@
                     <div class="pure-g">
                         <div class="pure-u-1-12">
                             {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
-                                <a class="edit-resource" tabindex="0" on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}" title="Rediger"/>
+                                <a class="edit-resource" tabindex="0"
+                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}"
+                                   on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}"
+                                   title="Rediger"/>
                             {{else}}
                                 <a class="select-result-item" tabindex="0"
                                    on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}"
