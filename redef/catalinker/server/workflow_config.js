@@ -475,7 +475,7 @@ module.exports = (app) => {
             createNewResource: {
               type: 'Publication',
               prefillValuesFromResource: {
-                'Work': [ 'mainTitle', 'subtitle', 'partTitle', 'partNumber', 'language' ]
+                'Work': [ 'mainTitle', 'subtitle', 'partTitle', 'partNumber']
               }
             }
           }
