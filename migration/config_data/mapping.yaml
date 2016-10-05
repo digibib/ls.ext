@@ -965,6 +965,14 @@
               object:
                 datatype: "literal"
     -
+      '520':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note520"
+              object:
+                datatype: "literal"
+    -
       '521':
         subfields:
           -
@@ -3971,7 +3979,7 @@
                     h: "PhysicalBody"
                     ib: "toBeDeleted"
                     ic: "toBeDeleted"
-                    j: "toBeDeleted"
+                    j: "periodical"
                     l: "Book"
                     la: "E-book"
                     ma: "PersonalComputerGame"
@@ -3985,7 +3993,7 @@
                     na: "ComputerFile"
                     nb: "toBeDeleted"
                     o: "E-book"
-                    sm: "toBeDeleted"
+                    sm: "periodical"
                     tf: "SignLanguageMovie"
                     vo: "toBeDeleted"
                   orig: "ab|da|db|dc|dd|de|dg|dh|di|dj|dk|dl|dm|dn|dz|ed|ee|ef|eg|fd|fm|ga|gc|gd|ge|gf|gg|gi|gt|ib|ic|la|ma|mb|mc|me|mj|mk|mn|mo|na|nb|sm|tf|vo|a|c|h|j|l|o"
