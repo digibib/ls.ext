@@ -18,13 +18,13 @@ class PublicationInfo extends React.Component {
     if (items) {
       return (
         <ReactCSSTransitionGroup
-        transitionName="fade-in"
-        transitionAppear={true}
-        transitionAppearTimeout={10000}
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={300}
-        component="table"
-        className="test">
+          transitionName="fade-in"
+          transitionAppear={true}
+          transitionAppearTimeout={10000}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}
+          component="table"
+          className="test">
           <tbody>
           <tr>
             <th><FormattedMessage {...messages.branch} /></th>
@@ -46,7 +46,7 @@ class PublicationInfo extends React.Component {
     }
   }
 
-  renderAvailability(available, total) {
+  renderAvailability (available, total) {
     return (
       <span>
         {available} <FormattedMessage {...messages.of} /> {total} <FormattedMessage {...messages.available} />
@@ -54,8 +54,8 @@ class PublicationInfo extends React.Component {
     )
   }
 
-  renderMetaItem(label, value) {
-    if(value) {
+  renderMetaItem (label, value) {
+    if (value) {
       return (
         <div className="meta-info">
           <div className="meta-label">{label}</div>
@@ -66,7 +66,7 @@ class PublicationInfo extends React.Component {
   }
 
   render () {
-    const { publication, publication: { items } } = this.props
+    const { publication, publication: { items }, intl } = this.props
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
@@ -79,22 +79,22 @@ class PublicationInfo extends React.Component {
         data-automation-id={`publication_info_${publication.uri}`}>
         <div className="left">
           {/* Missing data: Author / bidragsytere */}
-          {this.renderMetaItem(this.props.intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
-          {this.renderMetaItem(this.props.intl.formatMessage(messages.edition), publication.edition)}
-          {/* Missing data: Publisher */}
-          {/* Missing data: Published location */}
+          {this.renderMetaItem(intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
+          {this.renderMetaItem(intl.formatMessage(messages.edition), publication.edition)}
+          {this.renderMetaItem(intl.formatMessage(messages.publisher), publication.publisher)}
+          {this.renderMetaItem(intl.formatMessage(messages.placeOfPublication), publication.placeOfPublication)}
         </div>
         <div className="right">
-          {this.renderMetaItem(this.props.intl.formatMessage(messages.isbn), publication.isbn)}
-          {this.renderMetaItem(this.props.intl.formatMessage(messages.biblionr), publication.recordID)}
+          {this.renderMetaItem(intl.formatMessage(messages.isbn), publication.isbn)}
+          {this.renderMetaItem(intl.formatMessage(messages.biblionr), publication.recordID)}
           {/* Missing data: "forlagsserie" */}
           {/* Missing data: "Deler av utgivelse" */}
-          {/* Missing data: "Tilpasning" */}
-          {this.renderMetaItem(this.props.intl.formatMessage(messages.binding), publication.binding ? this.props.intl.formatMessage({ id: publication.binding }) : '')}
+          {this.renderMetaItem(intl.formatMessage(messages.adaptation), publication.formatAdaptations.map(formatAdaptation => intl.formatMessage({ id: formatAdaptation })).join(', '))}
+          {this.renderMetaItem(intl.formatMessage(messages.binding), publication.binding ? intl.formatMessage({ id: publication.binding }) : '')}
         </div>
         <div className="wide">
           <div className="meta-label"><FormattedMessage {...messages.note} /></div>
-          <p className="note">Lorem upsim missing data; note {/* Missing data: Note */}</p>
+          <p className="note">{publication.description}</p>
         </div>
         <div className="entry-items">
           <h2><FormattedMessage {...messages.items} /></h2>
@@ -176,6 +176,21 @@ export const messages = defineMessages({
     id: 'PublicationInfo.branch',
     description: 'Table header for publication items table',
     defaultMessage: 'Branch'
+  },
+  publisher: {
+    id: 'PublicationInfo.publisher',
+    description: 'Label for the publisher field',
+    defaultMessage: 'Publisher'
+  },
+  placeOfPublication: {
+    id: 'PublicationInfo.placeOfPublication',
+    description: 'Label for the place of publication field',
+    defaultMessage: 'Place of publication'
+  },
+  adaptation: {
+    id: 'PublicationInfo.adaptation',
+    description: 'Label for the adaptation field',
+    defaultMessage: 'Adaptation'
   }
 })
 

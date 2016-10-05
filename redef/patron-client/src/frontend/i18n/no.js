@@ -79,6 +79,9 @@ export default {
   'PublicationInfo.shelfmark': 'Hylleplass',
   'PublicationInfo.status': 'Status',
   'PublicationInfo.available': 'ledige',
+  'PublicationInfo.publisher': 'Utgiver',
+  'PublicationInfo.placeOfPublication': 'Utgivelsessted',
+  'PublicationInfo.adaptation': 'Tilpasning',
   'Publications.title': 'tittel',
   'Publications.publicationYear': 'utgivelsesår',
   'Publications.language': 'språk',
@@ -267,6 +270,5 @@ export default {
   'Work.labelOriginalTitle': 'Originaltittel',
   'Work.additionalInfoToggleLess': 'Mindre om dette verket',
   'Work.additionalInfoToggleMore': 'Mer om dette verket',
-  'Work.firstTimePublished': 'Første gang utgitt:',
   'Work.workInformation': 'Verksinformasjon'
 }

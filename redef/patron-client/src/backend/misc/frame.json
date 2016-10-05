@@ -211,13 +211,15 @@
       "@id": "deichman:biography",
       "@type": "@id"
     },
-    "hasFormatAdaptation": {
+    "formatAdaptations": {
       "@id": "deichman:hasFormatAdaptation",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
-    "hasContentAdaptation": {
+    "contentAdaptations": {
       "@id": "deichman:hasContentAdaptation",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
     "hasPlaceOfPublication": {
       "@id": "deichman:hasPlaceOfPublication",
@@ -328,7 +330,7 @@
     "locationFormat": {
       "@id": "deichman:locationFormat"
     },
-    "hasDescription": {
+    "description": {
       "@id": "deichman:hasDescription"
     }
   },
@@ -358,7 +360,13 @@
     "mediaTypes": {
       "@embed": "@never"
     },
-    "inSerials": {}
+    "inSerials": {},
+    "contentAdaptations": {
+      "@embed": "@never"
+    },
+    "formatAdaptations": {
+      "@embed": "@never"
+    }
   },
   "audience": {
     "@embed": "@never"

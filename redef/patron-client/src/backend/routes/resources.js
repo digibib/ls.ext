@@ -8,7 +8,7 @@ const frame = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'misc', 'fra
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
   app.get('/api/v1/resources/work/:workId', jsonParser, (request, response) => {
-    fetch(`http://services:8005/work/${request.params.workId}/ntriples`, { headers: { accept: 'application/n-triples;charset=utf-8' } })
+    fetch(`http://services:8005/work/${request.params.workId}`, { headers: { accept: 'application/n-triples;charset=utf-8' } })
       .then(res => {
         if (res.status === 200) {
           return res.text()
@@ -110,6 +110,13 @@ function transformResponse (work) {
     if (publication.image) {
       // choose any available image
       work.image = work.image || publication.image
+    }
+    publication.contributors = transformContributors(publication.contributors)
+    if (publication.publishedBy) {
+      publication.publisher = publication.publishedBy.name
+    }
+    if(publication.hasPlaceOfPublication) {
+      publication.placeOfPublication = publication.hasPlaceOfPublication.prefLabel
     }
   })
 
