@@ -5,38 +5,53 @@ import Items from './Items'
 import { groupByBranch } from '../utils/sorting'
 
 class PublicationInfo extends React.Component {
-  constructor (props) {
-    super(props)
-    this.handleClick = this.handleClick.bind(this)
-  }
+  // constructor (props) {
+  //   super(props)
+  //   this.handleClick = this.handleClick.bind(this)
+  // }
 
-  handleClick () {
-    this.props.expandSubResource(null, true)
-  }
+  // handleClick () {
+  //   this.props.expandSubResource(null, true)
+  // }
 
   renderItems (items) {
     if (items) {
       return (
         <ReactCSSTransitionGroup
-          transitionName="fade-in"
-          transitionAppear={true}
-          transitionAppearTimeout={10000}
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}
-          component="table"
-          className="items-by-branch">
-          {this.renderItemsByBranchRow(groupByBranch(items))}
+        transitionName="fade-in"
+        transitionAppear={true}
+        transitionAppearTimeout={10000}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+        component="table"
+        className="test">
+          <tbody>
+          <tr>
+            <th><FormattedMessage {...messages.branch} /></th>
+            <th><FormattedMessage {...messages.shelfmark} /></th>
+            <th><FormattedMessage {...messages.status} /></th>
+          </tr>
+          {items.map(item => {
+            return (
+              <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
+                <td>{item.branch}</td>
+                <td>{item.shelfmark}</td>
+                <td>{this.renderAvailability(item.available, item.total)}</td>
+              </tr>
+            )
+          })}
+          </tbody>
         </ReactCSSTransitionGroup>
       )
     }
   }
 
-  renderItemsByBranchRow(items) {
-    console.log(this.flattenItems(items))
-  }
-
-  flattenItems(items) {
-    return items
+  renderAvailability(available, total) {
+    return (
+      <span>
+        {available} <FormattedMessage {...messages.of} /> {total} <FormattedMessage {...messages.available} />
+      </span>
+    )
   }
 
   renderMetaItem(label, value) {
@@ -52,7 +67,6 @@ class PublicationInfo extends React.Component {
 
   render () {
     const { publication, publication: { items } } = this.props
-    //console.log(publication)
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
@@ -63,21 +77,29 @@ class PublicationInfo extends React.Component {
         component="section"
         className="publication-info"
         data-automation-id={`publication_info_${publication.uri}`}>
-        {/* Missing data: Author / bidragsytere */}
-        {this.renderMetaItem(this.props.intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
-        {this.renderMetaItem(this.props.intl.formatMessage(messages.edition), publication.edition)}
-        {/* Missing data: Publisher */}
-        {/* Missing data: Published location */}
-        {this.renderMetaItem(this.props.intl.formatMessage(messages.isbn), publication.isbn)}
-        {this.renderMetaItem(this.props.intl.formatMessage(messages.biblionr), publication.recordID)}
-        {/* Missing data: "forlagsserie" */}
-        {/* Missing data: "Deler av utgivelse" */}
-        {/* Missing data: "Tilpasning" */}
-        {this.renderMetaItem(this.props.intl.formatMessage(messages.binding), publication.binding ? this.props.intl.formatMessage({ id: publication.binding }) : '')}
-        <div className="meta-label"><FormattedMessage {...messages.note} /></div>
-        <p className="note">Lorem upsim missing data; note {/* Missing data: Note */}</p>
-        <h2><FormattedMessage {...messages.items} /></h2>
-        <div className="entry-items">{this.renderItems(items)}</div>
+        <div className="left">
+          {/* Missing data: Author / bidragsytere */}
+          {this.renderMetaItem(this.props.intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
+          {this.renderMetaItem(this.props.intl.formatMessage(messages.edition), publication.edition)}
+          {/* Missing data: Publisher */}
+          {/* Missing data: Published location */}
+        </div>
+        <div className="right">
+          {this.renderMetaItem(this.props.intl.formatMessage(messages.isbn), publication.isbn)}
+          {this.renderMetaItem(this.props.intl.formatMessage(messages.biblionr), publication.recordID)}
+          {/* Missing data: "forlagsserie" */}
+          {/* Missing data: "Deler av utgivelse" */}
+          {/* Missing data: "Tilpasning" */}
+          {this.renderMetaItem(this.props.intl.formatMessage(messages.binding), publication.binding ? this.props.intl.formatMessage({ id: publication.binding }) : '')}
+        </div>
+        <div className="wide">
+          <div className="meta-label"><FormattedMessage {...messages.note} /></div>
+          <p className="note">Lorem upsim missing data; note {/* Missing data: Note */}</p>
+        </div>
+        <div className="entry-items">
+          <h2><FormattedMessage {...messages.items} /></h2>
+          {this.renderItems(items)}
+        </div>
       </ReactCSSTransitionGroup>
     )
   }
@@ -96,13 +118,19 @@ export const messages = defineMessages({
     defaultMessage: 'About this publication'
   },
   items: {
-    id: 'PublicationInfo.items', description: 'Heading for items', defaultMessage: 'Items:'
+    id: 'PublicationInfo.items',
+    description: 'Heading for items',
+    defaultMessage: 'Items'
   },
   isbn: {
-    id: 'PublicationInfo.isbn', description: 'Header for the ISBN column', defaultMessage: 'ISBN:'
+    id: 'PublicationInfo.isbn',
+    description: 'Header for the ISBN column',
+    defaultMessage: 'ISBN:'
   },
   biblionr: {
-    id: 'PublicationInfo.biblionr', description: 'Header for the BiblioNR/recordID column', defaultMessage: 'RecordID:'
+    id: 'PublicationInfo.biblionr',
+    description: 'Header for the BiblioNR/recordID column',
+    defaultMessage: 'RecordID:'
   },
   numberOfPages: {
     id: 'PublicationInfo.numberOfPages',
@@ -110,13 +138,44 @@ export const messages = defineMessages({
     defaultMessage: 'Number of pages:'
   },
   edition: {
-    id: 'PublicationInfo.edition', description: 'Header for the edition column', defaultMessage: 'Edition:'
+    id: 'PublicationInfo.edition',
+    description: 'Header for the edition column',
+    defaultMessage: 'Edition:'
   },
   binding: {
-    id: 'PublicationInfo.binding', description: 'Header for the binding column', defaultMessage: 'Binding:'
+    id: 'PublicationInfo.binding',
+    description: 'Header for the binding column',
+    defaultMessage: 'Binding:'
   },
   note: {
-    id: 'PublicationInfo.note', description: 'Header for the note column', defaultMessage: 'Note:'
+    id: 'PublicationInfo.note',
+    description: 'Header for the note column',
+    defaultMessage: 'Note:'
+  },
+  of: {
+    id: 'PublicationInfo.of',
+    description: 'Used as component for availability',
+    defaultMessage: 'of'
+  },
+  available: {
+    id: 'PublicationInfo.available',
+    description: 'Used as component for availability',
+    defaultMessage: 'available'
+  },
+  status: {
+    id: 'PublicationInfo.status',
+    description: 'Table header for publication items table',
+    defaultMessage: 'Status'
+  },
+  shelfmark: {
+    id: 'PublicationInfo.shelfmark',
+    description: 'Table header for publication items table',
+    defaultMessage: 'Shelfmark'
+  },
+  branch: {
+    id: 'PublicationInfo.branch',
+    description: 'Table header for publication items table',
+    defaultMessage: 'Branch'
   }
 })
 

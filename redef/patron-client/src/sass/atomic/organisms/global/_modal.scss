@@ -18,12 +18,13 @@
   overflow: visible;
   -webkit-overflow-scrolling: touch;
   outline: none;
+
+  .single-publication {
+    cursor: pointer;
+  }
+
 }
 
 .patron-placeholder {
   display: none !important
-}
-
-.single-publication {
-  cursor: pointer;
 }

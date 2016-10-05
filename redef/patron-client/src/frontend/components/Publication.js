@@ -23,19 +23,21 @@ class Publication extends React.Component {
           <div className="book-cover">
             {publication.image ? <img src={publication.image} alt={coverAltText} /> : null}
           </div>
-          <div className="publication-text-container">
-            <div className="availability" data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
-              <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
-            </div>
-            <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
-            <div className="meta-item">
-              <span data-automation-id="publication_year">{publication.publicationYear}, </span>
-              <span data-automation-id="publication_languages">{languages.join(', ')}</span>
+          <div className="meta-info">
+            <div className="publication-text-container">
+              <div className="availability" data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
+                <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
+              </div>
+              <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
+              <div className="meta-item">
+                <span data-automation-id="publication_year">{publication.publicationYear}, </span>
+                <span data-automation-id="publication_languages">{languages.join(', ')}</span>
+              </div>
             </div>
             { publication.items.length > 0 ? (
               <div className="reserve-button">
                 <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
-                  <button className="black-btn" type="button"
+                  <button className="red-btn" type="button"
                           data-automation-id={`recordId_${publication.recordId}`}>
                     <span data-automation-id="publication_order"><FormattedMessage {...messages.reserve} /></span>
                   </button>
@@ -102,7 +104,7 @@ export const messages = defineMessages({
   showInfo: {
     id: 'Publication.showInfo',
     description: 'Clickable item to expand info about a publication',
-    defaultMessage: 'Show info about this publication'
+    defaultMessage: 'More info about this publication'
   },
   hideInfo: {
     id: 'Publication.hideInfo',

@@ -78,7 +78,7 @@ export const messages = defineMessages({
   info: {
     id: 'Footer.info',
     description: 'The text containing the address, telephone number and other information',
-    defaultMessage: 'Deichmanske bibliotek - Oslo public library <br />Oslo kommune <br />Arne Garborgs plass 4, 0179 Oslo, Norway <br />Telephone: +47 23 43 29 00 <br />Editor: Kristin Danielsen (Director) <br />'
+    defaultMessage: 'Deichmanske bibliotek - Oslo public library <br />Oslo kommune <br />Arne Garborgs plass 4, 0179 Oslo, Norway <br />Telephone: +47 23 43 29 00 <br />Editor: Knut Skansen (acting Director) <br />'
   }
 })
 

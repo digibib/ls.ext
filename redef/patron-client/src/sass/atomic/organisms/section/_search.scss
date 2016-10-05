@@ -2,10 +2,13 @@
   background: $greyColor;
   padding: rhythm(1.5);
   border-bottom: 1px solid $mediumGreyColor;
+
   form {
+
     label {
       display: none;
     }
+
     .search-field-wrapper {
       @include container;
       border: 1px solid $greyColor;
@@ -15,49 +18,67 @@
       border-color: $mediumGreyColor;
       border-radius: 4px 4px;
     }
+
     .search-field {
       @include span(9);
     }
+
     .search-button {
       @include span(3 last);
     }
+
   }
+
   input {
-    border: none;
-    color: $darkGreyColor;
-    font-size: rhythm(2.5);
+    background-position: 0.5em center;
     padding: rhythm(0.5) rhythm(1);
     background-repeat: no-repeat;
-    background-position: 0.5em center;
-    width: 100%;
-  }
-  button {
-    margin-top: -1px;
-    margin-bottom: -1px;
-    background: $redColor;
-    text-transform: uppercase;
-    color: $white;
     font-size: rhythm(2.5);
+    color: $darkGreyColor;
+    border: none;
     width: 100%;
-    text-align: center;
-    padding: rhythm(0.5);
-    border-radius: 2px;
-    letter-spacing: rhythm(0.2);
-    border-style: solid;
-    border-color: $redColor;
-    border-width: 1px;
-    border-radius: 0px 4px 4px 0px;
   }
+
+  button {
+    border-radius: 0px 4px 4px 0px;
+    letter-spacing: rhythm(0.2);
+    text-transform: uppercase;
+    border-color: $redColor;
+    font-size: rhythm(2.5);
+    background: $redColor;
+    padding: rhythm(0.5);
+    margin-bottom: -1px;
+    border-style: solid;
+    border-radius: 2px;
+    text-align: center;
+    border-width: 1px;
+    margin-top: -1px;
+    color: $white;
+    width: 100%;
+
+    &:hover, &:active, &:focus {
+      border-color: $darkGreyColor;
+      background: $darkGreyColor;
+      cursor: pointer;
+    }
+
+  }
+
 }
+
 @include breakpoint($small) {
+
   .search-box-wrapper {
     @include wrapper-container;
     padding-bottom: 0;
   }
+
   .search-box {
     padding: 0 rhythm(2) rhythm(2);
     border-bottom: none;
+
     form {
+
       label {
         position: relative;
         font-size: rhythm(2);
@@ -66,25 +87,33 @@
         color: $darkGreyColor;
         display: inline;
       }
-      .search-field-wrapper {   
+
+      .search-field-wrapper {
         padding-right: none;
       }
+
       .search-field {
         @include span(10);
       }
+
       .search-button {
         @include span(2 last);
       }
+
     }
+
     input {
       font-size: rhythm(4);
       padding: rhythm(1) rhythm(0.5) rhythm(1) rhythm(2);
       background-position: 1em center;
     }
+
     button {
       font-weight: bold;
       padding: rhythm(1);
       font-size: rhythm(4);
     }
+
   }
+
 }

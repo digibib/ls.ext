@@ -1,16 +1,20 @@
 .red-btn {
-  padding: rhythm(2);
-  padding-top: 0.5em;
+  @include semiBoldFont;
   padding-bottom: 0.5em;
   background: $redColor;
-  color: $white;
-  @include semiBoldFont;
-  font-size: 1em;
+  padding: rhythm(2);
+  padding-top: 0.5em;
   border-radius: 2px;
+  font-size: 1em;
+  color: $white;
+
+  &:hover, &:active, &:focus {
+    background: $darkGreyColor;
+    cursor: pointer;
+  }
 
   a, a:hover {
     text-decoration: none;
-    color: $white;
   }
 
 }

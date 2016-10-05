@@ -24,9 +24,13 @@ class ModalRoot extends React.Component {
     }
     const SpecificModal = MODAL_COMPONENTS[ this.props.modalType ]
     const ModalClasses = 'modal-overlay '.concat(this.props.modalType.toLowerCase(), '-modal-wrapper')
+    Modal.setAppElement('#app');
     return (
-      <Modal isOpen onRequestClose={this.props.modalActions.hideModal} className="modal-content"
-             overlayClassName={ModalClasses}>
+      <Modal
+        isOpen
+        onRequestClose={this.props.modalActions.hideModal}
+        className="modal-content"
+        overlayClassName={ModalClasses}>
         <SpecificModal {...this.props.modalProps} />
       </Modal>
     )

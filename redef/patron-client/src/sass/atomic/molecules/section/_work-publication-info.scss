@@ -1,5 +1,5 @@
 .single-publication {
-  border-bottom: 1px solid $darkGreyColor;
+  border-bottom: 1px solid $mediumGreyColor;
   padding-bottom: rhythm(2);
   margin-bottom: rhythm(2);
 
@@ -10,12 +10,21 @@
 
   .book-cover {
     @include span(3);
+
+    img {
+      max-height: 7em;
+    }
+
+  }
+
+  .meta-info {
+    @include span(9 last);
+    @include container;
   }
 
   .publication-text-container {
-    @include span(9 last);
+    @include span(12);
     @include container;
-
   }
 
   .availability {
@@ -39,6 +48,9 @@
   .reserve-button {
     @include span(12);
     margin-top: rhythm(2);
+
+
+
   }
 
   .show-status {
@@ -50,17 +62,17 @@
       @include span (12);
       width: 100%;
       font-size: rhythm(2.5);
-      color: $redColor;
       cursor: pointer;
-      font-weight: bold;
     }
 
     span {
       float: left;
+      //color: $redColor;
     }
 
     i {
       float: right;
+      color: $redColor;
     }
 
   }
@@ -68,10 +80,17 @@
 }
 
 .publication-info {
+  padding: rhythm(1) rhythm(1) rhythm(2) rhythm(1);
   border-bottom: 1px solid $darkGreyColor;
-  padding-bottom: rhythm(2);
-  margin-bottom: rhythm(2);
+  margin-bottom: rhythm(4);
   background: $greyColor;
+  font-size: rhythm(2);
+  margin-top: -1px;
+
+  .left, .right, .wide {
+    @include span(12);
+    @include container;
+  }
 
   .meta-info {
     @include span(12);
@@ -97,8 +116,54 @@
     font-weight: bold;
   }
 
+  .entry-items {
+
+    h2 {
+      font-size: rhythm(4);
+      margin-bottom: rhythm(2);
+    }
+
+    table {
+      border: 1px solid $mediumGreyColor;
+    }
+
+    th {
+      font-weight: bold;
+    }
+
+    tr.not-available td:last-child {
+      color: $redColor;
+    }
+
+  }
+
 }
 
-.entry-items {
+@include breakpoint($small){
+
+  .single-publication {
+    min-height: 11em;
+    margin-bottom: 0;
+    margin-top: rhythm(4);
+
+    &.open {
+      border-bottom: 3px solid $redColor;
+    }
+
+  }
+
+  .publication-info {
+    border: 1px solid $mediumGreyColor;
+    padding: rhythm(4);
+    margin-bottom: 0;
+
+    .left {
+      @include span(6);
+    }
+
+    .right {
+      @include span(6 last);
+    }
+  }
 
 }

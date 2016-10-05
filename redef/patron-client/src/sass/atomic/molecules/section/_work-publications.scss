@@ -25,6 +25,7 @@
 
     h2 {
       font-size: rhythm(2.5);
+      margin-bottom: 0;
     }
 
     > header {
@@ -65,7 +66,6 @@
 
 }
 
-
 .arrow-open, .arrow-close {
   @include span(1 of 12);
   float: right;
@@ -74,4 +74,34 @@
     @include span(0.5 of 12);
     float: right;
   }
+}
+
+@include breakpoint($small){
+
+  .other-publications .mediatype-group .single-publication {
+    @include span(6);
+
+    &:nth-child(even) {
+      @include span(6 last);
+    }
+
+  }
+
+}
+
+@include breakpoint($medium){
+
+  .other-publications .mediatype-group .single-publication {
+    @include span(4);
+
+    &:nth-child(even) {
+      @include span(4);
+    }
+
+    &:nth-child(3) {
+      @include span(4 last);
+    }
+
+  }
+
 }
