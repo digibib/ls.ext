@@ -17,6 +17,7 @@ public final class MimeType {
     public static final String PLAIN = MediaType.TEXT_PLAIN;
 
     public static final String DEFAULT = ";qs=1";
+    public static final String QS_7 = ";qs=0.7";
 
     private MimeType() {}
 

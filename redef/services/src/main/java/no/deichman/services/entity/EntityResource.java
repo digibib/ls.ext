@@ -50,6 +50,7 @@ import static no.deichman.services.restutils.MimeType.JSON;
 import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
+import static no.deichman.services.restutils.MimeType.QS_7;
 
 /**
  * Responsibility: Expose entities as r/w REST resources.
@@ -148,7 +149,7 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
-    @Produces(NTRIPLES + MimeType.UTF_8 + ";qs=0.7")
+    @Produces(NTRIPLES + MimeType.UTF_8 + QS_7)
     public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         Model model;
         XURI xuri = new XURI(BaseURI.root(), type, id);
