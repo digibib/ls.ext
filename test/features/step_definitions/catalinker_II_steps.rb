@@ -299,7 +299,7 @@ end
 
 When(/^jeg kan legge inn seriens navn$/) do
   @context[:serial_name] = generateRandomString
-  @site.RegSerial.add_prop("http://data.deichman.no/ontology#name", @context[:serial_name])
+  @site.RegSerial.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:serial_name])
 end
 
 When(/^jeg kan legge inn emnets navn$/) do
