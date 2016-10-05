@@ -12,10 +12,16 @@ module.exports = (app) => {
         response.status(res.status).send(res.statusText)
         throw Error()
       }
-    }).then(json => response.status(200).send(json))
+    }).then(json => response.status(200).send(filterLibraries(json)))
       .catch(error => {
         console.log(error)
         response.sendStatus(500)
       })
   })
+
+  function filterLibraries (libraries) {
+    return libraries.filter(library => {
+      if (!['api', 'frik', 'hsko', 'fgam', 'ukjent'].includes(library.branchcode)) { return true }
+    })
+  }
 }
