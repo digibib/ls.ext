@@ -10,7 +10,6 @@ module.exports = (app) => {
   require('./registration')(app)
   require('./search')(app)
   require('./validation')(app)
-  require('./terms')(app)
 
   app.all('/services/*', requestProxy({
     url: 'http://services:8005/*',

@@ -81,7 +81,7 @@ class RegistrationFormPartTwo extends React.Component {
           <FormInputField name="repeatPin" type="password" message={messages.repeatPin} formName={formName} getValidator={this.getValidator} />
           <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} name="library" formName={formName} />
           <p>
-            <a href="/terms" target="_blank">
+            <a href="https://www.deichman.no/utlansreglement" target="_blank">
               <FormattedMessage {...messages.acceptTermsLink} />
             </a>
           </p>
