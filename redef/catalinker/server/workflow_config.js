@@ -1218,7 +1218,7 @@ module.exports = (app) => {
             field: 'mainTitle',
             wildcard: true
           } ],
-          resultItemLabelProperties: [ 'mainTitle', 'partTitle' ],
+          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
         },
