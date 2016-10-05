@@ -868,6 +868,30 @@
                 datatype: "gYear"
                 regex_match: "[uU]tg.+([\\d]{4})"
     -
+      '500':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note500"
+              object:
+                datatype: "literal"
+    -
+      '501':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note501"
+              object:
+                datatype: "literal"
+    -
+      '502':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note502"
+              object:
+                datatype: "literal"
+    -
       '503':
         subfields:
           -
@@ -877,11 +901,59 @@
                 datatype: "gYear"
                 regex_match: "[\\d]{4}"
     -
+      '503':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note503"
+              object:
+                datatype: "literal"
+    -
       '505':
         subfields:
           -
             a:
-              predicate: "RAW.contentsDescription"
+              predicate: "MIGRATION.note505"
+              object:
+                datatype: "literal"
+    -
+      '508':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note508"
+              object:
+                datatype: "literal"
+    -
+      '510':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note510"
+              object:
+                datatype: "literal"
+    -
+      '511':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note511"
+              object:
+                datatype: "literal"
+    -
+      '512':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note512"
+              object:
+                datatype: "literal"
+    -
+      '516':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note516"
               object:
                 datatype: "literal"
     -
@@ -893,12 +965,196 @@
               object:
                 datatype: "literal"
     -
+      '521':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note521"
+              object:
+                datatype: "literal"
+    -
+      '525':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note525"
+              object:
+                datatype: "literal"
+    -
+      '530':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note530"
+              object:
+                datatype: "literal"
+    -
+      '531':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note531"
+              object:
+                datatype: "literal"
+    -
+      '532':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note532"
+              object:
+                datatype: "literal"
+    -
+      '533':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note533"
+              object:
+                datatype: "literal"
+    -
+      '538':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note538"
+              object:
+                datatype: "literal"
+    -
+      '539':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note539"
+              object:
+                datatype: "literal"
+    -
+      '546':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note546"
+              object:
+                datatype: "literal"
+    -
       '571':
         subfields:
           -
             a:
-              predicate: "RAW.identifierNote"
+              predicate: "MIGRATION.identifierNote"
               object:
+                datatype: "literal"
+    -
+      '571':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note571"
+              object:
+                datatype: "literal"
+    -
+      '572':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note572"
+              object:
+                datatype: "literal"
+    -
+      '573':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note573"
+              object:
+                datatype: "literal"
+    -
+      '574':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note574"
+              object:
+                datatype: "literal"
+    -
+      '590':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note590"
+              object:
+    -
+      '591':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note591"
+              object:
+                datatype: "literal"
+    -
+      '592':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note592"
+              object:
+                datatype: "literal"
+    -
+      '593':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note593"
+              object:
+                datatype: "literal"
+    -
+      '594':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note594"
+              object:
+                datatype: "literal"
+    -
+      '595':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note595"
+              object:
+                datatype: "literal"
+    -
+      '596':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note596"
+              object:
+                datatype: "literal"
+    -
+      '597':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note597"
+              object:
+                datatype: "literal"
+    -
+      '598':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note598"
+              object:
+                datatype: "literal"
+    -
+      '599':
+        subfields:
+          -
+            a:
+              predicate: "MIGRATION.note599"
+              object:
+                datatype: "literal"
                 datatype: "literal"
     -
       '600':
