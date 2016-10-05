@@ -97,6 +97,7 @@ WHERE {
       (format:MusicRecording          mediaType:MusicRecording)
       (format:SheetMusic              mediaType:SheetMusic)
       (format:Poster                  mediaType:Book)
+      (format:Periodical              mediaType:Periodical)
     }
 }
 ;

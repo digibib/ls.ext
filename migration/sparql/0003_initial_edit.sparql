@@ -150,3 +150,24 @@ WHERE {
 		a :Publication
 }
 ;
+
+
+# 7) Remove format toBeDeleted where other format is present
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+	?publication :format format:toBeDeleted .
+}
+
+WHERE {
+	?publication :format format:toBeDeleted ;
+		a :Publication ;
+		:format ?format .
+	FILTER (?format != format:toBeDeleted && ?format != format:E-book)
+}
+;
