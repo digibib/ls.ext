@@ -2349,9 +2349,6 @@
                 ractive.set(event.keypath + '.searchable', true)
                 var input = ractive.get(grandParentOf(event.keypath))
                 ractive.fire('patchResource', event, input.predicate, input.subjectType)
-                if (ractive.get(parentOf(event.keypath)).length > 1) {
-                  ractive.splice(parentOf(event.keypath), _.last(event.keypath.split('.')), 1)
-                }
                 if (input.isMainEntry) {
                   unloadResourceForDomain('Work')
                   unloadResourceForDomain('Person')
