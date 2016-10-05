@@ -1,4 +1,4 @@
-# 1) Merge locationCategory code 'a' into locationFormat
+# 1) Merge some locationCategory codes into locationFormat
 
 SPARQL
 PREFIX : <http://data.deichman.no/ontology#>
@@ -13,13 +13,14 @@ DELETE {
 }
 
 INSERT {
-  ?publication :locationFormat `concat("a",str(?format))` .
+  ?publication :locationFormat `concat(str(?category),str(?format))` .
 }
 
 WHERE {
-  ?publication migration:locationCategory "a" ;
+  ?publication migration:locationCategory ?category ;
     a :Publication .
   OPTIONAL {?publication :locationFormat ?format .}
+  VALUES ?category {"a", "dc", "dz", "ee", "ef", "BI"}
 }
 ;
 
