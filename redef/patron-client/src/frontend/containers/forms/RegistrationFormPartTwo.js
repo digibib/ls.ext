@@ -79,7 +79,7 @@ class RegistrationFormPartTwo extends React.Component {
           <legend><FormattedMessage {...messages.choosePin} /></legend>
           <FormInputField name="pin" message={messages.pin} formName={formName} type="password" getValidator={this.getValidator} />
           <FormInputField name="repeatPin" type="password" message={messages.repeatPin} formName={formName} getValidator={this.getValidator} />
-          <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} name="chooseBranch" />
+          <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} name="library" formName={formName} />
           <p>
             <a href="/terms" target="_blank">
               <FormattedMessage {...messages.acceptTermsLink} />
