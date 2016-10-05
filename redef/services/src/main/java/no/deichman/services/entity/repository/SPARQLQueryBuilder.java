@@ -45,7 +45,7 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX deichman: <http://data.deichman.no/ontology#>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "DESCRIBE <__WORKURI__> ?publication ?workContributor ?compType ?format ?mediaType ?subject ?genre"
-                + "  ?litform ?serial ?nation ?pubContrib ?publicationContributor ?place\n"
+                + "  ?litform ?hasWorkType ?serial ?nation ?pubContrib ?publicationContributor ?place\n"
                 + "WHERE {\n"
                 + "        { <__WORKURI__> a deichman:Work }\n"
                 + "  UNION {  <__WORKURI__> deichman:contributor ?workContrib .\n"
@@ -69,6 +69,7 @@ public final class SPARQLQueryBuilder {
                 + "  UNION { <__WORKURI__> deichman:subject ?subject }\n"
                 + "  UNION { <__WORKURI__> deichman:genre ?genre }\n"
                 + "  UNION { <__WORKURI__> deichman:literaryForm ?litform }\n"
+                + "  UNION { <__WORKURI__> deichman:workType ?hasWorkType }\n"
                 + "  UNION { <__WORKURI__> deichman:hasCompositionType ?compType }\n"
                 + "}";
         queryString = queryString.replaceAll("__WORKURI__", xuri.getUri());

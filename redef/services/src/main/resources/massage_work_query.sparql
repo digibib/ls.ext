@@ -9,7 +9,9 @@ CONSTRUCT {
                deich:subtitle ?subtitle ;
                deich:publicationYear ?publicationYear ;
                deich:contributor ?workContrib ;
-               deich:subject ?subject .
+               deich:subject ?subject ;
+               deich:hasWorkType ?hasWorkType ;
+               deich:workTypeLabel ?workTypeLabel .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
                deich:mainEntry ?mainEntry ;
@@ -23,6 +25,11 @@ WHERE {
         { <__WORKURI__> a deich:Work . }
   UNION { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
   UNION { <__WORKURI__> deich:partTitle ?partTitleO . BIND(str(?partTitleO) as ?partTitle) }
+  UNION { <__WORKURI__> deich:hasWorkType ?hasWorkType .
+        ?hasWorkType rdfs:label ?langWorkTypeLabel .
+        FILTER(LANGMATCHES(LANG(?langWorkTypeLabel), "no")) .
+        BIND(str(?langWorkTypeLabel) AS ?workTypeLabel)
+        }
   UNION { <__WORKURI__> deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
   UNION { <__WORKURI__> deich:contributor ?workContrib .
           ?workContrib a deich:Contribution ;

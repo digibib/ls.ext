@@ -1231,7 +1231,7 @@ module.exports = (app) => {
             { field: 'publicationYear' }
           ],
           legend: 'Søk etter tittel og/eller utgivelsesår',
-          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear' ],
+          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler',
           subItemsExpandTooltip: 'Vis/skjul utgivelser'

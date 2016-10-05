@@ -44,6 +44,8 @@
     "mainEntry": "deichman:mainEntry",
     "author": "http://data.deichman.no/role#author",
     "agent": "deichman:agent",
+    "hasWorkType": "deichman:hasWorkType",
+    "workTypeLabel": "deichman:workTypeLabel",
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent"
   }

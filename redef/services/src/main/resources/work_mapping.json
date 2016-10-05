@@ -59,6 +59,18 @@
     },
     "publicationYear": {
       "type": "string"
+    },
+    "workType": {
+      "type": "nested",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "index": "no"
+        }
+      }
+    },
+    "workTypeLabel": {
+      "type": "string"
     }
   }
 }

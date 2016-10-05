@@ -666,6 +666,7 @@ end
 When(/^jeg venter litt$/) do
   sleep 2
   @browser.execute_script("console.log('waiting...')")
+  Watir::Wait.while(BROWSER_WAIT_TIMEOUT) { @browser.span(:id => "ui-blocker").visible? }
 end
 
 When(/^viser trefflisten at personen har et verk fra før$/) do

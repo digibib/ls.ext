@@ -30,6 +30,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
+    Og jeg venter litt
     Og legger inn opplysningene om utgivelsen
     Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
     Og jeg venter litt
@@ -174,6 +175,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett ny person"-knappen
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Og jeg velger rollen "Forfatter"
     Så legger jeg inn et verksnavn i søkefeltet for å søke etter det
     Så får jeg ingen treff
@@ -209,6 +211,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Og at jeg skriver inn tilfeldig sted i feltet "Utgivelsessted" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt sted"-knappen
@@ -217,6 +220,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny serie"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så trykker jeg på "Neste steg: Beskriv verk"-knappen
     Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
     Så velger jeg emnetype "Generelt"
@@ -239,6 +243,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Og at jeg skriver inn tilfeldig sjanger i feltet "Sjanger" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny sjanger"-knappen
@@ -382,18 +387,22 @@ Egenskap: Katalogisere i arbeidsflyt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv verk"
     Og at jeg skriver inn tilfeldig verksnavn i feltet "Verk" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Og jeg velger verdien "Del av" for "Type relasjon"
     Og jeg venter litt
     Og jeg skriver verdien "1" for "Del nummer"
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
     Så frisker jeg opp nettleseren
     Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Verk" stemmer med verksnavnet
 

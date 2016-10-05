@@ -24,8 +24,11 @@ public class WorkModelToIndexMapperTest {
             + "            \"mainEntry\": true,\n"
             + "            \"role\": \"http://data.deichman.no/role#author\"\n"
             + "        }],\n"
-            + "        \"mainTitle\": \"Berlinerpoplene\"\n"
-
+            + "        \"mainTitle\": \"Berlinerpoplene\",\n"
+            + "        \"workTypeLabel\": \"Litteratur\",\n"
+            + "        \"hasWorkType\": {\n"
+            + "              \"uri\": \"http://data.deichman.no/workType#Literature\"\n"
+            + "         }\n"
             + "}";
 
     @Test
@@ -55,7 +58,8 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:literaryForm <http://data.deichman.no/literaryForm#fiction>,\n"
                 + "        <http://data.deichman.no/literaryForm#novel> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
-                + "    ns2:subject <http://data.deichman.no/subject/e1200005> .\n"
+                + "    ns2:subject <http://data.deichman.no/subject/e1200005> ;\n"
+                + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> .\n"
                 + "\n"
                 + "<http://data.deichman.no/person/h10834700> rdf:type ns2:Person ;\n"
                 + "    ns2:birthYear \"1957\" ;\n"
@@ -70,7 +74,8 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:nationality <http://data.deichman.no/nationality#ita> .\n"
                 + "\n"
                 + "<http://data.deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
-                + "    ns2:prefLabel \"Trondheim\"";
+                + "    ns2:prefLabel \"Trondheim\" .\n"
+                + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en \n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("work").createIndexDocument(model, workXuri);

@@ -1940,7 +1940,15 @@
                 return typeof ractive.get('targetUri.' + type) !== 'undefined'
               },
               getSearchResultItemLabel: function (item, itemLabelProperties) {
-                return _.compact(_.values(_.pick(item, itemLabelProperties))).join(' - ')
+                let inParensProperties = _.select(itemLabelProperties, function (property) {
+                  return property.indexOf('inParens:') === 0
+                })
+                let inParensValues = _.create(item, _.mapObject(_.pick(item, _.map(inParensProperties, unPrefix)), function (value) {
+                  return `(${value})`
+                }))
+                return _.compact(_.values(_.pick(inParensValues, _.map(itemLabelProperties, unPrefix)))).join(' - ')
+                  .replace('- (', ' (')
+                  .replace(') -', ') ')
               },
               tabIdFromDocumentUrl: function () {
                 var uri = URI.parse(document.location.href)
