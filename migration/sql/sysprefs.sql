@@ -17,6 +17,7 @@ IGNORE 1 LINES
 (variable, value);
 
 UPDATE systempreferences JOIN temptable USING (variable) SET systempreferences.value = temptable.value;
+INSERT IGNORE INTO systempreferences (variable,value) SELECT variable, value FROM temptable;
 DROP TEMPORARY TABLE temptable;
 
 /*!40000 ALTER TABLE `systempreferences` ENABLE KEYS */;
