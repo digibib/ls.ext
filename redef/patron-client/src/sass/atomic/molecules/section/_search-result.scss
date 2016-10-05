@@ -103,6 +103,10 @@
   text-align: center;
   margin-bottom: rhythm(1);
 
+  &:hover {
+    cursor: pointer;
+  }
+
   p {
     font-size: rhythm(2);
     display: inline-block;

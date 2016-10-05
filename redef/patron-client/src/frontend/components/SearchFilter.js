@@ -15,7 +15,7 @@ class SearchFilter extends React.Component {
 
   handleShowAllClick () {
     this.props.toggleFilterVisibility(this.props.aggregation)
-    ReactDOM.findDOMNode(this).scrollIntoView();
+    ReactDOM.findDOMNode(this).scrollIntoView()
   }
 
   renderEmpty () {
@@ -80,7 +80,7 @@ class SearchFilter extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"

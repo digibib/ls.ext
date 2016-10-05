@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 import firstBy from 'thenby'
-import { Link } from 'react-router'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import Publication from './Publication'
@@ -18,7 +17,7 @@ import MediaType from '../components/MediaType'
 
 class Publications extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.mediaTypeUri = {}
     this.handleAnchorClick = this.handleAnchorClick.bind(this)
@@ -138,7 +137,7 @@ class Publications extends React.Component {
 
   renderPublicationsMediaQueries (publications) {
     return (
-      <div>
+      <div key={publications}>
         <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
           {this.renderPublications(publications, 3)}
         </MediaQuery>
@@ -213,8 +212,8 @@ class Publications extends React.Component {
     return publicationHoldersByMediaType
   }
 
-  handleAnchorClick(mediaTypeUri) {
-    ReactDOM.findDOMNode(this.mediaTypeUri[mediaTypeUri]).scrollIntoView();
+  handleAnchorClick (mediaTypeUri) {
+    ReactDOM.findDOMNode(this.mediaTypeUri[mediaTypeUri]).scrollIntoView()
   }
 
   renderMediaTypeAnchors (publicationHoldersByMediaType) {
@@ -222,7 +221,6 @@ class Publications extends React.Component {
       <div className="mediatype-selector">
       {
         Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
-          const mediaTypeFragment = getFragment(mediaTypeUri)
           const mediaType = {uri: mediaTypeUri}
           return (
             <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[mediaTypeUri]} key={mediaTypeUri}>
@@ -248,7 +246,7 @@ class Publications extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
@@ -263,7 +261,7 @@ class Publications extends React.Component {
           Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
             const mediaTypeFragment = getFragment(mediaTypeUri)
             return (
-              <section className="mediatype-group" ref={e=> this.mediaTypeUri[mediaTypeUri] = e} key={mediaTypeUri} data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
+              <section className="mediatype-group" ref={e => this.mediaTypeUri[mediaTypeUri] = e} key={mediaTypeUri} data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
                 <header className="other-publications-title">
                   <ClickableElement
                     onClickAction={this.props.toggleParameterValue}
@@ -279,7 +277,7 @@ class Publications extends React.Component {
                 </header>
                 <ReactCSSTransitionGroup
                   transitionName="fade-in"
-                  transitionAppear={true}
+                  transitionAppear
                   transitionAppearTimeout={500}
                   transitionEnterTimeout={500}
                   transitionLeaveTimeout={500}
@@ -308,7 +306,9 @@ Publications.propTypes = {
   workLanguage: PropTypes.string,
   mediaQueryValues: PropTypes.object,
   libraries: PropTypes.object,
-  audiences: PropTypes.array.isRequired
+  audiences: PropTypes.array.isRequired,
+  searchFilterActions: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({

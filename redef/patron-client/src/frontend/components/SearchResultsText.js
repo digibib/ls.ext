@@ -19,7 +19,7 @@ class SearchResultsText extends React.Component {
       return (
         <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transtionLeave={false}
         transitionEnterTimeout={500}
         component="div"

@@ -55,6 +55,10 @@
 .secondary-navigation {
   @include span(12 of 12);
 
+  :hover {
+    cursor: pointer;
+  }
+
   @include breakpoint($small) {
     @include span(11 of 12);
     float: right;
@@ -69,7 +73,9 @@
       display: inline-block;
       margin: rhythm(3);
     }
+
   }
+
 }
 
 //TAB BAR

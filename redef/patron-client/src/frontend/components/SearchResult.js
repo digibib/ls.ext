@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import Items from '../components/Items'
@@ -102,17 +101,29 @@ class SearchResult extends React.Component {
     }
   }
 
-  renderSeries (series) {
+  renderSeries (publication) {
     return (
       <div data-automation-id="publication_series">
         <strong><FormattedMessage {...messages.partOfSeries} /></strong>
-        {series.map((serie, i) => (
+        <span>
+          <Link to="#">Serie placeholder</Link>
+        </span>
+      </div>
+    )
+
+    // TOO: When series information is available ...
+    /*
+    return (
+      <div data-automation-id="publication_series">
+        <strong><FormattedMessage {...messages.partOfSeries} /></strong>
+        {publication.series.map((serie, i) => (
           <span key={serie}>
-              <Link to={this.seriesSearchLink(serie)}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
-            </span>
+            <Link to={this.seriesSearchLink(serie)}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
+          </span>
         ))}
       </div>
     )
+    */
   }
 
   getResultUrl (result) {
@@ -158,7 +169,6 @@ class SearchResult extends React.Component {
 
   render () {
     const { result } = this.props
-    const firstPublishedYear = result.publication.firstPublicationYear
     const pubFormats = new Set()
     result.publication.formats = result.publication.formats || []
     result.publication.formats.forEach(format => {
@@ -172,7 +182,7 @@ class SearchResult extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
@@ -196,13 +206,7 @@ class SearchResult extends React.Component {
           {this.renderDisplayTitle(result)}
           {this.renderContributors(result.publication.contributors)}
           {this.renderOriginalTitle(result.publication)}
-          {firstPublishedYear
-            ? <p>
-              <strong><FormattedMessage {...messages.firstPublished} /></strong> <span>{firstPublishedYear}</span>
-            </p>
-            : null
-          }
-
+          {this.renderSeries(result.publication)}
           {result.publication.abstract
             ? <p className="abstract">{result.publication.abstract}</p>
             : null
@@ -218,9 +222,6 @@ class SearchResult extends React.Component {
           <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" />
         </div>),
           (<div key="entry-more-content" className="entry-content-more">
-            {result.publication.series
-              ? this.renderSeries(result.publication.series)
-              : null}
             {this.renderItems(result)}
           </div>) ]
           : (<div className="show-more-content" onClick={this.handleShowStatusClick}>

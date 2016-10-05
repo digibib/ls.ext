@@ -45,7 +45,7 @@ class UserLoans extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="section"
@@ -59,7 +59,7 @@ class UserLoans extends React.Component {
               <th><FormattedMessage {...messages.title} /></th>
               <th><FormattedMessage {...messages.author} /></th>
               <th><FormattedMessage {...messages.orderedDate} /></th>
-              {/*<th><FormattedMessage {...messages.waitingPeriod} /></th>*/}
+              {/* <th><FormattedMessage {...messages.waitingPeriod} /></th> */}
               <th><FormattedMessage {...messages.pickupLocation} /></th>
             </tr>
             </thead>
@@ -68,7 +68,7 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{item.orderedDate}</td>
-                {/*<td data-automation-id="UserLoans_reservation_waitingPeriod">{item.waitingPeriod}</td>*/}
+                {/* <td data-automation-id="UserLoans_reservation_waitingPeriod">{item.waitingPeriod}</td> */}
                 <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td>
                   <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}

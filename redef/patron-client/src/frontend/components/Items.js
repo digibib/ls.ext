@@ -14,7 +14,7 @@ class Items extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={300}
         component="table">

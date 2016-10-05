@@ -12,7 +12,6 @@ import Subjects from '../components/Subjects'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ParameterActions from '../actions/ParameterActions'
-import SearchFilterBox from '../components/SearchFilterBox'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
 import MediaQuery from 'react-responsive'
 
@@ -44,8 +43,8 @@ class Work extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
         transitionAppearTimeout={10000}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
@@ -59,8 +58,8 @@ class Work extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
         transitionAppearTimeout={10000}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
@@ -147,20 +146,25 @@ class Work extends React.Component {
     )
   }
 
-  /*
   renderRelations (work) {
     return (
       <div>
-        {work.isRelatedTo.map(relation => (
-          <div className="meta-item" key={relation.hasRelationType}>
-            <span className="meta-label">{this.props.intl.formatMessage({ id: relation.hasRelationType })}: </span>
-            <span className="meta-content">Navn på relasjon</span>
-          </div>
-        ))}
+        {/*
+          foreach relation
+        */}
+        {this.renderRelation(work)}
       </div>
     )
   }
-  */
+
+  renderRelation (work) {
+    return (
+      <div className="meta-item">
+        <span className="meta-label"><FormattedMessage {...messages.labelRelation} />: </span>
+        <span className="meta-content">Placholder relation</span>
+      </div>
+    )
+  }
 
   renderDeweynr (work) {
     return (
@@ -196,8 +200,8 @@ class Work extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
-        transitionLeave={true}
+        transitionAppear
+        transitionLeave
         transitionAppearTimeout={10000}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
@@ -214,26 +218,20 @@ class Work extends React.Component {
   }
 
   renderAvailableMediaTypes (publications) {
-    var mediaTypes = [];
+    const mediaTypes = []
     publications.forEach(function (publication) {
       publication.mediaTypes.forEach(function (mediaType) {
-        if (mediaTypes.indexOf(mediaType.split(".no/").pop()) < 0) mediaTypes.push(mediaType.split(".no/").pop());
-      });
-    });
+        if (mediaTypes.indexOf(mediaType.split('.no/').pop()) < 0) mediaTypes.push(mediaType.split('.no/').pop())
+      })
+    })
     return (
       <ul>
         <li>Here they come</li>
         {mediaTypes.map(function (mediaType) {
-          return <li><Link to={mediaType}>{mediaType}</Link></li>;
+          return <li><Link to={mediaType}>{mediaType}</Link></li>
         })}
       </ul>
     )
-
-    // return (
-    //   <ul>
-    //       {mediaTypes.map(medaType) => {<li>{mediaType}</li>}}
-    //   </ul>
-    // )
   }
 
   getMainTitleAndPartTitle (work) {
@@ -250,7 +248,6 @@ class Work extends React.Component {
   }
 
   render () {
-
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
@@ -274,7 +271,7 @@ class Work extends React.Component {
       <div className="wrapper">
         <ReactCSSTransitionGroup
           transitionName="fade-in"
-          transitionAppear={true}
+          transitionAppear
           transitionAppearTimeout={10000}
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
@@ -289,26 +286,26 @@ class Work extends React.Component {
             </header>
           ) : ''}
 
-          <section className="work-information">
-            <h1 data-automation-id="work_title">{mainTitle}</h1>
-            <h2>{work.partTitle ? `${work.partTitle} ${work.partNumber}` : work.partNumber}</h2>
-            {this.renderAuthor(work)}
-            {this.renderOriginalTitle(work)}
-            {this.renderOriginalLanguage(work)}
-            {this.renderYear(work)}
-            {/*this.renderOriginalReleaseDate(work)*/}
-            <Contributors contributors={work.contributors} />
-            {this.renderExcerpt(work)}
-            <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
-              {this.renderAdditionalInfo(work)}
-            </MediaQuery>
-          </section>
+            <section className="work-information">
+              <h1 data-automation-id="work_title">{mainTitle}</h1>
+              <h2>{work.partTitle ? `${work.partTitle} ${work.partNumber}` : work.partNumber}</h2>
+              {this.renderAuthor(work)}
+              {this.renderOriginalTitle(work)}
+              {this.renderOriginalLanguage(work)}
+              {this.renderYear(work)}
+              {/* this.renderOriginalReleaseDate(work) */}
+              <Contributors contributors={work.contributors} />
+              {this.renderExcerpt(work)}
+              <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
+                {this.renderAdditionalInfo(work)}
+              </MediaQuery>
+            </section>
 
           <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
             {this.renderAdditionalInfoContent(work)}
           </MediaQuery>
 
-          {/*this.renderAvailableMediaTypes(work.publications)*/}
+            {/* this.renderAvailableMediaTypes(work.publications) */}
 
           <Publications locationQuery={this.props.location.query}
                         expandSubResource={this.props.resourceActions.expandSubResource}
@@ -342,7 +339,8 @@ Work.propTypes = {
   libraries: PropTypes.object.isRequired,
   items: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  audiences: PropTypes.array
+  audiences: PropTypes.array,
+  mediaQueryValues: PropTypes.object
 }
 
 export const messages = defineMessages({

@@ -134,7 +134,7 @@ class UserInfo extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="section"

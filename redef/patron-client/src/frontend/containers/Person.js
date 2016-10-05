@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import * as ResourceActions from '../actions/ResourceActions'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 class Person extends React.Component {
   componentWillMount () {
@@ -19,13 +20,19 @@ class Person extends React.Component {
   }
 
   renderEmpty () {
-    return <div />
-  }
-
-  renderLifeSpan (person) {
-    if (person.birthYear) {
-      return `(${person.birthYear}-${person.deathYear || ''})`
-    }
+    return (
+      <ReactCSSTransitionGroup
+        transitionName="fade-in"
+        transitionAppear
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="div"
+        className="wrapper">
+        <article className="work-entry loading">
+          <i className="icon-spin4 animate-spin" />
+        </article>
+      </ReactCSSTransitionGroup>
+    )
   }
 
   renderWorks (person) {
@@ -47,13 +54,27 @@ class Person extends React.Component {
     })
   }
 
+  renderLifeSpan (person) {
+    if (person.birthYear) {
+      return (
+        <div className="meta-item lifespan">
+          <span className="meta-content" data-automation-id="person-nationality">
+            {`(${person.birthYear}-${person.deathYear || ''})`}
+          </span>
+        </div>
+      )
+    }
+  }
+
   renderNationality (person) {
     if (person.nationality) {
       return (
-        <p>
-          <strong><FormattedMessage {...messages.nationality} /></strong>&nbsp;<span
-          data-automation-id="person-nationality">{this.props.intl.formatMessage({ id: person.nationality })}</span>
-        </p>
+        <div className="meta-item">
+          <span className="meta-label"><FormattedMessage {...messages.nationality} /></span>
+          <span className="meta-content" data-automation-id="person-nationality">
+            {this.props.intl.formatMessage({ id: person.nationality })}
+          </span>
+        </div>
       )
     }
   }
@@ -69,26 +90,29 @@ class Person extends React.Component {
     }
 
     return (
-      <div className="container">
-        <div className="panel row person-info">
-          <div className="col person-image hidden">
-            TODO
-          </div>
-          <div className="col">
-            <h2><span data-automation-id="person-title">{person.personTitle}</span>&nbsp;<span
-              data-automation-id="person-name">{person.name}</span></h2>
-            <h3><span data-automation-id="lifespan">{this.renderLifeSpan(person)}</span></h3>
-            <div className="small-text">
-              {this.renderNationality(person)}
-            </div>
-          </div>
-        </div>
-        <div className="panel column full">
-          <div className="col">
-            <h3><FormattedMessage {...messages.work} /></h3>
+      <div className="wrapper">
+        <ReactCSSTransitionGroup
+          transitionName="fade-in"
+          transitionAppear
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+          component="article"
+          className="person">
+          <header>
+            <h1>
+              <span data-automation-id="person-title">{person.personTitle}</span>
+              <span data-automation-id="person-name">{person.name}</span>
+            </h1>
+            {this.renderLifeSpan(person)}
+            {this.renderNationality(person)}
+          </header>
+          <section className="person-works">
+            <header>
+              <h2><FormattedMessage {...messages.work} /></h2>
+            </header>
             {this.renderWorks(person)}
-          </div>
-        </div>
+          </section>
+        </ReactCSSTransitionGroup>
       </div>
     )
   }

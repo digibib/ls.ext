@@ -49,7 +49,7 @@ class Search extends React.Component {
         page: page
       }
       this.props.dispatch(push({ pathname: '/search', query: newQuery }))
-      ReactDOM.findDOMNode(this).scrollIntoView();
+      ReactDOM.findDOMNode(this).scrollIntoView()
     }
   }
 
@@ -81,7 +81,7 @@ class Search extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"

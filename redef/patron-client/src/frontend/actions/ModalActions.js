@@ -13,7 +13,7 @@ export function showModal (modalType, modalProps) {
 export function hideModal () {
   // TODO: A quick hack to work around an issue with th ereact modal.
   // aria-hidden is not removed upon closing the modal.
-  document.getElementById('app').removeAttribute('aria-hidden');
+  document.getElementById('app').removeAttribute('aria-hidden')
   // End of hack
   return {
     type: types.HIDE_MODAL

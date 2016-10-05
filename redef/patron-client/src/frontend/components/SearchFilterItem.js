@@ -12,7 +12,7 @@ class SearchFilterItem extends React.Component {
     event.preventDefault()
     const { filter: { id } } = this.props
     this.props.toggleFilter(id)
-    ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView();
+    ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView()
   }
 
   render () {

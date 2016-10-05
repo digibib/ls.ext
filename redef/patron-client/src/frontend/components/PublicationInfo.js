@@ -1,30 +1,19 @@
 import React, { PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import Items from './Items'
-import { groupByBranch } from '../utils/sorting'
 
 class PublicationInfo extends React.Component {
-  // constructor (props) {
-  //   super(props)
-  //   this.handleClick = this.handleClick.bind(this)
-  // }
-
-  // handleClick () {
-  //   this.props.expandSubResource(null, true)
-  // }
-
   renderItems (items) {
     if (items) {
       return (
         <ReactCSSTransitionGroup
-          transitionName="fade-in"
-          transitionAppear={true}
-          transitionAppearTimeout={10000}
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}
-          component="table"
-          className="test">
+        transitionName="fade-in"
+        transitionAppear
+        transitionAppearTimeout={10000}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+        component="table"
+        className="test">
           <tbody>
           <tr>
             <th><FormattedMessage {...messages.branch} /></th>
@@ -70,8 +59,8 @@ class PublicationInfo extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppear={true}
         transitionAppearTimeout={10000}
+        transitionAppear
         transitionEnterTimeout={500}
         transitionLeaveTimeout={300}
         component="section"

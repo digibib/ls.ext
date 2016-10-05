@@ -98,7 +98,7 @@
         <div>
             <ReactCSSTransitionGroup
               transitionName="fade-in"
-              transitionAppear={true}
+              transitionAppear
               transitionAppearTimeout={10000}
               transitionEnterTimeout={500}
               transitionLeaveTimeout={500}
@@ -133,7 +133,7 @@
 
           <ReactCSSTransitionGroup
             transitionName="fade-in"
-            transitionAppear={true}
+            transitionAppear
             transitionAppearTimeout={10000}
             transitionEnterTimeout={500}
             transitionLeaveTimeout={500}

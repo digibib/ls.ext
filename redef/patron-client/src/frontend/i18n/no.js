@@ -57,7 +57,7 @@ export default {
   'Navigation.logIn': 'Logg inn',
   'Navigation.logout': 'Logg ut',
   'Person.noPerson': 'Ingen person',
-  'Person.nationality': 'nasjonalitet:',
+  'Person.nationality': 'Nasjonalitet:',
   'Person.work': 'Verk',
   'Publication.available': 'Ledig',
   'Publication.unavailable': 'Ikke ledig',

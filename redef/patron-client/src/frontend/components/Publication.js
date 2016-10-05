@@ -14,7 +14,6 @@ class Publication extends React.Component {
   render () {
     const { publication, startReservation } = this.props
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
-    const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
     const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: this.renderTitle(publication) })
     return (
         <article onClick={this.handleClick}
