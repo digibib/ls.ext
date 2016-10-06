@@ -43,7 +43,7 @@ export default {
   'Items.shelfmark': 'oppstilling',
   'Items.noItems': 'Vi har ingen eksemplarer',
   'Items.numberOfCopies': 'Eksemplarer ({numberOfCopies})',
-  'Login.username': 'Lånekortnummer:',
+  'Login.username': 'Lånenummer:',
   'Login.password': 'PIN-kode:',
   'Login.logIn': 'Logg inn',
   'Login.cancel': 'Avbryt',
