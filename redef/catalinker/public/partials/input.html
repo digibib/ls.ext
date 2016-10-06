@@ -85,12 +85,10 @@
                                 {{/if}}
                                 {{/with}}
                                 {{/each}}
-                                <span>
                                     <button tabindex="0" class="pure-button pure-button-primary add-item-button"
                                        {{#if typeof subjectType === 'undefined' || values.length == 0 || (!resourceIsLoaded(subjectType)) || ../../../inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
                                       title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
                                        on-click="saveObject:{{inputValueIndex}}" >Legg til</button>
-                                </span>
                             {{/if}}
                         {{/with}}
 
