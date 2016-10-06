@@ -171,3 +171,48 @@ WHERE {
 	FILTER (?format != format:toBeDeleted && ?format != format:E-book)
 }
 ;
+
+
+
+# 8) Remove contentAdaptation mapped as formatAdaptation
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX adaptation: <http://data.deichman.no/formatAdaptation#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+	?publication :hasFormatAdaptation ?adaptation .
+}
+
+WHERE {
+	?publication :hasFormatAdaptation ?adaptation ;
+		a :Publication .
+	VALUES ?adaptation {adaptation:ta adaptation:tb}
+}
+;
+
+
+
+# 9) Remove formatAdaptation mapped as contentAdaptation
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX adaptation: <http://data.deichman.no/contentAdaptation#>
+
+WITH <http://deichman.no/migration>
+
+DELETE {
+	?publication :hasContentAdaptation ?adaptation .
+}
+
+WHERE {
+	?publication :hasContentAdaptation ?adaptation ;
+		a :Publication .
+	VALUES ?adaptation {adaptation:tc adaptation:td adaptation:te adaptation:tf adaptation:tg adaptation:tj}
+}
+;
+

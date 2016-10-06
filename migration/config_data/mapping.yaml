@@ -3917,6 +3917,35 @@
                 c: "collectiveBiography"
                 d: "biographicalContent"
     -
+      '015':
+        subfields:
+          -
+            a:
+              object:
+                datatype: "literal"
+              conditions:
+                subfield:
+                  b:
+                    subs:
+                      bibbi: "RAW.bibbiId"
+                      bibliofilid: "RAW.bibliofilId"
+                      dugnadsbasenibibliofil: "RAW.dugnadsbaseId"
+                      ebokbibid: "RAW.ebokbibid"
+                    orig: "bibbi|bibliofilid|dugnadsbasenibibliofil|ebokbibid"
+    -
+      '015':
+        subfields:
+          -
+            b:
+              object:
+                datatype: "literal"
+              conditions:
+                subfield:
+                  b:
+                    subs:
+                      dfb: "RAW.recordSource"
+                    orig: "dfb"
+    -
       '019':
         subfields:
           -
