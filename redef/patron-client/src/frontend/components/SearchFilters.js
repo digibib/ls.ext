@@ -8,6 +8,12 @@ class SearchFilters extends React.Component {
   constructor (props) {
     super(props)
     this.handleFiltersOpenClick = this.handleFiltersOpenClick.bind(this)
+    this.toggleFilterVisibility = this.toggleFilterVisibility.bind(this)
+  }
+
+  componentDidMount () {
+    window.addEventListener('resize', this.toggleFilterVisibility)
+    this.toggleFilterVisibility()
   }
 
   renderEmpty () {
@@ -20,9 +26,22 @@ class SearchFilters extends React.Component {
     this.props.toggleAllFiltersVisibility()
   }
 
+  toggleFilterVisibility () {
+    if (window.innerWidth < 668) {                           // If screen size is mobile
+      if (this.props.locationQuery.hideFilters !== null) { // And filters are visible
+        this.props.toggleAllFiltersVisibility()             // Hide the filters
+      }
+    } else {                                                // If screen size is tatblet or above
+      if (this.props.locationQuery.hideFilters === null) { // And filters are hidden
+        this.props.toggleAllFiltersVisibility()             // Show the filters
+      }
+    }
+  }
+
   render () {
     const groupedFilters = {}
     const buttonClass = (this.props.locationQuery.hideFilters === null) ? 'filters-hidden' : 'filters-visible'
+
     if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
         const aggregation = filter.id.split('_')[0]
