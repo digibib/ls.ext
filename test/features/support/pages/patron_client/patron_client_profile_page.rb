@@ -11,8 +11,8 @@ class PatronClientProfilePage < PageRoot
     self
   end
 
-  def borrowernumber
-    wait_retry { @browser.element(data_automation_id: 'UserInfo_borrowerNumber').exists? }
-    @browser.element(data_automation_id: 'UserInfo_borrowerNumber').text
+  def card_number
+    wait_retry { @browser.element(data_automation_id: 'UserInfo_cardNumber').exists? }
+    @browser.element(data_automation_id: 'UserInfo_cardNumber').text
   end
 end

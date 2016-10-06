@@ -3,13 +3,13 @@ import { Link } from 'react-router'
 import { injectIntl, intlShape } from 'react-intl'
 
 const Contributors = ({ contributors, intl }) => {
-    return (
-      <ul className="contributors">
-        {Object.keys(contributors).map(role => (
-          <li key={role}>
-            <span className="label">{intl.formatMessage({ id: role })}</span>:&nbsp;
-            {contributors[ role ].map(person =>
-              <span className="content" key={person.uri}>
+  return (
+    <ul className="contributors">
+      {Object.keys(contributors).map(role => (
+        <li key={role}>
+          <span className="label">{intl.formatMessage({ id: role })}</span>:&nbsp;
+          {contributors[ role ].map(person =>
+            <span className="content" key={person.uri}>
                 <Link
                   data-automation-id="work_contributor_link"
                   key={person.relativeUri + role}

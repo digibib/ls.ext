@@ -156,7 +156,7 @@ When(/^jeg logger inn$/) do
 end
 
 When(/^skal jeg se informasjonen min$/) do
-  @site.PatronClientProfilePage.borrowernumber.should eq @active[:patron].borrowernumber
+  @site.PatronClientProfilePage.card_number.should eq @active[:patron].borrowernumber
 end
 
 When(/^låneren trykker bestill på en utgivelse$/) do

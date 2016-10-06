@@ -150,8 +150,8 @@ class Work extends React.Component {
     return (
       <div>
         {/*
-          foreach relation
-        */}
+         foreach relation
+         */}
         {this.renderRelation(work)}
       </div>
     )
@@ -219,32 +219,32 @@ class Work extends React.Component {
 
   renderAvailableMediaTypes (publications) {
     const mediaTypes = []
-    publications.forEach(function (publication) {
-      publication.mediaTypes.forEach(function (mediaType) {
+    publications.forEach(publication => {
+      publication.mediaTypes.forEach(mediaType => {
         if (mediaTypes.indexOf(mediaType.split('.no/').pop()) < 0) mediaTypes.push(mediaType.split('.no/').pop())
       })
     })
     return (
       <ul>
         <li>Here they come</li>
-        {mediaTypes.map(function (mediaType) {
-          return <li><Link to={mediaType}>{mediaType}</Link></li>
-        })}
+        {mediaTypes.map(mediaType => <li><Link to={mediaType}>{mediaType}</Link></li>)}
       </ul>
     )
   }
 
-  getMainTitleAndPartTitle (work) {
+  getFieldsFromChosenPublication (work) {
     let mainTitle = work.mainTitle
     let partTitle = work.partTitle
+    let partNumber = work.partNumber
     if (this.props.params.publicationId) {
       const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
       if (chosenPublication) {
         mainTitle = chosenPublication.mainTitle
         partTitle = chosenPublication.partTitle
+        partNumber = chosenPublication.partNumber
       }
     }
-    return { mainTitle, partTitle }
+    return { mainTitle, partTitle, partNumber }
   }
 
   render () {
@@ -264,7 +264,7 @@ class Work extends React.Component {
       return newPublication
     })
 
-    const { mainTitle, partTitle } = this.getMainTitleAndPartTitle(work)
+    const { mainTitle, partTitle, partNumber } = this.getFieldsFromChosenPublication(work)
     const { back } = this.props.location.query
 
     return (
@@ -286,26 +286,26 @@ class Work extends React.Component {
             </header>
           ) : ''}
 
-            <section className="work-information">
-              <h1 data-automation-id="work_title">{mainTitle}</h1>
-              <h2>{work.partTitle ? `${work.partTitle} ${work.partNumber}` : work.partNumber}</h2>
-              {this.renderAuthor(work)}
-              {this.renderOriginalTitle(work)}
-              {this.renderOriginalLanguage(work)}
-              {this.renderYear(work)}
-              {/* this.renderOriginalReleaseDate(work) */}
-              <Contributors contributors={work.contributors} />
-              {this.renderExcerpt(work)}
-              <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
-                {this.renderAdditionalInfo(work)}
-              </MediaQuery>
-            </section>
+          <section className="work-information">
+            <h1 data-automation-id="work_title">{mainTitle}</h1>
+            <h2>{partTitle ? `${partTitle} ${partNumber}` : partNumber}</h2>
+            {this.renderAuthor(work)}
+            {this.renderOriginalTitle(work)}
+            {this.renderOriginalLanguage(work)}
+            {this.renderYear(work)}
+            {/* this.renderOriginalReleaseDate(work) */}
+            <Contributors contributors={work.contributors} />
+            {this.renderExcerpt(work)}
+            <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
+              {this.renderAdditionalInfo(work)}
+            </MediaQuery>
+          </section>
 
           <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
             {this.renderAdditionalInfoContent(work)}
           </MediaQuery>
 
-            {/* this.renderAvailableMediaTypes(work.publications) */}
+          {/* this.renderAvailableMediaTypes(work.publications) */}
 
           <Publications locationQuery={this.props.location.query}
                         expandSubResource={this.props.resourceActions.expandSubResource}

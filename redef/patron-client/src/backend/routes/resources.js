@@ -115,7 +115,7 @@ function transformResponse (work) {
     if (publication.publishedBy) {
       publication.publisher = publication.publishedBy.name
     }
-    if(publication.hasPlaceOfPublication) {
+    if (publication.hasPlaceOfPublication) {
       publication.placeOfPublication = publication.hasPlaceOfPublication.prefLabel
     }
   })
