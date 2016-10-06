@@ -88,6 +88,11 @@
 
   h3 {
     margin-bottom: 0;
+    :hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
   }
 
 }

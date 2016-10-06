@@ -9,18 +9,34 @@
     text-align: center;
 
     a {
-      max-width: 100%;
       display: inline-block;
+      max-width: 100%;
     }
 
     img {
-      max-width: 95%;
       display: inline-block;
       transition: all 0.5s;
       margin-top: 10px;
+      max-width: 95%;
 
       &:hover {
         max-width: 100%;
+        margin-top: 0;
+      }
+
+    }
+
+    i {
+      font-size: 3em;
+      color: $mediumGreyColor;
+      -webkit-transition: all 0.5s ease-in-out;
+      -moz-transition: all 0.5s ease-in-out;
+      -o-transition: all 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
+      margin-top: 0.5em;
+
+      &:hover {
+        font-size: 3.5em;
         margin-top: 0;
       }
 

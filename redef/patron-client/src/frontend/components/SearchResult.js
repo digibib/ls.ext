@@ -6,6 +6,7 @@ import Items from '../components/Items'
 import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import { groupByBranch } from '../utils/sorting'
+import Constants from '../constants/Constants'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -192,7 +193,7 @@ class SearchResult extends React.Component {
         <aside className="book-cover">
           <Link to={this.getResultUrl(result)} className="book-cover-item">
             {result.image ? <img src={result.image} alt={coverAltText} />
-              : <img src={missingCoverImage} alt={missingCoverAltText} />}
+              : <i aria-label={missingCoverAltText} className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ result.mediaTypes[0].uri ] ]} />}
           </Link>
         </aside>
 
