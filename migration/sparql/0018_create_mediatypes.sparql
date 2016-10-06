@@ -1,29 +1,3 @@
-# Remove format SignLanguageMovie
-
-SPARQL
-PREFIX : <http://data.deichman.no/ontology#>
-PREFIX format: <http://data.deichman.no/format#>
-PREFIX adaptation: <http://data.deichman.no/formatAdaptation#>
-
-WITH <http://deichman.no/migration>
-
-MODIFY
-
-DELETE {
-  ?publication :format format:SignLanguageMovie
-}
-
-INSERT {
-  ?publication :formatAdaptation adaptation:signLanguage .
-}
-
-WHERE {
-  ?publication :format format:SignLanguageMovie ;
-    a :Publication
-}
-;
-
-
 # 1) Create media type for comic books
 
 SPARQL
@@ -72,6 +46,7 @@ WHERE {
     VALUES (?format ?mediaType) {
       (format:DAISY                   mediaType:Audiobook)
       (format:ComputerFile            mediaType:E-book)
+      (format:SignLanguageMovie       mediaType:Book)
       (format:Videotape               mediaType:Film)
       (format:DVD                     mediaType:Film)
       (format:Blu-ray                 mediaType:Film)
@@ -329,7 +304,33 @@ WHERE {
 ;
 
 
-# 11) Delete redundant formats
+# 11) Replace format SignLanguageMovie with format adaptation
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX adaptation: <http://data.deichman.no/formatAdaptation#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?publication :format format:SignLanguageMovie .
+}
+
+INSERT {
+  ?publication :formatAdaptation adaptation:signLanguage .
+}
+
+WHERE {
+  ?publication :format format:SignLanguageMovie ;
+    a :Publication .
+}
+;
+
+
+# 12) Delete redundant formats
 SPARQL
 DEFINE sql:log-enable 2
 PREFIX : <http://data.deichman.no/ontology#>
