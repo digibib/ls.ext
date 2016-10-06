@@ -207,7 +207,7 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/sip2proxy:727c32413b62521deadb398ab4bd997635487274"
+    image: "digibib/sip2proxy:edb845a5b3ccb9c398784d5565d659eb7999ca9a"
     networks:
       - backend
     ports:
