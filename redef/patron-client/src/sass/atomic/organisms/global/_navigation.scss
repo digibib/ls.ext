@@ -17,10 +17,10 @@
 
 // MOBILE NAV
 .btn-mobile-toggle {
-  float: right;
   height: rhythm(4);
   width: rhythm(4);
   cursor: pointer;
+  float: right;
 }
 .primary-mobile-menu {
   transition: max-height 0.5s;
@@ -30,18 +30,18 @@
     max-height: 0;
   }
   ul {
-    width: 100%;
     list-style: none;
+    width: 100%;
     padding: 0;
     margin: 0;
     li {
       width: 100%;
       a {
-        padding: rhythm(3) rhythm(6);
         border-bottom: 1px solid $darkGreyColor;
-        display: block;
-        color: $blackColor;
+        padding: rhythm(3) rhythm(6);
         text-decoration: none;
+        color: $blackColor;
+        display: block;
         &:hover {
           background-color: #767676;
           color: $white;
@@ -56,25 +56,34 @@
 
 // FOOTER MENU
 .secondary-navigation {
-  @include span(12 of 12);
+  @include span(12);
 
-  :hover {
+  a, a:hover{
+    color: $white;
+  }
+
+  span:hover {
+    text-decoration: underline;
     cursor: pointer;
   }
 
   @include breakpoint($small) {
-    @include span(11 of 12);
-    float: right;
     text-align: right;
+    float: right;
   }
 
   ul, li {
-    list-style-type: none;
     margin-bottom: rhythm(3);
+    list-style-type: none;
 
     @include breakpoint($small) {
       display: inline-block;
       margin: rhythm(3);
+
+      &:last-child {
+        margin-right: 0;
+      }
+
     }
 
   }
@@ -85,13 +94,13 @@
 .tab-bar {
   @include span(12);
   @include container;
-  margin: 0;
-  padding: 0;
   font-size: rhythm(2.5);
+  padding: 0;
+  margin: 0;
 
   .tab-bar-tab {
-    float: left;
     display: inline-block;
+    float: left;
   }
 
   li {
@@ -107,16 +116,16 @@
   }
 
   a {
-    padding: 0.5em;
-    display: block;
-    margin-bottom: 1px;
     border-bottom: 1px solid $greyColor;
+    margin-bottom: 1px;
+    display: block;
+    padding: 0.5em;
 
     &:hover, &:active, &:focus {
       border-bottom: 2px solid $blackColor;
       text-decoration: none;
-      margin-bottom: 0;
       font-weight: bold;
+      margin-bottom: 0;
     }
 
   }

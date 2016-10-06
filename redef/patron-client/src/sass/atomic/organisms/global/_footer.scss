@@ -1,32 +1,51 @@
 .main-footer {
-  @include span(12 of 12);
+  @include container;
+  padding-bottom: rhythm(2);
   background: $blackColor;
-  color: $white;
   line-height: 1.5em;
+  color: $white;
+  width: 100%;
+}
+
+.footer-content {
+  @include wrapper-container;
 
   .footer-text {
-    @include span(12 of 12);
-
-
-    @include breakpoint($small){
-      @include span(3 of 12);
-      @include push(2 of 12);
-      margin-top: rhythm(2)
-    }
+    @include span(12);
   }
-  
+
+  .footer-right {
+    @include span(12);
+    @include container;
+    margin-top: rhythm(2);
+  }
+
+  .feedback {
+    @include span(10);
+
+    a {
+      color: $white;
+    }
+
+  }
+
   .footer-icon {
-    @include span(1 of 12);
-    margin: rhythm(2);
+    @include span(2 last);
+  }
 
+}
 
-    @include breakpoint($small){
-      float: right;
-      margin-top: rhythm(22);
+ @include breakpoint($small) {
 
-      img {
-        width: 50%;
-      }
+  .footer-content {
+
+    .footer-text {
+      @include span(6);
+    }
+
+    .footer-right {
+      @include span(6 last);
+      text-align: right;
     }
 
   }
