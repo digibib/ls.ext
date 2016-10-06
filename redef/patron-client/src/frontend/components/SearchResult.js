@@ -198,6 +198,7 @@ class SearchResult extends React.Component {
         <article className="entry-content">
 
           <div className="entry-content-icon">
+            <FormattedMessage {...messages.availableAs} />
             {result.mediaTypes.map(mediaType => {
               return <MediaType key={mediaType.uri} mediaType={mediaType} />
             })}
