@@ -448,7 +448,7 @@ end
 
 
 When(/^sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid$/) do
-  @browser.element(:text => "(#{@context[:person_birthyear]}–#{@context[:person_deathyear]}) - #{@context[:person_nationality]}").should exist
+  @browser.element(:text => "(#{@context[:person_birthyear]}–#{@context[:person_deathyear]}) #{@context[:person_nationality]}").should exist
 end
 
 When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do
