@@ -62,7 +62,7 @@ export default {
   'Publication.available': 'Ledig',
   'Publication.unavailable': 'Ikke ledig',
   'Publication.coverImageOf': 'Omslagsbilde av: {title}',
-  'Publication.reserve': 'Reserver',
+  'Publication.order': 'Bestill',
   'Publication.showStatus': 'Vis status',
   'Publication.showInfo': 'Mer info om utgivelsen',
   'Publication.hideInfo': 'Lukk info om utgivelsen',

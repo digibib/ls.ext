@@ -51,7 +51,7 @@ class Publication extends React.Component {
                 <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
                   <button className="red-btn" type="button"
                           data-automation-id={`recordId_${publication.recordId}`}>
-                    <span data-automation-id="publication_order"><FormattedMessage {...messages.reserve} /></span>
+                    <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
                   </button>
                 </ClickableElement>
               </div>
@@ -103,10 +103,10 @@ export const messages = defineMessages({
     description: 'Used for alt text in images',
     defaultMessage: 'Cover image of: {title}'
   },
-  reserve: {
-    id: 'Publication.reserve',
+  order: {
+    id: 'Publication.order',
     description: 'The button that allows users to reserve a publication',
-    defaultMessage: 'Reserve'
+    defaultMessage: 'Order'
   },
   showStatus: {
     id: 'Publication.showStatus',
