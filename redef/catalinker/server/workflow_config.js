@@ -475,7 +475,7 @@ module.exports = (app) => {
             createNewResource: {
               type: 'Publication',
               prefillValuesFromResource: {
-                'Work': [ 'mainTitle', 'subtitle', 'partTitle', 'partNumber']
+                'Work': [ 'mainTitle', 'subtitle', 'partTitle', 'partNumber' ]
               }
             }
           }
@@ -947,6 +947,16 @@ module.exports = (app) => {
                       formId: 'create-event-form',
                       targetType: 'event'
                     } ]
+                },
+                explanations: {
+                  patterns: [
+                    { match: '^.*\\/subject\\/.*$', explanation: '(Generelt emne)' },
+                    { match: '^.*\\/person\\/.*$', explanation: '(Person)' },
+                    { match: '^.*\\/work\\/.*$', explanation: '(Verk)' },
+                    { match: '^.*\\/place\\/.*$', explanation: '(Sted)' },
+                    { match: '^.*\\/corporation\\/.*$', explanation: '(Organisasjon)' },
+                    { match: '^.*\\/event\\/.*$', explanation: '(Hendelse)' }
+                  ]
                 }
               }
             },

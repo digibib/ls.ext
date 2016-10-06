@@ -36,7 +36,7 @@
                                 <span class="select2-selection__choice__remove spinner"> </span>
                             {{else}}
                                 <span class="select2-selection__choice__remove overrride-outside-detect" on-click="unselectEntity">×</span>
-                                <span class="value">{{current.displayValue}}</span>
+                                <span class="value">{{current.displayValue}}{{#widgetOptions.explanations}}<span class="explanation">{{getExplanation(., current.value)}}</span>{{/}}</span>
                             {{/if}}
                         </li>
                     </ul>

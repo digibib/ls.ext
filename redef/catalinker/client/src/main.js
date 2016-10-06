@@ -1939,6 +1939,11 @@
                 var resourceLabel = Ontology.resourceLabel(applicationData.ontology, subject, 'no')
                 return resourceLabel || ''
               },
+              getExplanation: function (explanations, value) {
+                return _.find(explanations.patterns, function (pattern) {
+                    return RegExp(pattern.match).test(value)
+                }).explanation
+              },
               subjectTypeLabelDet: function (subjectType) {
                 switch (subjectType) {
                   case 'Work':
