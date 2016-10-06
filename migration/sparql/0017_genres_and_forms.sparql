@@ -203,3 +203,116 @@ WHERE {
   }
 }
 ;
+
+
+# 7) Merge duplicate genres with specification
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?publication :genre ?genreDelete .
+  ?genreDelete ?p ?o .
+}
+
+INSERT {
+  ?publication :genre ?genreKeep .
+}
+
+WHERE {
+  ?genreKeep a :Genre ;
+    :specification ?spec ;
+    duo:bibliofilAuthorityId ?id1 ;
+    :prefLabel ?label .
+  ?genreDelete :prefLabel ?label ;
+    :specification ?spec ;
+    duo:bibliofilAuthorityId ?id2 ;
+    a :Genre ;
+    ?p ?o .
+  ?publication :genre ?genreDelete ;
+    a :Publication .
+  FILTER (?genreKeep != ?genreDelete)
+  FILTER (xsd:int(id1) < xsd:int(?id2))
+}
+;
+
+
+# 8) Merge duplicate genres without specification
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?publication :genre ?genreDelete .
+  ?genreDelete ?p ?o .
+}
+
+INSERT {
+  ?publication :genre ?genreKeep .
+}
+
+WHERE {
+  ?genreKeep a :Genre ;
+    duo:bibliofilAuthorityId ?id1 ;
+    :prefLabel ?label .
+  ?genreDelete :prefLabel ?label ;
+    duo:bibliofilAuthorityId ?id2 ;
+    a :Genre ;
+    ?p ?o .
+  ?publication :genre ?genreDelete ;
+    a :Publication .
+  MINUS {?genreDelete :specification ?spec .}
+  MINUS {?genreKeep :specification ?spec .}
+  FILTER (?genreKeep != ?genreDelete)
+  FILTER (xsd:int(id1) < xsd:int(?id2))
+}
+;
+
+
+# 9) Merge duplicate genres without autority id
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX duo: <http://data.deichman.no/duo#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?publication :genre ?genreWithout .
+  ?genreWithout ?p ?o .
+}
+
+INSERT {
+  ?publication :genre ?genreWith .
+}
+
+WHERE {
+  ?genreWith a :Genre ;
+    duo:bibliofilAuthorityId ?id ;
+    :prefLabel ?label .
+  ?genreWithout :prefLabel ?label ;
+    a :Genre ;
+    ?p ?o .
+  ?publication :genre ?genreWithout ;
+    a :Publication .
+  MINUS {?genreWith :specification ?spec .}
+  MINUS {?genreWithout duo:bibliofilAuthorityId ?any .}
+}
+;
