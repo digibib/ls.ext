@@ -19,11 +19,13 @@ Egenskap: katalogisere med eksterne kilder
     Og husker navnet på _personen jeg nettopp opprettet
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så åpner jeg listen med eksterne forslag fra andre kilder for rolle som skal knyttes til bidrag og velger det første forslaget
     Så setter jeg markøren i søkefelt for verk og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Dirigent" knyttet til "verket"
@@ -50,7 +52,7 @@ Egenskap: katalogisere med eksterne kilder
     Så trykker jeg på "Opprett ny person"-knappen
     Og husker navnet på _personen jeg nettopp opprettet
     Så trykker jeg på "Opprett"-knappen
-    Og debugger jeg
+    Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "utgivelsen"
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
