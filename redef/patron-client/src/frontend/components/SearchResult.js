@@ -206,7 +206,7 @@ class SearchResult extends React.Component {
           {this.renderDisplayTitle(result)}
           {this.renderContributors(result.publication.contributors)}
           {this.renderOriginalTitle(result.publication)}
-          {this.renderSeries(result.publication)}
+          {/* this.renderSeries(result.publication) */}
           {result.publication.abstract
             ? <p className="abstract">{result.publication.abstract}</p>
             : null
