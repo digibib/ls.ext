@@ -268,7 +268,7 @@
     function sequentialPromiseResolver (promises) {
       let promise = promises.shift()
       if (promise) {
-        promise.then(promises)
+        promise.then(sequentialPromiseResolver(promises))
       }
     }
 
@@ -719,7 +719,8 @@
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset))
                       if (input.isSubInput) {
-//                        input.values[ valueIndex ].nonEditable = true
+                          input.values[ valueIndex ].nonEditable = true
+                          input.parentInput.allowAddNewButton = true
                       }
                     } else {
                       input.suggestedValues = input.suggestedValues || []
@@ -741,13 +742,15 @@
       })
       Promise.all(promises).then(function () {
         if (!options.deferUpdate || promises.length > 0) {
-          ractive.update()
+          blockUI(function () {
+            ractive.update()
+            unblockUI()
+          })
         }
         if (!(options.keepDocumentUrl)) {
           ractive.set('targetUri.' + type, resourceUri)
           ractive.set('save_status', 'åpnet eksisterende ressurs')
           updateBrowserLocationWithUri(type, resourceUri)
-          unblockUI()
         }
       })
     }
@@ -802,7 +805,8 @@
           if (patchBatch.length > 0) {
             executePatch(resourceUri, patchBatch, undefined, errors)
           }
-          ractive.update()
+          blockUI()
+          ractive.update().then(unblockUI)
           return resourceUri
         })
       // .catch(function (err) {
@@ -1415,12 +1419,22 @@
       return (event.original && event.original.type === 'keyup' && event.original.keyCode !== 13)
     }
 
-    function blockUI (complete) {
-      $('#ui-blocker').fadeIn(100, complete)
+    var uiBlockCounter = 0
+
+    function blockUI (complete, from) {
+      uiBlockCounter++
+      if (uiBlockCounter === 1) {
+        $('#ui-blocker').fadeIn(100, complete)
+      } else if (complete) {
+        complete()
+      }
     }
 
-    function unblockUI () {
-      $('#ui-blocker').fadeOut(300)
+    function unblockUI (from) {
+      uiBlockCounter--
+      if (uiBlockCounter === 0) {
+        $('#ui-blocker').fadeOut(300)
+      }
     }
 
     function updateInputsForDependentResources (targetType, resourceUri) {
@@ -1458,8 +1472,7 @@
             }
           }
           ractive.set('save_status', 'alle endringer er lagret')
-          ractive.update()
-          unblockUI()
+          ractive.update().then(unblockUI)
         })
         .catch(function (response) {
           // failed to patch resource
@@ -1652,7 +1665,7 @@
           })
             .then(function (response) {
               // successfully patched resource
-              ractive.set('save_status', 'alle endringer er lagret')
+              return ractive.set('save_status', 'alle endringer er lagret')
             })
           // .catch(function (response) {
           //    // failed to patch resource
@@ -2104,8 +2117,8 @@
                       }
                     })
                     input.allowAddNewButton = true
-                    ractive.update()
                     var promises = []
+                    promises.push(ractive.update())
                     var subInputs = grandParentOf(event.keypath)
                     _.each(event.context.subInputs, function (input, subInputIndex) {
                       if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
@@ -2113,8 +2126,9 @@
                         promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
                       }
                     })
-                    return Promise.all(promises)
-                  }).then(unblockUI)
+                    promises.push(new Promise(unblockUI))
+                    sequentialPromiseResolver(promises)
+                  })
                 })
               },
               deleteObject: function (event, parentInput, index) {
@@ -2556,48 +2570,50 @@
                   ractive.update()
                   var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
                   var promises = []
-                  blockUI()
-                  let resultStat = {
-                    itemsFromPreferredSource: 0,
-                    itemsFromOtherSources: {}
-                  }
-                  _.each(sources, function (source) {
-                    promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`, {
-                        headers: {
-                          Accept: 'application/ld+json'
-                        }
-                      }
-                    ).then(function (response) {
-                      var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
-                      var hitsFromPreferredSource = { source: response.data.source, items: [] }
-                      _.each(response.data.hits, function (hit) {
-                        var graph = ldGraph.parse(hit)
-                        if (fromPreferredSource) {
-                          hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
-                          resultStat.itemsFromPreferredSource++
-                        } else {
-                          var options = {
-                            keepDocumentUrl: true,
-                            onlyValueSuggestions: true,
-                            source: response.data.source
+                  blockUI(function () {
+                    let resultStat = {
+                      itemsFromPreferredSource: 0,
+                      itemsFromOtherSources: {}
+                    }
+                    _.each(sources, function (source) {
+                      promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`, {
+                          headers: {
+                            Accept: 'application/ld+json'
                           }
-                          _.each([ 'Work', 'Publication' ], function (domain) {
-                            let byType = graph.byType(domain)
-                            updateInputsForResource({ data: {} }, null, options, byType[ 0 ], domain)
-                            resultStat.itemsFromOtherSources[ source ] = resultStat.itemsFromOtherSources[ source ] || 0
-                            resultStat.itemsFromOtherSources[ source ]++
-                          })
                         }
-                      })
-                      if (fromPreferredSource) {
-                        searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource.push(hitsFromPreferredSource)
-                      }
-                      ractive.update()
-                    }).then(function () {
-                      updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
-                    }).catch(function (error) {
-                      errors.push(error)
-                    }))
+                      ).then(function (response) {
+                        var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
+                        var hitsFromPreferredSource = { source: response.data.source, items: [] }
+                        _.each(response.data.hits, function (hit) {
+                          var graph = ldGraph.parse(hit)
+                          if (fromPreferredSource) {
+                            hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
+                            resultStat.itemsFromPreferredSource++
+                          } else {
+                            var options = {
+                              keepDocumentUrl: true,
+                              onlyValueSuggestions: true,
+                              source: response.data.source
+                            }
+                            _.each([ 'Work', 'Publication' ], function (domain) {
+                              let byType = graph.byType(domain)
+                              updateInputsForResource({ data: {} }, null, options, byType[ 0 ], domain)
+                              resultStat.itemsFromOtherSources[ source ] = resultStat.itemsFromOtherSources[ source ] || 0
+                              resultStat.itemsFromOtherSources[ source ]++
+                            })
+                          }
+                        })
+                        if (fromPreferredSource) {
+                          searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource.push(hitsFromPreferredSource)
+                        }
+                        ractive.update().then(unblockUI)
+                      }).then(function () {
+                        updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
+                      }).catch(function (error) {
+                        errors.push(error)
+                        unblockUI()
+                      }))
+                    })
                   })
                   Promise.all(promises).then(function () {
                     unblockUI()
@@ -2618,7 +2634,7 @@
                         ]
                       })
                     }
-                  })
+                  }).then(unblockUI)
                 }
               },
               acceptSuggestedPredefinedValue: function (event, value) {
@@ -3065,11 +3081,14 @@
 
         let etags = {}
         axios.interceptors.request.use(function (options) {
+          let url = options.url
+          if (url.indexOf('search') === -1) {
+            blockUI()
+          }
           if (options.method === 'get' || !options.method) {
             options.validateStatus = function (status) {
               return status >= 200 && status < 300 || status === 304
             }
-            let url = options.url
             const etag = etags[ url ]
             const cachedResponse = etagData[ `${url}${etag}` ]
             if (cachedResponse) {
@@ -3103,8 +3122,14 @@
               etags[ url ] = responseEtag
             }
           }
+          if (url.indexOf('search') === -1) {
+            unblockUI()
+          }
           return response
         }, function (error) {
+          if (url.indexOf('search') === -1) {
+            unblockUI()
+          }
           return Promise.reject(error)
         })
 
