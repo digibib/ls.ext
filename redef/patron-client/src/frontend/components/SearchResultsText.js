@@ -20,7 +20,8 @@ class SearchResultsText extends React.Component {
         <ReactCSSTransitionGroup
         transitionName="fade-in"
         transitionAppear
-        transtionLeave={false}
+        transitionAppearTimeout={500}
+        transitionLeaveTimeout={0}
         transitionEnterTimeout={500}
         component="div"
         className="search-results-number">

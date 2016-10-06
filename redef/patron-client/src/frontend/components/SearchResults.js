@@ -19,6 +19,7 @@ class SearchResults extends React.Component {
       <ReactCSSTransitionGroup
         transitionName="fade-in"
         transitionAppear
+        transitionAppearTimeout={500}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="section"

@@ -51,12 +51,13 @@ class SearchFilters extends React.Component {
 
       return (
         <ReactCSSTransitionGroup
-        transitionName="fade-in"
-        transitionAppear
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={500}
-        component="aside"
-        className="filters">
+          transitionName="fade-in"
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+          component="aside"
+          className="filters">
           <div className="limit-filters">
             <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
             {this.props.locationQuery.hideFilters === null

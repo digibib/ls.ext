@@ -9,9 +9,9 @@ class PublicationInfo extends React.Component {
         <ReactCSSTransitionGroup
         transitionName="fade-in"
         transitionAppear
-        transitionAppearTimeout={10000}
+        transitionAppearTimeout={500}
         transitionEnterTimeout={500}
-        transitionLeaveTimeout={300}
+        transitionLeaveTimeout={500}
         component="table"
         className="test">
           <tbody>
@@ -61,8 +61,9 @@ class PublicationInfo extends React.Component {
         transitionName="fade-in"
         transitionAppearTimeout={10000}
         transitionAppear
+        transitionAppearTimeout={500}
         transitionEnterTimeout={500}
-        transitionLeaveTimeout={300}
+        transitionLeaveTimeout={500}
         component="section"
         className="publication-info"
         data-automation-id={`publication_info_${publication.uri}`}>
