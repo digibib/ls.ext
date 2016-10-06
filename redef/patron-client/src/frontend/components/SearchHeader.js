@@ -7,262 +7,261 @@ import MediaQuery from 'react-responsive'
 
 import * as RegistrationActions from '../actions/RegistrationActions'
 
-  class SearchHeader extends React.Component {
-    constructor (props) {
-      super(props)
-      this.handleSearch = this.handleSearch.bind(this)
-      this.handleLoginClick = this.handleLoginClick.bind(this)
-      this.toggleMobileNav = this.toggleMobileNav.bind(this)
-      this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
-      this.state = {
-        mobileNavVisible: false
-      }
+class SearchHeader extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleSearch = this.handleSearch.bind(this)
+    this.handleLoginClick = this.handleLoginClick.bind(this)
+    this.toggleMobileNav = this.toggleMobileNav.bind(this)
+    this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
+    this.state = {
+      mobileNavVisible: false
     }
+  }
 
-    componentDidUpdate () {
-      this.searchFieldInput.value = this.props.locationQuery.query || ''
-    }
+  componentDidUpdate () {
+    this.searchFieldInput.value = this.props.locationQuery.query || ''
+  }
 
-    handleSearch (event) {
-      event.preventDefault()
+  handleSearch (event) {
+    event.preventDefault()
+    this.setState({mobileNavVisible: false})
+    this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
+  }
+
+  handleLoginClick (event) {
+    event.preventDefault()
+    this.setState({mobileNavVisible: false})
+    this.props.showLoginDialog(push({ pathname: '/profile/loans' }))
+  }
+
+  handleRegistrationClick (event) {
+    event.preventDefault()
+    this.props.startRegistration()
+  }
+
+  toggleMobileNav () {
+    if (!this.state.mobileNavVisible) {
+      this.setState({mobileNavVisible: true})
+    } else {
       this.setState({mobileNavVisible: false})
-      this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
     }
+  }
 
-    handleLoginClick (event) {
-      event.preventDefault()
-      this.setState({mobileNavVisible: false})
-      this.props.showLoginDialog(push({ pathname: '/profile/loans'}))
+  /**
+   * Links used in the menu and the mobile menu
+   */
+  loginLink () {
+    if (!this.props.isLoggedIn) {
+      return [
+        <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick}>
+          <Link to="/">
+            <FormattedMessage {...messages.logIn} /> <span>&raquo;</span>
+          </Link>
+        </li>
+      ]
     }
+  }
 
-    handleRegistrationClick (event) {
-      event.preventDefault()
-      this.props.startRegistration()
+  logoutLink () {
+    if (this.props.isLoggedIn) {
+      return [
+        <li key={1} data-automation-id="logout_element" onClick={this.props.logout}>
+          <Link to="/">
+            <FormattedMessage {...messages.logout} /> <span>&raquo;</span>
+          </Link>
+        </li>
+      ]
     }
+  }
 
-    toggleMobileNav () {
-      if (!this.state.mobileNavVisible) {
-        this.setState({mobileNavVisible: true})
-      } else {
-        this.setState({mobileNavVisible: false})
-      }
+  profileLink () {
+    if (this.props.isLoggedIn) {
+      return [
+        <li key={3}>
+          <Link to="/profile/loans"><FormattedMessage {...messages.myProfile} /> <span>&raquo;</span></Link>
+        </li>
+      ]
     }
+  }
 
-    /**
-     * Links used in the menu and the mobile menu
-     */
-    loginLink () {
-      if (!this.props.isLoggedIn) {
-        return [
-          <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick}>
-            <Link to="/">
-              <FormattedMessage {...messages.logIn} /> <span>&raquo;</span>
-            </Link>
-          </li>
-        ]
-      }
-    }
+  registrationLink () {
+    return (
+      <li>
+        <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /></a>
+      </li>
+    )
+  }
 
-    logoutLink() {
-      if (this.props.isLoggedIn) {
-        return [
-          <li key={1} data-automation-id="logout_element" onClick={this.props.logout}>
-            <Link to="/">
-              <FormattedMessage {...messages.logout} /> <span>&raquo;</span>
-            </Link>
-          </li>
-        ]
-      }
-    }
+  /**
+   * Renders the menu, and/or the mobile menu
+   */
+  renderNavigationLinks () {
+    return (
+      <ul>
+        {this.profileLink()}
+        {this.registrationLink()}
+        {this.loginLink()}
+        {this.logoutLink()}
+      </ul>
+    )
+  }
 
-    profileLink () {
-      if (this.props.isLoggedIn) {
-        return [
-          <li key={3}>
-            <Link to="/profile/loans"><FormattedMessage {...messages.myProfile} /> <span>&raquo;</span></Link>
-          </li>
-        ]
-      }
-    }
+  renderMobileNavigationLinks () {
+    return (
+      <ul>
+        {this.profileLink()}
+        {this.registrationLink()}
+        {this.loginLink()}
+        {this.logoutLink()}
+      </ul>
+    )
+  }
 
-    registrationLink() {
-        return (
-          <li>
-
-            <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /></a>
-          </li>
-        )
-    }
-
-    /**
-     * Renders the menu, and/or the mobile menu
-     */
-    renderNavigationLinks () {
-      return (
-        <ul>
-          {this.profileLink()}
-          {this.registrationLink()}
-          {this.loginLink()}
-          {this.logoutLink()}
-        </ul>
-      )
-    }
-
-    renderMobileNavigationLinks () {
-      return (
-        <ul>
-          {this.profileLink()}
-          {this.registrationLink()}
-          {this.loginLink()}
-          {this.logoutLink()}
-        </ul>
-      )
-    }
-
-    render () {
-      const mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
-      return (
-        <div>
-            <ReactCSSTransitionGroup
-              transitionName="fade-in"
-              transitionAppear
-              transitionAppearTimeout={500}
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={500}
-              component="header"
-              className="wrapper">
-
-              <div className="logo">
-                <Link to="/">
-                  <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
-                </Link>
-              </div>
-
-              <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
-                <div className="mobile-menu-toggle">
-                  <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars" onClick={this.toggleMobileNav} />
-                </div>
-              </MediaQuery>
-
-              <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
-                <nav className="primary-menu">
-                  {this.renderNavigationLinks()}
-                </nav>
-              </MediaQuery>
-
-            </ReactCSSTransitionGroup>
-
-          <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
-            <nav className={mobileNavClass}>
-              {this.renderMobileNavigationLinks()}
-            </nav>
-          </MediaQuery>
-
+  render () {
+    const mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
+    return (
+      <div>
           <ReactCSSTransitionGroup
             transitionName="fade-in"
             transitionAppear
             transitionAppearTimeout={500}
             transitionEnterTimeout={500}
             transitionLeaveTimeout={500}
-            component="section"
-            className="search-box-wrapper">
-            <div className="search-box">
-              <form onSubmit={this.handleSearch}>
-                <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>
-                <div className="search-field-wrapper">
-                  <div className="search-field">
-                    <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-                           id="search"
-                           type="search"
-                           defaultValue={this.props.locationQuery.query || ''}
-                           ref={e => this.searchFieldInput = e}
-                           data-automation-id="search_input_field"
-                    />
-                  </div>
-                  <div className="search-button">
-                    <button onClick={this.handleSearch} type="button" className="search-submit"
-                            data-automation-id="search_button">
-                      <FormattedMessage {...messages.search} />
-                    </button>
-                  </div>
-                </div>
-              </form>
+            component="header"
+            className="wrapper">
+
+            <div className="logo">
+              <Link to="/">
+                <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
+              </Link>
             </div>
+
+            <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
+              <div className="mobile-menu-toggle">
+                <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars" onClick={this.toggleMobileNav} />
+              </div>
+            </MediaQuery>
+
+            <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
+              <nav className="primary-menu">
+                {this.renderNavigationLinks()}
+              </nav>
+            </MediaQuery>
+
           </ReactCSSTransitionGroup>
-        </div>
-      )
-    }
+
+        <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
+          <nav className={mobileNavClass}>
+            {this.renderMobileNavigationLinks()}
+          </nav>
+        </MediaQuery>
+
+        <ReactCSSTransitionGroup
+          transitionName="fade-in"
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+          component="section"
+          className="search-box-wrapper">
+          <div className="search-box">
+            <form onSubmit={this.handleSearch}>
+              <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>
+              <div className="search-field-wrapper">
+                <div className="search-field">
+                  <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
+                         id="search"
+                         type="search"
+                         defaultValue={this.props.locationQuery.query || ''}
+                         ref={e => this.searchFieldInput = e}
+                         data-automation-id="search_input_field"
+                  />
+                </div>
+                <div className="search-button">
+                  <button onClick={this.handleSearch} type="button" className="search-submit"
+                          data-automation-id="search_button">
+                    <FormattedMessage {...messages.search} />
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </ReactCSSTransitionGroup>
+      </div>
+    )
   }
+}
 
-  SearchHeader.propTypes = {
-    locationQuery: PropTypes.object.isRequired,
-    requireLoginBeforeAction: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    locale: PropTypes.string.isRequired,
-    showLoginDialog: PropTypes.func.isRequired,
-    isLoggedIn: PropTypes.bool.isRequired,
-    logout: PropTypes.func.isRequired,
-    mediaQueryValues: PropTypes.object,
-    intl: intlShape.isRequired,
-    startRegistration: PropTypes.func.isRequired
+SearchHeader.propTypes = {
+  locationQuery: PropTypes.object.isRequired,
+  requireLoginBeforeAction: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  locale: PropTypes.string.isRequired,
+  showLoginDialog: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  logout: PropTypes.func.isRequired,
+  mediaQueryValues: PropTypes.object,
+  intl: intlShape.isRequired,
+  startRegistration: PropTypes.func.isRequired
+}
+
+export const messages = defineMessages({
+  logoAlt: {
+    id: 'SearchHeader.logoAlt',
+    description: 'Alt text for the logo',
+    defaultMessage: 'Black logo with text'
+  },
+  myProfile: {
+    id: 'SearchHeader.myProfile',
+    description: 'Label for the link to go to the user profile',
+    defaultMessage: 'My profile'
+  },
+  myLoans: {
+    id: 'SearchHeader.myLoans',
+    description: 'Label for the link to go to the users loans',
+    defaultMessage: 'My loans'
+  },
+  more: {
+    id: 'SearchHeader.more',
+    description: 'Label for the link to show more',
+    defaultMessage: 'More'
+  },
+  contactUs: {
+    id: 'SearchHeader.contactUs',
+    description: 'Label for the link to go to the contact page',
+    defaultMessage: 'Contact us'
+  },
+  searchInputPlaceholder: {
+    id: 'SearchHeader.searchInputPlaceholder',
+    description: 'Placeholder for the search field',
+    defaultMessage: 'Search for something...'
+  },
+  searchLabel: {
+    id: 'SearchHeader.searchLabel',
+    description: 'Label for the main search bar',
+    defaultMessage: 'Search the collections'
+  },
+  search: {
+    id: 'SearchHeader.search',
+    description: 'Label on search button',
+    defaultMessage: 'Search'
+  },
+  logout: {
+    id: 'Navigation.logout',
+    description: 'Shown when logged in',
+    defaultMessage: 'Log out'
+  },
+  logIn: {
+    id: 'Navigation.logIn',
+    description: 'Shown when logged out',
+    defaultMessage: 'Log in'
+  },
+  register: {
+    id: 'Navigation.register',
+    description: 'Register link in main menu',
+    defaultMessage: 'Register'
   }
+})
 
-  export const messages = defineMessages({
-    logoAlt: {
-      id: 'SearchHeader.logoAlt',
-      description: 'Alt text for the logo',
-      defaultMessage: 'Black logo with text'
-    },
-    myProfile: {
-      id: 'SearchHeader.myProfile',
-      description: 'Label for the link to go to the user profile',
-      defaultMessage: 'My profile'
-    },
-    myLoans: {
-      id: 'SearchHeader.myLoans',
-      description: 'Label for the link to go to the users loans',
-      defaultMessage: 'My loans'
-    },
-    more: {
-      id: 'SearchHeader.more',
-      description: 'Label for the link to show more',
-      defaultMessage: 'More'
-    },
-    contactUs: {
-      id: 'SearchHeader.contactUs',
-      description: 'Label for the link to go to the contact page',
-      defaultMessage: 'Contact us'
-    },
-    searchInputPlaceholder: {
-      id: 'SearchHeader.searchInputPlaceholder',
-      description: 'Placeholder for the search field',
-      defaultMessage: 'Search for something...'
-    },
-    searchLabel: {
-      id: 'SearchHeader.searchLabel',
-      description: 'Label for the main search bar',
-      defaultMessage: 'Search the collections'
-    },
-    search: {
-      id: 'SearchHeader.search',
-      description: 'Label on search button',
-      defaultMessage: 'Search'
-    },
-    logout: {
-      id: 'Navigation.logout',
-      description: 'Shown when logged in',
-      defaultMessage: 'Log out'
-    },
-    logIn: {
-      id: 'Navigation.logIn',
-      description: 'Shown when logged out',
-      defaultMessage: 'Log in'
-    },
-    register: {
-      id: 'Navigation.register',
-      description: 'Register link in main menu',
-      defaultMessage: 'Register'
-    }
-  })
-
-  export default injectIntl(SearchHeader)
+export default injectIntl(SearchHeader)
