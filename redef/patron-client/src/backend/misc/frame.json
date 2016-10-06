@@ -203,9 +203,10 @@
       "@id": "deichman:fictionNonfiction",
       "@type": "@id"
     },
-    "audience": {
+    "audiences": {
       "@id": "deichman:audience",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
     "biography": {
       "@id": "deichman:biography",
@@ -369,7 +370,7 @@
       "@embed": "@never"
     }
   },
-  "audience": {
+  "audiences": {
     "@embed": "@never"
   },
   "languages": {
