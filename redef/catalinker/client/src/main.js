@@ -719,8 +719,8 @@
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset))
                       if (input.isSubInput) {
-                          input.values[ valueIndex ].nonEditable = true
-                          input.parentInput.allowAddNewButton = true
+                        input.values[ valueIndex ].nonEditable = true
+                        input.parentInput.allowAddNewButton = true
                       }
                     } else {
                       input.suggestedValues = input.suggestedValues || []
@@ -2570,11 +2570,11 @@
                   ractive.update()
                   var sources = ractive.get('applicationData.externalSources') || searchExternalSourceInput.searchForValueSuggestions.sources
                   var promises = []
+                  let resultStat = {
+                    itemsFromPreferredSource: 0,
+                    itemsFromOtherSources: {}
+                  }
                   blockUI(function () {
-                    let resultStat = {
-                      itemsFromPreferredSource: 0,
-                      itemsFromOtherSources: {}
-                    }
                     _.each(sources, function (source) {
                       promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`, {
                           headers: {
@@ -3127,9 +3127,7 @@
           }
           return response
         }, function (error) {
-          if (url.indexOf('search') === -1) {
-            unblockUI()
-          }
+          unblockUI()
           return Promise.reject(error)
         })
 
