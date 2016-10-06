@@ -67,10 +67,15 @@ format:DAISY a duo:Format ;
   rdfs:label "DAISY"@no ;
   rdfs:label "DAISY"@en .
 
-format:ComputerFile a duo:Format ;
+format:PDF a duo:Format ;
   duo:code "na" ;
-  rdfs:label "Nedlastbar fil"@no ;
-  rdfs:label "Computer file"@en .
+  rdfs:label "PDF"@no ;
+  rdfs:label "PDF"@en .
+
+format:EPUB a duo:Format ;
+  duo:code "na" ;
+  rdfs:label "EPUB"@no ;
+  rdfs:label "EPUB"@en .
 
 format:NintendoDSGame a duo:Format ;
   duo:code "mn" ;

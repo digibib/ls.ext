@@ -306,7 +306,8 @@ CONSTRUCT {
         :hasRelationType relationType:partOf ;
         a :WorkRelation
     ] .
-    ?relatedWork :contributor [
+    ?relatedWork a :Work, migration:ConstructedWork ;
+    	:contributor [
         a :Contribution ;
         a :MainEntry ;
         :agent ?agent ;

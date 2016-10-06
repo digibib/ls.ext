@@ -189,7 +189,6 @@
             "pc, pcspill => pc-spill",
             "brsp => brettspill",
             "ksp => kortspill",
-            "fil => nedlastbar fil",
             "ds, nintendo ds => nintendo ds-spill",
             "wii, nintendo wii => nintendo wii-spill",
             "ps2, playstation 2 => playstation 2-spill",
