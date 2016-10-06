@@ -191,6 +191,7 @@ export default {
   'UserInfo.saveChanges': 'Lagre endringer',
   'UserInfo.lastUpdated': 'Sist oppdatert',
   'UserInfo.borrowerNumber': 'Lånernummer',
+  'UserInfo.cardNumber': 'Lånekortnummer',
   'UserInfo.personalInformationError': 'Noe gikk galt ved henting av personopplysninger.',
   'UserInfo.required': 'Feltet må fylles ut',
   'UserInfo.invalidEmail': 'Ugyldig epostadresse',

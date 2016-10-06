@@ -135,8 +135,8 @@ class UserInfo extends React.Component {
         <header>
           <h1 data-automation-id="UserInfo_name">{personalInformation.name}</h1>
 
-          <div className="borrow-number"><FormattedMessage {...messages.borrowerNumber} />: <span
-            data-automation-id="UserInfo_borrowerNumber">{personalInformation.borrowerNumber}</span></div>
+          <div className="card-number"><FormattedMessage {...messages.cardNumber} />: <span
+            data-automation-id="UserInfo_cardNumber">{personalInformation.cardNumber}</span></div>
         </header>
 
         {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}
@@ -230,6 +230,11 @@ export const messages = defineMessages({
     id: 'UserInfo.borrowerNumber',
     description: 'The label for borrower number',
     defaultMessage: 'Borrower number'
+  },
+  cardNumber: {
+    id: 'UserInfo.cardNumber',
+    description: 'The label for card number',
+    defaultMessage: 'Borrower card number'
   },
   personalInformationError: {
     id: 'UserInfo.personalInformationError',

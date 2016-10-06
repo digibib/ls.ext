@@ -19,7 +19,7 @@ function setup (propOverrides) {
   const profileInformation = {
     address: 'address',
     birthdate: 'birthdate',
-    borrowerNumber: 'borrowerNumber',
+    cardNumber: 'cardNumber',
     city: 'city',
     country: 'country',
     email: 'email',

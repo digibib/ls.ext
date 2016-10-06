@@ -240,6 +240,7 @@ module.exports = (app) => {
   function parsePatron (patron) {
     return {
       borrowerNumber: patron.borrowernumber || '',
+      cardNumber: patron.cardnumber || '',
       name: `${patron.firstname} ${patron.surname}`,
       address: patron.address || '',
       zipcode: patron.zipcode || '',
