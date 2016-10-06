@@ -164,6 +164,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg bekrefter at jeg skal avbestille reservasjonen
     Så skal jeg ikke ha noen reservasjoner
 
+  @wip
   Scenario: Låner endrer personlige innstillinger
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
