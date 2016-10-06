@@ -239,7 +239,7 @@ WHERE {
   ?publication :genre ?genreDelete ;
     a :Publication .
   FILTER (?genreKeep != ?genreDelete)
-  FILTER (xsd:int(id1) < xsd:int(?id2))
+  FILTER (xsd:int(?id1) < xsd:int(?id2))
 }
 ;
 
@@ -278,7 +278,7 @@ WHERE {
   MINUS {?genreDelete :specification ?spec .}
   MINUS {?genreKeep :specification ?spec .}
   FILTER (?genreKeep != ?genreDelete)
-  FILTER (xsd:int(id1) < xsd:int(?id2))
+  FILTER (xsd:int(?id1) < xsd:int(?id2))
 }
 ;
 
