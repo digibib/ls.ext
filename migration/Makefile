@@ -156,6 +156,7 @@ out/done.import_into_fuseki: out/done.convert_catalogue_to_nt
 	@echo "-- Running SPARQL queries to massage resources (create works & relationships)"
 	@ls sparql/*.sparql | xargs cat | sudo docker exec -i virtuoso /virtuoso/bin/isql -U dba -P dba | sed 's/^SQL.*//g' | grep .
 	@echo "-- Constructing the complete RDF resources to be migrated (resources.nt)"
+	@cp config_data/constructs.sparql out/
 	@$(MIGRATION_RUN_CMD) 'construct -n=3 -se=http://services:8005 -ve=http://virtuoso:8890/sparql > /out/resources.nt'
 	@echo "-- Anonymizing blank nodes"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) 'nt2ttl -f=/out/resources.nt > /out/resources.ttl'
