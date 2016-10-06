@@ -24,7 +24,11 @@ module.exports = (app) => {
           if (error) {
             throw error
           }
-          response.status(200).send(transformResponse(framed[ '@graph' ][ 0 ]))
+          try {
+            response.status(200).send(transformResponse(framed[ '@graph' ][ 0 ]))
+          } catch (error) {
+            response.status(500).send(error)
+          }
         })
       })
     ).catch(error => {
