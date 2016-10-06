@@ -193,6 +193,40 @@ WHERE {
 ;
 
 
+#6b) Prepare deleting periodical subscription records
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX mediaType: <http://data.deichman.no/mediaType#>
+PREFIX migration: <http://migration.deichman.no/>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?pub :hasMediaType mediaType:Periodical .
+}
+
+INSERT {
+  ?pub :format format:toBeDeleted .
+}
+
+WHERE {
+  ?pub :hasMediaType mediaType:Periodical ;
+    :mainTitle ?title ;
+    a :Publication ;
+    :recordId ?id .
+  ?other :mainTitle ?title ;
+    :hasMediaType mediaType:Periodical ;
+    :publicationYear ?year .
+  MINUS {?pub :publicationYear ?o .}
+  MINUS {?child migration:parentRecordId ?id}
+}
+;
+
+
 #7 ) Delete items with certain formats
 
 SPARQL
