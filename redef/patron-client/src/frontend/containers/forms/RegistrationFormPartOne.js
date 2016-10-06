@@ -216,12 +216,12 @@ export const messages = defineMessages({
   ssn: {
     id: 'RegistrationFormPartOne.ssnSpec',
     description: 'Specification of social security number',
-    defaultMessage: 'Personnr./D-nr./DUF-nr'
+    defaultMessage: 'National ID number (11 digits)/D-nr./DUF-nr.'
   },
   ssnLabel: {
     id: 'RegistrationFormPartOne.ssnLabel',
     description: 'Label(s) for social security number',
-    defaultMessage: 'SSN/D-nr./DUF.nr.'
+    defaultMessage: 'National ID number (11 digits)/D-nr./DUF.nr.'
   },
   ssnLink: {
     id: 'RegistrationFormPartOne.ssnLink',
