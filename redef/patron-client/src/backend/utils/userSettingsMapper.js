@@ -14,12 +14,10 @@ module.exports.patronSettingsToKohaSettings = patronSettings => {
       wants_digest: false
     },
     item_checkout: {
-      transports: patronSettingToArray(patronSettings.receipts.loans),
-      wants_digest: true
+      transports: patronSettingToArray(patronSettings.receipts.loans)
     },
     item_check_in: {
-      transports: patronSettingToArray(patronSettings.receipts.returns),
-      wants_digest: true
+      transports: patronSettingToArray(patronSettings.receipts.returns)
     }
   }
 }
