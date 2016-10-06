@@ -45,7 +45,7 @@ export const messages = defineMessages({
   username: {
     id: 'Login.username',
     description: 'The label over the username field',
-    defaultMessage: 'Username:'
+    defaultMessage: 'Cardnumber:'
   },
   password: {
     id: 'Login.password',

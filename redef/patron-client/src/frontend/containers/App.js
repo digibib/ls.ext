@@ -8,6 +8,7 @@ import * as LibraryActions from '../actions/LibraryActions'
 import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
 import Footer from '../components/Footer'
+import * as RegistrationActions from '../actions/RegistrationActions'
 
 class App extends React.Component {
   componentWillMount () {
@@ -27,6 +28,7 @@ class App extends React.Component {
                       logout={this.props.loginActions.logout}
                       showLoginDialog={this.props.loginActions.showLoginDialog}
                       requireLoginBeforeAction={this.props.loginActions.requireLoginBeforeAction}
+                      startRegistration={this.props.registrationActions.startRegistration}
         />
         {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
@@ -60,7 +62,8 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     languageActions: bindActionCreators(LanguageActions, dispatch),
     loginActions: bindActionCreators(LoginActions, dispatch),
-    libraryActions: bindActionCreators(LibraryActions, dispatch)
+    libraryActions: bindActionCreators(LibraryActions, dispatch),
+    registrationActions: bindActionCreators(RegistrationActions, dispatch)
   }
 }
 

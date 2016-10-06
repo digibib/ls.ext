@@ -1,9 +1,11 @@
-  import React, { PropTypes } from 'react'
-  import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-  import { Link } from 'react-router'
-  import { push } from 'react-router-redux'
-  import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-  import MediaQuery from 'react-responsive'
+import React, { PropTypes } from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { Link } from 'react-router'
+import { push } from 'react-router-redux'
+import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import MediaQuery from 'react-responsive'
+
+import * as RegistrationActions from '../actions/RegistrationActions'
 
   class SearchHeader extends React.Component {
     constructor (props) {
@@ -11,6 +13,7 @@
       this.handleSearch = this.handleSearch.bind(this)
       this.handleLoginClick = this.handleLoginClick.bind(this)
       this.toggleMobileNav = this.toggleMobileNav.bind(this)
+      this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
       this.state = {
         mobileNavVisible: false
       }
@@ -29,7 +32,12 @@
     handleLoginClick (event) {
       event.preventDefault()
       this.setState({mobileNavVisible: false})
-      this.props.showLoginDialog()
+      this.props.showLoginDialog(push({ pathname: '/profile/loans'}))
+    }
+
+    handleRegistrationClick (event) {
+      event.preventDefault()
+      this.props.startRegistration()
     }
 
     toggleMobileNav () {
@@ -44,15 +52,7 @@
      * Links used in the menu and the mobile menu
      */
     loginLink () {
-      if (this.props.isLoggedIn) {
-        return [
-          <li key={1} data-automation-id="logout_element" onClick={this.props.logout}>
-            <Link to="/">
-              <FormattedMessage {...messages.logout} /> <span>&raquo;</span>
-            </Link>
-          </li>
-        ]
-      } else {
+      if (!this.props.isLoggedIn) {
         return [
           <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick}>
             <Link to="/">
@@ -63,12 +63,35 @@
       }
     }
 
+    logoutLink() {
+      if (this.props.isLoggedIn) {
+        return [
+          <li key={1} data-automation-id="logout_element" onClick={this.props.logout}>
+            <Link to="/">
+              <FormattedMessage {...messages.logout} /> <span>&raquo;</span>
+            </Link>
+          </li>
+        ]
+      }
+    }
+
     profileLink () {
-      return [
-        <li key={3}>
-          <Link to="/profile"><FormattedMessage {...messages.myProfile} /> <span>&raquo;</span></Link>
-        </li>
-      ]
+      if (this.props.isLoggedIn) {
+        return [
+          <li key={3}>
+            <Link to="/profile/loans"><FormattedMessage {...messages.myProfile} /> <span>&raquo;</span></Link>
+          </li>
+        ]
+      }
+    }
+
+    registrationLink() {
+        return (
+          <li>
+
+            <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /></a>
+          </li>
+        )
     }
 
     /**
@@ -77,8 +100,10 @@
     renderNavigationLinks () {
       return (
         <ul>
-          {this.loginLink()}
           {this.profileLink()}
+          {this.registrationLink()}
+          {this.loginLink()}
+          {this.logoutLink()}
         </ul>
       )
     }
@@ -86,8 +111,10 @@
     renderMobileNavigationLinks () {
       return (
         <ul>
-          {this.loginLink()}
           {this.profileLink()}
+          {this.registrationLink()}
+          {this.loginLink()}
+          {this.logoutLink()}
         </ul>
       )
     }
@@ -176,7 +203,8 @@
     isLoggedIn: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
     mediaQueryValues: PropTypes.object,
-    intl: intlShape.isRequired
+    intl: intlShape.isRequired,
+    startRegistration: PropTypes.func.isRequired
   }
 
   export const messages = defineMessages({
@@ -229,6 +257,11 @@
       id: 'Navigation.logIn',
       description: 'Shown when logged out',
       defaultMessage: 'Log in'
+    },
+    register: {
+      id: 'Navigation.register',
+      description: 'Register link in main menu',
+      defaultMessage: 'Register'
     }
   })
 
