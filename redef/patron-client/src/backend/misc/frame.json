@@ -342,6 +342,7 @@
       "@embed": "@always",
       "type": "deichman:Contribution",
       "deichman:agent": {
+        "type": ["deichman:Person", "deichman:Corporation"],
         "nationality": {
           "@embed": "@never"
         }
