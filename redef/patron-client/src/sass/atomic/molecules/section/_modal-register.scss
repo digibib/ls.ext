@@ -141,7 +141,7 @@
 
     .date-of-birth {
       @include registration-grid-component(true);
-      
+
       .form-item {
         @include span(4);
 
@@ -172,7 +172,7 @@
   input {
 
     &#mobile, &#ssn {
-      max-width: 8em;
+      max-width: 9em;
     }
 
     &#pin, &#repeatPin {
