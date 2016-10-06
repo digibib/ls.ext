@@ -1,3 +1,29 @@
+# Remove format SignLanguageMovie
+
+SPARQL
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX format: <http://data.deichman.no/format#>
+PREFIX adaptation: <http://data.deichman.no/formatAdaptation#>
+
+WITH <http://deichman.no/migration>
+
+MODIFY
+
+DELETE {
+  ?publication :format format:SignLanguageMovie
+}
+
+INSERT {
+  ?publication :formatAdaptation adaptation:signLanguage .
+}
+
+WHERE {
+  ?publication :format format:SignLanguageMovie ;
+    a :Publication
+}
+;
+
+
 # 1) Create media type for comic books
 
 SPARQL
@@ -293,6 +319,7 @@ WHERE {
       (mediaType:Book                 workType:Literature)
       (mediaType:E-book               workType:Literature)
       (mediaType:ComicBook            workType:Literature)
+      (mediaType:Periodical           workType:Literature)
       (mediaType:MusicRecording       workType:Music)
       (mediaType:SheetMusic           workType:Music)
       (mediaType:LanguageCourse       workType:Other)
