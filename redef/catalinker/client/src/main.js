@@ -2238,6 +2238,7 @@
                     var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'
 
                     searchBody = {
+                      size: 100,
                       query: {
                         bool: {
                           filter: [
@@ -2255,6 +2256,7 @@
                       return `${queryTerm.field}:${searchString}${wildCardPostfix}`
                     }).join(' OR ')
                     searchBody = {
+                      size: 100,
                       params: {
                         q: query
                       }

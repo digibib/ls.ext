@@ -380,7 +380,7 @@ public class SearchServiceImpl implements SearchService {
         try {
             HttpGet httpGet = new HttpGet(searchUriBuilder
                     .setParameter("q", query)
-                    .setParameter("size", "50")
+                    .setParameter("size", "100")
                     .build());
             return executeHttpRequest(httpGet);
         } catch (Exception e) {
