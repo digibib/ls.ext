@@ -361,7 +361,7 @@ end
 When(/^sjekker jeg at emnet er listet opp på verket$/) do
   data_automation_id = "Work_http://data.deichman.no/ontology#subject_0"
   subject_field = @browser.span(:xpath => "//*[@data-automation-id='#{data_automation_id}']//li/span[@class='value']")
-  subject_field.text.should eq @context[:subject_name]
+  subject_field.text.should eq "#{@context[:subject_name]}(Generelt emne)"
 end
 
 When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|

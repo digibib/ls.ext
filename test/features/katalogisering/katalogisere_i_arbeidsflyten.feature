@@ -277,6 +277,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så klikker jeg utenfor sprettopp-skjemaet
     Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
     Så velger jeg et emne fra treffliste fra emneregisteret
+    Og jeg venter litt
     Så sjekker jeg at verdien for "Forklarende tilføyelse" nå er "Beskrivelse"
 
   Scenario: Redigere sjanger i katalogisering
