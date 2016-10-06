@@ -320,7 +320,7 @@ DELETE {
 }
 
 INSERT {
-  ?publication :formatAdaptation adaptation:signLanguage .
+  ?publication :hasFormatAdaptation adaptation:signLanguage .
 }
 
 WHERE {
