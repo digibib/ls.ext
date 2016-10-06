@@ -212,7 +212,7 @@ class Work extends React.Component {
         component="div"
         className="additional-info">
         {this.renderTargetAudience(work)}
-        {this.renderPartOfSeries(work)}
+        {/* this.renderPartOfSeries(work) */}
         {/* this.renderRelations(work) */}
         {this.renderDeweynr(work)}
         <Subjects subjects={work.subjects} />
