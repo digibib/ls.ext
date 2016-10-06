@@ -3788,7 +3788,7 @@
                       predicate: "ONTOLOGY.mainTitle"
                       object:
                         datatype: "literal"
-                class: "MIGRATION.Work"
+                class: "ONTOLOGY.Work"
     -
       '830':
         subfields:
@@ -3825,7 +3825,7 @@
                       predicate: "RAW.sortingForm"
                       object:
                         datatype: "literal"
-              class: "MIGRATION.Work"
+              class: "ONTOLOGY.Work"
     -
       '856':
         subfields:

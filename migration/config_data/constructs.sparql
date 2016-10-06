@@ -294,3 +294,27 @@ WHERE {
 	}
 }
 
+# tag: constructWorkIsPartOfWork
+PREFIX : <http://data.deichman.no/ontology#>
+PREFIX migration: <http://migration.deichman.no/>
+PREFIX relationType: <http://data.deichman.no/relationType#>
+PREFIX role: <http://data.deichman.no/role#>
+WITH <http://deichman.no/migration>
+CONSTRUCT {
+    <{{.URI}}> :isRelatedTo [
+        :work ?relatedWork ;
+        :hasRelationType relationType:partOf ;
+        a :WorkRelation
+    ] .
+    ?relatedWork :contributor [
+        a :Contribution ;
+        a :MainEntry ;
+        :agent ?agent ;
+        :role role:author
+    ] .
+}
+WHERE {
+    <{{.URI}}> migration:isPartOf ?relatedWork .
+    ?relatedWork migration:creator ?agent ;
+        a :Work .
+}
