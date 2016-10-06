@@ -469,6 +469,13 @@ body {
             background-image: url("/images/arrow_down_outline.svg");
           }
         }
+        .explainable {
+          position: relative;
+          right: 78px;
+          top: -51px;
+          float: right;
+          font-style: italic;
+        }
         :not(.input-wrapper) {
           .support-panel-expander {
             left: 293px;

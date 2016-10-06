@@ -1941,7 +1941,7 @@
               },
               getExplanation: function (explanations, value) {
                 return _.find(explanations.patterns, function (pattern) {
-                    return RegExp(pattern.match).test(value)
+                  return RegExp(pattern.match).test(value)
                 }).explanation
               },
               subjectTypeLabelDet: function (subjectType) {
@@ -2619,27 +2619,26 @@
                         unblockUI()
                       }))
                     })
-                  })
-                  Promise.all(promises).then(function () {
-                    unblockUI()
-                    if (resultStat.itemsFromPreferredSource + _.reduce(
-                        _.values(resultStat.itemsFromOtherSources), function (memo, value) {
-                          return memo + value
-                        }, 0) === 0) {
-                      $('#search-suggestion-result-dialog').dialog({
-                        modal: true,
-                        width: 450,
-                        buttons: [
-                          {
-                            text: 'Ok',
-                            click: function () {
-                              $(this).dialog('close')
+                    Promise.all(promises).then(function () {
+                      if (resultStat.itemsFromPreferredSource + _.reduce(
+                          _.values(resultStat.itemsFromOtherSources), function (memo, value) {
+                            return memo + value
+                          }, 0) === 0) {
+                        $('#search-suggestion-result-dialog').dialog({
+                          modal: true,
+                          width: 450,
+                          buttons: [
+                            {
+                              text: 'Ok',
+                              click: function () {
+                                $(this).dialog('close')
+                              }
                             }
-                          }
-                        ]
-                      })
-                    }
-                  }).then(unblockUI)
+                          ]
+                        })
+                      }
+                    }).then(unblockUI)
+                  })
                 }
               },
               acceptSuggestedPredefinedValue: function (event, value) {

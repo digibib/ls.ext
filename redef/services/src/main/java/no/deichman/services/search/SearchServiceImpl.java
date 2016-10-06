@@ -378,7 +378,10 @@ public class SearchServiceImpl implements SearchService {
 
     private Response doSearch(String query, URIBuilder searchUriBuilder) {
         try {
-            HttpGet httpGet = new HttpGet(searchUriBuilder.setParameter("q", query).build());
+            HttpGet httpGet = new HttpGet(searchUriBuilder
+                    .setParameter("q", query)
+                    .setParameter("size", "50")
+                    .build());
             return executeHttpRequest(httpGet);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
