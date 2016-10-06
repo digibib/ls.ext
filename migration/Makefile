@@ -258,6 +258,8 @@ transactions: out/done.massage_input_data out/done.migrate_patrons
 	@echo "   Migrating loans and holds to Koha"
 	@echo "-- Inserting issues SQL"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/issues.sql'
+	@echo "-- Remove item.onloan date on non-matched issues"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE items set onloan=NULL WHERE NOT EXISTS (SELECT * FROM issues WHERE items.itemnumber = issues.itemnumber)"'
 	@echo "-- Generating holds SQL"
 	@$(TIMEIT) $(MIGRATION_RUN_CMD) "res2sql -res=/data/$(RES) > /out/holds.sql"
 	@echo "-- Inserting holds SQL"
