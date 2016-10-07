@@ -1385,7 +1385,7 @@
 
     function getSuggestedValuesSearchInput () {
       var suggestValueInput = _.find(_.flatten(_.pluck(ractive.get('inputGroups'), 'inputs')), function (input) {
-        return input.searchForValueSuggestions
+        return input.searchForValueSuggestions && checkShouldInclude(input)
       })
       return suggestValueInput
     }
