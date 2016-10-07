@@ -1420,20 +1420,35 @@
     }
 
     var uiBlockCounter = 0
+    var uiBlockClearer
+
+    function resetUnblock () {
+      console.log('Resetting ui blocking')
+      uiBlockCounter = 0
+      unblockUI()
+    }
 
     function blockUI (complete, from) {
       uiBlockCounter++
+//      console.log(`uiBlockCounter -> ${uiBlockCounter} ${from}`)
       if (uiBlockCounter === 1) {
         $('#ui-blocker').fadeIn(100, complete)
+        uiBlockClearer = window.setTimeout(resetUnblock, 10000)
       } else if (complete) {
         complete()
       }
     }
 
     function unblockUI (from) {
-      uiBlockCounter--
+      if (uiBlockCounter > 0) {
+        uiBlockCounter--
+      }
+//      console.log(`uiBlockCounter <- ${uiBlockCounter} ${from}`)
       if (uiBlockCounter === 0) {
-        $('#ui-blocker').fadeOut(300)
+        if (uiBlockClearer) {
+          window.clearTimeout(uiBlockClearer)
+        }
+        $('#ui-blocker').fadeOut(200).delay(300)
       }
     }
 
@@ -2613,7 +2628,7 @@
                         if (fromPreferredSource) {
                           searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource.push(hitsFromPreferredSource)
                         }
-                        ractive.update().then(unblockUI)
+                        ractive.update()
                       }).then(function () {
                         updateBrowserLocationWithSuggestionParameter(searchExternalSourceInput.searchForValueSuggestions.parameterName, searchValue)
                       }).catch(function (error) {
