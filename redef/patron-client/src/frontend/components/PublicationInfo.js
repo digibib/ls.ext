@@ -23,7 +23,7 @@ class PublicationInfo extends React.Component {
           {items.map(item => {
             return (
               <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
-                <td>{item.branch}</td>
+                <td>{this.props.intl.formatMessage({ id: item.branch })}</td>
                 <td>{item.shelfmark}</td>
                 <td>{this.renderAvailability(item.available, item.total)}</td>
               </tr>
