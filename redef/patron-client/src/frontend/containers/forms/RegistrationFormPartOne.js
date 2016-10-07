@@ -42,11 +42,13 @@ class RegistrationFormPartOne extends React.Component {
   }
 
   renderCheckForExistingUserSuccess () {
+    {/*
     return (
       <p data-automation-id="check_for_existing_user_success">
         <FormattedMessage {...messages.checkForExistingUserSuccess} />
       </p>
     )
+    */}
   }
 
   renderCheckForExistingUserError (message) {
@@ -156,7 +158,7 @@ export const messages = defineMessages({
   userExistsInCentralDB: {
     id: 'RegistrationFormPartOne.userExistsInCentralDB',
     description: 'Message displayed to user when already registered in the Norwegian Patron DB',
-    defaultMessage: 'User seems to be already registered in the Norwegian Patron Database. Please contact library to get credentials'
+    defaultMessage: 'You are already registered in the Norwegian Patron Database. Please come by a library to pick up a new library card.'
   },
   cancel: {
     id: 'RegistrationFormPartOne.cancel',
@@ -231,7 +233,7 @@ export const messages = defineMessages({
   ssnInfo: {
     id: 'RegistrationFormPartOne.ssnInfo',
     description: 'Expanded info on ssn',
-    defaultMessage: 'SSN is your personal Social security number. It is either ... etc'
+    defaultMessage: 'The birth date determines wich items you can borrow and what rights you have. The SSN tells us who you are and ensures that no one can abuse your identity. All data is stored and processed according to current laws.'
   }
 })
 

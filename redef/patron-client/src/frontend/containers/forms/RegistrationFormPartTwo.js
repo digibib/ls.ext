@@ -159,7 +159,7 @@ export const messages = defineMessages({
   choosePin: {
     id: 'RegistrationFormPartTwo.choosePin',
     description: 'Label for choosing pin field',
-    defaultMessage: 'Choose PIN (4 digits)'
+    defaultMessage: 'Choose your PIN number (4 digits)'
   },
   repeatPin: {
     id: 'RegistrationFormPartTwo.repeatPin',
@@ -169,12 +169,12 @@ export const messages = defineMessages({
   register: {
     id: 'RegistrationFormPartTwo.register',
     description: 'The register button text',
-    defaultMessage: 'Register'
+    defaultMessage: 'Submit'
   },
   contactInfoLegend: {
     id: 'RegistrationFormPartTwo.contactInfoLegend',
     description: 'Fieldset legend for contact information',
-    defaultMessage: 'Contact information'
+    defaultMessage: 'Your contact details'
   },
   personSettingsLegend: {
     id: 'RegistrationFormPartTwo.personSettingsLegend',
@@ -204,7 +204,7 @@ export const messages = defineMessages({
   acceptTermsLabel: {
     id: 'RegistrationFormPartTwo.acceptTermsLabel',
     description: 'Text used in label for accept terms and conditions checkbox',
-    defaultMessage: 'Accept Terms and Conditions'
+    defaultMessage: 'I have read and accept the terms and conditions'
   },
   cancel: {
     id: 'RegistrationFormPartTwo.cancel',
