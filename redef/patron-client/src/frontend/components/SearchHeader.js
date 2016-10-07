@@ -237,7 +237,7 @@ export const messages = defineMessages({
   searchInputPlaceholder: {
     id: 'SearchHeader.searchInputPlaceholder',
     description: 'Placeholder for the search field',
-    defaultMessage: 'Search for something...'
+    defaultMessage: 'Search by title, author, subject, or other keywords'
   },
   searchLabel: {
     id: 'SearchHeader.searchLabel',

@@ -36,6 +36,13 @@
 
   .forgot-pin {
     font-size: rhythm(2.5);
+
+    span:first-child {
+      font-weight: bold;
+      width: 100%;
+      display: block;
+    }
+
   }
 
 }

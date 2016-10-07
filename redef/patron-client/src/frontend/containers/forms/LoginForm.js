@@ -53,7 +53,8 @@ class LoginForm extends React.Component {
           <FormInputField name="username" message={this.props.messages.username} type="text" formName={formName} />
           <FormInputField name="password" message={this.props.messages.password} type="password" formName={formName} />
           <p className="forgot-pin">
-            <Link to="#">Glemt PIN-kode?</Link>
+            <FormattedMessage {...this.props.messages.forgotPin} />
+            <FormattedMessage {...this.props.messages.forgotPinDesc} />
           </p>
           <p>
             <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}

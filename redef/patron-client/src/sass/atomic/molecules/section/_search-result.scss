@@ -51,6 +51,10 @@
   @include container;
   font-size: rhythm(2);
 
+  > a:hover h1 .title-text {
+    text-decoration: underline;
+  }
+
   .entry-content-icon {
     @include span(12);
   }

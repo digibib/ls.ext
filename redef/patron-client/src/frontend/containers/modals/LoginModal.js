@@ -71,7 +71,17 @@ export const messages = defineMessages({
     id: 'Login.genericLoginError',
     description: 'A generic message for login failures, which can be caused by server errors, network problems etc.',
     defaultMessage: 'Something went wrong when attempting to log in!'
-  }
+  },
+  forgotPin: {
+    id: 'Login.forgotPin',
+    description: 'Forgot Pin?',
+    defaultMessage: 'Forgot pin?'
+  },
+  forgotPinDesc: {
+    id: 'Login.forgotPinDesc',
+    description: 'Forgot pin description',
+    defaultMessage: 'If you have forgotten you PIN you have to come in to one of our libraries to have it reset. We are working on a better solution to this.'
+  },
 })
 
 LoginModal.propTypes = {
