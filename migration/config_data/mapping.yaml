@@ -4197,6 +4197,7 @@
               predicate: "MIGRATION.musicClass"
               object:
                 datatype: "literal"
+                regex_strip: "[\\s]+"
     -
       '090':
         subfields:
