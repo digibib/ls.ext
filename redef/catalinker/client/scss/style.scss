@@ -472,8 +472,8 @@ body {
         }
         .explainable {
           position: relative;
-          right: 78px;
-          top: -49px;
+          right: 57px;
+          top: -51px;
           float: right;
           font-style: italic;
           background: lightgray;
@@ -482,7 +482,7 @@ body {
         }
         :not(.input-wrapper) {
           .support-panel-expander {
-            left: 293px;
+            left: 290px;
             top: -24px;
           }
         }
@@ -535,7 +535,7 @@ body {
         }
         .suggestion-source-bibbi {
           @include source-logo-bibbi;
-          background-position: 85% 5px;
+          background-position: 90% 5px;
         }
         .suggestion-source-loc {
           @include source-logo-loc;
