@@ -35,7 +35,7 @@ variable,value
 "HidePatronName",1
 "IntranetUserCSS",".deichman-hidden { display: none !important; }"
 "IntranetUserJS","$(document).ready(function(){\r\n    if ($(\'div#aai_fnr\')[0]) {\r\n		$(\'div#aai_fnr\')[0].innerHTML = $(\'div#aai_fnr\')[0].innerHTML.replace(/\\d/g\,\'*\');\r\n    }\r\n})\r\n"
-"KohaAdminEmailAddress","digibib@gmail.com"
+"KohaAdminEmailAddress","no-reply@deichman.no"
 "MaxFine","100"
 "maxoutstanding","0"
 "maxreserves","1000"
