@@ -49,7 +49,7 @@ services:
       PIDGEON_USER: "${PIDGEON_USER}"
       PIDGEON_PASS: "${PIDGEON_PASS}"
       SIP_AUTOPASS: "${SIP_AUTOPASS}"
-      SIP_WORKERS: 75
+      SIP_WORKERS: 125
     ports:
       - "6001:6001"
       - "8081:8081"
