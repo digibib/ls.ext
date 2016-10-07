@@ -35,7 +35,8 @@ public final class Format {
             .put("mk", "XboxOneGame")
             .put("mn", "NintendoDSGame")
             .put("mo", "NintendoWiiGame")
-            .put("na", "ComputerFile")
+            .put("na", "PDF")
+            .put("nb", "EPUB")
             .build();
 
     public static String translate(String formatCode) {
