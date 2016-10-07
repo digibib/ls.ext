@@ -473,9 +473,12 @@ body {
         .explainable {
           position: relative;
           right: 78px;
-          top: -51px;
+          top: -49px;
           float: right;
           font-style: italic;
+          background: lightgray;
+          padding: 1px 3px 1px 3px;
+          border-radius: 9px;
         }
         :not(.input-wrapper) {
           .support-panel-expander {

@@ -69,7 +69,7 @@
         <a {{#if nonEditable}}style="display:none;" {{/if}} class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
     {{/if}}
     {{#if !deletable && widgetOptions.explanations && config.search[./current.accepted.selectedIndexType].selectIndexLabel}}
-    <span class="explainable">({{config.search[./current.accepted.selectedIndexType].selectIndexLabel}})</span>
+    <span class="explainable">{{config.search[./current.accepted.selectedIndexType].selectIndexLabel}}</span>
     {{/if}}
 {{/if}}
 </span>
