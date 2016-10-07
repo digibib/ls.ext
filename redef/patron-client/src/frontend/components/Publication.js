@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import ClickableElement from '../components/ClickableElement'
+import Constants from '../constants/Constants'
 
 class Publication extends React.Component {
   renderTitle (publication) {
@@ -9,6 +10,27 @@ class Publication extends React.Component {
       title += ` — ${publication.partTitle}`
     }
     return title
+  }
+
+  renderBookCover(publication) {
+    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: this.renderTitle(publication) })
+    if (publication.image) {
+      return (
+        <div className="book-cover">
+          <img src={publication.image} alt={coverAltText} />
+        </div>
+      )
+    } else if (typeof publication.mediaTypes[0] !== 'undefined') {
+      return (
+        <div className="book-cover missing">
+          <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[0] ] ]}/>
+        </div>
+      )
+    } else {
+      return (
+        <div className="book-cover" />
+      )
+    }
   }
 
   render () {
@@ -20,14 +42,11 @@ class Publication extends React.Component {
         return ", "
       }
     }
-    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: this.renderTitle(publication) })
     return (
         <article onClick={this.handleClick}
                  className={this.props.open ? 'single-publication open' : 'single-publication'}
                  data-automation-id={`publication_${publication.uri}`}>
-          <div className="book-cover">
-            {publication.image ? <img src={publication.image} alt={coverAltText} /> : null}
-          </div>
+          {this.renderBookCover(publication)}
           <div className="meta-info">
             <div className="publication-text-container">
               <div className="availability" data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>

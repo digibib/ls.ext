@@ -15,6 +15,15 @@
       max-height: 7em;
     }
 
+    &.missing {
+      text-align: center;
+      i {
+        font-size: 3em;
+        color: $mediumGreyColor;
+      }
+
+    }
+
   }
 
   .meta-info {
