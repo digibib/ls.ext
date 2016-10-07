@@ -15,6 +15,11 @@ class Publication extends React.Component {
     const { publication, startReservation } = this.props
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
+    const publicationYearLanguageSeparator = function () {
+      if (publication.publicationYear && publication.languages.length > 0) {
+        return ", "
+      }
+    }
     const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: this.renderTitle(publication) })
     return (
         <article onClick={this.handleClick}
@@ -30,7 +35,8 @@ class Publication extends React.Component {
               </div>
               <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
               <div className="meta-item">
-                <span data-automation-id="publication_year">{publication.publicationYear}, </span>
+                <span data-automation-id="publication_year">{publication.publicationYear}</span>
+                <span>{publicationYearLanguageSeparator()}</span>
                 <span data-automation-id="publication_languages">{languages.join(', ')}</span>
               </div>
               <div className="meta-item">
