@@ -189,8 +189,7 @@
       "@id": "deichman:edition"
     },
     "numberOfPages": {
-      "@id": "deichman:numberOfPages",
-      "@type": "xsd:string"
+      "@id": "deichman:numberOfPages"
     },
     "isbn": {
       "@id": "deichman:isbn"
