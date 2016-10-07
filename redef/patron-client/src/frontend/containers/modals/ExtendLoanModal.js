@@ -26,10 +26,9 @@ class ExtendLoanModal extends React.Component {
   renderSuccess () {
     return (
       <div data-automation-id="extend_loan_success_modal" className="default-modal">
-        <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
-        <p>
+        <h2>
           <FormattedMessage {...messages.messageSuccess} />
-        </p>
+        </h2>
         <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
@@ -99,7 +98,7 @@ export const messages = defineMessages({
   messageSuccess: {
     id: 'ExtendLoanModal.messageSuccess',
     description: 'The extend loan success message',
-    defaultMessage: 'The loan is now extended.'
+    defaultMessage: 'The loan is now extended with 14 days.'
   },
   headerTextError: {
     id: 'ExtendLoanModal.headerTextError',
@@ -109,7 +108,7 @@ export const messages = defineMessages({
   genericExtendLoanError: {
     id: 'ExtendLoanModal.genericExtendLoanError',
     description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
-    defaultMessage: 'Something went wrong when attempting to extend loan!'
+    defaultMessage: 'Can not be extended. This may be bacause you can not extend the loan further, the material is reserved by another, or you have an outstanding fee.'
   }
 })
 

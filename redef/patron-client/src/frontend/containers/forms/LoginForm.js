@@ -49,7 +49,7 @@ class LoginForm extends React.Component {
         </button>
 
         <form onSubmit={this.handleLogin}>
-          <h1>Logg inn for å reservere</h1>
+          <h1><FormattedMessage {...this.props.messages.logIn} /></h1>
           <FormInputField name="username" message={this.props.messages.username} type="text" formName={formName} />
           <FormInputField name="password" message={this.props.messages.password} type="password" formName={formName} />
           <p className="forgot-pin">

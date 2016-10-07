@@ -26,10 +26,9 @@ class CancelReservationModal extends React.Component {
   renderSuccess () {
     return (
       <div data-automation-id="cancel_reservation_success_modal" className="default-modal">
-        <h2><FormattedMessage {...messages.headerTextSuccess} /></h2>
-        <p>
+        <h2>
           <FormattedMessage {...messages.messageSuccess} />
-        </p>
+        </h2>
         <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>

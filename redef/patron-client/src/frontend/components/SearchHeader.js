@@ -86,11 +86,13 @@ class SearchHeader extends React.Component {
   }
 
   registrationLink () {
-    return (
-      <li>
-        <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /></a>
-      </li>
-    )
+    if (!this.props.isLoggedIn) {
+      return (
+        <li>
+          <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /></a>
+        </li>
+      )
+    }
   }
 
   /**
