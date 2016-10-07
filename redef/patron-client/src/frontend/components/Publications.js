@@ -115,8 +115,7 @@ class Publications extends React.Component {
               mediaType = 'uncategorized'
               mediaTypeOutput = this.props.intl.formatMessage({ id: messages.noMediaType.id })
             }
-            let showingRestLabel = <FormattedMessage {...messages.showRestOfPublications}
-                                                     values={{ mediaType: mediaTypeOutput }} />
+            let showingRestLabel = <FormattedMessage {...messages.showRestOfPublications} values={{ mediaType: mediaTypeOutput }} />
             const output = []
             const showAll = Array.isArray(this.props.locationQuery.showAllResults) ? this.props.locationQuery.showAllResults : [ this.props.locationQuery.showAllResults ]
             if (showAll.includes(mediaType)) {
@@ -347,12 +346,12 @@ export const messages = defineMessages({
   showRestOfPublications: {
     id: 'Publications.showRest',
     description: 'Label for showing the publications that where filtered out by the users delimiters',
-    defaultMessage: 'Show the rest of the {mediaType} publications'
+    defaultMessage: 'Show all of the {mediaType} publications'
   },
   hideRestOfPublications: {
     id: 'Publications.hideRest',
     description: 'Label for hiding the publications that where filtered out by the users delimiters',
-    defaultMessage: 'Hide the rest of the {mediaType} publications'
+    defaultMessage: 'Hide all of the {mediaType} publications'
   }
 })
 

@@ -117,7 +117,7 @@ class Work extends React.Component {
     return (
       <div className="meta-item author">
         <span className="meta-label"><FormattedMessage {...messages.labelBy} />: </span>
-        <span className="meta-content">{work.by}</span>
+        <span className="meta-content">{(Array.isArray(work.by)) ? work.by.join(' / ') : work.by}</span>
       </div>
     )
   }

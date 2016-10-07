@@ -18,4 +18,27 @@
 
   }
 
+  .toggle-all-publications {
+    margin-top: rhythm(4);
+    text-align: center;
+    color: $redColor;
+
+    span {
+      text-transform: lowercase;
+      padding-right: rhythm(2);
+      display: inline-block;
+
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      &:first-letter {
+        text-transform: uppercase;
+      }
+
+    }
+
+  }
+
 }

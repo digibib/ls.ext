@@ -62,6 +62,10 @@
       @include container;
     }
 
+    .toggle-all-publications {
+      @include span(12);
+    }
+
   }
 
 }

@@ -3,14 +3,13 @@ import React, { PropTypes } from 'react'
 import ClickableElement from '../components/ClickableElement'
 
 const ShowFilteredPublicationsLabel = ({ open, showingRestLabel, toggleParameterValue, mediaType }) => (
-    <ClickableElement onClickAction={toggleParameterValue} onClickArguments={[ 'showAllResults', mediaType ]}>
-      <div>
-        <p style={{ fontSize: '1.1em', marginBottom: '0', color: 'red', textAlign: 'center', fontWeight: 'bolder' }}>{showingRestLabel}</p>
-        <img style={{ height: '0.5em' }} src={open ? '/images/btn-arrow-close.svg' : '/images/btn-arrow-open.svg'}
-             alt="Red arrow pointing down" />
-      </div>
-    </ClickableElement>
-  )
+  <ClickableElement onClickAction={toggleParameterValue} onClickArguments={[ 'showAllResults', mediaType ]}>
+    <div className="toggle-all-publications">
+      {showingRestLabel}
+      {open ? <i className="icon-up-open"></i> : <i className="icon-down-open"></i>}
+    </div>
+  </ClickableElement>
+)
 
 ShowFilteredPublicationsLabel.propTypes = {
   showingRestLabel: PropTypes.object.isRequired,
