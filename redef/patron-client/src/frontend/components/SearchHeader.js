@@ -5,8 +5,6 @@ import { push } from 'react-router-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 
-import * as RegistrationActions from '../actions/RegistrationActions'
-
 class SearchHeader extends React.Component {
   constructor (props) {
     super(props)

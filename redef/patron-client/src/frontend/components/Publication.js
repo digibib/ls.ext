@@ -12,7 +12,7 @@ class Publication extends React.Component {
     return title
   }
 
-  renderBookCover(publication) {
+  renderBookCover (publication) {
     const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: this.renderTitle(publication) })
     if (publication.image) {
       return (
@@ -23,7 +23,7 @@ class Publication extends React.Component {
     } else if (typeof publication.mediaTypes[0] !== 'undefined') {
       return (
         <div className="book-cover missing">
-          <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[0] ] ]}/>
+          <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[0] ] ]} />
         </div>
       )
     } else {

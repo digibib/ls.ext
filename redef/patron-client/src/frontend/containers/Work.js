@@ -43,7 +43,6 @@ class Work extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppearTimeout={10000}
         transitionAppear
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}
@@ -59,7 +58,6 @@ class Work extends React.Component {
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
-        transitionAppearTimeout={10000}
         transitionAppear
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}

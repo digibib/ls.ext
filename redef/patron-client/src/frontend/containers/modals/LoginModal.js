@@ -81,7 +81,7 @@ export const messages = defineMessages({
     id: 'Login.forgotPinDesc',
     description: 'Forgot pin description',
     defaultMessage: 'If you have forgotten you PIN you have to come in to one of our libraries to have it reset. We are working on a better solution to this.'
-  },
+  }
 })
 
 LoginModal.propTypes = {

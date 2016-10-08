@@ -18,7 +18,7 @@ module.exports = (app) => {
       })
       .then(json => {
         // only unique user should be able to create user session
-        if (json.length != 1 ) {
+        if (json.length !== 1) {
           return Promise.reject({message: 'User not unique', status: 403})
         } else {
           request.session.borrowerNumber = json[0].borrowernumber
@@ -65,6 +65,4 @@ module.exports = (app) => {
       return fetch(`http://xkoha:8081/api/v1/patrons?userid=${username}`)
     }
   }
-
-
 }

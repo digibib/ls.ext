@@ -42,13 +42,13 @@ class RegistrationFormPartOne extends React.Component {
   }
 
   renderCheckForExistingUserSuccess () {
-    {/*
+    /*
     return (
       <p data-automation-id="check_for_existing_user_success">
         <FormattedMessage {...messages.checkForExistingUserSuccess} />
       </p>
     )
-    */}
+    */
   }
 
   renderCheckForExistingUserError (message) {

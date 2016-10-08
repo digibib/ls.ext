@@ -46,7 +46,8 @@ App.propTypes = {
   libraryActions: PropTypes.object.isRequired,
   loginActions: PropTypes.object.isRequired,
   locale: PropTypes.string.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
+  registrationActions: PropTypes.object.isRequired
 }
 
 function mapStateToProps (state) {

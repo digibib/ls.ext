@@ -6,7 +6,7 @@ const ShowFilteredPublicationsLabel = ({ open, showingRestLabel, toggleParameter
   <ClickableElement onClickAction={toggleParameterValue} onClickArguments={[ 'showAllResults', mediaType ]}>
     <div className="toggle-all-publications">
       {showingRestLabel}
-      {open ? <i className="icon-up-open"></i> : <i className="icon-down-open"></i>}
+      {open ? <i className="icon-up-open" /> : <i className="icon-down-open" />}
     </div>
   </ClickableElement>
 )
