@@ -1,6 +1,7 @@
 INSERT IGNORE INTO branches
   (branchcode, branchname)
 VALUES
+  ("api","Intern API-avdeling"),
   ("fbje","Bjerke"),
   ("fbjo","Bjørnholt"),
   ("fbol","Bøler"),
