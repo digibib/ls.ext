@@ -21,12 +21,12 @@ class PatronClientPersonPage < PageRoot
     end
 
     def getBirth
-      lifespan = @browser.span(:data_automation_id => "lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
+      lifespan = @browser.span(:data_automation_id => "person-lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
       return lifespan[1..lifespan.index("-")-1]
     end
 
     def getDeath
-      lifespan = @browser.span(:data_automation_id => "lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
+      lifespan = @browser.span(:data_automation_id => "person-lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
       return lifespan[lifespan.index("-")+1..-2]
     end
 

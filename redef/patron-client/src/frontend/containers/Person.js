@@ -59,7 +59,7 @@ class Person extends React.Component {
     if (person.birthYear) {
       return (
         <div className="meta-item lifespan">
-          <span className="meta-content" data-automation-id="person-nationality">
+          <span className="meta-content" data-automation-id="person-lifespan">
             {`(${person.birthYear}-${person.deathYear || ''})`}
           </span>
         </div>
