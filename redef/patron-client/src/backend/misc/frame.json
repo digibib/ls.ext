@@ -332,6 +332,11 @@
     },
     "description": {
       "@id": "deichman:hasDescription"
+    },
+    "publishers": {
+      "@id": "publishedBy",
+      "@type": "@id",
+      "@container": "@set"
     }
   },
   "type": "Work",
@@ -368,6 +373,9 @@
     },
     "formatAdaptations": {
       "@embed": "@never"
+    },
+    "publishers": {
+      "@embed": "@always"
     }
   },
   "audiences": {

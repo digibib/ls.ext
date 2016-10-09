@@ -72,7 +72,7 @@ class PublicationInfo extends React.Component {
           {/* Missing data: Author / bidragsytere */}
           {this.renderMetaItem(intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
           {this.renderMetaItem(intl.formatMessage(messages.edition), publication.edition)}
-          {this.renderMetaItem(intl.formatMessage(messages.publisher), publication.publisher)}
+          {this.renderMetaItem(intl.formatMessage(messages.publisher), publication.publishers.map(publisher => publisher.name).join(', '))}
           {this.renderMetaItem(intl.formatMessage(messages.placeOfPublication), publication.placeOfPublication)}
         </div>
         <div className="right">
