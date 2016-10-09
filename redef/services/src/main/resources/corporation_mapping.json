@@ -2,7 +2,9 @@
   "properties":
   {
     "name": {
-      "type": "string"
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "name_analyzer"
     }
   }
 }

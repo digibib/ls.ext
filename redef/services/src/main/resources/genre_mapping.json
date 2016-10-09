@@ -1,7 +1,9 @@
 {
   "properties": {
     "prefLabel": {
-      "type": "string"
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "name_analyzer"
     }
   }
 }

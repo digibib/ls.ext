@@ -666,6 +666,12 @@ end
 When(/^jeg venter litt$/) do
   sleep 2
   @browser.execute_script("console.log('waiting...')")
+  if @browser.div(:id => 'ui-blocker').exists?
+    puts("blocker")
+  end
+  if @browser.div(:id => 'ui-blocker').exists? && @browser.div(:id => 'ui-blocker').visible?
+    sleep 4
+  end
 end
 
 When(/^viser trefflisten at personen har et verk fra før$/) do

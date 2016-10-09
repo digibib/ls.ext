@@ -209,6 +209,13 @@
             "format_synonym_filter"
           ]
         },
+        "name_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase"
+          ]
+        },
         "language_analyzer": {
           "type": "custom",
           "tokenizer": "keyword",

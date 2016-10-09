@@ -387,6 +387,7 @@ module.exports = (app) => {
                     rdfProperty: 'agent',
                     indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
+                    previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
                     id: 'mainEntryPersonInput',
                     widgetOptions: {
@@ -918,7 +919,8 @@ module.exports = (app) => {
               type: 'searchable-with-result-in-side-panel',
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
-              nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name' ], // these are property names used to label already connected entities
+              nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name', '(birthYear-', 'deathYear)', 'nationality.fragment.' ], // these are property names used to label already connected entities
+              previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.', 'description', 'specification' ],
               indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ], // this is the name of the elasticsearch index type from which authorities are searched within
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
@@ -1201,11 +1203,8 @@ module.exports = (app) => {
       search: {
         person: {
           type: 'person',
+          sortedListQueryForField: "name",
           selectIndexLabel: 'Person',
-          queryTerms: [ {
-            field: 'name',
-            wildcard: true
-          } ],
           resultItemLabelProperties: [ 'name' ],
           resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
           itemHandler: 'personItemHandler',
@@ -1213,12 +1212,10 @@ module.exports = (app) => {
         },
         subject: {
           type: 'subject',
+          sortedListQueryForField: "prefLabel",
           selectIndexLabel: 'Generelt',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel' ]
+          resultItemLabelProperties: [ 'prefLabel' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         },
         work: {
           type: 'work',
@@ -1249,47 +1246,34 @@ module.exports = (app) => {
         genre: {
           type: 'genre',
           selectIndexLabel: 'Sjanger',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
+          sortedListQueryForField: "prefLabel",
           resultItemLabelProperties: [ 'prefLabel' ]
         },
         corporation: {
           type: 'corporation',
           selectIndexLabel: 'Organisasjon',
-          queryTerms: [ {
-            field: 'name',
-            wildcard: true
-          } ],
+          sortedListQueryForField: "name",
           resultItemLabelProperties: [ 'name' ]
         },
         place: {
           type: 'place',
           selectIndexLabel: 'Sted',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          sortedListQueryForField: "prefLabel",
+          resultItemLabelProperties: [ 'prefLabel' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         },
         event: {
           type: 'event',
           selectIndexLabel: 'Hendelse',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          sortedListQueryForField: "prefLabel",
+          resultItemLabelProperties: [ 'prefLabel' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         },
         serial: {
           type: 'serial',
           selectIndexLabel: 'Serie',
-          queryTerms: [ {
-            field: 'mainTitle',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'mainTitle' ]
+          sortedListQueryForField: "serialMainTitle",
+          resultItemLabelProperties: [ 'serialMainTitle' ]
         },
         publication: {
           type: 'publication',
@@ -1307,19 +1291,13 @@ module.exports = (app) => {
         instrument: {
           type: 'instrument',
           selectIndexLabel: 'Instrument',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
+          sortedListQueryForField: "prefLabel",
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         },
         compositionType: {
           type: 'compositionType',
           selectIndexLabel: 'Komposisjonstype',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
+          sortedListQueryForField: "prefLabel",
           resultItemLabelProperties: [ 'prefLabel', 'specification' ]
         }
       },

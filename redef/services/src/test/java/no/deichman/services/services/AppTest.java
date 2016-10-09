@@ -319,10 +319,10 @@ public class AppTest {
         final JsonArray delCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("del", personUri, BaseURI.ontology("name"), "Knut Hamsun"));
         final HttpResponse<String> patchDelCreatorNameToPersonPatchResponse = buildPatchRequest(resolveLocally(personUri), delCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchDelCreatorNameToPersonPatchResponse);
-        final JsonArray addNewCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, BaseURI.ontology("name"), "George Orwell"));
+        final JsonArray addNewCreatorNameToPersonPatch = buildLDPatch(buildPatchStatement("add", personUri, BaseURI.ontology("name"), "Orwell, George"));
         final HttpResponse<String> patchAddNewCreatorNameToPersonPatchResponse = buildPatchRequest(resolveLocally(personUri), addNewCreatorNameToPersonPatch).asString();
         assertResponse(Status.OK, patchAddNewCreatorNameToPersonPatchResponse);
-        doSearchForPersons("Orwell");
+        doSearchForPersons("Orwell, George");
 
         doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
 

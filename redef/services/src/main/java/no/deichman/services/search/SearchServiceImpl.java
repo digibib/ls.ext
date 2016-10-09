@@ -1,5 +1,8 @@
 package no.deichman.services.search;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.BaseURI;
@@ -40,6 +43,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
@@ -274,6 +278,17 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    @Override
+    public final Response sortedList(String type, String prefix, int minSize, String field) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        List<Map> musts = new ArrayList<>();
+        for (int i = 0; i < prefix.length(); i++) {
+            musts.add(ImmutableMap.of("match_phrase_prefix", ImmutableMap.of(field, prefix.substring(0, prefix.length() - i))));
+        }
+        String body = gson.toJson(ImmutableMap.of("size", minSize, "query", ImmutableMap.of("bool", ImmutableMap.of("should", musts))));
+        return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search"));
+    }
+
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
         Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
@@ -453,5 +468,6 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private URIBuilder getEventSearchUriBuilder() {
-        return getIndexUriBuilder().setPath("/search/event/_search");    }
+        return getIndexUriBuilder().setPath("/search/event/_search");
+    }
 }

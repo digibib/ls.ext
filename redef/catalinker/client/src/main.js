@@ -272,7 +272,7 @@
       }
     }
 
-    function propertyName (predicate) {
+    function fragmentPartOf (predicate) {
       return typeof predicate === 'string' ? _.last(predicate.split('#')) : predicate
     }
 
@@ -343,11 +343,9 @@
       var uri = input.values[ index ].current.value
 
       function fromRoot (root) {
-        var values = _.compact(_.reduce(input.nameProperties || [ 'name' ],
-          function (values, nameProperty) {
-            values.push((root.getAll(nameProperty)[ 0 ] || { value: undefined }).value)
-            return values
-          }, [])).join(' - ')
+        var values = _.pluck(getDisplayPropertiesForNode(input.nameProperties || [ 'name', 'prefLabel' ], root) || [], 'val')
+          .slice(options.onlyFirstField ? 0 : undefined, options.onlyFirstField ? 1 : undefined)
+          .join(' ')
 
         var typeMap = ractive.get('applicationData.config.typeMap')
         var selectedIndexType
@@ -356,6 +354,10 @@
             selectedIndexType = indexType
           }
         })
+        if ((options.onlyFirstField || (input.nameProperties || []).length === 1) && /^\[.*\]$/.test(values)) {
+          input.values[ index ].bracketed = true
+          values = values.replace('[', '').replace(']', '')
+        }
 
         var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
         if (options.onlyValueSuggestions) {
@@ -391,7 +393,6 @@
         return Promise.resolve()
       } else {
         input.values[ index ].waiting = true
-        ractive.update()
         return axios.get(proxyToServices(uri), {
             headers: {
               Accept: 'application/ld+json'
@@ -407,7 +408,10 @@
     }
 
     function isAdvancedQuery (queryString) {
-      return /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString)
+      if (queryString === '') {
+        return false
+      }
+      return  /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString.replace(/&nbsp;/g, ' '))
     }
 
     function checkShouldInclude (input) {
@@ -417,7 +421,7 @@
           let includeWhenValues = _.flatten([ input.includeOnlyWhen[ property ] ])
           allGroupInputs(function (input1) {
             if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
-                propertyName(URI.parseQuery(document.location.href)[ property ] ||
+                fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
                   input1.values[ 0 ].current.value)
               ])[ 0 ])) {
               shouldInclude = false
@@ -614,6 +618,64 @@
       return typeMap[ resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ] ]
     }
 
+    function getDisplayPropertiesForNode (properties, node) {
+      var parensStarted
+
+      function checkEndParens (previewProp, ornamented) {
+        if (parensStarted && previewProp.indexOf(')') !== -1) {
+          ornamented += ')'
+          parensStarted = false
+        }
+        return ornamented
+      }
+
+      function ornament (unornamented, previewProp) {
+        var ornamented = unornamented
+        if (previewProp.lastIndexOf('.') >= previewProp.length - 2) {
+          ornamented += '.'
+        }
+        if (previewProp.indexOf('(') === 0) {
+          ornamented = '(' + ornamented
+          parensStarted = true
+        }
+        if (previewProp.indexOf('-') !== -1) {
+          ornamented += '-'
+        }
+        ornamented = checkEndParens(previewProp, ornamented)
+        return ornamented
+      }
+
+      var displayProperties
+      _.each(properties, function (propName) {
+        let propNameCore = propName.split(/\.fragment|[\.\(\)-]/).join('')
+        let propVal = (node.getAll(propNameCore)[ 0 ] || { value: undefined }).value
+        if (propVal === undefined) {
+          propVal = (node.outAll(propNameCore)[ 0 ] || { 'id': undefined }).id
+        }
+
+        if (propVal) {
+          displayProperties = displayProperties || []
+          let property = { prop: propName }
+          if (propName.indexOf('.fragment') !== -1) {
+            property.val = ornament(fragmentPartOf(propVal), propName)
+          } else {
+            property.val = ornament(propVal, propName)
+          }
+          displayProperties.push(property)
+        } else {
+          let endParensVal = checkEndParens(propName, '')
+          if (endParensVal !== '') {
+            displayProperties.push({ val: endParensVal })
+          }
+        }
+      })
+      return displayProperties
+    }
+
+    function setPreviewValues (input, node, index) {
+      input.values[ index ].previewProperties = getDisplayPropertiesForNode(input.previewProperties, node)
+    }
+
     function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
       var graphData = ensureJSON(response.data)
@@ -644,7 +706,7 @@
               offset = input.offset[ offsetCrossTypes[ type ] ]
             }
             var predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
-            var actualRoots = input.isSubInput ? root.outAll(propertyName(input.parentInput.predicate)) : [ root ]
+            var actualRoots = input.isSubInput ? root.outAll(fragmentPartOf(input.parentInput.predicate)) : [ root ]
             var rootIndex = 0
             _.each(actualRoots, function (root) {
               var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
@@ -652,15 +714,18 @@
               if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
                 if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
                   var index = 0
-                  let values = setMultiValues(root.outAll(propertyName(predicate)), input, rootIndex)
+                  let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
                   promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
                 } else if (input.type === 'searchable-with-result-in-side-panel') {
                   if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
-                    _.each(root.outAll(propertyName(predicate)), function (node, multiValueIndex) {
+                    _.each(root.outAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
                       index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
                       setIdValue(node.id, input, index)
+                      if (options.source) {
+                        setPreviewValues(input, node, index)
+                      }
                       if (!options.onlyValueSuggestions) {
-                        promises.push(setDisplayValue(input, index, node, options))
+                        promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
                         if (!isBlankNodeUri(node.id)) {
                           input.values[ index ].deletable = true
                           if (input.isSubInput) {
@@ -681,7 +746,7 @@
                       input.values[ index ].subjectType = type
                     })
                   } else {
-                    _.each(root.getAll(propertyName(predicate)), function (node, multiValueIndex) {
+                    _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
                       input.suggestedValues = input.suggestedValues || []
                       input.suggestedValues.push({
                         value: node.value,
@@ -691,12 +756,12 @@
                   }
                 } else if (input.type === 'select-predefined-value') {
                   if (!options.onlyValueSuggestions) {
-                    setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                    setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                   } else {
                     var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-                    _.each(root.outAll(propertyName(predicate)), function (value) {
+                    _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
                       if (input.isSubInput && multiple) {
-                        setMultiValues(root.outAll(propertyName(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                        setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                       } else {
                         input.suggestedValues = input.suggestedValues || []
                         input.suggestedValues.push({
@@ -710,11 +775,11 @@
                     })
                   }
                 } else if (input.type === 'hidden-url-query-value') {
-                  _.each(root.outAll(propertyName(predicate)), function (value) {
+                  _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
                     setIdValue(value.id, input, 0)
                   })
                 } else {
-                  _.each(root.getAll(propertyName(predicate)), function (value, index) {
+                  _.each(root.getAll(fragmentPartOf(predicate)), function (value, index) {
                     if (!options.onlyValueSuggestions) {
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset))
@@ -734,8 +799,6 @@
                 rootIndex++
               }
             })
-            var mainInput = input.isSubInput ? input.parentInput : input
-            mainInput.subjectType = type
             input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
           }
         }
@@ -869,7 +932,7 @@
     function emptyValues (predefined, searchable) {
       return [ {
         old: { value: '', lang: '' },
-        current: { value: predefined ? [] : null, lang: '' },
+        current: { value: predefined ? [] : null, lang: '', displayValue: '' },
         uniqueId: _.uniqueId(),
         searchable: searchable
       } ]
@@ -900,6 +963,9 @@
       input.visible = (prop.type !== 'entity' && prop.type !== 'hidden-url-query-value' && !prop.initiallyHidden)
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
+      }
+      if (prop.previewProperties) {
+        input.previewProperties = prop.previewProperties
       }
       if (prop.dataAutomationId) {
         input.dataAutomationId = prop.dataAutomationId
@@ -1025,6 +1091,7 @@
       var inputs = []
       var inputMap = {}
       applicationData.predefinedValues = {}
+      applicationData.propertyLabels = {}
       var predefinedValues = []
       for (var i = 0; i < props.length; i++) {
         var disabled = false
@@ -1048,6 +1115,8 @@
           }
           var predefined = valuesFrom
           var fragment = predicate.substring(predicate.lastIndexOf('#') + 1)
+          let label = i18nLabelValue(props[ i ][ 'rdfs:label' ])
+          applicationData.propertyLabels[ fragment ] = label
           var input = {
             disabled: disabled,
             predicate: predicate,
@@ -1055,7 +1124,7 @@
             predefined: predefined,
             ranges: datatypes,
             datatypes: datatypes,
-            label: i18nLabelValue(props[ i ][ 'rdfs:label' ]),
+            label: label,
             domain: domain,
             allowAddNewButton: false,
             values: emptyValues(predefined),
@@ -1093,9 +1162,6 @@
           id: compoundInput.id,
           keypath: compoundInput.keypath
         }
-        if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
-          currentInput.subjectType = currentInput.subjectTypes[ 0 ]
-        }
         _.each(compoundInput.subInputs.inputs, function (subInput, subInputIndex) {
           if (!subInput.rdfProperty) {
             throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
@@ -1127,7 +1193,8 @@
               showOnlyWhen: subInput.showOnlyWhen,
               isTitleSource: subInput.isTitleSource,
               subInputIndex: subInputIndex,
-              keypath: `${compoundInput.keypath}.subInputs.${subInputIndex}.input`
+              keypath: `${compoundInput.keypath}.subInputs.${subInputIndex}.input`,
+              previewProperties: subInput.previewProperties
             }),
             parentInput: currentInput
           }
@@ -1136,6 +1203,9 @@
 
           if (type === 'searchable-with-result-in-side-panel') {
             newSubInput.input.values[ 0 ].searchable = true
+          }
+          if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
+            newSubInput.input.values[ 0 ].subjectType = currentInput.subjectTypes[ 0 ]
           }
           currentInput.subInputs.push(newSubInput)
         })
@@ -1323,7 +1393,7 @@
       var supportPanelWidth = dummyPanel.width()
       $('span.support-panel').each(function (index, panel) {
         var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
-        var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] input`)
+        var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
         if (supportPanelBase.length > 0) {
           $(panel).css({
             top: _.last(_.flatten([ supportPanelBase ])).position().top - 15,
@@ -1419,21 +1489,179 @@
       return (event.original && event.original.type === 'keyup' && event.original.keyCode !== 13)
     }
 
+    function decodeHtml (html) {
+      var txt = document.createElement('textarea')
+      txt.innerHTML = html
+      return txt.value
+    }
+
+    function doSearch (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem) {
+      searchString = decodeHtml(searchString).trim()
+      let indexType = preferredIndexType || secondaryIndexType
+      var inputkeyPath = grandParentOf(event.keypath)
+      var config = ractive.get('config')
+      var searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/_search`
+      if (!searchString) {
+        if (ractive.get(event.keypath + '.searchResult.')) {
+          ractive.set(event.keypath + '.searchResult.', null)
+        }
+      } else {
+        var searchBody
+        var axiosMethod
+        let fieldForSortedListQuery = config.search[ indexType ].sortedListQueryForField
+        if (config.search[ indexType ].structuredQuery && !isAdvancedQuery(searchString)) {
+          axiosMethod = axios.post
+          var filters = {
+            personAsMainEntryFilter: function (filterArg) {
+              return {
+                nested: {
+                  path: 'contributors',
+                  query: {
+                    bool: {
+                      filter: [
+                        {
+                          term: {
+                            'contributors.mainEntry': true
+                          }
+                        },
+                        {
+                          nested: {
+                            path: 'contributors.agent',
+                            query: {
+                              term: {
+                                'contributors.agent.uri': filterArg
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            default: function () {
+              return {}
+            }
+          }
+          var filterArg = null
+          var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
+          if (filterArgInputRef) {
+            filterArg = _.find(allInputs(), function (input) {
+              return filterArgInputRef === input.id
+            }).values[ 0 ].current.value
+          }
+          if (isBlankNodeUri(filterArg)) {
+            filterArg = undefined
+          }
+
+          var matchBody = {}
+          _.each(config.search[ indexType ].queryTerms, function (queryTerm) {
+            let fieldAndTerm = {}
+            fieldAndTerm[ queryTerm.field ] = searchString
+            matchBody = {
+              query: {
+                match_phrase_prefix: fieldAndTerm
+              }
+            }
+          })
+
+          var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'
+          searchBody = {
+            size: 100,
+            query: {
+              bool: {
+                filter: [
+                  matchBody,
+                  filters[ filterName ](filterArg)
+                ]
+              }
+            }
+          }
+        } else if (fieldForSortedListQuery && !isAdvancedQuery(searchString)) {
+          axiosMethod = axios.get
+          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&size=20`
+        } else {
+          axiosMethod = axios.get
+          var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {
+            var wildCardPostfix = queryTerm.wildcard ? '*' : ''
+            return `${queryTerm.field}:${searchString}${wildCardPostfix}`
+          }).join(' OR ')
+          searchBody = {
+            size: 100,
+            params: {
+              q: query
+            }
+          }
+        }
+        axiosMethod(searchURI, searchBody)
+          .then(function (response) {
+            var results = ensureJSON(response.data)
+            results.hits.hits.forEach(function (hit) {
+              var item = hit._source
+              item.isChecked = false
+              item.score = hit._score
+              if (loadWorksAsSubjectOfItem) {
+                item.work = null
+              }
+              if (item.work) {
+                if (!_.isArray(item.work)) {
+                  item.work = [ item.work ]
+                }
+                _.each(item.work, function (work) {
+                  work.isChecked = false
+                })
+              }
+              highestScore = Math.max(highestScore, hit._score)
+            })
+            let items = _.sortBy(_.map(_.pluck(results.hits.hits, '_source'),
+              Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]), fieldForSortedListQuery || 'name')
+            var highestScore = 0.0
+            var highestScoreIndex
+            _.each(items, function (item, index) {
+              if (item.score > highestScore) {
+                highestScore = item.score
+                highestScoreIndex = index
+              }
+            })
+            if (highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === items[ highestScoreIndex ][ fieldForSortedListQuery ].toLocaleLowerCase()) {
+              items[ highestScoreIndex ].exactMatch = true
+            }
+            ractive.set(event.keypath + '.searchResult', {
+              items: items,
+              origin: event.keypath,
+              searchTerm: searchString,
+              highestScoreIndex: highestScoreIndex
+            })
+            positionSupportPanels()
+          })
+        //    .catch(function (err) {
+        //    console.log(err)
+        // })
+      }
+    }
+
+    let debouncedSearch = _.debounce(doSearch, 500)
+
     var uiBlockCounter = 0
     var uiBlockClearer
 
     function resetUnblock () {
-      console.log('Resetting ui blocking')
       uiBlockCounter = 0
-      unblockUI()
+      unblockUI('Resetting ui blocking')
     }
 
     function blockUI (complete, from) {
       uiBlockCounter++
 //      console.log(`uiBlockCounter -> ${uiBlockCounter} ${from}`)
       if (uiBlockCounter === 1) {
-        $('#ui-blocker').fadeIn(100, complete)
-        uiBlockClearer = window.setTimeout(resetUnblock, 10000)
+        let uiBlocker = $('#ui-blocker')
+        if (uiBlocker.length > 0) {
+          uiBlocker.fadeIn(100, complete)
+          uiBlockClearer = window.setTimeout(resetUnblock, 10000)
+        } else if (complete) {
+          complete()
+        }
       } else if (complete) {
         complete()
       }
@@ -1704,15 +1932,23 @@
           // })
         }
 
+        let templateSelection = function (selection) {
+          var source = $(selection.element.parentElement).attr('data-accepted-source')
+          var sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+          return $(`<span>${selection.text}${sourceSpan}</span>`)
+        }
+
         var initRactive = function (applicationData) {
           Ractive.decorators.select2.type.singleSelect = function (node) {
             return {
               maximumSelectionLength: 1,
-              templateSelection: function (selection) {
-                var source = $(selection.element.parentElement).attr('data-accepted-source')
-                var sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
-                return $(`<span>${selection.text}${sourceSpan}</span>`)
-              }
+              templateSelection: templateSelection
+            }
+          }
+
+          Ractive.decorators.select2.type.multiSelect = function (node) {
+            return {
+              templateSelection: templateSelection
             }
           }
 
@@ -1781,6 +2017,22 @@
               teardown: function () {}
             }
           }
+          var pasteSanitizer = function (node) {
+            $(node)
+              .keypress(function (e) {
+                return e.which !== 13
+              })
+              .on('paste', function (e) {
+                e.originalEvent.preventDefault()
+                if (e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
+                  var text = e.originalEvent.clipboardData.getData('text/plain').replace(/\r?\n|\r/g, '').trim()
+                  document.execCommand('insertHTML', false, text)
+                }
+              })
+            return {
+              teardown: function () {}
+            }
+          }
           var detectChange = function (node) {
             var enableChange = false
             $(node).on('select2:selecting select2:unselecting', function (event) {
@@ -1831,7 +2083,7 @@
             }
           }
           var unload = function (node) {
-            $(window).unload(saveSuggestionData)
+            window.onbeforeunload = saveSuggestionData
             return {
               teardown: function () {}
             }
@@ -2050,7 +2302,8 @@
               unload: unload,
               accordion: accordionDecorator,
               timePicker: timePicker,
-              slideDown: slideDown
+              slideDown: slideDown,
+              pasteSanitizer: pasteSanitizer
             },
             partials: applicationData.partials,
             transitions: {
@@ -2139,7 +2392,7 @@
               saveObject: function (event, index) {
                 if (eventShouldBeIgnored(event)) return
                 blockUI(function () {
-                  var input = event.context
+                  var input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
                   patchObject(input, applicationData, index, 'add').then(function () {
                     visitInputs(input, function (input) {
                       if (input.isSubInput) {
@@ -2196,133 +2449,11 @@
                 })
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
-                let indexType = preferredIndexType || secondaryIndexType
                 options = options || {}
                 if (options.skipIfAdvancedQuery && isAdvancedQuery(searchString)) {
                   return
                 }
-                var inputkeyPath = grandParentOf(event.keypath)
-                if (!searchString) {
-                  if (ractive.get(event.keypath + '.searchResult.')) {
-                    ractive.set(event.keypath + '.searchResult.', null)
-                  }
-                } else {
-                  var searchBody
-                  var config = ractive.get('config')
-                  var axiosMethod
-                  if (config.search[ indexType ].structuredQuery && !isAdvancedQuery(searchString)) {
-                    axiosMethod = axios.post
-                    var filters = {
-                      personAsMainEntryFilter: function (filterArg) {
-                        return {
-                          nested: {
-                            path: 'contributors',
-                            query: {
-                              bool: {
-                                filter: [
-                                  {
-                                    term: {
-                                      'contributors.mainEntry': true
-                                    }
-                                  },
-                                  {
-                                    nested: {
-                                      path: 'contributors.agent',
-                                      query: {
-                                        term: {
-                                          'contributors.agent.uri': filterArg
-                                        }
-                                      }
-                                    }
-                                  }
-                                ]
-                              }
-                            }
-                          }
-                        }
-                      },
-                      default: function () {
-                        return {}
-                      }
-                    }
-                    var filterArg = null
-                    var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
-                    if (filterArgInputRef) {
-                      filterArg = _.find(allInputs(), function (input) {
-                        return filterArgInputRef === input.id
-                      }).values[ 0 ].current.value
-                    }
-                    if (isBlankNodeUri(filterArg)) {
-                      filterArg = undefined
-                    }
-
-                    var matchBody = {}
-                    _.each(config.search[ indexType ].queryTerms, function (queryTerm) {
-                      matchBody[ queryTerm.field ] = {
-                        query: `${searchString}${queryTerm.wildcard ? '*' : ''}`,
-                        operator: 'and'
-                      }
-                    })
-
-                    var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'
-
-                    searchBody = {
-                      size: 100,
-                      query: {
-                        bool: {
-                          filter: [
-                            {
-                              match: matchBody
-                            }, filters[ filterName ](filterArg)
-                          ]
-                        }
-                      }
-                    }
-                  } else {
-                    axiosMethod = axios.get
-                    var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {
-                      var wildCardPostfix = queryTerm.wildcard ? '*' : ''
-                      return `${queryTerm.field}:${searchString}${wildCardPostfix}`
-                    }).join(' OR ')
-                    searchBody = {
-                      size: 100,
-                      params: {
-                        q: query
-                      }
-                    }
-                  }
-                  var searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/_search`
-
-                  axiosMethod(searchURI, searchBody)
-                    .then(function (response) {
-                      var results = ensureJSON(response.data)
-                      results.hits.hits.forEach(function (hit) {
-                        var item = hit._source
-                        item.isChecked = false
-                        if (loadWorksAsSubjectOfItem) {
-                          item.work = null
-                        }
-                        if (item.work) {
-                          if (!_.isArray(item.work)) {
-                            item.work = [ item.work ]
-                          }
-                          _.each(item.work, function (work) {
-                            work.isChecked = false
-                          })
-                        }
-                      })
-                      ractive.set(event.keypath + '.searchResult', {
-                        items: _.map(_.pluck(results.hits.hits, '_source'),
-                          Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]),
-                        origin: event.keypath,
-                        searchTerm: searchString
-                      })
-                      positionSupportPanels()
-                    })
-                  //    .catch(function (err) {
-                  //    console.log(err)
-                  // })
-                }
+                debouncedSearch(event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options)
               },
               searchResourceFromSuggestion: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
                 if (eventShouldBeIgnored(event)) return
@@ -2744,7 +2875,7 @@
                               _.each(inputsWithValueSuggestionEnabled, function (input) {
                                 if (input.suggestValueFrom.domain === domain && !wrapperObject) {
                                   input.values = input.values || [ { current: {}, old: {} } ]
-                                  _.each(node.getAll(propertyName(input.suggestValueFrom.predicate)), function (value, index) {
+                                  _.each(node.getAll(fragmentPartOf(input.suggestValueFrom.predicate)), function (value, index) {
                                     input.values[ index ].current.displayValue = value.value
                                   })
                                 }
@@ -2956,7 +3087,9 @@
               if (window.sessionStorage[ property ] && window.sessionStorage[ property ] === value) {
                 var suggestionData = JSON.parse(window.sessionStorage.suggestionData)
                 _.each(suggestionData, function (ractiveData) {
-                  ractive.set(ractiveData.keypath, ractiveData.suggestedValues)
+                  if (ractiveData.suggestedValues) {
+                    ractive.set(ractiveData.keypath, ractiveData.suggestedValues)
+                  }
                 })
                 var acceptedData = JSON.parse(window.sessionStorage.acceptedData)
                 _.each(acceptedData, function (ractiveData) {
@@ -3001,20 +3134,21 @@
             if (input.headlinePart) {
               var subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
               var keypath
+              var headlinePart = {}
               if (input.type === 'select-predefined-value') {
-                input.headlinePart.predefinedValue = true
+                headlinePart.predefinedValue = true
                 keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.value[0]`
               } else {
                 var valuePart = input.type === 'searchable-with-result-in-side-panel' ? 'displayValue' : 'value'
                 keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.${valuePart}`
               }
-              input.headlinePart.keypath = keypath
-              input.headlinePart.fragment = input.fragment
-              headlineParts.push(input.headlinePart)
+              headlinePart.keypath = keypath
+              headlinePart.fragment = input.fragment
+              ractive.set(`${input.keypath}.headlinePart`, headlinePart)
+              headlineParts.push(headlinePart)
             }
           })
-          applicationData.headlineParts = headlineParts
-          ractive.update()
+          ractive.set('applicationData.headlineParts', headlineParts)
           return applicationData
         }
 
@@ -3083,16 +3217,15 @@
               ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])) {
               let queryValue = (input.widgetOptions.prefix || '') + ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])
               if (queryValue) {
-                input.values = [ {
+                ractive.set(`${input.keypath}.values`, [ {
                   current: {
                     value: queryValue
                   },
                   old: {
                     value: undefined
                   }
-                } ]
+                } ])
               }
-              ractive.update()
             }
           })
           return applicationData
@@ -3114,12 +3247,22 @@
           return applicationData
         }
 
+        let workaroundContentEditableBug = function (applicationData) {
+          // WebKit contentEditable focus bug workaround:
+          if (/AppleWebKit\/([\d.]+)/.exec(navigator.userAgent)) {
+            var editableFix = $('<input style="width:1px;height:1px;border:none;margin:0;padding:0;" tabIndex="-1">').appendTo('html')
+            $('[contenteditable]').blur(function () {
+              editableFix[ 0 ].setSelectionRange(0, 0)
+              editableFix.blur()
+            })
+          }
+          return applicationData
+        }
+
         let etags = {}
         axios.interceptors.request.use(function (options) {
           let url = options.url
-          if (url.indexOf('search') === -1) {
-            blockUI()
-          }
+          options.now = Date.now()
           if (options.method === 'get' || !options.method) {
             options.validateStatus = function (status) {
               return status >= 200 && status < 300 || status === 304
@@ -3157,12 +3300,8 @@
               etags[ url ] = responseEtag
             }
           }
-          if (url.indexOf('search') === -1) {
-            unblockUI()
-          }
           return response
         }, function (error) {
-          unblockUI()
           return Promise.reject(error)
         })
 
@@ -3183,6 +3322,7 @@
           .then(initTitle)
           .then(initValuesFromQuery)
           .then(unblockUI)
+          .then(workaroundContentEditableBug)
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)
         // })

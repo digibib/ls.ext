@@ -24,8 +24,10 @@ end
 
 When(/^jeg legger inn forfatternavnet på startsida$/) do
   @site.WorkFlow.visit
-  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']//input")
-  creator_name_field.set(@context[:person_name])
+  @site.WorkFlow.turn_off_ui_blocker
+  creator_name_field = @browser.elements(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']//input|//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']//span[@contenteditable]").find(&:visible?)
+  creator_name_field.click
+  creator_name_field.send_keys (@context[:person_name])
   creator_name_field.send_keys :enter
 end
 
@@ -34,7 +36,7 @@ def contains_class(class_name)
   "contains(concat(' ',normalize-space(@class),' '),' #{class_name} ')"
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)indeksen$/) do |art, type_1, type_2|
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT*5) {
     @browser.element(:xpath => "//a[#{contains_class('edit-resource')}]|//a[#{contains_class('select-result-item')}]").present?
   }
@@ -46,12 +48,22 @@ When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne
   end
 end
 
-When(/^velger verket fra lista tilkoplet forfatteren$/) do
-  wait_for{
-    @browser.span(:class => "toggle-show-sub-items").present?
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)registeret$/) do |art, type_1, type_2|
+  sleep 1
+  wait_for {
+    @browser.div(:class => 'exact-match').present?
   }
-  @browser.spans(:class => "toggle-show-sub-items").first.click
-  @browser.inputs(:class => "select-work-radio").first.click
+  @browser.div(:class => 'exact-match').as(:class => /select-result-item|edit-resource/).first.click
+end
+
+When(/^velger verket fra lista tilkoplet forfatteren$/) do
+  wait_for {
+    @browser.div(:class => 'exact-match').span(:class => "toggle-show-sub-items").present?
+  }
+  sleep 1
+  @browser.div(:class => 'exact-match').span(:class => "toggle-show-sub-items").click
+  @site.WorkFlow.wait_for_ui_blocker
+  @browser.inputs(:class => "select-work-radio").find(&:visible?).click
 end
 
 When(/^verifiserer at verkets basisopplysninger uten endringer er korrekte$/) do
@@ -185,32 +197,37 @@ end
 
 
 When(/^at jeg skriver inn sted i feltet for utgivelsessted og trykker enter$/) do
+  @site.WorkFlow.wait_for_ui_blocker
   data_automation_id = "Publication_http://data.deichman.no/ontology#hasPlaceOfPublication_0"
-  publication_place_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
+  publication_place_field = @browser.element(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']|//span[@data-automation-id='#{data_automation_id}']//span[@contenteditable]")
   publication_place_field.click
-  publication_place_field.set(@context[:placeofpublication_place])
+  publication_place_field.send_keys @context[:placeofpublication_place]
 #  publication_place_field.send_keys :enter
 end
 
 When(/^at jeg skriver inn (tilfeldig |)(.*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
+  @site.WorkFlow.wait_for_ui_blocker
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
   if (is_random == 'tilfeldig ')
     @context[("random_#{@site.translate(concept)}_name").to_sym] = generateRandomString
-    field.set(@context[("random_#{@site.translate(concept)}_name").to_sym])
+    field.send_keys (@context[("random_#{@site.translate(concept)}_name").to_sym])
   else
-    field.set(@context[("#{@site.translate(concept)}_name").to_sym])
+    field.send_keys (@context[("#{@site.translate(concept)}_name").to_sym])
   end
   field.send_keys :enter
 end
 
 When(/^skriver jeg inn samme (tilfeldige |)(.*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
+  @site.WorkFlow.wait_for_ui_blocker
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
+  field.double_click
+  field.send_keys :backspace
   if (is_random == 'tilfeldige ')
-    field.set(@context[("random_#{@site.translate(concept)}_name").to_sym])
+    field.send_keys @context[("random_#{@site.translate(concept)}_name").to_sym]
   else
-    field.set(@context[("#{@site.translate(concept)}_name").to_sym])
+    field.send_keys @context[("#{@site.translate(concept)}_name").to_sym]
   end
   field.send_keys :enter
 end
@@ -226,8 +243,9 @@ end
 
 When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
   data_automation_id = "Contribution_http://data.deichman.no/ontology#agent_0"
-  person_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']")
-  person_name_field.set(@context[:person_name])
+  person_name_field = @browser.element(:xpath => "//span[@data-automation-id='#{data_automation_id}']//span[@contenteditable]")
+  person_name_field.click
+  person_name_field.send_keys @context[:person_name]
   person_name_field.send_keys :enter
 end
 
@@ -241,6 +259,7 @@ When(/^velger radioknappen for "([^"]*)" for å velge "([^"]*)"$/) do |value, la
 end
 
 When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
+  @site.WorkFlow.wait_for_ui_blocker
   data_automation_id_1 = "Contribution_http://data.deichman.no/ontology#role_0"
   data_automation_id_2 = "PublicationPart_http://data.deichman.no/ontology#role_0"
   role_select_field = @browser.text_fields(:xpath => "//span[@data-automation-id='#{data_automation_id_1}' or @data-automation-id='#{data_automation_id_2}']//input[@type='search'][not(@disabled)]").find(&:visible?)
@@ -327,7 +346,7 @@ end
 
 When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
   data_automation_id_serial = "SerialIssue_http://data.deichman.no/ontology#serial_0"
-  wait_for {
+  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']").present?
   }
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']")
@@ -346,9 +365,11 @@ When(/^jeg velger emnetype "([^"]*)" emne$/) do |subject_type|
 end
 
 When(/^jeg legger inn emnet i søkefelt for emne og trykker enter$/) do
+  @site.WorkFlow.wait_for_ui_blocker
   data_automation_id = "Work_http://data.deichman.no/ontology#subject_0"
-  subject_search_field = @browser.text_field(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search'][not(@disabled)]")
-  subject_search_field.set(@context[:subject_name])
+  subject_search_field = @browser.element(:xpath => "//span[@data-automation-id='#{data_automation_id}']//span[@contenteditable]")
+  subject_search_field.click
+  subject_search_field.send_keys "#{@context[:subject_name]}"
   subject_search_field.send_keys :enter
   sleep 1
 end
@@ -372,22 +393,25 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
 end
 
 When(/^får jeg ingen treff$/) do
-  empty_result_set_div = @browser.div(:class => 'support-panel-content').div(:class => 'search-result').div(:text => /Ingen treff/)
+  empty_result_set_div = @browser.div(:class => 'support-panel-content').div(:class => 'search-result')
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     empty_result_set_div.present?
   }
-  empty_result_set_div.should exist
+  @browser.div(:class => 'support-panel-content').div(:class => 'search-result').span(:class => 'exact-match').should_not exist
 end
 
 When(/^jeg legger inn et nytt navn på startsida$/) do
   @site.WorkFlow.visit
+  sleep 2
+  @site.WorkFlow.turn_off_ui_blocker
   step "jeg legger inn et nytt navn"
 end
 
 When(/^jeg legger inn et nytt navn$/) do
   @context[:person_name] = generateRandomString
-  creator_name_field = @browser.text_field(:xpath => "//*[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0' or @data-automation-id='PublicationPart_http://data.deichman.no/ontology#agent_0']//input")
-  creator_name_field.set(@context[:person_name])
+  creator_name_field = @browser.element(:xpath => "//*[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0' or @data-automation-id='PublicationPart_http://data.deichman.no/ontology#agent_0']//span[@contenteditable]")
+  creator_name_field.click
+  creator_name_field.send_keys @context[:person_name]
   creator_name_field.send_keys :enter
 end
 
@@ -417,8 +441,9 @@ end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
   @context[:work_maintitle] = generateRandomString
-  input = @browser.text_field(:xpath => '//*[preceding-sibling::*/@data-uri-escaped-label = "' + URI::escape('Søk etter eksisterende verk') + '"]//input')
-  input.set(@context[:work_maintitle])
+  input = @browser.span(:xpath => '//*[preceding-sibling::*/@data-uri-escaped-label = "' + URI::escape('Søk etter eksisterende verk') + '"]//span[@contenteditable]')
+  input.click
+  input.send_keys @context[:work_maintitle]
   input.send_keys :enter
 end
 
@@ -429,13 +454,15 @@ When(/^trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
 end
 
 When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
+  @site.WorkFlow.wait_for_ui_blocker
   button = @browser.button(:xpath => "//button[span[@class='ui-button-text'][normalize-space()='#{button_label}']]")
   button.wait_until_present(BROWSER_WAIT_TIMEOUT)
+  @site.WorkFlow.wait_for_ui_blocker
   button.click
 end
 
 When(/^velger jeg (emnetype|aktørtype) "([^"]*)"$/) do |dummy, subject_type|
-  @browser.span(:class => 'index-type-select').select().select(subject_type)
+  @browser.element(:class => 'index-type-select').select().select(subject_type)
 end
 
 When(/^at jeg vil opprette (en|et) (.*)$/) do |article, concept|
@@ -443,6 +470,8 @@ When(/^at jeg vil opprette (en|et) (.*)$/) do |article, concept|
 end
 
 When(/^åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter$/) do
+  sleep 2
+  @site.WorkFlow.turn_off_ui_blocker
   @site.WorkFlow.visit_landing_page_auth_maintenance
 end
 
@@ -453,17 +482,19 @@ end
 
 When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do
   @site.WorkFlow.visit
+  @site.WorkFlow.turn_off_ui_blocker
   step "at jeg legger navnet på verket og trykker enter"
 end
 
 When(/^at jeg legger navnet på verket og trykker enter$/) do
-  search_work_as_main_resource = @browser.text_field(:data_automation_id => 'searchWorkAsMainResource')
-  search_work_as_main_resource.set(@context[:work_maintitle])
+  search_work_as_main_resource = @browser.element(:xpath => "//span[@data-automation-id='searchWorkAsMainResource']//span[@contenteditable]")
+  search_work_as_main_resource.click
+  search_work_as_main_resource.send_keys @context[:work_maintitle]
   search_work_as_main_resource.send_keys :enter
 end
 
 When(/^ser jeg at det står forfatter med navn og levetid i resultatlisten$/) do
-  @browser.element(:text => "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]})").should exist
+  @browser.p(:text => "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]})").should exist
 end
 
 When(/^så trykker jeg på Legg til ny biinnførsel\-knappen$/) do
@@ -477,6 +508,8 @@ end
 
 When(/^jeg legger inn et ISBN\-nummer på startsida og trykker enter/) do
   @site.WorkFlow.visit
+  sleep 2
+  @site.WorkFlow.turn_off_ui_blocker
   isbn = rand(999).to_s + rand(999).to_s + rand(999).to_s
   @context['isbn'] = isbn
   isbn_text_field = @browser.text_field(:data_automation_id => 'searchValueSuggestions')
@@ -491,12 +524,14 @@ When(/^Sjekker jeg at det vises treff fra preferert ekstern kilde$/) do
 end
 
 When(/^setter jeg markøren i forfatterfeltet og trykker enter$/) do
-  creator_name_field = @browser.text_field(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']/input")
+  creator_name_field = @browser.element(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']//span[@contenteditable]")
+  creator_name_field.click
   creator_name_field.send_keys :enter
 end
 
 When(/^setter jeg markøren i søkefelt for verk og trykker enter$/) do
-  search_work_as_main_resource = @browser.text_field(:data_automation_id => 'searchWorkAsMainResource')
+  search_work_as_main_resource = @browser.span(:xpath => '//span[@data-automation-id=\'searchWorkAsMainResource\']//span[@contenteditable]')
+  search_work_as_main_resource.click
   search_work_as_main_resource.send_keys :enter
 end
 
@@ -565,7 +600,8 @@ end
 
 When(/^jeg skriver verdien på (tittelnummer|verkshovedtittel) i feltet som heter "([^"]*)" og trykker enter$/) do |concept, label|
   field = @site.WorkFlow.get_text_field_from_label(label)
-  field.set(@context[@site.translate(concept).to_sym])
+  field.click
+  field.send_keys (@context[@site.translate(concept).to_sym])
   field.send_keys :enter
 end
 
@@ -619,4 +655,8 @@ end
 When(/^frisker jeg opp nettleseren$/) do
   @browser.refresh
   sleep 5
+end
+
+When(/^at jeg vil skru av ui\-blokkering$/) do
+  @site.WorkFlow.turn_off_ui_blocker
 end

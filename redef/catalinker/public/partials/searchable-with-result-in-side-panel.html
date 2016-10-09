@@ -3,7 +3,7 @@
     {{current.displayValue}}
 {{else}}
     {{#if ../../indexTypes.length > 1 && !(current.accepted || suggested) && !deletable}}
-        <span class="index-type-select pure-u-1-2">
+        <div class="index-type-select pure-u-1-2">
             {{#if ./current.accepted.selectedIndexType}}
             <select value="{{./current.accepted.selectedIndexType}}">
                 {{#with widgetOptions.selectIndexTypeLegend}}
@@ -23,8 +23,11 @@
                 {{/each}}
             </select>
             {{/if}}
-        </span>
+        </div>
     {{/if}}
+{{#if ./searchable}}
+<a {{#if nonEditable}}style="display:none;" {{/if}} class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
+{{/if}}
     {{#if ./deletable}}
         <div class="pure-u-1-1">
             <span class="select2 select2-container select2-container--default select2-container--above select2-container--focus"
@@ -44,14 +47,35 @@
             </span>
         </div>
     {{else}}
+        {{#if !deletable && widgetOptions.explanations && config.search[./current.accepted.selectedIndexType].selectIndexLabel}}
+        <span class="explainable">
+                                    {{config.search[./current.accepted.selectedIndexType].selectIndexLabel}}
+        </span>
+        {{/if}}
         <span {{#if nonEditable}}style="display:none;" {{/if}}>
-            <input {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}} type="search"
-            on-click="{{#deletable}}unselectEntity{{/deletable}}"
-            class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted || ./suggested}}suggestion-source-{{./current.accepted.source || ./suggested.source}}{{/if}}"
-            data-automation-id="{{dataAutomationId}}"
-            on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
-            on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
-            value="{{./current.displayValue}}"/>
+            <div class="search-input pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted || ./suggested}}suggestion-source-{{./current.accepted.source || ./suggested.source}}{{/if}}">
+                <span contenteditable="true" {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}}
+                    on-click="{{#deletable}}unselectEntity{{/deletable}}"
+                    class="search-term {{#if ./bracketed === true}}bracketed{{/if}}"
+                    decorator=pasteSanitizer
+                    onFocus="document.main.$(this.parentElement).addClass('focus')"
+                    onBlur="document.main.$(this.parentElement).removeClass('focus')"
+                    data-automation-id="{{dataAutomationId}}"
+                    on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
+                    on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
+                    value="{{./current.displayValue}}"/>
+                    {{#if ./previewProperties}}
+                        <span class="preview-properties">
+                            {{#each ./previewProperties}}
+                                {{#if ./fragment}}
+                                <span class="short-value">{{./fragment}}</span>
+                                {{else}}
+                                <span class="value">{{./val}}</span>
+                                {{/if}}
+                            {{/each}}
+                        </span>
+                    {{/if}}
+            </div>
             <span class="legend">
                 {{#if isAdvancedQuery(./current.displayValue)}}
                     <span class="advanced-search-legend pure-u-7-24">
@@ -64,12 +88,6 @@
                 {{/if}}
             </span>
         </span>
-    {{/if}}
-    {{#if ./searchable}}
-        <a {{#if nonEditable}}style="display:none;" {{/if}} class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
-    {{/if}}
-    {{#if !deletable && widgetOptions.explanations && config.search[./current.accepted.selectedIndexType].selectIndexLabel}}
-    <span class="explainable">{{config.search[./current.accepted.selectedIndexType].selectIndexLabel}}</span>
     {{/if}}
 {{/if}}
 </span>

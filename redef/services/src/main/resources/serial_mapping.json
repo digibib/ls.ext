@@ -1,8 +1,10 @@
 {
   "properties":
   {
-    "mainTitle": {
-      "type": "string"
+    "serialMainTitle": {
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "name_analyzer"
     },
     "uri": {
       "type": "string",
