@@ -181,6 +181,7 @@ class SearchResult extends React.Component {
 //    Unused?
 //    const missingCoverImage = '/images/no-cover.png'
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
+    const mediaTypeURI = result.mediaTypes[0] ? result.mediaTypes[0].uri : ''
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
@@ -194,7 +195,7 @@ class SearchResult extends React.Component {
         <aside className="book-cover">
           <Link to={this.getResultUrl(result)} className="book-cover-item">
             {result.image ? <img src={result.image} alt={coverAltText} />
-              : <i aria-label={missingCoverAltText} className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ result.mediaTypes[0].uri ] ]} />}
+              : <i aria-label={missingCoverAltText} className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
           </Link>
         </aside>
 
