@@ -11,7 +11,7 @@ classificationSource:ddk23 a duo:ClassificationSource ;
   rdfs:label "DDK 23"@en ;
   rdfs:label "DDK 23"@no .
 classificationSource:ddc22 a duo:ClassificationSource ;
-  duo:code "DDC23" ;
+  duo:code "22" ;
   rdfs:label "DDC 22"@en ;
   rdfs:label "DDC 22"@no .
 classificationSource:ddc23 a duo:ClassificationSource ;
