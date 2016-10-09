@@ -14,12 +14,14 @@ class PublicationInfo extends React.Component {
         transitionLeaveTimeout={500}
         component="table"
         className="test">
-          <tbody>
-          <tr>
-            <th><FormattedMessage {...messages.branch} /></th>
-            <th><FormattedMessage {...messages.shelfmark} /></th>
-            <th><FormattedMessage {...messages.status} /></th>
-          </tr>
+          <thead>
+            <tr>
+              <th><FormattedMessage {...messages.branch} /></th>
+              <th><FormattedMessage {...messages.shelfmark} /></th>
+              <th><FormattedMessage {...messages.status} /></th>
+            </tr>
+          </thead>
+          <tbody data-automation-id="work_items">
           {items.map(item => {
             return (
               <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
