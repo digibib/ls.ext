@@ -25,7 +25,7 @@ class UserLoans extends React.Component {
           >
               <div className="entry-details">
                 <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
-                <h2 className="contributors">{item.author}</h2>
+                <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
               </div>
               <div className="loan-expire">
                 <h2><FormattedMessage {...messages.expiry} />:</h2>
@@ -161,7 +161,7 @@ class UserLoans extends React.Component {
                    data-recordid={item.recordId}>
             <div className="entry-details">
               <h1 data-automation-id="UserLoans_loan_title">{item.title}</h1>
-              <h2 className="contributors">{item.author}</h2>
+              <h2 data-automation-id="UserLoans_loan_author" className="contributors">{item.author}</h2>
               <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
             </div>
             {this.renderDueDate(item.dueDate)}

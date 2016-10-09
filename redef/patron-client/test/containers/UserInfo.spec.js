@@ -57,7 +57,7 @@ describe('containers', () => {
       const { personalInformation } = store.getState().profile
       Object.keys(personalInformation).forEach(key => {
         const value = personalInformation[ key ]
-        expect(node.querySelector(`[data-automation-id='UserInfo_${key}']`).textContent).toEqual(value)
+        expect(node.querySelector(`[data-automation-id='UserInfo_${key}']`).textContent.trim()).toEqual(value)
       })
     })
   })

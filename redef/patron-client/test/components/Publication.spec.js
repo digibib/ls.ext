@@ -17,7 +17,8 @@ function setup (propOverrides) {
       languages: [ 'test_language' ],
       formats: [ 'test_format' ],
       items: [],
-      available: true
+      available: true,
+      mediaTypes: []
     },
     ...propOverrides
   }
@@ -57,7 +58,8 @@ describe('components', () => {
           partTitle: 'test_parttitle',
           formats: [],
           languages: [],
-          items: []
+          items: [],
+          mediaTypes: []
         }
       })
       expect(node.querySelector("[data-automation-id='publication_title']").textContent).toBe(`${props.publication.mainTitle} — ${props.publication.partTitle}`)

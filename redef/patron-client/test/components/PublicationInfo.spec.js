@@ -12,7 +12,8 @@ function setup (propOverrides) {
     publication: {
       id: 'test_id',
       uri: 'test_uri',
-      items: []
+      items: [],
+      formatAdaptations: []
     },
     expandSubResource: expect.createSpy(),
     startReservation: () => {},

@@ -67,7 +67,7 @@ function setup (propOverrides) {
         title: 'title_1',
         author: 'author_1',
         publicationYear: 'publicationYear_1',
-        dueDate: 'dueDate_1',
+        dueDate: '1.1.2017',
         checkoutId: 'checkoutId_1'
       },
       {
@@ -75,7 +75,7 @@ function setup (propOverrides) {
         title: 'title_2',
         author: 'author_2',
         publicationYear: 'publicationYear_2',
-        dueDate: 'dueDate_2',
+        dueDate: '12.12.2017',
         checkoutId: 'checkoutId_2'
       }
     ]
@@ -108,7 +108,6 @@ describe('containers', () => {
       Array.prototype.forEach.call(pickups, (pickup, index) => {
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_title']").textContent).toEqual(loansAndReservations.pickups[ index ].title)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].author)
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_publicationYear']").textContent).toEqual(loansAndReservations.pickups[ index ].publicationYear)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(loansAndReservations.pickups[ index ].expiry)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_pickupNumber']").textContent).toEqual(loansAndReservations.pickups[ index ].pickupNumber)
       })
@@ -124,7 +123,7 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(loansAndReservations.reservations[ index ].orderedDate)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
+        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })
@@ -139,7 +138,7 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(loansAndReservations.reservations[ index ].orderedDate)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
+        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })

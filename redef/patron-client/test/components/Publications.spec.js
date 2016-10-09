@@ -50,6 +50,8 @@ function setup (propOverrides) {
         formats: []
       }
     ],
+    searchFilterActions: {},
+    query: {},
     ...propOverrides
   }
 

@@ -9,10 +9,9 @@ const Contributors = ({ contributors, intl }) => {
         <li key={role}>
           <span className="label">{intl.formatMessage({ id: role })}</span>:&nbsp;
           {contributors[ role ].map(person =>
-            <span className="content" key={person.uri}>
+            <span className="content" key={person.relativeUri + role}>
                 <Link
                   data-automation-id="work_contributor_link"
-                  key={person.relativeUri + role}
                   to={person.relativeUri}>{person.name}
                 </Link>
               </span>
