@@ -39,7 +39,7 @@ class Publication extends React.Component {
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
     const publicationYearLanguageSeparator = function () {
       if (publication.publicationYear && publication.languages.length > 0) {
-        return ", "
+        return ', '
       }
     }
     return (
