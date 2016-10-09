@@ -3,6 +3,11 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 
 class PublicationInfo extends React.Component {
+  renderLocation (location) {
+    if (location !== '') {
+      return <span className="item-location">{location}</span>
+    }
+  }
   renderItems (items) {
     if (items) {
       return (
@@ -26,7 +31,7 @@ class PublicationInfo extends React.Component {
             return (
               <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
                 <td data-automation-id="item_location">{this.props.intl.formatMessage({ id: item.branch })}</td>
-                <td data-automation-id="item_shelfmark">{item.shelfmark}</td>
+                <td data-automation-id="item_shelfmark">{item.shelfmark} {this.renderLocation(item.location)}</td>
                 <td data-automation-id="item_status">{this.renderAvailability(item.available, item.total)}</td>
               </tr>
             )

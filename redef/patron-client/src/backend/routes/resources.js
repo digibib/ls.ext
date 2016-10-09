@@ -59,7 +59,7 @@ module.exports = (app) => {
               barcode: item.barcode,
               location: item.location
             }
-            const key = `${newItem.branch}_${newItem.shelfmark}`
+            const key = `${newItem.branch}_${newItem.shelfmark}_${item.location}`
             if (!items[ key ]) {
               newItem.available = 0
               newItem.total = 0
