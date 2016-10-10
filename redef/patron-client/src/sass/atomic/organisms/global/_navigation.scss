@@ -109,6 +109,8 @@
     &.tab-bar-tab-active {
       a {
         border-bottom: 2px solid $blackColor;
+        text-decoration: none;
+        font-weight: bold;
         margin-bottom: 0;
       }
     }
