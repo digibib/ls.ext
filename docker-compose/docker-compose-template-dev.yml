@@ -118,6 +118,8 @@ services:
     environment:
       SIP_SERVER: sip_proxy:9999
       TCP_PORT: 6006
+      SIP_USER: rfidhub
+      SIP_PASS: "${SIP_AUTOPASS}"
     logging:
       driver: "json-file"
       options:
