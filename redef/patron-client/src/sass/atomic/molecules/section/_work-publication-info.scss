@@ -1,11 +1,10 @@
 .single-publication {
-  border-bottom: 1px solid $mediumGreyColor;
-  padding-bottom: rhythm(2);
+  border: 1px solid $mediumGreyColor;
   margin-bottom: rhythm(2);
+  padding: rhythm(2);
 
   &.open {
     border-bottom: none;
-    padding-bottom: 0;
   }
 
   .book-cover {
@@ -19,8 +18,8 @@
     &.missing {
       text-align: center;
       i {
-        font-size: 3em;
         color: $mediumGreyColor;
+        font-size: 3em;
       }
 
     }
@@ -39,14 +38,14 @@
 
   .availability {
     @include span(12);
-    font-size: rhythm(2);
     text-transform: uppercase;
+    font-size: rhythm(2);
   }
 
   h2 {
     @include span(12);
-    margin: rhythm(1) 0;
     font-size: rhythm(2.5);
+    margin: rhythm(1) 0;
     font-weight: bold;
     cursor: pointer;
   }
@@ -71,9 +70,9 @@
 
     button {
       @include span (12);
-      width: 100%;
       font-size: rhythm(2.5);
       cursor: pointer;
+      width: 100%;
     }
 
     span {
@@ -82,8 +81,8 @@
     }
 
     i {
-      float: right;
       color: $redColor;
+      float: right;
     }
 
   }
@@ -130,8 +129,8 @@
   .entry-items {
 
     h2 {
-      font-size: rhythm(4);
       margin-bottom: rhythm(2);
+      font-size: rhythm(4);
     }
 
     table {
@@ -160,9 +159,9 @@
 @include breakpoint($small){
 
   .single-publication {
+    margin-top: rhythm(4);
     min-height: 11em;
     margin-bottom: 0;
-    margin-top: rhythm(4);
 
     &.open {
       border-bottom: 3px solid $redColor;
