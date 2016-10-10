@@ -21,6 +21,10 @@ class SearchResult extends React.Component {
     }
   }
 
+  scrollToTop () {
+    window.scrollTo(0, 0)
+  }
+
   renderContributors (contributors) {
     if (contributors.length > 0) {
       return (
@@ -79,7 +83,7 @@ class SearchResult extends React.Component {
           {result.subject.map((subject, i) => (
             <span key={subject}>
                 <Link
-                  to={this.subjectSearchLink(subject)}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
+                  to={this.subjectSearchLink(subject)} onClick={this.scrollToTop}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
                 </span>
           ))}
         </p>
@@ -94,7 +98,7 @@ class SearchResult extends React.Component {
           <strong><FormattedMessage {...messages.genres} /></strong><br />
           {result.genre.map((genre, i) => (
             <span key={genre}>
-                <Link to={this.genreSearchLink(genre)}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
+                <Link to={this.genreSearchLink(genre)} onClick={this.scrollToTop}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
                 </span>
           ))}
         </p>
@@ -107,7 +111,7 @@ class SearchResult extends React.Component {
       <div data-automation-id="publication_series">
         <strong><FormattedMessage {...messages.partOfSeries} /></strong>
         <span>
-          <Link to="#">Serie placeholder</Link>
+          <Link to="#" onClick={this.scrollToTop}>Serie placeholder</Link>
         </span>
       </div>
     )
@@ -119,7 +123,7 @@ class SearchResult extends React.Component {
         <strong><FormattedMessage {...messages.partOfSeries} /></strong>
         {publication.series.map((serie, i) => (
           <span key={serie}>
-            <Link to={this.seriesSearchLink(serie)}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
+            <Link to={this.seriesSearchLink(serie)} onClick={this.scrollToTop}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
           </span>
         ))}
       </div>
