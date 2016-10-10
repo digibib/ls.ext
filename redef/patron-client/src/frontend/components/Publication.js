@@ -25,7 +25,9 @@ class Publication extends React.Component {
     } else if (typeof publication.mediaTypes[0] !== 'undefined') {
       return (
         <div className="book-cover missing">
-          <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[0] ] ]} />
+          <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
+            <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[0] ] ]} />
+          </ClickableElement>
         </div>
       )
     } else {
