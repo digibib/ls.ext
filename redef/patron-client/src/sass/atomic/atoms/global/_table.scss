@@ -3,7 +3,7 @@ table {
   border-collapse: collapse;
 
   thead {
-    @include border-bottom;
+    border-bottom: 1px solid $blackColor;
   }
 
   th, tr {
