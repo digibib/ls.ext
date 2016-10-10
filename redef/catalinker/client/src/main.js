@@ -1464,6 +1464,20 @@
     function executePatch (subject, patches, keypath, errors) {
       blockUI()
       ractive.set('save_status', 'arbeider...')
+      // strip empty blank nodes
+      let emptyBlankNodeIndexes = []
+      _.each(patches, function (patch, index) {
+        if (patch.o.type === 'http://www.w3.org/2001/XMLSchema#anyURI' && isBlankNodeUri(patch.o.value)) {
+          if (!_.some(patches, function (subjectPatch) {
+              return subjectPatch.s === patch.o.value
+            })) {
+            emptyBlankNodeIndexes.unshift(index)
+          }
+        }
+      })
+      _.each(emptyBlankNodeIndexes, function (index) {
+        patches.splice(index, 1)
+      })
       axios.patch(proxyToServices(subject), JSON.stringify(patches, undefined, 2), {
         headers: {
           Accept: 'application/ld+json',
