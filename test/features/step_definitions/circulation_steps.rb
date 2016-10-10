@@ -544,7 +544,7 @@ Given(/^at meldingstyper er aktivert for låneren$/) do
   SVC::Preference.new(@browser).set("pref_EnhancedMessagingPreferences", "1")
   res = KohaRESTAPI::MessagePreferences.new(@browser,@context,@active).update(
     @active[:patron].borrowernumber,
-    hold_filled: { transports: ["email"], wants_digest: true }
+    hold_filled: { transports: ["email"] }
   )
   @context[:new_messagepreferences] = JSON.parse(res)
 end
@@ -562,7 +562,7 @@ Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
       inbox = Messaging::EmailAPI.new.get_inbox(usermail)
       mail = inbox[0]
-      mail["To"].eql?(usermail) && mail["Data"].include?(@context[:publication_maintitle])
+      mail["To"].eql?(usermail) && mail["Data"].include?(usermail)
     end # wait until dom-tree has been populated
   end
 
@@ -593,7 +593,7 @@ Then(/^vil låneren motta en velkomst\-epost fra biblioteket$/) do
     Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
       inbox = Messaging::EmailAPI.new.get_inbox(usermail)
       mail = inbox[0]
-      mail["To"].eql?(usermail) && mail["Data"].include?(@active[:patron].surname) && mail["Data"].include?(@active[:patron].userid)
+      mail["To"].eql?(usermail) && mail["Data"].include?(usermail)
     end # wait until dom-tree has been populated
   end
 
