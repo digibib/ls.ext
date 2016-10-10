@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import Contributors from '../components/Contributors'
 
 class PublicationInfo extends React.Component {
   renderLocation (location) {
@@ -75,6 +76,7 @@ class PublicationInfo extends React.Component {
         data-automation-id={`publication_info_${publication.uri}`}>
         <div className="left">
           {/* Missing data: Author / bidragsytere */}
+          <Contributors contributors={publication.contributors} />
           {this.renderMetaItem(intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
           {this.renderMetaItem(intl.formatMessage(messages.edition), publication.edition)}
           {this.renderMetaItem(intl.formatMessage(messages.publisher), publication.publishers.map(publisher => publisher.name).join(', '))}

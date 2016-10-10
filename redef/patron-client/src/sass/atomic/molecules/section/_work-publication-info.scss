@@ -120,6 +120,35 @@
     margin-top: rhythm(1);
   }
 
+  .contributors {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .label {
+      font-weight: bold;
+    }
+
+    li {
+      display: inline-block;
+
+      &:after {
+        content: '-';
+        display: inline-block;
+        padding-left: 0.25em;
+        padding-right: 0.25em;
+      }
+
+      &:last-child:after {
+        content: '';
+        display: none;
+        padding: 0;
+      }
+
+    }
+
+  }
+
   h2 {
     @include span(12);
     font-size: rhythm(4);
@@ -181,6 +210,7 @@
     .right {
       @include span(6 last);
     }
+
   }
 
 }
