@@ -122,7 +122,8 @@ class Search extends React.Component {
                                toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
                                toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
                                toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
-                               scrollTargetNode={this} />,
+                               scrollTargetNode={this}
+                               isSearching={this.props.isSearching} />,
             <SearchResults key="searchResults"
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
