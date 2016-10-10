@@ -77,6 +77,9 @@ class SearchFilter extends React.Component {
     if (!this.props.filters || this.props.filters.size === 0) {
       return this.renderEmpty()
     }
+    const buttonAriaLabel = (this.isCollapsed())
+      ? `${this.props.intl.formatMessage(messages.expandGroup)} ${this.renderTitle()}`
+      : `${this.props.intl.formatMessage(messages.collapseGroup)} ${this.renderTitle()}`
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
@@ -89,7 +92,7 @@ class SearchFilter extends React.Component {
         data-automation-id={`filter_${this.props.aggregation}`}>
         <header className="filterTitle">
           <h1>{this.renderTitle()}</h1>
-          <button onClick={this.handleCollapse} className="single-filter-close" type="button">
+          <button onClick={this.handleCollapse} className="single-filter-close" type="button" aria-label={buttonAriaLabel}>
             {this.isCollapsed()
               ? <i className="icon-plus" alt="" />
               : <i className="icon-minus" alt="" />}
@@ -117,6 +120,16 @@ SearchFilter.propTypes = {
 }
 
 export const messages = defineMessages({
+  expandGroup: {
+    id: 'SearchFilter.expandGroup',
+    description: 'Aria label for expanding the filter group',
+    defaultMessage: 'Expand filtergroup:'
+  },
+  collapseGroup: {
+    id: 'SearchFilter.collapseGroup',
+    description: 'Aria label for collapsing the filter group',
+    defaultMessage: 'Collapse filtergroup:'
+  },
   showMore: {
     id: 'SearchFilter.showMore',
     description: 'Shown when too many filters',

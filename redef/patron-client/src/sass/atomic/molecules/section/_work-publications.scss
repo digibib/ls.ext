@@ -24,8 +24,8 @@
     @include container;
 
     h2 {
-      font-size: rhythm(2.5);
       @include semiBoldFont;
+      font-size: rhythm(2.5);
       margin-bottom: 0;
     }
 

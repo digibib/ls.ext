@@ -165,6 +165,8 @@ export default {
   'SearchFilter.filter[work.publications.formats]': 'Format',
   'SearchFilter.filter[work.publications.languages]': 'Språk',
   'SearchFilter.filter[work.publications.mediatype]': 'Medietype',
+  'SearchFilter.collapseGroup': 'Skjul filtergruppen:',
+  'SearchFilter.expandGroup': 'Vis filtergruppen:',
   'SearchFilter.showLess': 'Vis færre -',
   'SearchFilter.showMore': 'Vis flere +',
   'SearchFilterBox.title.search': 'Avgrenset til:',
