@@ -1,5 +1,6 @@
 surname,cardnumber,userid,password,branchcode,categorycode,flags,dateexpiry
 "API-user","A007","$KOHA_API_USER","$KOHA_API_PASS_ENCRYPTED","api","API",1,"2999-01-01"
+"RFIDHUB-user","A009","rfidhub","$KOHA_API_PASS_ENCRYPTED","api","API",1,"2999-01-01"
 "Automat Bøler","A101","autoblr","$SIP_AUTOPASS_ENCRYPTED","fbol","AUTO",18,"2999-01-01"
 "Automat Furuset","A102","autofuru","$SIP_AUTOPASS_ENCRYPTED","ffur","AUTO",18,"2999-01-01"
 "Automat Grünerløkka","A103","autogru","$SIP_AUTOPASS_ENCRYPTED","fgry","AUTO",18,"2999-01-01"
