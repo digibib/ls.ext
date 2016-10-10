@@ -175,7 +175,7 @@ services:
       - "-log-messages=true"
       - "-replace-10=true"
       - "-log-metrics-every-s=300"
-      - "-asciify=true"
+      - "-asciify=false"
     logging:
       driver: "journald"
 
