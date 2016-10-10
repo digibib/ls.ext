@@ -122,7 +122,7 @@
     }
 
     .work-subjects, .work-genres {
-      @include border-top;
+      border-top: 1px solid $blackColor;
       margin-bottom: rhythm(2);
     }
 
