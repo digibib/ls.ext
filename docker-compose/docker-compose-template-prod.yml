@@ -74,7 +74,7 @@ services:
       - "--max_allowed_packet=64M"
       - "--wait_timeout=6000"
       - "--bind-address=0.0.0.0"
-      - "--innodb-buffer-pool-size=8G"
+      - "--innodb-buffer-pool-size=16G"
     environment:
       MYSQL_DATABASE: "koha_${KOHA_INSTANCE}"
       MYSQL_PASSWORD: "${KOHA_ADMINPASS}"
