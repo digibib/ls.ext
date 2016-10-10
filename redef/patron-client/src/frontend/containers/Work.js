@@ -183,18 +183,18 @@ class Work extends React.Component {
     if (this.state.showAdditionalInfo) {
       return (
         <div className="additional-info">
-          <Link to="#" className="additional-info-toggle" onClick={this.toggleAditionalInfo}>
+          <a href="#" className="additional-info-toggle" onClick={this.toggleAditionalInfo}>
             <FormattedMessage {...messages.additionalInfoToggleLess} /><i className="icon-up-open" />
-          </Link>
+          </a>
           {this.renderAdditionalInfoContent(work)}
         </div>
       )
     } else {
       return (
         <div className="additional-info">
-          <Link to="#" className="additional-info-toggle" onClick={this.toggleAditionalInfo}>
+          <a href="#" className="additional-info-toggle" onClick={this.toggleAditionalInfo}>
             <FormattedMessage {...messages.additionalInfoToggleMore} /><i className="icon-down-open" />
-          </Link>
+          </a>
         </div>
       )
     }

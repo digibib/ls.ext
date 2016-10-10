@@ -10,6 +10,7 @@
 
   .book-cover {
     @include span(3);
+    cursor: pointer;
 
     img {
       max-height: 7em;
@@ -47,6 +48,7 @@
     margin: rhythm(1) 0;
     font-size: rhythm(2.5);
     font-weight: bold;
+    cursor: pointer;
   }
 
   .meta-item {

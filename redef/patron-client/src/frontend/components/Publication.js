@@ -17,7 +17,9 @@ class Publication extends React.Component {
     if (publication.image) {
       return (
         <div className="book-cover">
-          <img src={publication.image} alt={coverAltText} />
+          <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
+            <img src={publication.image} alt={coverAltText} />
+          </ClickableElement>
         </div>
       )
     } else if (typeof publication.mediaTypes[0] !== 'undefined') {
@@ -52,7 +54,9 @@ class Publication extends React.Component {
               <div className="availability" data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
                 <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
               </div>
-              <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
+              <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
+                <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
+              </ClickableElement>
               <div className="meta-item">
                 <span data-automation-id="publication_year">{publication.publicationYear}</span>
                 <span>{publicationYearLanguageSeparator()}</span>
