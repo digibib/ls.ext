@@ -87,7 +87,7 @@ class SearchHeader extends React.Component {
     if (!this.props.isLoggedIn) {
       return (
         <li>
-          <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /></a>
+          <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /><span>&raquo;</span></a>
         </li>
       )
     }
