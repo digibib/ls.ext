@@ -40,6 +40,8 @@
 
       header {
         @include span(12);
+        border-top: 1px solid $darkGreyColor;
+        padding-top: rhythm(2);
       }
 
       section {

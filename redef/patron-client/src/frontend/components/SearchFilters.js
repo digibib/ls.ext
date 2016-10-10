@@ -18,7 +18,7 @@ class SearchFilters extends React.Component {
 
   componentDidUpdate () {
     // If a search is beeing done, check the filter visibility
-    if(this.props.isSearching === true) {
+    if (this.props.isSearching === true) {
       this.toggleFilterVisibility()
     }
   }
