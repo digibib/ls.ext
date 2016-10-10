@@ -25,6 +25,7 @@
 
     h2 {
       font-size: rhythm(2.5);
+      @include semiBoldFont;
       margin-bottom: 0;
     }
 
