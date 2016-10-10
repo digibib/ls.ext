@@ -68,7 +68,7 @@ export const receiveItems = (workId, items) => action(types.RECEIVE_ITEMS, { wor
 export const itemsFailure = error => errorAction(types.ITEMS_FAILURE, error)
 
 export function fetchWorkItems (workId) {
-  return dispatch => {
+  return (dispatch, getState) => {
     const url = `/api/v1/resources/work/${workId}/items`
     dispatch(requestItems(workId))
     return fetch(url).then(response => {
@@ -77,9 +77,24 @@ export function fetchWorkItems (workId) {
       } else {
         throw Error('Error fetching items for work')
       }
-    }).then(items => dispatch(receiveItems(workId, items)))
+    }).then(items => dispatch(receiveItems(workId, processItems(items, getState().resources.resources[ workId ]))))
       .catch(error => dispatch(itemsFailure(error)))
   }
+}
+
+function processItems (allItems, work) {
+  if (work) {
+    work.publications.forEach(publication => {
+      const items = allItems[ publication.recordId ]
+      if (items) {
+        items.forEach(item => {
+          item.mediaTypes = publication.mediaTypes
+          item.languages = publication.languages
+        })
+      }
+    })
+  }
+  return allItems
 }
 
 // TODO Refactor method logic to ParameterActions

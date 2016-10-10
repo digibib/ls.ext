@@ -5,8 +5,8 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import Items from '../components/Items'
 import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
-import { groupByBranch } from '../utils/sorting'
 import Constants from '../constants/Constants'
+import { groupByBranch } from '../utils/sorting'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -83,7 +83,8 @@ class SearchResult extends React.Component {
           {result.subject.map((subject, i) => (
             <span key={subject}>
                 <Link
-                  to={this.subjectSearchLink(subject)} onClick={this.scrollToTop}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
+                  to={this.subjectSearchLink(subject)}
+                  onClick={this.scrollToTop}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
                 </span>
           ))}
         </p>
@@ -98,7 +99,8 @@ class SearchResult extends React.Component {
           <strong><FormattedMessage {...messages.genres} /></strong><br />
           {result.genre.map((genre, i) => (
             <span key={genre}>
-                <Link to={this.genreSearchLink(genre)} onClick={this.scrollToTop}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
+                <Link to={this.genreSearchLink(genre)}
+                      onClick={this.scrollToTop}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
                 </span>
           ))}
         </p>
@@ -118,17 +120,17 @@ class SearchResult extends React.Component {
 
     // TOO: When series information is available ...
     /*
-    return (
-      <div data-automation-id="publication_series">
-        <strong><FormattedMessage {...messages.partOfSeries} /></strong>
-        {publication.series.map((serie, i) => (
-          <span key={serie}>
-            <Link to={this.seriesSearchLink(serie)} onClick={this.scrollToTop}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
-          </span>
-        ))}
-      </div>
-    )
-    */
+     return (
+     <div data-automation-id="publication_series">
+     <strong><FormattedMessage {...messages.partOfSeries} /></strong>
+     {publication.series.map((serie, i) => (
+     <span key={serie}>
+     <Link to={this.seriesSearchLink(serie)} onClick={this.scrollToTop}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
+     </span>
+     ))}
+     </div>
+     )
+     */
   }
 
   getResultUrl (result) {
@@ -139,13 +141,24 @@ class SearchResult extends React.Component {
     })
   }
 
+  /*
+   renderItems (result) {
+   const work = this.props.resources[ result.id ]
+   if (work) {
+   const items = [].concat.apply([], work.publications.map(publication => this.props.items[ publication.recordId ] || []).filter(array => array.length > 0))
+   return <Items items={items} />
+   }
+   }
+   */
+
   renderItems (result) {
-    const resource = this.props.resources[ result.id ]
-    if (resource) {
-      return groupByBranch(resource.items).map(el => {
+    const work = this.props.resources[ result.id ]
+    if (work) {
+      const items = [].concat.apply([], work.publications.map(publication => this.props.items[ publication.recordId ] || []).filter(array => array.length > 0))
+      return groupByBranch(items).map(el => {
         return (
-          <div className="items-by-branch">
-            <h1>{el.branch}</h1>
+          <div className="items-by-branch" key={el.branchcode}>
+            <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
             <Items items={el.items} />
             <p style={{ clear: 'both' }} />
           </div>
@@ -185,7 +198,7 @@ class SearchResult extends React.Component {
 //    Unused?
 //    const missingCoverImage = '/images/no-cover.png'
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
-    const mediaTypeURI = result.mediaTypes[0] ? result.mediaTypes[0].uri : ''
+    const mediaTypeURI = result.mediaTypes[ 0 ] ? result.mediaTypes[ 0 ].uri : ''
     return (
       <ReactCSSTransitionGroup
         transitionName="fade-in"
@@ -199,7 +212,8 @@ class SearchResult extends React.Component {
         <aside className="book-cover">
           <Link to={this.getResultUrl(result)} className="book-cover-item">
             {result.image ? <img src={result.image} alt={coverAltText} />
-              : <i aria-label={missingCoverAltText} className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
+              : <i aria-label={missingCoverAltText}
+                   className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
           </Link>
         </aside>
 
@@ -250,6 +264,7 @@ SearchResult.propTypes = {
   showStatus: PropTypes.func.isRequired,
   resources: PropTypes.object.isRequired,
   fetchWorkResource: PropTypes.func.isRequired,
+  items: PropTypes.object.isRequired,
   intl: intlShape.isRequired
 }
 

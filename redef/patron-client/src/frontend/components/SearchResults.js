@@ -33,6 +33,7 @@ class SearchResults extends React.Component {
                           showStatus={this.props.searchActions.showStatus}
                           fetchWorkResource={this.props.fetchWorkResource}
                           resources={this.props.resources}
+                          items={this.props.items}
             />
           )) : null}
         </div>
@@ -49,6 +50,7 @@ SearchResults.propTypes = {
   searchResults: PropTypes.array.isRequired,
   resources: PropTypes.object.isRequired,
   fetchWorkResource: PropTypes.func.isRequired,
+  items: PropTypes.object.isRequired,
   page: PropTypes.number.isRequired
 }
 

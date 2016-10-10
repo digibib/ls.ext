@@ -70,7 +70,9 @@ class Search extends React.Component {
               clickCallback={this.handlePageClick}
               containerClassName={'pagination'}
               subContainerClassName={'pages pagination'}
-              activeClassName={'active'} />
+              activeClassName={'active'}
+              items={this.props.items}
+            />
           </nav>
         </section>
       )
@@ -133,6 +135,7 @@ class Search extends React.Component {
                            fetchWorkResource={this.props.resourceActions.fetchWorkResource}
                            resources={this.props.resources}
                            page={this.props.location.query.page}
+                           items={this.props.items}
             /> ]
             : null}
           {this.renderPagination()}
@@ -156,6 +159,7 @@ Search.propTypes = {
   locationQuery: PropTypes.object.isRequired,
   resources: PropTypes.object.isRequired,
   resourceActions: PropTypes.object.isRequired,
+  items: PropTypes.object.isRequired,
   intl: intlShape.isRequired
 }
 
@@ -171,7 +175,8 @@ function mapStateToProps (state) {
     searchError: state.search.searchError,
     filters: state.search.filters,
     locationQuery: state.routing.locationBeforeTransitions.query,
-    resources: state.resources.resources
+    resources: state.resources.resources,
+    items: state.resources.items
   }
 }
 
