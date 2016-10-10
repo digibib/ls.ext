@@ -10,10 +10,6 @@ mediaType:E-book a duo:MediaType ;
   rdfs:label "E-bok"@no ;
   rdfs:label "E-book"@en .
 
-mediaType:Periodical a duo:MediaType ;
-  rdfs:label "Tidsskrift"@no ;
-  rdfs:label "Periodical"@en .
-
 mediaType:Audiobook a duo:MediaType ;
   rdfs:label "Lydbok"@no ;
   rdfs:label "Audiobook"@en .
