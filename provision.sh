@@ -7,7 +7,7 @@ export LSENV=$1
 export LSEXTPATH=$2
 export HOST=$3
 echo -e "\n Provisioning for $LSENV env, LSENV=$LSENV, LSEXTPATH=$LSEXTPATH, HOST=$HOST\n"
-if [[ `uname -s` == 'Linux' ]]; then
+if [[ `uname -s` == 'Linux' && "$LSENV" != 'prod' ]]; then
   echo -e "\n1) Installing Docker\n"
   VERSION="1.12.1-0~$(lsb_release -c -s)"
   INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
