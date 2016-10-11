@@ -235,8 +235,9 @@ out/done.migrate_patrons:
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/categories.sql'
 	@echo "-- Inserting patron home branches into MySQL"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/homebranches.sql'
-	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_message_preferences, borrower_message_transport_preferences, borrower_sync"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_message_preferences;TRUNCATE TABLE borrower_message_transport_preferences;TRUNCATE TABLE borrower_sync;SET foreign_key_checks=1;"'
+	@echo "-- Truncating tables borrowers, borrower_attributes, borrower_sync, clearing borrower_message_preferences (except for categories)"
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "SET foreign_key_checks=0;TRUNCATE TABLE borrower_attributes;TRUNCATE TABLE borrowers;TRUNCATE TABLE borrower_sync;SET foreign_key_checks=1;"'
+	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "DELETE FROM borrower_message_preferences WHERE borrowernumber IS NOT NULL;"'
 	@echo "-- Recreating static data (since we just truncated borrowers table and more)"
 	$(MAKE) settings
 	@echo "-- Importing patrons to Koha"
