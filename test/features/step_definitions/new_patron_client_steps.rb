@@ -321,8 +321,8 @@ When(/^jeg trykker på knappen for å sjekke om jeg er registrert fra før$/) do
   @browser.element(data_automation_id: 'check_existing_user_button').click
 end
 
-Then(/^får jeg vite at jeg ikke er registrert fra før$/) do
-  wait_for { @browser.element(data_automation_id: 'check_for_existing_user_success').present? }
+Then(/^får jeg opp resten av registreringsskjemaet$/) do
+  wait_for { @browser.element(data_automation_id: 'register_button').present? }
 end
 
 When(/^jeg fyller inn resten av skjemaet$/) do
