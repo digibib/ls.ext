@@ -13,6 +13,7 @@ import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
 import no.deichman.services.version.VersionResource;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.system.JenaSystem;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -62,6 +63,7 @@ public final class App {
     public static void main(String[] args) {
         App app = new App(SERVICES_PORT_NO, null, false, JAMON_WEBAPP_PORT, null);
         try {
+            JenaSystem.init(); // Needed to counter sporadic nullpointerexceptions because of context is not initialized.
             app.startSync();
         } catch (Exception e) {
             LOG.error("App failed to startSync:");
