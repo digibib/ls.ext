@@ -28,7 +28,7 @@ export default {
   'Footer.aboutUs': 'Om oss',
   'Footer.contactUs': 'Kontakt oss',
   'Footer.currentLanguage': 'Norsk',
-  'Footer.feedback': 'Gi tilbakemeldiger på søk eller min side',
+  'Footer.feedback': 'Gi tilbakemeldinger på søk eller min side',
   'Footer.info': 'Deichmanske bibliotek <br />Oslo kommune <br />Arne Garborgs plass 4, 0179 Oslo, Norge <br />Telefon: +47 23 43 29 00 <br />Redaktør: Knut Skansen (konst. Biblioteksjef) <br />',
   'Footer.languageChoice': 'In English',
   'Footer.openingHours': 'Åpningstider',
