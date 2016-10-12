@@ -132,9 +132,9 @@ class SearchHeader extends React.Component {
             className="wrapper">
 
             <div className="logo">
-              <Link to="/">
+              <a href="https://www.deichman.no/">
                 <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
-              </Link>
+              </a>
             </div>
 
             <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
