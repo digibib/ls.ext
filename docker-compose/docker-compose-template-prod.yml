@@ -222,6 +222,7 @@ services:
   patron-client:
     container_name: patron_client
     image: "digibib/redef-patron-client:${GITREF}"
+    restart: always
     networks:
       - backend
     depends_on:
