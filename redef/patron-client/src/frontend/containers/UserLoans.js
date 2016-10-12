@@ -177,24 +177,28 @@ class UserLoans extends React.Component {
   }
 
   renderCurrentDateTime () {
-    const year = this.props.intl.formatDate(Date.now(), {'year': 'numeric'})
-    const month = this.props.intl.formatDate(Date.now(), {'month': 'numeric'})
-    const day = this.props.intl.formatDate(Date.now(), {'day': 'numeric'})
-    const time = this.props.intl.formatTime(Date.now())
+    const dateTime = new Intl.DateTimeFormat('nb', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit'}).format(Date.now())
     return (
-      <span className="date">{year}.{month}.{day} - {time}</span>
+      <span className="date">{dateTime}</span>
     )
   }
 
   renderDueDate (dueDate) {
     if (dueDate) {
-      const day = this.props.intl.formatDate(dueDate, {'day': 'numeric'})
-      const month = this.props.intl.formatDate(dueDate, {'month': 'numeric'})
-      const year = this.props.intl.formatDate(dueDate, {'year': 'numeric'})
+      const formattedDate = new Intl.DateTimeFormat('nb', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'}).format(Date.parse(dueDate.replace(/-/g, '/')))
       return (
         <div className="due-date">
           <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p data-automation-id="UserLoans_loan_dueDate">{day}.{month}.{year}</p>
+          <p data-automation-id="UserLoans_loan_dueDate">{formattedDate}</p>
         </div>
       )
     }

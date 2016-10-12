@@ -8,8 +8,27 @@ import { addLocaleData } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import no from 'react-intl/locale-data/no'
 
-if (!global.Intl) {
-  require('intl') // Safari requires this polyfill
+const areIntlLocalesSupported = require('intl-locales-supported')
+
+const localesMyAppSupports = [
+  'en', 'nb'
+]
+
+function applyPolyfill () {
+  const IntlPollyfill = require('intl')
+  Intl.NumberFormat = IntlPollyfill.NumberFormat
+  Intl.DateTimeFormat = IntlPollyfill.DateTimeFormat
+  require('intl/locale-data/jsonp/en.js')
+  require('intl/locale-data/jsonp/nb.js')
+  return IntlPollyfill
+}
+
+if (global.Intl) {
+  if (!areIntlLocalesSupported(localesMyAppSupports)) {
+    applyPolyfill()
+  }
+} else {
+  global.Intl = applyPolyfill()
 }
 
 addLocaleData(en)
