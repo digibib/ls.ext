@@ -421,7 +421,7 @@ public final class SPARQLQueryBuilder {
                 + "    ?contrib a deichman:MainEntry ;\n"
                 + "      deichman:agent ?agent .\n"
                 + "    OPTIONAL { ?agent a deichman:Person ; deichman:name ?mainEntryPersonName . }\n"
-                + "    OPTIONAL { ?agent a deichman:Corporation ; deichman:name ?mainEntryCorponratioName . }\n"
+                + "    OPTIONAL { ?agent a deichman:Corporation ; deichman:name ?mainEntryCorporationName . }\n"
                 + "  }\n"
                 + "  UNION {\n"
                 + "    ?work deichman:subject ?subject .\n"
