@@ -17,7 +17,13 @@ module.exports = (app) => {
           throw Error()
         }
       }).then(ntdata => jsonld.fromRDF(ntdata, { format: 'application/nquads' }, (error, ntdoc) => {
+        if (error) {
+          response.status(500).send(error)
+        }
         jsonld.frame(ntdoc, frame, (error, framed) => {
+          if (error) {
+            response.status(500).send(error)
+          }
           try {
             response.status(200).send(transformResponse(framed[ '@graph' ][ 0 ]))
           } catch (error) {
