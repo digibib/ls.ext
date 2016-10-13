@@ -17,13 +17,7 @@ module.exports = (app) => {
           throw Error()
         }
       }).then(ntdata => jsonld.fromRDF(ntdata, { format: 'application/nquads' }, (error, ntdoc) => {
-        if (error) {
-          throw error
-        }
         jsonld.frame(ntdoc, frame, (error, framed) => {
-          if (error) {
-            throw error
-          }
           try {
             response.status(200).send(transformResponse(framed[ '@graph' ][ 0 ]))
           } catch (error) {
@@ -93,7 +87,12 @@ function transformResponse (work) {
   work.id = getId(work.id)
   // work.relativeUri = relativeUri(workResource.uri)
   work.items = []
-  work.contributors = transformContributors(work.contributors)
+  try {
+    work.contributors = transformContributors(work.contributors)
+  } catch (error) {
+    console.log(error)
+    work.contributors = {}
+  }
   work.by = []
     .concat(work.contributors[ 'http://data.deichman.no/role#author' ])
     .concat(work.contributors[ 'http://data.deichman.no/role#director' ])
@@ -110,12 +109,22 @@ function transformResponse (work) {
     publication.uri = publication.id
     publication.items = []
     publication.id = getId(publication.id)
-    publication.inSerials = transformInSerials(publication.inSerials)
+    try {
+      publication.inSerials = transformInSerials(publication.inSerials)
+    } catch (error) {
+      console.log(error)
+      publication.inSerials = []
+    }
     if (publication.image) {
       // choose any available image
       work.image = work.image || publication.image
     }
-    publication.contributors = transformContributors(publication.contributors)
+    try {
+      publication.contributors = transformContributors(publication.contributors)
+    } catch (error) {
+      console.log(error)
+      publication.contributors = {}
+    }
     if (publication.publishedBy) {
       publication.publisher = publication.publishedBy.name
     }
