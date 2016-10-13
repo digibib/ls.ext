@@ -15,12 +15,12 @@ const localesMyAppSupports = [
 ]
 
 function applyPolyfill () {
-  const IntlPollyfill = require('intl')
-  Intl.NumberFormat = IntlPollyfill.NumberFormat
-  Intl.DateTimeFormat = IntlPollyfill.DateTimeFormat
+  const IntlPolyfill = require('intl')
+  Intl.NumberFormat = IntlPolyfill.NumberFormat
+  Intl.DateTimeFormat = IntlPolyfill.DateTimeFormat
   require('intl/locale-data/jsonp/en.js')
   require('intl/locale-data/jsonp/nb.js')
-  return IntlPollyfill
+  return IntlPolyfill
 }
 
 if (global.Intl) {
