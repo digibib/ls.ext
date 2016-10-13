@@ -51,7 +51,7 @@ export default {
   'Login.invalidCredentials': 'Feil brukernavn og/eller passord',
   'Login.logIn': 'Logg inn',
   'Login.password': 'PIN-kode:',
-  'Login.username': 'Lånenummer:',
+  'Login.username': 'Lånernummer eller epost:',
   'MyPage.loansAndReservations': 'Lån og reservasjoner',
   'MyPage.mustBeLoggedIn': 'Du må være logget inn for å se Min Side.',
   'MyPage.personalInformation': 'Personopplysninger',

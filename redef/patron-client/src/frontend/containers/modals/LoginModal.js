@@ -45,12 +45,12 @@ export const messages = defineMessages({
   username: {
     id: 'Login.username',
     description: 'The label over the username field',
-    defaultMessage: 'Username:'
+    defaultMessage: 'Borrower number or email:'
   },
   password: {
     id: 'Login.password',
     description: 'The label over the password field',
-    defaultMessage: 'Password:'
+    defaultMessage: 'PIN:'
   },
   logIn: {
     id: 'Login.logIn',
