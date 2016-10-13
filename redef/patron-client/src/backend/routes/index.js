@@ -12,7 +12,7 @@ module.exports = (app) => {
   require('./search')(app)
   require('./validation')(app)
 
-  app.all('/services/*', requestProxy({
+  app.get('/services/*', requestProxy({
     url: 'http://services:8005/*',
     timeout: 30 * 1000 // 30 seconds
   }))
