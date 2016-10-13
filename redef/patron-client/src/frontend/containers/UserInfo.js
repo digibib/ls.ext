@@ -115,7 +115,7 @@ class UserInfo extends React.Component {
         <div className="last-updated">
           <FormattedMessage {...messages.lastUpdated} />:&nbsp;
             <span data-automation-id="UserInfo_lastUpdated" className="green-text">
-              {this.props.personalInformation.lastUpdated}
+              {this.renderDate(this.props.personalInformation.lastUpdated)}
             </span>
         </div>
       </footer>
@@ -149,6 +149,16 @@ class UserInfo extends React.Component {
           {this.renderButtonAndLastUpdated(editable, [ '' ])}
       </ReactCSSTransitionGroup>
     )
+  }
+
+  renderDate (date) {
+    if (date) {
+      const formattedDate = new Intl.DateTimeFormat('nb', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'}).format(Date.parse(date.replace(/-/g, '/')))
+      return formattedDate
+    }
   }
 }
 

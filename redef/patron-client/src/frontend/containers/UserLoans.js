@@ -29,7 +29,7 @@ class UserLoans extends React.Component {
               </div>
               <div className="loan-expire">
                 <h2><FormattedMessage {...messages.expiry} />:</h2>
-                <p data-automation-id="UserLoans_pickup_expiry">{item.expiry}</p>
+                <p data-automation-id="UserLoans_pickup_expiry">{this.renderDate(item.expiry)}</p>
               </div>
               <div className="loan-pickup-number">
                 <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
@@ -103,7 +103,7 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.orderedDate} />
                   </div>
                   <div className="meta-content" data-automation-id="UserLoans_reservation_orderedDate">
-                    {item.orderedDate}
+                    {this.renderDate(item.orderedDate)}
                   </div>
                 </div>
                 <div className="meta-item">
@@ -191,16 +191,22 @@ class UserLoans extends React.Component {
 
   renderDueDate (dueDate) {
     if (dueDate) {
-      const formattedDate = new Intl.DateTimeFormat('nb', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'}).format(Date.parse(dueDate.replace(/-/g, '/')))
       return (
         <div className="due-date">
           <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p data-automation-id="UserLoans_loan_dueDate">{formattedDate}</p>
+          <p data-automation-id="UserLoans_loan_dueDate">{this.renderDate(dueDate)}</p>
         </div>
       )
+    }
+  }
+
+  renderDate (date) {
+    if (date) {
+      const formattedDate = new Intl.DateTimeFormat('nb', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'}).format(Date.parse(date.replace(/-/g, '/')))
+      return formattedDate
     }
   }
 
