@@ -29,7 +29,7 @@ class UserLoans extends React.Component {
             </div>
             <div className="loan-expire">
               <h2><FormattedMessage {...messages.expiry} />:</h2>
-              <p data-automation-id="UserLoans_pickup_expiry">{this.renderDate(item.expiry)}</p>
+              <p data-automation-id="UserLoans_pickup_expiry">{formatDate(item.expiry)}</p>
             </div>
             <div className="loan-pickup-number">
               <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
@@ -196,7 +196,7 @@ class UserLoans extends React.Component {
       return (
         <div className="due-date">
           <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p data-automation-id="UserLoans_loan_dueDate">{this.renderDate(dueDate)}</p>
+          <p data-automation-id="UserLoans_loan_dueDate">{formatDate(dueDate)}</p>
         </div>
       )
     }
