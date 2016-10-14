@@ -98,7 +98,7 @@ export const messages = defineMessages({
   messageSuccess: {
     id: 'ExtendLoanModal.messageSuccess',
     description: 'The extend loan success message',
-    defaultMessage: 'The loan is now extended with 14 days.'
+    defaultMessage: 'The loan is now extended.'
   },
   headerTextError: {
     id: 'ExtendLoanModal.headerTextError',

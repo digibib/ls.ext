@@ -24,7 +24,7 @@ export default {
   'ExtendLoanModal.genericExtendLoanError': 'Kan ikke forlenges. Dette kan være fordi du ikke kan forlenge lånet flere ganger, materialet er reservert av en annen, eller du har et utestående gebyr.',
   'ExtendLoanModal.headerTextError': 'Feilmelding',
   'ExtendLoanModal.headerTextSuccess': 'Suksess!',
-  'ExtendLoanModal.messageSuccess': 'Lånetiden er nå forlenget med 14 dager.',
+  'ExtendLoanModal.messageSuccess': 'Lånetiden er nå forlenget.',
   'Footer.aboutUs': 'Om oss',
   'Footer.contactUs': 'Kontakt oss',
   'Footer.currentLanguage': 'Norsk',
