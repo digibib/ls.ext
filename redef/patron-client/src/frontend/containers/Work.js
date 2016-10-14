@@ -127,10 +127,7 @@ class Work extends React.Component {
   }
 
   renderTargetAudience (work) {
-    const audiences = []
-    work.audiences.forEach(audience => {
-      audiences.push(this.props.intl.formatMessage({ id: audience }))
-    })
+    const audiences = work.audiences.map(audience => this.props.intl.formatMessage({ id: audience }))
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelTargetAudience} />: </span>

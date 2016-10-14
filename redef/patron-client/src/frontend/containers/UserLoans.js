@@ -11,6 +11,7 @@ import * as ReservationActions from '../actions/ReservationActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
 import ClickableButton from '../components/ClickableButton'
+import { formatDate } from '../utils/dateFormatter'
 
 class UserLoans extends React.Component {
   renderPickups () {
@@ -21,20 +22,19 @@ class UserLoans extends React.Component {
           <article key={item.recordId}
                    className="single-entry"
                    data-automation-id="UserLoans_pickup"
-                   data-recordid={item.recordId}
-          >
-              <div className="entry-details">
-                <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
-                <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
-              </div>
-              <div className="loan-expire">
-                <h2><FormattedMessage {...messages.expiry} />:</h2>
-                <p data-automation-id="UserLoans_pickup_expiry">{this.renderDate(item.expiry)}</p>
-              </div>
-              <div className="loan-pickup-number">
-                <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
-                <p data-automation-id="UserLoans_pickup_pickupNumber">{item.pickupNumber}</p>
-              </div>
+                   data-recordid={item.recordId}>
+            <div className="entry-details">
+              <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
+              <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
+            </div>
+            <div className="loan-expire">
+              <h2><FormattedMessage {...messages.expiry} />:</h2>
+              <p data-automation-id="UserLoans_pickup_expiry">{this.renderDate(item.expiry)}</p>
+            </div>
+            <div className="loan-pickup-number">
+              <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
+              <p data-automation-id="UserLoans_pickup_pickupNumber">{item.pickupNumber}</p>
+            </div>
           </article>
         ))}
       </section>
@@ -53,7 +53,7 @@ class UserLoans extends React.Component {
         className="reserve">
         <h1><FormattedMessage {...messages.reservations} /></h1>
 
-        <MediaQuery query="(min-width: 992px)" values={{...this.props.mediaQueryValues}}>
+        <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
           <table>
             <thead>
             <tr>
@@ -73,7 +73,7 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td>
                   <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}
-                                   onClickArguments={[item.reserveId]}>
+                                   onClickArguments={[ item.reserveId ]}>
                     <FormattedMessage {...messages.cancelReservation} />
                   </ClickableButton>
                 </td>
@@ -82,7 +82,7 @@ class UserLoans extends React.Component {
           </table>
         </MediaQuery>
 
-        <MediaQuery query="(max-width: 991px)" values={{...this.props.mediaQueryValues}}>
+        <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
           <div>
             {this.props.loansAndReservations.reservations.map(item => (
               <div className="reserved-entry-content"
@@ -103,7 +103,7 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.orderedDate} />
                   </div>
                   <div className="meta-content" data-automation-id="UserLoans_reservation_orderedDate">
-                    {this.renderDate(item.orderedDate)}
+                    {formatDate(item.orderedDate)}
                   </div>
                 </div>
                 <div className="meta-item">
@@ -132,8 +132,8 @@ class UserLoans extends React.Component {
                 </div>
                 <div className="meta-item">
                   <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}
-                                     onClickArguments={[item.reserveId]}>
-                  <FormattedMessage {...messages.cancelReservation} />
+                                   onClickArguments={[ item.reserveId ]}>
+                    <FormattedMessage {...messages.cancelReservation} />
                   </ClickableButton>
                 </div>
               </div>
@@ -148,7 +148,7 @@ class UserLoans extends React.Component {
     return (
       <section className="registered">
         <h1>
-          <FormattedMessage {...messages.name} values={{name: this.props.loansAndReservations.name}} />
+          <FormattedMessage {...messages.name} values={{ name: this.props.loansAndReservations.name }} />
           {this.renderCurrentDateTime()}
         </h1>
         <button className="black-btn patron-placeholder">
@@ -166,7 +166,8 @@ class UserLoans extends React.Component {
             </div>
             {this.renderDueDate(item.dueDate)}
             <div className="prolong">
-              <ClickableButton onClickAction={this.props.loanActions.startExtendLoan} onClickArguments={[item.checkoutId]}>
+              <ClickableButton onClickAction={this.props.loanActions.startExtendLoan}
+                               onClickArguments={[ item.checkoutId ]}>
                 <FormattedMessage {...messages.extendLoan} />
               </ClickableButton>
             </div>
@@ -183,7 +184,8 @@ class UserLoans extends React.Component {
       day: '2-digit',
       hour12: false,
       hour: '2-digit',
-      minute: '2-digit'}).format(Date.now())
+      minute: '2-digit'
+    }).format(Date.now())
     return (
       <span className="date">{dateTime}</span>
     )
@@ -197,16 +199,6 @@ class UserLoans extends React.Component {
           <p data-automation-id="UserLoans_loan_dueDate">{this.renderDate(dueDate)}</p>
         </div>
       )
-    }
-  }
-
-  renderDate (date) {
-    if (date) {
-      const formattedDate = new Intl.DateTimeFormat('nb', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'}).format(Date.parse(date.replace(/-/g, '/')))
-      return formattedDate
     }
   }
 

@@ -7,6 +7,7 @@ import * as ParameterActions from '../actions/ParameterActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
 import UserInfoForm from './forms/UserInfoForm'
+import { formatDate } from '../utils/dateFormatter'
 
 class UserInfo extends React.Component {
   constructor (props) {
@@ -114,8 +115,8 @@ class UserInfo extends React.Component {
           <FormattedMessage {...messages.editPersonalInfo} /></button>}
         <div className="last-updated">
           <FormattedMessage {...messages.lastUpdated} />:&nbsp;
-            <span data-automation-id="UserInfo_lastUpdated" className="green-text">
-              {this.renderDate(this.props.personalInformation.lastUpdated)}
+          <span data-automation-id="UserInfo_lastUpdated" className="green-text">
+              {formatDate(this.props.personalInformation.lastUpdated)}
             </span>
         </div>
       </footer>
@@ -140,25 +141,15 @@ class UserInfo extends React.Component {
         transitionLeaveTimeout={500}
         component="section"
         className="user-info">
-          <header>
-            <h1 data-automation-id="UserInfo_name">{personalInformation.name}</h1>
-            <div className="card-number"><FormattedMessage {...messages.cardNumber} />: <span
-              data-automation-id="UserInfo_cardNumber">{personalInformation.cardNumber}</span></div>
-          </header>
-          {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}
-          {this.renderButtonAndLastUpdated(editable, [ '' ])}
+        <header>
+          <h1 data-automation-id="UserInfo_name">{personalInformation.name}</h1>
+          <div className="card-number"><FormattedMessage {...messages.cardNumber} />: <span
+            data-automation-id="UserInfo_cardNumber">{personalInformation.cardNumber}</span></div>
+        </header>
+        {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}
+        {this.renderButtonAndLastUpdated(editable, [ '' ])}
       </ReactCSSTransitionGroup>
     )
-  }
-
-  renderDate (date) {
-    if (date) {
-      const formattedDate = new Intl.DateTimeFormat('nb', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'}).format(Date.parse(date.replace(/-/g, '/')))
-      return formattedDate
-    }
   }
 }
 
