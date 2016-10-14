@@ -8,7 +8,7 @@ CONSTRUCT {
                deich:mainTitle ?pubMainTitle ;
                deich:partTitle ?pubPartTitle ;
                deich:norwegianTitle ?norwegianTitle ;
-               deich:englishTitle ?enlishTitle ;
+               deich:englishTitle ?englishTitle ;
                deich:languages ?language ;
                deich:language ?langCode ;
                deich:format ?format ;
