@@ -36,7 +36,7 @@ export function processSearchResponse (response, locationQuery) {
         result.displayTitle += ` — ${result.publication.partTitle}`
       }
 
-      if (!result.publication.mainTitle.includes(locationQuery.query)) {
+      if (!result.publication.mainTitle.toLocaleLowerCase().includes(locationQuery.query.toLocaleLowerCase())) {
         // The query does not match in title. This can happen f.ex when searching for author name
         // If possible - choose the norwegian or enlglish title for display:
         let norwegianTitle = result.publication.norwegianTitle
