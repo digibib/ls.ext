@@ -15,7 +15,7 @@ Egenskap: Registrere låner
     Så skal jeg se registreringsskjemaet
     Når jeg legger inn mine personalia som "voksen"
     Og jeg trykker på knappen for å sjekke om jeg er registrert fra før
-    Så får jeg vite at jeg ikke er registrert fra før
+    Så får jeg opp resten av registreringsskjemaet
     Og jeg fyller inn resten av skjemaet
     Og jeg godtar lånerreglementet
     Og jeg trykker på registreringsknappen
@@ -33,7 +33,7 @@ Egenskap: Registrere låner
     Så skal jeg se registreringsskjemaet
     Når jeg legger inn mine personalia som "barn"
     Og jeg trykker på knappen for å sjekke om jeg er registrert fra før
-    Så får jeg vite at jeg ikke er registrert fra før
+    Så får jeg opp resten av registreringsskjemaet
     Og jeg fyller inn resten av skjemaet
     Og jeg godtar lånerreglementet
     Og jeg trykker på registreringsknappen
