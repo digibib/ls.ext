@@ -76,6 +76,7 @@ export default {
   'PublicationInfo.biblionr': 'Biblionr.:',
   'PublicationInfo.binding': 'Innbinding:',
   'PublicationInfo.branch': 'Filial',
+  'PublicationInfo.duration': 'Spilletid:',
   'PublicationInfo.edition': 'Utgave:',
   'PublicationInfo.isbn': 'ISBN:',
   'PublicationInfo.items': 'Eksemplarer',
