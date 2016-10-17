@@ -52,13 +52,12 @@ class PublicationInfo extends React.Component {
   }
 
   renderPublisherSeries (publisherSeries) {
-
     if (publisherSeries.length > 0) {
       return (
         publisherSeries.map(serialIssue =>
           <span key="{publisherSeries.id}" data-automation-id="Publication_serial_issue">
             <span data-automation-id="Publication_serial_issue_name">{serialIssue.name}</span>
-            <span data-automation-id="Publication_serial_issue_subtitle">{((serialIssue.subtitle) ? ' — ' + serialIssue.subtitle : '')}</span>
+            <span data-automation-id="Publication_serial_issue_subtitle">{((serialIssue.subtitle) ? ` — ${serialIssue.subtitle}` : '')}</span>
             <span>{': '}</span>
             <span data-automation-id="Publication_serial_issue_issue"> {serialIssue.issue}</span>
           </span>
