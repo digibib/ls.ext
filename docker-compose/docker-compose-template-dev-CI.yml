@@ -290,7 +290,7 @@ services:
       context: "${LSEXTPATH}/redef/patron-client"
       dockerfile: Dockerfile-build
     volumes:
-      - "${LSEXTPATH}/redef/patron-client/public/dist:/usr/src/app/public/dist"
+      - "${LSEXTPATH}/redef/patron-client/public:/usr/src/app/public"
 
   patron_client:
     container_name: patron_client
