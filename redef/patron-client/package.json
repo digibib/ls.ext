@@ -30,7 +30,7 @@
     "productionbuild": "npm run clean && compass compile && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
     "compass-watch": "compass watch",
     "start": "npm run clean && npm run compass-watch & compass compile -q --force && webpack && node --debug src/backend/server.js",
-    "production": "npm run productionbuild && cross-env NODE_ENV=production node src/backend/server.js",
+    "production": "cross-env NODE_ENV=production node src/backend/server.js",
     "test": "cross-env NODE_ENV=test mocha -R min --recursive --compilers js:babel-core/register --require ./test/setup.js; true",
     "test:debug": "cross-env NODE_ENV=test mocha debug --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:watch": "npm test -- --watch",
