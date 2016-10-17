@@ -81,6 +81,7 @@ class PublicationInfo extends React.Component {
           {this.renderMetaItem(intl.formatMessage(messages.edition), publication.edition)}
           {this.renderMetaItem(intl.formatMessage(messages.publisher), publication.publishers.map(publisher => publisher.name).join(', '))}
           {this.renderMetaItem(intl.formatMessage(messages.placeOfPublication), publication.placeOfPublication)}
+          {this.renderMetaItem(intl.formatMessage(messages.subtitles), publication.subtitles.map(subtitle => intl.formatMessage({ id: subtitle })).join(', '))}
         </div>
         <div className="right">
           {this.renderMetaItem(intl.formatMessage(messages.isbn), publication.isbn)}
@@ -178,17 +179,22 @@ export const messages = defineMessages({
   publisher: {
     id: 'PublicationInfo.publisher',
     description: 'Label for the publisher field',
-    defaultMessage: 'Publisher'
+    defaultMessage: 'Publisher:'
   },
   placeOfPublication: {
     id: 'PublicationInfo.placeOfPublication',
     description: 'Label for the place of publication field',
-    defaultMessage: 'Place of publication'
+    defaultMessage: 'Place of publication:'
   },
   adaptation: {
     id: 'PublicationInfo.adaptation',
     description: 'Label for the adaptation field',
     defaultMessage: 'Adaptation'
+  },
+  subtitles: {
+    id: 'PublicationInfo.subtitles',
+    description: 'Label for subtitles field',
+    defaultMessage: 'Subtitles:'
   }
 })
 
