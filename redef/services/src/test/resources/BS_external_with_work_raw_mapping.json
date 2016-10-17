@@ -683,7 +683,7 @@
           "@id": "_:0000000"
         },
         "deichman:role": {
-          "@id": "http://data.deichman.no/role#contributor"
+          "@id": "http://data.deichman.no/role#author"
         },
         "@type": [
           "deichman:Contribution",
@@ -742,7 +742,7 @@
           "@id": "_:0000000"
         },
         "deichman:role": {
-          "@id": "http://data.deichman.no/role#contributor"
+          "@id": "http://data.deichman.no/role#author"
         },
         "@type": [
           "deichman:Contribution"
@@ -765,7 +765,7 @@
           "@id": "_:0000000"
         },
         "deichman:role": {
-          "@id": "http://data.deichman.no/role#contributor"
+          "@id": "http://data.deichman.no/role#author"
         },
         "@type": [
           "deichman:PublicationPart"

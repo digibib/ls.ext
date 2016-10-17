@@ -484,7 +484,7 @@ public class MARCMapper {
     }
 
     private void setRole(DataField dataField, Contribution contribution) {
-        getSubfieldValue(dataField, 'e', "author")
+        getSubfieldValue(dataField, 'e', "forf")
                 .map(String::toLowerCase)
                 .map(this::unPunctuate)
                 .map(Role::translate)
