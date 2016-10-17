@@ -337,6 +337,11 @@
       "@id": "publishedBy",
       "@type": "@id",
       "@container": "@set"
+    },
+    "subtitles": {
+      "@id": "hasSubtitles",
+      "@type": "@id",
+      "@container": "@set"
     }
   },
   "type": "Work",
@@ -376,6 +381,9 @@
     },
     "publishers": {
       "@embed": "@always"
+    },
+    "subtitles": {
+      "@embed": "@never"
     }
   },
   "audiences": {
