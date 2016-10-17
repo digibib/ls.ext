@@ -490,6 +490,8 @@ public final class EntityServiceImpl implements EntityService {
                     marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(mainEntryCorporationProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_110, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                    // We also duplicate corporation MainEntry to field 100$a, as this is needed for Koha to display it as "author"
+                    marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(publicationYearProperty)) {
                     field260.addSubfield(MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
                 } else if (pred.equals(publicationPlaceProperty)) {
