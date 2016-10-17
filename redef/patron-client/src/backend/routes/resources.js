@@ -116,10 +116,10 @@ function transformResponse (work) {
     publication.items = []
     publication.id = getId(publication.id)
     try {
-      publication.inSerials = transformInSerials(publication.inSerials)
+      publication.serialIssues = transformSerialIssues(publication.serialIssues)
     } catch (error) {
       console.log(error)
-      publication.inSerials = []
+      publication.serialIssues = []
     }
     if (publication.image) {
       // choose any available image
@@ -139,7 +139,7 @@ function transformResponse (work) {
     }
   })
 
-  work.serials = [].concat.apply([], work.publications.map(publication => publication.inSerials.map(inSerial => inSerial.name)))
+  work.serials = [].concat.apply([], work.publications.map(publication => publication.serialIssues.map(inSerial => inSerial.name)))
   return work
 }
 
@@ -156,11 +156,13 @@ function transformContributors (input) {
   return contributors
 }
 
-function transformInSerials (input) {
-  return input.map(inSerial => {
+function transformSerialIssues (input) {
+  return input.map(serialIssue => {
     return {
-      uri: inSerial.serial.id,
-      name: inSerial.serial.name
+      uri: serialIssue.serial.id,
+      name: serialIssue.serial.mainTitle,
+      subtitle: serialIssue.serial.subtitle,
+      issue: serialIssue.issue
     }
   })
 }

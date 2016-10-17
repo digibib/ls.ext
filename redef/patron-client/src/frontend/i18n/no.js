@@ -84,6 +84,7 @@ export default {
   'PublicationInfo.of': 'av',
   'PublicationInfo.placeOfPublication': 'Utgivelsessted:',
   'PublicationInfo.publisher': 'Utgiver:',
+  'PublicationInfo.publisherSeries': 'Forlagsserie:',
   'PublicationInfo.shelfmark': 'Hylleplass',
   'PublicationInfo.subtitles': 'Undertekster:',
   'PublicationInfo.status': 'Status',
