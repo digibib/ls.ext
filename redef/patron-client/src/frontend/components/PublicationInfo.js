@@ -51,6 +51,17 @@ class PublicationInfo extends React.Component {
     )
   }
 
+  renderPublisherSeries (publisherSeries) {
+    return (
+        publisherSeries.map(serialIssue => <span data-automation-id="Publication_serial_issues">
+          <span data-automation-id="Publication_serial_issue_name">{serialIssue.name}</span>
+          <span data-automation-id="Publication_serial_issue_subtitle">{((serialIssue.subtitle) ? ' — ' + serialIssue.subtitle : '')}</span>
+          <span>{': '}</span>
+          <span data-automation-id="Publication_serial_issue_issue"> {serialIssue.issue}</span>
+        </span>)
+    )
+  }
+
   renderMetaItem (label, value) {
     if (value) {
       return (
@@ -86,7 +97,7 @@ class PublicationInfo extends React.Component {
         <div className="right">
           {this.renderMetaItem(intl.formatMessage(messages.isbn), publication.isbn)}
           {this.renderMetaItem(intl.formatMessage(messages.biblionr), publication.recordID)}
-          {this.renderMetaItem(intl.formatMessage(messages.publisherSeries), publication.serialIssues.map(serialIssue => serialIssue.name + ((serialIssue.subtitle) ? " — " + serialIssue.subtitle : "") + ": " + serialIssue.issue))}
+          {this.renderMetaItem(intl.formatMessage(messages.publisherSeries), this.renderPublisherSeries(publication.serialIssues))}
           {/* Missing data: "Deler av utgivelse" */}
           {this.renderMetaItem(intl.formatMessage(messages.adaptation), publication.formatAdaptations.map(formatAdaptation => intl.formatMessage({ id: formatAdaptation })).join(', '))}
           {this.renderMetaItem(intl.formatMessage(messages.binding), publication.binding ? intl.formatMessage({ id: publication.binding }) : '')}
