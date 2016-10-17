@@ -284,6 +284,14 @@ services:
         max-size: "1m"
         max-file: "2"
 
+  build_patron_client:
+    container_name: build_patron_client
+    build:
+      context: "${LSEXTPATH}/redef/patron-client"
+      dockerfile: Dockerfile-build
+    volumes:
+      - "${LSEXTPATH}/redef/patron-client/public/dist:/usr/src/app/public/dist"
+
   patron_client:
     container_name: patron_client
     build:
@@ -292,6 +300,7 @@ services:
     networks:
       - backend
     depends_on:
+      - build_patron_client
       - services
     ports:
       - "8000:8000"

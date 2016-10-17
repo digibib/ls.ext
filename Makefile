@@ -111,6 +111,13 @@ rebuild_catalinker:					## Force rebuilds catalinker
 
 rebuild_patron_client:					## Force rebuilds patron-client
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
+ifeq ($(LSDEVMODE),build)
+	$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
+	  sudo docker-compose stop build_patron_client || true &&\
+	  sudo docker-compose rm -f build_patron_client || true &&\
+	  sudo docker-compose build build_patron_client &&\
+	  sudo docker-compose run build_patron_client"
+endif
 	$(call rebuild,patron_client)
 
 rebuild_overview:					## Force rebuilds overview
