@@ -90,6 +90,7 @@ class PublicationInfo extends React.Component {
           {/* Missing data: "Deler av utgivelse" */}
           {this.renderMetaItem(intl.formatMessage(messages.adaptation), publication.formatAdaptations.map(formatAdaptation => intl.formatMessage({ id: formatAdaptation })).join(', '))}
           {this.renderMetaItem(intl.formatMessage(messages.binding), publication.binding ? intl.formatMessage({ id: publication.binding }) : '')}
+          {this.renderMetaItem(intl.formatMessage(messages.duration), publication.duration)}
         </div>
         <div className="wide">
           <div className="meta-label"><FormattedMessage {...messages.note} /></div>
@@ -200,6 +201,11 @@ export const messages = defineMessages({
     id: 'PublicationInfo.publisherSeries',
     description: 'Label for publisher series',
     defaultMessage: 'Series:'
+  },
+  duration: {
+    id: 'PublicationInfo.duration',
+    description: 'Label for duration',
+    defaultMessage: 'Duration:'
   }
 })
 
