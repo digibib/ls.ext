@@ -229,14 +229,9 @@
       "@id": "deichman:publishedBy",
       "@type": "@id"
     },
-    "inSerials": {
+    "serialIssues": {
       "@id": "deichman:inSerial",
-      "@type": "@id",
       "@container": "@set"
-    },
-    "serial": {
-      "@id": "deichman:serial",
-      "@type": "@id"
     },
     "issue": {
       "@id": "deichman:issue",
@@ -342,6 +337,12 @@
       "@id": "hasSubtitles",
       "@type": "@id",
       "@container": "@set"
+    },
+    "issue": {
+      "@id": "deichman:issue"
+    },
+    "serial": {
+      "@id": "deichman:serial"
     }
   },
   "type": "Work",
@@ -372,7 +373,10 @@
     "mediaTypes": {
       "@embed": "@never"
     },
-    "inSerials": {},
+    "serialIssues": {
+      "@type": "SerialIssue",
+      "@embed": "@always"
+    },
     "contentAdaptations": {
       "@embed": "@never"
     },
