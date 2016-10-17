@@ -50,7 +50,7 @@
 
   }
 
-  .loan-expire, .loan-pickup-number {
+  .loan-expire, .loan-pickup-number, .loan-pickup-location {
     @include span(6);
     
     h2 {
@@ -59,7 +59,7 @@
     }
 
     p {
-      font-size: rhythm(4);
+      font-size: rhythm(3);
       font-weight: bold;
       margin: 0;
     }

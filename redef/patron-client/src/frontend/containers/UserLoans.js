@@ -27,6 +27,10 @@ class UserLoans extends React.Component {
               <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
               <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
             </div>
+            <div className="loan-pickup-location">
+              <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
+              <p data-automation-id="UserLoans_pickup_branch">{this.props.intl.formatMessage({ id: item.branchCode })}</p>
+            </div>
             <div className="loan-expire">
               <h2><FormattedMessage {...messages.expiry} />:</h2>
               <p data-automation-id="UserLoans_pickup_expiry">{formatDate(item.expiry)}</p>
