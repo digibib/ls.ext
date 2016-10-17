@@ -411,7 +411,7 @@
       if (queryString === '') {
         return false
       }
-      return  /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString.replace(/&nbsp;/g, ' '))
+      return /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString.replace(/&nbsp;/g, ' '))
     }
 
     function checkShouldInclude (input) {
@@ -2712,7 +2712,9 @@
                   var nop = function (uri) {
                     return uri
                   }
-                  saveInputs(event.context.inputs, event.context.rdfType)
+                  saveInputs(_.union(event.context.inputs, _.filter(allInputs(), function (input) {
+                    return event.context.rdfType === input.rdfType
+                  })), event.context.rdfType)
                     .then(setCreatedResourceUriInSearchInput)
                     .then(!maintenance ? patchMotherResource : nop)
                     .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
