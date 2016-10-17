@@ -2572,7 +2572,9 @@
                                   if (targetInput.values.length === 1 && targetInput.values[ 0 ].current.value === '' || targetInput.values[ 0 ].current.value === null) {
                                     targetInput.values[ 0 ] = deepClone(sourceValue)
                                   } else {
-                                    targetInput.values.push(deepClone(sourceValue))
+                                    if (targetInput.multiple) {
+                                      targetInput.values.push(deepClone(sourceValue))
+                                    }
                                   }
                                 }
                               })
