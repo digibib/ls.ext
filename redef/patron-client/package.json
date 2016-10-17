@@ -63,7 +63,7 @@
     "fs": "0.0.1-security",
     "html-webpack-plugin": "2.22.0",
     "ignore-styles": "^5.0.1",
-    "intl": "1.2.4",
+    "intl": "^1.2.4",
     "intl-locales-supported": "^1.0.0",
     "isomorphic-fetch": "2.2.1",
     "jsdom": "9.4.2",

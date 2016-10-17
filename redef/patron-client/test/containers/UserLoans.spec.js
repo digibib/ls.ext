@@ -31,16 +31,18 @@ function setup (propOverrides) {
         title: 'title_1',
         author: 'author_1',
         publicationYear: 'publicationYear_1',
-        expiry: 'expiry_1',
-        pickupNumber: 'pickupNumber_1'
+        expiry: '2016-10-01',
+        pickupNumber: 'pickupNumber_1',
+        branchCode: 'branchCode_1'
       },
       {
         recordId: 'recordId_2',
         title: 'title_2',
         author: 'author_2',
         publicationYear: 'publicationYear_1',
-        expiry: 'expiry_2',
-        pickupNumber: 'pickupNumber_2'
+        expiry: '2016-10-02',
+        pickupNumber: 'pickupNumber_2',
+        branchCode: 'branchCode_2'
       }
     ],
     reservations: [
@@ -75,16 +77,21 @@ function setup (propOverrides) {
         title: 'title_2',
         author: 'author_2',
         publicationYear: 'publicationYear_2',
-        dueDate: '12.12.2017',
+        dueDate: '06-10-2016',
         checkoutId: 'checkoutId_2'
       }
     ]
   }
   store.dispatch(ProfileActions.receiveProfileLoans(loansAndReservations))
 
+  const messages = {
+    'branchCode_1': 'Branch 1',
+    'branchCode_2': 'Branch 2'
+  }
+
   const output = TestUtils.renderIntoDocument(
     <Provider store={store}>
-      <IntlProvider locale="en">
+      <IntlProvider locale="en" messages={messages}>
         <UserLoans {...props} />
       </IntlProvider>
     </Provider>
@@ -110,6 +117,7 @@ describe('containers', () => {
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].author)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(loansAndReservations.pickups[ index ].expiry)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_pickupNumber']").textContent).toEqual(loansAndReservations.pickups[ index ].pickupNumber)
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(loansAndReservations.pickups[ index ].branchCode)
       })
     })
 
