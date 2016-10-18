@@ -67,19 +67,26 @@ class RegistrationFormPartTwo extends React.Component {
       <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
         <fieldset>
           <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
-          <FormInputField name="email" message={messages.email} formName={formName} type="email" getValidator={this.getValidator} />
-          <FormInputField name="mobile" message={messages.mobile} formName={formName} getValidator={this.getValidator} />
+          <FormInputField name="email" message={messages.email} formName={formName} type="email"
+                          getValidator={this.getValidator} />
+          <FormInputField name="mobile" message={messages.mobile} formName={formName}
+                          getValidator={this.getValidator} />
           <address>
-            <FormInputField name="address" message={messages.address} formName={formName} getValidator={this.getValidator} />
-            <FormInputField name="zipcode" message={messages.zipcode} formName={formName} getValidator={this.getValidator} />
+            <FormInputField name="address" message={messages.address} formName={formName}
+                            getValidator={this.getValidator} />
+            <FormInputField name="zipcode" message={messages.zipcode} formName={formName}
+                            getValidator={this.getValidator} />
             <FormInputField name="city" message={messages.city} formName={formName} getValidator={this.getValidator} />
           </address>
         </fieldset>
         <fieldset>
           <legend><FormattedMessage {...messages.choosePin} /></legend>
-          <FormInputField name="pin" message={messages.pin} formName={formName} type="password" getValidator={this.getValidator} />
-          <FormInputField name="repeatPin" type="password" message={messages.repeatPin} formName={formName} getValidator={this.getValidator} />
-          <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} name="library" formName={formName} />
+          <FormInputField name="pin" message={messages.pin} formName={formName} type="password"
+                          getValidator={this.getValidator} />
+          <FormInputField name="repeatPin" type="password" message={messages.repeatPin} formName={formName}
+                          getValidator={this.getValidator} />
+          <FormSelectFieldLibrary libraries={this.props.libraries} message={messages.chooseBranch} name="library"
+                                  formName={formName} />
           <p>
             <a href="https://www.deichman.no/utlansreglement" target="_blank">
               <FormattedMessage {...messages.acceptTermsLink} />
@@ -97,7 +104,8 @@ class RegistrationFormPartTwo extends React.Component {
                     data-automation-id="register_button">
               <FormattedMessage {...messages.register} />
             </button>
-            <a className="cancel-link" onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a>
+            <a className="cancel-link" onClick={this.handleCancel}
+               title="cancel"><FormattedMessage {...messages.cancel} /></a>
           </p>
         </fieldset>
       </form>

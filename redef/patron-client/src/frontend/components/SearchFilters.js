@@ -51,7 +51,7 @@ class SearchFilters extends React.Component {
 
     if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
-        const aggregation = filter.id.split('_')[0]
+        const aggregation = filter.id.split('_')[ 0 ]
         groupedFilters[ aggregation ] = groupedFilters[ aggregation ] || []
         groupedFilters[ aggregation ].push(filter)
       })
@@ -67,9 +67,9 @@ class SearchFilters extends React.Component {
           className="filters">
           <div className="limit-filters">
             <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
-            {this.props.locationQuery.hideFilters === null
-              ? (<span>Vis filter</span>)
-              : (<span>Skjul filter</span>)}
+              {this.props.locationQuery.hideFilters === null
+                ? (<span>Vis filter</span>)
+                : (<span>Skjul filter</span>)}
             </Link>
           </div>
 

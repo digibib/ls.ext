@@ -44,8 +44,8 @@ class ReservationModal extends React.Component {
         <h2><FormattedMessage {...messages.headerTextError} /></h2>
         <p>
           {messages[ this.props.message ]
-             ? <FormattedMessage {...messages[ this.props.message ]} />
-             : <FormattedMessage {...messages.genericReservationError} />}
+            ? <FormattedMessage {...messages[ this.props.message ]} />
+            : <FormattedMessage {...messages.genericReservationError} />}
         </p>
         <button className="black-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
@@ -69,7 +69,8 @@ class ReservationModal extends React.Component {
           <Libraries ref={e => this.librarySelect = e} libraries={this.props.libraries} />
           <br />
           <br />
-          <button className="black-btn" data-automation-id="reserve_button" disabled={this.props.isRequestingReservation}
+          <button className="black-btn" data-automation-id="reserve_button"
+                  disabled={this.props.isRequestingReservation}
                   onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>

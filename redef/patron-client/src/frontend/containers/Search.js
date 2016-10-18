@@ -89,56 +89,56 @@ class Search extends React.Component {
         transitionLeaveTimeout={500}
         component="div"
         className="wrapper">
-          {this.props.locationQuery.query
-            ? (<div className="search-results-header">
-                <div className="search-results-summary">
-                  <SearchResultsText totalHits={this.props.totalHits}
-                                     totalHitsPublications={this.props.totalHitsPublications}
-                                     locationQuery={this.props.locationQuery}
-                                     isSearching={this.props.isSearching} />
-                  <div className="search-sorting-placeholder">
-                    <p>Sortert på: <span>Relevans</span></p>
-                  </div>
-                </div>
-                <SearchFilterBox query={this.props.locationQuery}
-                                 toggleFilter={this.props.searchFilterActions.toggleFilter} />
-                {this.props.totalHits > 0
-                    ? (<div className="search-sorting patron-placeholder">
-                    <p>Sorter treff på</p>
-
-                    <div className="search-sorting-select-box">
-                      <select>
-                        <option defaultValue>Årstall</option>
-                        <option>Nyeste</option>
-                        <option>Eldre</option>
-                      </select>
-                    </div>
-                  </div>) : null}
-          </div>)
-            : null}
+        {this.props.locationQuery.query
+          ? (<div className="search-results-header">
+          <div className="search-results-summary">
+            <SearchResultsText totalHits={this.props.totalHits}
+                               totalHitsPublications={this.props.totalHitsPublications}
+                               locationQuery={this.props.locationQuery}
+                               isSearching={this.props.isSearching} />
+            <div className="search-sorting-placeholder">
+              <p>Sortert på: <span>Relevans</span></p>
+            </div>
+          </div>
+          <SearchFilterBox query={this.props.locationQuery}
+                           toggleFilter={this.props.searchFilterActions.toggleFilter} />
           {this.props.totalHits > 0
-            ? [ <SearchFilters key="searchFilters"
-                               filters={this.props.filters}
-                               locationQuery={this.props.location.query}
-                               toggleFilter={this.props.searchFilterActions.toggleFilter}
-                               toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
-                               toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
-                               toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
-                               scrollTargetNode={this}
-                               isSearching={this.props.isSearching} />,
-            <SearchResults key="searchResults"
-                           locationQuery={this.props.location.query}
-                           searchActions={this.props.searchActions}
-                           searchResults={this.props.searchResults}
-                           totalHits={this.props.totalHits}
-                           searchError={this.props.searchError}
-                           fetchWorkResource={this.props.resourceActions.fetchWorkResource}
-                           resources={this.props.resources}
-                           page={this.props.location.query.page}
-                           items={this.props.items}
-            /> ]
-            : null}
-          {this.renderPagination()}
+            ? (<div className="search-sorting patron-placeholder">
+            <p>Sorter treff på</p>
+
+            <div className="search-sorting-select-box">
+              <select>
+                <option defaultValue>Årstall</option>
+                <option>Nyeste</option>
+                <option>Eldre</option>
+              </select>
+            </div>
+          </div>) : null}
+        </div>)
+          : null}
+        {this.props.totalHits > 0
+          ? [ <SearchFilters key="searchFilters"
+                             filters={this.props.filters}
+                             locationQuery={this.props.location.query}
+                             toggleFilter={this.props.searchFilterActions.toggleFilter}
+                             toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
+                             toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
+                             toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                             scrollTargetNode={this}
+                             isSearching={this.props.isSearching} />,
+          <SearchResults key="searchResults"
+                         locationQuery={this.props.location.query}
+                         searchActions={this.props.searchActions}
+                         searchResults={this.props.searchResults}
+                         totalHits={this.props.totalHits}
+                         searchError={this.props.searchError}
+                         fetchWorkResource={this.props.resourceActions.fetchWorkResource}
+                         resources={this.props.resources}
+                         page={this.props.location.query.page}
+                         items={this.props.items}
+          /> ]
+          : null}
+        {this.renderPagination()}
       </ReactCSSTransitionGroup>
     )
   }

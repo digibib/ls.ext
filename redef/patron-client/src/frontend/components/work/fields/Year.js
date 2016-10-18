@@ -1,0 +1,29 @@
+import React, { PropTypes } from 'react'
+import { defineMessages } from 'react-intl'
+import MetaItem from '../../MetaItem'
+
+const Year = ({ year }) => {
+  if (year) {
+    return (
+      <MetaItem label={messages.labelOriginalReleaseDate}
+                content={year}
+                data-automation-id="work_originalReleaseDate" />
+    )
+  } else {
+    return null
+  }
+}
+
+Year.propTypes = {
+  year: PropTypes.string
+}
+
+export const messages = defineMessages({
+  labelOriginalReleaseDate: {
+    id: 'Year.labelOriginalReleaseDate',
+    description: 'Label for original release date',
+    defaultMessage: 'Original release date'
+  }
+})
+
+export default Year

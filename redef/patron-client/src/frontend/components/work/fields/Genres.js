@@ -16,16 +16,20 @@ class Genres extends React.Component {
   }
 
   render () {
-    const genres = this.props.genres.map(genre => this.renderLabel(genre))
-    return (
-      <aside className="work-genres">
-        <h2><FormattedMessage {...messages.genre} /></h2>
-        <ul data-automation-id="work_genres">
-          {genres.map(genre => <li key={genre}><Link to={this.searchLink(genre)}>{genre}</Link></li>)}
-        </ul>
-        <a className="patron-placeholder" href="#" alt="More genres">Se flere sjangre</a>
-      </aside>
-    )
+    if (this.props.genres.length > 0) {
+      const genres = this.props.genres.map(genre => this.renderLabel(genre))
+      return (
+        <aside className="work-genres">
+          <h2><FormattedMessage {...messages.genre} /></h2>
+          <ul data-automation-id="work_genres">
+            {genres.map(genre => <li key={genre}><Link to={this.searchLink(genre)}>{genre}</Link></li>)}
+          </ul>
+          <a className="patron-placeholder" href="#" alt="More genres">Se flere sjangre</a>
+        </aside>
+      )
+    } else {
+      return null
+    }
   }
 }
 

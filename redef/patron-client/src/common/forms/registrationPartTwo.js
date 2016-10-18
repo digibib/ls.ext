@@ -20,9 +20,9 @@ module.exports = {
     asyncValidation: true
   },
   /* gender: {
-    required: true,
-    asyncValidation: true
-  }, */
+   required: true,
+   asyncValidation: true
+   }, */
   pin: {
     required: true,
     asyncValidation: true

@@ -3,7 +3,7 @@ import Constants from '../constants/Constants'
 
 function sample (array) {
   if (Array.isArray(array)) {
-    return array[Math.floor(Math.random() * array.length)]
+    return array[ Math.floor(Math.random() * array.length) ]
   }
 }
 
@@ -18,7 +18,7 @@ export function processSearchResponse (response, locationQuery) {
       result.workUri = element.key
       result.id = getId(result.workUri)
       result.relativeUri = relativeUri(result.workUri)
-      result.publication = element.publications.hits.hits[0]._source
+      result.publication = element.publications.hits.hits[ 0 ]._source
       result.publication.contributors = result.publication.contributors || []
       result.publication.contributors = result.publication.contributors.filter(contributor => {
         return contributor.mainEntry
@@ -42,10 +42,10 @@ export function processSearchResponse (response, locationQuery) {
         let norwegianTitle = result.publication.norwegianTitle
         let englishTitle = result.publication.englishTitle
         if (Array.isArray(norwegianTitle)) {
-          norwegianTitle = norwegianTitle[0]
+          norwegianTitle = norwegianTitle[ 0 ]
         }
         if (Array.isArray(englishTitle)) {
-          englishTitle = englishTitle[0]
+          englishTitle = englishTitle[ 0 ]
         }
         result.displayTitle = norwegianTitle || englishTitle || result.displayTitle
 

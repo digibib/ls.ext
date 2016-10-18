@@ -11,7 +11,7 @@ module.exports = (app) => {
       if (res.ok) {
         return res.json()
       } else {
-        return res.text().then(error => { return Promise.reject({message: error, queryString: queryString}) })
+        return res.text().then(error => { return Promise.reject({ message: error, queryString: queryString }) })
       }
     }).then(json => response.status(200).send(json))
       .catch(error => {

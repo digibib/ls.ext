@@ -7,7 +7,7 @@ class Root extends React.Component {
   render () {
     return (
       <IntlProvider key="intl" locale={this.props.locale}
-                    messages={this.props.messages[this.props.locale]}>{routes}</IntlProvider>
+                    messages={this.props.messages[ this.props.locale ]}>{routes}</IntlProvider>
     )
   }
 }

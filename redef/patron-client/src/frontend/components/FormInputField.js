@@ -31,7 +31,7 @@ class FormInputField extends React.Component {
         />
         {!this.props.excludeLabel && this.props.isLabelUnderInput
           ? <label htmlFor={field.name}><FormattedMessage {...this.props.message} /></label> : null}
-        { this.props.getValidator ? this.props.getValidator(field) : null}
+        {this.props.getValidator ? this.props.getValidator(field) : null}
       </div>
     )
   }

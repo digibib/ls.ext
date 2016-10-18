@@ -12,7 +12,7 @@ end
 
 Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
   step "jeg er på sida til verket"
-  @site.browser.span(data_automation_id: /work_date/).text.should_not include(@context[:work_publicationyear])
+  @site.browser.element(data_automation_id: /work_originalReleaseDate/).present?.should eq false
 end
 
 Then(/^verkets årstall førsteutgave av vises på verks\-siden$/) do

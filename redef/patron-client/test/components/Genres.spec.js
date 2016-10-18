@@ -4,7 +4,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
-import Genres from '../../src/frontend/components/Genres'
+import Genres from '../../src/frontend/components/work/fields/Genres'
 
 function setup (propOverrides) {
   const props = {

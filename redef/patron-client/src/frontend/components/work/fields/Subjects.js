@@ -16,15 +16,19 @@ class Subjects extends React.Component {
   }
 
   render () {
-    const subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
-    return (
-       <aside className="work-subjects">
-        <h2><FormattedMessage {...messages.subjects} /></h2>
-        <ul data-automation-id="work_subjects">
-          {subjects.map(subject => <li key={subject}><Link to={this.searchLink(subject)} >{subject}</Link></li>)}
-        </ul>
-      </aside>
-    )
+    if (this.props.subjects.length > 0) {
+      const subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
+      return (
+        <aside className="work-subjects">
+          <h2><FormattedMessage {...messages.subjects} /></h2>
+          <ul data-automation-id="work_subjects">
+            {subjects.map(subject => <li key={subject}><Link to={this.searchLink(subject)}>{subject}</Link></li>)}
+          </ul>
+        </aside>
+      )
+    } else {
+      return null
+    }
   }
 }
 

@@ -18,20 +18,26 @@ class SearchResultsText extends React.Component {
     } else {
       return (
         <ReactCSSTransitionGroup
-        transitionName="fade-in"
-        transitionAppear
-        transitionAppearTimeout={500}
-        transitionLeaveTimeout={0}
-        transitionEnterTimeout={500}
-        component="div"
-        className="search-results-number">
-          <MediaQuery query="(min-width: 668px)" values={{...this.props.mediaQueryValues}}>
+          transitionName="fade-in"
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionLeaveTimeout={0}
+          transitionEnterTimeout={500}
+          component="div"
+          className="search-results-number">
+          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
             <FormattedHTMLMessage {...messages.totalHits}
-              values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
+                                  values={{
+                                    searchQuery: this.props.locationQuery.query,
+                                    totalHits: String(this.props.totalHits)
+                                  }} />
           </MediaQuery>
-          <MediaQuery query="(max-width: 667px)" values={{...this.props.mediaQueryValues}}>
+          <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
             <FormattedHTMLMessage {...messages.totalHitsMobile}
-              values={{ searchQuery: this.props.locationQuery.query, totalHits: String(this.props.totalHits) }} />
+                                  values={{
+                                    searchQuery: this.props.locationQuery.query,
+                                    totalHits: String(this.props.totalHits)
+                                  }} />
           </MediaQuery>
         </ReactCSSTransitionGroup>
       )

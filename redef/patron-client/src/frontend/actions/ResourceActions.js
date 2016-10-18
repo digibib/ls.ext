@@ -117,3 +117,5 @@ export function expandSubResource (id, replacePath) {
       : dispatch(push(locationDescriptor))
   }
 }
+
+export const toggleShowMoreInformation = workId => action(types.TOGGLE_SHOW_ADDITIONAL_INFORMATION, { workId })

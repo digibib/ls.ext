@@ -26,7 +26,7 @@ module.exports = (app) => {
             response.status(500).send(error)
           }
           try {
-            response.status(200).send(transformResponse(framed[ '@graph' ][ 0 ]))
+            response.status(200).send(transformWork(framed[ '@graph' ][ 0 ]))
           } catch (error) {
             response.status(500).send(error)
           }
@@ -89,83 +89,168 @@ module.exports = (app) => {
   })
 }
 
-function transformResponse (work) {
-  work.uri = work.id
-  work.id = getId(work.id)
-  // work.relativeUri = relativeUri(workResource.uri)
-  work.items = []
+function transformWork (input) {
   try {
-    work.contributors = transformContributors(work.contributors)
+    const contributors = transformContributors(input.contributors)
+    const work = {
+      _original: process.env.NODE_ENV !== 'production' ? input : undefined,
+      audiences: input.audiences,
+      biographies: input.biographies,
+      by: transformBy(contributors),
+      classifications: transformClassifications(input.classifications),
+      compositionType: transformCompositionType(input.compositionType),
+      contentAdaptations: input.contentAdaptations,
+      contributors: contributors,
+      deweyNumber: input.hasClassification ? input.hasClassification.hasClassificationNumber : undefined,
+      fictionNonfiction: input.fictionNonfiction,
+      genres: input.genres,
+      hasSummary: input.hasSummary,
+      id: getId(input.id),
+      instruments: transformInstruments(input.hasInstrument),
+      items: [],
+      languages: input.languages,
+      literaryForms: input.literaryForms,
+      mainTitle: input.mainTitle,
+      partNumber: input.partNumber,
+      partTitle: input.partTitle,
+      publicationYear: input.publicationYear,
+      publications: transformPublications(input.publications),
+      serials: transformSerials(input),
+      subtitle: input.subtitle,
+      subjects: input.subjects,
+      uri: input.id
+    }
+    const publicationWithImage = work.publications.find(publication => publication.image)
+    if (publicationWithImage) {
+      work.image = publicationWithImage.image
+    }
+    return work
   } catch (error) {
     console.log(error)
-    work.contributors = {}
   }
-  work.by = []
-    .concat(work.contributors[ 'http://data.deichman.no/role#author' ])
-    .concat(work.contributors[ 'http://data.deichman.no/role#director' ])
-    .concat(work.contributors[ 'http://data.deichman.no/role#composer' ])
-    .concat(work.contributors[ 'http://data.deichman.no/role#performer' ])
-    .filter(by => by)
-    .map(by => by.name)
+}
 
-  if (work.hasClassification) {
-    work.deweyNumber = work.hasClassification.hasClassificationNumber
-  }
-
-  work.publications.forEach(publication => {
-    publication.uri = publication.id
-    publication.items = []
-    publication.id = getId(publication.id)
-    try {
-      publication.serialIssues = transformSerialIssues(publication.serialIssues)
-    } catch (error) {
-      console.log(error)
-      publication.serialIssues = []
-    }
-    if (publication.image) {
-      // choose any available image
-      work.image = work.image || publication.image
-    }
-    try {
-      publication.contributors = transformContributors(publication.contributors)
-    } catch (error) {
-      console.log(error)
-      publication.contributors = {}
-    }
-    if (publication.publishedBy) {
-      publication.publisher = publication.publishedBy.name
-    }
-    if (publication.hasPlaceOfPublication) {
-      publication.placeOfPublication = publication.hasPlaceOfPublication.prefLabel
+function transformPublications (publications) {
+  return publications.map(publication => {
+    return {
+      binding: publication.binding,
+      contentAdaptations: publication.contentAdaptations,
+      contributors: transformContributors(publication.contributors),
+      description: publication.description,
+      /* duration: publication.duration, */
+      edition: publication.edition,
+      formatAdaptations: publication.formatAdaptations,
+      formats: publication.formats,
+      genres: publication.genres,
+      id: getId(publication.id),
+      image: publication.image,
+      isbn: publication.isbn,
+      items: [],
+      languages: publication.languages,
+      mainTitle: publication.mainTitle,
+      mediaTypes: publication.mediaTypes,
+      numberOfPages: publication.numberOfPages,
+      partNumber: publication.partNumber,
+      partTitle: publication.partTitle,
+      placeOfPublication: publication.hasPlaceOfPublication ? publication.hasPlaceOfPublication.prefLabel : undefined,
+      publicationYear: publication.publicationYear,
+      publisher: publication.publishedBy ? publication.publishedBy.name : undefined,
+      publishers: publication.publishers,
+      recordId: publication.recordId,
+      serialIssues: transformSerialIssues(publication.serialIssues),
+      subtitles: publication.subtitles,
+      uri: publication.id
     }
   })
+}
 
-  work.serials = [].concat.apply([], work.publications.map(publication => publication.serialIssues.map(inSerial => inSerial.name)))
-  return work
+function transformSerials (work) {
+  try {
+    return [].concat(...work.publications.map(publication => publication.serialIssues.map(inSerial => inSerial.name)))
+  } catch (error) {
+    console.log(error)
+    return []
+  }
 }
 
 function transformContributors (input) {
-  const contributors = {}
-  input.forEach(inputContributor => {
-    const contributor = inputContributor.agent
-    contributor.uri = contributor.id
-    contributor.id = getId(contributor.id)
-    contributor.relativeUri = relativeUri(contributor.uri)
-    contributors[ inputContributor.role ] = contributors[ inputContributor.role ] || []
-    contributors[ inputContributor.role ].push(contributor)
-  })
-  return contributors
+  try {
+    const contributors = {}
+    input.forEach(inputContributor => {
+      const contributor = inputContributor.agent
+      contributor.uri = contributor.id
+      contributor.id = getId(contributor.id)
+      contributor.relativeUri = relativeUri(contributor.uri)
+      contributors[ inputContributor.role ] = contributors[ inputContributor.role ] || []
+      contributors[ inputContributor.role ].push(contributor)
+    })
+    return contributors
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
 }
 
 function transformSerialIssues (input) {
-  return input.map(serialIssue => {
-    return {
-      uri: serialIssue.serial.id,
-      name: serialIssue.serial.mainTitle,
-      subtitle: serialIssue.serial.subtitle,
-      issue: serialIssue.issue
+  try {
+    return input.map(serialIssue => {
+      return {
+        uri: serialIssue.serial.id,
+        name: serialIssue.serial.mainTitle,
+        subtitle: serialIssue.serial.subtitle,
+        issue: serialIssue.issue
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}
+
+function transformBy (contributors) {
+  try {
+    return []
+      .concat(contributors[ 'http://data.deichman.no/role#author' ])
+      .concat(contributors[ 'http://data.deichman.no/role#director' ])
+      .concat(contributors[ 'http://data.deichman.no/role#composer' ])
+      .concat(contributors[ 'http://data.deichman.no/role#performer' ])
+      .filter(by => by)
+      .map(by => by.name)
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}
+
+function transformCompositionType (hasCompositionType) {
+  try {
+    if (hasCompositionType) {
+      return hasCompositionType.map(compositionType => compositionType.prefLabel)
     }
-  })
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}
+
+function transformInstruments (hasInstrument) {
+  try {
+    if (hasInstrument) {
+      return hasInstrument.map(instrument => instrument.hasInstrument.prefLabel)
+    }
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}
+
+function transformClassifications (input) {
+  try {
+    return input.map(classification => classification.hasClassificationNumber)
+  } catch (error) {
+    console.log(error)
+    return []
+  }
 }
 
 const urijs = require('urijs')

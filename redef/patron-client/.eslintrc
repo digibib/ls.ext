@@ -25,6 +25,7 @@
       {
         "allowNamedFunctions": true
       }
-    ]
+    ],
+    "arrow-parens": 0
   }
 }

@@ -5,7 +5,7 @@ import React, { PropTypes } from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
-import Contributors, { __RewireAPI__ as DefaultExportContributorsRewireApi } from '../../src/frontend/components/Contributors'
+import Contributors, { __RewireAPI__ as DefaultExportContributorsRewireApi } from '../../src/frontend/components/work/fields/Contributors'
 
 function setup (propOverrides) {
   const props = { ...propOverrides }

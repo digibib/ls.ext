@@ -18,13 +18,13 @@ let middleware = [ thunkMiddleware, reduxRouterMiddleware ]
 if (process.env.NODE_ENV !== 'production') {
   // Only apply in development mode
   const loggerMiddleware = createLogger()
-  middleware = [...middleware, loggerMiddleware]
+  middleware = [ ...middleware, loggerMiddleware ]
 }
 
 const createPersistentStoreWithMiddleware = compose(
-    applyMiddleware(...middleware),
-    persistState(storage, 'patron-client')
-  )(createStore)
+  applyMiddleware(...middleware),
+  persistState(storage, 'patron-client')
+)(createStore)
 
 const store = createPersistentStoreWithMiddleware(rootReducer)
 

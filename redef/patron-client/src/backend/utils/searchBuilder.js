@@ -46,7 +46,7 @@ function initSimpleQuery (query) {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: ['mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series']
+                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series' ]
               }
             }
           ],
@@ -95,22 +95,22 @@ function parseFilters (filtersFromLocationQuery) {
   const filterableFields = Constants.filterableFields
   const filterBuckets = {}
   if (!Array.isArray(filtersFromLocationQuery)) {
-    filtersFromLocationQuery = [filtersFromLocationQuery]
+    filtersFromLocationQuery = [ filtersFromLocationQuery ]
   }
   filtersFromLocationQuery.forEach(filter => { // ex filter: 'audience_juvenile'
     const split = filter.split('_')
-    const filterableField = filterableFields[ split[0] ]
+    const filterableField = filterableFields[ split[ 0 ] ]
     const aggregation = filterableField.name
-    if (!filterBuckets[aggregation]) {
-      filterBuckets[aggregation] = []
+    if (!filterBuckets[ aggregation ]) {
+      filterBuckets[ aggregation ] = []
     }
     const val = filterableField.prefix + filter.substring(`${split[ 0 ]}_`.length)
-    filterBuckets[aggregation].push(val)
+    filterBuckets[ aggregation ].push(val)
   })
 
   const filters = []
   Object.keys(filterBuckets).forEach(aggregation => {
-    filters.push({ aggregation: aggregation, bucket: filterBuckets[aggregation] })
+    filters.push({ aggregation: aggregation, bucket: filterBuckets[ aggregation ] })
   })
 
   return filters
@@ -150,7 +150,7 @@ module.exports.buildQuery = function (urlQueryString) {
     const fieldName = field.name
     elasticSearchQuery.aggs.facets.aggs[ fieldName ] = {
       filter: {
-        bool: Object.assign({}, elasticSearchQuery.query.filtered.query.bool || {filter: [elasticSearchQuery.query.filtered.query]})
+        bool: Object.assign({}, elasticSearchQuery.query.filtered.query.bool || { filter: [ elasticSearchQuery.query.filtered.query ] })
       },
       aggs: {
         [fieldName]: {
@@ -164,7 +164,7 @@ module.exports.buildQuery = function (urlQueryString) {
 
     const aggregationMusts = []
     Object.keys(musts).forEach(aggregation => {
-      const must = musts[aggregation]
+      const must = musts[ aggregation ]
       if (aggregation !== fieldName) {
         aggregationMusts.push(must)
       }

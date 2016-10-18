@@ -4,7 +4,8 @@ import {
   REQUEST_RESOURCE,
   ITEMS_FAILURE,
   RECEIVE_ITEMS,
-  REQUEST_ITEMS
+  REQUEST_ITEMS,
+  TOGGLE_SHOW_ADDITIONAL_INFORMATION
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
   error: false,
   isRequestingItems: false,
   items: {},
-  itemsError: false
+  itemsError: false,
+  showAdditionalInformation: []
 }
 
 export default function resources (state = initialState, action) {
@@ -56,6 +58,13 @@ export default function resources (state = initialState, action) {
       return {
         ...state,
         isRequestingItems: true
+      }
+    case TOGGLE_SHOW_ADDITIONAL_INFORMATION:
+      return {
+        ...state,
+        showAdditionalInformation: state.showAdditionalInformation.includes(action.payload.workId)
+          ? state.showAdditionalInformation.filter(e => e !== action.payload.workId)
+          : [ action.payload.workId ].concat(state.showAdditionalInformation)
       }
     default:
       return state

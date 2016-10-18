@@ -115,7 +115,8 @@ class Publications extends React.Component {
               mediaType = 'uncategorized'
               mediaTypeOutput = this.props.intl.formatMessage({ id: messages.noMediaType.id })
             }
-            let showingRestLabel = <FormattedMessage {...messages.showRestOfPublications} values={{ mediaType: mediaTypeOutput }} />
+            let showingRestLabel = <FormattedMessage {...messages.showRestOfPublications}
+                                                     values={{ mediaType: mediaTypeOutput }} />
             const output = []
             const showAll = Array.isArray(this.props.locationQuery.showAllResults) ? this.props.locationQuery.showAllResults : [ this.props.locationQuery.showAllResults ]
             if (showAll.includes(mediaType)) {
@@ -212,22 +213,23 @@ class Publications extends React.Component {
   }
 
   handleAnchorClick (mediaTypeUri) {
-    ReactDOM.findDOMNode(this.mediaTypeUri[mediaTypeUri]).scrollIntoView()
+    ReactDOM.findDOMNode(this.mediaTypeUri[ mediaTypeUri ]).scrollIntoView()
   }
 
   renderMediaTypeAnchors (publicationHoldersByMediaType) {
     return (
       <div className="mediatype-selector">
-      {
-        Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
-          const mediaType = {uri: mediaTypeUri}
-          return (
-            <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[mediaTypeUri]} key={mediaTypeUri}>
-              <div><MediaType key={mediaTypeUri} mediaType={mediaType} /></div>
-            </ClickableElement>
-          )
-        })
-      }
+        {
+          Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
+            const mediaType = { uri: mediaTypeUri }
+            return (
+              <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[ mediaTypeUri ]}
+                                key={mediaTypeUri}>
+                <div><MediaType key={mediaTypeUri} mediaType={mediaType} /></div>
+              </ClickableElement>
+            )
+          })
+        }
       </div>
     )
   }
@@ -254,13 +256,15 @@ class Publications extends React.Component {
         <header>
           <h2>Gå til</h2>
           {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
-          <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl} query={this.props.query} />
+          <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+                           query={this.props.query} />
         </header>
         {
           Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
             const mediaTypeFragment = getFragment(mediaTypeUri)
             return (
-              <section className="mediatype-group" ref={e => this.mediaTypeUri[mediaTypeUri] = e} key={mediaTypeUri} data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
+              <section className="mediatype-group" ref={e => this.mediaTypeUri[ mediaTypeUri ] = e} key={mediaTypeUri}
+                       data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
                 <header className="other-publications-title">
                   <ClickableElement
                     onClickAction={this.props.toggleParameterValue}

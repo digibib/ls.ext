@@ -43,12 +43,12 @@ class RegistrationFormPartOne extends React.Component {
 
   renderCheckForExistingUserSuccess () {
     /*
-    return (
-      <p data-automation-id="check_for_existing_user_success">
-        <FormattedMessage {...messages.checkForExistingUserSuccess} />
-      </p>
-    )
-    */
+     return (
+     <p data-automation-id="check_for_existing_user_success">
+     <FormattedMessage {...messages.checkForExistingUserSuccess} />
+     </p>
+     )
+     */
   }
 
   renderCheckForExistingUserError (message) {
@@ -99,13 +99,15 @@ class RegistrationFormPartOne extends React.Component {
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.nameLabel} /></legend>
           <FormInputField name="firstName" message={messages.firstName} formName={formName} />
-          <FormInputField name="lastName" message={messages.lastName} formName={formName} getValidator={this.getValidator} />
+          <FormInputField name="lastName" message={messages.lastName} formName={formName}
+                          getValidator={this.getValidator} />
         </fieldset>
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.birthdate} /></legend>
           <div className="date-of-birth">
             <FormInputField name="day" message={messages.day} formName={formName} getValidator={this.getValidator} />
-            <FormInputField name="month" message={messages.month} formName={formName} getValidator={this.getValidator} />
+            <FormInputField name="month" message={messages.month} formName={formName}
+                            getValidator={this.getValidator} />
             <FormInputField name="year" message={messages.year} formName={formName} getValidator={this.getValidator} />
           </div>
         </fieldset>

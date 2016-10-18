@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import Contributors from '../components/Contributors'
+import Contributors from './work/fields/Contributors'
 
 class PublicationInfo extends React.Component {
   renderLocation (location) {
@@ -9,23 +9,24 @@ class PublicationInfo extends React.Component {
       return <span className="item-location">{location}</span>
     }
   }
+
   renderItems (items) {
     if (items) {
       return (
         <ReactCSSTransitionGroup
-        transitionName="fade-in"
-        transitionAppear
-        transitionAppearTimeout={500}
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={500}
-        component="table"
-        className="test">
+          transitionName="fade-in"
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+          component="table"
+          className="test">
           <thead>
-            <tr>
-              <th><FormattedMessage {...messages.branch} /></th>
-              <th><FormattedMessage {...messages.shelfmark} /></th>
-              <th><FormattedMessage {...messages.status} /></th>
-            </tr>
+          <tr>
+            <th><FormattedMessage {...messages.branch} /></th>
+            <th><FormattedMessage {...messages.shelfmark} /></th>
+            <th><FormattedMessage {...messages.status} /></th>
+          </tr>
           </thead>
           <tbody data-automation-id="work_items">
           {items.map(item => {
@@ -57,7 +58,8 @@ class PublicationInfo extends React.Component {
         publisherSeries.map(serialIssue =>
           <span key="{publisherSeries.id}" data-automation-id="Publication_serial_issue">
             <span data-automation-id="Publication_serial_issue_name">{serialIssue.name}</span>
-            <span data-automation-id="Publication_serial_issue_subtitle">{((serialIssue.subtitle) ? ` — ${serialIssue.subtitle}` : '')}</span>
+            <span
+              data-automation-id="Publication_serial_issue_subtitle">{((serialIssue.subtitle) ? ` — ${serialIssue.subtitle}` : '')}</span>
             <span>{': '}</span>
             <span data-automation-id="Publication_serial_issue_issue"> {serialIssue.issue}</span>
           </span>
@@ -100,7 +102,7 @@ class PublicationInfo extends React.Component {
         </div>
         <div className="right">
           {this.renderMetaItem(intl.formatMessage(messages.isbn), publication.isbn)}
-          {this.renderMetaItem(intl.formatMessage(messages.biblionr), publication.recordID)}
+          {this.renderMetaItem(intl.formatMessage(messages.biblionr), publication.recordId)}
           {this.renderMetaItem(intl.formatMessage(messages.publisherSeries), this.renderPublisherSeries(publication.serialIssues))}
           {/* Missing data: "Deler av utgivelse" */}
           {this.renderMetaItem(intl.formatMessage(messages.adaptation), publication.formatAdaptations.map(formatAdaptation => intl.formatMessage({ id: formatAdaptation })).join(', '))}

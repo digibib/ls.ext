@@ -25,7 +25,7 @@ Tab.propTypes = {
   tab: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
-  ariaSelected: PropTypes.isrequired
+  ariaSelected: PropTypes.string.isRequired
 }
 
 export default Tab

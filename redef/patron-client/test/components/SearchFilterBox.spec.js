@@ -42,10 +42,10 @@ describe('components', () => {
     it('should render filters', () => {
       const { node } = setup()
       // TODO Uncomment count checks when the count received from elastic search is correct
-      expect(node.querySelector(`[data-automation-id='language_nob']`).innerHTML).toContain('Norwegian')
-      expect(node.querySelector(`[data-automation-id='language_eng']`).innerHTML).toContain('English')
-      expect(node.querySelector(`[data-automation-id='language_fin']`).innerHTML).toContain('Finnish')
-      expect(node.querySelector(`[data-automation-id='language_swe']`).innerHTML).toContain('Swedish')
+      expect(node.querySelector("[data-automation-id='language_nob']").innerHTML).toContain('Norwegian')
+      expect(node.querySelector("[data-automation-id='language_eng']").innerHTML).toContain('English')
+      expect(node.querySelector("[data-automation-id='language_fin']").innerHTML).toContain('Finnish')
+      expect(node.querySelector("[data-automation-id='language_swe']").innerHTML).toContain('Swedish')
     })
   })
 })

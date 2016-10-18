@@ -17,16 +17,18 @@ class Publication extends React.Component {
     if (publication.image) {
       return (
         <div className="book-cover">
-          <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
+          <ClickableElement onClickAction={this.props.expandSubResource}
+                            onClickArguments={[ this.props.publication.id, true ]}>
             <img src={publication.image} alt={coverAltText} />
           </ClickableElement>
         </div>
       )
-    } else if (typeof publication.mediaTypes[0] !== 'undefined') {
+    } else if (typeof publication.mediaTypes[ 0 ] !== 'undefined') {
       return (
         <div className="book-cover missing">
-          <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
-            <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[0] ] ]} />
+          <ClickableElement onClickAction={this.props.expandSubResource}
+                            onClickArguments={[ this.props.publication.id, true ]}>
+            <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[ 0 ] ] ]} />
           </ClickableElement>
         </div>
       )
@@ -47,59 +49,62 @@ class Publication extends React.Component {
       }
     }
     return (
-        <article onClick={this.handleClick}
-                 className={this.props.open ? 'single-publication open' : 'single-publication'}
-                 data-automation-id={`publication_${publication.uri}`}>
-          {this.renderBookCover(publication)}
-          <div className="meta-info">
-            <div className="publication-text-container">
-              <div className="availability" data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
-                <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
-              </div>
-              <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
-                <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
-              </ClickableElement>
-              <div className="meta-item">
-                <span data-automation-id="publication_year">{publication.publicationYear}</span>
-                <span>{publicationYearLanguageSeparator()}</span>
-                <span data-automation-id="publication_languages">{languages.join(', ')}</span>
-              </div>
-              <div className="meta-item">
-                <span data-automation-id="publication_formats">{formats.join(', ')}</span>
-              </div>
-              <div className="meta-item">
-                <span data-automation-id="publication_record_id">{publication.recordId}</span>
-              </div>
+      <article onClick={this.handleClick}
+               className={this.props.open ? 'single-publication open' : 'single-publication'}
+               data-automation-id={`publication_${publication.uri}`}>
+        {this.renderBookCover(publication)}
+        <div className="meta-info">
+          <div className="publication-text-container">
+            <div className="availability"
+                 data-automation-id={publication.available ? 'publication_available' : 'publication_unavailable'}>
+              <FormattedMessage {...(publication.available ? messages.available : messages.unavailable)} />
             </div>
-            { publication.items.length > 0 ? (
-              <div className="reserve-button">
-                <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
-                  <button className="red-btn" type="button"
-                          data-automation-id={`recordId_${publication.recordId}`}>
-                    <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
-                  </button>
-                </ClickableElement>
-              </div>
-            ) : null }
+            <ClickableElement onClickAction={this.props.expandSubResource}
+                              onClickArguments={[ this.props.publication.id, true ]}>
+              <h2 data-automation-id="publication_title">{this.renderTitle(publication)}</h2>
+            </ClickableElement>
+            <div className="meta-item">
+              <span data-automation-id="publication_year">{publication.publicationYear}</span>
+              <span>{publicationYearLanguageSeparator()}</span>
+              <span data-automation-id="publication_languages">{languages.join(', ')}</span>
+            </div>
+            <div className="meta-item">
+              <span data-automation-id="publication_formats">{formats.join(', ')}</span>
+            </div>
+            <div className="meta-item">
+              <span data-automation-id="publication_record_id">{publication.recordId}</span>
+            </div>
           </div>
-          <div className="show-status">
-              {this.props.open ? (
-                <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>
-                  <button>
-                    <FormattedMessage {...messages.hideInfo} />
-                    <i className="icon-up-open" />
-                  </button>
-                </ClickableElement>
-              ) : (
-                <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ this.props.publication.id, true ]}>
-                  <button type="button">
-                    <FormattedMessage {...messages.showInfo} />
-                    <i className="icon-down-open" />
-                  </button>
-                </ClickableElement>
-              )}
-          </div>
-        </article>
+          {publication.items.length > 0 ? (
+            <div className="reserve-button">
+              <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
+                <button className="red-btn" type="button"
+                        data-automation-id={`recordId_${publication.recordId}`}>
+                  <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
+                </button>
+              </ClickableElement>
+            </div>
+          ) : null}
+        </div>
+        <div className="show-status">
+          {this.props.open ? (
+            <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>
+              <button>
+                <FormattedMessage {...messages.hideInfo} />
+                <i className="icon-up-open" />
+              </button>
+            </ClickableElement>
+          ) : (
+            <ClickableElement onClickAction={this.props.expandSubResource}
+                              onClickArguments={[ this.props.publication.id, true ]}>
+              <button type="button">
+                <FormattedMessage {...messages.showInfo} />
+                <i className="icon-down-open" />
+              </button>
+            </ClickableElement>
+          )}
+        </div>
+      </article>
     )
   }
 }

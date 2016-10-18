@@ -4,7 +4,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
-import Subjects from '../../src/frontend/components/Subjects'
+import Subjects from '../../src/frontend/components/work/fields/Subjects'
 
 function setup (propOverrides) {
   const props = {

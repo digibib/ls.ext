@@ -22,7 +22,7 @@ class PatronClientWorkPage < PageRoot
   end
 
   def getDate
-    return @browser.element(data_automation_id: /work_date/).when_present(BROWSER_WAIT_TIMEOUT).text
+    return @browser.element(data_automation_id: /work_originalReleaseDate/).when_present(BROWSER_WAIT_TIMEOUT).text
   end
 
   def exists_exemplar?

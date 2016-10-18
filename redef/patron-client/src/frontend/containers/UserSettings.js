@@ -94,15 +94,15 @@ class UserSettings extends React.Component {
             </label>
           </div>
 
-            {/* "patron-placeholder"
-             <input data-automation-id="??"
-             type="checkbox" name="user-settings-reminder-dont-send"
-             id="user-settings-reminder-dont-send"
-             ref={e => this.reminderOfDueDateEmailCheckbox = e}
-             defaultChecked={settings.alerts.reminderOfDueDate.email} />
-             <label
-             htmlFor="user-settings-reminder-email"><span></span>
-             <span>Nei, ikke send</span></label> */}
+          {/* "patron-placeholder"
+           <input data-automation-id="??"
+           type="checkbox" name="user-settings-reminder-dont-send"
+           id="user-settings-reminder-dont-send"
+           ref={e => this.reminderOfDueDateEmailCheckbox = e}
+           defaultChecked={settings.alerts.reminderOfDueDate.email} />
+           <label
+           htmlFor="user-settings-reminder-email"><span></span>
+           <span>Nei, ikke send</span></label> */}
 
         </div>
 

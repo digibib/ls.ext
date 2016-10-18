@@ -7,7 +7,7 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 
 const SearchFilterBox = ({ toggleFilter, query }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
-   : <FormattedMessage {...messages.titleSearch} />
+    : <FormattedMessage {...messages.titleSearch} />
   if (getFiltersFromQuery(query).length > 0) {
     return (
       <ReactCSSTransitionGroup

@@ -125,7 +125,7 @@ function populateItems (target, field, itemResources) {
     }
     items[ key ].total++
   })
-  const targetField = target[field] = []
+  const targetField = target[ field ] = []
   Object.keys(items).forEach(key => {
     targetField.push(items[ key ])
   })

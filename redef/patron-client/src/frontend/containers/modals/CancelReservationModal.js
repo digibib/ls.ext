@@ -61,7 +61,8 @@ class CancelReservationModal extends React.Component {
     return (
       <div data-automation-id="cancel_reservation_modal" className="default-modal">
         <h2>{this.props.message}</h2>
-        <button className="black-btn" disabled={this.props.isRequestingCancelReservation} onClick={this.handleCancelReservation}
+        <button className="black-btn" disabled={this.props.isRequestingCancelReservation}
+                onClick={this.handleCancelReservation}
                 data-automation-id="confirm_button">
           <FormattedMessage {...messages.cancelReservation} />
         </button>

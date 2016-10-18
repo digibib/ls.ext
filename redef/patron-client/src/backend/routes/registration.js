@@ -16,23 +16,25 @@ module.exports = (app) => {
     }
 
     fetch(`http://xkoha:8081/api/v1/checkexistinguser?${querystring.stringify(params)}`, {})
-    .then(res => {
-      if (res.status === 200) {
-        return res.json()
-      } else {
-        return Promise.reject({message: 'Could not check for existing patron', status: res.status})
-      }
-    }).then(json => {
-      response.json({
-        count: json.count,
-        localdb: json.localdb,
-        centraldb: json.centraldb
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          return Promise.reject({ message: 'Could not check for existing patron', status: res.status })
+        }
       })
-    }).catch((error) => {
-      console.log(`Checkexistinguser error: ${error.message}`)
-      console.log(`Status Code: ${error.status}`)
-      response.sendStatus(error.status)
-    })
+      .then(json => {
+        response.json({
+          count: json.count,
+          localdb: json.localdb,
+          centraldb: json.centraldb
+        })
+      })
+      .catch((error) => {
+        console.log(`Checkexistinguser error: ${error.message}`)
+        console.log(`Status Code: ${error.status}`)
+        response.sendStatus(error.status)
+      })
   })
 
   app.post('/api/v1/registration', jsonParser, (request, response) => {
@@ -63,16 +65,17 @@ module.exports = (app) => {
       userid: `${Math.floor(Math.random() * (99 - 10) + 10)}-${Math.floor(Math.random() * (999 - 100) + 100)}` // TODO: Proper user ID
     }
     registerPatron(patron)
-    .then(json => setDefaultMessagingSettings(json))
-    .then(json => setDefaultSyncStatusAndAttributes(json))
-    .then(json => sendAccountDetailsByMail(json))
-    .then(json => {
-      response.status(201).send({username: json.userid, categoryCode: categoryCode})
-    }).catch(error => {
-      console.log(`Registration error: ${error.message}`)
-      console.log(`Status Code: ${error.status}`)
-      response.sendStatus(error.status)
-    })
+      .then(json => setDefaultMessagingSettings(json))
+      .then(json => setDefaultSyncStatusAndAttributes(json))
+      .then(json => sendAccountDetailsByMail(json))
+      .then(json => {
+        response.status(201).send({ username: json.userid, categoryCode: categoryCode })
+      })
+      .catch(error => {
+        console.log(`Registration error: ${error.message}`)
+        console.log(`Status Code: ${error.status}`)
+        response.sendStatus(error.status)
+      })
   })
 
   function registerPatron (patron) {
@@ -84,7 +87,7 @@ module.exports = (app) => {
       if (res.status === 201) {
         return res.json()
       } else {
-        return Promise.reject({message: 'Could not register patron', status: res.status})
+        return Promise.reject({ message: 'Could not register patron', status: res.status })
       }
     }).then(json => {
       patron.borrowernumber = json.borrowernumber
@@ -94,7 +97,10 @@ module.exports = (app) => {
 
   function setDefaultMessagingSettings (patron) {
     if (!patron.borrowernumber) {
-      return Promise.reject({message: 'Missing borrowernumber when setting messaging defaults, not able to complete registration', status: 400})
+      return Promise.reject({
+        message: 'Missing borrowernumber when setting messaging defaults, not able to complete registration',
+        status: 400
+      })
     }
     const messageSettings = JSON.stringify(userSettingsMapper.patronSettingsToKohaSettings({
       alerts: {
@@ -124,7 +130,7 @@ module.exports = (app) => {
       if (res.status === 200) {
         return res.json()
       } else {
-        return Promise.reject({message: 'Could not set default message preferences', status: res.status})
+        return Promise.reject({ message: 'Could not set default message preferences', status: res.status })
       }
     }).then(json => {
       patron.messageSettings = json
@@ -140,7 +146,7 @@ module.exports = (app) => {
       if (res.status === 200) {
         return patron
       } else {
-        return Promise.reject({message: 'Could not set patron sync defaults', status: res.status})
+        return Promise.reject({ message: 'Could not set patron sync defaults', status: res.status })
       }
     })
   }
@@ -152,7 +158,7 @@ module.exports = (app) => {
       if (res.status === 200) {
         return patron
       } else {
-        return Promise.reject({message: 'Could not send patron account details', status: res.status})
+        return Promise.reject({ message: 'Could not send patron account details', status: res.status })
       }
     })
   }

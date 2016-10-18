@@ -4,39 +4,19 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
+import MediaQuery from 'react-responsive'
 
-import Contributors from '../components/Contributors'
+import WorkInformation from '../components/work/WorkInformation'
 import Publications from '../components/Publications'
-import Genres from '../components/Genres'
-import Subjects from '../components/Subjects'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ParameterActions from '../actions/ParameterActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
-import MediaQuery from 'react-responsive'
+import AdditionalInformationContent from '../components/work/AdditionalInformationContent'
 
 class Work extends React.Component {
-
-  constructor (props) {
-    super(props)
-    this.toggleAditionalInfo = this.toggleAditionalInfo.bind(this)
-    this.state = {
-      showAdditionalInfo: false
-    }
-  }
-
   componentWillMount () {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
-  }
-
-  toggleAditionalInfo (event) {
-    event.preventDefault()
-    event.stopPropagation()
-    if (this.state.showAdditionalInfo) {
-      this.setState({ showAdditionalInfo: false })
-    } else {
-      this.setState({ showAdditionalInfo: true })
-    }
   }
 
   renderNoWork () {
@@ -71,68 +51,11 @@ class Work extends React.Component {
     )
   }
 
-  renderYear (work) {
-    if (work.publicationYear) {
-      return (
-        <div className="meta-item">
-          <span className="meta-label"><FormattedMessage {...messages.labelOriginalReleaseDate} />: </span>
-          <span className="meta-content" data-automation-id="work_date">{work.publicationYear}</span>
-        </div>
-      )
-    }
-    return <span data-automation-id="work_date" />
-  }
-
-  renderOriginalTitle (work) {
-    return (
-      <div className="meta-item">
-        <span className="meta-label"><FormattedMessage {...messages.labelOriginalTitle} />: </span>
-        <span className="meta-content">{work.mainTitle}</span>
-      </div>
-    )
-  }
-
-  renderOriginalLanguage (work) {
-    return (
-      <div className="meta-item">
-        <span className="meta-label"><FormattedMessage {...messages.labelOriginalLanguage} />: </span>
-        <span
-          className="meta-content">{work.languages.map(language => this.props.intl.formatMessage({ id: language }))}</span>
-      </div>
-    )
-  }
-
   renderOriginalReleaseDate (work) {
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelOriginalReleaseDate} />: </span>
         <span className="meta-content">Placholder original release date</span>
-      </div>
-    )
-  }
-
-  renderAuthor (work) {
-    return (
-      <div className="meta-item author">
-        <span className="meta-label"><FormattedMessage {...messages.labelBy} />: </span>
-        <span className="meta-content">{(Array.isArray(work.by)) ? work.by.join(' / ') : work.by}</span>
-      </div>
-    )
-  }
-
-  renderExcerpt (work) {
-    return (
-      <p className="work-excerpt">{work.hasSummary}</p>
-    )
-  }
-
-  renderTargetAudience (work) {
-    const audiences = work.audiences.map(audience => this.props.intl.formatMessage({ id: audience }))
-    return (
-      <div className="meta-item">
-        <span className="meta-label"><FormattedMessage {...messages.labelTargetAudience} />: </span>
-        <span
-          className="meta-content">{audiences.join(', ')}</span>
       </div>
     )
   }
@@ -167,57 +90,6 @@ class Work extends React.Component {
     )
   }
 
-  renderDeweynr (work) {
-    return (
-      <div className="meta-item">
-        <span className="meta-label"><FormattedMessage {...messages.labelDeweynr} />: </span>
-        <span className="meta-content">{work.deweyNumber}</span>
-      </div>
-    )
-  }
-
-  renderAdditionalInfo (work) {
-    if (this.state.showAdditionalInfo) {
-      return (
-        <div className="additional-info">
-          <a href="#" className="additional-info-toggle" onClick={this.toggleAditionalInfo}>
-            <FormattedMessage {...messages.additionalInfoToggleLess} /><i className="icon-up-open" />
-          </a>
-          {this.renderAdditionalInfoContent(work)}
-        </div>
-      )
-    } else {
-      return (
-        <div className="additional-info">
-          <a href="#" className="additional-info-toggle" onClick={this.toggleAditionalInfo}>
-            <FormattedMessage {...messages.additionalInfoToggleMore} /><i className="icon-down-open" />
-          </a>
-        </div>
-      )
-    }
-  }
-
-  renderAdditionalInfoContent (work) {
-    return (
-      <ReactCSSTransitionGroup
-        transitionName="fade-in"
-        transitionLeave
-        transitionAppear
-        transitionAppearTimeout={500}
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={500}
-        component="div"
-        className="additional-info">
-        {this.renderTargetAudience(work)}
-        {/* this.renderPartOfSeries(work) */}
-        {/* this.renderRelations(work) */}
-        {this.renderDeweynr(work)}
-        <Subjects subjects={work.subjects} />
-        <Genres genres={work.genres} />
-      </ReactCSSTransitionGroup>
-    )
-  }
-
   renderAvailableMediaTypes (publications) {
     const mediaTypes = []
     publications.forEach(publication => {
@@ -233,30 +105,13 @@ class Work extends React.Component {
     )
   }
 
-  getFieldsFromChosenPublication (work) {
-    let mainTitle = work.mainTitle
-    let partTitle = work.partTitle
-    let partNumber = work.partNumber
-    if (this.props.params.publicationId) {
-      const chosenPublication = work.publications.find(publication => publication.id === this.props.params.publicationId)
-      if (chosenPublication) {
-        mainTitle = chosenPublication.mainTitle
-        partTitle = chosenPublication.partTitle
-        partNumber = chosenPublication.partNumber
-      }
-    }
-    return { mainTitle, partTitle, partNumber }
-  }
-
   render () {
     if (this.props.isRequesting) {
       return this.renderEmpty()
     }
-    let work = this.props.resources[ this.props.params.workId ]
+    const work = this.props.resources[ this.props.params.workId ]
     if (!work) {
       return this.renderNoWork()
-    } else {
-      work = { ...work }
     }
 
     const publicationsWithItems = work.publications.map(publication => {
@@ -265,7 +120,6 @@ class Work extends React.Component {
       return newPublication
     })
 
-    const { mainTitle, partTitle, partNumber } = this.getFieldsFromChosenPublication(work)
     const { back } = this.props.location.query
 
     return (
@@ -287,25 +141,11 @@ class Work extends React.Component {
             </header>
           ) : ''}
 
-          <section className="work-information">
-            <h1 data-automation-id="work_title">{mainTitle}</h1>
-            <h2>{partNumber ? `${partNumber}. ` : ''}{partTitle}</h2>
-            {this.renderAuthor(work)}
-            {this.renderOriginalTitle(work)}
-            {this.renderOriginalLanguage(work)}
-            {this.renderYear(work)}
-            {/* this.renderOriginalReleaseDate(work) */}
-            <Contributors contributors={work.contributors} />
-            {this.renderExcerpt(work)}
-            <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
-              {this.renderAdditionalInfo(work)}
-            </MediaQuery>
-          </section>
+          <WorkInformation work={work} publicationId={this.props.params.publicationId} showAdditionalInformation={this.props.showAdditionalInformation.includes(work.id)} toggleShowAdditionalInformation={this.props.resourceActions.toggleShowMoreInformation} />
 
           <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
-            {this.renderAdditionalInfoContent(work)}
+            <AdditionalInformationContent work={work} />
           </MediaQuery>
-
           {/* this.renderAvailableMediaTypes(work.publications) */}
 
           <Publications locationQuery={this.props.location.query}
@@ -345,26 +185,13 @@ Work.propTypes = {
 }
 
 export const messages = defineMessages({
-  additionalInfoToggleLess: {
-    id: 'Work.additionalInfoToggleLess',
-    description: 'Text used in trigger for displaying additional info',
-    defaultMessage: 'Less about this work'
-  },
-  additionalInfoToggleMore: {
-    id: 'Work.additionalInfoToggleMore',
-    description: 'Text used in trigger for displaying additional info',
-    defaultMessage: 'More about this work'
-  },
+
   noWork: {
     id: 'Work.noWork',
     description: 'When no work was found',
     defaultMessage: 'No work'
   },
-  labelDeweynr: {
-    id: 'Work.labelDeweynr',
-    description: 'Label for deweynr meta',
-    defaultMessage: 'Deweynr.'
-  },
+
   labelRelation: {
     id: 'Work.labelRelation',
     description: 'Label for relation',
@@ -375,30 +202,11 @@ export const messages = defineMessages({
     description: 'Label for series',
     defaultMessage: 'Part of series'
   },
-  labelTargetAudience: {
-    id: 'Work.labelTargetAudience',
-    description: 'Label for target audience',
-    defaultMessage: 'Target audience'
-  },
-  labelBy: {
-    id: 'Work.labelBy',
-    description: 'Label for "by"',
-    defaultMessage: 'By'
-  },
+
   labelOriginalReleaseDate: {
     id: 'Work.labelOriginalReleaseDate',
     description: 'Label for original release date',
     defaultMessage: 'Original release date'
-  },
-  labelOriginalLanguage: {
-    id: 'Work.labelOriginalLanguage',
-    description: 'Label for original language',
-    defaultMessage: 'Original language'
-  },
-  labelOriginalTitle: {
-    id: 'Work.labelOriginalTitle',
-    description: 'Label for original title',
-    defaultMessage: 'Original title'
   },
   workInformation: {
     id: 'Work.workInformation',
@@ -413,7 +221,8 @@ function mapStateToProps (state) {
     isRequesting: state.resources.isRequesting,
     query: state.routing.locationBeforeTransitions.query,
     libraries: state.application.libraries,
-    items: state.resources.items
+    items: state.resources.items,
+    showAdditionalInformation: state.resources.showAdditionalInformation
   }
 }
 

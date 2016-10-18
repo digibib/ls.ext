@@ -68,7 +68,8 @@ class LoginForm extends React.Component {
           </p>
           <p>
             Er du ikke registrert? <br />
-            <a data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer deg</a>
+            <a data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer
+              deg</a>
           </p>
         </form>
       </div>

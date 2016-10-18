@@ -87,7 +87,8 @@ class SearchHeader extends React.Component {
     if (!this.props.isLoggedIn) {
       return (
         <li>
-          <a onClick={this.handleRegistrationClick} title="register"><FormattedMessage {...messages.register} /><span>&raquo;</span></a>
+          <a onClick={this.handleRegistrationClick}
+             title="register"><FormattedMessage {...messages.register} /><span>&raquo;</span></a>
         </li>
       )
     }
@@ -122,34 +123,35 @@ class SearchHeader extends React.Component {
     const mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
       <div>
-          <ReactCSSTransitionGroup
-            transitionName="fade-in"
-            transitionAppear
-            transitionAppearTimeout={500}
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={500}
-            component="header"
-            className="wrapper">
+        <ReactCSSTransitionGroup
+          transitionName="fade-in"
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+          component="header"
+          className="wrapper">
 
-            <div className="logo">
-              <a href="https://www.deichman.no/">
-                <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
-              </a>
+          <div className="logo">
+            <a href="https://www.deichman.no/">
+              <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
+            </a>
+          </div>
+
+          <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
+            <div className="mobile-menu-toggle">
+              <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars"
+                   onClick={this.toggleMobileNav} />
             </div>
+          </MediaQuery>
 
-            <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
-              <div className="mobile-menu-toggle">
-                <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars" onClick={this.toggleMobileNav} />
-              </div>
-            </MediaQuery>
+          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
+            <nav className="primary-menu">
+              {this.renderNavigationLinks()}
+            </nav>
+          </MediaQuery>
 
-            <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
-              <nav className="primary-menu">
-                {this.renderNavigationLinks()}
-              </nav>
-            </MediaQuery>
-
-          </ReactCSSTransitionGroup>
+        </ReactCSSTransitionGroup>
 
         <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
           <nav className={mobileNavClass}>

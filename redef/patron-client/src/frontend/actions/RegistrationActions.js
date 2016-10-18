@@ -36,7 +36,11 @@ export function postRegistrationFailure (error, message) {
 
 export function postRegistrationSuccess (username, password, categoryCode) {
   return dispatch => {
-    dispatch(showModal(ModalComponents.REGISTRATION, { isSuccess: true, username: username, categoryCode: categoryCode }))
+    dispatch(showModal(ModalComponents.REGISTRATION, {
+      isSuccess: true,
+      username: username,
+      categoryCode: categoryCode
+    }))
     dispatch({ type: types.REGISTRATION_SUCCESS })
     dispatch(LoginActions.login(username, password))
   }
@@ -78,11 +82,11 @@ export function checkForExistingUser () {
       .then(json => {
         console.log('json', json)
         if (json.localdb) {
-          dispatch(checkForExistingUserFailure({error: 'userExistsInLocalDB'}))
+          dispatch(checkForExistingUserFailure({ error: 'userExistsInLocalDB' }))
         } else if (json.centraldb) {
-          dispatch(checkForExistingUserFailure({error: 'userExistsInCentralDB'}))
+          dispatch(checkForExistingUserFailure({ error: 'userExistsInCentralDB' }))
         } else if (json.error) {
-          dispatch(checkForExistingUserFailure({error: 'genericRegistrationError'}))
+          dispatch(checkForExistingUserFailure({ error: 'genericRegistrationError' }))
         } else {
           dispatch(checkForExistingUserSuccess())
         }
