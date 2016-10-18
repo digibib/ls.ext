@@ -2338,11 +2338,19 @@
                 }
               },
               slideIn: function (transition) {
-                $(transition.element.node).hide()
-                $(transition.element.node).slideDown()
+                $(transition.element.node).addClass('fadein')
               },
               slideOut: function (transition) {
-                $(transition.element.node).slideUp()
+                 transition.animateStyle('opacity', '0', {duration: 200})
+                 transition.animateStyle('height', '0', {duration: 200, delay: 200})
+                  //$(transition.element.node).remove()
+                // $(transition.element.node).addClass('fadeout').removeClass('fadein')
+                setTimeout(function() {
+                  $(transition.element.node).remove
+                  ractive.updateModel()
+
+                }, 400
+                )
               }
             }
           })
@@ -2540,7 +2548,7 @@
                 ractive.set(event.keypath + '.deletable', false)
                 ractive.set(event.keypath + '.searchable', true)
                 var input = ractive.get(grandParentOf(event.keypath))
-                ractive.fire('patchResource', event, input.predicate, input.subjectType)
+                ractive.fire('patchResource', event, input.predicate, input.rdfType)
                 if (input.isMainEntry) {
                   unloadResourceForDomain('Work')
                   unloadResourceForDomain('Person')
