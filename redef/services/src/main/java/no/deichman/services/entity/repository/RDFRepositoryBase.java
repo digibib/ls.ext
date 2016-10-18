@@ -13,6 +13,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -59,7 +60,18 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         log.debug("Attempting to retrieve resource <" + xuri.getUri() +">");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(xuri.getUri()))) {
             disableCompression(qexec);
-            return qexec.execDescribe();
+            return qexec.execDescribe().query(new SimpleSelector(){
+                @Override
+                public boolean test(Statement s) {
+                    switch (s.getPredicate().getNameSpace()) {
+                        case "http://migration.deichman.no/":
+                        case "http://data.deichman.no/raw#":
+                            return false;
+                        default:
+                            return true;
+                    }
+                }
+            });
         }
     }
 

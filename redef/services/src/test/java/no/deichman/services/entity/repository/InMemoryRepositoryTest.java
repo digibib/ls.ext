@@ -170,6 +170,15 @@ public class InMemoryRepositoryTest {
         assertTrue(data.contains("80001"));
     }
 
+    @Test
+    public void shouldNotReturnBlacklistedPredicates() throws Exception {
+        repository = repositoryWithDataFrom("work_w87654.ttl");
+        XURI test = new XURI("http://data.deichman.no/publication/p80002");
+        Model data = repository.retrieveResourceByURI(test);
+        assertFalse(data.toString().contains("359"));
+        assertFalse(data.toString().contains("360"));
+    }
+
     public static InMemoryRepository repositoryWithDataFrom(String fileName) {
         final InMemoryRepository repository = new InMemoryRepository();
         Model testDataModel = ModelFactory.createDefaultModel();

@@ -1,11 +1,15 @@
 @prefix deichman: <http://data.deichman.no/ontology#> .
+@prefix migration: <http://migration.deichman.no/> .
+@prefix raw: <http://data.deichman.no/raw#> .
 
 <http://data.deichman.no/work/w87654> a deichman:Work .
 
-<http//data.deichman.no/publication/p80001> a deichman:Publication;
+<http://data.deichman.no/publication/p80001> a deichman:Publication;
   deichman:publicationOf <http://data.deichman.no/work/w87654> ;
   deichman:recordId "80001" .
 
-<http//data.deichman.no/publication/p80002> a deichman:Publication;
+<http://data.deichman.no/publication/p80002> a deichman:Publication;
   deichman:publicationOf <http://data.deichman.no/work/w87654> ;
+  migration:numberOfPages "359" ;
+  raw:numberOfPages "360" ;
   deichman:recordId "80002" .
