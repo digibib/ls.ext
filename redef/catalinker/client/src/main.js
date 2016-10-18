@@ -419,7 +419,7 @@
       if (input.includeOnlyWhen) {
         _.each(_.keys(input.includeOnlyWhen), function (property) {
           let includeWhenValues = _.flatten([ input.includeOnlyWhen[ property ] ])
-          allGroupInputs(function (input1) {
+          forAllGroupInputs(function (input1) {
             if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
                 fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
                   input1.values[ 0 ].current.value)
@@ -539,7 +539,11 @@
       }
     }
 
-    function allGroupInputs (handleInput, options) {
+    function allGroupInputsForDomain (domain) {
+      return _.chain(ractive.get('inputGroups')).pluck('inputs').flatten().filter(function (input) {return input.domain && unPrefix(input.domain) === domain}).value()
+    }
+
+    function forAllGroupInputs (handleInput, options) {
       options = options || {}
       var abort = false
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
@@ -583,7 +587,7 @@
         }
       }
 
-      allGroupInputs(addInput)
+      forAllGroupInputs(addInput)
 
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
         inputs.push(input)
@@ -1624,7 +1628,7 @@
                 highestScoreIndex = index
               }
             })
-            if (highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === items[ highestScoreIndex ][ fieldForSortedListQuery ].toLocaleLowerCase()) {
+            if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === items[ highestScoreIndex ][ fieldForSortedListQuery ].toLocaleLowerCase()) {
               items[ highestScoreIndex ].exactMatch = true
             }
             ractive.set(event.keypath + '.searchResult', {
@@ -1681,7 +1685,7 @@
     }
 
     function updateInputsForDependentResources (targetType, resourceUri) {
-      allGroupInputs(function (input) {
+      forAllGroupInputs(function (input) {
         if (input.dependentResourceTypes && _.contains(input.dependentResourceTypes, targetType)) {
           input.values[ 0 ] = input.values[ 0 ] || {}
           input.values[ 0 ].current.value = resourceUri
@@ -2125,7 +2129,7 @@
             computed: {
               firstAndLastVisibleInputs: function () {
                 var result = []
-                allGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+                forAllGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
                   result[ groupIndex ] = result[ groupIndex ] || { first: 100, last: 0 }
                   let showIt = (input.visible && checkShouldInclude(input) && !(typeof ractive.get('targetUri.' + input.showOnlyWhenEmpty) !== 'undefined'))
                   if (showIt && inputIndex < result[ groupIndex ].first) {
@@ -2478,7 +2482,7 @@
                     fetchExistingResource(uri).then(function () {
                       let initOptions = { presetValues: {} }
                       updateBrowserLocationWithTemplate(template)
-                      allGroupInputs(function (input) {
+                      forAllGroupInputs(function (input) {
                         if (input.type === 'hidden-url-query-value' &&
                           typeof input.values[ 0 ].current.value === 'string' &&
                           input.values[ 0 ].current.value !== '') {
@@ -2625,16 +2629,6 @@
                 if (eventShouldBeIgnored(event)) return
                 ractive.set(origin + '.searchResult.hidden', true)
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
-                var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
-                if (searchTerm) {
-                  _.each(event.context.inputs, function (input) {
-                    if (input.preFillFromSearchField) {
-                      input.values[ 0 ].current.value = searchTerm
-                    } else if (input.type !== 'hidden-url-query-value') {
-                      input.values = emptyValues(input.type === 'select-predefined-value')
-                    }
-                  })
-                }
                 let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
                 if (suggestedValuesGraphNode) {
                   updateInputsForResource({ data: {} }, null, {
@@ -2645,7 +2639,15 @@
                     overrideMainEntry: true
                   }, suggestedValuesGraphNode, event.context.rdfType)
                 }
-                ractive.update()
+                var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
+                if (searchTerm) {
+                  _.each(event.context.inputs, function (input) {
+                    if (input.preFillFromSearchField) {
+                      input.values[ 0 ].current.value = searchTerm
+                    }
+                  })
+                  ractive.update(event.keypath)
+                }
               },
               createNewResource: function (event, origin) {
                 blockUI(function () {
@@ -2712,9 +2714,7 @@
                   var nop = function (uri) {
                     return uri
                   }
-                  saveInputs(_.union(event.context.inputs, _.filter(allInputs(), function (input) {
-                    return event.context.rdfType === input.rdfType
-                  })), event.context.rdfType)
+                  saveInputs(_.union(event.context.inputs, allGroupInputsForDomain(event.context.rdfType)), event.context.rdfType)
                     .then(setCreatedResourceUriInSearchInput)
                     .then(!maintenance ? patchMotherResource : nop)
                     .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
@@ -3134,7 +3134,7 @@
 
         var initHeadlineParts = function (applicationData) {
           var headlineParts = []
-          allGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+          forAllGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
             if (input.headlinePart) {
               var subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
               var keypath
@@ -3158,7 +3158,7 @@
 
         var initInputLinks = function (applicationData) {
           var inputLinks = {}
-          allGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+          forAllGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
             if (input.id) {
               if (inputLinks[ input.id ]) {
                 throw new Error(`Duplicate input id: "${input.id}"`)
@@ -3179,7 +3179,7 @@
               .then(positionSupportPanels)
               .then(Main.repositionSupportPanelsHorizontally)
           }
-          allGroupInputs(function (input) {
+          forAllGroupInputs(function (input) {
             if (input.showOnlyWhen) {
               if (!input.id) {
                 throw new Error(`Input "${input.label}" should have its own id attribute in order to handle dependency of input with id "${input.showOnlyWhen.inputId}"`)
@@ -3236,7 +3236,7 @@
         }
 
         let initTitle = function (applicationData) {
-          allGroupInputs(function (input) {
+          forAllGroupInputs(function (input) {
             let titleSource = input.isTitleSource
             if (titleSource) {
               let keypath = ractive.get(`inputLinks.${input.id}`)
