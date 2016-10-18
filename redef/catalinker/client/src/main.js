@@ -2492,7 +2492,7 @@
                   var input = ractive.get(inputKeyPath)
                   var uri = event.context.uri
                   var editWith = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
-                  if (editWith.template) {
+                  if (editWith) {
                     fetchExistingResource(uri).then(function () {
                       let initOptions = { presetValues: {}, task: editWith.descriptionKey }
                       updateBrowserLocationWithTemplate(editWith.template)
