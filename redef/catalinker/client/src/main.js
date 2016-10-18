@@ -540,7 +540,14 @@
     }
 
     function allGroupInputsForDomain (domain) {
-      return _.chain(ractive.get('inputGroups')).pluck('inputs').flatten().filter(function (input) {return input.domain && unPrefix(input.domain) === domain}).value()
+      return _
+        .chain(ractive.get('inputGroups'))
+        .pluck('inputs')
+        .flatten()
+        .filter(function (input) {
+          return input.domain && unPrefix(input.domain) === domain
+        })
+        .value()
     }
 
     function forAllGroupInputs (handleInput, options) {
