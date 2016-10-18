@@ -1751,6 +1751,13 @@
         })
     }
 
+    function setTaskDescription (taskDescriptionKey) {
+      let taskDescription = ractive.get(`applicationData.config.taskDescriptions.${taskDescriptionKey}`)
+      if (taskDescription) {
+        ractive.set('currentTaskDescription', taskDescription)
+      }
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -2338,19 +2345,11 @@
                 }
               },
               slideIn: function (transition) {
-                $(transition.element.node).addClass('fadein')
+                $(transition.element.node).hide()
+                $(transition.element.node).slideDown()
               },
               slideOut: function (transition) {
-                 transition.animateStyle('opacity', '0', {duration: 200})
-                 transition.animateStyle('height', '0', {duration: 200, delay: 200})
-                  //$(transition.element.node).remove()
-                // $(transition.element.node).addClass('fadeout').removeClass('fadein')
-                setTimeout(function() {
-                  $(transition.element.node).remove
-                  ractive.updateModel()
-
-                }, 400
-                )
+                $(transition.element.node).slideUp()
               }
             }
           })
@@ -2492,11 +2491,11 @@
                   var inputKeyPath = grandParentOf(origin)
                   var input = ractive.get(inputKeyPath)
                   var uri = event.context.uri
-                  var template = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
-                  if (template) {
+                  var editWith = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
+                  if (editWith.template) {
                     fetchExistingResource(uri).then(function () {
-                      let initOptions = { presetValues: {} }
-                      updateBrowserLocationWithTemplate(template)
+                      let initOptions = { presetValues: {}, task: editWith.descriptionKey }
+                      updateBrowserLocationWithTemplate(editWith.template)
                       forAllGroupInputs(function (input) {
                         if (input.type === 'hidden-url-query-value' &&
                           typeof input.values[ 0 ].current.value === 'string' &&
@@ -3247,6 +3246,7 @@
               }
             }
           })
+          setTaskDescription(query.task)
           return applicationData
         }
 
@@ -3342,6 +3342,10 @@
           .then(initValuesFromQuery)
           .then(unblockUI)
           .then(workaroundContentEditableBug)
+          .then(function (applicationData) {
+            setTaskDescription(options.task)
+            return applicationData
+          })
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)
         // })

@@ -1184,7 +1184,10 @@ module.exports = (app) => {
                 indexType: 'publication'
               },
               widgetOptions: {
-                editWithTemplate: "workflow"
+                editWithTemplate: {
+                  template: "workflow",
+                  descriptionKey: 'maintPub'
+                }
               }
             },
             {
@@ -1193,7 +1196,10 @@ module.exports = (app) => {
                 indexType: 'workUnstructured'
               },
               widgetOptions: {
-                editWithTemplate: "workflow",
+                editWithTemplate: {
+                  template: "workflow",
+                  descriptionKey: 'maintWork'
+                },
                 editSubItemWithTemplate: "workflow"
               }
             }
@@ -1370,7 +1376,20 @@ module.exports = (app) => {
           predicate: 'publicationOf',
           enableCreateNewResource: true
         }
-      ]
+      ],
+      taskDescriptions: {
+        filmPub: 'Katalogisering av filmutgivelse',
+        comicPub: 'Katalogisering av tegneserieutgivelse',
+        aBookPub: 'Katalogisering av lydbokutgivelse',
+        eBookPub: 'Katalogisering av e-bokutgivelse',
+        bookPub: 'Katalogisering av bokutgivelse',
+        langCourse: 'Katalogisering av språkkurs',
+        gamePub: 'Katalogisering av spill',
+        sheetMusPub: 'Katalogisering av musikknoter',
+        musRecPub: 'Katalogisering av musikkopptak',
+        maintWork: 'Vedlikeholde verk',
+        maintPub: 'Vedlikeholde utgivelse'
+      }
     }
     response.json(config)
   })
