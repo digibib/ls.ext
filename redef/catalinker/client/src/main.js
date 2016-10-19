@@ -2560,7 +2560,7 @@
               },
               nextStep: function (event) {
                 if (event.context.restart) {
-                  this.restart()
+                  Main.restart()
                 }
                 var newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get('targetUri.' + newResourceType))) {
