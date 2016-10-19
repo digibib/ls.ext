@@ -131,10 +131,11 @@ module.exports = (app) => {
           orderedDate: hold.reservedate,
           branchCode: hold.branchcode,
           status: hold.found,
-          waitingDate: hold.waitingDate,
+          waitingDate: hold.waitingdate,
           expiry: expiry,
           waitingPeriod: waitingPeriod,
-          pickupNumber: pickupNumber
+          pickupNumber: pickupNumber,
+          queuePlace: hold.priority
         }
       })
   }
