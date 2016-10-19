@@ -66,6 +66,7 @@ class UserLoans extends React.Component {
               <th><FormattedMessage {...messages.orderedDate} /></th>
               {/* <th><FormattedMessage {...messages.waitingPeriod} /></th> */}
               <th><FormattedMessage {...messages.pickupLocation} /></th>
+              <th><FormattedMessage {...messages.placeInQueue} /></th>
             </tr>
             </thead>
             <tbody>{this.props.loansAndReservations.reservations.map(item => (
@@ -75,6 +76,7 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_orderedDate">{item.orderedDate}</td>
                 {/* <td data-automation-id="UserLoans_reservation_waitingPeriod">{item.waitingPeriod}</td> */}
                 <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
+                <td data-automation-id="Userloans_reservation_queue_place">{item.queuePlace}</td>
                 <td>
                   <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}
                                    onClickArguments={[ item.reserveId ]}>
@@ -338,6 +340,11 @@ export const messages = defineMessages({
     id: 'UserLoans.loansAndReservationError',
     description: 'The message shown when an error retrieving loans and reservations has occurred',
     defaultMessage: 'Something went wrong retrieving loans and reservations.'
+  },
+  placeInQueue: {
+    id: 'UserLoans.placeInQueue',
+    description: 'The header over a reservations\' place in holds queue',
+    defaultMessage: 'Place in queue'
   }
 })
 

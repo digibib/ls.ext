@@ -236,6 +236,7 @@ export default {
   'UserLoans.orderedDate': 'Reservasjonsdato',
   'UserLoans.pickupLocation': 'Hentested',
   'UserLoans.pickupNumber': 'Hentenummer',
+  'UserLoans.placeInQueue': 'Køplass',
   'UserLoans.publicationYear': 'Utgivelsesår',
   'UserLoans.renewAllLoans': 'Forny alle lån',
   'UserLoans.reservations': 'Reserveringer',
