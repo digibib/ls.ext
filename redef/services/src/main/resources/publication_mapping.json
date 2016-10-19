@@ -57,6 +57,9 @@
     "subtitle": {
       "type": "string"
     },
+    "partNumber": {
+      "type": "string"
+    },
     "subtitles": {
       "type": "string",
       "analyzer": "language_analyzer"
@@ -201,9 +204,8 @@
     "compType": {
       "type": "string"
     },
-    "imagesFromAllPublications": {
-      "type": "string",
-      "index": "no"
+    "langTitles": {
+      "enabled": false
     },
     "mediatypesFromAllPublications": {
       "type": "nested",

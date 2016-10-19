@@ -1,17 +1,13 @@
 import { relativeUri, getId } from './uriParser'
 import Constants from '../constants/Constants'
 
-function sample (array) {
-  if (Array.isArray(array)) {
-    return array[ Math.floor(Math.random() * array.length) ]
-  }
-}
-
 export function processSearchResponse (response, locationQuery) {
   const processedResponse = {}
   if (response.error) {
     processedResponse.error = response.error
   } else {
+    const filteredLanguages = []
+    processedResponse.filters = processAggregationsToFilters(response, locationQuery, filteredLanguages)
     const searchResults = response.aggregations.byWork.buckets.map(element => {
       const result = {}
 
@@ -26,31 +22,86 @@ export function processSearchResponse (response, locationQuery) {
       result.publication.contributors.forEach(contributor => {
         contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
       })
-      result.relativePublicationUri = `${result.relativeUri}${relativeUri(result.publication.uri)}`
 
-      result.image = result.publication.image || sample(result.publication.imagesFromAllPublications)
-      result.mediaTypes = result.publication.mediaTypesFromAllPublications || []
+      let selected // will be our selected publication for display, based on language criteria
 
-      result.displayTitle = result.publication.mainTitle
-      if (result.publication.partTitle) {
-        result.displayTitle += ` — ${result.publication.partTitle}`
+      // If there is an active language filter, choose a publication that matches language
+      // according to the preferred list.
+      if (filteredLanguages.length > 0) {
+        for (let i = 0; i < Constants.preferredLanguages.lengh; i++) {
+          const prefLang = Constants.preferredLanguages[i]
+          for (let j = 0; j < filteredLanguages; j++) {
+            const filterLang = filteredLanguages[j]
+            if (prefLang === filterLang && result.publication.langTitles[prefLang]) {
+              // There might be several publications in the same language. We choose the first.
+              selected = result.publication.langTitles[prefLang][0]
+              break
+            }
+          }
+          if (selected) {
+            break
+          }
+        }
       }
 
-      if (!result.publication.mainTitle.toLocaleLowerCase().includes(locationQuery.query.toLocaleLowerCase())) {
-        // The query does not match in title. This can happen f.ex when searching for author name
-        // If possible - choose the norwegian or enlglish title for display:
-        let norwegianTitle = result.publication.norwegianTitle
-        let englishTitle = result.publication.englishTitle
-        if (Array.isArray(norwegianTitle)) {
-          norwegianTitle = norwegianTitle[ 0 ]
+      if (!selected) {
+        // If the search query has match in the publication which elasticsearch returns as best match, use that.
+        const titles = `${result.publication.mainTitle} ${result.publication.subtitle} ${result.publication.partNumber} ${result.publication.partTitle}`
+        if (titles.toLocaleLowerCase().includes(locationQuery.query.toLocaleLowerCase())) {
+          selected = result.publication
         }
-        if (Array.isArray(englishTitle)) {
-          englishTitle = englishTitle[ 0 ]
-        }
-        result.displayTitle = norwegianTitle || englishTitle || result.displayTitle
+      }
 
-        // choose another image as well
-        result.image = sample(result.publication.imagesFromAllPublications) || result.publication.image
+      if (!selected) {
+        // We still haven't selected a publication, choose one among the available,
+        // according to the list of preferred languages.
+        for (let i = 0; i < Constants.preferredLanguages.lengh; i++) {
+          const prefLang = Constants.preferredLanguages[i]
+          if (result.publication.langTitles[prefLang]) {
+            // There might be several publications in the same language. We choose the first.
+            selected = result.publication.langTitles[prefLang][0]
+            break
+          }
+        }
+      }
+
+      if (!selected) {
+        // Still no match, use the publication which elasticsearch returns as best match
+        selected = result.publication
+      }
+
+      if (selected.subtitle) {
+        result.titleLine1 = `${selected.mainTitle} : ${selected.subtitle}`
+      } else {
+        result.titleLine1 = selected.mainTitle
+      }
+      if (selected.partNumber && selected.partTitle) {
+        result.titleLine2 = `${selected.partNumber}. ${selected.partTitle}`
+      } else if (selected.partNumber) {
+        result.titleLine2 = selected.partNumber
+      } else if (selected.partTitle) {
+        result.titleLine2 = selected.partTitle
+      } else {
+        result.titleLine2 = ''
+      }
+
+      if (selected.pubUri) {
+        result.relativePublicationUri = `${result.relativeUri}${relativeUri(selected.pubUri)}`
+      } else {
+        result.relativePublicationUri = `${result.relativeUri}${relativeUri(result.publication.uri)}`
+      }
+
+      result.mediaTypes = result.publication.mediaTypesFromAllPublications || []
+      result.image = selected.image
+      if (!result.image) {
+        // Choose any available based on preferred languages
+        for (let i = 0; i < Constants.preferredLanguages.lengh; i++) {
+          const prefLang = Constants.preferredLanguages[i]
+          if (result.publication.langTitles[prefLang] && result.publication.langTitles[prefLang].image) {
+            result.image = result.publication.langTitles[prefLang].image
+            break
+          }
+        }
       }
 
       return result
@@ -58,12 +109,11 @@ export function processSearchResponse (response, locationQuery) {
     processedResponse.searchResults = searchResults
     processedResponse.totalHits = response.aggregations.workCount.value
     processedResponse.totalHitsPublications = response.hits.total
-    processedResponse.filters = processAggregationsToFilters(response, locationQuery)
   }
   return processedResponse
 }
 
-export function processAggregationsToFilters (response, locationQuery) {
+export function processAggregationsToFilters (response, locationQuery, filteredLanguages) {
   const filters = []
   const filterParameters = locationQuery[ 'filter' ] instanceof Array ? locationQuery[ 'filter' ] : [ locationQuery[ 'filter' ] ]
 
@@ -77,6 +127,9 @@ export function processAggregationsToFilters (response, locationQuery) {
         const filterId = `${fieldShortName}_${bucket.key.substring(field.prefix.length)}`
         const filterParameter = filterParameters.find(filterParameter => filterParameter === filterId)
         const active = filterParameter !== undefined
+        if (active && filterId.startsWith('language')) {
+          filteredLanguages.push(bucket.key)
+        }
         filters.push({ id: filterId, bucket: bucket.key, count: bucket.doc_count, active: active })
       })
     }
