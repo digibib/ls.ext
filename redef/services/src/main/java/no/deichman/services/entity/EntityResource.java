@@ -298,7 +298,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: (g|w|h|e|c)[a-zA-Z0-9_]+}/asSubjectOfWorks")
+    @Path("{id: (g|w|h|e|c|s)[a-zA-Z0-9_]+}/asSubjectOfWorks")
     public Response getWorksWhereUriIsSubject(@PathParam("type") final String type,
                                               @PathParam("id") String id,
                                               @QueryParam("maxSize") @DefaultValue("100") int maxSize) throws Exception {
