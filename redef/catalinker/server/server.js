@@ -114,7 +114,7 @@ app.use('/services', cache('1 hour', cacheableRequestsFilter), requestProxy(serv
       return url.parse(req.url).path
     },
     intercept: function (rsp, data, req, res, callback) {
-      if ([ 'PUT', 'PATCH' ].indexOf(rsp.req.method) !== -1) {
+      if ([ 'PUT', 'PATCH', 'DELETE' ].indexOf(rsp.req.method) !== -1) {
         apicache.clear(req.originalUrl)
         console.log(`clearing ${req.originalUrl}`)
       }
