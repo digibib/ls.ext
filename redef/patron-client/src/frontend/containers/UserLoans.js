@@ -72,7 +72,7 @@ class UserLoans extends React.Component {
               <tr key={item.recordId} data-automation-id="UserLoans_reservation" data-recordid={item.recordId}>
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
-                <td data-automation-id="UserLoans_reservation_orderedDate">{item.orderedDate}</td>
+                <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
                 <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td data-automation-id="Userloans_reservation_queue_place">{item.queuePlace}</td>
                 <td>
