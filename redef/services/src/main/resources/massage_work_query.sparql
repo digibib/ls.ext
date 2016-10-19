@@ -23,6 +23,13 @@ CONSTRUCT {
 }
 WHERE {
         { <__WORKURI__> a deich:Work . }
+
+  UNION { <__WORKURI__> deich:subject ?subject .
+            ?subject deich:prefLabel ?subjectName  . }
+  UNION { <__WORKURI__> deich:subject ?subject .
+             ?subject deich:mainTitle ?subjectName  . }
+  UNION { <__WORKURI__> deich:subject ?subject .
+            ?subject deich:name ?subjectName  . }
   UNION { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
   UNION { <__WORKURI__> deich:partTitle ?partTitleO . BIND(str(?partTitleO) as ?partTitle) }
   UNION { <__WORKURI__> deich:hasWorkType ?hasWorkType .

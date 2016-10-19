@@ -5,6 +5,7 @@ import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
@@ -25,6 +26,7 @@ import java.util.Map;
  */
 public class ModelToIndexMapper {
     private static final String AGENT = "Agent";
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private String query;
     private Map<String, Object> context;
     private String type;
@@ -35,7 +37,7 @@ public class ModelToIndexMapper {
         String sparqlQueryFilename = "massage_" + type + "_query.sparql";
         query = new ResourceReader().readFile(sparqlQueryFilename).replace("__ONTOLOGY__", BaseURI.ontology());
         String contextFilename = "massage_" + type + "_context.json";
-        context = new Gson().fromJson(new ResourceReader().readFile(contextFilename).replace("__ONTOLOGY__", BaseURI.ontology()), HashMap.class);
+        context = GSON.fromJson(new ResourceReader().readFile(contextFilename).replace("__ONTOLOGY__", BaseURI.ontology()), HashMap.class);
     }
 
     public final String createIndexDocument(Model model, XURI xuri) {
@@ -68,7 +70,7 @@ public class ModelToIndexMapper {
         removeTypeAndBnodeIdAndEmbedAllNodes(graph);
         Map<String, Object> root = new HashMap<>();
         root.putAll(graph);
-        return new Gson().toJson(root);
+        return GSON.toJson(root);
     }
 
     private void indexNodes(Object input) {

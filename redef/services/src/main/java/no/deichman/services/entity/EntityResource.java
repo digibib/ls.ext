@@ -23,6 +23,7 @@ import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
@@ -30,6 +31,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -297,9 +299,11 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("{id: (g|w|h|e|c)[a-zA-Z0-9_]+}/asSubjectOfWorks")
-    public Response getWorksWhereUriIsSubject(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
+    public Response getWorksWhereUriIsSubject(@PathParam("type") final String type,
+                                              @PathParam("id") String id,
+                                              @QueryParam("maxSize") @DefaultValue("100") int maxSize) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
-        return getSearchService().searchWork("work.subject.uri:\"" + xuri.getUri() + "\"");
+        return getSearchService().searchWorkWhereUriIsSubject(xuri.getUri(), maxSize);
     }
 
     @Override
