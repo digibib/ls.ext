@@ -1423,7 +1423,8 @@
           }
         }
       ).then(function (response) {
-        target.work = _.pluck(_.pluck(ensureJSON(response).data.hits.hits, '_source'), 'work')
+        target.subItems = _.pluck(ensureJSON(response).data.hits.hits, '_source')
+        target.subItemType = 'work'
         ractive.update()
       })
     }

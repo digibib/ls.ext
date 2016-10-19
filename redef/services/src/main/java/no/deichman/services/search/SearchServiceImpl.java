@@ -1,6 +1,5 @@
 package no.deichman.services.search;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.EntityService;
@@ -45,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -66,6 +66,7 @@ public class SearchServiceImpl implements SearchService {
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
     private ModelToIndexMapper corporationModelToIndexMapper = new ModelToIndexMapper("corporation");
     private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -280,13 +281,34 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response sortedList(String type, String prefix, int minSize, String field) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         List<Map> musts = new ArrayList<>();
         for (int i = 0; i < prefix.length(); i++) {
-            musts.add(ImmutableMap.of("match_phrase_prefix", ImmutableMap.of(field, prefix.substring(0, prefix.length() - i))));
+            musts.add(of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))));
         }
-        String body = gson.toJson(ImmutableMap.of("size", minSize, "query", ImmutableMap.of("bool", ImmutableMap.of("should", musts))));
+        String body = GSON.toJson(of(
+                "size", minSize,
+                "query", of(
+                        "bool", of(
+                                "should", musts)
+                )
+        ));
         return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search"));
+    }
+
+    @Override
+    public final Response searchWorkWhereUriIsSubject(String subjectUri, int maxSize) {
+        String body = GSON.toJson(of(
+                "size", maxSize,
+                "query", of(
+                        "nested", of(
+                                "path", "subjects",
+                                "query", of("term", of(
+                                        "subjects.uri", subjectUri)
+                                )
+                        )
+                )
+        ));
+        return searchWithJson(body, getIndexUriBuilder().setPath("/search/work/_search"));
     }
 
     private void doIndexPublication(XURI pubUri) throws Exception {
