@@ -79,6 +79,12 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -436,6 +442,20 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Kulturhistorie"
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Nipsperioden"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Åstjønna"
       },
       {
         "@type": [

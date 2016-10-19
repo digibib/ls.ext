@@ -6,6 +6,7 @@ import org.marc4j.MarcReader;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
+import org.marc4j.marc.Subfield;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import static com.google.common.base.Splitter.fixedLength;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 
 /**
@@ -292,10 +294,10 @@ public class MARCMapper {
                     });
                     break;
                 case "650":
-                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE, PLACE_TYPE, 'z');
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE);
                     break;
                 case "651":
-                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, PLACE_TYPE, SUBJECT_TYPE, 'x');
+                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, PLACE_TYPE);
                     break;
                 case "653":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
@@ -447,15 +449,16 @@ public class MARCMapper {
             Work work,
             Collection<Object> graphList,
             DataField dataField,
-            String primarySubjectType,
-            String subDivisionSubjectType,
-            char subDivisionField) {
+            String primarySubjectType) {
         getSubfieldValue(dataField, 'a').ifPresent(a -> {
             ExternalDataObject subject = addExternalObject(graphList, a, primarySubjectType, work::addSubject);
             getSubfieldValue(dataField, 'q').ifPresent(subject::setSpecification);
         });
-        getSubfieldValue(dataField, subDivisionField).ifPresent(a -> {
-            addExternalObject(graphList, a, subDivisionSubjectType, work::addSubject);
+        getSubfieldMultiValue(dataField, 'x').forEach(value -> {
+            addExternalObject(graphList, value, SUBJECT_TYPE, work::addSubject);
+        });
+        getSubfieldMultiValue(dataField, 'z').forEach(value -> {
+            addExternalObject(graphList, value, PLACE_TYPE, work::addSubject);
         });
     }
 
@@ -601,6 +604,11 @@ public class MARCMapper {
     private String path(String path, String fragment) {
         return path + "#" + fragment;
     }
+
+    private Iterable<String> getSubfieldMultiValue(DataField dataField, Character character) {
+        return dataField.getSubfields(character).stream().map(Subfield::getData).collect(toList());
+    }
+
 
     private Optional<String> getSubfieldValue(DataField dataField, Character character) {
         return getSubfieldValue(dataField, character, null);
