@@ -118,4 +118,4 @@ export function expandSubResource (id, replacePath) {
   }
 }
 
-export const toggleShowMoreInformation = workId => action(types.TOGGLE_SHOW_ADDITIONAL_INFORMATION, { workId })
+export const toggleShowAdditionalInformation = workId => action(types.TOGGLE_SHOW_ADDITIONAL_INFORMATION, { workId })

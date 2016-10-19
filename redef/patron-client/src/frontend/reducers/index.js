@@ -3,6 +3,7 @@ import { routerReducer } from 'react-router-redux'
 import { reducer as formReducer } from 'redux-form'
 
 import application from './application'
+import mobileNavigation from './mobileNavigation'
 import modal from './modal'
 import profile from './profile'
 import search from './search'
@@ -12,6 +13,7 @@ import resources from './resources'
 
 const rootReducer = combineReducers({
   application,
+  mobileNavigation,
   modal,
   profile,
   search,

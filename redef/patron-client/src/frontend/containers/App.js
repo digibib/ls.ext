@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import SearchHeader from '../components/SearchHeader'
 import * as LanguageActions from '../actions/LanguageActions'
 import * as LibraryActions from '../actions/LibraryActions'
+import * as MobileNavigationActions from '../actions/MobileNavigationActions'
 
 import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
@@ -29,6 +30,8 @@ class App extends React.Component {
                       showLoginDialog={this.props.loginActions.showLoginDialog}
                       requireLoginBeforeAction={this.props.loginActions.requireLoginBeforeAction}
                       startRegistration={this.props.registrationActions.startRegistration}
+                      showMobileNavigation={this.props.showMobileNavigation}
+                      mobileNavigationActions={this.props.mobileNavigationActions}
         />
         {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
@@ -47,14 +50,17 @@ App.propTypes = {
   loginActions: PropTypes.object.isRequired,
   locale: PropTypes.string.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  registrationActions: PropTypes.object.isRequired
+  registrationActions: PropTypes.object.isRequired,
+  mobileNavigationActions: PropTypes.object.isRequired,
+  showMobileNavigation: PropTypes.bool.isRequired
 }
 
 function mapStateToProps (state) {
   return {
     routing: state.routing,
     locale: state.application.locale,
-    isLoggedIn: state.application.isLoggedIn
+    isLoggedIn: state.application.isLoggedIn,
+    showMobileNavigation: state.mobileNavigation.visible
   }
 }
 
@@ -64,7 +70,8 @@ function mapDispatchToProps (dispatch) {
     languageActions: bindActionCreators(LanguageActions, dispatch),
     loginActions: bindActionCreators(LoginActions, dispatch),
     libraryActions: bindActionCreators(LibraryActions, dispatch),
-    registrationActions: bindActionCreators(RegistrationActions, dispatch)
+    registrationActions: bindActionCreators(RegistrationActions, dispatch),
+    mobileNavigationActions: bindActionCreators(MobileNavigationActions, dispatch)
   }
 }
 

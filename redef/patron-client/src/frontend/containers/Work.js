@@ -141,7 +141,9 @@ class Work extends React.Component {
             </header>
           ) : ''}
 
-          <WorkInformation work={work} publicationId={this.props.params.publicationId} showAdditionalInformation={this.props.showAdditionalInformation.includes(work.id)} toggleShowAdditionalInformation={this.props.resourceActions.toggleShowMoreInformation} />
+          <WorkInformation work={work} publicationId={this.props.params.publicationId}
+                           showAdditionalInformation={this.props.showAdditionalInformation.includes(work.id)}
+                           toggleShowAdditionalInformation={this.props.resourceActions.toggleShowAdditionalInformation} />
 
           <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
             <AdditionalInformationContent work={work} />
@@ -181,7 +183,8 @@ Work.propTypes = {
   items: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   audiences: PropTypes.array,
-  mediaQueryValues: PropTypes.object
+  mediaQueryValues: PropTypes.object,
+  showAdditionalInformation: PropTypes.array.isRequired
 }
 
 export const messages = defineMessages({

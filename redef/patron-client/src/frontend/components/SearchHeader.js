@@ -12,9 +12,6 @@ class SearchHeader extends React.Component {
     this.handleLoginClick = this.handleLoginClick.bind(this)
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
     this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
-    this.state = {
-      mobileNavVisible: false
-    }
   }
 
   componentDidUpdate () {
@@ -23,13 +20,13 @@ class SearchHeader extends React.Component {
 
   handleSearch (event) {
     event.preventDefault()
-    this.setState({mobileNavVisible: false})
+    this.props.mobileNavigationActions.hideMobileNavigation()
     this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
   }
 
   handleLoginClick (event) {
     event.preventDefault()
-    this.setState({mobileNavVisible: false})
+    this.props.mobileNavigationActions.hideMobileNavigation()
     this.props.showLoginDialog(push({ pathname: '/profile/loans' }))
   }
 
@@ -39,11 +36,7 @@ class SearchHeader extends React.Component {
   }
 
   toggleMobileNav () {
-    if (!this.state.mobileNavVisible) {
-      this.setState({mobileNavVisible: true})
-    } else {
-      this.setState({mobileNavVisible: false})
-    }
+    this.props.mobileNavigationActions.toggleMobileNavigation()
   }
 
   /**
@@ -120,7 +113,7 @@ class SearchHeader extends React.Component {
   }
 
   render () {
-    const mobileNavClass = this.state.mobileNavVisible ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
+    const mobileNavClass = this.props.showMobileNavigation ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
       <div>
         <ReactCSSTransitionGroup
@@ -205,7 +198,9 @@ SearchHeader.propTypes = {
   logout: PropTypes.func.isRequired,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired,
-  startRegistration: PropTypes.func.isRequired
+  startRegistration: PropTypes.func.isRequired,
+  showMobileNavigation: PropTypes.bool.isRequired,
+  mobileNavigationActions: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({
