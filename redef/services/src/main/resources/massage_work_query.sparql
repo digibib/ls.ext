@@ -5,8 +5,9 @@ PREFIX  role: <http://data.deichman.no/role#>
 CONSTRUCT {
  <__WORKURI__> a deich:Work ;
                deich:mainTitle ?mainTitle ;
-               deich:partTitle ?partTitle ;
                deich:subtitle ?subtitle ;
+               deich:partTitle ?partTitle ;
+               deich:partNumber ?partNumber ;
                deich:publicationYear ?publicationYear ;
                deich:contributor ?workContrib ;
                deich:subject ?subject ;
@@ -31,7 +32,9 @@ WHERE {
   UNION { <__WORKURI__> deich:subject ?subject .
             ?subject deich:name ?subjectName  . }
   UNION { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
+  UNION { <__WORKURI__> deich:subtitle ?subtitleO . BIND(str(?subtitleO) as ?subtitle) }
   UNION { <__WORKURI__> deich:partTitle ?partTitleO . BIND(str(?partTitleO) as ?partTitle) }
+  UNION { <__WORKURI__> deich:partNumber ?partNumberO . BIND(str(?partNumberO) as ?partNumber) }
   UNION { <__WORKURI__> deich:hasWorkType ?hasWorkType .
         ?hasWorkType rdfs:label ?langWorkTypeLabel .
         FILTER(LANGMATCHES(LANG(?langWorkTypeLabel), "no")) .
