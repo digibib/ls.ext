@@ -539,13 +539,13 @@
       }
     }
 
-    function allGroupInputsForDomain (domain) {
+    function allTopLevelGroupInputsForDomain (domain) {
       return _
         .chain(ractive.get('inputGroups'))
         .pluck('inputs')
         .flatten()
         .filter(function (input) {
-          return input.domain && unPrefix(input.domain) === domain
+          return input.domain && !input.isSubInput && unPrefix(input.domain) === domain
         })
         .value()
     }
@@ -794,10 +794,7 @@
                     if (!options.onlyValueSuggestions) {
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset))
-                      if (input.isSubInput) {
-                        input.values[ valueIndex ].nonEditable = true
-                        input.parentInput.allowAddNewButton = true
-                      }
+                      input.values[ valueIndex ].subjectType = type
                     } else {
                       input.suggestedValues = input.suggestedValues || []
                       input.suggestedValues.push({
@@ -2729,7 +2726,7 @@
                   var nop = function (uri) {
                     return uri
                   }
-                  saveInputs(_.union(event.context.inputs, allGroupInputsForDomain(event.context.rdfType)), event.context.rdfType)
+                  saveInputs(_.union(event.context.inputs, allTopLevelGroupInputsForDomain(event.context.rdfType)), event.context.rdfType)
                     .then(setCreatedResourceUriInSearchInput)
                     .then(!maintenance ? patchMotherResource : nop)
                     .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
