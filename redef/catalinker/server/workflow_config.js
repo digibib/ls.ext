@@ -163,8 +163,18 @@ module.exports = (app) => {
             },
             {
               label: 'Undertittel',
-              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              type: 'input-string',
               rdfProperty: 'subtitle'
+            },
+            {
+              label: 'Deltittel',
+              type: 'input-string',
+              rdfProperty: 'partTitle'
+            },
+            {
+              label: 'Delnummer',
+              type: 'input-string',
+              rdfProperty: 'partNumber'
             },
             {
               rdfProperty: 'hasWorkType',
@@ -192,6 +202,16 @@ module.exports = (app) => {
               label: 'Undertittel',
               type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
               rdfProperty: 'subtitle'
+            },
+            {
+              label: 'Deltittel',
+              type: 'input-string',
+              rdfProperty: 'partTitle'
+            },
+            {
+              label: 'Delnummer',
+              type: 'input-string',
+              rdfProperty: 'partNumber'
             },
             {
               rdfProperty: 'hasWorkType'
@@ -1231,7 +1251,7 @@ module.exports = (app) => {
             field: 'mainTitle',
             wildcard: true
           } ],
-          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
+          resultItemLabelProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
         },
@@ -1244,7 +1264,7 @@ module.exports = (app) => {
             { field: 'publicationYear' }
           ],
           legend: 'Søk etter tittel og/eller utgivelsesår',
-          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
+          resultItemLabelProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler',
           subItemsExpandTooltip: 'Vis/skjul utgivelser'
