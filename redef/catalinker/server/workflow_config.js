@@ -1047,6 +1047,7 @@ module.exports = (app) => {
                     label: 'Aktør',
                     rdfProperty: 'agent',
                     indexTypes: [ 'person', 'corporation' ],
+                    previewProperties: [ '(birthYear-', 'deathYear)', 'place', 'subdivision', 'nationality.fragment.' ],
                     type: 'searchable-with-result-in-side-panel',
                     id: 'publicationPartActorInput',
                     widgetOptions: {
@@ -1147,6 +1148,7 @@ module.exports = (app) => {
                     rdfProperty: 'agent',
                     id: 'contributionAgentInput',
                     indexTypes: [ 'person', 'corporation' ],
+                    previewProperties: [ '(birthYear-', 'deathYear)', 'place', 'subdivision', 'nationality.fragment.' ],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
                       showSelectItem: false, // show and enable select work radio button
