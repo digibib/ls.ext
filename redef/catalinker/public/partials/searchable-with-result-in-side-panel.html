@@ -1,5 +1,5 @@
 <span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
-{{#if nonEditable || suggested && subInputs}}
+{{#if ./nonEditable || suggested && subInputs}}
     {{current.displayValue}}
 {{else}}
     {{#if ../../indexTypes.length > 1 && !(current.accepted || suggested) && !deletable}}
@@ -57,7 +57,7 @@
                 <span contenteditable="true" {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}}
                     on-click="{{#deletable}}unselectEntity{{/deletable}}"
                     class="search-term {{#if ./bracketed === true}}bracketed{{/if}}"
-                    decorator=pasteSanitizer
+                    decorator="multi:{pasteSanitizer:[], searchable:[]}"
                     onFocus="document.main.$(this.parentElement).addClass('focus')"
                     onBlur="document.main.$(this.parentElement).removeClass('focus')"
                     data-automation-id="{{dataAutomationId}}"

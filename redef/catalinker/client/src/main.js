@@ -376,6 +376,7 @@
             }
           }
         } else {
+          input.values[ index ].current = input.values[ index ].current || {}
           input.values[ index ].current.displayValue = values
           if (options.source) {
             input.values[ index ].current.accepted = {
@@ -392,7 +393,6 @@
         }
         return Promise.resolve()
       } else {
-        input.values[ index ].waiting = true
         return axios.get(proxyToServices(uri), {
             headers: {
               Accept: 'application/ld+json'
@@ -402,7 +402,6 @@
           var graphData = ensureJSON(response.data)
           var root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
-          input.values[ index ].waiting = undefined
         })
       }
     }
@@ -736,20 +735,20 @@
                         setPreviewValues(input, node, index)
                       }
                       if (!options.onlyValueSuggestions) {
-                        promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
-                        if (!isBlankNodeUri(node.id)) {
-                          input.values[ index ].deletable = true
-                          if (input.isSubInput) {
-                            input.values[ index ].nonEditable = true
-                            input.parentInput.allowAddNewButton = true
-                          }
-                        }
-                        setAllowNewButtonForInput(input)
                         if (options.source) {
                           input.values[ index ].searchable = true
                         } else {
                           input.values[ index ].searchable = false
                         }
+                        promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
+                        if (!isBlankNodeUri(node.id)) {
+                          ractive.set(`${input.keypath}.values.${index}.deletable`, true)
+                          if (input.isSubInput) {
+                            ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                            input.parentInput.allowAddNewButton = true
+                          }
+                        }
+                        setAllowNewButtonForInput(input)
                       } else {
                         promises.push(setDisplayValue(input, index, node, options))
                         input.values[ index ].searchable = true
@@ -795,6 +794,9 @@
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset))
                       input.values[ valueIndex ].subjectType = type
+                      if (input.isSubInput) {
+                        ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                      }
                     } else {
                       input.suggestedValues = input.suggestedValues || []
                       input.suggestedValues.push({
@@ -1158,7 +1160,6 @@
           label: compoundInput.label,
           domain: tab.rdfType,
           subjectTypes: compoundInput.subjects,
-          subjectType: undefined,
           allowAddNewButton: false,
           subInputs: [],
           predicate: ontologyUri + compoundInput.subInputs.rdfProperty,
@@ -1335,6 +1336,9 @@
             if (input.id) {
               ontologyInput.id = input.id
             }
+            if (input.reportFormat) {
+              ontologyInput.reportFormat = input.reportFormat
+            }
           }
           copyResourceForms(input)
         })
@@ -1397,19 +1401,21 @@
 
     function positionSupportPanels (applicationData) {
       var dummyPanel = $('#right-dummy-panel')
-      var supportPanelLeftEdge = dummyPanel.position().left
-      var supportPanelWidth = dummyPanel.width()
-      $('span.support-panel').each(function (index, panel) {
-        var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
-        var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
-        if (supportPanelBase.length > 0) {
-          $(panel).css({
-            top: _.last(_.flatten([ supportPanelBase ])).position().top - 15,
-            left: supportPanelLeftEdge,
-            width: supportPanelWidth
-          })
-        }
-      })
+      if (dummyPanel.length > 0) {
+        var supportPanelLeftEdge = dummyPanel.position().left
+        var supportPanelWidth = dummyPanel.width()
+        $('span.support-panel').each(function (index, panel) {
+          var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
+          var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
+          if (supportPanelBase.length > 0) {
+            $(panel).css({
+              top: _.last(_.flatten([ supportPanelBase ])).position().top - 15,
+              left: supportPanelLeftEdge,
+              width: supportPanelWidth
+            })
+          }
+        })
+      }
       return applicationData
     }
 
@@ -1756,6 +1762,22 @@
       }
     }
 
+    function showOverlay (uri) {
+      let closePreview = function () {
+        $('#iframecontainer').hide()
+        $('#block').fadeOut()
+      }
+      $('#block').click(closePreview)
+      $('#block').fadeIn()
+      $('#close-preview-button').click(closePreview)
+      $('#iframecontainer').fadeIn()
+      $('#iframecontainer iframe').attr('src', uri).load(function () {
+        $('#loader').fadeOut(function () {
+          $('iframe').fadeIn()
+        })
+      })
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -1835,7 +1857,16 @@
           'delete-publication-dialog',
           'delete-work-dialog',
           'confirm-enable-special-input-dialog',
-          'accordion-header-for-collection'
+          'accordion-header-for-collection',
+          'readonly-input',
+          'readonly-input-string',
+          'readonly-input-boolean',
+          'readonly-input-string-large',
+          'readonly-input-gYear',
+          'readonly-input-duration',
+          'readonly-input-nonNegativeInteger',
+          'readonly-select-predefined-value',
+          'readonly-searchable-with-result-in-side-panel'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
@@ -2127,6 +2158,17 @@
             }
           }
 
+          var searchable = function (node) {
+            let keypath = Ractive.getNodeInfo(node).keypath
+            var value = ractive.get(keypath)
+            if (!value.searchable) {
+              ractive.set(`${keypath}.searchable`, true)
+              ractive.set(`${keypath}.uniqueId`, _.uniqueId())
+            }
+            return {
+              teardown: function () {}
+            }
+          }
           titleRactive = new Ractive({
             el: 'title',
             template: '{{title.1 || title.2 || title.3 || "Katalogisering"}}',
@@ -2319,7 +2361,8 @@
               accordion: accordionDecorator,
               timePicker: timePicker,
               slideDown: slideDown,
-              pasteSanitizer: pasteSanitizer
+              pasteSanitizer: pasteSanitizer,
+              searchable: searchable
             },
             partials: applicationData.partials,
             transitions: {
@@ -2414,7 +2457,7 @@
                       if (input.isSubInput) {
                         _.each(input.values, function (value, valueIndex) {
                           if (valueIndex === index) {
-                            value.nonEditable = true
+                            ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                           }
                         })
                       }
@@ -2639,6 +2682,9 @@
               },
               showCreateNewResource: function (event, origin) {
                 if (eventShouldBeIgnored(event)) return
+                _.each(event.context.inputs, function (input, index) {
+                  ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
+                })
                 ractive.set(origin + '.searchResult.hidden', true)
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
                 let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
@@ -2923,6 +2969,13 @@
               },
               enableSpecialInput: function (event) {
                 enableSpecialInput(event.context)
+              },
+              showRdf: function (event, resourceUri) {
+                showOverlay(proxyToServices(resourceUri) + '?format=TURTLE')
+              },
+              showReport: function (event, resourceUri) {
+                let url = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`
+                showOverlay(url)
               }
             }
           )
@@ -3084,6 +3137,14 @@
               })
             }
           })
+        }
+
+        var setDisplayMode = function (applicationData) {
+          var query = URI.parseQuery(URI.parse(document.location.href).query)
+          if (query.hideHome) {
+            $('#home').remove()
+          }
+          return applicationData
         }
 
         var loadResourceOfQuery = function (applicationData) {
@@ -3340,6 +3401,7 @@
           .then(initValuesFromQuery)
           .then(unblockUI)
           .then(workaroundContentEditableBug)
+          .then(setDisplayMode)
           .then(function (applicationData) {
             setTaskDescription(options.task)
             return applicationData
@@ -3364,7 +3426,8 @@
       etagData: etagData,
       saveSuggestionData: saveSuggestionData,
       checkRangeStart: checkRangeStart,
-      checkRangeEnd: checkRangeEnd
+      checkRangeEnd: checkRangeEnd,
+      positionSupportPanels: positionSupportPanels
     }
     return Main
   }

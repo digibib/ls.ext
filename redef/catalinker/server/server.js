@@ -12,6 +12,7 @@ var url = require('url')
 require('ejs')
 var apicache = require('apicache')
 var cache = apicache.options({ debug: true }).middleware
+var URI = require('urijs')
 
 if (app.get('env') === 'development') {
   var livereload = require('express-livereload')
@@ -106,7 +107,7 @@ app.get('/valueSuggestions/demo_:source/:isbn', function (req, res, next) {
 var services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
 
 var cacheableRequestsFilter = function (req, res) {
-  return (req.method === 'GET' || req.method === 'HEAD') && !/^\/search\/.*$/.test(req.url)
+  return (req.method === 'GET' || req.method === 'HEAD') && !/^\/search\/.*$/.test(req.url) && !(URI.parseQuery(URI.parse(req.url).query).format === 'TURTLE')
 }
 
 app.use('/services', cache('1 hour', cacheableRequestsFilter), requestProxy(services, {
@@ -119,6 +120,12 @@ app.use('/services', cache('1 hour', cacheableRequestsFilter), requestProxy(serv
         console.log(`clearing ${req.originalUrl}`)
       }
       callback(null, data)
+    },
+    decorateRequest: function (proxyReq, req) {
+      if (req.method === 'GET' && URI.parseQuery(URI.parse(req.originalUrl).query).format === 'TURTLE') {
+        proxyReq.headers[ 'Accept' ] = 'text/turtle'
+      }
+      return proxyReq
     }
   }
 ))

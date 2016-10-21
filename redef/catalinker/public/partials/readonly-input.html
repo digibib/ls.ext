@@ -1,0 +1,51 @@
+{{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
+<span class="pure-u-1-1" intro='slideIn'>
+    <span class="pure-g">
+        <span class="pure-u-1-2 label" data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
+        <span class="pure-u-1-2">
+                {{#each values:inputValueIndex}}
+                    <span class="value {{#if reportFormat.separateLines}} separate-lines {{/if}}">
+                        {{>"readonly-" + type}}
+                    </span>
+                {{/each}}
+                {{#if subInputs}}
+                    <span class="pure-g">
+                        {{#each subInputs[0].input.values:inputValueIndex}}
+                                    {{#if reportFormat.list}}
+                                        <span class="pure-u-1-1">
+                                            {{#each ../../../../../subInputs}}
+                                                        {{#with input.values[inputValueIndex]}}
+                                                            <span class="list-value">
+                                                                {{>"readonly-" + ../../../input.type}}
+                                                            </span>
+                                                        {{/with}}
+                                            {{/each}}
+                                    {{#if subjectTypes.length > 1}}
+                                            <span class="subject-type-association list-value">
+                                                            {{subjectTypeLabelDet(subjectType)}}
+                                            </span>
+                                    {{/if}}
+                                        </span>
+                                    {{else}}
+                                    {{#each ../../../../../subInputs}}
+                                                <span class="pure-u-1-2 label"
+                                                      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
+                                                {{#with input.values[inputValueIndex]}}
+                                                    <span class="pure-u-1-2">
+                                                        {{>"readonly-" + ../../../input.type}}
+                                                    </span>
+                                                {{/with}}
+                                    {{/each}}
+                                    {{#if subjectTypes.length > 1}}
+                                    <span class="subject-type-association pure-u-1-1">
+                                                    {{subjectTypeLabelDet(subjectType)}}
+                                    </span>
+                                    {{/if}}
+                                    {{/if}}
+                        {{/each}}
+                    </span>
+                {{/if}}
+        </span>
+    </span>
+</span>
+{{/if}}

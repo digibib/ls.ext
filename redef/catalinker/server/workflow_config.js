@@ -394,6 +394,9 @@ module.exports = (app) => {
             {
               label: 'Hovedansvarlig',
               id: 'mainEntryInput',
+              reportFormat: {
+                list: true
+              },
               showOnlyWhen: {
                 inputId: 'missingMainEntry',
                 valueAsStringMatches: '^false$'
@@ -653,6 +656,9 @@ module.exports = (app) => {
               multiple: true,
               addAnotherLabel: 'Legg til ny serie',
               subjects: [ 'Publication' ],
+              reportFormat: {
+                list: true
+              },
               subInputs: {
                 rdfProperty: 'inSerial',
                 range: 'SerialIssue',
@@ -786,6 +792,9 @@ module.exports = (app) => {
               label: 'Relasjon til annet verk',
               multiple: true,
               addAnotherLabel: 'Legg til en relasjon til',
+              reportFormat: {
+                list: true
+              },
               subInputs: {
                 rdfProperty: 'isRelatedTo',
                 range: 'WorkRelation',
@@ -937,6 +946,9 @@ module.exports = (app) => {
               multiple: true,
               addAnotherLabel: 'Legg til et emne til',
               type: 'searchable-with-result-in-side-panel',
+              reportFormat: {
+                separateLines: true
+              },
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
               nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name', '(birthYear-', 'deathYear)', 'nationality.fragment.' ], // these are property names used to label already connected entities
@@ -986,6 +998,10 @@ module.exports = (app) => {
               label: 'Klassifikasjon',
               multiple: true,
               addAnotherLabel: 'Legg til en klassifikasjon til',
+              subjects: ['Work'],
+              reportFormat: {
+                list: true
+              },
               subInputs: {
                 rdfProperty: 'hasClassification',
                 range: 'ClassificationEntry',
@@ -1138,6 +1154,9 @@ module.exports = (app) => {
               label: 'Biinnførsel',
               multiple: true, // can have many of these
               addAnotherLabel: 'Legg til ny biinnførsel',
+              reportFormat: {
+                list: true
+              },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'contributor', // the rdf property of the resource
                 range: 'Contribution', // this is the shorthand name of the type of the blank node
