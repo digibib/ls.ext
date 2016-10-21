@@ -576,7 +576,7 @@ module.exports = (app) => {
             },
             {
               includeOnlyWhen: {
-                hasMediaType: ['Film', 'Game']
+                hasMediaType: [ 'Film', 'Game' ]
               },
               rdfProperty: 'hasSubtitles',
               multiple: 'true'
@@ -879,7 +879,7 @@ module.exports = (app) => {
           label: 'Emneopplysninger',
           inputs: [
             {
-              includeOnlyWhen: { hasWorkType: 'Music' },
+              includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
               rdfProperty: 'hasCompositionType',
               multiple: true,
               addAnotherLabel: 'Legg til en komposisjonstype til',
@@ -905,7 +905,7 @@ module.exports = (app) => {
               multiple: true
             },
             {
-              includeOnlyWhen: { hasWorkType: 'Music' },
+              includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
               label: 'Besetning',
               multiple: true,
               addAnotherLabel: 'Legg til et instrument til',
@@ -1000,7 +1000,7 @@ module.exports = (app) => {
               label: 'Klassifikasjon',
               multiple: true,
               addAnotherLabel: 'Legg til en klassifikasjon til',
-              subjects: ['Work'],
+              subjects: [ 'Work' ],
               reportFormat: {
                 list: true
               },
@@ -1030,7 +1030,7 @@ module.exports = (app) => {
               authority: true,
               nameProperties: [ 'prefLabel', '(specification)' ],
               indexTypes: [ 'genre' ],
-              indexDocumentFields: [ 'prefLabel' , 'specification'],
+              indexDocumentFields: [ 'prefLabel', 'specification' ],
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [ {
