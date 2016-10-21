@@ -7,6 +7,8 @@ CONSTRUCT {
           deich:name ?name ;
           deich:birthYear ?birthYear ;
           deich:deathYear ?deathYear ;
+          deich:ordinal ?ordinal ;
+          deich:specification ?specification ;
           deich:nationality ?nationalityLabel ;
           deich:work ?work .
     ?work a deich:Work ;
@@ -21,6 +23,8 @@ WHERE {
   OPTIONAL { ?person deich:name ?name }
   OPTIONAL { ?person deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
   OPTIONAL { ?person deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
+  OPTIONAL { ?person deich:ordinal ?ordinalO . BIND(str(?ordinalO) AS ?ordinal) }
+  OPTIONAL { ?person deich:specification ?specificationO . BIND(str(?specificationO) AS ?specification) }
   OPTIONAL {
        ?person deich:nationality ?nationality .
        ?nationality rdfs:label ?nl .
