@@ -745,6 +745,7 @@
                           ractive.set(`${input.keypath}.values.${index}.deletable`, true)
                           if (input.isSubInput) {
                             input.values[index].nonEditable = true
+                            ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                             input.parentInput.allowAddNewButton = true
                           }
                         }
@@ -767,11 +768,15 @@
                 } else if (input.type === 'select-predefined-value') {
                   if (!options.onlyValueSuggestions) {
                     setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                    if (input.isSubInput) {
+                      input.values[ rootIndex + (offset) ].nonEditable = true
+                    }
                   } else {
                     var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
                     _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
                       if (input.isSubInput && multiple) {
                         setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                        input.values[ (input.isSubInput ? rootIndex : 0) + (offset)].nonEditable=true
                       } else {
                         input.suggestedValues = input.suggestedValues || []
                         input.suggestedValues.push({
@@ -796,6 +801,7 @@
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput) {
                         input.values[valueIndex].nonEditable=true
+                        ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
                     } else {
@@ -2714,7 +2720,8 @@
                   var displayValueInput = _.find(event.context.inputs, function (input) {
                     return input.displayValueSource === true
                   })
-                  var useAfterCreation = ractive.get(grandParentOf(event.keypath)).useAfterCreation
+                  let searchOriginInput = ractive.get(grandParentOf(event.keypath))
+                  let useAfterCreation = searchOriginInput.useAfterCreation
 
                   var setCreatedResourceUriInSearchInput = function (resourceUri) {
                     if (!maintenance) {
@@ -2773,7 +2780,7 @@
                   var nop = function (uri) {
                     return uri
                   }
-                  saveInputs(_.union(event.context.inputs, allTopLevelGroupInputsForDomain(event.context.rdfType)), event.context.rdfType)
+                  saveInputs(_.union(event.context.inputs, searchOriginInput.searchMainResource ? allTopLevelGroupInputsForDomain(event.context.rdfType) : []), event.context.rdfType)
                     .then(setCreatedResourceUriInSearchInput)
                     .then(!maintenance ? patchMotherResource : nop)
                     .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
