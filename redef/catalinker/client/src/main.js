@@ -776,7 +776,7 @@
                     _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
                       if (input.isSubInput && multiple) {
                         setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                        input.values[ (input.isSubInput ? rootIndex : 0) + (offset)].nonEditable=true
+                        input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
                       } else {
                         input.suggestedValues = input.suggestedValues || []
                         input.suggestedValues.push({
@@ -800,7 +800,7 @@
                       setSingleValue(value, input, (valueIndex) + (offset))
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput) {
-                        input.values[valueIndex].nonEditable=true
+                        input.values[valueIndex].nonEditable = true
                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
