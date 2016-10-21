@@ -296,7 +296,8 @@ module.exports = (app) => {
               rdfProperty: 'publishedBy',
               type: 'searchable-authority-dropdown',
               indexTypes: 'corporation',
-              indexDocumentFields: [ 'name' ]
+              nameProperties: [ 'name', 'subdivision', '(specification)' ],
+              indexDocumentFields: [ 'name', 'subdivision', 'specification' ]
             }
           ]
         },
@@ -410,6 +411,7 @@ module.exports = (app) => {
                     rdfProperty: 'agent',
                     indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
+                    nameProperties: [ 'name', 'ordinal', 'subdivision', '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
                     id: 'mainEntryPersonInput',
@@ -574,7 +576,7 @@ module.exports = (app) => {
             },
             {
               includeOnlyWhen: {
-                hasMediaType: 'Film'
+                hasMediaType: ['Film', 'Game']
               },
               rdfProperty: 'hasSubtitles',
               multiple: 'true'
@@ -951,9 +953,9 @@ module.exports = (app) => {
               },
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
-              nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name', '(birthYear-', 'deathYear)', 'nationality.fragment.' ], // these are property names used to label already connected entities
-              previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.', 'description', 'specification' ],
-              indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ], // this is the name of the elasticsearch index type from which authorities are searched within
+              nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name', 'ordinal', '(birthYear-', 'deathYear)', 'nationality.fragment.', '(specification)' ],
+              previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.', '(specification)' ],
+              indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ],
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
                 enableCreateNewResource: {
@@ -1026,9 +1028,9 @@ module.exports = (app) => {
               addAnotherLabel: 'Legg til en sjanger til',
               type: 'searchable-with-result-in-side-panel',
               authority: true,
-              nameProperties: [ 'prefLabel' ],
+              nameProperties: [ 'prefLabel', '(specification)' ],
               indexTypes: [ 'genre' ],
-              indexDocumentFields: [ 'prefLabel' ],
+              indexDocumentFields: [ 'prefLabel' , 'specification'],
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [ {
@@ -1096,7 +1098,7 @@ module.exports = (app) => {
                     id: 'publicationPartWorkInput',
                     rdfProperty: 'publicationOf',
                     type: 'searchable-with-result-in-side-panel',
-                    nameProperties: [ 'mainTitle', 'subtitle' ], // these are property names used to label already connected entities
+                    nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
                     indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
                     indexDocumentFields: [ 'mainTitle' ],
                     widgetOptions: {
@@ -1167,7 +1169,8 @@ module.exports = (app) => {
                     rdfProperty: 'agent',
                     id: 'contributionAgentInput',
                     indexTypes: [ 'person', 'corporation' ],
-                    previewProperties: [ '(birthYear-', 'deathYear)', 'place', 'subdivision', 'nationality.fragment.' ],
+                    nameProperties: [ 'prefLabel', 'name', 'ordinal', 'subdivision', '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
+                    previewProperties: [ '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
                       showSelectItem: false, // show and enable select work radio button
@@ -1252,8 +1255,8 @@ module.exports = (app) => {
           type: 'person',
           sortedListQueryForField: "name",
           selectIndexLabel: 'Person',
-          resultItemLabelProperties: [ 'name' ],
-          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
+          resultItemLabelProperties: [ 'name', 'ordinal' ],
+          resultItemDetailsLabelProperties: [ 'specification', 'lifeSpan', 'nationality' ],
           itemHandler: 'personItemHandler',
           subItemsExpandTooltip: 'Vis/skjul verk'
         },
@@ -1294,7 +1297,8 @@ module.exports = (app) => {
           type: 'genre',
           selectIndexLabel: 'Sjanger',
           sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel' ]
+          resultItemLabelProperties: [ 'prefLabel' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         },
         corporation: {
           type: 'corporation',
@@ -1339,13 +1343,15 @@ module.exports = (app) => {
           type: 'instrument',
           selectIndexLabel: 'Instrument',
           sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          resultItemLabelProperties: [ 'prefLabel' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         },
         compositionType: {
           type: 'compositionType',
           selectIndexLabel: 'Komposisjonstype',
           sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          resultItemLabelProperties: [ 'prefLabel' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         }
       },
       typeMap: {

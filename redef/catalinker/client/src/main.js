@@ -2032,7 +2032,7 @@
                 processResults: function (data, params) {
                   params.page = params.page || 1
 
-                  var select2Data = $.map(data.hits.hits, function (obj) {
+                  var select2Data = _.map(data.hits.hits, function (obj) {
                     obj.id = obj._source.uri
                     obj.text = _.map(inputDef.indexDocumentFields, function (field) {
                       return obj._source[ field ]
