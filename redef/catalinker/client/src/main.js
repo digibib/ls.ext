@@ -744,7 +744,7 @@
                         if (!isBlankNodeUri(node.id)) {
                           ractive.set(`${input.keypath}.values.${index}.deletable`, true)
                           if (input.isSubInput) {
-                            ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                            input.values[index].nonEditable = true
                             input.parentInput.allowAddNewButton = true
                           }
                         }
@@ -795,7 +795,8 @@
                       setSingleValue(value, input, (valueIndex) + (offset))
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput) {
-                        ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                        input.values[valueIndex].nonEditable=true
+                        input.parentInput.allowAddNewButton = true
                       }
                     } else {
                       input.suggestedValues = input.suggestedValues || []
