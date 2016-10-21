@@ -2982,8 +2982,15 @@
                 showOverlay(proxyToServices(resourceUri) + '?format=TURTLE')
               },
               showReport: function (event, resourceUri) {
-                let url = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`
-                showOverlay(url)
+                let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`
+                let query = URI.parseQuery(URI.parse(document.location.href).query)
+                if (query.hasMediaType) {
+                  targetUrl += `&hasMediaType=${query.hasMediaType}`
+                }
+                if (query.hasWorkType) {
+                  targetUrl += `&hasWorkType=${query.hasWorkType}`
+                }
+                showOverlay(targetUrl)
               }
             }
           )
