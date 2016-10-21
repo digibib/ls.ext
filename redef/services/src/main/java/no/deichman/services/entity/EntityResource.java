@@ -25,6 +25,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -52,6 +53,7 @@ import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
 import static no.deichman.services.restutils.MimeType.QS_0_7;
+import static no.deichman.services.restutils.MimeType.TURTLE;
 
 /**
  * Responsibility: Expose entities as r/w REST resources.
@@ -150,8 +152,8 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
-    @Produces(NTRIPLES + MimeType.UTF_8 + QS_0_7)
-    public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+    @Produces({NTRIPLES + MimeType.UTF_8 + QS_0_7, TURTLE + MimeType.UTF_8 + QS_0_7})
+    public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id, @HeaderParam("Accept") String acceptHeader) throws Exception {
         Model model;
         XURI xuri = new XURI(BaseURI.root(), type, id);
 
@@ -165,7 +167,7 @@ public final class EntityResource extends ResourceBase {
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
-        return ok().entity(RDFModelUtil.stringFrom(model, Lang.NTRIPLES)).build();
+        return ok().entity(RDFModelUtil.stringFrom(model, acceptHeader.startsWith(NTRIPLES) ? Lang.NTRIPLES : Lang.TURTLE)).build();
     }
 
     @DELETE
