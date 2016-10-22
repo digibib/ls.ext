@@ -1791,6 +1791,9 @@
           return item
         },
         personItemHandler: function (personItem) {
+          _.each(personItem.work, function (work) {
+            work.role = _.flatten([work.role || []])
+          })
           personItem.subItems = personItem.work
           personItem.subItemType = 'work'
           personItem.lifeSpan = ''

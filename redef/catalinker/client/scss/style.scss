@@ -658,6 +658,21 @@ body {
           .part-name {
             font-style: italic;
           }
+          .role-list {
+            font-size: 0.8em;
+            .role-name {
+              text-transform: lowercase;
+              &:nth-last-child(2):after {
+                content: " og ";
+              }
+              &:nth-last-child(n+3):after {
+                content: ", ";
+              }
+            }
+            &:before {
+              content: "Rolle: ";
+            }
+          }
           .search-result-subitem:last-child {
             margin-bottom: 0;
           }
@@ -876,7 +891,7 @@ body {
     text-align: right;
   }
 
-  .report{
+  .report {
     .label {
       padding-right: 4px;
       text-align: right;
@@ -885,7 +900,7 @@ body {
         content: ":";
       }
     }
-    .value.separate-lines{
+    .value.separate-lines {
       display: block;
     }
     .list-value:not(:last-child):after {
