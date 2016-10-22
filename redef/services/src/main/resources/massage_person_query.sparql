@@ -14,7 +14,8 @@ CONSTRUCT {
     ?work a deich:Work ;
           deich:mainTitle ?mainTitle ;
           deich:partTitle ?partTitle ;
-          deich:publicationYear ?publicationYear .
+          deich:publicationYear ?publicationYear ;
+          deich:contribRoleName ?contribRoleName .
 }
 WHERE {
   BIND(uri("__PERSONURI__") AS ?person)
@@ -34,7 +35,11 @@ WHERE {
   OPTIONAL {
        ?work a deich:Work ;
              deich:contributor ?contrib .
-    ?contrib deich:agent ?person .
+    ?contrib deich:agent ?person ;
+             deich:role ?contribRole .
+    ?contribRole rdfs:label ?contribRoleNameNo .
+       FILTER (lang(?contribRoleNameNo) = "no")
+       BIND(str(?contribRoleNameNo) AS ?contribRoleName)
   }
   OPTIONAL { ?work deich:mainTitle ?mainTitle }
   OPTIONAL { ?work deich:partTitle ?partTitle }

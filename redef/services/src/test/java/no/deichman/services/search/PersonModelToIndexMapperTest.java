@@ -42,10 +42,12 @@ public class PersonModelToIndexMapperTest {
                 + "    deich:contributor [\n"
                 + "        a deich:Contribution, deich:MainEntry ;\n"
                 + "        deich:agent <http://data.deichman.no/person/h1> ;\n"
-                + "        deich:role <http://data.deichman.no/role#author>\n"
+                + "        deich:role <http://data.deichman.no/role#illustrator>\n"
                 + "    ] .\n"
                 + "\n"
-                + "<http://data.deichman.no/nationality#n> rdfs:label \"Norsk\"@no, \"Norwegian\"@en .";
+                + "<http://data.deichman.no/nationality#n> rdfs:label \"Norsk\"@no, \"Norwegian\"@en ."
+                + "<http://data.deichman.no/role#author> rdfs:label \"Forfatter\"@no, \"Author\"@en ."
+                + "<http://data.deichman.no/role#illustrator> rdfs:label \"Illustratør\"@no, \"Illustrator\"@en .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("person").createIndexDocument(model, personXuri);
@@ -62,10 +64,12 @@ public class PersonModelToIndexMapperTest {
                 + "  \"work\":["
                 + "     {"
                 + "        \"uri\":\"http://data.deichman.no/work/w1\","
+                + "        \"role\": \"Forfatter\",\n"
                 + "        \"mainTitle\":\"Sult\""
                 + "     },"
                 + "     {"
                 + "        \"uri\":\"http://data.deichman.no/work/w2\","
+                + "        \"role\": \"Illustratør\",\n"
                 + "        \"mainTitle\":\"Pan\""
                 + "     }"
                 + "  ]"

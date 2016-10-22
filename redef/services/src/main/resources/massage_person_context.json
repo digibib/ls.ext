@@ -21,6 +21,7 @@
     "mainTitle": "deichman:mainTitle",
     "Work": "deichman:Work",
     "name": "deichman:name",
+    "role": "deichman:contribRoleName",
     "publicationYear": "deichman:publicationYear",
     "Person": "deichman:Person"
   }

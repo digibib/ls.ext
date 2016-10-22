@@ -1,7 +1,11 @@
 <div class="work-name pure-u-22-24">
-    <span class="pure-u-23-24">{{inPreferredLanguage(mainTitle)}}</span>
+    <span class="pure-u-22-24">{{inPreferredLanguage(mainTitle)}}</span>
     {{#partTitle}}
     <span class="pure-u-1-24"/>
     <span class="part-name pure-u-21-22">{{inPreferredLanguage(partTitle)}}</span>
+    {{/}}
+    {{#role}}
+    <span class="pure-u-1-24"/>
+    <span class="part-name pure-u-21-22">{{role}}</span>
     {{/}}
 </div>

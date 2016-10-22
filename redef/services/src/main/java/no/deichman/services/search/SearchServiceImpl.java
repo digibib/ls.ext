@@ -362,7 +362,7 @@ public class SearchServiceImpl implements SearchService {
             ResIterator subjectIterator = works.listSubjects();
             while (subjectIterator.hasNext()) {
                 Resource subj = subjectIterator.next();
-                if (subj.isAnon()) {
+                if (subj.isAnon() || subj.toString().indexOf('#') != -1) {
                     continue;
                 }
                 XURI workUri = new XURI(subj.toString());
