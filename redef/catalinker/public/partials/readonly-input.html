@@ -11,6 +11,7 @@
                 {{#if subInputs}}
                     <span class="pure-g">
                         {{#each subInputs[0].input.values:inputValueIndex}}
+                        {{#if ./nonEditable}}
                                     {{#if reportFormat.list}}
                                         <span class="pure-u-1-1">
                                             {{#each ../../../../../subInputs}}
@@ -42,6 +43,7 @@
                                     </span>
                                     {{/if}}
                                     {{/if}}
+                        {{/if}}
                         {{/each}}
                     </span>
                 {{/if}}
