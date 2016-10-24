@@ -878,7 +878,7 @@ module.exports = (app) => {
               multiple: true,
               addAnotherLabel: 'Legg til et instrument til',
               subInputs: {
-                rdfProperty: 'hasInstrument',
+                rdfProperty: 'hasInstrumentation',
                 range: 'Instrumentation',
                 inputs: [
                   {

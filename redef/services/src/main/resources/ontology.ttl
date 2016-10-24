@@ -186,6 +186,12 @@ duo:Biography a rdfs:Class ;
   rdfs:range :Instrument ;
   rdfs:domain :Instrumentation .
 
+:hasInstrumentation a rdfs:Property ;
+  rdfs:label "Instrumentation"@en ;
+  rdfs:label "Besetning"@no ;
+  rdfs:range :Instrumentation ;
+  rdfs:domain :Work .
+
 :hasRelationType a rdfs:Property ;
   rdfs:label "Relation type"@en ;
   rdfs:label "Relasjonstype"@no ;
