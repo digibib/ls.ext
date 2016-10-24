@@ -31,6 +31,7 @@ public class PersonModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/work/w1> a deich:Work ;\n"
                 + "    deich:mainTitle \"Sult\" ;\n"
+                + "    deich:hasWorkType <http://data.deichman.no/workType#literature> ;\n"
                 + "    deich:contributor [\n"
                 + "        a deich:Contribution, deich:MainEntry ;\n"
                 + "        deich:agent <http://data.deichman.no/person/h1> ;\n"
@@ -39,6 +40,7 @@ public class PersonModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/work/w2> a deich:Work ;\n"
                 + "    deich:mainTitle \"Pan\" ;\n"
+                + "    deich:hasWorkType <http://data.deichman.no/workType#film> ; \n"
                 + "    deich:contributor [\n"
                 + "        a deich:Contribution, deich:MainEntry ;\n"
                 + "        deich:agent <http://data.deichman.no/person/h1> ;\n"
@@ -47,7 +49,9 @@ public class PersonModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/nationality#n> rdfs:label \"Norsk\"@no, \"Norwegian\"@en ."
                 + "<http://data.deichman.no/role#author> rdfs:label \"Forfatter\"@no, \"Author\"@en ."
-                + "<http://data.deichman.no/role#illustrator> rdfs:label \"Illustratør\"@no, \"Illustrator\"@en .";
+                + "<http://data.deichman.no/role#illustrator> rdfs:label \"Illustratør\"@no, \"Illustrator\"@en ."
+                + "<http://data.deichman.no/workType#literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en ."
+                + "<http://data.deichman.no/workType#film> rdfs:label \"Film\"@no, \"Film\"@en .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("person").createIndexDocument(model, personXuri);
@@ -65,12 +69,14 @@ public class PersonModelToIndexMapperTest {
                 + "     {"
                 + "        \"uri\":\"http://data.deichman.no/work/w1\","
                 + "        \"role\": \"Forfatter\",\n"
-                + "        \"mainTitle\":\"Sult\""
+                + "        \"mainTitle\":\"Sult\",\n"
+                + "        \"workType\":\"Litteratur\""
                 + "     },"
                 + "     {"
                 + "        \"uri\":\"http://data.deichman.no/work/w2\","
                 + "        \"role\": \"Illustratør\",\n"
-                + "        \"mainTitle\":\"Pan\""
+                + "        \"mainTitle\":\"Pan\",\n"
+                + "        \"workType\":\"Film\""
                 + "     }"
                 + "  ]"
                 + "}").allowingAnyArrayOrdering());

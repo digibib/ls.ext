@@ -589,6 +589,7 @@ public final class EntityServiceImpl implements EntityService {
         Model m = ModelFactory.createDefaultModel();
         m = repository.retrieveWorksByCreator(xuri);
         m = getLinkedRoleResource(m);
+        m = getLinkedWorkTypeResource(m);
         return m;
     }
 

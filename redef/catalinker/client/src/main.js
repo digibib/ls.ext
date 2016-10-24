@@ -1894,6 +1894,7 @@
           'readonly-input-duration',
           'readonly-input-nonNegativeInteger',
           'readonly-select-predefined-value',
+          'readonly-hidden-url-query-value',
           'readonly-searchable-with-result-in-side-panel'
         ]
         // window.onerror = function (message, url, line) {
@@ -2711,7 +2712,9 @@
               showCreateNewResource: function (event, origin) {
                 if (eventShouldBeIgnored(event)) return
                 _.each(event.context.inputs, function (input, index) {
-                  ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
+                  if (input.type !== 'hidden-url-query-value') {
+                    ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
+                  }
                 })
                 ractive.set(origin + '.searchResult.hidden', true)
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
@@ -3324,23 +3327,28 @@
         }
 
         let initValuesFromQuery = function (applicationData) {
+          var ractiveNeedsUpdate
           _.each(allInputs(), function (input) {
             if (input.type === 'hidden-url-query-value' &&
               input.widgetOptions && input.widgetOptions.queryParameter &&
               ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])) {
               let queryValue = (input.widgetOptions.prefix || '') + ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])
               if (queryValue) {
-                ractive.set(`${input.keypath}.values`, [ {
+                ractiveNeedsUpdate = true
+                input.values = [ {
                   current: {
                     value: queryValue
                   },
                   old: {
                     value: undefined
                   }
-                } ])
+                } ]
               }
             }
           })
+          if (ractiveNeedsUpdate) {
+            ractive.update()
+          }
           setTaskDescription(query.task)
           return applicationData
         }

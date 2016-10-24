@@ -29,13 +29,24 @@
           "index": "no"
         },
         "mainTitle": {
-          "type": "string"
+          "type": "string",
+          "index": "no"
         },
         "partTitle": {
-          "type": "string"
+          "type": "string",
+          "index": "no"
+        },
+        "partNumber": {
+          "type": "string",
+          "index": "no"
+        },
+        "workType": {
+          "type": "string",
+          "index": "no"
         },
         "publicationYear": {
-          "type": "string"
+          "type": "string",
+          "index": "no"
         }
       }
     }

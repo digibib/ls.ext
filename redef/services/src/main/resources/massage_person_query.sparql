@@ -13,7 +13,10 @@ CONSTRUCT {
           deich:work ?work .
     ?work a deich:Work ;
           deich:mainTitle ?mainTitle ;
+          deich:workTypeName ?workTypeName ;
           deich:partTitle ?partTitle ;
+          deich:partNumber ?partNumber ;
+          deich:subtitle ?subtitle ;
           deich:publicationYear ?publicationYear ;
           deich:contribRoleName ?contribRoleName .
 }
@@ -42,6 +45,14 @@ WHERE {
        BIND(str(?contribRoleNameNo) AS ?contribRoleName)
   }
   OPTIONAL { ?work deich:mainTitle ?mainTitle }
+  OPTIONAL { ?work deich:subtitle ?subtitle }
+  OPTIONAL {
+        ?work deich:hasWorkType ?hasWorkType .
+        ?hasWorkType rdfs:label ?workTypeNameNo .
+        FILTER(lang(?workTypeNameNo) = "no")
+        BIND(str(?workTypeNameNo) AS ?workTypeName)
+        }
   OPTIONAL { ?work deich:partTitle ?partTitle }
+  OPTIONAL { ?work deich:partNumber ?partNumber }
   OPTIONAL { ?work deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
 }

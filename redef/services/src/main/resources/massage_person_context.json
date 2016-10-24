@@ -8,7 +8,6 @@
       "@id": "deichman:work",
       "@container": "@set"
     },
-    "partTitle": "deichman:partTitle",
     "type": "@type",
     "uri": "@id",
     "graph": "@graph",
@@ -19,6 +18,10 @@
     "ordinal": "deichman:ordinal",
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
+    "subtitle": "deichman:subtitle",
+    "partNumber": "deichman:partNumber",
+    "partTitle": "deichman:partTitle",
+    "workType": "deichman:workTypeName",
     "Work": "deichman:Work",
     "name": "deichman:name",
     "role": "deichman:contribRoleName",

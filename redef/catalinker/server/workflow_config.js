@@ -585,7 +585,6 @@ module.exports = (app) => {
             }
             ,
             { rdfProperty: 'format', multiple: true },
-            { rdfProperty: 'hasMediaType' },
             {
               includeOnlyWhen: {
                 hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Audiobook', 'LanguageCourse' ]
