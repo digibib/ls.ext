@@ -1060,6 +1060,9 @@ module.exports = (app) => {
             {
               label: 'Verk som inngår i samling',
               multiple: true,
+              reportFormat: {
+                topLevel: true
+              },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'hasPublicationPart', // the rdf property of the resource
                 range: 'PublicationPart', // this is the shorthand name of the type of the blank node
@@ -1127,6 +1130,7 @@ module.exports = (app) => {
                     rdfProperty: 'startsAtPage',
                     widgetOptions: {
                       isRangeStart: true,
+                      reportLabel: 'Sidetall fra'
                     }
                   },
                   {
@@ -1134,6 +1138,7 @@ module.exports = (app) => {
                     rdfProperty: 'endsAtPage',
                     widgetOptions: {
                       isRangeEnd: true,
+                      reportLabel: 'Sidetall til'
                     }
                   },
                   {
