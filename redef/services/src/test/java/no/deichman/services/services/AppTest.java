@@ -77,7 +77,7 @@ public class AppTest {
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
     private static final String ANOTHER_BIBLIO_ID = "333333";
-    private static final  String EMPTY_STRING = "";
+    private static final String EMPTY_STRING = "";
     private static final String ADD = "ADD";
     private static final String DEL = "DEL";
     private static String appURI;
@@ -103,7 +103,7 @@ public class AppTest {
         System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
 
         setupElasticSearch();
-        System.setProperty("ELASTICSEARCH_URL", "http://localhost:"+embeddedElasticsearchServer.getPort());
+        System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + embeddedElasticsearchServer.getPort());
 
         appURI = LOCALHOST + ":" + appPort + "/";
         app = new App(appPort, svcEndpoint, USE_IN_MEMORY_REPO, jamonAppPort, z3950Endpoint);
@@ -208,8 +208,8 @@ public class AppTest {
     }
 
     private static void setUpKohaExpectation(String biblioNumber) {
-            kohaSvcMock.addLoginExpectation();
-            kohaSvcMock.addCreateNewBiblioExpectation(biblioNumber);
+        kohaSvcMock.addLoginExpectation();
+        kohaSvcMock.addCreateNewBiblioExpectation(biblioNumber);
     }
 
     private static RequestBodyEntity buildCreateRequest(String uri, String body) {
@@ -999,12 +999,12 @@ public class AppTest {
 
         String publicationTriples = ""
                 + "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + BaseURI.ontology("Publication") + "> .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("mainTitle") +"> \"" + publicationTitle + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partTitle") +"> \"" + partTitle + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationOf") +"> <__WORKURI__> .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partNumber") +"> \"" + partNumber + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("isbn") +"> \"" + isbn + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationYear") +"> \"" + publicationYear + "\" .\n";
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("mainTitle") + "> \"" + publicationTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partTitle") + "> \"" + partTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationOf") + "> <__WORKURI__> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partNumber") + "> \"" + partNumber + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("isbn") + "> \"" + isbn + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationYear") + "> \"" + publicationYear + "\" .\n";
 
         HttpResponse<JsonNode> createpublicationResponse = buildCreateRequestNtriples(appURI + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
         assertNotNull(getLocation(createpublicationResponse));
@@ -1173,7 +1173,7 @@ public class AppTest {
         String pubUri1 = "http://data.deichman.no/publication/p594502562255";
         String pubUri2 = "http://data.deichman.no/publication/p735933031021";
         String persUri1 = "http://data.deichman.no/person/h10834700";
-        String persUri2 =  "http://data.deichman.no/person/h11234";
+        String persUri2 = "http://data.deichman.no/person/h11234";
         String subjUri = "http://data.deichman.no/subject/e1200005";
 
         // 1 ) Verify that resources exist in triplestore:
@@ -1249,7 +1249,11 @@ public class AppTest {
         buildCreateRequestNtriples(appURI + "publication", publicationTriples).asJson();
 
         HttpResponse<String> result = Unirest.get(workURI.replace("http://data.deichman.no/", appURI) + "/listRecordIds").asString();
-        assertEquals("{\"recordIds\":[\"" + SECOND_BIBLIO_ID + "\"]}", result.getBody());
+        assertEquals("{\n"
+                + "  \"recordIds\": [\n"
+                + "    \"" + SECOND_BIBLIO_ID + "\"\n"
+                + "  ]\n"
+                + "}", result.getBody());
 
     }
 
@@ -1262,9 +1266,12 @@ public class AppTest {
         String workURI = getLocation(createworkResponse);
 
         HttpResponse<String> result = Unirest.get(workURI.replace("http://data.deichman.no/", appURI) + "/listRecordIds").asString();
-        assertEquals("{\"recordIds\":[]}", result.getBody());
+        assertEquals("{\n"
+                + "  \"recordIds\": []\n"
+                + "}", result.getBody());
 
     }
+
     private Boolean resourceIsIndexed(String uri) throws Exception {
         String uriEncoded = URLEncoder.encode(uri, "UTF-8");
         SearchResponse res = EmbeddedElasticsearchServer.getInstance().getClient()
@@ -1285,7 +1292,7 @@ public class AppTest {
 
     private Boolean resourceIsIndexedWithinNumSeconds(String uri, Integer numSeconds) throws Exception {
         Integer c = 0;
-        while(c <= numSeconds) {
+        while (c <= numSeconds) {
             if (resourceIsIndexed(uri)) {
                 return true;
             }
@@ -1297,7 +1304,7 @@ public class AppTest {
 
     private Boolean resourceIsIndexedWithValueWithinNumSeconds(String uri, String value, Integer numSeconds) throws Exception {
         Integer c = 0;
-        while(c <= numSeconds) {
+        while (c <= numSeconds) {
             if (resourceIsIndexedWithValue(uri, value)) {
                 return true;
             }

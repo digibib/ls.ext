@@ -257,7 +257,7 @@ public class EntityResourceTest {
         String workId = result.getLocation().getPath().substring(("/" + WORK + "/").length());
         String patchData = "{}";
         try {
-            entityResource.patch(WORK, workId,patchData);
+            entityResource.patch(WORK, workId, patchData);
             fail("HTTP 400 Bad Request");
         } catch (BadRequestException bre) {
             assertEquals("HTTP 400 Bad Request", bre.getMessage());
@@ -269,7 +269,7 @@ public class EntityResourceTest {
         entityResource.patch(WORK, "w0000000012131231", "{}");
     }
 
-    @Test(expected=NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void delete__non_existing_work_should_raise_not_found_exception() throws Exception {
         entityResource.delete(WORK, "work_DOES_NOT_EXIST_AND_FAILS");
     }
@@ -285,7 +285,7 @@ public class EntityResourceTest {
 
 
     @Test
-    public void location_returned_from_create_should_return_the_new_publication() throws Exception{
+    public void location_returned_from_create_should_return_the_new_publication() throws Exception {
         when(mockKohaAdapter.createNewBiblioWithMarcRecord(new MarcRecord())).thenReturn(A_BIBLIO_ID);
         Response createResponse = entityResource.createFromLDJSON(PUBLICATION, createTestRDF("publication_SHOULD_EXIST", PUBLICATION));
 
@@ -418,20 +418,25 @@ public class EntityResourceTest {
 
     @Test
     public void should_return_a_list_of_record_ids() throws Exception {
-
         entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w87654.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
         XURI xuri = new XURI("http://deichman.no/work/w87654");
         Response result = entityResource.getWorkRecordIds(xuri.getType(), xuri.getId());
-        assertEquals("{\"recordIds\":[\"80001\",\"80002\"]}", result.getEntity());
+        assertEquals("{\n"
+                + "  \"recordIds\": [\n"
+                + "    \"80001\",\n"
+                + "    \"80002\"\n"
+                + "  ]\n"
+                + "}", result.getEntity());
     }
 
     @Test
     public void should_return_empty_recordId_list_when_no_publications() throws Exception {
-
         entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w00000891.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
         XURI xuri = new XURI("http://deichman.no/work/w87654");
         Response result = entityResource.getWorkRecordIds(xuri.getType(), xuri.getId());
-        assertEquals("{\"recordIds\":[]}", result.getEntity());
+        assertEquals("{\n"
+                + "  \"recordIds\": []\n"
+                + "}", result.getEntity());
 
     }
 
@@ -478,6 +483,16 @@ public class EntityResourceTest {
                 + "        \"http://data.deichman.no/duo#bibliofilPlaceId\": \"" + placeId + "\"\n"
                 + "    }\n"
                 + "}";
+    }
+
+    @Test
+    public void should_return_number_of_references_from_other_resources() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w87654.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://deichman.no/work/w87654");
+        Response result = entityResource.getNumberOfRelationsForResource(xuri.getType(), xuri.getId());
+        assertEquals("{\n"
+                + "  \"http://data.deichman.no/ontology#Publication\": 2\n"
+                + "}", result.getEntity());
     }
 
 }

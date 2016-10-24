@@ -476,4 +476,15 @@ public final class SPARQLQueryBuilder {
                 + "CONSTRUCT {<"+ workUri.getUri() +"> deichman:hasPublication ?publication} WHERE {?publication deichman:publicationOf <"+workUri.getUri()+">}";
         return QueryFactory.create(query);
     }
+
+    public Query getNumberOfRelationsForResource(XURI xuri) {
+        String queryString = String.format("PREFIX deich: <http://data.deichman.no/ontology#>\n"
+                + "SELECT ?type (COUNT(?a) as ?references)\n"
+                + "WHERE {\n"
+                + "  ?a ?b <%s> ;\n"
+                + "     a ?type .\n"
+                + "}\n"
+                + "GROUP BY ?type ", xuri.getUri());
+        return QueryFactory.create(queryString);
+    }
 }

@@ -1,6 +1,7 @@
 package no.deichman.services.entity;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.rdf.RDFModelUtil;
@@ -61,6 +62,7 @@ import static no.deichman.services.restutils.MimeType.TURTLE;
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|c|s|e|m|i|t|v";
     @Context
@@ -327,10 +329,14 @@ public final class EntityResource extends ResourceBase {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         HashMap<String, List<String>> recordIds = new HashMap<>();
         recordIds.put("recordIds", getEntityService().retrieveWorkRecordIds(xuri));
+        return ok().entity(GSON.toJson(recordIds)).build();
+    }
 
-        Gson gson = new Gson();
-
-        return ok().entity(gson.toJson(recordIds)).build();
-
+    @GET
+    @Path("{id: (g|w|h|e|c|s)[a-zA-Z0-9_]+}/references")
+    @Produces(JSON + MimeType.UTF_8)
+    public Response getNumberOfRelationsForResource(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+        return ok().entity(GSON.toJson(getEntityService().getNumberOfRelationsForResource(xuri))).build();
     }
 }

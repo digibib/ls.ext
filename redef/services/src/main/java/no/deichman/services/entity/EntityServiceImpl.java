@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -607,4 +608,8 @@ public final class EntityServiceImpl implements EntityService {
         return repository.retrieveRecordIdsByWork(xuri);
     }
 
+    @Override
+    public Map<String, Integer> getNumberOfRelationsForResource(XURI uri) {
+        return repository.getNumberOfRelationsForResource(uri);
+    }
 }

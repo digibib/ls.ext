@@ -501,7 +501,7 @@ body {
         }
         .add-new-btn-row {
           padding: 19px 13px 8px 8px;
-          a, button, span {
+          a:not(.delete-link), button, span {
             float: right;
             width: auto;
           }

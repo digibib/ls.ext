@@ -734,7 +734,7 @@ module.exports = (app) => {
           },
           deleteResource: {
             buttonLabel: 'Slett utgivelsen',
-            resourceType: 'Publication',
+            rdfType: 'Publication',
             dialogKeypath: 'deletePublicationDialog',
             dialogId: 'delete-publication-dialog',
             dialogTemplateValues: {
@@ -861,7 +861,7 @@ module.exports = (app) => {
           },
           deleteResource: {
             buttonLabel: 'Slett verket',
-            resourceType: 'Work',
+            rdfType: 'Work',
             dialogKeypath: 'deleteWorkDialog',
             dialogId: 'delete-work-dialog',
             dialogTemplateValues: {

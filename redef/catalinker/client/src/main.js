@@ -169,63 +169,79 @@
     }
 
     var deleteResource = function (uri, deleteConfig, success) {
-      _.each(_.pairs(deleteConfig.dialogTemplateValues), function (pair) {
-        ractive.set(`${deleteConfig.dialogKeypath}.${pair[ 0 ]}`, valueOfInputByInputId(pair[ 1 ]))
-      })
-      ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
-      var idPrefix = _.uniqueId()
-      $(`#${deleteConfig.dialogId}`).dialog({
-        resizable: false,
-        modal: true,
-        width: 450,
-        buttons: [
-          {
-            text: 'Slett',
-            id: `${idPrefix}-do-del`,
-            click: function () {
-              ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
-              axios.delete(proxyToServices(uri))
-                .then(function (response) {
-                  $(`#${idPrefix}-do-del, #${idPrefix}-cancel-del`).hide()
-                  $(`#${idPrefix}-ok-del`).show()
-                  ractive.set(`${deleteConfig.dialogKeypath}.deleted`, true)
-                  $(this).dialog('close')
-                  return response
-                })
-                .catch(function (response) {
-                  if (response.status === 400 && response.data.numberOfItemsLeft) {
-                    ractive.set(`${deleteConfig.dialogKeypath}.error`, { itemsLeft: { numberOfItemsLeft: response.data.numberOfItemsLeft } })
-                  } else {
-                    ractive.set(`${deleteConfig.dialogKeypath}.error.message`, 'Noe gikk galt under sletting.')
-                    $(`#${idPrefix}-do-del, #${idPrefix}-ok-del`).hide()
-                    $(`#${idPrefix}-cancel-del`).show()
-                  }
-                })
-            }
-          },
-          {
-            text: 'Avbryt',
-            id: `${idPrefix}-cancel-del`,
-            click: function () {
-              $(this).dialog('close')
-              ractive.set(deleteConfig.dialogKeypath, null)
-            }
-          },
-          {
-            text: 'Ok',
-            id: `${idPrefix}-ok-del`,
-            click: function () {
-              $(this).dialog('close')
-              ractive.set(deleteConfig.dialogKeypath, null)
-              if (success) {
-                success()
+      if (!deleteConfig.dialogKeypath) {
+        deleteConfig.dialogKeypath = 'deleteResourceDialog'
+        ractive.update()
+      }
+      deleteConfig.dialogId = deleteConfig.dialogId || 'delete-resource-dialog'
+      axios.get(proxyToServices(`${uri}/references`)).then(function (response) {
+        var totalNumberOfReferences = 0
+        _.each(_.values(response.data), function (referenceCountForType) {
+          totalNumberOfReferences += referenceCountForType
+        })
+        if (totalNumberOfReferences > 0) {
+          ractive.set(`${deleteConfig.dialogKeypath}.references`, totalNumberOfReferences)
+        }
+        _.each(_.pairs(deleteConfig.dialogTemplateValues), function (pair) {
+          ractive.set(`${deleteConfig.dialogKeypath}.${pair[ 0 ]}`, valueOfInputByInputId(pair[ 1 ]))
+        })
+        ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
+        var idPrefix = _.uniqueId()
+        $(`#${deleteConfig.dialogId}`).dialog({
+          resizable: false,
+          modal: true,
+          width: 450,
+          buttons: [
+            {
+              text: 'Slett',
+              id: `${idPrefix}-do-del`,
+              click: function () {
+                ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
+                axios.delete(proxyToServices(uri))
+                  .then(function (response) {
+                    $(`#${idPrefix}-do-del, #${idPrefix}-cancel-del`).hide()
+                    $(`#${idPrefix}-ok-del`).show()
+                    ractive.set(`${deleteConfig.dialogKeypath}.deleted`, true)
+                    $(this).dialog('close')
+                    return response
+                  })
+                  .catch(function (response) {
+                    if (response.status === 400 && response.data.numberOfItemsLeft) {
+                      ractive.set(`${deleteConfig.dialogKeypath}.error`, { itemsLeft: { numberOfItemsLeft: response.data.numberOfItemsLeft } })
+                    } else {
+                      ractive.set(`${deleteConfig.dialogKeypath}.error.message`, 'Noe gikk galt under sletting.')
+                      $(`#${idPrefix}-do-del, #${idPrefix}-ok-del`).hide()
+                      $(`#${idPrefix}-cancel-del`).show()
+                    }
+                  })
+              }
+            },
+            {
+              text: 'Avbryt',
+              id: `${idPrefix}-cancel-del`,
+              class: 'default',
+              click: function () {
+                $(this).dialog('close')
+                ractive.set(deleteConfig.dialogKeypath, null)
+              }
+            },
+            {
+              text: 'Ok',
+              id: `${idPrefix}-ok-del`,
+              click: function () {
+                $(this).dialog('close')
+                ractive.set(deleteConfig.dialogKeypath, null)
+                if (success) {
+                  success()
+                }
               }
             }
+          ],
+          open: function () {
+            $(`#${idPrefix}-ok-del`).hide()
+            $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
           }
-        ],
-        open: function () {
-          $(`#${idPrefix}-ok-del`).hide()
-        }
+        })
       })
     }
 
@@ -744,7 +760,7 @@
                         if (!isBlankNodeUri(node.id)) {
                           ractive.set(`${input.keypath}.values.${index}.deletable`, true)
                           if (input.isSubInput) {
-                            input.values[index].nonEditable = true
+                            input.values[ index ].nonEditable = true
                             ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                             input.parentInput.allowAddNewButton = true
                           }
@@ -800,7 +816,7 @@
                       setSingleValue(value, input, (valueIndex) + (offset))
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput) {
-                        input.values[valueIndex].nonEditable = true
+                        input.values[ valueIndex ].nonEditable = true
                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
@@ -1792,7 +1808,7 @@
         },
         personItemHandler: function (personItem) {
           _.each(personItem.work, function (work) {
-            work.role = _.flatten([work.role || []])
+            work.role = _.flatten([ work.role || [] ])
           })
           personItem.subItems = personItem.work
           personItem.subItemType = 'work'
@@ -1866,6 +1882,7 @@
           'publication',
           'delete-publication-dialog',
           'delete-work-dialog',
+          'delete-resource-dialog',
           'confirm-enable-special-input-dialog',
           'accordion-header-for-collection',
           'readonly-input',
@@ -2671,7 +2688,7 @@
                 })
               },
               deleteResource: function (event) {
-                var uriToDelete = ractive.get(`targetUri.${event.context.resourceType}`)
+                var uriToDelete = ractive.get(`targetUri.${event.context.rdfType}`)
                 deleteResource(uriToDelete, event.context, function () {
                   unloadResourceForDomain(event.context.resourceType)
                   if (event.context.afterSuccess) {
