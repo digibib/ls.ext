@@ -411,6 +411,7 @@ module.exports = (app) => {
                     rdfProperty: 'agent',
                     indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
+                    required: true,
                     nameProperties: [ 'name', 'ordinal', 'subdivision', '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
@@ -510,6 +511,7 @@ module.exports = (app) => {
           id: 'describe-publication',
           rdfType: 'Publication',
           label: 'Beskriv utgivelse',
+          reportLabel: 'Utgivelse',
           showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             {
@@ -552,7 +554,7 @@ module.exports = (app) => {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] },
               rdfProperty: 'numberOfPages'
             },
-            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter' },
+            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter', multiple: true },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
               rdfProperty: 'isbn',
@@ -756,6 +758,7 @@ module.exports = (app) => {
           id: 'describe-work',
           rdfType: 'Work',
           label: 'Beskriv verk',
+          reportLabel: 'Verk',
           inputs: [
             {
               id: 'workMainTitle',
@@ -877,6 +880,7 @@ module.exports = (app) => {
           id: 'subjects',
           rdfType: 'Work',
           label: 'Emneopplysninger',
+          reportLabel: 'Emner',
           inputs: [
             {
               includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
@@ -1050,6 +1054,7 @@ module.exports = (app) => {
           id: 'collection-of-works',
           rdfType: 'Publication',
           label: 'Beskriv deler',
+          reportLabel: 'Deler',
           showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             {

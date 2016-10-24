@@ -892,6 +892,10 @@ body {
   }
 
   .report {
+    h2 {
+      border-top: 2px solid black;
+      padding-top: 2px;
+    }
     .label {
       padding-right: 4px;
       text-align: right;

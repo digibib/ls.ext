@@ -785,7 +785,7 @@
                   if (!options.onlyValueSuggestions) {
                     setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                     if (input.isSubInput) {
-                      input.values[ rootIndex + (offset) ].nonEditable = true
+//                      input.values[ rootIndex + (offset) ].nonEditable = true
                     }
                   } else {
                     var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
@@ -816,8 +816,8 @@
                       setSingleValue(value, input, (valueIndex) + (offset))
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput) {
-                        input.values[ valueIndex ].nonEditable = true
-                        ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
+                        // input.values[ valueIndex ].nonEditable = true
+                        // ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
                     } else {
@@ -1373,6 +1373,7 @@
         var groupInputs = createInputsForGroup(inputGroup, index)
         group.inputs = groupInputs
         group.tabLabel = inputGroup.label
+        group.reportLabel = inputGroup.reportLabel
         group.tabId = inputGroup.id
         group.tabSelected = false
         group.domain = inputGroup.rdfType

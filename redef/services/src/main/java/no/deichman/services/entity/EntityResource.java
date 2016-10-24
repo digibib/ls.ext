@@ -333,7 +333,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: (g|w|h|e|c|s)[a-zA-Z0-9_]+}/references")
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/references")
     @Produces(JSON + MimeType.UTF_8)
     public Response getNumberOfRelationsForResource(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);

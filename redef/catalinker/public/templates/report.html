@@ -4,7 +4,7 @@
      data-publication-uri="{{targetUri.Publication}}"
      data-person-uri="{{targetUri.Person}}"
      decorator="multi:{clickOutsideSupportPanelDetector:[], unload:[]}">
-    <h2 data-automation-id="page-heading">{{currentTaskDescription}}</h2>
+    <h2 data-automation-id="page-heading">Oversikt over metadata</h2>
     <h3 class="headline" data-automation-id="headline">
         {{#each applicationData.headlineParts}}
         {{#headlinePart(.)}}
@@ -17,7 +17,7 @@
     </h3>
     <div class="report">
         {{#each inputGroups:groupIndex}}
-        <h2>{{tabLabel}}</h2>
+        <h2>{{reportLabel || tabLabel}}</h2>
         <div id="{{tabId}}" class="pure-g">
             {{#each inputs:inputIndex}}
             {{#if ./predicate}}
