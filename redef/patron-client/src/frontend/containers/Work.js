@@ -289,7 +289,7 @@ class Work extends React.Component {
 
           <section className="work-information">
             <h1 data-automation-id="work_title">{mainTitle}</h1>
-            <h2>{partTitle ? `${partTitle} ${partNumber}` : partNumber}</h2>
+            <h2>{partNumber ? `${partNumber}. `: ''}{partTitle ? partTitle: ''}</h2>
             {this.renderAuthor(work)}
             {this.renderOriginalTitle(work)}
             {this.renderOriginalLanguage(work)}
