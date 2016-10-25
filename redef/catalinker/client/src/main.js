@@ -759,7 +759,7 @@
                         promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
                         if (!isBlankNodeUri(node.id)) {
                           ractive.set(`${input.keypath}.values.${index}.deletable`, true)
-                          if (input.isSubInput) {
+                          if (input.isSubInput && !options.source) {
                             input.values[ index ].nonEditable = true
                             ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                             input.parentInput.allowAddNewButton = true
@@ -784,8 +784,9 @@
                 } else if (input.type === 'select-predefined-value') {
                   if (!options.onlyValueSuggestions) {
                     setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                    if (input.isSubInput) {
-//                      input.values[ rootIndex + (offset) ].nonEditable = true
+                    if (input.isSubInput && !options.source) {
+                      input.values[ rootIndex + (offset) ].nonEditable = true
+                      ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
                     }
                   } else {
                     var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
@@ -815,9 +816,9 @@
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset))
                       input.values[ valueIndex ].subjectType = type
-                      if (input.isSubInput) {
-                        // input.values[ valueIndex ].nonEditable = true
-                        // ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
+                      if (input.isSubInput && !options.source) {
+                         input.values[ valueIndex ].nonEditable = true
+                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
                     } else {
@@ -1302,7 +1303,8 @@
               dataAutomationId: input.searchMainResource.automationId,
               inputIndex: index,
               id: input.id,
-              isTitleSource: input.isTitleSource
+              isTitleSource: input.isTitleSource,
+              searchMainResource: input.searchMainResource
             })
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
@@ -1663,7 +1665,7 @@
                 highestScoreIndex = index
               }
             })
-            if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === items[ highestScoreIndex ][ fieldForSortedListQuery ].toLocaleLowerCase()) {
+            if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([items[ highestScoreIndex ][ fieldForSortedListQuery ]]).join().toLocaleLowerCase()) {
               items[ highestScoreIndex ].exactMatch = true
             }
             ractive.set(event.keypath + '.searchResult', {
@@ -2804,7 +2806,7 @@
                   var nop = function (uri) {
                     return uri
                   }
-                  saveInputs(_.union(event.context.inputs, searchOriginInput.searchMainResource ? allTopLevelGroupInputsForDomain(event.context.rdfType) : []), event.context.rdfType)
+                  saveInputs(_.union(event.context.inputs, ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : []), event.context.rdfType)
                     .then(setCreatedResourceUriInSearchInput)
                     .then(!maintenance ? patchMotherResource : nop)
                     .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
