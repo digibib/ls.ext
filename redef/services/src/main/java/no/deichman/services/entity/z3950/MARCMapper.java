@@ -126,7 +126,7 @@ public class MARCMapper {
                 case "082":
                     getSubfieldValue(dataField, 'a').ifPresent(classificationNumber -> {
                         Classification classification = new Classification(newBlankNodeId(), classificationNumber);
-                        setUriObject(dataField, '2', "classification", classification::setClassificationSource, ClassificationSource::translate);
+                        setUriObject(dataField, '2', "classificationSource", classification::setClassificationSource, ClassificationSource::translate);
                         work.addClassification(classification);
                         graphList.add(classification);
                     });
