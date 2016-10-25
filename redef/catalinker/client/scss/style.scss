@@ -676,6 +676,14 @@ body {
           .search-result-subitem:last-child {
             margin-bottom: 0;
           }
+          .search-result-subitem {
+            .sub-title:before {
+              content: " : "
+            }
+            .part-number:after {
+              content: ".";
+            }
+          }
           .search-result-item-label, .creator-years {
             margin: 0;
           }

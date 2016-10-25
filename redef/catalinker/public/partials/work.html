@@ -1,6 +1,10 @@
 <div class="work-name pure-g">
-    <span class="pure-u-1-1">{{mainTitle}} {{subtitle}} {{partNumber}} {{partTitle}}
-        <span class="work-type">({{workType}})</span>
+    <span class="pure-u-1-1">
+        {{#mainTitle}}<span class="main-title">{{mainTitle}}</span>{{/}}
+        {{#subtitle}}<span class="sub-title">{{subtitle}}</span>{{/}}
+        {{#partNumber}}<span class="part-number">{{partNumber}}</span>{{/}}
+        {{#partNumber}}<span class="part-title">{{partTitle}}</span>{{/}}
+        {{#workType}}<span class="work-type">({{workType}})</span>{{/}}
     </span>
     <span class="pure-u-1-1">
     {{#if role}}
