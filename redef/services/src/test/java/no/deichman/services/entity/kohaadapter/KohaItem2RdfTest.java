@@ -56,7 +56,7 @@ public class KohaItem2RdfTest {
         Statement branchStatement = createStatement(
                 createResource(s),
                 createProperty(BaseURI.ontology("branch")),
-                createPlainLiteral("Hovedbiblioteket, voksen")
+                createPlainLiteral("Hovedbiblioteket")
         );
         Statement shelfmarkStatement = createStatement(
                 createResource(s),
