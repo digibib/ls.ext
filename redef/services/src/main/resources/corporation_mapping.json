@@ -5,6 +5,11 @@
       "type": "string",
       "index": "analyzed",
       "analyzer": "name_analyzer"
+    },
+    "subdivision": {
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "name_analyzer"
     }
   }
 }

@@ -6,6 +6,9 @@
       "index": "analyzed",
       "analyzer": "name_analyzer"
     },
+    "subtitle": {
+      "type": "string"
+    },
     "uri": {
       "type": "string",
       "index": "no"

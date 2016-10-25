@@ -8,6 +8,12 @@
     },
     "specification": {
       "type": "String"
+    },
+    "ordinal": {
+      "type": "String"
+    },
+    "date": {
+      "type": "String"
     }
   }
 }

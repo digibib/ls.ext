@@ -3,6 +3,7 @@
   "@context": {
     "deichman": "__ONTOLOGY__",
     "serialMainTitle": "deichman:mainTitle",
+    "subtitle": "deichman:subtitle",
     "Serial": "deichman:Serial",
     "type": "@type",
     "uri": "@id",
