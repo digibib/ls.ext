@@ -1264,8 +1264,8 @@ module.exports = (app) => {
           type: 'person',
           sortedListQueryForField: "name",
           selectIndexLabel: 'Person',
-          resultItemLabelProperties: [ 'name', 'ordinal' ],
-          resultItemDetailsLabelProperties: [ 'specification', 'lifeSpan', 'nationality' ],
+          resultItemLabelProperties: [ 'name', 'ordinal,', 'specification' ],
+          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
           itemHandler: 'personItemHandler',
           subItemsExpandTooltip: 'Vis/skjul verk'
         },
@@ -1273,8 +1273,7 @@ module.exports = (app) => {
           type: 'subject',
           sortedListQueryForField: "prefLabel",
           selectIndexLabel: 'Generelt',
-          resultItemLabelProperties: [ 'prefLabel' ],
-          resultItemDetailsLabelProperties: [ 'specification' ]
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
         work: {
           type: 'work',
@@ -1306,34 +1305,33 @@ module.exports = (app) => {
           type: 'genre',
           selectIndexLabel: 'Sjanger',
           sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel' ],
-          resultItemDetailsLabelProperties: [ 'specification' ]
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
         corporation: {
           type: 'corporation',
           selectIndexLabel: 'Organisasjon',
           sortedListQueryForField: "name",
-          resultItemLabelProperties: [ 'name' ]
+          resultItemLabelProperties: [ 'name', 'subdivision' ],
+          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
         },
         place: {
           type: 'place',
           selectIndexLabel: 'Sted',
           sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel' ],
-          resultItemDetailsLabelProperties: [ 'specification' ]
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
         event: {
           type: 'event',
           selectIndexLabel: 'Hendelse',
           sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel' ],
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:ordinal', 'date' ],
           resultItemDetailsLabelProperties: [ 'specification' ]
         },
         serial: {
           type: 'serial',
           selectIndexLabel: 'Serie',
           sortedListQueryForField: "serialMainTitle",
-          resultItemLabelProperties: [ 'serialMainTitle' ]
+          resultItemLabelProperties: [ 'serialMainTitle', 'inParens:subtitle' ]
         },
         publication: {
           type: 'publication',
@@ -1351,16 +1349,14 @@ module.exports = (app) => {
         instrument: {
           type: 'instrument',
           selectIndexLabel: 'Instrument',
-          sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel' ],
-          resultItemDetailsLabelProperties: [ 'specification' ]
+          sortedListQueryForField: 'prefLabel',
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
-        compositionType: {
+        compositiontype: {
           type: 'compositionType',
           selectIndexLabel: 'Komposisjonstype',
-          sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel' ],
-          resultItemDetailsLabelProperties: [ 'specification' ]
+          sortedListQueryForField: 'prefLabel',
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         }
       },
       typeMap: {

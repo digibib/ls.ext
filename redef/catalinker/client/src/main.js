@@ -2334,7 +2334,7 @@
                 let inParensValues = _.create(item, _.mapObject(_.pick(item, _.map(inParensProperties, unPrefix)), function (value) {
                   return `(${value})`
                 }))
-                return _.compact(_.values(_.pick(inParensValues, _.map(itemLabelProperties, unPrefix)))).join(' - ')
+                return _.compact(_.values(_.pick(inParensValues, _.map(itemLabelProperties, unPrefix)))).join(' ')
                   .replace('- (', ' (')
                   .replace(') -', ') ')
               },
