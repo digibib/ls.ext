@@ -814,11 +814,11 @@
                   _.each(root.getAll(fragmentPartOf(predicate)), function (value, index) {
                     if (!options.onlyValueSuggestions) {
                       let valueIndex = input.isSubInput ? rootIndex : index
-                      setSingleValue(value, input, (valueIndex) + (offset))
+                      setSingleValue(value, input, (valueIndex) + (offset), options)
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput && !options.source) {
-                         input.values[ valueIndex ].nonEditable = true
-                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
+                        input.values[ valueIndex ].nonEditable = true
+                        ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
                     } else {
@@ -1274,7 +1274,8 @@
                 input.widgetOptions[ enableAction ][ 'forms' ][ formRef.targetType ] = {
                   inputs: resourceForm.inputs,
                   rdfType: resourceForm.rdfType,
-                  labelForCreateButton: resourceForm.labelForCreateButton
+                  labelForCreateButton: resourceForm.labelForCreateButton,
+                  prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource
                 }
               })
             }
@@ -1665,7 +1666,7 @@
                 highestScoreIndex = index
               }
             })
-            if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([items[ highestScoreIndex ][ fieldForSortedListQuery ]]).join().toLocaleLowerCase()) {
+            if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([ items[ highestScoreIndex ][ fieldForSortedListQuery ] ]).join().toLocaleLowerCase()) {
               items[ highestScoreIndex ].exactMatch = true
             }
             ractive.set(event.keypath + '.searchResult', {
@@ -2713,22 +2714,24 @@
               },
               showCreateNewResource: function (event, origin) {
                 if (eventShouldBeIgnored(event)) return
-                _.each(event.context.inputs, function (input, index) {
-                  if (input.type !== 'hidden-url-query-value') {
-                    ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
-                  }
-                })
+                if (!event.context.prefillFromAcceptedSource) {
+                  _.each(event.context.inputs, function (input, index) {
+                    if (input.type !== 'hidden-url-query-value') {
+                      ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
+                    }
+                  })
+                }
                 ractive.set(origin + '.searchResult.hidden', true)
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
-                let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
-                if (suggestedValuesGraphNode) {
-                  updateInputsForResource({ data: {} }, null, {
-                    keepDocumentUrl: true,
-                    source: event.context.source,
-                    inputs: event.context.inputs,
-                    deferUpdate: true,
-                    overrideMainEntry: true
-                  }, suggestedValuesGraphNode, event.context.rdfType)
+                  let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
+                  if (suggestedValuesGraphNode) {
+                    updateInputsForResource({ data: {} }, null, {
+                      keepDocumentUrl: true,
+                      source: event.context.source,
+                      inputs: event.context.inputs,
+                      deferUpdate: true,
+                      overrideMainEntry: true
+                    }, suggestedValuesGraphNode, event.context.rdfType)
                 }
                 var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
                 if (searchTerm) {
@@ -2937,10 +2940,6 @@
               },
               acceptExternalItem: function (event) {
                 blockUI(function () {
-                    var inputsWithValueSuggestionEnabled = _.filter(allInputs(), function (input) {
-                        return input.suggestValueFrom
-                      }
-                    )
                     let prefillValuesFromExternalSources = ractive.get('applicationData.config.prefillValuesFromExternalSources')
                     _.each(prefillValuesFromExternalSources, function (suggestionSpec) {
                       var domain = suggestionSpec.resourceType
@@ -2968,6 +2967,10 @@
                             }, node, domain)
 
                             if (node.isA('TopBanana')) {
+                              let inputsWithValueSuggestionEnabled = _.filter(allInputs(), function (input) {
+                                  return input.suggestValueFrom
+                                }
+                              )
                               _.each(inputsWithValueSuggestionEnabled, function (input) {
                                 if (input.suggestValueFrom.domain === domain && !wrapperObject) {
                                   input.values = input.values || [ { current: {}, old: {} } ]
