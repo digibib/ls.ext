@@ -15,9 +15,16 @@
 </head>
 <body>
 <span id="ui-blocker"></span>
+<div id="block"></div>
+<div id="iframecontainer">
+    <div id="loader"></div>
+    <iframe></iframe>
+    <span id="close-preview-button" class="pure-button">Lukk</span>
+</div>
 <a id="home" href="/">Katalogisering</a>
 <div id="container">
     <script src="/js/bundle.js"></script>
 </div>
+<span id="ui-blocker-blocker" onclick="document.main.$('#ui-blocker').remove()"></span>
 </body>
 </html>

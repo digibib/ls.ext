@@ -1,6 +1,7 @@
 package no.deichman.services.entity;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.rdf.RDFModelUtil;
@@ -23,13 +24,16 @@ import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -50,6 +54,7 @@ import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static no.deichman.services.restutils.MimeType.NTRIPLES;
 import static no.deichman.services.restutils.MimeType.QS_0_7;
+import static no.deichman.services.restutils.MimeType.TURTLE;
 
 /**
  * Responsibility: Expose entities as r/w REST resources.
@@ -57,6 +62,7 @@ import static no.deichman.services.restutils.MimeType.QS_0_7;
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|c|s|e|m|i|t|v";
     @Context
@@ -148,8 +154,8 @@ public final class EntityResource extends ResourceBase {
 
     @GET
     @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
-    @Produces(NTRIPLES + MimeType.UTF_8 + QS_0_7)
-    public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+    @Produces({NTRIPLES + MimeType.UTF_8 + QS_0_7, TURTLE + MimeType.UTF_8 + QS_0_7})
+    public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id, @HeaderParam("Accept") String acceptHeader) throws Exception {
         Model model;
         XURI xuri = new XURI(BaseURI.root(), type, id);
 
@@ -163,7 +169,7 @@ public final class EntityResource extends ResourceBase {
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
-        return ok().entity(RDFModelUtil.stringFrom(model, Lang.NTRIPLES)).build();
+        return ok().entity(RDFModelUtil.stringFrom(model, acceptHeader.startsWith(NTRIPLES) ? Lang.NTRIPLES : Lang.TURTLE)).build();
     }
 
     @DELETE
@@ -296,10 +302,12 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: (p|w|h|e)[a-zA-Z0-9_]+}/asSubjectOfWorks")
-    public Response getWorksWhereUriIsSubject(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
+    @Path("{id: (g|w|h|e|c|s)[a-zA-Z0-9_]+}/asSubjectOfWorks")
+    public Response getWorksWhereUriIsSubject(@PathParam("type") final String type,
+                                              @PathParam("id") String id,
+                                              @QueryParam("maxSize") @DefaultValue("100") int maxSize) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
-        return getSearchService().searchWork("work.subject.uri:\"" + xuri.getUri() + "\"");
+        return getSearchService().searchWorkWhereUriIsSubject(xuri.getUri(), maxSize);
     }
 
     @Override
@@ -321,10 +329,14 @@ public final class EntityResource extends ResourceBase {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         HashMap<String, List<String>> recordIds = new HashMap<>();
         recordIds.put("recordIds", getEntityService().retrieveWorkRecordIds(xuri));
+        return ok().entity(GSON.toJson(recordIds)).build();
+    }
 
-        Gson gson = new Gson();
-
-        return ok().entity(gson.toJson(recordIds)).build();
-
+    @GET
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/references")
+    @Produces(JSON + MimeType.UTF_8)
+    public Response getNumberOfRelationsForResource(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+        return ok().entity(GSON.toJson(getEntityService().getNumberOfRelationsForResource(xuri))).build();
     }
 }

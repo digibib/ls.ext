@@ -35,12 +35,24 @@ public class CorporationModelToIndexMapperTest {
                 ResourceFactory.createProperty(BaseURI.ontology("name")),
                 ResourceFactory.createPlainLiteral("publisherName_value")));
 
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(xuri.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology("subdivision")),
+                ResourceFactory.createPlainLiteral("subdivision_value")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(xuri.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology("specification")),
+                ResourceFactory.createPlainLiteral("specification_value")));
+
         String jsonDocument = new ModelToIndexMapper("corporation").createIndexDocument(model, xuri);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
                 + "  \"uri\": \"" + xuri.getUri() + "\","
-                + "  \"name\": \"publisherName_value\""
+                + "  \"name\": \"publisherName_value\","
+                + "  \"subdivision\": \"subdivision_value\","
+                + "  \"specification\": \"specification_value\""
                 + "}").allowingAnyArrayOrdering());
     }
 }

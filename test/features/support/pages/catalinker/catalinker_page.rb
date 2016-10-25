@@ -30,6 +30,8 @@ class CatalinkerPage < PageRoot
   end
 
   def add_prop(predicate, value, nr=0, skip_wait=false)
+    wait_for_ui_blocker
+
     input = @browser.elements(:data_automation_id => predicate+"_#{nr}").find(&:visible?).to_subtype
     input.focus
     input.set('')

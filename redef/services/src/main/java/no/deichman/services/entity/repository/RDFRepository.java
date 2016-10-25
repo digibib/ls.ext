@@ -6,6 +6,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -71,4 +72,6 @@ public interface RDFRepository {
     Model retrieveCorporationAndLinkedResourcesByURI(String uri);
 
     List<String> retrieveRecordIdsByWork(XURI xuri);
+
+    Map getNumberOfRelationsForResource(XURI uri);
 }

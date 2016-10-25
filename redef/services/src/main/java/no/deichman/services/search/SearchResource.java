@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -45,6 +46,17 @@ public class SearchResource extends ResourceBase {
     public SearchResource(SearchService searchService) {
         setSearchService(searchService);
     }
+
+
+    @GET
+    @Path("{type: "+ ALL_TYPES_PATTERN + "}/sorted_list")
+    public final Response sortedList(@PathParam("type") String type,
+                                     @QueryParam("prefix") String prefix,
+                                     @DefaultValue("100") @QueryParam("minSize") int minSize,
+                                     @DefaultValue("name") @QueryParam("field") String field) {
+        return getSearchService().sortedList(type, prefix, minSize, field);
+    }
+
 
     @GET
     @Path("{type: "+ ALL_TYPES_PATTERN + "}/_search")

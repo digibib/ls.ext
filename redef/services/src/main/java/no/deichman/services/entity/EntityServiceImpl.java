@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -58,6 +59,7 @@ public final class EntityServiceImpl implements EntityService {
     private static final String NATIONALITY_TTL_FILE = "nationality.ttl";
     private static final String MEDIATYPE_TTL_FILE = "mediaType.ttl";
     private static final String WORKTYPE_TTL_FILE = "workType.ttl";
+    private static final String ROLE_TTL_FILE = "role.ttl";
     private static final String LITERARYFORM_TTL_FILE = "literaryForm.ttl";
     private static final String CONTENTADAPTATION_TTL_FILE = "contentAdaptation.ttl";
     private static final String FORMATADAPTATION_TTL_FILE = "formatAdaptation.ttl";
@@ -188,6 +190,10 @@ public final class EntityServiceImpl implements EntityService {
         return getLinkedResource(input, "workType", WORKTYPE_TTL_FILE);
     }
 
+    private Model getLinkedRoleResource(Model input) {
+        return getLinkedResource(input, "role", ROLE_TTL_FILE);
+    }
+
     private Model getLinkedResource(Model input, String path, String filename) {
         NodeIterator objects = input.listObjects();
         if (objects.hasNext()) {
@@ -239,6 +245,7 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedContentAdaptationResource(m);
         m = getLinkedFormatAdaptationResource(m);
         m = getLinkedWorkTypeResource(m);
+        m = getLinkedRoleResource(m);
         return m;
     }
 
@@ -579,7 +586,11 @@ public final class EntityServiceImpl implements EntityService {
 
     @Override
     public Model retrieveWorksByCreator(XURI xuri) {
-        return repository.retrieveWorksByCreator(xuri);
+        Model m = ModelFactory.createDefaultModel();
+        m = repository.retrieveWorksByCreator(xuri);
+        m = getLinkedRoleResource(m);
+        m = getLinkedWorkTypeResource(m);
+        return m;
     }
 
     @Override
@@ -598,4 +609,8 @@ public final class EntityServiceImpl implements EntityService {
         return repository.retrieveRecordIdsByWork(xuri);
     }
 
+    @Override
+    public Map<String, Integer> getNumberOfRelationsForResource(XURI uri) {
+        return repository.getNumberOfRelationsForResource(uri);
+    }
 }

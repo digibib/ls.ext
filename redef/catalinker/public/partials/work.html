@@ -1,7 +1,18 @@
-<div class="work-name pure-u-22-24">
-    <span class="pure-u-23-24">{{inPreferredLanguage(mainTitle)}}</span>
-    {{#partTitle}}
-    <span class="pure-u-1-24"/>
-    <span class="part-name pure-u-21-22">{{inPreferredLanguage(partTitle)}}</span>
-    {{/}}
+<div class="work-name pure-g">
+    <span class="pure-u-1-1">
+        {{#mainTitle}}<span class="main-title">{{mainTitle}}</span>{{/}}
+        {{#subtitle}}<span class="sub-title">{{subtitle}}</span>{{/}}
+        {{#partNumber}}<span class="part-number">{{partNumber}}</span>{{/}}
+        {{#partNumber}}<span class="part-title">{{partTitle}}</span>{{/}}
+        {{#workType}}<span class="work-type">({{workType}})</span>{{/}}
+    </span>
+    <span class="pure-u-1-1">
+    {{#if role}}
+        <span class="role-list pure-u-24-24">
+        {{#each role}}
+            <span class="role-name">{{.}}</span>
+        {{/each}}
+        </span>
+    {{/if}}
+    </span>
 </div>

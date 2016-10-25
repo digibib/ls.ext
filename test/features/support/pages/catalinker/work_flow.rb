@@ -76,7 +76,8 @@ class WorkFlow < CatalinkerPage
   end
 
   def get_text_field_from_label(label)
-    @browser.text_field(:xpath => "//*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input")
+    @browser.element(:xpath => "//*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input|
+    //*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//span[@contenteditable]")
   end
 
   def get_checkbox_from_label(label)
@@ -96,6 +97,7 @@ class WorkFlow < CatalinkerPage
   end
 
   def finish
+    wait_for_ui_blocker
     @browser.elements(:text => "Avslutt registrering av utgivelsen").first.click
   end
 end

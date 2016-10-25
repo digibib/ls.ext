@@ -68,7 +68,7 @@
       {
         "deichman:hasClassificationNumber": "225.53982",
         "deichman:hasClassificationSource": {
-          "@id": "http://data.deichman.no/classification#ddk5"
+          "@id": "http://data.deichman.no/classificationSource#ddk5"
         },
         "@id": "_:0000000"
       },

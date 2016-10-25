@@ -2,9 +2,17 @@
   "properties":
   {
     "prefLabel": {
-      "type": "string"
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "name_analyzer"
     },
     "specification": {
+      "type": "String"
+    },
+    "ordinal": {
+      "type": "String"
+    },
+    "date": {
       "type": "String"
     }
   }

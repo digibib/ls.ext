@@ -4,6 +4,7 @@ import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -38,4 +39,6 @@ public interface EntityService {
     Optional<String> retrieveImportedResource(String id, String type);
 
     List<String> retrieveWorkRecordIds(XURI xuri);
+
+    Map<String, Integer> getNumberOfRelationsForResource(XURI uri);
 }

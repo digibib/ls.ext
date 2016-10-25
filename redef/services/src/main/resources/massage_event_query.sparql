@@ -3,7 +3,9 @@ PREFIX  :     <__ONTOLOGY__>
 CONSTRUCT {
   ?eventUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Event ;
             :prefLabel ?label ;
-            :specification ?specification .
+            :specification ?specification ;
+            :ordinal ?ordinal ;
+            :date ?date .
 }
 
 WHERE {
@@ -11,4 +13,6 @@ WHERE {
   ?eventUri a :Event .
   OPTIONAL { ?eventUri :prefLabel ?label }
   OPTIONAL { ?eventUri :specification ?specification }
+  OPTIONAL { ?eventUri :ordinal ?ordinal }
+  OPTIONAL { ?eventUri :date ?date }
 }

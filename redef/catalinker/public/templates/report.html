@@ -1,0 +1,40 @@
+<div class="content"
+     data-automation-id="targetresources-uris"
+     data-work-uri="{{targetUri.Work}}"
+     data-publication-uri="{{targetUri.Publication}}"
+     data-person-uri="{{targetUri.Person}}"
+     decorator="multi:{clickOutsideSupportPanelDetector:[], unload:[]}">
+    <h2 data-automation-id="page-heading">Oversikt over metadata</h2>
+    <h3 class="headline" data-automation-id="headline">
+        {{#each applicationData.headlineParts}}
+        {{#headlinePart(.)}}
+        {{#if value.length > 0}}
+        <span class="{{#if styleClass}}{{styleClass}}{{/if}} {{#if ! postfix}}default-postfix{{/if}}"
+              style="order: {{order || 0}}">{{prefix}}{{value}}{{postfix}}</span>
+        {{/if}}
+        {{/with}}
+        {{/each}}
+    </h3>
+    <div class="report">
+        {{#each inputGroups:groupIndex}}
+        <h2>{{reportLabel || tabLabel}}</h2>
+        <div id="{{tabId}}" class="pure-g">
+            {{#each inputs:inputIndex}}
+            {{#if ./predicate}}
+            {{>readonly-input}}
+            {{#if (type === 'input-boolean') && !(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) &&
+            (checkShouldInclude(.))}}
+            <span class="prop-input boolean-separator pure-u-1-2 {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}">
+                                    <span class="panel-part boolean-separator pure-u-1-1"> </span>
+                                </span>
+            {{/if}}
+            {{/if}}
+            {{/each}}
+        </div>
+        {{/each}}
+    </div>
+</div>
+<div class="footer">
+    <div id="errors">{{#errors}}<p>{{.}}</p>{{/errors}}</div>
+</div>
+

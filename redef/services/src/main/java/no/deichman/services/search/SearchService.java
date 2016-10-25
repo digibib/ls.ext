@@ -45,4 +45,7 @@ public interface SearchService {
 
     void delete(XURI xuri);
 
+    Response sortedList(String type, String prefix, int minSize, String field);
+
+    Response searchWorkWhereUriIsSubject(String subjectUri, int maxSize);
 }

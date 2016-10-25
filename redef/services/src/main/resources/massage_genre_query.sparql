@@ -3,15 +3,19 @@ PREFIX  :     <__ONTOLOGY__>
 CONSTRUCT
   { ?genreUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Genre .
     ?genreUri :prefLabel ?prefLabel .
+    ?genreUri :specification  ?specification .
   }
 WHERE
-  { SELECT DISTINCT  ?genreUri ?prefLabel
+  { SELECT DISTINCT  ?genreUri ?prefLabel ?specification
     WHERE
       { BIND(uri("__GENREURI__") AS ?genreUri)
         ?genreUri a :Genre ;
 
         OPTIONAL
           { ?genreUri  :prefLabel  ?prefLabel
+          }
+        OPTIONAL
+          { ?genreUri  :specification  ?specification
           }
       }
   }

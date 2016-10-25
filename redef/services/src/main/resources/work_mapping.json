@@ -47,11 +47,15 @@
     "mainTitle": {
       "type": "string"
     },
+    "subtitle": {
+      "type": "string"
+    },
     "partTitle": {
       "type": "string"
     },
-    "subtitle": {
-      "type": "string"
+    "partNumber": {
+      "type": "string",
+      "index": "no"
     },
     "uri": {
       "type": "string",

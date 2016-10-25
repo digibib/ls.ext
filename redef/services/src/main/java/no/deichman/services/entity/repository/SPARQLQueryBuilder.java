@@ -70,7 +70,7 @@ public final class SPARQLQueryBuilder {
                 + "  UNION { <__WORKURI__> deichman:subject ?subject }\n"
                 + "  UNION { <__WORKURI__> deichman:genre ?genre }\n"
                 + "  UNION { <__WORKURI__> deichman:literaryForm ?litform }\n"
-                + "  UNION { <__WORKURI__> deichman:workType ?hasWorkType }\n"
+                + "  UNION { <__WORKURI__> deichman:hasWorkType ?hasWorkType }\n"
                 + "  UNION { <__WORKURI__> deichman:hasCompositionType ?compType }\n"
                 + "}";
         queryString = queryString.replaceAll("__WORKURI__", xuri.getUri());
@@ -475,5 +475,16 @@ public final class SPARQLQueryBuilder {
         String query = "PREFIX deichman: <http://data.deichman.no/ontology#>\n"
                 + "CONSTRUCT {<"+ workUri.getUri() +"> deichman:hasPublication ?publication} WHERE {?publication deichman:publicationOf <"+workUri.getUri()+">}";
         return QueryFactory.create(query);
+    }
+
+    public Query getNumberOfRelationsForResource(XURI xuri) {
+        String queryString = String.format("PREFIX deich: <http://data.deichman.no/ontology#>\n"
+                + "SELECT ?type (COUNT(?a) as ?references)\n"
+                + "WHERE {\n"
+                + "  ?a ?b <%s> ;\n"
+                + "     a ?type .\n"
+                + "}\n"
+                + "GROUP BY ?type ", xuri.getUri());
+        return QueryFactory.create(queryString);
     }
 }

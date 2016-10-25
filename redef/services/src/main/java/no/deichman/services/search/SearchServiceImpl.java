@@ -1,5 +1,7 @@
 package no.deichman.services.search;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.BaseURI;
@@ -40,7 +42,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static com.google.common.collect.ImmutableMap.of;
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -62,6 +66,7 @@ public class SearchServiceImpl implements SearchService {
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
     private ModelToIndexMapper corporationModelToIndexMapper = new ModelToIndexMapper("corporation");
     private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -274,6 +279,38 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    @Override
+    public final Response sortedList(String type, String prefix, int minSize, String field) {
+        List<Map> musts = new ArrayList<>();
+        for (int i = 0; i < prefix.length(); i++) {
+            musts.add(of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))));
+        }
+        String body = GSON.toJson(of(
+                "size", minSize,
+                "query", of(
+                        "bool", of(
+                                "should", musts)
+                )
+        ));
+        return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search"));
+    }
+
+    @Override
+    public final Response searchWorkWhereUriIsSubject(String subjectUri, int maxSize) {
+        String body = GSON.toJson(of(
+                "size", maxSize,
+                "query", of(
+                        "nested", of(
+                                "path", "subjects",
+                                "query", of("term", of(
+                                        "subjects.uri", subjectUri)
+                                )
+                        )
+                )
+        ));
+        return searchWithJson(body, getIndexUriBuilder().setPath("/search/work/_search"));
+    }
+
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
         Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
@@ -325,7 +362,7 @@ public class SearchServiceImpl implements SearchService {
             ResIterator subjectIterator = works.listSubjects();
             while (subjectIterator.hasNext()) {
                 Resource subj = subjectIterator.next();
-                if (subj.isAnon()) {
+                if (subj.isAnon() || subj.toString().indexOf('#') != -1) {
                     continue;
                 }
                 XURI workUri = new XURI(subj.toString());
@@ -453,5 +490,6 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private URIBuilder getEventSearchUriBuilder() {
-        return getIndexUriBuilder().setPath("/search/event/_search");    }
+        return getIndexUriBuilder().setPath("/search/event/_search");
+    }
 }

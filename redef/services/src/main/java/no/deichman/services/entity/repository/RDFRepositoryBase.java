@@ -11,8 +11,10 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -30,7 +32,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -59,7 +63,18 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         log.debug("Attempting to retrieve resource <" + xuri.getUri() +">");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(xuri.getUri()))) {
             disableCompression(qexec);
-            return qexec.execDescribe();
+            return qexec.execDescribe().query(new SimpleSelector(){
+                @Override
+                public boolean test(Statement s) {
+                    switch (s.getPredicate().getNameSpace()) {
+                        case "http://migration.deichman.no/":
+                        case "http://data.deichman.no/raw#":
+                            return false;
+                        default:
+                            return true;
+                    }
+                }
+            });
         }
     }
 
@@ -329,6 +344,23 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             );
         }
         return recordIDs;
+    }
+
+    @Override
+    public final Map<String, Integer> getNumberOfRelationsForResource(XURI uri) {
+        Map result = new HashMap();
+        try (QueryExecution qexec = getQueryExecution(sqb.getNumberOfRelationsForResource(uri))) {
+            disableCompression(qexec);
+            qexec.execSelect().forEachRemaining(
+                    solution -> {
+                        RDFNode type = solution.get("type");
+                        if (type != null) {
+                            result.put(type.toString(), solution.get("references").<Integer>asLiteral().getValue());
+                        }
+                    }
+            );
+        }
+        return result;
     }
 
     private void disableCompression(QueryExecution qexec) {

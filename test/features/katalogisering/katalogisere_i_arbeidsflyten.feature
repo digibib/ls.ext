@@ -42,6 +42,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
+    Og jeg venter litt
     Så sjekker jeg at utgivelsen er nummer "12" i serien
     Og at jeg skriver inn utgiver i feltet "Utgitt av" og trykker enter
     Så velger jeg en organisasjon fra treffliste fra organisasjonsregisteret
@@ -128,8 +129,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Så klikker jeg på fanen "Beskriv verk"
     Så trykker jeg på "Slett verket"-knappen
     Så trykker jeg på "Slett"-knappen i dialogen
+    Og jeg venter litt
     Så trykker jeg på "Ok"-knappen i dialogen
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og jeg venter litt
     Og jeg skriver verdien på verkshovedtittel i feltet som heter "Verk" og trykker enter
     Så får jeg ingen treff
 
@@ -157,7 +160,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så jeg skriver verdien på tittelnummer i feltet som heter "Utgivelser" og trykker enter
     Og jeg venter litt
-    Så velger jeg en utgivelse fra treffliste fra utgivelsesregisteret
+    Så velger jeg en utgivelse fra treffliste fra utgivelsesindeksen
     Og jeg venter litt
     Og jeg venter litt
     Så trykker jeg på "Slett utgivelsen"-knappen
@@ -264,18 +267,23 @@ Egenskap: Katalogisere i arbeidsflyt
   Scenario: Redigere emne i katalogisering
     Gitt at jeg vil opprette et emne
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Så at jeg vil skru av ui-blokkering
     Og at jeg skriver inn tilfeldig emne i feltet "Emner" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt generelt emne"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
+    Så klikker jeg utenfor sprettopp-skjemaet
     Og jeg venter litt
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
     Så velger jeg et emne fra treffliste fra emneregisteret
     Så jeg skriver verdien "Beskrivelse" for "Forklarende tilføyelse"
-    Så klikker jeg utenfor sprettopp-skjemaet
+    Så trykker jeg på "Ferdig"-knappen
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og jeg venter litt
     Så skriver jeg inn samme tilfeldige emne i feltet "Emner" og trykker enter
+    Og jeg venter litt
     Så velger jeg et emne fra treffliste fra emneregisteret
     Og jeg venter litt
     Så sjekker jeg at verdien for "Forklarende tilføyelse" nå er "Beskrivelse"
@@ -338,6 +346,7 @@ Egenskap: Katalogisere i arbeidsflyt
   Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
     Gitt at det finnes et verk med forfatter
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Og jeg venter litt
     Så ser jeg at det står forfatter med navn og levetid i resultatlisten
 
   @wip

@@ -3,15 +3,23 @@ PREFIX  :     <__ONTOLOGY__>
 CONSTRUCT
   { ?corporationUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Corporation .
     ?corporationUri :name ?name .
+    ?corporationUri :subdivision ?subdivision .
+    ?corporationUri :specification ?specification .
   }
 WHERE
-  { SELECT DISTINCT  ?corporationUri ?name
+  { SELECT DISTINCT  ?corporationUri ?name ?subdivision ?specification
     WHERE
       { BIND(uri("__CORPORATIONURI__") AS ?corporationUri)
         ?corporationUri  a                   :Corporation ;
 
         OPTIONAL
           { ?corporationUri  :name  ?name
+          }
+        OPTIONAL
+          { ?corporationUri  :subdivision  ?subdivision
+          }
+        OPTIONAL
+          { ?corporationUri  :specification  ?specification
           }
       }
   }

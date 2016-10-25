@@ -41,6 +41,7 @@ module.exports = (app) => {
       inputForms: [
         {
           id: 'create-person-form',
+          prefillFromAcceptedSource: true,
           rdfType: 'Person',
           labelForCreateButton: 'Opprett ny person',
           inputs: [
@@ -82,6 +83,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-subject-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett nytt generelt emne',
           rdfType: 'Subject',
           inputs: [
@@ -101,6 +103,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-genre-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny sjanger',
           rdfType: 'Genre',
           inputs: [
@@ -120,6 +123,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-corporation-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny organisasjon',
           rdfType: 'Corporation',
           inputs: [
@@ -151,6 +155,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-main-work-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett nytt verk',
           rdfType: 'Work',
           inputs: [
@@ -163,8 +168,18 @@ module.exports = (app) => {
             },
             {
               label: 'Undertittel',
-              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              type: 'input-string',
               rdfProperty: 'subtitle'
+            },
+            {
+              label: 'Deltittel',
+              type: 'input-string',
+              rdfProperty: 'partTitle'
+            },
+            {
+              label: 'Delnummer',
+              type: 'input-string',
+              rdfProperty: 'partNumber'
             },
             {
               rdfProperty: 'hasWorkType',
@@ -194,12 +209,23 @@ module.exports = (app) => {
               rdfProperty: 'subtitle'
             },
             {
+              label: 'Deltittel',
+              type: 'input-string',
+              rdfProperty: 'partTitle'
+            },
+            {
+              label: 'Delnummer',
+              type: 'input-string',
+              rdfProperty: 'partNumber'
+            },
+            {
               rdfProperty: 'hasWorkType'
             }
           ]
         },
         {
           id: 'create-place-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett nytt sted',
           rdfType: 'Place',
           inputs: [
@@ -220,6 +246,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-event-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny hendelse',
           rdfType: 'Event',
           inputs: [
@@ -256,6 +283,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-serial-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny serie',
           rdfType: 'Serial',
           inputs: [
@@ -276,12 +304,14 @@ module.exports = (app) => {
               rdfProperty: 'publishedBy',
               type: 'searchable-authority-dropdown',
               indexTypes: 'corporation',
-              indexDocumentFields: [ 'name' ]
+              nameProperties: [ 'name', 'subdivision', '(specification)' ],
+              indexDocumentFields: [ 'name', 'subdivision', 'specification' ]
             }
           ]
         },
         {
           id: 'create-instrument-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett nytt musikkinstrument',
           rdfType: 'Instrument',
           inputs: [
@@ -300,6 +330,7 @@ module.exports = (app) => {
         },
         {
           id: 'create-compositiontype-form',
+          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny komposisjonstype',
           rdfType: 'CompositionType',
           inputs: [
@@ -374,6 +405,9 @@ module.exports = (app) => {
             {
               label: 'Hovedansvarlig',
               id: 'mainEntryInput',
+              reportFormat: {
+                list: true
+              },
               showOnlyWhen: {
                 inputId: 'missingMainEntry',
                 valueAsStringMatches: '^false$'
@@ -387,6 +421,9 @@ module.exports = (app) => {
                     rdfProperty: 'agent',
                     indexTypes: [ 'person', 'corporation' ],
                     type: 'searchable-with-result-in-side-panel',
+                    required: true,
+                    nameProperties: [ 'name', 'ordinal', 'subdivision', '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
+                    previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     dependentResourceTypes: [ 'Work', 'Publication' ], // when the creator is changed, unload current work and publication
                     id: 'mainEntryPersonInput',
                     widgetOptions: {
@@ -484,6 +521,7 @@ module.exports = (app) => {
           id: 'describe-publication',
           rdfType: 'Publication',
           label: 'Beskriv utgivelse',
+          reportLabel: 'Utgivelse',
           showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             {
@@ -526,7 +564,7 @@ module.exports = (app) => {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] },
               rdfProperty: 'numberOfPages'
             },
-            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter' },
+            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter', multiple: true },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
               rdfProperty: 'isbn',
@@ -550,14 +588,13 @@ module.exports = (app) => {
             },
             {
               includeOnlyWhen: {
-                hasMediaType: 'Film'
+                hasMediaType: [ 'Film', 'Game' ]
               },
               rdfProperty: 'hasSubtitles',
               multiple: 'true'
             }
             ,
             { rdfProperty: 'format', multiple: true },
-            { rdfProperty: 'hasMediaType' },
             {
               includeOnlyWhen: {
                 hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Audiobook', 'LanguageCourse' ]
@@ -632,6 +669,9 @@ module.exports = (app) => {
               multiple: true,
               addAnotherLabel: 'Legg til ny serie',
               subjects: [ 'Publication' ],
+              reportFormat: {
+                list: true
+              },
               subInputs: {
                 rdfProperty: 'inSerial',
                 range: 'SerialIssue',
@@ -705,7 +745,7 @@ module.exports = (app) => {
           },
           deleteResource: {
             buttonLabel: 'Slett utgivelsen',
-            resourceType: 'Publication',
+            rdfType: 'Publication',
             dialogKeypath: 'deletePublicationDialog',
             dialogId: 'delete-publication-dialog',
             dialogTemplateValues: {
@@ -727,6 +767,7 @@ module.exports = (app) => {
           id: 'describe-work',
           rdfType: 'Work',
           label: 'Beskriv verk',
+          reportLabel: 'Verk',
           inputs: [
             {
               id: 'workMainTitle',
@@ -765,6 +806,9 @@ module.exports = (app) => {
               label: 'Relasjon til annet verk',
               multiple: true,
               addAnotherLabel: 'Legg til en relasjon til',
+              reportFormat: {
+                list: true
+              },
               subInputs: {
                 rdfProperty: 'isRelatedTo',
                 range: 'WorkRelation',
@@ -829,7 +873,7 @@ module.exports = (app) => {
           },
           deleteResource: {
             buttonLabel: 'Slett verket',
-            resourceType: 'Work',
+            rdfType: 'Work',
             dialogKeypath: 'deleteWorkDialog',
             dialogId: 'delete-work-dialog',
             dialogTemplateValues: {
@@ -845,9 +889,10 @@ module.exports = (app) => {
           id: 'subjects',
           rdfType: 'Work',
           label: 'Emneopplysninger',
+          reportLabel: 'Emner',
           inputs: [
             {
-              includeOnlyWhen: { hasWorkType: 'Music' },
+              includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
               rdfProperty: 'hasCompositionType',
               multiple: true,
               addAnotherLabel: 'Legg til en komposisjonstype til',
@@ -873,7 +918,7 @@ module.exports = (app) => {
               multiple: true
             },
             {
-              includeOnlyWhen: { hasWorkType: 'Music' },
+              includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
               label: 'Besetning',
               multiple: true,
               addAnotherLabel: 'Legg til et instrument til',
@@ -916,10 +961,14 @@ module.exports = (app) => {
               multiple: true,
               addAnotherLabel: 'Legg til et emne til',
               type: 'searchable-with-result-in-side-panel',
+              reportFormat: {
+                separateLines: true
+              },
               loadWorksAsSubjectOfItem: true,
               authority: true, // this indicates it is an authorized entity
-              nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name' ], // these are property names used to label already connected entities
-              indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ], // this is the name of the elasticsearch index type from which authorities are searched within
+              nameProperties: [ 'prefLabel', 'mainTitle', 'subtitle', 'name', 'ordinal', '(birthYear-', 'deathYear)', 'nationality.fragment.', '(specification)' ],
+              previewProperties: [ '(birthYear-', 'deathYear)', 'nationality.fragment.', '(specification)' ],
+              indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ],
               widgetOptions: {
                 selectIndexTypeLegend: 'Velg emnetype',
                 enableCreateNewResource: {
@@ -964,6 +1013,10 @@ module.exports = (app) => {
               label: 'Klassifikasjon',
               multiple: true,
               addAnotherLabel: 'Legg til en klassifikasjon til',
+              subjects: [ 'Work' ],
+              reportFormat: {
+                list: true
+              },
               subInputs: {
                 rdfProperty: 'hasClassification',
                 range: 'ClassificationEntry',
@@ -988,9 +1041,9 @@ module.exports = (app) => {
               addAnotherLabel: 'Legg til en sjanger til',
               type: 'searchable-with-result-in-side-panel',
               authority: true,
-              nameProperties: [ 'prefLabel' ],
+              nameProperties: [ 'prefLabel', '(specification)' ],
               indexTypes: [ 'genre' ],
-              indexDocumentFields: [ 'prefLabel' ],
+              indexDocumentFields: [ 'prefLabel', 'specification' ],
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [ {
@@ -1010,11 +1063,15 @@ module.exports = (app) => {
           id: 'collection-of-works',
           rdfType: 'Publication',
           label: 'Beskriv deler',
+          reportLabel: 'Deler',
           showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             {
               label: 'Verk som inngår i samling',
               multiple: true,
+              reportFormat: {
+                topLevel: true
+              },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'hasPublicationPart', // the rdf property of the resource
                 range: 'PublicationPart', // this is the shorthand name of the type of the blank node
@@ -1025,6 +1082,7 @@ module.exports = (app) => {
                     label: 'Aktør',
                     rdfProperty: 'agent',
                     indexTypes: [ 'person', 'corporation' ],
+                    previewProperties: [ '(birthYear-', 'deathYear)', 'place', 'subdivision', 'nationality.fragment.' ],
                     type: 'searchable-with-result-in-side-panel',
                     id: 'publicationPartActorInput',
                     widgetOptions: {
@@ -1057,7 +1115,7 @@ module.exports = (app) => {
                     id: 'publicationPartWorkInput',
                     rdfProperty: 'publicationOf',
                     type: 'searchable-with-result-in-side-panel',
-                    nameProperties: [ 'mainTitle', 'subtitle' ], // these are property names used to label already connected entities
+                    nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
                     indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
                     indexDocumentFields: [ 'mainTitle' ],
                     widgetOptions: {
@@ -1081,6 +1139,7 @@ module.exports = (app) => {
                     rdfProperty: 'startsAtPage',
                     widgetOptions: {
                       isRangeStart: true,
+                      reportLabel: 'Sidetall fra'
                     }
                   },
                   {
@@ -1088,6 +1147,7 @@ module.exports = (app) => {
                     rdfProperty: 'endsAtPage',
                     widgetOptions: {
                       isRangeEnd: true,
+                      reportLabel: 'Sidetall til'
                     }
                   },
                   {
@@ -1115,6 +1175,9 @@ module.exports = (app) => {
               label: 'Biinnførsel',
               multiple: true, // can have many of these
               addAnotherLabel: 'Legg til ny biinnførsel',
+              reportFormat: {
+                list: true
+              },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'contributor', // the rdf property of the resource
                 range: 'Contribution', // this is the shorthand name of the type of the blank node
@@ -1125,6 +1188,8 @@ module.exports = (app) => {
                     rdfProperty: 'agent',
                     id: 'contributionAgentInput',
                     indexTypes: [ 'person', 'corporation' ],
+                    nameProperties: [ 'prefLabel', 'name', 'ordinal', 'subdivision', '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
+                    previewProperties: [ '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
                     type: 'searchable-with-result-in-side-panel',
                     widgetOptions: {
                       showSelectItem: false, // show and enable select work radio button
@@ -1182,7 +1247,10 @@ module.exports = (app) => {
                 indexType: 'publication'
               },
               widgetOptions: {
-                editWithTemplate: "workflow"
+                editWithTemplate: {
+                  template: "workflow",
+                  descriptionKey: 'maintPub'
+                }
               }
             },
             {
@@ -1191,7 +1259,10 @@ module.exports = (app) => {
                 indexType: 'workUnstructured'
               },
               widgetOptions: {
-                editWithTemplate: "workflow",
+                editWithTemplate: {
+                  template: "workflow",
+                  descriptionKey: 'maintWork'
+                },
                 editSubItemWithTemplate: "workflow"
               }
             }
@@ -1201,24 +1272,18 @@ module.exports = (app) => {
       search: {
         person: {
           type: 'person',
+          sortedListQueryForField: "name",
           selectIndexLabel: 'Person',
-          queryTerms: [ {
-            field: 'name',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'name' ],
+          resultItemLabelProperties: [ 'name', 'ordinal', 'specification' ],
           resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
           itemHandler: 'personItemHandler',
           subItemsExpandTooltip: 'Vis/skjul verk'
         },
         subject: {
           type: 'subject',
+          sortedListQueryForField: "prefLabel",
           selectIndexLabel: 'Generelt',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel' ]
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
         work: {
           type: 'work',
@@ -1228,7 +1293,7 @@ module.exports = (app) => {
             field: 'mainTitle',
             wildcard: true
           } ],
-          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
+          resultItemLabelProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler'
         },
@@ -1241,7 +1306,7 @@ module.exports = (app) => {
             { field: 'publicationYear' }
           ],
           legend: 'Søk etter tittel og/eller utgivelsesår',
-          resultItemLabelProperties: [ 'mainTitle', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
+          resultItemLabelProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear', 'inParens:workTypeLabel' ],
           resultItemDetailsLabelProperties: [ 'creator' ],
           itemHandler: 'workItemHandler',
           subItemsExpandTooltip: 'Vis/skjul utgivelser'
@@ -1249,47 +1314,34 @@ module.exports = (app) => {
         genre: {
           type: 'genre',
           selectIndexLabel: 'Sjanger',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel' ]
+          sortedListQueryForField: "prefLabel",
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
         corporation: {
           type: 'corporation',
           selectIndexLabel: 'Organisasjon',
-          queryTerms: [ {
-            field: 'name',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'name' ]
+          sortedListQueryForField: "name",
+          resultItemLabelProperties: [ 'name', 'subdivision' ],
+          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
         },
         place: {
           type: 'place',
           selectIndexLabel: 'Sted',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          sortedListQueryForField: "prefLabel",
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
         event: {
           type: 'event',
           selectIndexLabel: 'Hendelse',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          sortedListQueryForField: "prefLabel",
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:ordinal', 'date' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         },
         serial: {
           type: 'serial',
           selectIndexLabel: 'Serie',
-          queryTerms: [ {
-            field: 'mainTitle',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'mainTitle' ]
+          sortedListQueryForField: "serialMainTitle",
+          resultItemLabelProperties: [ 'serialMainTitle', 'inParens:subtitle' ]
         },
         publication: {
           type: 'publication',
@@ -1307,20 +1359,14 @@ module.exports = (app) => {
         instrument: {
           type: 'instrument',
           selectIndexLabel: 'Instrument',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          sortedListQueryForField: 'prefLabel',
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         },
-        compositionType: {
+        compositiontype: {
           type: 'compositionType',
           selectIndexLabel: 'Komposisjonstype',
-          queryTerms: [ {
-            field: 'prefLabel',
-            wildcard: true
-          } ],
-          resultItemLabelProperties: [ 'prefLabel', 'specification' ]
+          sortedListQueryForField: 'prefLabel',
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
         }
       },
       typeMap: {
@@ -1392,7 +1438,20 @@ module.exports = (app) => {
           predicate: 'publicationOf',
           enableCreateNewResource: true
         }
-      ]
+      ],
+      taskDescriptions: {
+        filmPub: 'Katalogisering av filmutgivelse',
+        comicPub: 'Katalogisering av tegneserieutgivelse',
+        aBookPub: 'Katalogisering av lydbokutgivelse',
+        eBookPub: 'Katalogisering av e-bokutgivelse',
+        bookPub: 'Katalogisering av bokutgivelse',
+        langCourse: 'Katalogisering av språkkurs',
+        gamePub: 'Katalogisering av spill',
+        sheetMusPub: 'Katalogisering av musikknoter',
+        musRecPub: 'Katalogisering av musikkopptak',
+        maintWork: 'Vedlikeholde verk',
+        maintPub: 'Vedlikeholde utgivelse'
+      }
     }
     response.json(config)
   })

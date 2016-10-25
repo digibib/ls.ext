@@ -3,6 +3,8 @@
   "@context": {
     "specification": "deichman:specification",
     "prefLabel": "deichman:prefLabel",
+    "ordinal": "deichman:ordinal",
+    "date": "deichman:date",
     "Event": "deichman:Event",
     "deichman": "__ONTOLOGY__",
     "type": "@type",

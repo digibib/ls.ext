@@ -1,7 +1,9 @@
 {
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "index": "analyzed",
+      "analyzer": "name_analyzer"
     },
     "birthYear": {
       "type": "string"
@@ -10,6 +12,9 @@
       "type": "string"
     },
     "nationality": {
+      "type": "string"
+    },
+    "specification": {
       "type": "string"
     },
     "uri": {
@@ -24,13 +29,24 @@
           "index": "no"
         },
         "mainTitle": {
-          "type": "string"
+          "type": "string",
+          "index": "no"
         },
         "partTitle": {
-          "type": "string"
+          "type": "string",
+          "index": "no"
+        },
+        "partNumber": {
+          "type": "string",
+          "index": "no"
+        },
+        "workType": {
+          "type": "string",
+          "index": "no"
         },
         "publicationYear": {
-          "type": "string"
+          "type": "string",
+          "index": "no"
         }
       }
     }
