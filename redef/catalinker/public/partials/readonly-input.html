@@ -1,4 +1,4 @@
-{{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
+{{#if (!resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
 <span class="pure-u-1-1" intro='slideIn'>
     <span class="pure-g">
         {{#if ! reportFormat.topLevel}}
@@ -16,7 +16,7 @@
                         <span class="{{#if reportFormat.topLevel}}compound{{/if}}">
                         {{#if ./nonEditable}}
                                     {{#if reportFormat.list}}
-                                        <span class="pure-u-1-1">
+                                        <span class="pure-u-1-1 value-list">
                                             {{#each ../../../../../subInputs}}
                                                         {{#with input.values[inputValueIndex]}}
                                                             <span class="list-value">

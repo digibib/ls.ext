@@ -916,17 +916,20 @@ body {
         content: ":";
       }
     }
-    .value.separate-lines {
-      display: block;
-    }
-    .list-value:not(:last-child):after {
-      content: " - ";
-    }
-    .predefined-value:not(:last-child):after {
-      content: ", ";
-    }
-    .subject-type-association:before {
-      content: " knyttet til ";
+    .value-list {
+      margin-bottom: 5px;
+      .value.separate-lines {
+        display: block;
+      }
+      .list-value:not(:last-child):after {
+        content: " - ";
+      }
+      .predefined-value:not(:last-child):after {
+        content: ", ";
+      }
+      .subject-type-association:before {
+        content: " knyttet til ";
+      }
     }
   }
   .footer {
