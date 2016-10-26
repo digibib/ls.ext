@@ -381,7 +381,7 @@ public class MARCMapper {
                         Work followingWork = new Work(newBlankNodeId(), title);
                         graphList.add(followingWork);
                         WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(),
-                                dataPrefix(path("relationType", tag.equals("780") ? "continuedIn" : "continuationOf")));
+                                dataPrefix(path("relationType", tag.equals("780") ? "continuationOf" : "continuedIn")));
                         graphList.add(relationToFollowing);
                         work.isRelatedTo(relationToFollowing);
                     });

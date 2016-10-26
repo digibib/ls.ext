@@ -536,7 +536,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#continuedIn"
+          "@id": "http://data.deichman.no/relationType#continuationOf"
         },
         "@id": "_:0000000",
         "deichman:work": {
@@ -553,7 +553,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#continuationOf"
+          "@id": "http://data.deichman.no/relationType#continuedIn"
         },
         "@id": "_:0000000",
         "deichman:work": {
