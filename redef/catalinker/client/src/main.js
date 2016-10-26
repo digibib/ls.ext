@@ -2723,15 +2723,15 @@
                 }
                 ractive.set(origin + '.searchResult.hidden', true)
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
-                  let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
-                  if (suggestedValuesGraphNode) {
-                    updateInputsForResource({ data: {} }, null, {
-                      keepDocumentUrl: true,
-                      source: event.context.source,
-                      inputs: event.context.inputs,
-                      deferUpdate: true,
-                      overrideMainEntry: true
-                    }, suggestedValuesGraphNode, event.context.rdfType)
+                let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
+                if (suggestedValuesGraphNode) {
+                  updateInputsForResource({ data: {} }, null, {
+                    keepDocumentUrl: true,
+                    source: event.context.source,
+                    inputs: event.context.inputs,
+                    deferUpdate: true,
+                    overrideMainEntry: true
+                  }, suggestedValuesGraphNode, event.context.rdfType)
                 }
                 var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
                 if (searchTerm) {
@@ -3384,6 +3384,7 @@
             })
           }
 
+         // workaround for <div> being inserted into search field when selecting exact match result item with enter key
           $(document).on("DOMNodeInserted", $.proxy(function (e) {
             if (e.target.parentNode.getAttribute("contenteditable") === "true") {
               var newTextNode = document.createTextNode("");
@@ -3393,15 +3394,15 @@
                 }
                 else if (node.nodeType == 1 && node.childNodes) {
                   for (var i = 0; i < node.childNodes.length; ++i) {
-                    antiChrome(node.childNodes[i]);
+                    antiChrome(node.childNodes[ i ]);
                   }
                 }
               }
               antiChrome(e.target);
-
               e.target.parentNode.replaceChild(newTextNode, e.target);
             }
-          }, this));          return applicationData
+          }, this));
+          return applicationData
         }
 
         let etags = {}
