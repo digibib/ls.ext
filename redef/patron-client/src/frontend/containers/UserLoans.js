@@ -120,10 +120,10 @@ class UserLoans extends React.Component {
                 </div>
                 <div className="meta-item">
                   <div className="meta-label">
-                    <FormattedMessage {...messages.waitingPeriod} />
+                    <FormattedMessage {...messages.placeInQueue} />
                   </div>
-                  <div className="meta-content" data-automation-id="UserLoans_reservation_waitingPeriod">
-                    {item.waitingPeriod}
+                  <div className="meta-content" data-automation-id="Userloans_reservation_queue_place">
+                    {item.queuePlace}
                   </div>
                 </div>
                 <div className="meta-item">
