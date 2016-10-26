@@ -29,7 +29,7 @@
             }
           ],
           "deichman:biography": {
-            "@id": "http://data.deichman.no/biography#biographicalInformation"
+            "@id": "http://data.deichman.no/biography#biographicalContent"
           },
           "deichman:hasClassification": [
             {

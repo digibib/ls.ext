@@ -12,11 +12,10 @@ public final class Biography {
     }
 
     private static final Map<String, String> FORMAT_MAP = ImmutableMap.<String, String>builder()
-            .put("1", "biographicalContent")
             .put("a", "autobiography")
             .put("b", "singleBiograpy")
             .put("c", "collectiveBiography")
-            .put("d", "biographicalInformation")
+            .put("d", "biographicalContent")
             .build();
 
     public static String translate(String formatCode) {
