@@ -210,7 +210,6 @@ services:
       - backend
     depends_on:
       - fuseki
-      - koha
     environment:
       KOHA_API_USER: "${KOHA_API_USER}"
       KOHA_API_PASS: "${KOHA_API_PASS}"
