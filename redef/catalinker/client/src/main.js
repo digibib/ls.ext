@@ -3374,7 +3374,7 @@
           return applicationData
         }
 
-        let workaroundContentEditableBug = function (applicationData) {
+        let workaroundContentEditableBugs = function (applicationData) {
           // WebKit contentEditable focus bug workaround:
           if (/AppleWebKit\/([\d.]+)/.exec(navigator.userAgent)) {
             var editableFix = $('<input style="width:1px;height:1px;border:none;margin:0;padding:0;" tabIndex="-1">').appendTo('html')
@@ -3383,7 +3383,25 @@
               editableFix.blur()
             })
           }
-          return applicationData
+
+          $(document).on("DOMNodeInserted", $.proxy(function (e) {
+            if (e.target.parentNode.getAttribute("contenteditable") === "true") {
+              var newTextNode = document.createTextNode("");
+              let antiChrome = function (node) {
+                if (node.nodeType == 3) {
+                  newTextNode.nodeValue += node.nodeValue.replace(/(\r\n|\n|\r)/gm, "")
+                }
+                else if (node.nodeType == 1 && node.childNodes) {
+                  for (var i = 0; i < node.childNodes.length; ++i) {
+                    antiChrome(node.childNodes[i]);
+                  }
+                }
+              }
+              antiChrome(e.target);
+
+              e.target.parentNode.replaceChild(newTextNode, e.target);
+            }
+          }, this));          return applicationData
         }
 
         let etags = {}
@@ -3449,7 +3467,7 @@
           .then(initTitle)
           .then(initValuesFromQuery)
           .then(unblockUI)
-          .then(workaroundContentEditableBug)
+          .then(workaroundContentEditableBugs)
           .then(setDisplayMode)
           .then(function (applicationData) {
             setTaskDescription(options.task)
