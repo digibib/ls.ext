@@ -74,6 +74,7 @@ export default {
   'Navigation.logIn': 'Logg inn',
   'Navigation.logout': 'Logg ut',
   'Navigation.register': 'Registrer deg',
+  'Navigation.faq': 'Ofte stilte spørsmål',
   'OriginalLanguage.labelOriginalLanguage': 'Originalspråk',
   'OriginalTitle.labelOriginalTitle': 'Originaltittel',
   'Person.nationality': 'Nasjonalitet:',

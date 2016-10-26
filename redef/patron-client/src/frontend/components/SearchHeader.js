@@ -87,12 +87,24 @@ class SearchHeader extends React.Component {
     }
   }
 
+  faqLink () {
+    return (
+      <li>
+        <a href="https://www.deichman.no/sp%C3%B8rsm%C3%A5l_og_svar_nytt_biblioteksystem">
+          <FormattedMessage {...messages.faq} />
+          <span>&raquo;</span>
+        </a>
+      </li>
+    )
+  }
+
   /**
    * Renders the menu, and/or the mobile menu
    */
   renderNavigationLinks () {
     return (
       <ul>
+        {this.faqLink()}
         {this.profileLink()}
         {this.registrationLink()}
         {this.loginLink()}
@@ -104,6 +116,7 @@ class SearchHeader extends React.Component {
   renderMobileNavigationLinks () {
     return (
       <ul>
+        {this.faqLink()}
         {this.profileLink()}
         {this.registrationLink()}
         {this.loginLink()}
@@ -258,6 +271,11 @@ export const messages = defineMessages({
     id: 'Navigation.register',
     description: 'Register link in main menu',
     defaultMessage: 'Register'
+  },
+  faq: {
+    id: 'Navigation.faq',
+    description: 'Faq link in main menu',
+    defaultMessage: 'FAQ'
   }
 })
 
