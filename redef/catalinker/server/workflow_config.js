@@ -41,7 +41,6 @@ module.exports = (app) => {
       inputForms: [
         {
           id: 'create-person-form',
-          prefillFromAcceptedSource: true,
           rdfType: 'Person',
           labelForCreateButton: 'Opprett ny person',
           inputs: [
@@ -83,7 +82,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-subject-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett nytt generelt emne',
           rdfType: 'Subject',
           inputs: [
@@ -103,7 +101,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-genre-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny sjanger',
           rdfType: 'Genre',
           inputs: [
@@ -123,7 +120,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-corporation-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny organisasjon',
           rdfType: 'Corporation',
           inputs: [
@@ -225,7 +221,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-place-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett nytt sted',
           rdfType: 'Place',
           inputs: [
@@ -246,7 +241,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-event-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny hendelse',
           rdfType: 'Event',
           inputs: [
@@ -283,7 +277,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-serial-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny serie',
           rdfType: 'Serial',
           inputs: [
@@ -311,7 +304,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-instrument-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett nytt musikkinstrument',
           rdfType: 'Instrument',
           inputs: [
@@ -330,7 +322,6 @@ module.exports = (app) => {
         },
         {
           id: 'create-compositiontype-form',
-          prefillFromAcceptedSource: true,
           labelForCreateButton: 'Opprett ny komposisjonstype',
           rdfType: 'CompositionType',
           inputs: [
