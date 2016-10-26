@@ -406,7 +406,9 @@
         "@embed": "@never"
       }
     },
-    "deichman:role": {}
+    "deichman:role": {
+      "@embed": "@never"
+    }
   },
   "isRelatedTo": {}
 }
