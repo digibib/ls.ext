@@ -13,6 +13,10 @@ illustrativeMatter:kart a duo:IllustrativeMatter ;
   duo:code "kart" ;
   rdfs:label "Kart"@no ;
   rdfs:label "Map"@en .
+illustrativeMatter:noter a duo:IllustrativeMatter ;
+  duo:code "mus" ;
+  rdfs:label "Noter"@no ;
+  rdfs:label "Musical score"@en .
 illustrativeMatter:portrett a duo:IllustrativeMatter ;
   duo:code "port." ;
   rdfs:label "Portrett"@no ;
