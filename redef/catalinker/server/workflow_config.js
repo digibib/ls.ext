@@ -817,7 +817,7 @@ module.exports = (app) => {
                     required: true,
                     indexTypes: [ 'work' ],
                     type: 'searchable-with-result-in-side-panel',
-                    nameProperties: [ 'mainTitle' ],
+                    nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
                     widgetOptions: {
                       enableCreateNewResource: {
                         formRefs: [
