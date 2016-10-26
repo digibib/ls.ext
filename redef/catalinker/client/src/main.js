@@ -3334,15 +3334,14 @@
         let initValuesFromQuery = function (applicationData) {
           var ractiveNeedsUpdate
           _.each(allInputs(), function (input) {
-            if (input.type === 'hidden-url-query-value' &&
-              input.widgetOptions && input.widgetOptions.queryParameter &&
+            if (input.widgetOptions && input.widgetOptions.queryParameter &&
               ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])) {
               let queryValue = (input.widgetOptions.prefix || '') + ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])
               if (queryValue) {
                 ractiveNeedsUpdate = true
                 input.values = [ {
                   current: {
-                    value: queryValue
+                    value: [ queryValue ]
                   },
                   old: {
                     value: undefined
@@ -3384,24 +3383,23 @@
             })
           }
 
-         // workaround for <div> being inserted into search field when selecting exact match result item with enter key
-          $(document).on("DOMNodeInserted", $.proxy(function (e) {
-            if (e.target.parentNode.getAttribute("contenteditable") === "true") {
-              var newTextNode = document.createTextNode("");
+          // workaround for <div> being inserted into search field when selecting exact match result item with enter key
+          $(document).on('DOMNodeInserted', $.proxy(function (e) {
+            if (e.target.parentNode.getAttribute('contenteditable') === 'true') {
+              var newTextNode = document.createTextNode('')
               let antiChrome = function (node) {
-                if (node.nodeType == 3) {
-                  newTextNode.nodeValue += node.nodeValue.replace(/(\r\n|\n|\r)/gm, "")
-                }
-                else if (node.nodeType == 1 && node.childNodes) {
+                if (node.nodeType === 3) {
+                  newTextNode.nodeValue += node.nodeValue.replace(/(\r\n|\n|\r)/gm, '')
+                } else if (node.nodeType === 1 && node.childNodes) {
                   for (var i = 0; i < node.childNodes.length; ++i) {
-                    antiChrome(node.childNodes[ i ]);
+                    antiChrome(node.childNodes[ i ])
                   }
                 }
               }
-              antiChrome(e.target);
-              e.target.parentNode.replaceChild(newTextNode, e.target);
+              antiChrome(e.target)
+              e.target.parentNode.replaceChild(newTextNode, e.target)
             }
-          }, this));
+          }, this))
           return applicationData
         }
 

@@ -920,7 +920,7 @@ body {
       display: block;
       margin-bottom: 5px;
     }
-    .value-list {
+    .value-list, .value {
       margin-bottom: 5px;
       .list-value:not(:last-child):after {
         content: " - ";

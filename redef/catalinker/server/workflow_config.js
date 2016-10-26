@@ -583,8 +583,15 @@ module.exports = (app) => {
               },
               rdfProperty: 'hasSubtitles',
               multiple: 'true'
-            }
-            ,
+            },
+            {
+              rdfProperty: 'hasMediaType',
+              id: 'mediaTypeInput',
+              widgetOptions: {
+                queryParameter: 'hasMediaType',
+                prefix: 'http://data.deichman.no/mediaType#'
+              }
+            },
             { rdfProperty: 'format', multiple: true },
             {
               includeOnlyWhen: {
@@ -701,15 +708,6 @@ module.exports = (app) => {
               type: 'input-string-large'
             },
             {
-              rdfProperty: 'hasMediaType',
-              id: 'mediaTypeInput',
-              type: 'hidden-url-query-value',
-              widgetOptions: {
-                queryParameter: 'hasMediaType',
-                prefix: 'http://data.deichman.no/mediaType#'
-              }
-            },
-            {
               rdfProperty: 'publicationOf',
               id: 'publicationOfInput',
               type: 'searchable-with-result-in-side-panel',
@@ -774,6 +772,14 @@ module.exports = (app) => {
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'publicationYear' },
             { rdfProperty: 'language', multiple: true },
+            {
+              rdfProperty: 'hasWorkType',
+              id: 'workTypeInput',
+              widgetOptions: {
+                queryParameter: 'hasWorkType',
+                prefix: 'http://data.deichman.no/workType#'
+              }
+            },
             {
               includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] },
               rdfProperty: 'literaryForm',
@@ -847,15 +853,6 @@ module.exports = (app) => {
             {
               rdfProperty: 'hasSummary',
               type: 'input-string-large'
-            },
-            {
-              rdfProperty: 'hasWorkType',
-              type: 'hidden-url-query-value',
-              id: 'workTypeInput',
-              widgetOptions: {
-                queryParameter: 'hasWorkType',
-                prefix: 'http://data.deichman.no/workType#'
-              }
             }
           ],
           nextStep: {
