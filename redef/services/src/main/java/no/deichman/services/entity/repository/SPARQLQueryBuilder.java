@@ -68,7 +68,7 @@ public final class SPARQLQueryBuilder {
                 + "          OPTIONAL { ?publication deichman:publishedBy ?publishedBy }\n"
                 + "    }\n"
                 + "  UNION { <__WORKURI__> deichman:subject ?subject }\n"
-                + "  UNION { <__WORKURI__> deichman:hasInstrument ?instrumentation .\n"
+                + "  UNION { <__WORKURI__> deichman:hasInstrumentation ?instrumentation .\n"
                 + "       ?instrumentation deichman:hasInstrument ?instrument     }\n"
                 + "  UNION { <__WORKURI__> deichman:genre ?genre }\n"
                 + "  UNION { <__WORKURI__> deichman:literaryForm ?litform }\n"
