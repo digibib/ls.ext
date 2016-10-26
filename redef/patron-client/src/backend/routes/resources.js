@@ -20,6 +20,13 @@ module.exports = (app) => {
         if (error) {
           response.status(500).send(error)
         }
+
+        // Temporary hack: remove role objects from graph, as patron-client can't handle them
+        // TODO (PGÅ) revise
+        ntdoc = ntdoc.filter(el => {
+          return !el['@type'] || !el['@type'].includes("http://data.deichman.no/utility#Role")
+        })
+
         jsonld.frame(ntdoc, frame, (error, framed) => {
           if (error) {
             response.status(500).send(error)
