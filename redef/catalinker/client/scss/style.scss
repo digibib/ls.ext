@@ -916,11 +916,12 @@ body {
         content: ":";
       }
     }
+    .separate-lines {
+      display: block;
+      margin-bottom: 5px;
+    }
     .value-list {
       margin-bottom: 5px;
-      .value.separate-lines {
-        display: block;
-      }
       .list-value:not(:last-child):after {
         content: " - ";
       }
