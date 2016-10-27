@@ -12,7 +12,9 @@ import {
   PROFILE_SETTINGS_FAILURE,
   REQUEST_CHANGE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
-  CHANGE_PASSWORD_FAILURE
+  CHANGE_PASSWORD_FAILURE,
+  LOGIN_SUCCESS,
+  LOGOUT_SUCCESS
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -88,6 +90,10 @@ export default function profile (state = initialState, action) {
         changePasswordError: null,
         changePasswordSuccess: false
       }
+    case LOGIN_SUCCESS:
+      return initialState
+    case LOGOUT_SUCCESS:
+      return initialState
     default:
       return state
   }
