@@ -397,3 +397,7 @@ When(/^skal utgivelsene være inndelt etter medietype$/) do
   uncategorized_count = @site.PatronClientWorkPage.publication_entries('Publications.noMediaType').size
   @site.PatronClientWorkPage.publication_entries.size.should eq(book_count + music_recording_count + uncategorized_count)
 end
+
+When(/^at jeg er på verkssiden for det konstruerte verket$/) do
+  @site.PatronClientWorkPage.visit 'w720408349555'
+end
