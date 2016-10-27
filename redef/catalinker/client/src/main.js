@@ -2944,7 +2944,7 @@
                     _.each(prefillValuesFromExternalSources, function (suggestionSpec) {
                       var domain = suggestionSpec.resourceType
                       var wrappedIn = suggestionSpec.wrappedIn
-                      var demandTopBanana = false
+                      var demandTopBanana = suggestionSpec.demandTopBanana
                       if (wrappedIn && wrappedIn.substr(0, 1) === '/') {
                         wrappedIn = wrappedIn.substr(1)
                         demandTopBanana = true

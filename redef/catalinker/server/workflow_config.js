@@ -1376,7 +1376,7 @@ module.exports = (app) => {
         'compositiontype': 'compositionType'
       },
       prefillValuesFromExternalSources: [
-        { resourceType: 'Work' },
+        { resourceType: 'Work', demandTopBanana: true },
         { resourceType: 'Publication' },
         {
           resourceType: 'Person',
