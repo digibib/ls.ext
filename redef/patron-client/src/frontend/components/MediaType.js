@@ -12,11 +12,11 @@ class MediaType extends React.Component {
         return !(mediaType === 'http://data.deichman.no/mediaType#ComicBook' && (formats.length === 1 && formats[ 0 ] === 'http://data.deichman.no/format#Book'))
       }
     })
-    return <p>
+    return <ul className="mediaTypeFormats">
       {filtered.map(format => {
-        return <span key={format}>{this.props.intl.formatMessage({ id: format })} &nbsp;</span>
+        return <li key={format}>{this.props.intl.formatMessage({ id: format })} &nbsp;</li>
       })}
-    </p>
+    </ul>
   }
 
   render () {
@@ -25,8 +25,7 @@ class MediaType extends React.Component {
       <div key={mediaType.uri} className="entry-content-icon-single">
         <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} />
         {this.props.intl.formatMessage({ id: mediaType.uri })}
-        {/* Im unsure if this is needed, leaving it commented out for now. It renders an empty <p> for me */}
-        {/* <div>{this.renderFormats(mediaType.uri, mediaType.formats)}</div> */}
+        {this.renderFormats(mediaType.uri, mediaType.formats)}
       </div>
     )
   }

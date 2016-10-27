@@ -89,6 +89,20 @@
 
   }
 
+  ul.mediaTypeFormats {
+    list-style-type: none;
+    display: inline;
+    padding: 0
+  }
+
+  ul.mediaTypeFormats li {
+    display: inline;
+    padding: 0;
+    margin: 0 0.3em;
+    font-weight: normal
+  }
+
+
   > a:hover, > a:active, > a:focus {
 
     h1 {
