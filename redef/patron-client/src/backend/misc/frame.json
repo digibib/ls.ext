@@ -368,7 +368,9 @@
           "@embed": "@never"
         }
       },
-      "deichman:role": {}
+      "deichman:role": {
+        "@embed": "@never"
+      }
     },
     "languages": {
       "@embed": "@never"
