@@ -16,18 +16,30 @@ class PatronClientCommon < PageRoot
     @browser.element(data_automation_id: 'change_language_element').click
   end
 
-  def login(username, password)
-    unless @browser.element(data_automation_id: 'login_modal').exists?
-      if @browser.element(data_automation_id: 'logout_element').exists?
-        @browser.element(data_automation_id: 'logout_element').click
+  def login(username = nil, password = nil)
+    if (username && password)
+      unless @browser.element(data_automation_id: 'login_modal').exists?
+        if @browser.element(data_automation_id: 'logout_element').exists?
+          @browser.element(data_automation_id: 'logout_element').click
+        end
+        @browser.element(data_automation_id: 'login_element').click
       end
-      @browser.element(data_automation_id: 'login_element').click
+      wait_for { @browser.element(data_automation_id: 'login_modal').exists? }
+      @browser.element(data_automation_id: 'login_modal').text_fields.first.set(username)
+      @browser.element(data_automation_id: 'login_modal').text_fields.last.set(password)
+      @browser.element(data_automation_id: 'login_button').click
+      wait_retry { @browser.element(data_automation_id: 'logout_element').exists? }
+    else
+      if (@browser.element(data_automation_id: 'login_element').present? && !@browser.element(data_automation_id: 'login_modal').exists?)
+        @browser.element(data_automation_id: 'login_element').click
+      end
     end
-    wait_for { @browser.element(data_automation_id: 'login_modal').exists? }
-    @browser.element(data_automation_id: 'login_modal').text_fields.first.set(username)
-    @browser.element(data_automation_id: 'login_modal').text_fields.last.set(password)
-    @browser.element(data_automation_id: 'login_button').click
-    wait_retry { @browser.element(data_automation_id: 'logout_element').exists? }
+  end
+
+  def logout
+    if (@browser.element(data_automation_id: 'logout_element').present?)
+      @browser.element(data_automation_id: 'logout_element').click
+    end
   end
 
   def login_modal_visible?

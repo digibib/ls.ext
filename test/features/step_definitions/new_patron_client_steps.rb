@@ -397,3 +397,26 @@ When(/^skal utgivelsene være inndelt etter medietype$/) do
   uncategorized_count = @site.PatronClientWorkPage.publication_entries('Publications.noMediaType').size
   @site.PatronClientWorkPage.publication_entries.size.should eq(book_count + music_recording_count + uncategorized_count)
 end
+
+When(/^jeg fyller inn gammel PIN og ny PIN riktig$/) do
+  @browser.element(data_automation_id: 'changePin_currentPin').to_subtype.set(@active[:patron].password)
+  @browser.element(data_automation_id: 'changePin_newPin').to_subtype.set('8888')
+  @browser.element(data_automation_id: 'changePin_repeatPin').to_subtype.set('8888')
+  @active[:patron].password = '8888'
+end
+
+When(/^trykker på endre PIN\-kode$/) do
+  @browser.element(data_automation_id: 'changePinForm_button').click
+end
+
+When(/^skal jeg se at PIN\-koden har blitt endret$/) do
+  wait_for { @browser.element(data_automation_id: 'changePinForm_success').present? }
+end
+
+When(/^jeg logger ut$/) do
+  @site.PatronClientCommon.logout
+end
+
+When(/^jeg trykker logg inn$/) do
+  @site.PatronClientCommon.login
+end

@@ -189,3 +189,19 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg se "11" utgivelser
     Og skal utgivelsene være inndelt etter medietype
     Og utgivelsene skal være sortert på språk (med norsk, engelsk, dansk og svensk først), utgivelsesår og format
+
+  Scenario: Bytte PIN
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en låner med passord
+    Og at jeg er i søkegrensesnittet
+    Når jeg går til Min Side
+    Så skal jeg se innloggingsvinduet
+    Når jeg logger inn
+    Og jeg går til innstillinger
+    Og jeg fyller inn gammel PIN og ny PIN riktig
+    Og trykker på endre PIN-kode
+    Så skal jeg se at PIN-koden har blitt endret
+    Når jeg logger ut
+    Når jeg trykker logg inn
+    Så skal jeg se innloggingsvinduet
+    Og jeg logger inn
