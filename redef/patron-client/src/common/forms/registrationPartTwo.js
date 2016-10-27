@@ -19,10 +19,6 @@ module.exports = {
     required: true,
     asyncValidation: true
   },
-  /* gender: {
-   required: true,
-   asyncValidation: true
-   }, */
   pin: {
     required: true,
     asyncValidation: true
