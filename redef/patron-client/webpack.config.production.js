@@ -27,7 +27,7 @@ module.exports = {
         warnings: false
       }
     }),
-    new ExtractTextPlugin('master.css', { allChunks: true }),
+    new ExtractTextPlugin('master.css'),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.template.html'
