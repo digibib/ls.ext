@@ -3417,11 +3417,13 @@
             const cachedResponse = etagData[ `${url}${etag}` ]
             if (cachedResponse) {
               options.cachedResponse = cachedResponse
+              if (etag) {
+                options.headers[ 'If-None-Match' ] = etag
+              }
+              options.headers[ 'Access-Control-Expose-Headers' ] = 'ETag'
+            } else {
+              etags[ url ] = undefined
             }
-            if (etag) {
-              options.headers[ 'If-None-Match' ] = etag
-            }
-            options.headers[ 'Access-Control-Expose-Headers' ] = 'ETag'
           }
           return options
         }, function (error) {
