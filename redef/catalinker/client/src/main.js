@@ -786,6 +786,7 @@
                     setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                     if (input.isSubInput && !options.source) {
                       input.values[ rootIndex + (offset) ].nonEditable = true
+                      ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
                       ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
                     }
                   } else {
@@ -818,6 +819,7 @@
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput && !options.source) {
                         input.values[ valueIndex ].nonEditable = true
+                        ractive.update(`${input.keypath}.values.${valueIndex}`)
                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
@@ -845,7 +847,7 @@
           })
         }
         if (!(options.keepDocumentUrl)) {
-          ractive.set('targetUri.' + type, resourceUri)
+          ractive.set(`targetUri.${type}`, resourceUri)
           ractive.set('save_status', 'åpnet eksisterende ressurs')
           updateBrowserLocationWithUri(type, resourceUri)
         }
@@ -862,6 +864,7 @@
       )
         .then(function (response) {
             updateInputsForResource(response, resourceUri, options)
+            ractive.set(`targetUri.${typeFromUri(resourceUri)}`, resourceUri)
           }
         )
         .catch(function (err) {
@@ -2566,23 +2569,22 @@
                   var uri = event.context.uri
                   var editWith = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
                   if (editWith) {
-                    fetchExistingResource(uri).then(function () {
-                      let initOptions = { presetValues: {}, task: editWith.descriptionKey }
-                      updateBrowserLocationWithTemplate(editWith.template)
-                      forAllGroupInputs(function (input) {
-                        if (input.type === 'hidden-url-query-value' &&
-                          typeof input.values[ 0 ].current.value === 'string' &&
-                          input.values[ 0 ].current.value !== '') {
-                          let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
-                          initOptions.presetValues[ input.widgetOptions.queryParameter ] = shortValue
-                          updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
-                        }
-                      })
-                      if (uri.indexOf('publication') !== -1) {
-                        updateBrowserLocationWithTab(1)
+                    let initOptions = { presetValues: {}, task: editWith.descriptionKey }
+                    updateBrowserLocationWithTemplate(editWith.template)
+                    updateBrowserLocationWithUri(typeFromUri(uri), uri)
+                    forAllGroupInputs(function (input) {
+                      if (input.type === 'hidden-url-query-value' &&
+                        typeof input.values[ 0 ].current.value === 'string' &&
+                        input.values[ 0 ].current.value !== '') {
+                        let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
+                        initOptions.presetValues[ input.widgetOptions.queryParameter ] = shortValue
+                        updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
                       }
-                      Main.init(initOptions)
                     })
+                    if (uri.indexOf('publication') !== -1) {
+                      updateBrowserLocationWithTab(1)
+                    }
+                    Main.init(initOptions)
                   } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
                     var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
                     var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
@@ -3230,14 +3232,14 @@
               window.sessionStorage.clear()
             }
           }
-          if (query.Publication) {
+          if (query.Publication && !ractive.get(`targetUri.${query.Publication}`)) {
             fetchExistingResource(query.Publication)
               .then(loadWorkOfPublication)
               .then(function () {
                 ractive.set('targetUri.Publication', query.Publication)
                 ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
               })
-          } else if (query.Work) {
+          } else if (query.Work && !ractive.get(`targetUri.${query.Work}`)) {
             fetchExistingResource(query.Work)
               .then(function () {
                 ractive.set('targetUri.Work', query.Work)
