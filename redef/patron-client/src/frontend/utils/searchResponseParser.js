@@ -28,10 +28,8 @@ export function processSearchResponse (response, locationQuery) {
       // If there is an active language filter, choose a publication that matches language
       // according to the preferred list.
       if (filteredLanguages.length > 0) {
-        for (let i = 0; i < Constants.preferredLanguages.lengh; i++) {
-          const prefLang = Constants.preferredLanguages[i]
-          for (let j = 0; j < filteredLanguages; j++) {
-            const filterLang = filteredLanguages[j]
+        for (let prefLang of Constants.preferredLanguages) {
+          for (let filterLang of filteredLanguages) {
             if (prefLang === filterLang && result.publication.langTitles[prefLang]) {
               // There might be several publications in the same language. We choose the first.
               selected = result.publication.langTitles[prefLang][0]
@@ -55,8 +53,7 @@ export function processSearchResponse (response, locationQuery) {
       if (!selected) {
         // We still haven't selected a publication, choose one among the available,
         // according to the list of preferred languages.
-        for (let i = 0; i < Constants.preferredLanguages.lengh; i++) {
-          const prefLang = Constants.preferredLanguages[i]
+        for (let prefLang of Constants.preferredLanguages) {
           if (result.publication.langTitles[prefLang]) {
             // There might be several publications in the same language. We choose the first.
             selected = result.publication.langTitles[prefLang][0]
