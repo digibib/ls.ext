@@ -437,7 +437,7 @@
           forAllGroupInputs(function (input1) {
             if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
                 fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
-                  input1.values[ 0 ].current.value)
+                  _.flatten([input1.values[ 0 ].current.value])[0])
               ])[ 0 ])) {
               shouldInclude = false
               return true
