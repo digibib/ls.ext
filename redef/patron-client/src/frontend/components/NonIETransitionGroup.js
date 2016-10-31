@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 const NonIETransitionGroup = (props) => {
-  if (!isIe()) {
+  if (isIe()) {
     const { component, className } = props
     const elementProps = { className }
     Object.keys(props).forEach(prop => {
