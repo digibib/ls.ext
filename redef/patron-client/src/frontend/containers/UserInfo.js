@@ -8,6 +8,7 @@ import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
 import UserInfoForm from './forms/UserInfoForm'
 import { formatDate } from '../utils/dateFormatter'
+import Constants from '../constants/Constants'
 
 class UserInfo extends React.Component {
   constructor (props) {
@@ -129,7 +130,7 @@ class UserInfo extends React.Component {
     } else if (this.props.personalInformationError) {
       return <FormattedMessage {...messages.personalInformationError} />
     }
-    const editable = this.props.location.query.edit === null
+    const editable = this.props.location.query.edit === Constants.enabledParameter
     const { personalInformation } = this.props
 
     return (

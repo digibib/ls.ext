@@ -28,11 +28,11 @@ export function processSearchResponse (response, locationQuery) {
       // If there is an active language filter, choose a publication that matches language
       // according to the preferred list.
       if (filteredLanguages.length > 0) {
-        for (let prefLang of Constants.preferredLanguages) {
-          for (let filterLang of filteredLanguages) {
-            if (prefLang === filterLang && result.publication.langTitles[prefLang]) {
+        for (const prefLang of Constants.preferredLanguages) {
+          for (const filterLang of filteredLanguages) {
+            if (prefLang === filterLang && result.publication.langTitles[ prefLang ]) {
               // There might be several publications in the same language. We choose the first.
-              selected = result.publication.langTitles[prefLang][0]
+              selected = result.publication.langTitles[ prefLang ][ 0 ]
               break
             }
           }
@@ -53,10 +53,10 @@ export function processSearchResponse (response, locationQuery) {
       if (!selected) {
         // We still haven't selected a publication, choose one among the available,
         // according to the list of preferred languages.
-        for (let prefLang of Constants.preferredLanguages) {
-          if (result.publication.langTitles[prefLang]) {
+        for (const prefLang of Constants.preferredLanguages) {
+          if (result.publication.langTitles[ prefLang ]) {
             // There might be several publications in the same language. We choose the first.
-            selected = result.publication.langTitles[prefLang][0]
+            selected = result.publication.langTitles[ prefLang ][ 0 ]
             break
           }
         }
@@ -93,9 +93,9 @@ export function processSearchResponse (response, locationQuery) {
       if (!result.image) {
         // Choose any available based on preferred languages
         for (let i = 0; i < Constants.preferredLanguages.lengh; i++) {
-          const prefLang = Constants.preferredLanguages[i]
-          if (result.publication.langTitles[prefLang] && result.publication.langTitles[prefLang].image) {
-            result.image = result.publication.langTitles[prefLang].image
+          const prefLang = Constants.preferredLanguages[ i ]
+          if (result.publication.langTitles[ prefLang ] && result.publication.langTitles[ prefLang ].image) {
+            result.image = result.publication.langTitles[ prefLang ].image
             break
           }
         }

@@ -25,8 +25,8 @@ module.exports = (app) => {
         // problems when work has subjects which themselves are works.
         // TODO revise this hack - it might make it difficult to present the work relations on work page.
         ntdoc = ntdoc.map(el => {
-          if (el['@type'] && el['@type'].includes('http://data.deichman.no/ontology#Work') && el['@id'] !== `http://data.deichman.no/work/${request.params.workId}`) {
-            delete el['@type']
+          if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] !== `http://data.deichman.no/work/${request.params.workId}`) {
+            delete el[ '@type' ]
           }
           return el
         })

@@ -62,5 +62,6 @@ module.exports = {
     'http://lexvo.org/id/iso639-3/fre',
     'http://lexvo.org/id/iso639-3/spa',
     'http://lexvo.org/id/iso639-3/ita'
-  ]
+  ],
+  enabledParameter: null
 }

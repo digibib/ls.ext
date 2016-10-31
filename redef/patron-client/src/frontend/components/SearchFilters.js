@@ -3,6 +3,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { Link } from 'react-router'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchFilter from './SearchFilter'
+import Constants from '../constants/Constants'
 
 class SearchFilters extends React.Component {
   constructor (props) {
@@ -12,12 +13,17 @@ class SearchFilters extends React.Component {
   }
 
   componentDidMount () {
-    window.addEventListener('resize', this.toggleFilterVisibility)
     this.toggleFilterVisibility()
   }
 
+  componentWillUpdate (nextProps) {
+    if (this.props.windowWidth !== nextProps.windowWidth) {
+      this.toggleFilterVisibility()
+    }
+  }
+
   componentDidUpdate () {
-    // If a search is beeing done, check the filter visibility
+    // If a search is being done, check the filter visibility
     if (this.props.isSearching === true) {
       this.toggleFilterVisibility()
     }
@@ -33,13 +39,16 @@ class SearchFilters extends React.Component {
     this.props.toggleAllFiltersVisibility()
   }
 
-  toggleFilterVisibility () {
+  toggleFilterVisibility (event) {
+    if (event && event.target.innerWidth === this.props.windowWidth) {
+      return
+    }
     if (window.innerWidth < 668) {                           // If screen size is mobile
-      if (this.props.locationQuery.hideFilters !== null) { // And filters are visible
+      if (this.props.locationQuery.hideFilters !== Constants.enabledParameter) { // And filters are visible
         this.props.toggleAllFiltersVisibility()             // Hide the filters
       }
     } else {                                                // If screen size is tatblet or above
-      if (this.props.locationQuery.hideFilters === null) { // And filters are hidden
+      if (this.props.locationQuery.hideFilters === Constants.enabledParameter) { // And filters are hidden
         this.props.toggleAllFiltersVisibility()             // Show the filters
       }
     }
@@ -47,7 +56,7 @@ class SearchFilters extends React.Component {
 
   render () {
     const groupedFilters = {}
-    const buttonClass = (this.props.locationQuery.hideFilters === null) ? 'filters-hidden' : 'filters-visible'
+    const buttonClass = (this.props.locationQuery.hideFilters === Constants.enabledParameter) ? 'filters-hidden' : 'filters-visible'
 
     if (this.props.locationQuery.query && this.props.filters) {
       this.props.filters.forEach(filter => {
@@ -67,7 +76,7 @@ class SearchFilters extends React.Component {
           className="filters">
           <div className="limit-filters">
             <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
-              {this.props.locationQuery.hideFilters === null
+              {this.props.locationQuery.hideFilters === Constants.enabledParameter
                 ? (<span>Vis filter</span>)
                 : (<span>Skjul filter</span>)}
             </Link>
@@ -79,7 +88,7 @@ class SearchFilters extends React.Component {
 
           <section className="filter-wrapper"
                    data-automation-id="search_filters">
-            {this.props.locationQuery.hideFilters === null ? null : Object.keys(groupedFilters).map(aggregation => {
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {
               const filtersByAggregation = groupedFilters[ aggregation ]
               return (
                 <SearchFilter
@@ -111,7 +120,8 @@ SearchFilters.propTypes = {
   toggleAllFiltersVisibility: PropTypes.func.isRequired,
   toggleCollapseFilter: PropTypes.func.isRequired,
   scrollTargetNode: PropTypes.object.isRequired,
-  isSearching: PropTypes.bool
+  isSearching: PropTypes.bool,
+  windowWidth: PropTypes.number.isRequired
 }
 
 SearchFilters.defaultProps = { filters: [] }

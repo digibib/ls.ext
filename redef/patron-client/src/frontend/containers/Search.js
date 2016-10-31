@@ -125,7 +125,9 @@ class Search extends React.Component {
                              toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
                              toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
                              scrollTargetNode={this}
-                             isSearching={this.props.isSearching} />,
+                             isSearching={this.props.isSearching}
+                             windowWidth={this.props.windowWidth}
+        />,
           <SearchResults key="searchResults"
                          locationQuery={this.props.location.query}
                          searchActions={this.props.searchActions}
@@ -160,7 +162,8 @@ Search.propTypes = {
   resources: PropTypes.object.isRequired,
   resourceActions: PropTypes.object.isRequired,
   items: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  windowWidth: PropTypes.number.isRequired
 }
 
 const intlSearch = injectIntl(Search)
@@ -176,7 +179,8 @@ function mapStateToProps (state) {
     filters: state.search.filters,
     locationQuery: state.routing.locationBeforeTransitions.query,
     resources: state.resources.resources,
-    items: state.resources.items
+    items: state.resources.items,
+    windowWidth: state.application.windowWidth
   }
 }
 
