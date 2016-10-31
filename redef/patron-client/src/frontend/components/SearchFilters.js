@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 import { Link } from 'react-router'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchFilter from './SearchFilter'
@@ -66,7 +66,7 @@ class SearchFilters extends React.Component {
       })
 
       return (
-        <ReactCSSTransitionGroup
+        <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
           transitionAppearTimeout={500}
@@ -104,7 +104,7 @@ class SearchFilters extends React.Component {
               )
             })}
           </section>
-        </ReactCSSTransitionGroup>
+        </NonIETransitionGroup>
       )
     } else {
       return this.renderEmpty()

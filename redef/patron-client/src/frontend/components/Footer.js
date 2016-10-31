@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 
 class Footer extends React.Component {
   constructor (props) {
@@ -15,7 +15,7 @@ class Footer extends React.Component {
   render () {
     return (
       <footer className="main-footer">
-        <ReactCSSTransitionGroup
+        <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
           transitionAppearTimeout={500}
@@ -64,7 +64,7 @@ class Footer extends React.Component {
 
           </div>
 
-        </ReactCSSTransitionGroup>
+        </NonIETransitionGroup>
       </footer>
     )
   }

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 import ReactDOM from 'react-dom'
 import Constants from '../constants/Constants'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
@@ -81,7 +81,7 @@ class SearchFilter extends React.Component {
       ? `${this.props.intl.formatMessage(messages.expandGroup)} ${this.renderTitle()}`
       : `${this.props.intl.formatMessage(messages.collapseGroup)} ${this.renderTitle()}`
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -104,7 +104,7 @@ class SearchFilter extends React.Component {
           <ul className="searchfilters">{this.renderFilters()}</ul>
         </section>,
           <footer key="searchfilter_footer">{this.renderShowMore()}</footer> ]}
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }

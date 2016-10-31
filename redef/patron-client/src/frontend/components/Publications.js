@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 import firstBy from 'thenby'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 
 import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
@@ -245,7 +245,7 @@ class Publications extends React.Component {
     }
 
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -278,7 +278,7 @@ class Publications extends React.Component {
                     </h2>
                   </ClickableElement>
                 </header>
-                <ReactCSSTransitionGroup
+                <NonIETransitionGroup
                   transitionName="fade-in"
                   transitionAppear
                   transitionAppearTimeout={500}
@@ -289,12 +289,12 @@ class Publications extends React.Component {
                   {collapsePublications.includes(mediaTypeFragment)
                     ? null
                     : this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaTypeUri ].map(publicationHolder => publicationHolder.original))}
-                </ReactCSSTransitionGroup>
+                </NonIETransitionGroup>
               </section>
             )
           })
         }
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }

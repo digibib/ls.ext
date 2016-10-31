@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage, intlShape } from 'react-intl'
@@ -48,7 +48,7 @@ class UserLoans extends React.Component {
 
   renderReservations () {
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -145,7 +145,7 @@ class UserLoans extends React.Component {
             ))}
           </div>
         </MediaQuery>
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
@@ -21,7 +21,7 @@ class Work extends React.Component {
 
   renderNoWork () {
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -30,13 +30,13 @@ class Work extends React.Component {
         component="div"
         className="wrapper">
         <FormattedMessage {...messages.noWork} />
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 
   renderEmpty () {
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -47,7 +47,7 @@ class Work extends React.Component {
         <article className="work-entry loading">
           <i className="icon-spin4 animate-spin" />
         </article>
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 
@@ -124,7 +124,7 @@ class Work extends React.Component {
 
     return (
       <div className="wrapper">
-        <ReactCSSTransitionGroup
+        <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
           transitionAppearTimeout={500}
@@ -161,7 +161,7 @@ class Work extends React.Component {
                         searchFilterActions={this.props.searchFilterActions}
                         query={this.props.query} />
 
-        </ReactCSSTransitionGroup>
+        </NonIETransitionGroup>
 
       </div>
     )

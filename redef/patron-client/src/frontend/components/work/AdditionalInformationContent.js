@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from '../NonIETransitionGroup'
 import TargetAudience from './fields/TargetAudience'
 import DeweyNumber from './fields/DeweyNumber'
 import Subjects from './fields/Subjects'
@@ -14,7 +14,7 @@ import AgeLimit from './fields/AgeLimit'
 import ContentAdaptations from './fields/ContentAdaptations'
 
 const AdditionalInformationContent = ({ work }) => (
-  <ReactCSSTransitionGroup
+  <NonIETransitionGroup
     transitionName="fade-in"
     transitionLeave
     transitionAppear
@@ -37,7 +37,7 @@ const AdditionalInformationContent = ({ work }) => (
     <Key key={work.key} />
     <Subjects subjects={work.subjects} />
     <Genres genres={work.genres} />
-  </ReactCSSTransitionGroup>
+  </NonIETransitionGroup>
 )
 
 AdditionalInformationContent.propTypes = {

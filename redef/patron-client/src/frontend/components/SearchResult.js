@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import Items from '../components/Items'
@@ -201,7 +201,7 @@ class SearchResult extends React.Component {
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
     const mediaTypeURI = result.mediaTypes[ 0 ] ? result.mediaTypes[ 0 ].uri : ''
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -254,7 +254,7 @@ class SearchResult extends React.Component {
         </div>)
         }
 
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }

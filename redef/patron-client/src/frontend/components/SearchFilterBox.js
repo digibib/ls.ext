@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 
 import SearchFilterBoxItem from '../components/SearchFilterBoxItem'
 import { getFiltersFromQuery } from '../utils/filterParser'
@@ -10,7 +10,7 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
     : <FormattedMessage {...messages.titleSearch} />
   if (getFiltersFromQuery(query).length > 0) {
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -23,7 +23,7 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
           {getFiltersFromQuery(query).filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
             key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
         </ul>
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   } else {
     return null

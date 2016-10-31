@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
@@ -134,7 +134,7 @@ class UserInfo extends React.Component {
     const { personalInformation } = this.props
 
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -149,7 +149,7 @@ class UserInfo extends React.Component {
         </header>
         {editable ? this.renderEditInfo(editable) : this.renderInfo(editable)}
         {this.renderButtonAndLastUpdated(editable, [ '' ])}
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }

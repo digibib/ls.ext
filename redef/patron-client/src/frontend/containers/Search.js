@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactPaginate from 'react-paginate'
@@ -81,7 +81,7 @@ class Search extends React.Component {
 
   render () {
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -141,7 +141,7 @@ class Search extends React.Component {
           /> ]
           : null}
         {this.renderPagination()}
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }
