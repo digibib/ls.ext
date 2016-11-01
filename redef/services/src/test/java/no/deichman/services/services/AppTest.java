@@ -719,7 +719,7 @@ public class AppTest {
                 testData = "<http://lexvo.org/id/iso639-3/afr> <http://www.w3.org/2000/01/rdf-schema#label> \"Afrikaans\"@en .";
                 break;
             case LITERARY_FORM:
-                testData = "<http://data.deichman.no/literaryForm#poem> <http://www.w3.org/2000/01/rdf-schema#label> \"Poem\"@en .";
+                testData = "<http://data.deichman.no/literaryForm#poetry> <http://www.w3.org/2000/01/rdf-schema#label> \"Poem\"@en .";
                 break;
             case MEDIA_TYPE:
                 testData = "<http://data.deichman.no/mediaType#Book> <http://www.w3.org/2000/01/rdf-schema#label> \"Book\"@en .";
