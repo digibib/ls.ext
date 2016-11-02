@@ -22,33 +22,7 @@
       "index": "no"
     },
     "work": {
-      "type": "nested",
-      "properties": {
-        "uri": {
-          "type": "string",
-          "index": "no"
-        },
-        "mainTitle": {
-          "type": "string",
-          "index": "no"
-        },
-        "partTitle": {
-          "type": "string",
-          "index": "no"
-        },
-        "partNumber": {
-          "type": "string",
-          "index": "no"
-        },
-        "workType": {
-          "type": "string",
-          "index": "no"
-        },
-        "publicationYear": {
-          "type": "string",
-          "index": "no"
-        }
-      }
+      "enabled": false
     }
   }
 }

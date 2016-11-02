@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import * as ResourceActions from '../actions/ResourceActions'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from '../components/NonIETransitionGroup'
 
 class Person extends React.Component {
   componentWillMount () {
@@ -21,7 +21,7 @@ class Person extends React.Component {
 
   renderEmpty () {
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -32,7 +32,7 @@ class Person extends React.Component {
         <article className="work-entry loading">
           <i className="icon-spin4 animate-spin" />
         </article>
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 
@@ -92,7 +92,7 @@ class Person extends React.Component {
 
     return (
       <div className="wrapper">
-        <ReactCSSTransitionGroup
+        <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
           transitionAppearTimeout={500}
@@ -114,7 +114,7 @@ class Person extends React.Component {
             </header>
             {this.renderWorks(person)}
           </section>
-        </ReactCSSTransitionGroup>
+        </NonIETransitionGroup>
       </div>
     )
   }

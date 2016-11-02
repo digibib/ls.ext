@@ -5,7 +5,8 @@ import MetaItem from '../../MetaItem'
 const Classifications = ({ classifications }) => {
   if (classifications.length > 0) {
     return (
-      <MetaItem content={classifications.join(', ')} label={messages.labelClassifications} data-automation-id="work_classifications" />
+      <MetaItem content={classifications.join(', ')} label={messages.labelClassifications}
+                data-automation-id="work_classifications" />
     )
   } else {
     return null

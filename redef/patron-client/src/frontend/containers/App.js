@@ -5,6 +5,7 @@ import SearchHeader from '../components/SearchHeader'
 import * as LanguageActions from '../actions/LanguageActions'
 import * as LibraryActions from '../actions/LibraryActions'
 import * as MobileNavigationActions from '../actions/MobileNavigationActions'
+import * as WindowActions from '../actions/WindowActions'
 
 import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
@@ -12,10 +13,25 @@ import Footer from '../components/Footer'
 import * as RegistrationActions from '../actions/RegistrationActions'
 
 class App extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleResizeWindow = this.handleResizeWindow.bind(this)
+  }
+
   componentWillMount () {
     this.props.loginActions.updateLoginStatus()
     this.props.languageActions.loadLanguage()
     this.props.libraryActions.fetchLibraries()
+    this.props.windowActions.resizeWindow(window.innerWidth)
+    window.addEventListener('resize', this.handleResizeWindow)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.handleResizeWindow)
+  }
+
+  handleResizeWindow (event) {
+    this.props.windowActions.resizeWindow(event.target.innerWidth)
   }
 
   render () {
@@ -52,7 +68,9 @@ App.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   registrationActions: PropTypes.object.isRequired,
   mobileNavigationActions: PropTypes.object.isRequired,
-  showMobileNavigation: PropTypes.bool.isRequired
+  showMobileNavigation: PropTypes.bool.isRequired,
+  windowActions: PropTypes.object.isRequired
+
 }
 
 function mapStateToProps (state) {
@@ -71,7 +89,8 @@ function mapDispatchToProps (dispatch) {
     loginActions: bindActionCreators(LoginActions, dispatch),
     libraryActions: bindActionCreators(LibraryActions, dispatch),
     registrationActions: bindActionCreators(RegistrationActions, dispatch),
-    mobileNavigationActions: bindActionCreators(MobileNavigationActions, dispatch)
+    mobileNavigationActions: bindActionCreators(MobileNavigationActions, dispatch),
+    windowActions: bindActionCreators(WindowActions, dispatch)
   }
 }
 

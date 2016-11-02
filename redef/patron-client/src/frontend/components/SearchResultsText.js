@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 
@@ -17,7 +17,7 @@ class SearchResultsText extends React.Component {
       )
     } else {
       return (
-        <ReactCSSTransitionGroup
+        <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
           transitionAppearTimeout={500}
@@ -39,7 +39,7 @@ class SearchResultsText extends React.Component {
                                     totalHits: String(this.props.totalHits)
                                   }} />
           </MediaQuery>
-        </ReactCSSTransitionGroup>
+        </NonIETransitionGroup>
       )
     }
   }

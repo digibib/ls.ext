@@ -13,7 +13,8 @@ import {
   RECEIVE_LOGIN_STATUS,
   REQUEST_LIBRARIES,
   RECEIVE_LIBRARIES,
-  LIBRARIES_FAILURE
+  LIBRARIES_FAILURE,
+  RESIZE_WINDOW
 } from '../constants/ActionTypes'
 import * as i18n from '../i18n'
 
@@ -32,7 +33,8 @@ const initialState = {
   loginStatusError: null,
   libraries: {},
   isRequestingLibraries: false,
-  librariesError: false
+  librariesError: false,
+  windowWidth: 0
 }
 
 export default function application (state = initialState, action) {
@@ -95,6 +97,8 @@ export default function application (state = initialState, action) {
       return { ...state, isRequestingLibraries: false, libraries: action.payload.libraries }
     case LIBRARIES_FAILURE:
       return { ...state, isRequestingLibraries: false, libraryError: action.payload.message }
+    case RESIZE_WINDOW:
+      return { ...state, windowWidth: action.payload.windowWidth }
     default:
       return state
   }

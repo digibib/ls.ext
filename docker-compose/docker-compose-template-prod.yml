@@ -215,6 +215,7 @@ services:
       KOHA_API_PASS: "${KOHA_API_PASS}"
       GITREF: "${GITREF}"
       BUILD_TAG: "${BUILD_TAG}"
+      MARCFRAMEWORK: "DCHM"
     logging:
       driver: "journald"
 

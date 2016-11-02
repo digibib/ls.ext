@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactPaginate from 'react-paginate'
@@ -81,7 +81,7 @@ class Search extends React.Component {
 
   render () {
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -125,7 +125,9 @@ class Search extends React.Component {
                              toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
                              toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
                              scrollTargetNode={this}
-                             isSearching={this.props.isSearching} />,
+                             isSearching={this.props.isSearching}
+                             windowWidth={this.props.windowWidth}
+        />,
           <SearchResults key="searchResults"
                          locationQuery={this.props.location.query}
                          searchActions={this.props.searchActions}
@@ -139,7 +141,7 @@ class Search extends React.Component {
           /> ]
           : null}
         {this.renderPagination()}
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }
@@ -160,7 +162,8 @@ Search.propTypes = {
   resources: PropTypes.object.isRequired,
   resourceActions: PropTypes.object.isRequired,
   items: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  windowWidth: PropTypes.number.isRequired
 }
 
 const intlSearch = injectIntl(Search)
@@ -176,7 +179,8 @@ function mapStateToProps (state) {
     filters: state.search.filters,
     locationQuery: state.routing.locationBeforeTransitions.query,
     resources: state.resources.resources,
-    items: state.resources.items
+    items: state.resources.items,
+    windowWidth: state.application.windowWidth
   }
 }
 

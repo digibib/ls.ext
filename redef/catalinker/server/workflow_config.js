@@ -513,7 +513,6 @@ module.exports = (app) => {
           rdfType: 'Publication',
           label: 'Beskriv utgivelse',
           reportLabel: 'Utgivelse',
-          showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             {
               rdfProperty: 'mainTitle',
@@ -1052,7 +1051,6 @@ module.exports = (app) => {
           rdfType: 'Publication',
           label: 'Beskriv deler',
           reportLabel: 'Deler',
-          showOnlyWhenInputHasValue: 'mediaTypeInput',
           inputs: [
             {
               label: 'Verk som inngår i samling',

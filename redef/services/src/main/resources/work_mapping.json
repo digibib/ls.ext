@@ -54,8 +54,7 @@
       "type": "string"
     },
     "partNumber": {
-      "type": "string",
-      "index": "no"
+      "type": "string"
     },
     "uri": {
       "type": "string",

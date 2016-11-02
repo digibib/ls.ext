@@ -1,9 +1,9 @@
 import { replace } from 'react-router-redux'
 
-export function toggleParameter (queryParamName, locationQuery) {
+export function toggleParameter (queryParamName, inputLocationQuery) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = locationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     const queryParam = locationQuery[ queryParamName ]
     if (queryParam !== undefined) {
       delete locationQuery[ queryParamName ]
@@ -14,10 +14,10 @@ export function toggleParameter (queryParamName, locationQuery) {
   }
 }
 
-export function toggleParameterValue (queryParamName, value, locationQuery, shouldRemoveInBackString = false, nameToReplace) {
+export function toggleParameterValue (queryParamName, value, inputLocationQuery, shouldRemoveInBackString = false, nameToReplace) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = locationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     let queryParam = locationQuery[ queryParamName ] || []
     if (shouldRemoveInBackString) {
       locationQuery[ queryParamName ] = queryParam.replace(`${nameToReplace}=${value}&`, '')

@@ -44,5 +44,6 @@ class BiblioDetail < IntraPage
   end
 
   def find_first_available_exemplar
-    @browser.table(class: 'items_table').trs.select { |tr| tr.td.present? && tr.td(class: 'status').text.strip.eql?('Available')}.first.tds[7].text  end
+    @browser.table(class: 'items_table').trs.select { |tr| tr.td.present? && tr.td(class: 'status').text.include?('Available')}.first.tds[7].text
+  end
 end

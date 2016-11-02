@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 import { Link } from 'react-router'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import Items from '../components/Items'
@@ -44,7 +44,8 @@ class SearchResult extends React.Component {
     return (
       <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
         <h1 className="workTitle" data-automation-id="work-title">
-          <span className="title-text">{result.displayTitle}</span>
+          <span className="title-text">{result.titleLine1}</span><br />
+          <span className="title-text">{result.titleLine2}</span>
           <span className="caret"><i className="icon-angle-wide" /></span>
         </h1>
       </Link>
@@ -200,7 +201,7 @@ class SearchResult extends React.Component {
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
     const mediaTypeURI = result.mediaTypes[ 0 ] ? result.mediaTypes[ 0 ].uri : ''
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -253,7 +254,7 @@ class SearchResult extends React.Component {
         </div>)
         }
 
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }

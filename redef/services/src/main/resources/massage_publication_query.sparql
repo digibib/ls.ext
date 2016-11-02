@@ -18,7 +18,6 @@ CONSTRUCT {
                deich:hasHoldingBranch ?branch ;
                deich:contributor ?contrib ;
                deich:hasImage ?img ;
-               deich:hasImageAll ?allImg ;
                deich:mediaType ?pubMediaType ;
                deich:hasMediaTypeAll ?mediaType ;
                deich:workUri ?workUri ;
@@ -38,11 +37,22 @@ CONSTRUCT {
                deich:title ?pubMainTitle ;
                deich:title ?pubPartTitle ;
                deich:title ?pubSubtitle ;
+               deich:title ?pubPartNumber ;
                deich:litform ?litform ;
                deich:subtitles ?subtitles ;
+               deich:subtitle ?pubSubtitle ;
+               deich:partNumber ?pubPartNumber ;
                deich:isbn ?isbn ;
                deich:compType ?compTypeLabel ;
-               deich:fictionNonfiction ?fictionNonfiction .
+               deich:fictionNonfiction ?fictionNonfiction ;
+               deich:langTitles <http://ignore> .
+ <http://ignore> ?anyLang [
+                deich:mainTitle ?anyMt;
+                deich:subtitle ?anySt ;
+                deich:partNumber ?anyPn ;
+                deich:partTitle ?anyPt ;
+                deich:hasImage ?anyImage ;
+                deich:pubUri ?anyPub ]  .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -65,6 +75,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
   UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }
+  UNION { <__PUBLICATIONURI__> deich:partNumber ?pubPartNumber }
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
   UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO .
@@ -88,35 +99,17 @@ WHERE {
           ?serial deich:mainTitle ?seriesTitle . }
 
   # 2. Information from other publications:
-
   UNION {
-    ?p deich:publicationOf ?work ;
-       deich:mainTitle ?norwegianMainTitle ;
-       deich:language <http://lexvo.org/id/iso639-3/nob> .
-    OPTIONAL {
-    ?p deich:publicationOf ?work ;
-           deich:partTitle ?norwegianPartTitle ;
-           deich:language <http://lexvo.org/id/iso639-3/nob> .
-    }
-    BIND(IF(BOUND(?norwegianPartTitle), CONCAT(?norwegianMainTitle, " — ", ?norwegianPartTitle), ?norwegianMainTitle) AS ?norwegianTitle)
+    <__PUBLICATIONURI__> deich:publicationOf ?work  .
+    ?anyP deich:publicationOf ?work ;
+      deich:language ?anyLang ;
+      deich:mainTitle ?anyMt .
+    OPTIONAL { ?anyP deich:subtitle ?anySt }
+    OPTIONAL { ?anyP deich:partTitle ?anyPt }
+    OPTIONAL { ?anyP deich:partNumber ?anyPn }
+    OPTIONAL { ?anyP deich:hasImage ?anyImage }
+    BIND(str(?anyP) AS ?anyPub)
   }
-
-  UNION {
-    ?p2 deich:publicationOf ?work ;
-       deich:mainTitle ?englishMainTitle ;
-       deich:language <http://lexvo.org/id/iso639-3/eng> .
-    OPTIONAL {
-        ?p2 deich:publicationOf ?work ;
-               deich:partTitle ?englishPartTitle ;
-               deich:language <http://lexvo.org/id/iso639-3/eng> .
-        }
-        BIND(IF(BOUND(?englishPartTitle), CONCAT(?englishMainTitle, " — ", ?englishPartTitle), ?englishMainTitle) AS ?englishTitle)
-  }
-
-  UNION {
-      ?p3 deich:publicationOf ?work ;
-         deich:hasImage ?allImg .
-    }
 
   UNION {
         ?p4 deich:publicationOf ?work ;
@@ -178,7 +171,8 @@ WHERE {
   # 4. Information from contributions on both publication and work:
 
     UNION {
-      { <__PUBLICATIONURI__> deich:contributor ?contrib } UNION { ?work deich:contributor ?contrib }
+            { <__PUBLICATIONURI__> deich:contributor ?contrib }
+      UNION { <__PUBLICATIONURI__> deich:publicationOf ?work . ?work deich:contributor ?contrib }
         ?contrib a deich:Contribution ;
             deich:agent ?contribAgent ;
             deich:role ?contribRoleURI .

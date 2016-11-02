@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchResult from './SearchResult'
 import Constants from '../constants/Constants'
@@ -16,7 +16,7 @@ class SearchResults extends React.Component {
     const from = Constants.maxSearchResultsPerPage * (this.props.page - 1)
     const to = from + Constants.maxSearchResultsPerPage
     return (
-      <ReactCSSTransitionGroup
+      <NonIETransitionGroup
         transitionName="fade-in"
         transitionAppear
         transitionAppearTimeout={500}
@@ -37,7 +37,7 @@ class SearchResults extends React.Component {
             />
           )) : null}
         </div>
-      </ReactCSSTransitionGroup>
+      </NonIETransitionGroup>
     )
   }
 }

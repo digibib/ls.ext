@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import NonIETransitionGroup from './NonIETransitionGroup'
 import { Link } from 'react-router'
 import { push } from 'react-router-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
@@ -129,7 +129,7 @@ class SearchHeader extends React.Component {
     const mobileNavClass = this.props.showMobileNavigation ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
       <div>
-        <ReactCSSTransitionGroup
+        <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
           transitionAppearTimeout={500}
@@ -157,7 +157,7 @@ class SearchHeader extends React.Component {
             </nav>
           </MediaQuery>
 
-        </ReactCSSTransitionGroup>
+        </NonIETransitionGroup>
 
         <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
           <nav className={mobileNavClass}>
@@ -165,7 +165,7 @@ class SearchHeader extends React.Component {
           </nav>
         </MediaQuery>
 
-        <ReactCSSTransitionGroup
+        <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
           transitionAppearTimeout={500}
@@ -195,7 +195,7 @@ class SearchHeader extends React.Component {
               </div>
             </form>
           </div>
-        </ReactCSSTransitionGroup>
+        </NonIETransitionGroup>
       </div>
     )
   }
