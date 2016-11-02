@@ -13,6 +13,40 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.2.0 (2016-11-02) First post-release!
+
+KOHA: b8d166a4c9463aace98c372c55f466a9aea8bcaf
+
+- services:
+  - add DEIC framework to records
+  - json-ld framing
+- patron-client:
+  - mediatype filter
+  - fiction/nonfiction filter
+  - filter branches
+  - available status fix
+  - target audience fix
+  - email login
+  - styling
+  - publishe rdata
+  - item location
+  - borrower name fix
+  - publication publisher
+  - reservation postition
+  - reservation date
+  - disable IE11 transitions
+- catalinker:
+  - numerous bugfixes
+  - link to patron client work
+  - compositiontype
+  - follows/followedby/partof
+  - work types
+- koha:
+  - account details mail
+  - advance notices cronjob
+  - SMS sender
+  - send reports in cron
+
 ## 0.1.5 (2016-09-16) Bugfix release
 
 TAG:  b31510201995ee07c5edb3fc7a0ff1cb1da8abce
