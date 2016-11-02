@@ -15,7 +15,8 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 ## 0.2.0 (2016-11-02) First post-release!
 
-KOHA: b8d166a4c9463aace98c372c55f466a9aea8bcaf
+GITREF: 4111a6e4981cb9f074310233cd7aee661dce6b56
+KOHA:   b8d166a4c9463aace98c372c55f466a9aea8bcaf
 
 - services:
   - add DEIC framework to records
