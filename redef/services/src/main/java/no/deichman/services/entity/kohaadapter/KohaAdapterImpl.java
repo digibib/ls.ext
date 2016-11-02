@@ -106,6 +106,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
             login();
         }
         invocationBuilder.cookie(sessionCookie.toCookie());
+        invocationBuilder.header("framework", System.getenv("MARCFRAMEWORK"));
         switch (method) {
             case "POST":
                 return invocationBuilder.post(Entity.entity(marcRecord.getMarcXml(), MediaType.TEXT_XML));
