@@ -167,7 +167,7 @@ end
 When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   @browser.goto intranet(:reserve)+@context[:publication_recordid]
   barcode = @context[:item_barcode]
-  res = KohaRESTAPI::Patron.new(@browser,@context,@active).list({surname: name})
+  res = KohaRESTAPI::Patron.new(@browser,@context,@active).list({userid: @active[:patron].userid})
   user = JSON.parse(res).first
 
   # lookup patron via holds
