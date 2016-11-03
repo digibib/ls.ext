@@ -49,6 +49,7 @@ import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+import static com.google.common.collect.ImmutableMap.of;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.json.Json.createObjectBuilder;
 import static javax.ws.rs.core.Response.Status.CREATED;
@@ -80,6 +81,7 @@ public class AppTest {
     private static final String EMPTY_STRING = "";
     private static final String ADD = "ADD";
     private static final String DEL = "DEL";
+    public static final String ISBN = "978-82-525-8570-4";
     private static String appURI;
     private static App app;
 
@@ -276,6 +278,20 @@ public class AppTest {
         final HttpResponse<String> patchWorkIntoPublicationResponse = buildPatchRequest(resolveLocally(publicationUri), workIntoPublicationPatch).asString();
         assertResponse(Status.OK, patchWorkIntoPublicationResponse);
 
+        final JsonArray isbnOfPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, BaseURI.ontology("isbn"), ISBN));
+
+        final HttpResponse<String> patchIsbnIntoPublicationResponse = buildPatchRequest(resolveLocally(publicationUri), isbnOfPublicationPatch).asString();
+        assertResponse(Status.OK, patchIsbnIntoPublicationResponse);
+
+        final JsonArray mainTitleOfPublicationPatch = buildLDPatch(buildPatchStatement("add", publicationUri, BaseURI.ontology("mainTitle"), "pubMainTitle"));
+
+        final HttpResponse<String> patchMainTitleIntoPublicationResponse = buildPatchRequest(resolveLocally(publicationUri), mainTitleOfPublicationPatch).asString();
+        assertResponse(Status.OK, patchMainTitleIntoPublicationResponse);
+
+        final HttpResponse<JsonNode> getPublicationProjectionResponse = buildGetRequest(resolveLocally("/publication")).queryString(of("isbn", ISBN, "@return", "mainTitle")).asJson();
+        assertResponse(Status.OK, getPublicationProjectionResponse);
+        assertTrue(getPublicationProjectionResponse.getBody().toString().contains("pubMainTitle"));
+
         kohaSvcMock.addCreateNewBiblioExpectation(SECOND_BIBLIO_ID);
 
         final HttpResponse<JsonNode> createSecondPublicationResponse = buildEmptyCreateRequest(appURI + "publication").asJson();
@@ -326,6 +342,7 @@ public class AppTest {
 
         doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
 
+        
         // delete publication
         kohaSvcMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, "{\"items\":[]}");
         kohaSvcMock.addDeleteBibloExpectation(FIRST_BIBLIO_ID);

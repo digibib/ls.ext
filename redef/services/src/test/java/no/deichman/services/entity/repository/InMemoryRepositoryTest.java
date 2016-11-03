@@ -1,5 +1,6 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.ImmutableMap.of;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -177,6 +179,15 @@ public class InMemoryRepositoryTest {
         Model data = repository.retrieveResourceByURI(test);
         assertFalse(data.toString().contains("359"));
         assertFalse(data.toString().contains("360"));
+    }
+
+    @Test
+    public void shouldReturnMainTitleOfPublicationByISBN() throws Exception {
+        repository = repositoryWithDataFrom("work_w87654.ttl");
+        Model data = repository.retrieveResourceByQuery(EntityType.PUBLICATION, of("isbn", "978-82-02-48040-0"), newArrayList("mainTitle", "subtitle"));
+        assertTrue(data.toString().contains("Hey nonny nonny"));
+        assertTrue(data.toString().contains("Much ado about nothing"));
+        assertFalse(data.toString().contains("80001"));
     }
 
     public static InMemoryRepository repositoryWithDataFrom(String fileName) {

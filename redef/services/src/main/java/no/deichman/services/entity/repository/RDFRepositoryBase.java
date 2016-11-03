@@ -1,5 +1,6 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.patch.PatchParserException;
@@ -32,6 +33,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,18 @@ import java.util.function.Consumer;
 public abstract class RDFRepositoryBase implements RDFRepository {
 
     private static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
+    public static final SimpleSelector WITH_MIGRATION_FILTER = new SimpleSelector() {
+        @Override
+        public boolean test(Statement s) {
+            switch (s.getPredicate().getNameSpace()) {
+                case "http://migration.deichman.no/":
+                case "http://data.deichman.no/raw#":
+                    return false;
+                default:
+                    return true;
+            }
+        }
+    };
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
     private final SPARQLQueryBuilder sqb;
@@ -63,18 +77,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         log.debug("Attempting to retrieve resource <" + xuri.getUri() +">");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(xuri.getUri()))) {
             disableCompression(qexec);
-            return qexec.execDescribe().query(new SimpleSelector(){
-                @Override
-                public boolean test(Statement s) {
-                    switch (s.getPredicate().getNameSpace()) {
-                        case "http://migration.deichman.no/":
-                        case "http://data.deichman.no/raw#":
-                            return false;
-                        default:
-                            return true;
-                    }
-                }
-            });
+            return qexec.execDescribe().query(WITH_MIGRATION_FILTER);
         }
     }
 
@@ -361,6 +364,14 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             );
         }
         return result;
+    }
+
+    @Override
+    public final Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection) {
+        try (QueryExecution qexec = getQueryExecution(sqb.constructFromQueryAndProjection(entityType, queryParameters, projection))) {
+            disableCompression(qexec);
+            return qexec.execConstruct();
+        }
     }
 
     private void disableCompression(QueryExecution qexec) {
