@@ -29,6 +29,7 @@
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
     let etagData = {}
+    require('isbn2')
 
     var deepClone = function (object) {
       var clone = _.clone(object)
@@ -437,7 +438,7 @@
           forAllGroupInputs(function (input1) {
             if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
                 fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
-                  _.flatten([input1.values[ 0 ].current.value])[0])
+                  _.flatten([ input1.values[ 0 ].current.value ])[ 0 ])
               ])[ 0 ])) {
               shouldInclude = false
               return true
@@ -1368,6 +1369,9 @@
             if (input.reportFormat) {
               ontologyInput.reportFormat = input.reportFormat
             }
+            if (input.formatter) {
+              ontologyInput.formatter = input.formatter
+            }
           }
           copyResourceForms(input)
         })
@@ -2204,6 +2208,26 @@
               teardown: function () {}
             }
           }
+          var formatter = function (node, formatter) {
+            if (formatter === 'isbn') {
+              $(node).on('input', function () {
+                let value = $(this).val()
+                let parsedIsbn = ISBN.parse(value)
+                if (parsedIsbn) {
+                  if (parsedIsbn.isIsbn10()) {
+                    $(this).val(parsedIsbn.asIsbn10(true));
+                  } else {
+                    if (parsedIsbn.isIsbn13()) {
+                      $(this).val(parsedIsbn.asIsbn13(true));
+                    }
+                  }
+                }
+              })
+            }
+            return {
+              teardown: function () {}
+            }
+          }
           titleRactive = new Ractive({
             el: 'title',
             template: '{{title.1 || title.2 || title.3 || "Katalogisering"}}',
@@ -2397,7 +2421,8 @@
               timePicker: timePicker,
               slideDown: slideDown,
               pasteSanitizer: pasteSanitizer,
-              searchable: searchable
+              searchable: searchable,
+              formatter: formatter
             },
             partials: applicationData.partials,
             transitions: {
@@ -3497,7 +3522,8 @@
       saveSuggestionData: saveSuggestionData,
       checkRangeStart: checkRangeStart,
       checkRangeEnd: checkRangeEnd,
-      positionSupportPanels: positionSupportPanels
+      positionSupportPanels: positionSupportPanels,
+      ISBN: ISBN
     }
     return Main
   }

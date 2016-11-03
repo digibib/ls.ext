@@ -355,6 +355,7 @@ module.exports = (app) => {
               searchForValueSuggestions: {
                 label: 'ISBN',
                 pattern: '^[ 0-9\-]+[xX]?\s*$',
+                formatter: 'isbn',
                 patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
                 parameterName: 'isbn',
                 automationId: 'searchValueSuggestions',
@@ -559,6 +560,7 @@ module.exports = (app) => {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
               rdfProperty: 'isbn',
               multiple: true,
+              formatter: 'isbn',
               addAnotherLabel: 'Legg til nytt ISBN'
             },
             {
