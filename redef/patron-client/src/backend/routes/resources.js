@@ -66,7 +66,7 @@ module.exports = (app) => {
             const newItem = {
               shelfmark: item.itemcallnumber,
               status: item.status,
-              branchcode: item.holdingbranch,
+              branchcode: item.homebranch,
               barcode: item.barcode,
               location: item.location
             }
