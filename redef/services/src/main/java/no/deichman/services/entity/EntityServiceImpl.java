@@ -32,6 +32,7 @@ import org.apache.jena.vocabulary.RDF;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -612,5 +613,10 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public Map<String, Integer> getNumberOfRelationsForResource(XURI uri) {
         return repository.getNumberOfRelationsForResource(uri);
+    }
+
+    @Override
+    public Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection) {
+        return repository.retrieveResourceByQuery(entityType, queryParameters, projection);
     }
 }

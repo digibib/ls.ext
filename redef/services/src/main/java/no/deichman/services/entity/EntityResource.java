@@ -36,13 +36,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toMap;
 import static javax.ws.rs.core.Response.accepted;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
@@ -338,5 +342,15 @@ public final class EntityResource extends ResourceBase {
     public Response getNumberOfRelationsForResource(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         return ok().entity(GSON.toJson(getEntityService().getNumberOfRelationsForResource(xuri))).build();
+    }
+
+    @GET
+    @Produces(LD_JSON)
+    public Response retrieveResourceByQuery(@PathParam("type") String type, @Context UriInfo uriInfo) throws Exception {
+        Map<String, List<String>> queryParameters = uriInfo.getQueryParameters().entrySet().stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+        List<String> projections = Optional.ofNullable(queryParameters.remove("@return")).orElse(emptyList());
+        Map<String, String> queryParamsSingleValue = queryParameters.entrySet().stream().collect(toMap(Map.Entry::getKey, v -> v.getValue().get(0)));
+        Model model = getEntityService().retrieveResourceByQuery(EntityType.get(type), queryParamsSingleValue, projections);
+        return ok().entity(getJsonldCreator().asJSONLD(model)).build();
     }
 }

@@ -12,4 +12,7 @@
   deichman:publicationOf <http://data.deichman.no/work/w87654> ;
   migration:numberOfPages "359" ;
   raw:numberOfPages "360" ;
+  deichman:mainTitle "Much ado about nothing" ;
+  deichman:subtitle "Hey nonny nonny" ;
+  deichman:isbn "978-82-02-48040-0" ;
   deichman:recordId "80002" .
