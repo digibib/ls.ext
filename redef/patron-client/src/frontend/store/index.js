@@ -13,19 +13,16 @@ const storage = compose(
 )(adapter(window.localStorage))
 
 const reduxRouterMiddleware = routerMiddleware(browserHistory)
-let middleware = [ thunkMiddleware, reduxRouterMiddleware ]
+const middleware = [ thunkMiddleware, reduxRouterMiddleware ]
 
 if (process.env.NODE_ENV !== 'production') {
-  // Only apply in development mode
   const loggerMiddleware = createLogger()
-  middleware = [ ...middleware, loggerMiddleware ]
+  middleware.push(loggerMiddleware)
 }
 
-const createPersistentStoreWithMiddleware = compose(
+const store = createStore(rootReducer, compose(
   applyMiddleware(...middleware),
   persistState(storage, 'patron-client')
-)(createStore)
-
-const store = createPersistentStoreWithMiddleware(rootReducer)
+))
 
 export default store
