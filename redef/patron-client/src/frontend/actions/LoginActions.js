@@ -147,7 +147,8 @@ export function updateLoginStatus () {
     return fetch(url, {
       method: 'GET',
       headers: {
-        'cache-control': 'no-cache'
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache'
       },
       credentials: 'same-origin'
     }).then(response => response.json())
@@ -167,7 +168,8 @@ export function updateLoginStatusBeforeAction (successAction) {
     return fetch(url, {
       method: 'GET',
       headers: {
-        'cache-control': 'no-cache'
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache'
       },
       credentials: 'same-origin'
     }).then(response => response.json())
