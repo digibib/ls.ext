@@ -20,9 +20,27 @@ if (process.env.NODE_ENV !== 'production') {
   middleware.push(loggerMiddleware)
 }
 
-const store = createStore(rootReducer, compose(
-  applyMiddleware(...middleware),
-  persistState(storage, 'patron-client')
-))
+const composeEnhancers =
+  process.env.NODE_ENV !== 'production' &&
+  typeof window === 'object' &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose
 
-export default store
+export default (initialState) => {
+  const store = createStore(
+    rootReducer,
+    initialState,
+    composeEnhancers(
+      applyMiddleware(...middleware),
+      persistState(storage, 'patron-client')
+    ))
+
+  if (module.hot) {
+    module.hot.accept('../reducers', () => {
+      store.replaceReducer(require('../reducers'))
+    })
+  }
+
+  return store
+}

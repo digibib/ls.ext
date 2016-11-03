@@ -1,12 +1,15 @@
 import '../../public/dist/styles/main.css'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import store from './store'
+import configureStore from './store'
 import Root from './containers/Root'
 import { addLocaleData } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import no from 'react-intl/locale-data/no'
+import { Provider } from 'react-redux'
+import routes from './routes'
+
+const store = configureStore()
 
 const areIntlLocalesSupported = require('intl-locales-supported')
 
@@ -34,4 +37,4 @@ if (global.Intl) {
 addLocaleData(en)
 addLocaleData(no)
 
-ReactDOM.render(<Provider store={store}><Root /></Provider>, document.getElementById('app'))
+ReactDOM.render(<Provider store={store}><Root routes={routes(store)} /></Provider>, document.getElementById('app'))
