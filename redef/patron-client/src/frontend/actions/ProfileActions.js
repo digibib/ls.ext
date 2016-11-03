@@ -18,7 +18,9 @@ export function fetchProfileSettings () {
       method: 'GET',
       credentials: 'same-origin',
       headers: {
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache'
       }
     })
       .then(response => response.json())
@@ -41,7 +43,9 @@ export function fetchProfileLoans () {
       method: 'GET',
       credentials: 'same-origin',
       headers: {
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache'
       }
     })
       .then(response => response.json())
@@ -64,7 +68,9 @@ export function fetchProfileInfo () {
       method: 'GET',
       credentials: 'same-origin',
       headers: {
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache'
       }
     })
       .then(response => response.json())
