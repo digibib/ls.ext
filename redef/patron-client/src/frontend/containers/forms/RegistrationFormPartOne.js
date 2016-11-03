@@ -41,16 +41,6 @@ class RegistrationFormPartOne extends React.Component {
     )
   }
 
-  renderCheckForExistingUserSuccess () {
-    /*
-     return (
-     <p data-automation-id="check_for_existing_user_success">
-     <FormattedMessage {...messages.checkForExistingUserSuccess} />
-     </p>
-     )
-     */
-  }
-
   renderCheckForExistingUserError (message) {
     return (
       <div data-automation-id="check_for_existing_user_error">
@@ -96,9 +86,13 @@ class RegistrationFormPartOne extends React.Component {
     return (
       <form onSubmit={this.props.handleSubmit(this.props.registrationActions.checkForExistingUser)}>
         <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
+        {/* IE11-hack begin: Make the first fieldset with firstName and lastName display with correct width */}
+        <fieldset style={{ visibility: 'hidden', height: '0px' }}><input /></fieldset>
+        {/* IE11-hack end */}
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.nameLabel} /></legend>
-          <FormInputField name="firstName" message={messages.firstName} formName={formName} />
+          <FormInputField name="firstName" message={messages.firstName} formName={formName}
+                          getValidator={this.getValidator} />
           <FormInputField name="lastName" message={messages.lastName} formName={formName}
                           getValidator={this.getValidator} />
         </fieldset>
@@ -124,7 +118,6 @@ class RegistrationFormPartOne extends React.Component {
           {/* TODO: also handle all fields empty */}
           {this.props.checkForExistingUserSuccess ? null : this.renderContinueAndCancelButtons(submitting)}
         </fieldset>
-        {this.props.checkForExistingUserSuccess ? this.renderCheckForExistingUserSuccess() : ''}
         {this.props.checkForExistingUserFailure ? this.renderCheckForExistingUserError(this.props.registrationError) : ''}
       </form>
     )
