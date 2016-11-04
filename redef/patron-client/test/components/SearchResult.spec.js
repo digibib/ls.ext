@@ -28,6 +28,7 @@ function setup (resultPropOverrides) {
       ...resultPropOverrides
     },
     resources: {},
+    items: {},
     fetchWorkResource: () => {}
   }
 

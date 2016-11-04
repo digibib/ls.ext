@@ -15,6 +15,8 @@ function setup (propOverrides) {
     searchActions: { search: () => {} },
     fetchWorkResource: () => {},
     resources: {},
+    items: {},
+    page: 1,
     ...propOverrides
   }
 
@@ -33,13 +35,7 @@ function setup (propOverrides) {
 
 describe('components', () => {
   before(() => {
-    DefaultExportSearchResultsRewireApi.__Rewire__('SearchResult', React.createClass({
-      render () {
-        return (
-          <div />
-        )
-      }
-    }))
+    DefaultExportSearchResultsRewireApi.__Rewire__('SearchResult', () => <div />)
   })
 
   after(() => {

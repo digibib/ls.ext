@@ -17,7 +17,7 @@ const NonIETransitionGroup = (props) => {
 }
 
 NonIETransitionGroup.propTypes = {
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   component: PropTypes.string.isRequired
 }
 

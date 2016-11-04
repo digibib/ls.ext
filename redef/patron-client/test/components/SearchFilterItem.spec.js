@@ -10,6 +10,7 @@ function setup (propOverrides) {
   const props = {
     filter: {id: 'test_id', active: false, bucket: 'test_bucket'},
     toggleFilter: expect.createSpy(),
+    scrollTargetNode: {},
     ...propOverrides
   }
 

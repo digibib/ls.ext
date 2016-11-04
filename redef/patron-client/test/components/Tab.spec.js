@@ -11,7 +11,7 @@ function setup (propOverrides) {
     tab: { label: 'test_label', path: 'test_path' },
     push: expect.createSpy(),
     className: '',
-    currentPath: '',
+    ariaSelected: 'false',
     ...propOverrides
   }
 
@@ -30,13 +30,7 @@ function setup (propOverrides) {
 
 describe('components', () => {
   before(() => {
-    DefaultExportTabRewireApi.__Rewire__('Tab', React.createClass({
-      render () {
-        return (
-          <div />
-        )
-      }
-    }))
+    DefaultExportTabRewireApi.__Rewire__('Tab', () => <div />)
   })
 
   after(() => {

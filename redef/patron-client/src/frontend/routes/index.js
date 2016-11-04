@@ -10,32 +10,32 @@ import MyPage from '../containers/MyPage'
 import UserLoans from '../containers/UserLoans'
 import UserInfo from '../containers/UserInfo'
 import UserSettings from '../containers/UserSettings'
-import store from '../store'
 import { requireLoginBeforeAction } from '../actions/LoginActions'
 import { SHOW_PRIVILEGED_ROUTE } from '../constants/ActionTypes'
 
-const history = syncHistoryWithStore(browserHistory, store)
-
-function requireLogin () {
-  if (!store.getState().application.isLoggedIn) {
-    store.dispatch(requireLoginBeforeAction({ type: SHOW_PRIVILEGED_ROUTE }))
+export default (store) => {
+  function requireLogin () {
+    if (!store.getState().application.isLoggedIn) {
+      store.dispatch(requireLoginBeforeAction({ type: SHOW_PRIVILEGED_ROUTE }))
+    }
   }
-}
 
-export default (
-  <Router history={history}>
-    <Route path="/" component={App}>
-      <IndexRoute component={Search} />
-      <Route path="search" component={Search} />
-      <Route path="work/:workId" component={Work} />
-      <Route path="work/:workId/publication/:publicationId" component={Work} />
-      <Route path="person/:personId" component={Person} />
-      <Route path="profile" component={MyPage} onEnter={requireLogin}>
-        <IndexRoute component={UserLoans} />
-        <Route path="loans" component={UserLoans} />
-        <Route path="info" component={UserInfo} />
-        <Route path="settings" component={UserSettings} />
-      </Route>
-    </Route>
-  </Router>
-)
+  const history = syncHistoryWithStore(browserHistory, store)
+  return (
+      <Router history={history}>
+        <Route path="/" component={App}>
+          <IndexRoute component={Search} />
+          <Route path="search" component={Search} />
+          <Route path="work/:workId" component={Work} />
+          <Route path="work/:workId/publication/:publicationId" component={Work} />
+          <Route path="person/:personId" component={Person} />
+          <Route path="profile" component={MyPage} onEnter={requireLogin}>
+            <IndexRoute component={UserLoans} />
+            <Route path="loans" component={UserLoans} />
+            <Route path="info" component={UserInfo} />
+            <Route path="settings" component={UserSettings} />
+          </Route>
+        </Route>
+      </Router>
+  )
+}

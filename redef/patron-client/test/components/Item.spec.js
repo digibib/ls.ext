@@ -45,19 +45,17 @@ describe('components', () => {
   describe('Item', () => {
     it('should render one unavailable item', () => {
       const { node, props } = setup({
-        publication: {
-          mediaTypes: [ 'test_media_type' ],
-          languages: []
-        },
         item: {
           shelfmark: 'shelfmark',
           total: 1,
-          available: 0
+          available: 0,
+          languages: [],
+          mediaTypes: ['test_media_type']
         }
       })
 
       expect(node.querySelector("[data-automation-id='item_media_type']").textContent).toBe('test_media_type_english')
-      expect(node.querySelector("[data-automation-id='item_languages']").textContent).toBe(' ')
+      expect(node.querySelector("[data-automation-id='item_languages']").textContent).toBe('')
       expect(node.querySelector("[data-automation-id='item_shelfmark']").textContent).toBe(props.item.shelfmark)
       expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe('0 av 1 ledige')
     })

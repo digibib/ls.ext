@@ -2,30 +2,13 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import Errors from '../constants/Errors'
+import { action, errorAction } from './GenericActions'
 
-export function requestProfileSettings () {
-  return {
-    type: types.REQUEST_PROFILE_SETTINGS
-  }
-}
+export const requestProfileSettings = () => action(types.REQUEST_PROFILE_SETTINGS)
 
-export function profileSettingsFailure (error) {
-  console.log(error)
-  return {
-    type: types.PROFILE_SETTINGS_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const profileSettingsFailure = (error) => errorAction(types.PROFILE_SETTINGS_FAILURE, error)
 
-export function receiveProfileSettings (settings) {
-  return {
-    type: types.RECEIVE_PROFILE_SETTINGS,
-    payload: {
-      settings: settings
-    }
-  }
-}
+export const receiveProfileSettings = (settings) => action(types.RECEIVE_PROFILE_SETTINGS, { settings })
 
 export function fetchProfileSettings () {
   return (dispatch) => {
@@ -46,29 +29,11 @@ export function fetchProfileSettings () {
   }
 }
 
-export function requestProfileLoans () {
-  return {
-    type: types.REQUEST_PROFILE_LOANS
-  }
-}
+export const requestProfileLoans = () => action(types.REQUEST_PROFILE_LOANS)
 
-export function profileLoansFailure (error) {
-  console.log(error)
-  return {
-    type: types.PROFILE_LOANS_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const profileLoansFailure = (error) => errorAction(types.PROFILE_LOANS_FAILURE, error)
 
-export function receiveProfileLoans (loans) {
-  return {
-    type: types.RECEIVE_PROFILE_LOANS,
-    payload: {
-      loans: loans
-    }
-  }
-}
+export const receiveProfileLoans = (loans) => action(types.RECEIVE_PROFILE_LOANS, { loans })
 
 export function fetchProfileLoans () {
   return (dispatch) => {
@@ -89,29 +54,11 @@ export function fetchProfileLoans () {
   }
 }
 
-export function requestProfileInfo () {
-  return {
-    type: types.REQUEST_PROFILE_INFO
-  }
-}
+export const requestProfileInfo = () => action(types.REQUEST_PROFILE_INFO)
 
-export function profileInfoFailure (error) {
-  console.log(error)
-  return {
-    type: types.PROFILE_INFO_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const profileInfoFailure = (error) => errorAction(types.PROFILE_INFO_FAILURE, error)
 
-export function receiveProfileInfo (info) {
-  return {
-    type: types.RECEIVE_PROFILE_INFO,
-    payload: {
-      info: info
-    }
-  }
-}
+export const receiveProfileInfo = (info) => action(types.RECEIVE_PROFILE_INFO, { info })
 
 export function fetchProfileInfo () {
   return (dispatch) => {
@@ -132,26 +79,11 @@ export function fetchProfileInfo () {
   }
 }
 
-export function requestPostProfileInfo () {
-  return {
-    type: types.REQUEST_POST_PROFILE_INFO
-  }
-}
+export const requestPostProfileInfo = () => action(types.REQUEST_POST_PROFILE_INFO)
 
-export function postProfileInfoFailure (error) {
-  console.log(error)
-  return {
-    type: types.POST_PROFILE_INFO_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const postProfileInfoFailure = (error) => errorAction(types.POST_PROFILE_INFO_FAILURE, error)
 
-export function postProfileInfoSuccess () {
-  return {
-    type: types.POST_PROFILE_INFO_SUCCESS
-  }
-}
+export const postProfileInfoSuccess = () => action(types.POST_PROFILE_INFO_SUCCESS)
 
 export function postProfileInfo (successAction) {
   const url = '/api/v1/profile/info'
@@ -189,26 +121,11 @@ export function postProfileInfo (successAction) {
   }
 }
 
-export function requestPostProfileSettings () {
-  return {
-    type: types.REQUEST_POST_PROFILE_SETTINGS
-  }
-}
+export const requestPostProfileSettings = () => action(types.REQUEST_POST_PROFILE_SETTINGS)
 
-export function postProfileSettingsFailure (error) {
-  console.log(error)
-  return {
-    type: types.POST_PROFILE_SETTINGS_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const postProfileSettingsFailure = (error) => errorAction(types.POST_PROFILE_SETTINGS_FAILURE, error)
 
-export function postProfileSettingsSuccess () {
-  return {
-    type: types.POST_PROFILE_SETTINGS_SUCCESS
-  }
-}
+export const postProfileSettingsSuccess = () => action(types.POST_PROFILE_SETTINGS_SUCCESS)
 
 export function postProfileSettings (profileSettings, successAction) {
   const url = '/api/v1/profile/settings'
@@ -240,26 +157,11 @@ export function postProfileSettings (profileSettings, successAction) {
   }
 }
 
-export function requestChangePassword () {
-  return {
-    type: types.REQUEST_CHANGE_PASSWORD
-  }
-}
+export const requestChangePassword = () => action(types.REQUEST_CHANGE_PASSWORD)
 
-export function changePasswordFailure (error) {
-  console.log(error)
-  return {
-    type: types.CHANGE_PASSWORD_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const changePasswordFailure = (error) => errorAction(types.CHANGE_PASSWORD_FAILURE, error)
 
-export function changePasswordSuccess () {
-  return {
-    type: types.CHANGE_PASSWORD_SUCCESS
-  }
-}
+export const changePasswordSuccess = () => action(types.CHANGE_PASSWORD_SUCCESS)
 
 export function changePasswordFromForm (successAction) {
   return (dispatch, getState) => {

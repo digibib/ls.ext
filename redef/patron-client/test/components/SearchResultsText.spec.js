@@ -40,7 +40,7 @@ describe('components', () => {
         locationQuery: { query: 'test_query' },
         isSearching: true
       })
-      expect(node.getAttribute('data-automation-id')).toEqual('is_searching')
+      expect(node.querySelector("[data-automation-id='is_searching']")).toNotEqual(null)
     })
 
     it('should render search term and total hits when display is large enough', () => {

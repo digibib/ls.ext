@@ -1,20 +1,19 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import routes from '../routes'
 import { IntlProvider } from 'react-intl'
 
-class Root extends React.Component {
-  render () {
-    return (
-      <IntlProvider key="intl" locale={this.props.locale}
-                    messages={this.props.messages[ this.props.locale ]}>{routes}</IntlProvider>
-    )
-  }
-}
+const Root = ({ locale, messages, routes }) => (
+  <IntlProvider key="intl"
+                locale={locale}
+                messages={messages[ locale ]}>
+    {routes}
+  </IntlProvider>
+)
 
 Root.propTypes = {
   locale: PropTypes.string.isRequired,
-  messages: PropTypes.object.isRequired
+  messages: PropTypes.object.isRequired,
+  routes: PropTypes.object.isRequired
 }
 
 function mapStateToProps (state) {
