@@ -10,6 +10,7 @@ function setup (propOverrides) {
   const props = {
     expandSubResource: () => {},
     startReservation: () => {},
+    toggleFilter: () => {},
     toggleParameterValue: () => {},
     locationQuery: {},
     audiences: [],
@@ -50,8 +51,11 @@ function setup (propOverrides) {
         formats: []
       }
     ],
-    searchFilterActions: {},
+    searchFilterActions: {
+      removeFilterInBackUrl: () => {}
+    },
     query: {},
+    workLanguage: '',
     ...propOverrides
   }
 

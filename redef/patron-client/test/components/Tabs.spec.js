@@ -8,6 +8,7 @@ import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
+    label: 'testlabel',
     tabList: [ { label: 'label_1', path: '/path_1' }, { label: 'label_2', path: '/path_2' }, { label: 'label_3', path: '/path_3' } ],
     push: () => {},
     currentPath: '',

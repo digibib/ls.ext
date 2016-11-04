@@ -17,6 +17,12 @@ function setup (propOverrides) {
     logout: () => {},
     showLoginDialog: () => {},
     requireLoginBeforeAction: () => {},
+    showMobileNavigation: false,
+    startRegistration: () => {},
+    mobileNavigationActions: {
+      showMobileNavigation: () => {},
+      hideMobileNavigation: () => {}
+    },
     ...propOverrides
   }
 

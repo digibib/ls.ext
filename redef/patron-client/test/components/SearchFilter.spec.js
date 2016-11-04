@@ -19,6 +19,7 @@ function setup (propOverrides) {
     toggleFilter: () => {},
     toggleFilterVisibility: () => {},
     toggleCollapseFilter: () => {},
+    scrollTargetNode: {},
     ...propOverrides
   }
 
@@ -51,27 +52,27 @@ describe('components', () => {
     it('should render filters', () => {
       const { node, props } = setup()
       // TODO Uncomment count checks when the count received from elastic search is correct
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[0].id}']`).innerHTML).toContain('Norwegian')
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[1].id}']`).innerHTML).toContain('English')
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[2].id}']`).innerHTML).toContain('Finnish')
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[3].id}']`).innerHTML).toContain('Swedish')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 0 ].id}']`).innerHTML).toContain('Norwegian')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 1 ].id}']`).innerHTML).toContain('English')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 2 ].id}']`).innerHTML).toContain('Finnish')
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 3 ].id}']`).innerHTML).toContain('Swedish')
     })
 
     it('should render checked filters', () => {
       const { node, props } = setup()
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[0].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[1].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[2].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[3].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 0 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 1 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 2 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
+      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 3 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
     })
 
     it('should order by count', () => {
       const { node, props } = setup()
       const nodes = node.querySelectorAll("[data-automation-id^='filter_language_']")
-      expect(nodes[ 0 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[1].id}`)
-      expect(nodes[ 1 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[2].id}`)
-      expect(nodes[ 2 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[3].id}`)
-      expect(nodes[ 3 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[0].id}`)
+      expect(nodes[ 0 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 1 ].id}`)
+      expect(nodes[ 1 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 2 ].id}`)
+      expect(nodes[ 2 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 3 ].id}`)
+      expect(nodes[ 3 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 0 ].id}`)
     })
   })
 })

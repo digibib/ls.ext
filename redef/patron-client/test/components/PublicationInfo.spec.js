@@ -13,7 +13,10 @@ function setup (propOverrides) {
       id: 'test_id',
       uri: 'test_uri',
       items: [],
-      formatAdaptations: []
+      formatAdaptations: [],
+      publishers: [],
+      subtitles: [],
+      serialIssues: []
     },
     expandSubResource: expect.createSpy(),
     startReservation: () => {},
@@ -35,13 +38,7 @@ function setup (propOverrides) {
 
 describe('components', () => {
   before(() => {
-    DefaultExportPublicationInfoRewireApi.__Rewire__('Items', React.createClass({
-      render () {
-        return (
-          <table />
-        )
-      }
-    }))
+    DefaultExportPublicationInfoRewireApi.__Rewire__('Items', () => <table />)
   })
 
   after(() => {
