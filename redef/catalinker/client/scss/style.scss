@@ -22,6 +22,16 @@ $mintgreen: #DCFC9F;
   outline-offset: 2px;
 }
 
+@mixin pencil {
+  display: inline-block;
+  background-image: url('/images/lower_right_pencil.svg');
+  background-repeat: no-repeat;
+  background-position: left top;
+  padding-left: 2em;
+  cursor: pointer;
+  height: 20px
+}
+
 .label-font {
   font-weight: bold;
 }
@@ -610,13 +620,7 @@ body {
           padding: 0.5em;
           min-height: 65px;
           .edit-resource {
-            display: inline-block;
-            background-image: url('/images/lower_right_pencil.svg');
-            background-repeat: no-repeat;
-            background-position: left top;
-            padding-left: 2em;
-            cursor: pointer;
-            height: 20px
+            @include pencil()
           }
           .select-result-item {
             display: inline-block;
@@ -1007,5 +1011,17 @@ body {
     left: 0;
     display: none;
     z-index: 2000;
+  }
+  #alert-existing-resource-dialog {
+    .search-result {
+      max-height: 70px;
+      overflow: scroll;
+      .item {
+        .edit-resource {
+          @include pencil();
+          margin-right: -12px;
+        }
+      }
+    }
   }
 }
