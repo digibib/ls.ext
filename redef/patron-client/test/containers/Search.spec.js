@@ -29,6 +29,8 @@ function setup (propOverrides) {
       fetchWorkResource: () => {}
     },
     resources: {},
+    items: {},
+    windowWidth: 1000,
     ...propOverrides
   }
 

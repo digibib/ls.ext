@@ -9,27 +9,23 @@ describe('reducers', () => {
       expect(
         resources(undefined, {})
       ).toEqual({
-        error: false,
         isRequesting: false,
         resources: {},
+        error: false,
         isRequestingItems: false,
         items: {},
-        itemsError: false
+        itemsError: false,
+        showAdditionalInformation: []
       })
     })
 
     it(`should handle ${types.REQUEST_RESOURCE}`, () => {
       expect(
-        resources(undefined, {
+        resources({}, {
           type: types.REQUEST_RESOURCE
         })
       ).toEqual({
-        error: false,
-        isRequesting: true,
-        resources: {},
-        isRequestingItems: false,
-        items: {},
-        itemsError: false
+        isRequesting: true
       })
       expect(
         resources({
@@ -46,7 +42,7 @@ describe('reducers', () => {
 
     it(`should handle ${types.RECEIVE_RESOURCE}`, () => {
       expect(
-        resources(undefined, {
+        resources({}, {
           type: types.RECEIVE_RESOURCE,
           payload: {
             id: 'test uri',
@@ -56,10 +52,7 @@ describe('reducers', () => {
       ).toEqual({
         error: false,
         isRequesting: false,
-        resources: { 'test uri': 'test resource' },
-        isRequestingItems: false,
-        items: {},
-        itemsError: false
+        resources: { 'test uri': 'test resource' }
       })
       expect(
         resources({

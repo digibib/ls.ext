@@ -23,7 +23,7 @@ function setup (propOverrides) {
     city: 'city',
     country: 'country',
     email: 'email',
-    lastUpdated: 'lastUpdated',
+    lastUpdated: '01/01/2016',
     loanerCardIssued: 'loanerCardIssued',
     loanerCategory: 'loanerCategory',
     mobile: 'mobile',

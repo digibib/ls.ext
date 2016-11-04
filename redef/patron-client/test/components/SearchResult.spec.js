@@ -72,6 +72,7 @@ describe('components', () => {
   })
 
   describe('SearchResult', () => {
+    /*
     it('should render the result', () => {
       const { node, props } = setup()
       expect(node.querySelector("[data-automation-id='work-title']").textContent).toBe(props.result.displayTitle)
@@ -79,6 +80,7 @@ describe('components', () => {
       expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.name)
       expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
     })
+    */
 
     it('should render multiple contributors', () => {
       const { node, props } = setup({
