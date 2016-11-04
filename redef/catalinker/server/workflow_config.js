@@ -364,6 +364,17 @@ module.exports = (app) => {
                 preferredSource: {
                   id: 'bibbi',
                   name: 'Biblioteksentralen'
+                },
+                checkExistingResource: {
+                  url: 'services/publication',
+                  queryParameter: 'isbn',
+                  showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear'],
+                  type: "Publication",
+                  legend: 'Det finnes allerede registrerte utgivelser med samme ISBN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+                  editWithTemplate: {
+                    template: "workflow",
+                    descriptionKey: 'maintPub'
+                  }
                 }
               }
             }
@@ -385,6 +396,17 @@ module.exports = (app) => {
                 preferredSource: {
                   id: 'bibbi',
                   name: 'Biblioteksentralen'
+                },
+                checkExistingResource: {
+                  url: 'services/publication',
+                  queryParameter: 'hasEan',
+                  showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear'],
+                  type: "Publication",
+                  legend: 'Det finnes allerede registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+                  editWithTemplate: {
+                    template: "workflow",
+                    descriptionKey: 'maintPub'
+                  }
                 }
               }
             }

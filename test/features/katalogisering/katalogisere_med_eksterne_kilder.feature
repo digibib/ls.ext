@@ -75,3 +75,36 @@ Egenskap: katalogisere med eksterne kilder
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"
 
     
+  Scenario: Legge inn et ISBN-nummer som finnes fra før
+    Gitt at jeg har en bok
+    Og jeg legger inn et ISBN-nummer på startsida og trykker enter
+    Og jeg venter litt
+    Så Sjekker jeg at det vises treff fra preferert ekstern kilde
+    Så trykker jeg på "Bruk forslag"-knappen
+    Og jeg venter litt
+    Så åpner jeg listen med eksterne forslag fra andre kilder for agent som skal knyttes til bidrag og velger det første forslaget
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny person"-knappen
+    Og husker navnet på _personen jeg nettopp opprettet
+    Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så åpner jeg listen med eksterne forslag fra andre kilder for rolle som skal knyttes til bidrag og velger det første forslaget
+    Og jeg venter litt
+    Så setter jeg markøren i søkefelt for verk og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Dirigent" knyttet til "verket"
+    Så trykker jeg på "Neste steg: Beskrivelse"-knappen
+    Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
+    Og jeg legger inn samme ISBN-nummer i ISBN-feltet til utgivelsen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg legger inn samme ISBN-nummer på startsida og trykker enter
+    Og jeg venter litt
+    Så vises en dialog med tittelen "Denne utgivelsen finnes fra før"
+
