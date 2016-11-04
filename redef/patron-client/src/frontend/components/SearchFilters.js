@@ -17,7 +17,9 @@ class SearchFilters extends React.Component {
   }
 
   componentWillUpdate (nextProps) {
-    if (this.props.windowWidth !== nextProps.windowWidth) {
+    const previousWidth = this.props.windowWidth
+    const currentWidth = nextProps.windowWidth
+    if (previousWidth !== currentWidth && ((previousWidth >= 668 && currentWidth < 668) || previousWidth < 668 && currentWidth >= 668)) {
       this.toggleFilterVisibility()
     }
   }
