@@ -95,7 +95,7 @@ describe('components', () => {
   })
 
   after(() => {
-    DefaultExportPublicationsRewireApi.__ResetDependency__
+    DefaultExportPublicationsRewireApi.__ResetDependency__('Publication')
   })
 
   describe('Publications', () => {

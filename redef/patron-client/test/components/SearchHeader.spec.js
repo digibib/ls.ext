@@ -41,17 +41,11 @@ function setup (propOverrides) {
 
 describe('components', () => {
   before(() => {
-    DefaultExportSearchHeaderRewireApi.__Rewire__('Link', React.createClass({
-      render () {
-        return (
-          <div />
-        )
-      }
-    }))
+    DefaultExportSearchHeaderRewireApi.__Rewire__('Link', () => <div />)
   })
 
   after(() => {
-    DefaultExportSearchHeaderRewireApi.__ResetDependency__
+    DefaultExportSearchHeaderRewireApi.__ResetDependency__('Link')
   })
 
   describe('SearchHeader', () => {
@@ -60,7 +54,10 @@ describe('components', () => {
       const searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[0]).toEqual({ pathname: '/search', query: { query: 'testvalue' } })
+      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[ 0 ]).toEqual({
+        pathname: '/search',
+        query: { query: 'testvalue' }
+      })
     })
 
     it('should search with value set from input', () => {
@@ -70,7 +67,10 @@ describe('components', () => {
       const searchButton = findElementByDataAutomationId(output, 'search_button')
       TestUtils.Simulate.click(searchButton)
       expect(props.dispatch).toHaveBeenCalled()
-      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[0]).toEqual({ pathname: '/search', query: { query: 'testvalue' } })
+      expect(props.dispatch.calls[ 0 ].arguments[ 0 ].payload.args[ 0 ]).toEqual({
+        pathname: '/search',
+        query: { query: 'testvalue' }
+      })
     })
   })
 })

@@ -49,7 +49,7 @@ describe('containers', () => {
   })
 
   after(() => {
-    DefaultExportModalRootRewireApi.__ResetDependency__
+    DefaultExportModalRootRewireApi.__ResetDependency__('Modal')
   })
 
   describe('ModalRoot', () => {

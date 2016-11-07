@@ -34,7 +34,7 @@ describe('components', () => {
   })
 
   after(() => {
-    DefaultExportTabRewireApi.__ResetDependency__
+    DefaultExportTabRewireApi.__ResetDependency__('Tab')
   })
 
   describe('Tab', () => {

@@ -68,7 +68,7 @@ describe('components', () => {
   })
 
   after(() => {
-    DefaultExportSearchResultRewireApi.__ResetDependency__
+    DefaultExportSearchResultRewireApi.__ResetDependency__('Link')
   })
 
   describe('SearchResult', () => {
