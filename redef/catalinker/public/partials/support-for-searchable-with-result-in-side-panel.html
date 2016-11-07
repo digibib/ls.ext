@@ -29,19 +29,19 @@
                         <div class="pure-u-1-12">
                             {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
                                 <a class="edit-resource" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
-                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}"
-                                   on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}"
+                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
+                                   on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
                                    title="Rediger"/>
                             {{else}}
                                 <a class="select-result-item" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
-                                   on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}"
-                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}"
+                                   on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
+                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
                                    title="Velg"><span/></a>
                             {{/if}}
                         </div>
                         <div class="pure-u-5-6">
-                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[selectedIndexType || current.accepted.selectedIndexType].resultItemLabelProperties)}}</p>
-                            <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[selectedIndexType ||current.accepted.selectedIndexType].resultItemDetailsLabelProperties)}}</p>
+                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}</p>
+                            <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemDetailsLabelProperties)}}</p>
                         </div>
 
                         <div class="pure-u-1-12">
