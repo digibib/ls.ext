@@ -55,13 +55,13 @@ module.exports = {
     'http://lexvo.org/id/iso639-3/nob',
     'http://lexvo.org/id/iso639-3/nno',
     'http://lexvo.org/id/iso639-3/nor',
+    'http://lexvo.org/id/iso639-3/eng',
     'http://lexvo.org/id/iso639-3/swe',
     'http://lexvo.org/id/iso639-3/dan',
-    'http://lexvo.org/id/iso639-3/eng',
     'http://lexvo.org/id/iso639-3/ger',
     'http://lexvo.org/id/iso639-3/fre',
     'http://lexvo.org/id/iso639-3/spa',
     'http://lexvo.org/id/iso639-3/ita'
   ],
-  enabledParameter: null
+  enabledParameter: null /* used to clarify url parameters without value, e.g. ?hideFilters */
 }

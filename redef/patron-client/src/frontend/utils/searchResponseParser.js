@@ -16,9 +16,7 @@ export function processSearchResponse (response, locationQuery) {
       result.relativeUri = relativeUri(result.workUri)
       result.publication = element.publications.hits.hits[ 0 ]._source
       result.publication.contributors = result.publication.contributors || []
-      result.publication.contributors = result.publication.contributors.filter(contributor => {
-        return contributor.mainEntry
-      })
+      result.publication.contributors = result.publication.contributors.filter(contributor => contributor.mainEntry)
       result.publication.contributors.forEach(contributor => {
         contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
       })
@@ -34,6 +32,25 @@ export function processSearchResponse (response, locationQuery) {
               // There might be several publications in the same language. We choose the first.
               selected = result.publication.langTitles[ prefLang ][ 0 ]
               break
+            }
+          }
+          if (selected) {
+            break
+          }
+        }
+      }
+
+      if (!selected) {
+        // If  the title of any preferred language contains the search query, use that title.
+        for (const preferredLanguage of Constants.preferredLanguages) {
+          const langTitles = result.publication.langTitles[ preferredLanguage ]
+          if (langTitles) {
+            for (const langTitle of langTitles) {
+              const titles = `${langTitle.mainTitle} ${langTitle.subtitle} ${langTitle.partNumber} ${langTitle.partTitle}`
+              if (titles.toLocaleLowerCase().includes(locationQuery.query.toLocaleLowerCase())) {
+                selected = langTitle
+                break
+              }
             }
           }
           if (selected) {
@@ -68,7 +85,7 @@ export function processSearchResponse (response, locationQuery) {
       }
 
       if (selected.subtitle) {
-        result.titleLine1 = `${selected.mainTitle} : ${selected.subtitle}`
+        result.titleLine1 = `${selected.mainTitle}: ${selected.subtitle}`
       } else {
         result.titleLine1 = selected.mainTitle
       }
