@@ -96,6 +96,11 @@ module.exports = (app) => {
             {
               rdfProperty: 'specification',
               type: 'input-string-large'
+            },
+            {
+              label: 'Alternativt navn',
+              rdfProperty: 'alternativeName',
+              type: 'input-string'
             }
           ]
         },
@@ -115,6 +120,11 @@ module.exports = (app) => {
             {
               rdfProperty: 'specification',
               type: 'input-string-large'
+            },
+            {
+              label: 'Alternativt navn',
+              rdfProperty: 'alternativeName',
+              type: 'input-string'
             }
           ]
         },
@@ -145,6 +155,11 @@ module.exports = (app) => {
             {
               label: 'Forklarende tilføyelse',
               rdfProperty: 'specification',
+              type: 'input-string'
+            },
+            {
+              label: 'Alternativt navn',
+              rdfProperty: 'alternativeName',
               type: 'input-string'
             }
           ]
@@ -236,6 +251,11 @@ module.exports = (app) => {
               rdfProperty: 'specification',
               type: 'input-string'
               // input type must be defined explicitly, otherwise it will inherit from the search field above
+            },
+            {
+              label: 'Alternativt navn',
+              rdfProperty: 'alternativeName',
+              type: 'input-string'
             }
           ]
         },
@@ -271,6 +291,11 @@ module.exports = (app) => {
             {
               label: 'Forklarende tilføyelse',
               rdfProperty: 'specification',
+              type: 'input-string'
+            },
+            {
+              label: 'Alternativt navn',
+              rdfProperty: 'alternativeName',
               type: 'input-string'
             }
           ]
@@ -317,6 +342,11 @@ module.exports = (app) => {
               label: 'Forklarende tilføyelse',
               rdfProperty: 'specification',
               type: 'input-string'
+            },
+            {
+              label: 'Alternativt navn',
+              rdfProperty: 'alternativeName',
+              type: 'input-string'
             }
           ]
         },
@@ -334,6 +364,11 @@ module.exports = (app) => {
             {
               label: 'Forklarende tilføyelse',
               rdfProperty: 'specification',
+              type: 'input-string'
+            },
+            {
+              label: 'Alternativt navn',
+              rdfProperty: 'alternativeName',
               type: 'input-string'
             }
           ]

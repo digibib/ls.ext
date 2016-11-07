@@ -3,7 +3,8 @@ PREFIX  :     <__ONTOLOGY__>
 CONSTRUCT {
   ?placeUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Place ;
             :prefLabel ?label ;
-            :specification ?specification .
+            :specification ?specification ;
+            :alternativeName  ?alternativeName .
 }
 
 WHERE {
@@ -11,4 +12,5 @@ WHERE {
   ?placeUri a :Place .
   OPTIONAL { ?placeUri :prefLabel ?label }
   OPTIONAL { ?placeUri :specification ?specification }
+  OPTIONAL { ?placeUri :alternativeName  ?alternativeName . }
 }

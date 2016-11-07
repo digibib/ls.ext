@@ -5,13 +5,15 @@ CONSTRUCT {
             :prefLabel ?label ;
             :specification ?specification ;
             :ordinal ?ordinal ;
-            :date ?date .
+            :date ?date ;
+            :alternativeName  ?alternativeName .
 }
 
 WHERE {
   BIND(uri("__EVENTURI__") AS ?eventUri)
   ?eventUri a :Event .
   OPTIONAL { ?eventUri :prefLabel ?label }
+  OPTIONAL { ?eventUri :alternativeName  ?alternativeName }
   OPTIONAL { ?eventUri :specification ?specification }
   OPTIONAL { ?eventUri :ordinal ?ordinal }
   OPTIONAL { ?eventUri :date ?date }

@@ -76,8 +76,8 @@ class WorkFlow < CatalinkerPage
   end
 
   def get_text_field_from_label(label)
-    @browser.element(:xpath => "//*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input|
-    //*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//span[@contenteditable]")
+    @browser.element(:xpath => "//*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//input|
+    //*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//span[@contenteditable]")
   end
 
   def get_checkbox_from_label(label)

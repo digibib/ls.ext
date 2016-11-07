@@ -1,17 +1,19 @@
 PREFIX  :     <__ONTOLOGY__>
 
 CONSTRUCT
-  { ?subjectUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Subject .
-    ?subjectUri :prefLabel ?prefLabel .
-    ?subjectUri :specification ?specification .
+  { ?subjectUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Subject ;
+        :prefLabel ?prefLabel ;
+        :specification ?specification ;
+        :alternativeName  ?alternativeName .
   }
 WHERE
-  { SELECT DISTINCT  ?subjectUri ?prefLabel ?specification
+  { SELECT DISTINCT  ?subjectUri ?prefLabel ?specification ?alternativeName
     WHERE
       { BIND(uri("__SUBJECTURI__") AS ?subjectUri)
         ?subjectUri  a                   :Subject ;
 
       OPTIONAL { ?subjectUri :prefLabel ?prefLabel }
       OPTIONAL { ?subjectUri :specification ?specification }
+      OPTIONAL { ?subjectUri :alternativeName  ?alternativeName }
       }
   }
