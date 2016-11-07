@@ -143,7 +143,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg se at boka er utlånt
     Når jeg trykker på forleng lånet
     Og jeg bekrefter at jeg skal forlenge lånet
-    #Så skal jeg se en dato lenger frem i tid
+    Så skal jeg se en dato lenger frem i tid
 
   Scenario: Låner reserverer og avbestiller reservasjon
     Gitt at jeg er logget inn som adminbruker

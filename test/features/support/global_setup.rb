@@ -29,6 +29,9 @@ class GlobalSetup
     # Needed for new patron category to work
     SVC::Preference.new(@growser).set("pref_CheckPrevCheckout", "softyes")
 
+    # Set renewal preferences
+    SVC::Preference.new(@growser).set("NoRenewalBeforePrecision", "exact_time")
+
     sql = %Q{
 INSERT IGNORE INTO branches  (branchcode, branchname)
 VALUES ('hutl','Hovedbiblioteket');
