@@ -276,7 +276,7 @@
 
     var alertAboutExistingResource = function (spec, existingResources, proceed) {
       ractive.set('existingResourcesDialog.existingResources', existingResources)
-      ractive.set('existingResourcesDialog.legend', spec.legend)
+      ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural.replace('${numberOfResources}', existingResources.length) : spec.legendSingular)
       ractive.set('existingResourcesDialog.editResourceConfig', spec.editWithTemplate)
       $('#alert-existing-resource-dialog').dialog({
         resizable: false,
