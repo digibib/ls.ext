@@ -92,7 +92,7 @@ export function processSearchResponse (response, locationQuery) {
       result.image = selected.image
       if (!result.image) {
         // Choose any available based on preferred languages
-        for (let i = 0; i < Constants.preferredLanguages.lengh; i++) {
+        for (let i = 0; i < Constants.preferredLanguages.length; i++) {
           const prefLang = Constants.preferredLanguages[ i ]
           if (result.publication.langTitles[ prefLang ] && result.publication.langTitles[ prefLang ].image) {
             result.image = result.publication.langTitles[ prefLang ].image
