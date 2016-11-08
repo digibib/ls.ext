@@ -862,6 +862,7 @@
                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
+                      ractive.set(`${input.keypath}.allowAddNewButton`, true)
                     } else {
                       input.suggestedValues = input.suggestedValues || []
                       input.suggestedValues.push({

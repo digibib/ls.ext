@@ -577,7 +577,9 @@ module.exports = (app) => {
             },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] },
-              rdfProperty: 'numberOfPages'
+              rdfProperty: 'numberOfPages',
+              multiple: true,
+              addAnotherLabel: 'Legg til et sidetall'
             },
             { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter', multiple: true },
             {
@@ -789,8 +791,7 @@ module.exports = (app) => {
               isTitleSource: {
                 priority: 2,
                 qualifier: ' - verk'
-              },
-              multiple: true
+              }
             },
             { rdfProperty: 'subtitle' },
             { rdfProperty: 'partTitle' },
