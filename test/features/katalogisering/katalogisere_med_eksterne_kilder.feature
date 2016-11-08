@@ -41,7 +41,7 @@ Egenskap: katalogisere med eksterne kilder
     Så sjekker jeg at verdien for "Utgivelsesår" nå er "2000"
     Så sjekker jeg at verdien for "Sidetall" er "207"
     Så åpner jeg listen med eksterne forslag fra andre kilder for sidetall som skal knyttes til utgivelsen og velger det første forslaget
-    Så sjekker jeg at verdien for "Sidetall" nå er "208"
+    Så sjekker jeg at den siste verdien for "Sidetall" nå er "208"
     Så åpner jeg listen med eksterne forslag fra andre kilder for language som skal knyttes til utgivelsen og velger det første forslaget
     Og jeg venter litt
     Så sjekker jeg at "Svensk" er blant verdiene som er valgt for Språk

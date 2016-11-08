@@ -582,6 +582,11 @@ When(/^sjekker jeg at verdien for "([^"]*)" (nå er|er) "([^"]*)"$/) do |paramet
   input.value.should eq expected_value
 end
 
+When(/^sjekker jeg at den siste verdien for "([^"]*)" (nå er|er) "([^"]*)"$/) do |parameter_label, nowness, expected_value|
+  input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").select(&:visible?).last
+  input.value.should eq expected_value
+end
+
 When(/^trykker jeg på den (første|andre|tredje|fjerde|femte|sjette) trekanten for å søke opp personen i forslaget$/) do |ordinal|
   index = @site.translate(ordinal) - 1
   @browser.elements(:class => 'support-panel-expander').select { |a| a.visible? }[index].click
