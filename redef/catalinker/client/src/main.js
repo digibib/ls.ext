@@ -2998,11 +2998,12 @@
                 let subInputs = ractive.get(grandParentOf(grandParentOf(event.keypath)))
                 _.each(subInputs, function (subInput) {
                   if (typeof subInput.input.values[ event.index.inputValueIndex ].searchable === 'boolean') {
-                    subInput.input.values[ event.index.inputValueIndex ].searchable = true
+                    ractive.set(`${subInput.input.keypath}.values.${event.index.inputValueIndex}.searchable`, true)
                   }
                   if (typeof subInput.input.values[ event.index.inputValueIndex ].suggested === 'object') {
-                    subInput.input.values[ event.index.inputValueIndex ].suggested = null
+                    ractive.set(`${subInput.input.keypath}.values.${event.index.inputValueIndex}.suggested`, null)
                   }
+                  ractive.set(`${subInput.input.keypath}.values.${event.index.inputValueIndex}.nonEditable`, null)
                 })
                 ractive.update()
               },
@@ -3068,7 +3069,16 @@
 
           ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
             checkRequiredSubInput(newValue, keypath)
-          })
+          }, { init: false })
+
+          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.nonEditable', function (newValue, oldValue, keypath) {
+            let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
+            let valueIndex = _.last(parentOf(keypath).split('.'))
+            let nonEditableTarget = `${compoundInputKeypath}.subInputs.0.input.values.${valueIndex}.nonEditable`
+            if (newValue === true && ractive.get(nonEditableTarget) !== true) {
+              ractive.set(nonEditableTarget, true)
+            }
+          }, { init: false })
 
           ractive.observe('inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
             if (Boolean(newValue) !== Boolean(oldValue)) {
@@ -3080,7 +3090,7 @@
                 })
               }
             }
-          })
+          }, { init: false })
 
           ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
             if (newValue && newValue.current) {
