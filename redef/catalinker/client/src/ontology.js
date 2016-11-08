@@ -79,6 +79,9 @@
               delPatches = [];
 
             var currentValue = oldAndCurrentValue.current.value;
+            if (currentValue === null) {
+                currentValue = ''
+            }
             var oldValue = oldAndCurrentValue.old.value;
             if (_.isArray(oldValue) && !_.isArray(currentValue)) {
                 currentValue = [ currentValue ];
