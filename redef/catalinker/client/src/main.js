@@ -777,11 +777,11 @@
               var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
               var mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
               if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
-                if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
+                if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
                   var index = 0
                   let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
                   promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
-                } else if (input.type === 'searchable-with-result-in-side-panel') {
+                } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
                   if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                     _.each(root.outAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
                       index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
@@ -2171,8 +2171,9 @@
                 var keypath = inputValue.keypath
                 ractive.set(keypath + '.current.value', $(e.target).val())
                 var inputNode = ractive.get(grandParentOf(keypath))
-                if (!inputNode.isSubInput && keypath.indexOf('enableCreateNewResource') === -1) {
-                  Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
+                let target = ractive.get('targetUri.' + unPrefix(inputNode.domain))
+                if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') === -1)) {
+                  Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
                 }
                 ractive.update()
