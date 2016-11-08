@@ -16,7 +16,6 @@ import SearchFilterBox from '../components/SearchFilterBox'
 import MediaType from '../components/MediaType'
 
 class Publications extends React.Component {
-
   constructor (props) {
     super(props)
     this.mediaTypeUri = {}
@@ -162,14 +161,16 @@ class Publications extends React.Component {
   getSortedPublicationHolders () {
     const exceptions = {
       'http://lexvo.org/id/iso639-3/nob': 1,
-      'http://lexvo.org/id/iso639-3/eng': 2,
-      'http://lexvo.org/id/iso639-3/dan': 3,
-      'http://lexvo.org/id/iso639-3/swe': 4
+      'http://lexvo.org/id/iso639-3/nno': 2,
+      'http://lexvo.org/id/iso639-3/nor': 3,
+      'http://lexvo.org/id/iso639-3/eng': 4,
+      'http://lexvo.org/id/iso639-3/swe': 5,
+      'http://lexvo.org/id/iso639-3/dan': 6
     }
 
     const { workLanguage } = this.props
     if (!exceptions[ workLanguage ]) {
-      exceptions[ workLanguage ] = 5
+      exceptions[ workLanguage ] = 7
     }
 
     const publicationHoldersByMediaType = {}
@@ -206,10 +207,13 @@ class Publications extends React.Component {
         })
           .thenBy((a, b) => b.original.publicationYear - a.original.publicationYear)
           .thenBy((a, b) => (a.formats[ 0 ] || '').localeCompare(b.formats[ 0 ]))
+          .thenBy((a, b) => a.original.mainTitle.localeCompare(b.original.mainTitle))
       )
     })
 
-    return publicationHoldersByMediaType
+    const sortedPublicationHoldersByMediaType = {}
+    Object.keys(publicationHoldersByMediaType).sort((a, b) => a.localeCompare(b)).forEach(field => sortedPublicationHoldersByMediaType[ field ] = publicationHoldersByMediaType[ field ])
+    return sortedPublicationHoldersByMediaType
   }
 
   handleAnchorClick (mediaTypeUri) {

@@ -147,7 +147,7 @@ function transformPublications (publications) {
       contentAdaptations: publication.contentAdaptations,
       contributors: transformContributors(publication.contributors),
       description: publication.description,
-      /* duration: publication.duration, */
+      duration: publication.duration,
       edition: publication.edition,
       formatAdaptations: publication.formatAdaptations,
       formats: publication.formats,
@@ -163,7 +163,7 @@ function transformPublications (publications) {
       partNumber: publication.partNumber,
       partTitle: publication.partTitle,
       placeOfPublication: publication.hasPlaceOfPublication ? publication.hasPlaceOfPublication.prefLabel : undefined,
-      publicationYear: publication.publicationYear,
+      publicationYear: publication.publicationYear || publication['deichman:publicationYear'],
       publisher: publication.publishedBy ? publication.publishedBy.name : undefined,
       publishers: publication.publishers,
       recordId: publication.recordId,

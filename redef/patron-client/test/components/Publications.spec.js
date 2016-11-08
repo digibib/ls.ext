@@ -246,7 +246,7 @@ describe('components', () => {
       expect(publications[ 4 ].getAttribute('data-automation-id')).toEqual('publication_/uri4')
     })
 
-    it('should prioritize Norwegian, English, Danish and Swedish when sorting by language', () => {
+    it('should prioritize Norwegian, English, Swedish and Danish when sorting by language', () => {
       const { node } = setup({
         mediaQueryValues: { width: 992 },
         publications: [
@@ -275,7 +275,7 @@ describe('components', () => {
             uri: '/uri4',
             id: 'publication_id4',
             mediaTypes: [ 'http://data.deichman.no/mediaType#Book' ],
-            languages: [ 'http://lexvo.org/id/iso639-3/swe' ],
+            languages: [ 'http://lexvo.org/id/iso639-3/dan' ],
             formats: []
           },
           {
@@ -289,7 +289,7 @@ describe('components', () => {
             uri: '/uri6',
             id: 'publication_id6',
             mediaTypes: [ 'http://data.deichman.no/mediaType#Book' ],
-            languages: [ 'http://lexvo.org/id/iso639-3/dan' ],
+            languages: [ 'http://lexvo.org/id/iso639-3/swe' ],
             formats: []
           }
         ]

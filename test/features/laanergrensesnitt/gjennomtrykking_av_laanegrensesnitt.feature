@@ -180,7 +180,6 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg trykker oppfrisk i nettleseren
     Så skal ingen av avkrysningsboksene være skrudd på inne på innstillinger
 
-  @wip
   Scenario: Sortering på verkssiden
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
