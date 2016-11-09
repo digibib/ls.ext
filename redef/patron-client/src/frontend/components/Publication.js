@@ -89,7 +89,7 @@ class Publication extends React.Component {
         <div className="show-status">
           {this.props.open ? (
             <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>
-              <button>
+              <button data-automation-id="publication_close_show_more_info">
                 <FormattedMessage {...messages.hideInfo} />
                 <i className="icon-up-open" />
               </button>
@@ -97,7 +97,7 @@ class Publication extends React.Component {
           ) : (
             <ClickableElement onClickAction={this.props.expandSubResource}
                               onClickArguments={[ this.props.publication.id, true ]}>
-              <button type="button">
+              <button type="button" data-automation-id="publication_open_show_more_info">
                 <FormattedMessage {...messages.showInfo} />
                 <i className="icon-down-open" />
               </button>

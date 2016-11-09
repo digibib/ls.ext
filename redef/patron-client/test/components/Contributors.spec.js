@@ -44,7 +44,7 @@ describe('components', () => {
     })
 
     after(() => {
-      DefaultExportContributorsRewireApi.__ResetDependency__
+      DefaultExportContributorsRewireApi.__ResetDependency__('Link')
     })
 
     it('should render one contributor', () => {

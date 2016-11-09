@@ -31,7 +31,7 @@ function setup (propOverrides) {
         title: 'title_1',
         author: 'author_1',
         publicationYear: 'publicationYear_1',
-        expiry: '2016-10-01',
+        expiry: '01/10/2016',
         pickupNumber: 'pickupNumber_1',
         branchCode: 'branchCode_1'
       },
@@ -40,7 +40,7 @@ function setup (propOverrides) {
         title: 'title_2',
         author: 'author_2',
         publicationYear: 'publicationYear_1',
-        expiry: '2016-10-02',
+        expiry: '02/10/2016',
         pickupNumber: 'pickupNumber_2',
         branchCode: 'branchCode_2'
       }
@@ -50,7 +50,7 @@ function setup (propOverrides) {
         recordId: 'recordId_1',
         title: 'title_1',
         author: 'author_1',
-        orderedDate: 'orderedDate_1',
+        orderedDate: '03/10/2016',
         waitingPeriod: 'waitingPeriod_1',
         branchCode: 'branchCode_1'
       },
@@ -58,7 +58,7 @@ function setup (propOverrides) {
         recordId: 'recordId_2',
         title: 'title_2',
         author: 'author_2',
-        orderedDate: 'orderedDate_2',
+        orderedDate: '04/10/2016',
         waitingPeriod: 'waitingPeriod_2',
         branchCode: 'branchCode_2'
       }
@@ -69,7 +69,7 @@ function setup (propOverrides) {
         title: 'title_1',
         author: 'author_1',
         publicationYear: 'publicationYear_1',
-        dueDate: '1.1.2017',
+        dueDate: '01/01/2017',
         checkoutId: 'checkoutId_1'
       },
       {
@@ -77,7 +77,7 @@ function setup (propOverrides) {
         title: 'title_2',
         author: 'author_2',
         publicationYear: 'publicationYear_2',
-        dueDate: '06-10-2016',
+        dueDate: '06/10/2016',
         checkoutId: 'checkoutId_2'
       }
     ]
@@ -101,14 +101,15 @@ function setup (propOverrides) {
     props: props,
     output: output,
     node: ReactDOM.findDOMNode(output),
-    store: store
+    store: store,
+    messages: messages
   }
 }
 
 describe('containers', () => {
   describe('UserLoans', () => {
     it('should display pickups', () => {
-      const { node, store } = setup()
+      const { node, store, messages } = setup()
       const { loansAndReservations } = store.getState().profile
       const pickups = node.querySelectorAll("[data-automation-id='UserLoans_pickup']")
       expect(pickups.length).toEqual(2)
@@ -117,7 +118,7 @@ describe('containers', () => {
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].author)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(loansAndReservations.pickups[ index ].expiry)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_pickupNumber']").textContent).toEqual(loansAndReservations.pickups[ index ].pickupNumber)
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(loansAndReservations.pickups[ index ].branchCode)
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(messages[loansAndReservations.pickups[ index ].branchCode])
       })
     })
 

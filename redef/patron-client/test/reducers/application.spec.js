@@ -15,23 +15,29 @@ describe('reducers', () => {
           no: { ...i18n.no }
         },
         isLoggedIn: false,
-        isRequestingLibraries: false,
         borrowerNumber: null,
         isRequestingLogin: false,
         loginError: null,
         isRequestingLogout: false,
-        libraries: {},
-        librariesError: false,
         logoutError: null,
         isRequestingLoginStatus: false,
-        loginStatusError: null
+        loginStatusError: null,
+        libraries: {},
+        isRequestingLibraries: false,
+        librariesError: false,
+        windowWidth: 0
       })
     })
 
     it(`should handle ${types.RECEIVE_TRANSLATION}`, () => {
       const messages = { 'testkey': 'testvalue' }
       expect(
-        application(undefined, {
+        application({
+          locale: 'no',
+          messages: {
+            no: { ...i18n.no }
+          }
+        }, {
           type: types.RECEIVE_TRANSLATION,
           payload: {
             locale: 'en',
@@ -43,18 +49,7 @@ describe('reducers', () => {
         messages: {
           no: { ...i18n.no },
           en: messages
-        },
-        isLoggedIn: false,
-        isRequestingLibraries: false,
-        borrowerNumber: null,
-        isRequestingLogin: false,
-        loginError: null,
-        isRequestingLogout: false,
-        libraries: {},
-        librariesError: false,
-        logoutError: null,
-        isRequestingLoginStatus: false,
-        loginStatusError: null
+        }
       })
     })
   })

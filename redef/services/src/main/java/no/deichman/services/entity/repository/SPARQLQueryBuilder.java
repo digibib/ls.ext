@@ -1,5 +1,6 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
@@ -16,10 +17,18 @@ import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Stream.concat;
+import static java.util.stream.Stream.of;
 import static org.apache.commons.lang3.StringUtils.capitalize;
+import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
 
 /**
  * Responsibility: TODO.
@@ -80,7 +89,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query describePersonAndLinkedResources(String personId) {
-        String queryString = String.format("#\n"
+        String queryString = format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "DESCRIBE <%2$s> ?name ?birth ?death ?personTitle ?nationality ?nationalityLabel \n"
@@ -98,7 +107,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query describeCorporationAndLinkedResources(String corporationId) {
-        String queryString = String.format("#\n"
+        String queryString = format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "DESCRIBE <%2$s> ?name ?nationality ?nationalityLabel \n"
@@ -211,14 +220,14 @@ public final class SPARQLQueryBuilder {
                 .map(s -> {
                     return "a";
                 })
-                .collect(Collectors.joining(""));
+                .collect(joining(""));
 
         String bnodeObjectCheck = patches.stream()
                 .filter(s -> s.getStatement().getObject().isAnon())
                 .map(s -> {
                     return "a";
                 })
-                .collect(Collectors.joining());
+                .collect(joining());
 
         if (bnodeSubjectCheck.contains("a") && bnodeObjectCheck.contains("a")) {
             retVal = patches.stream()
@@ -230,7 +239,7 @@ public final class SPARQLQueryBuilder {
                                 String withoutBnodes = RDFModelUtil.stringFrom(model, Lang.NTRIPLES).replaceAll("_:", "?");
                                 return INDENT + withoutBnodes;
                             }
-                    ).filter(s -> !s.isEmpty()).collect(Collectors.joining());
+                    ).filter(s -> !s.isEmpty()).collect(joining());
 
         }
 
@@ -246,7 +255,7 @@ public final class SPARQLQueryBuilder {
                             model.add(patch2.getStatement());
                             return INDENT + RDFModelUtil.stringFrom(model, Lang.NTRIPLES);
                         }
-                ).filter(s -> !s.isEmpty()).collect(Collectors.joining());
+                ).filter(s -> !s.isEmpty()).collect(joining());
 
     }
 
@@ -272,7 +281,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query describeWorksByCreator(XURI xuri) {
-        String q = String.format(""
+        String q = format(""
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
@@ -287,7 +296,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query describeLinkedPublications(XURI xuri) {
-        String q = String.format(""
+        String q = format(""
                 + "PREFIX deichman: <%s>\n"
                 + "DESCRIBE ?publication WHERE \n"
                 + "    {\n"
@@ -297,7 +306,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query selectAllUrisOfType(String type) {
-        String q = String.format(""
+        String q = format(""
                 + "PREFIX deichman: <%s>\n"
                 + "SELECT ?uri WHERE \n"
                 + "    {\n"
@@ -307,7 +316,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public String updateHoldingBranches(String recordId, String branches) {
-        String q = String.format(""
+        String q = format(""
                 + "PREFIX : <%s>\n"
                 + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
                 + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
@@ -317,7 +326,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query getWorkByRecordId(String recordId) {
-        String q = String.format(""
+        String q = format(""
                         + "PREFIX : <%s>\n"
                         + "SELECT ?work\n"
                         + "WHERE { ?pub :recordId \"%s\" .\n"
@@ -328,7 +337,7 @@ public final class SPARQLQueryBuilder {
 
 
     public Query selectWorksByAgent(XURI agent) {
-        String q = String.format(""
+        String q = format(""
                 + "PREFIX deichman: <%1$s>\n"
                 + "SELECT ?work\n"
                 + "WHERE {\n"
@@ -480,7 +489,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query getNumberOfRelationsForResource(XURI xuri) {
-        String queryString = String.format("PREFIX deich: <http://data.deichman.no/ontology#>\n"
+        String queryString = format("PREFIX deich: <http://data.deichman.no/ontology#>\n"
                 + "SELECT ?type (COUNT(?a) as ?references)\n"
                 + "WHERE {\n"
                 + "  ?a ?b <%s> ;\n"
@@ -488,5 +497,27 @@ public final class SPARQLQueryBuilder {
                 + "}\n"
                 + "GROUP BY ?type ", xuri.getUri());
         return QueryFactory.create(queryString);
+    }
+
+    public Query constructFromQueryAndProjection(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection) {
+        Stream<String> start = of("prefix deichman:<http://data.deichman.no/ontology#>\n"
+                + "construct {"
+                + "     ?uri a ?type .\n");
+        Stream<String> conditionals = queryParameters
+                .entrySet()
+                .stream()
+                .map(entry -> format(" ?uri deichman:%s %s .", entry.getKey(), createTypedLiteral(entry.getValue()).asNode().toString()));
+
+        Stream<String> type = of(format(" ?uri a deichman:%s .", org.apache.commons.lang3.StringUtils.capitalize(entityType.getPath())));
+        Stream<String> selects = projection.stream().map(property -> format(" OPTIONAL { ?uri deichman:%s ?%s } ", property, property));
+        Stream<String> projections = projection.stream().map(property -> format(" ?uri deichman:%s ?%s .", property, property));
+
+        Stream<String> where = of("}\n"
+                + "where {"
+                + "     ?uri a ?type .\n ");
+
+        Stream<String> end = newArrayList("}\n").stream();
+        String query = concat(start, concat(projections, concat(where, concat(type, concat(conditionals, concat(selects, end)))))).collect(joining("\n"));
+        return QueryFactory.create(query);
     }
 }

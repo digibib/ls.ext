@@ -1,10 +1,12 @@
 package no.deichman.services.entity.repository;
 
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -74,4 +76,6 @@ public interface RDFRepository {
     List<String> retrieveRecordIdsByWork(XURI xuri);
 
     Map getNumberOfRelationsForResource(XURI uri);
+
+    Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection);
 }

@@ -4,6 +4,7 @@ class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}} simple-searchab
 on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}"
+decorator="formatter:{{searchForValueSuggestions.formatter}}"
 {{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled=disabled{{/if}}/>
 <span class="legend">
     {{#if current.value && !../../searchForValueSuggestions.hitsFromPreferredSource.length > 0 }}

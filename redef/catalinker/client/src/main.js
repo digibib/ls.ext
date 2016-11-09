@@ -13,12 +13,13 @@
     var $ = require('jquery')
     var ldGraph = require('ld-graph')
     var URI = require('urijs')
-    module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI)
+    require('isbn2')
+    module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, window.ISBN)
   } else {
     // Browser globals (root is window)
-    root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI)
+    root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI, root.ISBN)
   }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, dialog) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, dialog, ISBN) {
     'use strict'
 
     Ractive.DEBUG = false
@@ -29,8 +30,10 @@
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
     let etagData = {}
+    require('isbn2')
+    ISBN = ISBN || window.ISBN
 
-    var deepClone = function (object) {
+  var deepClone = function (object) {
       var clone = _.clone(object)
 
       _.each(clone, function (value, key) {
@@ -271,6 +274,42 @@
       })
     }
 
+    var alertAboutExistingResource = function (spec, existingResources, proceed) {
+      ractive.set('existingResourcesDialog.existingResources', existingResources)
+      ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural.replace('${numberOfResources}', existingResources.length) : spec.legendSingular)
+      ractive.set('existingResourcesDialog.editResourceConfig', spec.editWithTemplate)
+      $('#alert-existing-resource-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 550,
+        title: 'Denne utgivelsen finnes fra før',
+        class: 'existing-resources-dialog',
+        buttons: [
+          {
+            text: 'Fortsett',
+            click: function () {
+              $(this).dialog('close')
+              proceed()
+            }
+          },
+          {
+            text: 'Avbryt',
+            class: 'default',
+            click: function () {
+              $(this).dialog('close')
+              Main.restart()
+            }
+          }
+        ],
+        open: function () {
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        }
+      })
+      ractive.set('existingResourcesDialog.dialogCloser', function () {
+        $('#alert-existing-resource-dialog').dialog('close')
+      })
+    }
+
     function i18nLabelValue (label) {
       if (Array.isArray(label)) {
         return _.find(label, function (labelValue) {
@@ -437,7 +476,7 @@
           forAllGroupInputs(function (input1) {
             if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
                 fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
-                  _.flatten([input1.values[ 0 ].current.value])[0])
+                  _.flatten([ input1.values[ 0 ].current.value ])[ 0 ])
               ])[ 0 ])) {
               shouldInclude = false
               return true
@@ -738,11 +777,11 @@
               var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
               var mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
               if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
-                if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.type)) {
+                if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
                   var index = 0
                   let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
                   promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
-                } else if (input.type === 'searchable-with-result-in-side-panel') {
+                } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
                   if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                     _.each(root.outAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
                       index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
@@ -823,6 +862,7 @@
                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
+                      ractive.set(`${input.keypath}.allowAddNewButton`, true)
                     } else {
                       input.suggestedValues = input.suggestedValues || []
                       input.suggestedValues.push({
@@ -1368,6 +1408,9 @@
             if (input.reportFormat) {
               ontologyInput.reportFormat = input.reportFormat
             }
+            if (input.formatter) {
+              ontologyInput.formatter = input.formatter
+            }
           }
           copyResourceForms(input)
         })
@@ -1891,6 +1934,7 @@
           'delete-work-dialog',
           'delete-resource-dialog',
           'confirm-enable-special-input-dialog',
+          'alert-existing-resource-dialog',
           'accordion-header-for-collection',
           'readonly-input',
           'readonly-input-string',
@@ -2127,8 +2171,9 @@
                 var keypath = inputValue.keypath
                 ractive.set(keypath + '.current.value', $(e.target).val())
                 var inputNode = ractive.get(grandParentOf(keypath))
-                if (!inputNode.isSubInput && keypath.indexOf('enableCreateNewResource') === -1) {
-                  Main.patchResourceFromValue(ractive.get('targetUri.' + unPrefix(inputNode.domain)), inputNode.predicate,
+                let target = ractive.get('targetUri.' + unPrefix(inputNode.domain))
+                if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') === -1)) {
+                  Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
                 }
                 ractive.update()
@@ -2199,6 +2244,27 @@
             if (!value.searchable) {
               ractive.set(`${keypath}.searchable`, true)
               ractive.set(`${keypath}.uniqueId`, _.uniqueId())
+            }
+            return {
+              teardown: function () {}
+            }
+          }
+          var formatter = function (node, formatter) {
+            if (formatter === 'isbn') {
+              $(node).on('input', function () {
+                let value = $(this).val()
+                let parsedIsbn = ISBN.parse(value)
+                if (parsedIsbn) {
+                  if (parsedIsbn.isIsbn10()) {
+                    $(this).val(parsedIsbn.asIsbn10(true))
+                  } else {
+                    if (parsedIsbn.isIsbn13()) {
+                      $(this).val(parsedIsbn.asIsbn13(true))
+                    }
+                  }
+                  ractive.updateModel()
+                }
+              })
             }
             return {
               teardown: function () {}
@@ -2397,7 +2463,8 @@
               timePicker: timePicker,
               slideDown: slideDown,
               pasteSanitizer: pasteSanitizer,
-              searchable: searchable
+              searchable: searchable,
+              formatter: formatter
             },
             partials: applicationData.partials,
             transitions: {
@@ -2560,6 +2627,27 @@
                   loadWorksAsSubject(origin)
                 }
               },
+              editResource: function (event, editWith, uri, preAction) {
+                if (preAction) {
+                  preAction()
+                }
+                let initOptions = { presetValues: {}, task: editWith.descriptionKey }
+                updateBrowserLocationWithTemplate(editWith.template)
+                updateBrowserLocationWithUri(typeFromUri(uri), uri)
+                forAllGroupInputs(function (input) {
+                  if (input.type === 'hidden-url-query-value' &&
+                    typeof input.values[ 0 ].current.value === 'string' &&
+                    input.values[ 0 ].current.value !== '') {
+                    let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
+                    initOptions.presetValues[ input.widgetOptions.queryParameter ] = shortValue
+                    updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
+                  }
+                })
+                if (uri.indexOf('publication') !== -1) {
+                  updateBrowserLocationWithTab(1)
+                }
+                Main.init(initOptions)
+              },
               selectSearchableItem: function (event, origin, displayValue, options) {
                 if (!eventShouldBeIgnored(event)) {
                   options = options || {}
@@ -2567,24 +2655,9 @@
                   var inputKeyPath = grandParentOf(origin)
                   var input = ractive.get(inputKeyPath)
                   var uri = event.context.uri
-                  var editWith = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
-                  if (editWith) {
-                    let initOptions = { presetValues: {}, task: editWith.descriptionKey }
-                    updateBrowserLocationWithTemplate(editWith.template)
-                    updateBrowserLocationWithUri(typeFromUri(uri), uri)
-                    forAllGroupInputs(function (input) {
-                      if (input.type === 'hidden-url-query-value' &&
-                        typeof input.values[ 0 ].current.value === 'string' &&
-                        input.values[ 0 ].current.value !== '') {
-                        let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
-                        initOptions.presetValues[ input.widgetOptions.queryParameter ] = shortValue
-                        updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
-                      }
-                    })
-                    if (uri.indexOf('publication') !== -1) {
-                      updateBrowserLocationWithTab(1)
-                    }
-                    Main.init(initOptions)
+                  var editWithTemplateSpec = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
+                  if (editWithTemplateSpec) {
+                    ractive.fire('editResource', event, editWithTemplateSpec, uri)
                   } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
                     var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
                     var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
@@ -2824,12 +2897,9 @@
                 ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
               },
               fetchValueSuggestions: function (event) {
-                var searchValue = event.context.current.value.replace(/[ -]/g, '')
-                if (searchValue && searchValue !== '') {
-                  var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
-                  if (searchExternalSourceInput.searchForValueSuggestions.pattern && !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
-                    return
-                  }
+                var searchValue = event.context.current.value
+
+                function doExternalSearch () {
                   searchExternalSourceInput.searchForValueSuggestions.hitsFromPreferredSource = []
                   searchExternalSourceInput.searchForValueSuggestions.valuesFromPreferredSource = []
                   _.each(allInputs(), function (input) {
@@ -2903,6 +2973,39 @@
                     }).then(unblockUI)
                   })
                 }
+
+                if (searchValue && searchValue !== '') {
+                  var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
+                  if (searchExternalSourceInput.searchForValueSuggestions.pattern && !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
+                    return
+                  }
+                  if (searchExternalSourceInput.searchForValueSuggestions.checkExistingResource) {
+                    ractive.fire('checkExistingResource', event.context.current.value, searchExternalSourceInput.searchForValueSuggestions.checkExistingResource, doExternalSearch)
+                  }
+                }
+              },
+              checkExistingResource: function (queryValue, spec, proceed) {
+                var searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
+                  return memo + '&@return=' + fieldName
+                }, '')}`)
+                axios.get(searchUrl, { headers: { 'x-apicache-bypass': true } }).then(function (response) {
+                  let parsed = ldGraph.parse(response.data)
+                  let existingResources = parsed.byType(spec.type)
+                  if (existingResources.length > 0) {
+                    alertAboutExistingResource(spec, _.map(existingResources, function (resource) {
+                      var detailsForResource = []
+                      _.each(spec.showDetails, function (detail) {
+                        let detailValue = resource.getAll(detail)[ 0 ]
+                        if (detailValue) {
+                          detailsForResource.push(detailValue.value)
+                        }
+                      })
+                      return { uri: resource.id, details: detailsForResource.join(' ') }
+                    }), proceed)
+                  } else {
+                    proceed()
+                  }
+                })
               },
               acceptSuggestedPredefinedValue: function (event, value) {
                 var input = ractive.get(grandParentOf(event.keypath))
@@ -3507,7 +3610,8 @@
       saveSuggestionData: saveSuggestionData,
       checkRangeStart: checkRangeStart,
       checkRangeEnd: checkRangeEnd,
-      positionSupportPanels: positionSupportPanels
+      positionSupportPanels: positionSupportPanels,
+      ISBN: ISBN
     }
     return Main
   }

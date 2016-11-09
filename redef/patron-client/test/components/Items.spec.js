@@ -34,7 +34,7 @@ describe('components', () => {
   })
 
   after(() => {
-    DefaultExportItemsRewireApi.__ResetDependency__
+    DefaultExportItemsRewireApi.__ResetDependency__('Item')
   })
 
   describe('Items', () => {

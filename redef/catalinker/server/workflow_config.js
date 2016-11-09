@@ -355,6 +355,7 @@ module.exports = (app) => {
               searchForValueSuggestions: {
                 label: 'ISBN',
                 pattern: '^[ 0-9\-]+[xX]?\s*$',
+                formatter: 'isbn',
                 patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
                 parameterName: 'isbn',
                 automationId: 'searchValueSuggestions',
@@ -363,6 +364,18 @@ module.exports = (app) => {
                 preferredSource: {
                   id: 'bibbi',
                   name: 'Biblioteksentralen'
+                },
+                checkExistingResource: {
+                  url: 'services/publication',
+                  queryParameter: 'isbn',
+                  showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear'],
+                  type: "Publication",
+                  legendSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+                  legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme ISBN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+                  editWithTemplate: {
+                    template: "workflow",
+                    descriptionKey: 'maintPub'
+                  }
                 }
               }
             }
@@ -384,6 +397,18 @@ module.exports = (app) => {
                 preferredSource: {
                   id: 'bibbi',
                   name: 'Biblioteksentralen'
+                },
+                checkExistingResource: {
+                  url: 'services/publication',
+                  queryParameter: 'hasEan',
+                  showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear'],
+                  type: "Publication",
+                  legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+                  legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+                  editWithTemplate: {
+                    template: "workflow",
+                    descriptionKey: 'maintPub'
+                  }
                 }
               }
             }
@@ -552,13 +577,16 @@ module.exports = (app) => {
             },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] },
-              rdfProperty: 'numberOfPages'
+              rdfProperty: 'numberOfPages',
+              multiple: true,
+              addAnotherLabel: 'Legg til et sidetall'
             },
             { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter', multiple: true },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
               rdfProperty: 'isbn',
               multiple: true,
+              formatter: 'isbn',
               addAnotherLabel: 'Legg til nytt ISBN'
             },
             {
@@ -763,8 +791,7 @@ module.exports = (app) => {
               isTitleSource: {
                 priority: 2,
                 qualifier: ' - verk'
-              },
-              multiple: true
+              }
             },
             { rdfProperty: 'subtitle' },
             { rdfProperty: 'partTitle' },

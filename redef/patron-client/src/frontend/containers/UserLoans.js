@@ -10,7 +10,7 @@ import * as LoanActions from '../actions/LoanActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
-import ClickableButton from '../components/ClickableButton'
+import ClickableElement from '../components/ClickableElement'
 import { formatDate } from '../utils/dateFormatter'
 
 class UserLoans extends React.Component {
@@ -77,10 +77,12 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td data-automation-id="Userloans_reservation_queue_place">{item.queuePlace}</td>
                 <td>
-                  <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}
-                                   onClickArguments={[ item.reserveId ]}>
-                    <FormattedMessage {...messages.cancelReservation} />
-                  </ClickableButton>
+                  <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
+                                    onClickArguments={item.reserveId}>
+                    <button className="black-btn">
+                      <FormattedMessage {...messages.cancelReservation} />
+                    </button>
+                  </ClickableElement>
                 </td>
               </tr>
             ))}</tbody>
@@ -136,10 +138,12 @@ class UserLoans extends React.Component {
                   </div>
                 </div>
                 <div className="meta-item">
-                  <ClickableButton onClickAction={this.props.reservationActions.startCancelReservation}
-                                   onClickArguments={[ item.reserveId ]}>
-                    <FormattedMessage {...messages.cancelReservation} />
-                  </ClickableButton>
+                  <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
+                                    onClickArguments={item.reserveId}>
+                    <button className="black-btn">
+                      <FormattedMessage {...messages.cancelReservation} />
+                    </button>
+                  </ClickableElement>
                 </div>
               </div>
             ))}
@@ -171,10 +175,12 @@ class UserLoans extends React.Component {
             </div>
             {this.renderDueDate(item.dueDate)}
             <div className="prolong">
-              <ClickableButton onClickAction={this.props.loanActions.startExtendLoan}
-                               onClickArguments={[ item.checkoutId ]}>
-                <FormattedMessage {...messages.extendLoan} />
-              </ClickableButton>
+              <ClickableElement onClickAction={this.props.loanActions.startExtendLoan}
+                                onClickArguments={item.checkoutId}>
+                <button className="black-btn">
+                  <FormattedMessage {...messages.extendLoan} />
+                </button>
+              </ClickableElement>
             </div>
           </article>
         ))}

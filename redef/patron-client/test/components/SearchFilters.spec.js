@@ -49,7 +49,7 @@ describe('components', () => {
   })
 
   after(() => {
-    DefaultExportSearchFiltersRewireApi.__ResetDependency__
+    DefaultExportSearchFiltersRewireApi.__ResetDependency__('SearchFilter')
   })
 
   describe('SearchFilters', () => {

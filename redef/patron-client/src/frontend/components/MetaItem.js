@@ -18,7 +18,6 @@ const MetaItem = (props) => {
 MetaItem.propTypes = {
   label: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
     defaultMessage: PropTypes.string.isRequired
   }).isRequired,
   content: PropTypes.oneOfType([ PropTypes.string, PropTypes.node ]).isRequired,

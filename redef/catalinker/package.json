@@ -44,6 +44,7 @@
     "express-compile-sass": "^3.0.4",
     "express-http-proxy": "^0.7.2",
     "express-livereload": "0.0.24",
+    "isbn2": "^0.1.8",
     "jade": "~1.11.0",
     "jquery": "^2.1.4",
     "jquery-ui": "1.10.5",

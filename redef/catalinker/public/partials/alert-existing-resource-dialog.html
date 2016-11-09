@@ -1,0 +1,15 @@
+<div id="alert-existing-resource-dialog">
+    <p>{{existingResourcesDialog.legend}}</p>
+    {{#if existingResourcesDialog.existingResources}}
+        <div class="search-result">
+        {{#each existingResourcesDialog.existingResources}}
+            <div class="item">
+                <a class="edit-resource" on-click="editResource:{{existingResourcesDialog.editResourceConfig}},{{uri}}, {{existingResourcesDialog.dialogCloser}}" title="Rediger"/>
+                <span class="details">
+                    {{details}}
+                </span>
+            </div>
+        {{/each}}
+        </div>
+    {{/if}}
+</div>

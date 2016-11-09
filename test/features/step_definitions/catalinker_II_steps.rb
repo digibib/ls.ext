@@ -517,6 +517,16 @@ When(/^jeg legger inn et ISBN\-nummer på startsida og trykker enter/) do
   isbn_text_field.send_keys :enter
 end
 
+When(/^jeg legger inn samme ISBN\-nummer på startsida og trykker enter/) do
+  @site.WorkFlow.visit
+  sleep 2
+  @site.WorkFlow.turn_off_ui_blocker
+  isbn = @context['isbn']
+  isbn_text_field = @browser.text_field(:data_automation_id => 'searchValueSuggestions')
+  isbn_text_field.set isbn
+  isbn_text_field.send_keys :enter
+end
+
 When(/^Sjekker jeg at det vises treff fra preferert ekstern kilde$/) do
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     @browser.li(:xpath => '//*[@class="external-source-results"]//ul/li[@class="external-hit"]').present?
@@ -569,6 +579,11 @@ end
 
 When(/^sjekker jeg at verdien for "([^"]*)" (nå er|er) "([^"]*)"$/) do |parameter_label, nowness, expected_value|
   input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").find(&:visible?)
+  input.value.should eq expected_value
+end
+
+When(/^sjekker jeg at den siste verdien for "([^"]*)" (nå er|er) "([^"]*)"$/) do |parameter_label, nowness, expected_value|
+  input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").select(&:visible?).last
   input.value.should eq expected_value
 end
 
@@ -659,4 +674,14 @@ end
 
 When(/^at jeg vil skru av ui\-blokkering$/) do
   @site.WorkFlow.turn_off_ui_blocker
+end
+
+When(/^vises en dialog med tittelen "([^"]*)"$/) do |dialog_title|
+  @browser.span(:class => 'ui-dialog-title', :text => dialog_title).visible?.should eq true
+end
+
+When(/^jeg legger inn samme ISBN\-nummer i ISBN\-feltet til utgivelsen$/) do
+  isbn_text_field = @browser.text_field(:data_automation_id => 'Publication_http://data.deichman.no/ontology#isbn_0')
+  isbn_text_field.set @context['isbn']
+  isbn_text_field.send_keys :tab
 end
