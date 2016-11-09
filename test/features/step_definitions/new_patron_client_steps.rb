@@ -116,7 +116,7 @@ When(/^skal jeg se et panel med informasjon om utgivelsen$/) do
 end
 
 When(/^jeg trykker på utgivelsen med "([^"]*)" språk$/) do |language|
-  @browser.elements(data_automation_id: /^publication_http/).select{|element| element.elements(data_automation_id: 'publication_languages').select { |element| element.text.include? language }[0]}[0].button(data_automation_id: 'publication_open_show_more_info').click
+  @browser.elements(data_automation_id: /^publication_http/).select { |element| element.elements(data_automation_id: 'publication_languages').select { |element| element.text.include? language }[0] }[0].button(data_automation_id: 'publication_open_show_more_info').click
 end
 
 When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
@@ -254,7 +254,7 @@ When(/^skal jeg ikke ha noen reservasjoner$/) do
 end
 
 When(/^jeg går til innstillinger$/) do
- @browser.element(data_automation_id: 'tabs').element(text: 'Innstillinger').click
+  @browser.element(data_automation_id: 'tabs').element(text: 'Innstillinger').click
 end
 
 When(/^slår på alle avkrysningsboksene inne på innstillinger$/) do
@@ -305,8 +305,8 @@ When(/^skal jeg se registreringsskjemaet$/) do
 end
 
 When(/^jeg legger inn mine personalia som "(barn|voksen)"$/) do |category|
-  juvenile_age = (Time.now - (60*60*24*365*8)).year  # ~8 years
-  adult_age    = (Time.now - (60*60*24*365*40)).year # ~40 years
+  juvenile_age = (Time.now - (60*60*24*365*8)).year # ~8 years
+  adult_age = (Time.now - (60*60*24*365*40)).year # ~40 years
 
   @browser.text_field(id: 'firstName').set generateRandomString
   @browser.text_field(id: 'lastName').set @active[:patron].surname
@@ -417,4 +417,8 @@ end
 
 When(/^jeg trykker logg inn$/) do
   @site.PatronClientCommon.login
+end
+
+When(/^jeg trykker på registrer deg$/) do
+  @browser.element(data_automation_id: 'registration_element').click
 end

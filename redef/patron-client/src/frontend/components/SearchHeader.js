@@ -79,7 +79,7 @@ class SearchHeader extends React.Component {
   registrationLink () {
     if (!this.props.isLoggedIn) {
       return (
-        <li>
+        <li data-automation-id="registration_element">
           <a onClick={this.handleRegistrationClick}
              title="register"><FormattedMessage {...messages.register} /><span>&raquo;</span></a>
         </li>
