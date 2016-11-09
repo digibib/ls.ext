@@ -3,6 +3,7 @@
   "@context": {
     "specification": "deichman:specification",
     "prefLabel": "deichman:prefLabel",
+    "alternativeName": "deichman:alternativeName",
     "ordinal": "deichman:ordinal",
     "date": "deichman:date",
     "Event": "deichman:Event",

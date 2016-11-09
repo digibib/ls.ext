@@ -37,6 +37,11 @@ public class CorporationModelToIndexMapperTest {
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(xuri.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology("alternativeName")),
+                ResourceFactory.createPlainLiteral("alternativeName_value")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(xuri.getUri()),
                 ResourceFactory.createProperty(BaseURI.ontology("subdivision")),
                 ResourceFactory.createPlainLiteral("subdivision_value")));
 
@@ -51,6 +56,7 @@ public class CorporationModelToIndexMapperTest {
                 + "{"
                 + "  \"uri\": \"" + xuri.getUri() + "\","
                 + "  \"name\": \"publisherName_value\","
+                + "  \"alternativeName\": \"alternativeName_value\","
                 + "  \"subdivision\": \"subdivision_value\","
                 + "  \"specification\": \"specification_value\""
                 + "}").allowingAnyArrayOrdering());

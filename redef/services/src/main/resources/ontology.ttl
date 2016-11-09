@@ -231,7 +231,7 @@ duo:Biography a rdfs:Class ;
 :alternativeName a rdfs:Property ;
   rdfs:label "Alternative name"@en ;
   rdfs:label "Alternativt navn"@no ;
-  rdfs:domain :Person ;
+  rdfs:domain :Person, :Corporation, :Subject, :Genre, :Place, :Event, :CompositionType, :Instrument ;
   rdfs:range xsd:string .
 
 :ordinal a rdfs:Property ;

@@ -4,6 +4,7 @@
     "deichman": "__ONTOLOGY__",
     "specification": "deichman:specification",
     "prefLabel": "deichman:prefLabel",
+    "alternativeName": "deichman:alternativeName",
     "Subject": "deichman:Subject",
     "type": "@type",
     "uri": "@id",

@@ -15,40 +15,40 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 /**
  * Responsibility: unit test PlaceModelToIndexMapper.
  */
-public class SubjectModelToIndexMapperTest {
+public class CompositionTypeModelToIndexMapperTest {
 
     @Test
     public void testModelToIndexDocument() throws Exception {
-        XURI subjetXuri1 = new XURI(BaseURI.root(), EntityType.SUBJECT.getPath(), "e000000001");
+        XURI placeXuri1 = new XURI(BaseURI.root(), EntityType.MUSICAL_COMPOSITION_TYPE.getPath(), "e000000001");
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(subjetXuri1.getUri()),
+                ResourceFactory.createResource(placeXuri1.getUri()),
                 RDF.type,
-                ResourceFactory.createResource(BaseURI.ontology("Subject"))));
+                ResourceFactory.createResource(BaseURI.ontology("CompositionType"))));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(subjetXuri1.getUri()),
-                ResourceFactory.createProperty(BaseURI.ontology() + "specification"),
-                ResourceFactory.createPlainLiteral("Måte å lage klesplagg ved hjelp av to pinner og garn")));
+                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology("specification")),
+                ResourceFactory.createPlainLiteral("Not over before the fat lady sings")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(subjetXuri1.getUri()),
+                ResourceFactory.createResource(placeXuri1.getUri()),
                 ResourceFactory.createProperty(BaseURI.ontology("prefLabel")),
-                ResourceFactory.createPlainLiteral("Strikking")));
+                ResourceFactory.createPlainLiteral("Opera")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(subjetXuri1.getUri()),
+                ResourceFactory.createResource(placeXuri1.getUri()),
                 ResourceFactory.createProperty(BaseURI.ontology("alternativeName")),
                 ResourceFactory.createPlainLiteral("alternativeName_value")));
 
-        String jsonDocument = new ModelToIndexMapper("subject").createIndexDocument(model, subjetXuri1);
+        String jsonDocument = new ModelToIndexMapper("compositionType").createIndexDocument(model, placeXuri1);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"uri\": \"" + subjetXuri1.getUri() + "\","
-                + "  \"prefLabel\": \"Strikking\","
+                + "  \"uri\": \"" + placeXuri1.getUri() + "\","
+                + "  \"prefLabel\": \"Opera\","
                 + "  \"alternativeName\": \"alternativeName_value\","
-                + "  \"specification\": \"Måte å lage klesplagg ved hjelp av to pinner og garn\","
+                + "  \"specification\": \"Not over before the fat lady sings\","
                 + "}").allowingAnyArrayOrdering());
     }
 }

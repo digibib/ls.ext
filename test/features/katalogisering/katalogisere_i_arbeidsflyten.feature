@@ -294,6 +294,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig sjanger i feltet "Sjangre" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny sjanger"-knappen
+    Så skriver jeg inn samme tilfeldige sjanger i feltet "Alternativt navn" og trykker enter
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige sjanger i feltet "Sjangre" og trykker enter
@@ -316,6 +317,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig organisasjon i feltet "Organisasjoner" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen
+    Så skriver jeg inn samme tilfeldige organisasjon i feltet "Alternativt navn" og trykker enter
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige organisasjon i feltet "Organisasjoner" og trykker enter
@@ -327,6 +329,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig hendelse i feltet "Hendelser" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny hendelse"-knappen
+    Så skriver jeg inn samme tilfeldige hendelse i feltet "Alternativt navn" og trykker enter
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige hendelse i feltet "Hendelser" og trykker enter
@@ -338,6 +341,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig sted i feltet "Steder" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt sted"-knappen
+    Så skriver jeg inn samme tilfeldige sted i feltet "Alternativt navn" og trykker enter
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige sted i feltet "Steder" og trykker enter

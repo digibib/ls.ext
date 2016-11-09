@@ -14,6 +14,7 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 # Releases
 ## 0.3.0 (2016-11-09)
 
+GITREF: 5eb52acd085ec5e88c19020a9c49ad44250bda68
 KOHA:   90437fe3ee4e3d5af59182d7f3be477940b484f4
 
 - patron-client:
