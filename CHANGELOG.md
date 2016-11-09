@@ -12,6 +12,44 @@ a secrets.env:
 The resulting compose file can then be used with `docker-compose up -d` to provision.
 
 # Releases
+## 0.3.0 (2016-11-09)
+
+KOHA:   90437fe3ee4e3d5af59182d7f3be477940b484f4
+
+- patron-client:
+  - add validator to firstname, add IE11 hack for firstname and lastname
+  - Add proper headers for no caching to appropriate get requests
+  - Use homebranch instead of holdingbranch
+  - attempt at fixing closing filters when scrolling on mobile safari
+  - Fix sorting on work page and related tests
+  - Remove proptype from metaitem
+  - Show titles in preferred languages in the search results
+- catalinker:
+  - manglende_opplysninger_på_autoriteter' into develop
+  - fix showing and patching of authorities connected to other authorities DEICH-425
+  - number of pages as multivalue. Main title single value.
+  - copy nonEditable when set to first input of blank node input group DEICH-434
+  - use correct subject type when extracting fields ti show from search result  DEICH-432
+  - add pluralised form of dialog message DEICH-389
+  - check for existing ISBN/EAN before fetching external data DEICH-389
+  -force format ISBN numbers
+- services:
+  - add endpoint to find projections of resources by simple query
+- koha:
+  - add framework query param to biblio CRUD
+  - Add bug 17561 reserveslip fix
+  - add patch to use framework in batch mod items
+  - Show 'Preg brikker' button next to RFID status button
+  - sync homebranch, not holdingbranch
+  - Add csv headers to runreports cronjob
+  - Add maxdays to longoverdue cronjob
+  - Add apacheconf overrides
+  - stability fixes on patron search/edit
+  - default search fields
+  - Add codedLocationQualifier to labelgenerator response
+  - show items.location in holds queue
+  - upstream changes:
+    https://github.com/Koha-Community/Koha/compare/239b81c1dd0cfa2e5e1f720ba9b8554536a9bc44...674d3875c81af122eb7f925845fe73cc4d817db4
 
 ## 0.2.0 (2016-11-02) First post-release!
 
