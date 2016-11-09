@@ -74,36 +74,34 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "SEARCH"
 
-  @wip
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
     Og jeg trykker på første treff
-    Så skal jeg se "4" utgivelser
-    Når jeg trykker på utgivelsen med "Norsk (bokmål)" språk
+    Så skal jeg se "11" utgivelser
+    Når jeg trykker på utgivelsen med "Svensk" språk
     Så skal jeg se et panel med informasjon om utgivelsen
     Og den skal inneholde eksemplarinformasjonen
-      | Filial                    | Antall | Plassering | Status              |
-      | random_migrate_branchcode | 1      | placement1 | Ledig               |
-      | random_migrate_branchcode | 1      | placement1 | Utlånt              |
-      | random_migrate_branchcode | 1      | placement2 | Utlånt              |
-    Når jeg trykker på krysset i boksen med utgivelsesinformasjon
+      | Filial                    | Hylleplass | Status        |
+      | random_migrate_branchcode | placement1 | 1 av 2 ledige |
+      | random_migrate_branchcode | placement2 | 0 av 1 ledige |
+    Når jeg trykker for å lukke utgivelsesinformasjon
     Så skal jeg ikke se et panel med informasjon om utgivelsen
     Når jeg trykker på utgivelsen med "Dansk" språk
     Så skal jeg se et panel med informasjon om utgivelsen
     Og den skal inneholde eksemplarinformasjonen
-      | Filial                    | Antall | Plassering | Status               |
-      | random_migrate_branchcode | 1      | placement1 | Utlånt               |
+      | Filial                    | Hylleplass | Status        |
+      | random_migrate_branchcode | placement1 | 0 av 1 ledige |
     Når jeg trykker oppfrisk i nettleseren
     Så den skal inneholde eksemplarinformasjonen
-      | Filial                    | Antall | Plassering | Status               |
-      | random_migrate_branchcode | 1      | placement1 | Utlånt               |
+      | Filial                    | Hylleplass | Status        |
+      | random_migrate_branchcode | placement1 | 0 av 1 ledige |
     Når jeg trykker tilbake i nettleseren
     Så skal jeg ikke se et panel med informasjon om utgivelsen
     Når jeg trykker fremover i nettleseren
     Så den skal inneholde eksemplarinformasjonen
-      | Filial                    | Antall | Plassering | Status               |
-      | random_migrate_branchcode | 1      | placement1 | Utlånt               |
+      | Filial                    | Hylleplass | Status        |
+      | random_migrate_branchcode | placement1 | 0 av 1 ledige |
 
   Scenario: Logge inn på Min Side
     Gitt at jeg er logget inn som adminbruker
@@ -130,7 +128,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så får låneren tilbakemelding om at boka er reservert
     Når jeg går til Lån og reservasjoner på Min Side
     Så skal jeg se reservasjonen
-    Og det skal ikke være bøker klare til avhenging eller i historikk
+    Og det skal ikke være bøker klare til avhenting eller i historikk
     Når jeg finner strekkoden for et ledig eksemplar
     Og jeg er på den opprettede filialen
     Og jeg leverer inn eksemplaret

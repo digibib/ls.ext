@@ -116,7 +116,7 @@ When(/^skal jeg se et panel med informasjon om utgivelsen$/) do
 end
 
 When(/^jeg trykker på utgivelsen med "([^"]*)" språk$/) do |language|
-  @browser.elements(data_automation_id: 'publication_languages').select { |element| element.text.include? language }[0].click
+  @browser.elements(data_automation_id: /^publication_http/).select{|element| element.elements(data_automation_id: 'publication_languages').select { |element| element.text.include? language }[0]}[0].button(data_automation_id: 'publication_open_show_more_info').click
 end
 
 When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
@@ -139,8 +139,8 @@ When(/^skal skal tittel prefikset "([^"]*)" og som inneholder "([^"]*)" vises p�
   @site.PatronClientWorkPage.title.eql?("#{prefix}#{@context[:random_migrate_id]} #{@context[:random_migrate_id]}#{str}")
 end
 
-When(/^jeg trykker på krysset i boksen med utgivelsesinformasjon$/) do
-  @browser.element(data_automation_id: /^close_publication_info_/).click
+When(/^jeg trykker for å lukke utgivelsesinformasjon$/) do
+  @browser.element(data_automation_id: 'publication_close_show_more_info').click
 end
 
 When(/^jeg går til Min Side$/) do
@@ -191,7 +191,7 @@ When(/^jeg går til Lån og reservasjoner på Min Side$/) do
 end
 
 When(/^skal jeg se reservasjonen$/) do
-  wait_retry {
+  wait_for {
     reservations = @site.PatronClientLoansAndReservationsPage.reservations
     reservations.size.eql?(1) && reservations.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
   }
@@ -202,19 +202,19 @@ When(/^jeg trykker på personopplysninger$/) do
 end
 
 When(/^skal jeg se at boka er klar til å hentes$/) do
-  wait_retry {
+  wait_for {
     pickups = @site.PatronClientLoansAndReservationsPage.pickups
     pickups.size.eql?(1) && pickups.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
   }
 end
 
-When(/^det skal ikke være bøker klare til avhenging eller i historikk$/) do
+When(/^det skal ikke være bøker klare til avhenting eller i historikk$/) do
   @site.PatronClientLoansAndReservationsPage.loans.size.should eq 0
   @site.PatronClientLoansAndReservationsPage.pickups.size.should eq 0
 end
 
 When(/^skal jeg se at boka er utlånt$/) do
-  wait_retry {
+  wait_for {
     loans = @site.PatronClientLoansAndReservationsPage.loans
     loans.size.eql?(1) && loans.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
   }
