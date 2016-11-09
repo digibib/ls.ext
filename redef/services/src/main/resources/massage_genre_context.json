@@ -3,6 +3,7 @@
   "@context": {
     "deichman": "__ONTOLOGY__",
     "prefLabel": "deichman:prefLabel",
+    "alternativeName": "deichman:alternativeName",
     "specification": "deichman:specification",
     "Genre": "deichman:Genre",
     "type": "@type",

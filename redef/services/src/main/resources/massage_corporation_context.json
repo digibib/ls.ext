@@ -3,6 +3,7 @@
   "@context": {
     "deichman": "__ONTOLOGY__",
     "name": "deichman:name",
+    "alternativeName": "deichman:alternativeName",
     "subdivision": "deichman:subdivision",
     "specification": "deichman:specification",
     "Corporation": "deichman:Corporation",
