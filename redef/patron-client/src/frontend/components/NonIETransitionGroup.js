@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
+import isIe from '../utils/isIe'
+
 const NonIETransitionGroup = (props) => {
   if (isIe()) {
     const { component, className } = props
@@ -22,7 +24,3 @@ NonIETransitionGroup.propTypes = {
 }
 
 export default NonIETransitionGroup
-
-function isIe () {
-  return !!navigator.userAgent.match(/Trident/g) || !!navigator.userAgent.match(/MSIE/g)
-}

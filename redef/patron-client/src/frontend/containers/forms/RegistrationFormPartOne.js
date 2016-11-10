@@ -11,6 +11,7 @@ import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputField from '../../components/FormInputField'
+import isIe from '../../utils/isIe'
 
 const formName = 'registrationPartOne'
 
@@ -87,7 +88,7 @@ class RegistrationFormPartOne extends React.Component {
       <form onSubmit={this.props.handleSubmit(this.props.registrationActions.checkForExistingUser)}>
         <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
         {/* IE11-hack begin: Make the first fieldset with firstName and lastName display with correct width */}
-        <fieldset style={{ visibility: 'hidden', height: '0px' }}><input /></fieldset>
+        { isIe() ? <fieldset style={{ visibility: 'hidden' }}><input /></fieldset> : null }
         {/* IE11-hack end */}
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.nameLabel} /></legend>
