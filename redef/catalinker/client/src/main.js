@@ -2069,7 +2069,7 @@
           _.each(input.subInputs, function (subInput) {
             if (!(subInput.input.visible === false)) {
               var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || value.length > 0)) {
+              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[0] !== ''))) {
                 patch.push({
                   op: operation,
                   s: '_:b0',

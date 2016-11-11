@@ -95,7 +95,7 @@
                     addPatches.push(addPatch);
                 }
 
-                if (oldValue !== "" && oldValue !== null) {
+                if (oldValue !== "" && oldValue !== null && currentValue !== '') {
                     var delPatch = { op: "del", s: subject, p: predicate, o: { value: oldValue } };
                     if (oldAndCurrentValue.old.lang !== "") {
                         delPatch.o.lang = oldAndCurrentValue.old.lang;
@@ -112,7 +112,7 @@
                     });
 
                     var delValues = _.difference(oldValue, currentValue);
-                    _.each(_.compact(delValues), function (value) {
+                    _.chain(delValues).compact().filter(function(v){return v !== ''}).each(function (value) {
                         delPatches.push({ op: "del", s: subject, p: predicate, o: { value: value, type: datatype } });
                     });
                 }
