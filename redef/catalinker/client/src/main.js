@@ -163,8 +163,31 @@
     var unloadResourceForDomain = function (domainType) {
       _.each(allInputs(), function (input) {
         if (input.domain && domainType === unPrefix(input.domain)) {
-          input.values = emptyValues(false)
+          let subjectType = input.values[0].subjectType
+          input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
+          input.values[ 0 ].subjectType = subjectType
+        } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
+          var valuesToRemove = []
+          _.each(input.values, function (value, index) {
+            if (value.subjectType === domainType) {
+              valuesToRemove.push(index)
+            }
+          })
+          var promises = []
+          _.each(valuesToRemove.reverse(), function (index) {
+            promises.push(ractive.splice(`${input.keypath}.values`, index, 1))
+          })
+          Promise.all(promises).then(function () {
+            let values = ractive.get(`${input.keypath}.values`)
+            if (values.length == 0) {
+              ractive.set(`${input.keypath}.values.0`, emptyValues(input.searchable))
+              if (input.parentInput.subjectTypes.length === 1) {
+                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[0])
+              }
+            }
+          })
         }
+
       })
       ractive.update()
       ractive.set('targetUri.' + domainType, undefined)

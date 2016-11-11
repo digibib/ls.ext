@@ -461,7 +461,7 @@ module.exports = (app) => {
               },
               showOnlyWhen: {
                 inputId: 'missingMainEntry',
-                valueAsStringMatches: '^false$'
+                valueAsStringMatches: '^false$|^null$|^undefined'
               },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'contributor', // the rdf property of the resource
