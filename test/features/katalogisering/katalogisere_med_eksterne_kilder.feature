@@ -54,6 +54,7 @@ Egenskap: katalogisere med eksterne kilder
     Og husker navnet på _personen jeg nettopp opprettet
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
+    Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
     Og jeg trykker på "Legg til"-knappen
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "utgivelsen"
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
@@ -61,6 +62,7 @@ Egenskap: katalogisere med eksterne kilder
     Så noterer jeg ned navnet på personen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
+    Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Oversetter" knyttet til "utgivelsen"
@@ -70,6 +72,7 @@ Egenskap: katalogisere med eksterne kilder
     Så noterer jeg ned navnet på personen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
+    Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"

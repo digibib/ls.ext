@@ -67,6 +67,14 @@ module.exports = (app) => {
                     '@id': '_:N9fdb7e0d043e44708df915d456bbb132'
                   },
                   'http://migration.deichman.no/numberOfPages': request.params[0] === 'bibbi' ? '207' : '208',
+                  "deichman:hasPublicationPart": [
+                    {
+                      "@id": "_:b9"
+                    },
+                    {
+                      "@id": "_:b10"
+                    }
+                    ],
                   'http://migration.deichman.no/originalLanguage': {
                     '@id': 'http://lexvo.org/id/iso639-3/hrv'
                   },
@@ -171,6 +179,59 @@ module.exports = (app) => {
                   'deichman:role': {
                     '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/role#translator' :  'http://data.deichman.no/role#coreographer'
                   }
+                },
+                {
+                  "deichman:improperWork": false,
+                  "deichman:mainTitle": "En gammeldags julaften",
+                  "deichman:agent": {
+                    "@id": "_:b8"
+                  },
+                  "deichman:role": {
+                    "@id": "http://data.deichman.no/role#author"
+                  },
+                  "@type": [
+                    "deichman:PublicationPart"
+                  ],
+                  "@id": "_:b9"
+                },
+                {
+                  "deichman:improperWork": false,
+                  "deichman:mainTitle": "En jul jeg aldri glemmer",
+                  "deichman:agent": {
+                    "@id": "_:b11"
+                  },
+                  "@type": [
+                    "deichman:PublicationPart"
+                  ],
+                  "@id": "_:b10"
+                },
+                {
+                  "deichman:birthYear": "1812",
+                  "deichman:deathYear": "1885",
+                  "deichman:nationality": [
+                    {
+                      "@id": "http://data.deichman.no/nationality#n"
+                    }
+                  ],
+                  "deichman:name": "Asbjørnsen, Peter Christen",
+                  "@type": [
+                    "deichman:Person"
+                  ],
+                  "@id": "_:b8"
+                },
+                {
+                  "deichman:birthYear": "1812",
+                  "deichman:deathYear": "1885",
+                  "deichman:nationality": [
+                    {
+                      "@id": "http://data.deichman.no/nationality#n"
+                    }
+                  ],
+                  "deichman:name": "Olderbolle, Kåre",
+                  "@type": [
+                    "deichman:Person"
+                  ],
+                  "@id": "_:b11"
                 }
               ]
             }

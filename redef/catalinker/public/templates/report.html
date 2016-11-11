@@ -3,7 +3,8 @@
      data-work-uri="{{targetUri.Work}}"
      data-publication-uri="{{targetUri.Publication}}"
      data-person-uri="{{targetUri.Person}}"
-     decorator="multi:{clickOutsideSupportPanelDetector:[], unload:[]}">
+     as-clickOutsideSupportPanelDetector
+     as-unload>
     <h2 data-automation-id="page-heading">Oversikt over metadata</h2>
     <h3 class="headline" data-automation-id="headline">
         {{#each applicationData.headlineParts}}

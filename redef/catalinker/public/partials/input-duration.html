@@ -2,8 +2,10 @@
 <span data-automation-id="{{../../dataAutomationId}}">{{./current.value}}</span>
 {{else}}
 <input {{#disabled}} disabled="true" {{/}}
-class="pure-u-1-4 {{#error}}invalid-input{{else}}valid{{/error}} duration"
+class="pure-u-1-4 duration"
+class-invalid-input="{{error}}"
+class-valid="{{!error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{../../dataAutomationId}}"
-value="{{./current.value}}" decorator='timePicker'/>
+value="{{./current.value}}" as-timePicker/>
 {{/if}}

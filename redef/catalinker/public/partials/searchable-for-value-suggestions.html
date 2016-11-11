@@ -1,11 +1,13 @@
 <input autofocus {{#disabled}} disabled="true" {{/}}
 {{#with searchForValueSuggestions.pattern}}pattern="{{this}}"{{/with}}
-class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}} simple-searchable"
+class="pure-u-1-1 simple-searchable"
+class-invalid-input="{{error}}"
+class-valid="{{!error}}"
 on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}"
-decorator="formatter:{{searchForValueSuggestions.formatter}}"
-{{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled=disabled{{/if}}/>
+as-formatter="format: {{searchForValueSuggestions.formatter}}"
+{{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled="disabled"{{/if}}/>
 <span class="legend">
     {{#if current.value && !../../searchForValueSuggestions.hitsFromPreferredSource.length > 0 }}
         {{#if !searchForValueSuggestions.pattern || RegExp(searchForValueSuggestions.pattern).test(current.value) }}

@@ -1,14 +1,25 @@
-<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
+<span data-automation-id="{{../../dataAutomationId}}" class-pure-u-1-1="{{! nonEditable && !suggested}}">
 {{#if nonEditable || suggested}}
-<span {{#if !nonEditable }} style="display:none;" {{/if}}>{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
+<span style-display="{{!nonEditable ? 'none' : ''}}">{{predefinedLabelValue(../../fragment, ./current.value[0])}}</span>
 {{else}}
-<span {{#if nonEditable}} style="display:none;" {{/if}}>
+<span style-display="{{nonEditable ? 'none' : ''}}">
     <select
             class="authorized" style="width: 100%;"
-            decorator="multi:{select2:[{{#if !multiple || input.isSubInput}}'singleSelect'{{/if}}{{#if multiple && !input.isSubInput}}'multiSelect'{{/if}}], detectChange:[], handleAddNewBySelect2:[]}"
-            value="{{./current.value}}"
+            {{#if !multiple || input.isSubInput}}
+                as-select2="{mode: 'singleSelect'}"
+            class-singleSelectx="{{true}}"
+            {{elseif multiple && !input.isSubInput}}
+            class-multipleSelect="{{true}}"
+                as-select2="{mode: 'multiSelect'}"
+            {{else}}
+            class-singleSelecto="{{true}}"
+                as-select2="{mode: 'singleSelect'}"
+            {{/if}}
+            as-handleAddNewBySelect2
+            value="{{.//current.value || ''}}"
             data-automation-id="{{dataAutomationId || ../../dataAutomationId}}"
-            multiple="multiple" {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
+            multiple="multiple"
+            {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
         {{#each predefinedValues[../../fragment]}}
         <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["label"])}}</option>
         {{/each}}

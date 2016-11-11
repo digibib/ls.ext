@@ -3,7 +3,9 @@
 {{else}}
 <input {{#disabled}} disabled="true" {{/}}
 type="number" min="0"
-class="pure-u-{{input.widgetOptions.isRangeStart ? '1-1' : (input.widgetOptions.isRangeEnd ? '1-4' : (widgetOptions.short ? '1-4' : '1-1'))}} {{#error}}invalid-input{{else}}valid{{/error}}"
+class-invalid-input="{{error}}"
+class-valid="{{!error}}"
+class="pure-u-{{input.widgetOptions.isRangeStart ? '1-1' : (input.widgetOptions.isRangeEnd ? '1-4' : (widgetOptions.short ? '1-4' : '1-1'))}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
 {{#if input.widgetOptions.isRangeStart}}
 oninput="main.checkRangeStart(this)"

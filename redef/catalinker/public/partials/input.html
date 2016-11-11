@@ -1,13 +1,20 @@
 {{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
 <span class="input-panel pure-u-1-1 prop-input" intro='slideIn' outro='slideOut'>
-<span class="{{(type === 'input-boolean') ? 'panel-part  pure-u-1-2  for-checkbox':''}} {{(firstAndLastVisibleInputs[groupIndex].first === inputIndex) ? 'first':''}} {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}">
-<span class="{{#if (type != 'input-boolean')}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}pure-u-2-3{{/if}} label {{(firstAndLastVisibleInputs[groupIndex].first === inputIndex) ? 'first':''}} {{(type == 'input-boolean') ? 'for-checkbox' : 'panel-part'}}"
-     data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
+<span class="{{(type === 'input-boolean') ? 'panel-part  pure-u-1-2  for-checkbox':''}}"
+    class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
+    class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
+<span class="{{#if (type != 'input-boolean')}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}pure-u-2-3{{/if}} label"
+      class-for-checkbox="{{type == 'input-boolean'}}"
+      class-panel-part="{{!(type == 'input-boolean')}}"
+      class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
+        data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
 </span>
-<span class="{{#if type != 'input-boolean'}}panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}checkbox{{/if}} {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}" intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
+<span class="{{#if type != 'input-boolean'}}panel-part pure-u-1-{{./accordionHeader ? '1' : '2'}}{{else}}checkbox{{/if}}"
+      class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}"
+      intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
         {{#each values:inputValueIndex}}
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
-                <span class="field {{#if (type != 'input-boolean')}}pure-u-1-1{{/if}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                <span class="field" class-pure-u-1-1="{{type != 'input-boolean'}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
                     {{>type}}
                     <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                 </span>
@@ -46,7 +53,9 @@
                     {{#each ../../../../../subInputs}}
                         {{#if !(./input.visible === false)}}
                             <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
-                                <span class="label {{#if !nonEditable && !suggested}}pure-u-1-1{{/if}} {{#if input.type === 'input-boolean'}}for-checkbox{{/if}}"
+                                <span class="label"
+                                      class-pure-u-1-1="{{!nonEditable && !suggested}}"
+                                      class-for-checkbox="{{input.type === 'input-boolean'}}"
                                       data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
                                 {{#with input.values[inputValueIndex]}}
                                     <span class="value sub-field" data-support-panel-base-id="support_panel_base_{{./uniqueId}}">
@@ -64,17 +73,17 @@
                                         </span>
                                     {{/if}}
                                 {{/with}}
-                                <span class="invalid-msg {{#if !nonEditable && ! suggested}}pure-u-1-1{{/if}}">{{#error}}{{error}}{{/error}}</span>
+                                <span class="invalid-msg" class-pure-u-1-1="{{!nonEditable && !suggested}}">{{#error}}{{error}}{{/error}}</span>
                             </span>
                         {{/if}}
                     {{/each}}
                 </span>
                 <span class="subject-type-association">
-                    <span class="{{#if !./nonEditable && ! suggested}}pure-u-1-1{{/if}}">
+                    <span class-pure-u-1-1="{{!nonEditable && !suggested}}">
                         {{#with ../../../parentInput}}
                             {{#if ! nonEditable && ! (suggested && multiple)}}
                                 {{#each subjectTypes:index}}
-                                {{#with ./subInputs[0].input.values[inputValueIndex]}}
+                                {{#with subInputs[0].input.values[inputValueIndex]}}
                                     {{#if (subjectTypes.length > 1)}}
                                     <span class="subject-type-select">
                                         <input type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"

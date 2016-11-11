@@ -2,7 +2,9 @@
 <span data-automation-id="{{../../dataAutomationId}}" class="boolean-value"><span class="{{./current.value === true ? 'ui-icon ui-icon-check' : ''}}"></span></span>
 {{else}}
 <input type="checkbox" {{#disabled}} disabled="true" {{/}}
-class="pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}"
+class="pure-u-1-1"
+class-invalid-input="{{error}}"
+class-valid="{{!error}}"
 on-change='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{../../dataAutomationId}}"
 checked="{{./current.value}}" />

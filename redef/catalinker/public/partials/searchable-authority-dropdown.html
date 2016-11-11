@@ -3,7 +3,8 @@
     <span>{{authorityLabels[urlEscape(current.value[0])]}}</span>
     {{else}}
             <select style="width: 100%;"
-                    decorator="multi:{select2:['authoritySelectSingle'], detectChange:[]}" id="sel_{{uniqueId}}"
+                    as-select2="{mode: 'authoritySelectSingle'}"
+                    id="sel_{{uniqueId}}"
                     class="searchable-authority" multiple value="{{current.value}}">
         {{#if ./current.value}}
         <option value='{{current.value}}' selected="selected">{{current.displayValue}}</option>

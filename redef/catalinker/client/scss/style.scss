@@ -321,6 +321,9 @@ body {
               border: none;
               padding: 13px;
               display: none;
+              &+span>.add-new-btn-row {
+                margin-top: 13px;
+              }
             }
             display: flex;
             flex-direction: column;
