@@ -219,6 +219,9 @@
           "index": "no"
         }
       }
+    },
+    "kd": {
+      "type": "string"
     }
   }
 }
