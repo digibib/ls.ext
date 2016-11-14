@@ -2,6 +2,17 @@ import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import Contributors from './work/fields/Contributors'
+import BiblioNumber from './work/fields/publication/BiblioNumber'
+import Binding from './work/fields/publication/Binding'
+import Duration from './work/fields/publication/Duration'
+import Edition from './work/fields/publication/Edition'
+import FormatAdaptations from './work/fields/publication/FormatAdaptations'
+import Isbn from './work/fields/publication/Isbn'
+import NumberOfPages from './work/fields/publication/NumberOfPages'
+import PlaceOfPublication from './work/fields/publication/PlaceOfPublication'
+import Publishers from './work/fields/publication/Publishers'
+import PublisherSeries from './work/fields/publication/PublisherSeries'
+import Subtitles from './work/fields/publication/Subtitles'
 
 class PublicationInfo extends React.Component {
   renderLocation (location) {
@@ -29,15 +40,13 @@ class PublicationInfo extends React.Component {
           </tr>
           </thead>
           <tbody data-automation-id="work_items">
-          {items.map(item => {
-            return (
-              <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
-                <td data-automation-id="item_location">{this.props.intl.formatMessage({ id: item.branchcode })}</td>
-                <td data-automation-id="item_shelfmark">{item.shelfmark} {this.renderLocation(item.location)}</td>
-                <td data-automation-id="item_status">{this.renderAvailability(item.available, item.total)}</td>
-              </tr>
-            )
-          })}
+          {items.map(item => (
+            <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
+              <td data-automation-id="item_location">{this.props.intl.formatMessage({ id: item.branchcode })}</td>
+              <td data-automation-id="item_shelfmark">{item.shelfmark} {this.renderLocation(item.location)}</td>
+              <td data-automation-id="item_status">{this.renderAvailability(item.available, item.total)}</td>
+            </tr>
+          ))}
           </tbody>
         </NonIETransitionGroup>
       )
@@ -52,35 +61,8 @@ class PublicationInfo extends React.Component {
     )
   }
 
-  renderPublisherSeries (publisherSeries) {
-    if (publisherSeries.length > 0) {
-      return (
-        publisherSeries.map(serialIssue =>
-          <span key="{publisherSeries.id}" data-automation-id="Publication_serial_issue">
-            <span data-automation-id="Publication_serial_issue_name">{serialIssue.name}</span>
-            <span
-              data-automation-id="Publication_serial_issue_subtitle">{((serialIssue.subtitle) ? ` — ${serialIssue.subtitle}` : '')}</span>
-            <span>{': '}</span>
-            <span data-automation-id="Publication_serial_issue_issue"> {serialIssue.issue}</span>
-          </span>
-        )
-      )
-    }
-  }
-
-  renderMetaItem (label, value) {
-    if (value) {
-      return (
-        <div className="meta-info">
-          <div className="meta-label">{label}</div>
-          <div className="meta-content">{value}</div>
-        </div>
-      )
-    }
-  }
-
   render () {
-    const { publication, publication: { items }, intl } = this.props
+    const { publication, publication: { items } } = this.props
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -94,20 +76,20 @@ class PublicationInfo extends React.Component {
         <div className="left">
           {/* Missing data: Author / bidragsytere */}
           <Contributors contributors={publication.contributors} />
-          {this.renderMetaItem(intl.formatMessage(messages.numberOfPages), publication.numberOfPages)}
-          {this.renderMetaItem(intl.formatMessage(messages.edition), publication.edition)}
-          {this.renderMetaItem(intl.formatMessage(messages.publisher), publication.publishers.map(publisher => publisher.name).join(', '))}
-          {this.renderMetaItem(intl.formatMessage(messages.placeOfPublication), publication.placeOfPublication)}
-          {this.renderMetaItem(intl.formatMessage(messages.subtitles), publication.subtitles.map(subtitle => intl.formatMessage({ id: subtitle })).join(', '))}
+          <NumberOfPages numberOfPages={publication.numberOfPages} />
+          <Edition edition={publication.edition} />
+          <Publishers publishers={publication.publishers} />
+          <PlaceOfPublication placeOfPublication={publication.placeOfPublication} />
+          <Subtitles subtitles={publication.subtitles} />
         </div>
         <div className="right">
-          {this.renderMetaItem(intl.formatMessage(messages.isbn), publication.isbn)}
-          {this.renderMetaItem(intl.formatMessage(messages.biblionr), publication.recordId)}
-          {this.renderMetaItem(intl.formatMessage(messages.publisherSeries), this.renderPublisherSeries(publication.serialIssues))}
+          <Isbn isbn={publication.isbn} />
+          <BiblioNumber biblioNumber={publication.recordId} />
+          <PublisherSeries publisherSeries={publication.publisherSeries} />
           {/* Missing data: "Deler av utgivelse" */}
-          {this.renderMetaItem(intl.formatMessage(messages.adaptation), publication.formatAdaptations.map(formatAdaptation => intl.formatMessage({ id: formatAdaptation })).join(', '))}
-          {this.renderMetaItem(intl.formatMessage(messages.binding), publication.binding ? intl.formatMessage({ id: publication.binding }) : '')}
-          {this.renderMetaItem(intl.formatMessage(messages.duration), publication.duration)}
+          <FormatAdaptations formatAdaptations={publication.formatAdaptations} />
+          <Binding binding={publication.binding} />
+          <Duration duration={publication.duration} />
         </div>
         <div className="wide">
           <div className="meta-label"><FormattedMessage {...messages.note} /></div>
@@ -139,31 +121,6 @@ export const messages = defineMessages({
     description: 'Heading for items',
     defaultMessage: 'Items'
   },
-  isbn: {
-    id: 'PublicationInfo.isbn',
-    description: 'Header for the ISBN column',
-    defaultMessage: 'ISBN:'
-  },
-  biblionr: {
-    id: 'PublicationInfo.biblionr',
-    description: 'Header for the BiblioNR/recordID column',
-    defaultMessage: 'RecordID:'
-  },
-  numberOfPages: {
-    id: 'PublicationInfo.numberOfPages',
-    description: 'Header for the number of items column',
-    defaultMessage: 'Number of pages:'
-  },
-  edition: {
-    id: 'PublicationInfo.edition',
-    description: 'Header for the edition column',
-    defaultMessage: 'Edition:'
-  },
-  binding: {
-    id: 'PublicationInfo.binding',
-    description: 'Header for the binding column',
-    defaultMessage: 'Binding:'
-  },
   note: {
     id: 'PublicationInfo.note',
     description: 'Header for the note column',
@@ -193,36 +150,6 @@ export const messages = defineMessages({
     id: 'PublicationInfo.branch',
     description: 'Table header for publication items table',
     defaultMessage: 'Branch'
-  },
-  publisher: {
-    id: 'PublicationInfo.publisher',
-    description: 'Label for the publisher field',
-    defaultMessage: 'Publisher:'
-  },
-  placeOfPublication: {
-    id: 'PublicationInfo.placeOfPublication',
-    description: 'Label for the place of publication field',
-    defaultMessage: 'Place of publication:'
-  },
-  adaptation: {
-    id: 'PublicationInfo.adaptation',
-    description: 'Label for the adaptation field',
-    defaultMessage: 'Adaptation'
-  },
-  subtitles: {
-    id: 'PublicationInfo.subtitles',
-    description: 'Label for subtitles field',
-    defaultMessage: 'Subtitles:'
-  },
-  publisherSeries: {
-    id: 'PublicationInfo.publisherSeries',
-    description: 'Label for publisher series',
-    defaultMessage: 'Series:'
-  },
-  duration: {
-    id: 'PublicationInfo.duration',
-    description: 'Label for duration',
-    defaultMessage: 'Duration:'
   }
 })
 
