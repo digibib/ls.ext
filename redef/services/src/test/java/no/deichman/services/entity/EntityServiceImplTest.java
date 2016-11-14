@@ -15,6 +15,7 @@ import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -58,6 +59,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.riot.Lang.JSONLD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
@@ -69,6 +71,8 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 public class EntityServiceImplTest {
 
     private static final String A_BIBLIO_ID = "234567";
+    public static final Property CREATED = ResourceFactory.createProperty("http://purl.org/dc/terms/created");
+    public static final Property MODIFIED = ResourceFactory.createProperty("http://purl.org/dc/terms/modified");
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     private EntityServiceImpl service;
@@ -143,6 +147,7 @@ public class EntityServiceImplTest {
             XURI xuri;
             xuri = new XURI(servicesURI);
             Model toBeTested = service.retrieveById(xuri);
+            toBeTested.removeAll(null, CREATED, null);
             boolean value = toBeTested.isIsomorphicWith(comparison);
             assertTrue("Models were not isomorphic", value);
         }
@@ -378,17 +383,31 @@ public class EntityServiceImplTest {
         InputStream oldIn = new ByteArrayInputStream(comparisonRDF.getBytes(StandardCharsets.UTF_8));
         RDFDataMgr.read(oldModel, oldIn, JSONLD);
         Model data = service.retrieveById(workUri);
+        data.removeAll(null, CREATED, null);
         assertTrue(oldModel.isIsomorphicWith(data));
-        String patchData = getTestPatch("add", workUri.getUri());
+        String patchData = getTestPatch("add", workUri.getUri(), "red");
         Model patchedModel = service.patch(workUri, patchData);
         assertTrue(patchedModel.contains(
                 createResource(workUri.getUri()),
                 createProperty(ontologyURI + "color"),
                 "red"));
+        assertNotNull(patchedModel.getProperty(CREATED.getURI()));
+        patchData = getTestPatch("add", workUri.getUri(), "blue");
+        patchedModel = service.patch(workUri, patchData);
+        NodeIterator nodeIterator = patchedModel.listObjectsOfProperty(MODIFIED);
+        final int[] count = new int[1];
+        nodeIterator.forEachRemaining(rdfNode -> {
+            count[0]++;
+        });
+        assertEquals(1, count[0]);
+        assertNotNull(patchedModel.getProperty(MODIFIED.getURI()));
+        patchedModel.removeAll(null, CREATED, null);
+        patchedModel.removeAll(null, MODIFIED, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         RDFDataMgr.write(baos, patchedModel.difference(oldModel), Lang.NT);
         assertEquals(baos.toString("UTF-8").trim(),
-                "<" + workUri.getUri() + "> <" + ontologyURI + "color> \"red\" .");
+                "<" + workUri.getUri() + "> <" + ontologyURI + "color> \"blue\" .\n"
+                 +"<" + workUri.getUri() + "> <" + ontologyURI + "color> \"red\" .");
     }
 
     @Test
@@ -398,7 +417,7 @@ public class EntityServiceImplTest {
         String publicationData = getTestJSON(testId, "publication");
         Model inputModel = modelFrom(publicationData, JSONLD);
         XURI publicationId = new XURI(service.create(PUBLICATION, inputModel));
-        String patchData = getTestPatch("add", publicationId.getUri());
+        String patchData = getTestPatch("add", publicationId.getUri(), "red");
         Model patchedModel = service.patch(publicationId, patchData);
         assertTrue(patchedModel.contains(
                 createResource(publicationId.getUri()),
@@ -565,13 +584,13 @@ public class EntityServiceImplTest {
                 + "\"dcterms:identifier\":\"" + id + "\"}}", capitalize(type));
     }
 
-    private String getTestPatch(String operation, String id) {
+    private String getTestPatch(String operation, String id, final String colour) {
         return "{"
                 + "\"op\": \"" + operation + "\","
                 + "\"s\": \"" + id + "\","
                 + "\"p\": \"" + ontologyURI + "color\","
                 + "\"o\": {"
-                + "\"value\": \"red\""
+                + "\"value\": \"" + colour + "\""
                 + "}"
                 + "}";
     }

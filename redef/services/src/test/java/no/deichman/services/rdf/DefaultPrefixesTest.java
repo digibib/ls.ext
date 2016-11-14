@@ -1,6 +1,7 @@
 package no.deichman.services.rdf;
 
 import no.deichman.services.uridefaults.BaseURI;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Test;
 
@@ -39,9 +40,12 @@ public class DefaultPrefixesTest {
         String deichmanNs = BaseURI.ontology();
         String rdfs = "rdfs";
         String rdfsNs = RDFS.getURI();
+        String dcterms = "dcterms";
+        String dctermsNs = DCTerms.getURI();
         Map<String,String> map = new HashMap<String,String>();
         map.put(deichman, deichmanNs);
         map.put(rdfs, rdfsNs);
+        map.put(dcterms, dctermsNs);
         assertEquals(def.getAll(),map);
     }
 }

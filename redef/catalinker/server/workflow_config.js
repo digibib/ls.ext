@@ -28,6 +28,22 @@ function maintenanceInputs (label, type) {
   }
 }
 
+function dctermsCreated () {
+  return  {
+    rdfProperty: 'dcterms:created',
+    readOnly: true,
+    oneLiner: true
+  }
+}
+
+function dctermsModified () {
+  return  {
+    rdfProperty: 'dcterms:modified',
+    readOnly: true,
+    oneLiner: true
+  }
+}
+
 module.exports = (app) => {
   app.get('/config', function (request, response) {
     response.setHeader('Cache-Control', 'public, max-age=3600')
@@ -77,7 +93,9 @@ module.exports = (app) => {
             {
               rdfProperty: 'ordinal',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -101,7 +119,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -125,7 +145,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -161,7 +183,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -256,7 +280,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -297,7 +323,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -324,7 +352,9 @@ module.exports = (app) => {
               indexTypes: 'corporation',
               nameProperties: [ 'name', 'subdivision', '(specification)' ],
               indexDocumentFields: [ 'name', 'subdivision', 'specification' ]
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -347,7 +377,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         },
         {
@@ -370,7 +402,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ]
         }
       ],
@@ -788,7 +822,9 @@ module.exports = (app) => {
                   } ]
                 }
               }
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Beskriv verk',
@@ -914,7 +950,9 @@ module.exports = (app) => {
             {
               rdfProperty: 'hasSummary',
               type: 'input-string-large'
-            }
+            },
+            dctermsCreated(),
+            dctermsModified()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Emneopplysninger',
@@ -1431,6 +1469,9 @@ module.exports = (app) => {
         corporation: 'Corporation',
         instrument: 'Instrument',
         compositionType: 'CompositionType',
+      },
+      rdfContext: {
+        'dcterms': "http://purl.org/dc/terms/"
       },
       resourceTypeAliases: {
         'compositiontype': 'compositionType'

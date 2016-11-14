@@ -4,6 +4,7 @@ import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 
 import java.util.Collection;
@@ -59,7 +60,7 @@ public interface RDFRepository {
 
     void delete(Model inputModel);
 
-    void patch(List<Patch> patches);
+    void patch(List<Patch> patches, Resource subject);
 
     List<String> getWorkURIsByAgent(XURI agent);
 

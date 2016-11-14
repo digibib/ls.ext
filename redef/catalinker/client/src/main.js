@@ -163,7 +163,7 @@
     var unloadResourceForDomain = function (domainType) {
       _.each(allInputs(), function (input) {
         if (input.domain && domainType === unPrefix(input.domain)) {
-          let subjectType = input.values[0].subjectType
+          let subjectType = input.values[ 0 ].subjectType
           input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
           input.values[ 0 ].subjectType = subjectType
         } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
@@ -182,7 +182,7 @@
             if (values.length == 0) {
               ractive.set(`${input.keypath}.values.0`, emptyValues(input.searchable))
               if (input.parentInput.subjectTypes.length === 1) {
-                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[0])
+                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
               }
             }
           })
@@ -351,7 +351,7 @@
     }
 
     function fragmentPartOf (predicate) {
-      return typeof predicate === 'string' ? _.last(predicate.split('#')) : predicate
+      return typeof predicate === 'string' ? _.last(predicate.split(/[#\\/]/)) : predicate
     }
 
     function setMultiValues (values, input, index, options) {
@@ -1162,6 +1162,9 @@
         case 'http://data.deichman.no/utility#duration':
           inputType = 'input-duration'
           break
+        case 'http://www.w3.org/2001/XMLSchema#dateTime':
+          inputType = 'input-date-time'
+          break
         case 'deichman:Place':
         case 'deichman:Work':
         case 'deichman:Person':
@@ -1205,8 +1208,20 @@
       })
     }
 
-    var createInputGroups = function (applicationData) {
-      var props = Ontology.allProps(applicationData.ontology)
+  function predicateOfInput (formInput, ontologyUri, applicationData) {
+    var predicate
+      let indexOfColon = (formInput.rdfProperty || formInput.fragment).indexOf(':')
+      if (indexOfColon !== -1) {
+        var prefix = (formInput.rdfProperty || formInput.fragment).slice(0, indexOfColon)
+        predicate = applicationData.config.rdfContext[prefix] + formInput.rdfProperty.slice(indexOfColon + 1)
+      } else {
+        predicate = `${ontologyUri}${formInput.rdfProperty}`
+      }
+      return predicate
+    }
+
+  var createInputGroups = function (applicationData) {
+    var props = Ontology.allProps(applicationData.ontology)
       var inputs = []
       var inputMap = {}
       applicationData.predefinedValues = {}
@@ -1340,7 +1355,7 @@
                   return formSpec.id === formRef.formId
                 }))
                 _.each(resourceForm.inputs, function (formInput) {
-                  var predicate = ontologyUri + formInput.rdfProperty
+                  var predicate = predicateOfInput(formInput, ontologyUri, applicationData)
                   var ontologyInput = inputMap[ resourceForm.rdfType + '.' + predicate ]
                   _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
                   formInput[ 'values' ] = emptyValues(false)
@@ -1412,7 +1427,7 @@
           } else {
             input.inputIndex = index
             if (input.rdfProperty) {
-              ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
+              ontologyInput = deepClone(inputMap[ `${inputGroup.rdfType}.${predicateOfInput(input, ontologyUri, applicationData)}` ])
               ontologyInput.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput.suggestedValuesForNewResource = []
 
@@ -1452,6 +1467,15 @@
             }
             if (input.formatter) {
               ontologyInput.formatter = input.formatter
+            }
+            if (input.readOnly) {
+              ontologyInput.readOnly = input.readOnly
+            }
+            if (input.oneLiner) {
+              ontologyInput.oneLiner = input.oneLiner
+            }
+            if (input.showOnlyWhenInputHasValue) {
+              ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
           }
           copyResourceForms(input)
@@ -1969,6 +1993,7 @@
           'input-lang-string',
           'input-gYear',
           'input-duration',
+          'input-date-time',
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
@@ -1996,6 +2021,7 @@
           'readonly-input-string-large',
           'readonly-input-gYear',
           'readonly-input-duration',
+          'readonly-input-date-time',
           'readonly-input-nonNegativeInteger',
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
@@ -2069,7 +2095,7 @@
           _.each(input.subInputs, function (subInput) {
             if (!(subInput.input.visible === false)) {
               var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[0] !== ''))) {
+              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
                 patch.push({
                   op: operation,
                   s: '_:b0',
@@ -2425,6 +2451,16 @@
               },
               spy: function (node, nmode2) {
                 console.dir(node)
+              },
+              formatDateTime: function (dateTime) {
+                if (dateTime) {
+                  let date = new Date(dateTime)
+                  if (!isNaN(date.getTime())) {
+                    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+                  } else {
+                    return dateTime
+                  }
+                }
               },
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {

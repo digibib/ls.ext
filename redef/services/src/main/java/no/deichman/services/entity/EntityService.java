@@ -25,7 +25,7 @@ public interface EntityService {
 
     Model retrieveWorkItemsByURI(XURI xuri);
     String create(EntityType type, Model inputModel) throws Exception;
-    void create(Model inputModel) throws Exception;
+
     void delete(Model model);
     Model patch(XURI xuri, String ldPatchJson) throws Exception;
 

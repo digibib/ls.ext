@@ -142,12 +142,12 @@ public class InMemoryRepositoryTest {
                 createPlainLiteral("Test"));
         Patch patch1 = new Patch("add",s1,null);
         list.add(patch1);
-        repository.patch(list);
+        repository.patch(list, RDFRepositoryBase.PLACEHOLDER_RESOURCE);
         assertTrue(repository.askIfStatementExists(s1));
         Patch patch2 = new Patch("del",s1,null);
         List<Patch> list2 = new ArrayList<Patch>();
         list2.add(patch2);
-        repository.patch(list2);
+        repository.patch(list2, RDFRepositoryBase.PLACEHOLDER_RESOURCE);
         assertFalse(repository.askIfStatementExists(s1));
     }
 

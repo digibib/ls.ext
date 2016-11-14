@@ -11,6 +11,7 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -191,9 +192,12 @@ public final class SPARQLQueryBuilder {
         return baos.toString("UTF-8");
     }
 
-    public String patch(List<Patch> patches) {
+    public String patch(List<Patch> patches, Resource subject) {
         StringBuilder q = new StringBuilder();
-
+        if (subject != null) {
+            q.append("DELETE { <").append(subject.getURI()).append("> <http://purl.org/dc/terms/modified> ?modified }\n"
+                    + "WHERE  { <").append(subject.getURI()).append("> <http://purl.org/dc/terms/modified> ?modified };\n");
+        }
         String del = getStringOfStatments(patches, "DEL", SKIP_BLANK_NODES);
         String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
         String add = getStringOfStatments(patches, "ADD", KEEP_BLANK_NODES);
@@ -519,5 +523,9 @@ public final class SPARQLQueryBuilder {
         Stream<String> end = newArrayList("}\n").stream();
         String query = concat(start, concat(projections, concat(where, concat(type, concat(conditionals, concat(selects, end)))))).collect(joining("\n"));
         return QueryFactory.create(query);
+    }
+
+    public String patch(List<Patch> deleteModelAsPatches) {
+        return patch(deleteModelAsPatches, null);
     }
 }
