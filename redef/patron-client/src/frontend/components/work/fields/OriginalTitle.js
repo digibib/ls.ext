@@ -5,13 +5,9 @@ import MetaItem from '../../MetaItem'
 const OriginalTitle = ({ mainTitle, subtitle, partNumber, partTitle }) => {
   if (mainTitle) {
     return (
-      <MetaItem label={messages.labelOriginalTitle}
-                data-automation-id="work_originalTitle"
-                content={
-                  <span>
-                    {mainTitle}{(subtitle || partNumber || partTitle) ? ':' : null}{subtitle ? ` ${subtitle}.` : null}{partNumber ? ` ${partNumber}.` : null}{partTitle ? ` ${partTitle}` : null}
-                  </span>
-                } />
+      <MetaItem label={messages.labelOriginalTitle} data-automation-id="work_originalTitle">
+        {mainTitle}{(subtitle || partNumber || partTitle) ? ':' : null}{subtitle ? ` ${subtitle}.` : null}{partNumber ? ` ${partNumber}.` : null}{partTitle ? ` ${partTitle}` : null}
+      </MetaItem>
     )
   } else {
     return null

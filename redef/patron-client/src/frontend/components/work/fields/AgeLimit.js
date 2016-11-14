@@ -5,7 +5,7 @@ import MetaItem from '../../MetaItem'
 const AgeLimit = ({ ageLimit }) => {
   if (ageLimit) {
     return (
-      <MetaItem label={messages.ageLimit} content={ageLimit} data-automation-id="work_ageLimit" />
+      <MetaItem label={messages.ageLimit} data-automation-id="work_ageLimit">{ageLimit}</MetaItem>
     )
   } else {
     return null

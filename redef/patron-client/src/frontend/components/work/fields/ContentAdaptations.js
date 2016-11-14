@@ -5,11 +5,9 @@ import MetaItem from '../../MetaItem'
 const ContentAdaptations = ({ contentAdaptations, intl }) => {
   if (contentAdaptations.length > 0) {
     return (
-      <MetaItem
-        content={contentAdaptations.map(contentAdaptation => intl.formatMessage({ id: contentAdaptation })).join(', ')}
-        label={messages.labelContentAdaptations}
-        data-automation-id="work_contentAdaptations"
-      />
+      <MetaItem label={messages.labelContentAdaptations} data-automation-id="work_contentAdaptations">
+        {contentAdaptations.map(contentAdaptation => intl.formatMessage({ id: contentAdaptation })).join(', ')}
+      </MetaItem>
     )
   } else {
     return null

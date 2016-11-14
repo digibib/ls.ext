@@ -5,7 +5,9 @@ import MetaItem from '../../MetaItem'
 const DeweyNumber = ({ deweyNumber }) => {
   if (deweyNumber) {
     return (
-      <MetaItem label={messages.labelDeweyNumber} content={deweyNumber} data-automation-id="work_deweyNumber" />
+      <MetaItem label={messages.labelDeweyNumber} data-automation-id="work_deweyNumber">
+        {deweyNumber}
+      </MetaItem>
     )
   } else {
     return null

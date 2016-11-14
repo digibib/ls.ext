@@ -5,10 +5,9 @@ import MetaItem from '../../MetaItem'
 const OriginalLanguage = ({ languages, intl }) => {
   if (languages.length > 0) {
     return (
-      <MetaItem label={messages.labelOriginalLanguage}
-                content={languages.map(language => intl.formatMessage({ id: language })).join(', ')}
-                data-automation-id="work_originalLanguage"
-      />
+      <MetaItem label={messages.labelOriginalLanguage} data-automation-id="work_originalLanguage">
+        {languages.map(language => intl.formatMessage({ id: language })).join(', ')}
+      </MetaItem>
     )
   } else {
     return null

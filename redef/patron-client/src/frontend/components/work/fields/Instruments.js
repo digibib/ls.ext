@@ -5,8 +5,9 @@ import MetaItem from '../../MetaItem'
 const Instruments = ({ instruments }) => {
   if (instruments.length > 0) {
     return (
-      <MetaItem content={instruments.join(', ')} label={messages.labelInstruments}
-                data-automation-id="work_instruments" />
+      <MetaItem label={messages.labelInstruments} data-automation-id="work_instruments">
+        {instruments.join(', ')}
+      </MetaItem>
     )
   } else {
     return null

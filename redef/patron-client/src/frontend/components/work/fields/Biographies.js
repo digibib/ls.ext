@@ -5,11 +5,9 @@ import MetaItem from '../../MetaItem'
 const Biographies = ({ biographies, intl }) => {
   if (biographies.length > 0) {
     return (
-      <MetaItem
-        content={biographies.map(biography => intl.formatMessage({ id: biography })).join(', ')}
-        label={messages.labelBiographies}
-        data-automation-id="work_biographies"
-      />
+      <MetaItem label={messages.labelBiographies} data-automation-id="work_biographies">
+        {biographies.map(biography => intl.formatMessage({ id: biography })).join(', ')}
+      </MetaItem>
     )
   } else {
     return null
