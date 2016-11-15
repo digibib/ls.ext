@@ -179,7 +179,7 @@
           })
           Promise.all(promises).then(function () {
             let values = ractive.get(`${input.keypath}.values`)
-            if (values.length == 0) {
+            if (values.length === 0) {
               ractive.set(`${input.keypath}.values.0`, emptyValues(input.searchable))
               if (input.parentInput.subjectTypes.length === 1) {
                 ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
@@ -187,7 +187,6 @@
             }
           })
         }
-
       })
       ractive.update()
       ractive.set('targetUri.' + domainType, undefined)
