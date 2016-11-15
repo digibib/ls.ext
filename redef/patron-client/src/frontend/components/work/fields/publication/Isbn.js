@@ -3,17 +3,21 @@ import { defineMessages } from 'react-intl'
 import MetaItem from '../../../MetaItem'
 
 const Isbn = ({ isbn }) => {
-  if (isbn) {
+  if (isbn.length > 0) {
     return (
-      <MetaItem label={messages.isbn} data-automation-id="publication_isbn">{isbn}</MetaItem>
+      <MetaItem label={messages.isbn} data-automation-id="publication_isbn">{isbn.join(', ')}</MetaItem>
     )
   } else {
     return null
   }
 }
 
+Isbn.defaultProps = {
+  isbn: []
+}
+
 Isbn.propTypes = {
-  isbn: PropTypes.string
+  isbn: PropTypes.array.isRequired
 }
 
 export const messages = defineMessages({

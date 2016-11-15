@@ -143,12 +143,15 @@ function transformWork (input) {
 function transformPublications (publications) {
   return publications.map(publication => {
     return {
+      ageLimit: publication.ageLimit,
       binding: publication.binding,
       contentAdaptations: publication.contentAdaptations,
       contributors: transformContributors(publication.contributors),
       description: publication.description,
       duration: publication.duration,
+      ean: publication.ean,
       edition: publication.edition,
+      extent: publication.extent,
       formatAdaptations: publication.formatAdaptations,
       formats: publication.formats,
       genres: publication.genres,
@@ -163,15 +166,30 @@ function transformPublications (publications) {
       partNumber: publication.partNumber,
       partTitle: publication.partTitle,
       placeOfPublication: publication.hasPlaceOfPublication ? publication.hasPlaceOfPublication.prefLabel : undefined,
-      publicationYear: publication.publicationYear || publication['deichman:publicationYear'],
+      publicationParts: transformPublicationParts(publication.publicationParts),
+      publicationYear: publication.publicationYear,
       publisher: publication.publishedBy ? publication.publishedBy.name : undefined,
       publishers: publication.publishers,
       recordId: publication.recordId,
       serialIssues: transformSerialIssues(publication.serialIssues),
+      subtitle: publication.subtitle,
       subtitles: publication.subtitles,
       uri: publication.id
     }
   })
+}
+
+function transformPublicationParts (input) {
+  try {
+    return input.map(inputPublicationPart => {
+      return {
+        /* TODO */
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    return []
+  }
 }
 
 function transformSerials (work) {
@@ -232,22 +250,18 @@ function transformBy (contributors) {
   }
 }
 
-function transformCompositionType (hasCompositionType) {
+function transformCompositionType (hasCompositionType = []) {
   try {
-    if (hasCompositionType) {
-      return hasCompositionType.map(compositionType => compositionType.prefLabel)
-    }
+    return hasCompositionType.map(compositionType => compositionType.prefLabel)
   } catch (error) {
     console.log(error)
     return []
   }
 }
 
-function transformInstruments (hasInstrument) {
+function transformInstruments (hasInstrument = []) {
   try {
-    if (hasInstrument) {
-      return hasInstrument.map(instrument => instrument.hasInstrument.prefLabel)
-    }
+    return hasInstrument.map(instrument => instrument.hasInstrument.prefLabel)
   } catch (error) {
     console.log(error)
     return []

@@ -1,17 +1,21 @@
 import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import Contributors from './work/fields/Contributors'
+import AgeLimit from './work/fields/publication/AgeLimit'
 import BiblioNumber from './work/fields/publication/BiblioNumber'
 import Binding from './work/fields/publication/Binding'
+import Contributors from './work/fields/Contributors'
 import Duration from './work/fields/publication/Duration'
+import Ean from './work/fields/publication/Ean'
 import Edition from './work/fields/publication/Edition'
 import FormatAdaptations from './work/fields/publication/FormatAdaptations'
+import Formats from './work/fields/publication/Formats'
 import Isbn from './work/fields/publication/Isbn'
 import NumberOfPages from './work/fields/publication/NumberOfPages'
 import PlaceOfPublication from './work/fields/publication/PlaceOfPublication'
 import Publishers from './work/fields/publication/Publishers'
 import PublisherSeries from './work/fields/publication/PublisherSeries'
+import SerialIssues from './work/fields/publication/SerialIssues'
 import Subtitles from './work/fields/publication/Subtitles'
 
 class PublicationInfo extends React.Component {
@@ -74,22 +78,24 @@ class PublicationInfo extends React.Component {
         className="publication-info"
         data-automation-id={`publication_info_${publication.uri}`}>
         <div className="left">
-          {/* Missing data: Author / bidragsytere */}
+          <AgeLimit ageLimit={publication.ageLimit} />
           <Contributors contributors={publication.contributors} />
           <NumberOfPages numberOfPages={publication.numberOfPages} />
           <Edition edition={publication.edition} />
           <Publishers publishers={publication.publishers} />
           <PlaceOfPublication placeOfPublication={publication.placeOfPublication} />
           <Subtitles subtitles={publication.subtitles} />
+          <SerialIssues serialIssues={publication.serialIssues} />
         </div>
         <div className="right">
+          <Formats formats={publication.formats} />
           <Isbn isbn={publication.isbn} />
           <BiblioNumber biblioNumber={publication.recordId} />
           <PublisherSeries publisherSeries={publication.publisherSeries} />
-          {/* Missing data: "Deler av utgivelse" */}
           <FormatAdaptations formatAdaptations={publication.formatAdaptations} />
           <Binding binding={publication.binding} />
           <Duration duration={publication.duration} />
+          <Ean ean={publication.ean} />
         </div>
         <div className="wide">
           <div className="meta-label"><FormattedMessage {...messages.note} /></div>

@@ -20,7 +20,7 @@ export const messages = defineMessages({
   biblioNumber: {
     id: 'BiblioNumber.biblioNumber',
     description: 'Label for biblionumber meta',
-    defaultMessage: 'BiblioNumber'
+    defaultMessage: 'Title number'
   }
 })
 
