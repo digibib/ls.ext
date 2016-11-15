@@ -213,7 +213,7 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/sip2proxy:ab3fdece55099862069f04ef21acb01665598f82"
+    image: "digibib/sip2proxy:a387e6d35e38c488b0f4ec7bc0c7292e19dd61df"
     networks:
       - backend
     ports:
@@ -225,7 +225,7 @@ services:
       - "-log-messages=true"
       - "-replace-10=true"
       - "-log-metrics-every-s=300"
-      - "-asciify=false"
+      - "-ensure-branch=true"
     logging:
       driver: "json-file"
       options:
