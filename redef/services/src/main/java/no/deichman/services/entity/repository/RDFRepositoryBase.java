@@ -66,7 +66,6 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             }
         }
     };
-    public static final Pair[] EMPTY = new Pair[0];
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
     private final SPARQLQueryBuilder sqb;
@@ -247,18 +246,18 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     private Statement createdStatement(Resource subject) {
-        return createDcTermTimestampStatement(subject, "created");
+        return createTimestampStatement(subject, "created");
     }
 
     private Statement modifiedStatement(Resource subject) {
-        return createDcTermTimestampStatement(subject, "modified");
+        return createTimestampStatement(subject, "modified");
     }
 
-    private Statement createDcTermTimestampStatement(Resource subject, String predicate) {
+    private Statement createTimestampStatement(Resource subject, String predicate) {
         XSDDateTime xsdDateTime = new XSDDateTime(GregorianCalendar.getInstance());
         return ResourceFactory.createStatement(
                 subject,
-                ResourceFactory.createProperty("http://purl.org/dc/terms/" + predicate),
+                ResourceFactory.createProperty(BaseURI.ontology() + predicate),
                 ResourceFactory.createTypedLiteral(xsdDateTime.toString(), XSDDatatype.XSDdateTime));
     }
 

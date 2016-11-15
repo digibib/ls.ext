@@ -1,7 +1,6 @@
 package no.deichman.services.rdf;
 
 
-import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDFS;
 
 import java.util.HashMap;
@@ -16,7 +15,6 @@ final class DefaultPrefixes {
 
     DefaultPrefixes(String deichmanOntologyBaseUri){
         prefixMapping.put("rdfs", RDFS.getURI());
-        prefixMapping.put("dcterms", DCTerms.getURI());
         prefixMapping.put("deichman", deichmanOntologyBaseUri);
     }
 

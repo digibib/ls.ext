@@ -28,17 +28,17 @@ function maintenanceInputs (label, type) {
   }
 }
 
-function dctermsCreated () {
+function createdTimestamp () {
   return  {
-    rdfProperty: 'dcterms:created',
+    rdfProperty: 'created',
     readOnly: true,
     oneLiner: true
   }
 }
 
-function dctermsModified () {
+function modifiedTimestamp () {
   return  {
-    rdfProperty: 'dcterms:modified',
+    rdfProperty: 'modified',
     readOnly: true,
     oneLiner: true
   }
@@ -94,8 +94,8 @@ module.exports = (app) => {
               rdfProperty: 'ordinal',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -120,8 +120,8 @@ module.exports = (app) => {
               rdfProperty: 'alternativeName',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -146,8 +146,8 @@ module.exports = (app) => {
               rdfProperty: 'alternativeName',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -184,8 +184,8 @@ module.exports = (app) => {
               rdfProperty: 'alternativeName',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -281,8 +281,8 @@ module.exports = (app) => {
               rdfProperty: 'alternativeName',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -324,8 +324,8 @@ module.exports = (app) => {
               rdfProperty: 'alternativeName',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -353,8 +353,8 @@ module.exports = (app) => {
               nameProperties: [ 'name', 'subdivision', '(specification)' ],
               indexDocumentFields: [ 'name', 'subdivision', 'specification' ]
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -378,8 +378,8 @@ module.exports = (app) => {
               rdfProperty: 'alternativeName',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -403,8 +403,8 @@ module.exports = (app) => {
               rdfProperty: 'alternativeName',
               type: 'input-string'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         }
       ],
@@ -823,8 +823,8 @@ module.exports = (app) => {
                 }
               }
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Beskriv verk',
@@ -951,8 +951,8 @@ module.exports = (app) => {
               rdfProperty: 'hasSummary',
               type: 'input-string-large'
             },
-            dctermsCreated(),
-            dctermsModified()
+            createdTimestamp(),
+            modifiedTimestamp()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Emneopplysninger',
@@ -1469,9 +1469,6 @@ module.exports = (app) => {
         corporation: 'Corporation',
         instrument: 'Instrument',
         compositionType: 'CompositionType',
-      },
-      rdfContext: {
-        'dcterms': "http://purl.org/dc/terms/"
       },
       resourceTypeAliases: {
         'compositiontype': 'compositionType'

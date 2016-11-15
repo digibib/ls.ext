@@ -350,7 +350,7 @@
     }
 
     function fragmentPartOf (predicate) {
-      return typeof predicate === 'string' ? _.last(predicate.split(/[#\\/]/)) : predicate
+      return typeof predicate === 'string' ? _.last(predicate.split('#')) : predicate
     }
 
     function setMultiValues (values, input, index, options) {
@@ -1207,20 +1207,8 @@
       })
     }
 
-  function predicateOfInput (formInput, ontologyUri, applicationData) {
-    var predicate
-      let indexOfColon = (formInput.rdfProperty || formInput.fragment).indexOf(':')
-      if (indexOfColon !== -1) {
-        var prefix = (formInput.rdfProperty || formInput.fragment).slice(0, indexOfColon)
-        predicate = applicationData.config.rdfContext[prefix] + formInput.rdfProperty.slice(indexOfColon + 1)
-      } else {
-        predicate = `${ontologyUri}${formInput.rdfProperty}`
-      }
-      return predicate
-    }
-
-  var createInputGroups = function (applicationData) {
-    var props = Ontology.allProps(applicationData.ontology)
+    var createInputGroups = function (applicationData) {
+      var props = Ontology.allProps(applicationData.ontology)
       var inputs = []
       var inputMap = {}
       applicationData.predefinedValues = {}
@@ -1354,7 +1342,7 @@
                   return formSpec.id === formRef.formId
                 }))
                 _.each(resourceForm.inputs, function (formInput) {
-                  var predicate = predicateOfInput(formInput, ontologyUri, applicationData)
+                  var predicate = ontologyUri + formInput.rdfProperty
                   var ontologyInput = inputMap[ resourceForm.rdfType + '.' + predicate ]
                   _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
                   formInput[ 'values' ] = emptyValues(false)
@@ -1426,7 +1414,7 @@
           } else {
             input.inputIndex = index
             if (input.rdfProperty) {
-              ontologyInput = deepClone(inputMap[ `${inputGroup.rdfType}.${predicateOfInput(input, ontologyUri, applicationData)}` ])
+              ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
               ontologyInput.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput.suggestedValuesForNewResource = []
 

@@ -24,9 +24,11 @@ public interface EntityService {
     XURI updateHoldingBranches(String recordId, String branches) throws Exception;
 
     Model retrieveWorkItemsByURI(XURI xuri);
+
     String create(EntityType type, Model inputModel) throws Exception;
 
     void delete(Model model);
+
     Model patch(XURI xuri, String ldPatchJson) throws Exception;
 
     Model synchronizeKoha(XURI xuri) throws Exception;

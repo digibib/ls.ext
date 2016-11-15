@@ -608,9 +608,9 @@ public class AppTest {
     private void checkTimestampPresent(String locationUri, final String fragment) throws Exception {
         HttpResponse<JsonNode> jsonNodeHttpResponse = buildGetRequest(resolveLocally(locationUri)).asJson();
         try {
-            Object createdObject = jsonNodeHttpResponse.getBody().getObject().get("dcterms:" + fragment);
+            Object createdObject = jsonNodeHttpResponse.getBody().getObject().get("deichman:" + fragment);
             String createdDateTime = ((JSONObject) createdObject).get("@value").toString();
-            assertTrue("Missing dcterms:" + fragment + " for " + new XURI(locationUri).getType(), createdDateTime.endsWith("Z"));
+            assertTrue("Missing deichman:" + fragment + " for " + new XURI(locationUri).getType(), createdDateTime.endsWith("Z"));
         } catch (Exception e) {
             fail(e.getMessage() + " Couldn't get " + fragment + " timestamp for " + new XURI(locationUri).getType());
         }

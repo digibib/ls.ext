@@ -195,8 +195,10 @@ public final class SPARQLQueryBuilder {
     public String patch(List<Patch> patches, Resource subject) {
         StringBuilder q = new StringBuilder();
         if (subject != null) {
-            q.append("DELETE { <").append(subject.getURI()).append("> <http://purl.org/dc/terms/modified> ?modified }\n"
-                    + "WHERE  { <").append(subject.getURI()).append("> <http://purl.org/dc/terms/modified> ?modified };\n");
+            q.append(String.format(""
+                            + "DELETE { <%s> <%smodified> ?modified }"
+                            + "WHERE { <%s> <%smodified> ?modified };",
+                    subject.getURI(), BaseURI.ontology(), subject.getURI(), BaseURI.ontology()));
         }
         String del = getStringOfStatments(patches, "DEL", SKIP_BLANK_NODES);
         String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
@@ -321,11 +323,11 @@ public final class SPARQLQueryBuilder {
 
     public String updateHoldingBranches(String recordId, String branches) {
         String q = format(""
-                + "PREFIX : <%s>\n"
-                + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
-                + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
-                + "WHERE { ?pub :recordId \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
-                BaseURI.ontology(), StringUtils.join(branches.split(","),"\",\""), recordId);
+                        + "PREFIX : <%s>\n"
+                        + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
+                        + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
+                        + "WHERE { ?pub :recordId \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
+                BaseURI.ontology(), StringUtils.join(branches.split(","), "\",\""), recordId);
         return q;
     }
 
@@ -488,7 +490,7 @@ public final class SPARQLQueryBuilder {
 
     public Query constructInversePublicationRelations(XURI workUri) {
         String query = "PREFIX deichman: <http://data.deichman.no/ontology#>\n"
-                + "CONSTRUCT {<"+ workUri.getUri() +"> deichman:hasPublication ?publication} WHERE {?publication deichman:publicationOf <"+workUri.getUri()+">}";
+                + "CONSTRUCT {<" + workUri.getUri() + "> deichman:hasPublication ?publication} WHERE {?publication deichman:publicationOf <" + workUri.getUri() + ">}";
         return QueryFactory.create(query);
     }
 

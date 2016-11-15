@@ -6,7 +6,6 @@
 @prefix ui: <http://data.deichman.no/ui#> .
 @prefix values: <__BASE_URI_VALUES__> .
 @prefix duo: <http://data.deichman.no/utility#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 
 :MainEntry a rdfs:Class ;
   rdfs:label "Main entry"@en ;
@@ -175,13 +174,13 @@ duo:Biography a rdfs:Class ;
   rdfs:label "Biography"@en ;
   rdfs:label "Biografisk innhold"@no .
 
-dcterms:created a rdfs:Property ;
+:created a rdfs:Property ;
    rdfs:label "Opprettet"@no ;
    rdfs:label "Created"@en ;
    rdfs:range xsd:dateTime ;
    rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument, :Event, :Publication, :Work, :Serial .
 
-dcterms:modified a rdfs:Property ;
+:modified a rdfs:Property ;
    rdfs:label "Sist endret"@no ;
    rdfs:label "Modified"@en ;
    rdfs:range xsd:dateTime ;

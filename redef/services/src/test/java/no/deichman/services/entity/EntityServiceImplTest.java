@@ -71,8 +71,8 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 public class EntityServiceImplTest {
 
     private static final String A_BIBLIO_ID = "234567";
-    public static final Property CREATED = ResourceFactory.createProperty("http://purl.org/dc/terms/created");
-    public static final Property MODIFIED = ResourceFactory.createProperty("http://purl.org/dc/terms/modified");
+    public static final Property CREATED = ResourceFactory.createProperty("http://data.deichman.no/ontology#created");
+    public static final Property MODIFIED = ResourceFactory.createProperty("http://data.deichman.no/ontology#modified");
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     private EntityServiceImpl service;
