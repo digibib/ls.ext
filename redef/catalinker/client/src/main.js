@@ -163,7 +163,7 @@
     var unloadResourceForDomain = function (domainType) {
       _.each(allInputs(), function (input) {
         if (input.domain && domainType === unPrefix(input.domain)) {
-          let subjectType = input.values[0].subjectType
+          let subjectType = input.values[ 0 ].subjectType
           input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
           input.values[ 0 ].subjectType = subjectType
         } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
@@ -179,15 +179,14 @@
           })
           Promise.all(promises).then(function () {
             let values = ractive.get(`${input.keypath}.values`)
-            if (values.length == 0) {
+            if (values.length === 0) {
               ractive.set(`${input.keypath}.values.0`, emptyValues(input.searchable))
               if (input.parentInput.subjectTypes.length === 1) {
-                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[0])
+                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
               }
             }
           })
         }
-
       })
       ractive.update()
       ractive.set('targetUri.' + domainType, undefined)
@@ -2069,7 +2068,7 @@
           _.each(input.subInputs, function (subInput) {
             if (!(subInput.input.visible === false)) {
               var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[0] !== ''))) {
+              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
                 patch.push({
                   op: operation,
                   s: '_:b0',
