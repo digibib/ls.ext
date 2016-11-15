@@ -35,6 +35,11 @@ public class MARCMapperTest extends MappingTester {
     }
 
     @Test
+    public void it_maps_marc_with_extent() {
+        checkMapping("BS_external_data_with_extent.xml", "BS_external_with_extent.json");
+    }
+
+    @Test
     public void it_maps_bible() {
         checkMapping("BS_external_data_bible.xml", "BS_external_data_bible.json");
     }

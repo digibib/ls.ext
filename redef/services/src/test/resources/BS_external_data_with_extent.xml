@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+        xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+        <leader>01016 am a2200193   4500</leader>
+        <controlfield tag="001">000001</controlfield>
+        <controlfield tag="008">                      a          1dmul 2</controlfield>
+        <datafield tag="015" ind1=" " ind2=" ">
+            <subfield code="a">0250080</subfield>
+            <subfield code="b">BIBBI</subfield>
+        </datafield>
+        <datafield tag="019" ind1=" " ind2=" ">
+            <subfield code="a">bu,u,mu</subfield>
+            <subfield code="b">dj</subfield>
+            <subfield code="d">AN</subfield>
+            <subfield code="s">18</subfield>
+        </datafield>
+        <datafield tag="300" ind1=" " ind2=" ">
+            <subfield code="a">3</subfield>
+        </datafield>
+    </record>
+</collection>
