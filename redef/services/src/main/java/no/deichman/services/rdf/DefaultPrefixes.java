@@ -2,6 +2,7 @@ package no.deichman.services.rdf;
 
 
 import org.apache.jena.vocabulary.RDFS;
+
 import java.util.HashMap;
 import java.util.Map;
 

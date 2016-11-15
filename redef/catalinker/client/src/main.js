@@ -1161,6 +1161,9 @@
         case 'http://data.deichman.no/utility#duration':
           inputType = 'input-duration'
           break
+        case 'http://www.w3.org/2001/XMLSchema#dateTime':
+          inputType = 'input-date-time'
+          break
         case 'deichman:Place':
         case 'deichman:Work':
         case 'deichman:Person':
@@ -1451,6 +1454,15 @@
             }
             if (input.formatter) {
               ontologyInput.formatter = input.formatter
+            }
+            if (input.readOnly) {
+              ontologyInput.readOnly = input.readOnly
+            }
+            if (input.oneLiner) {
+              ontologyInput.oneLiner = input.oneLiner
+            }
+            if (input.showOnlyWhenInputHasValue) {
+              ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
           }
           copyResourceForms(input)
@@ -1968,6 +1980,7 @@
           'input-lang-string',
           'input-gYear',
           'input-duration',
+          'input-date-time',
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
@@ -1995,6 +2008,7 @@
           'readonly-input-string-large',
           'readonly-input-gYear',
           'readonly-input-duration',
+          'readonly-input-date-time',
           'readonly-input-nonNegativeInteger',
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
@@ -2424,6 +2438,16 @@
               },
               spy: function (node, nmode2) {
                 console.dir(node)
+              },
+              formatDateTime: function (dateTime) {
+                if (dateTime) {
+                  let date = new Date(dateTime)
+                  if (!isNaN(date.getTime())) {
+                    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+                  } else {
+                    return dateTime
+                  }
+                }
               },
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {

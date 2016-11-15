@@ -28,6 +28,22 @@ function maintenanceInputs (label, type) {
   }
 }
 
+function createdTimestamp () {
+  return  {
+    rdfProperty: 'created',
+    readOnly: true,
+    oneLiner: true
+  }
+}
+
+function modifiedTimestamp () {
+  return  {
+    rdfProperty: 'modified',
+    readOnly: true,
+    oneLiner: true
+  }
+}
+
 module.exports = (app) => {
   app.get('/config', function (request, response) {
     response.setHeader('Cache-Control', 'public, max-age=3600')
@@ -77,7 +93,9 @@ module.exports = (app) => {
             {
               rdfProperty: 'ordinal',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -101,7 +119,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -125,7 +145,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -161,7 +183,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -256,7 +280,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -297,7 +323,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -324,7 +352,9 @@ module.exports = (app) => {
               indexTypes: 'corporation',
               nameProperties: [ 'name', 'subdivision', '(specification)' ],
               indexDocumentFields: [ 'name', 'subdivision', 'specification' ]
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -347,7 +377,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -370,7 +402,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         }
       ],
@@ -788,7 +822,9 @@ module.exports = (app) => {
                   } ]
                 }
               }
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Beskriv verk',
@@ -914,7 +950,9 @@ module.exports = (app) => {
             {
               rdfProperty: 'hasSummary',
               type: 'input-string-large'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Emneopplysninger',

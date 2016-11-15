@@ -95,12 +95,14 @@
     <div class="search-result pure-u-1">
         {{#each inputs}}
             {{#if !(type === 'hidden-url-query-value')}}
-                <span data-uri-escaped-label="{{encodeURI(./label)}}">{{./label}}:</span>
-                {{#each values}}
-                    <span class="field pure-u-1-1">
-                        {{>type}}
-                    </span>
-                {{/each}}
+                <div>
+                    <span data-uri-escaped-label="{{encodeURI(./label)}}">{{./label}}:</span>
+                    {{#each values}}
+                        <span class="field" class-pure-u-1-1="{{!oneLiner}}">
+                            {{>(readOnly ? "readonly-" : "") + type}}
+                        </span>
+                    {{/each}}
+                </div>
             {{/if}}
         {{/each}}
         {{#if widgetOptions.enableCreateNewResource.showInputs === (inputValueIndex || 0)}}

@@ -35,6 +35,7 @@ import org.apache.jena.vocabulary.RDFS;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -53,6 +54,7 @@ import static com.google.common.collect.ImmutableMap.of;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.json.Json.createObjectBuilder;
 import static javax.ws.rs.core.Response.Status.CREATED;
+import static junit.framework.TestCase.fail;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -567,13 +569,13 @@ public class AppTest {
             XURI location = new XURI(getLocation(createResult));
             HttpResponse<String> addResult = buildPatchRequest(resolveLocally(location.getUri()), createSimplePatch(ADD, location)).asString();
             assertEquals("expected OK when creating " + entityType + " but got " + addResult.getStatus(), Status.OK.getStatusCode(), addResult.getStatus());
+            checkTimestampPresent(location.getUri(), "modified");
             HttpResponse<String> delResult = buildPatchRequest(resolveLocally(location.getUri()), createSimplePatch(DEL, location)).asString();
             assertEquals(Status.OK.getStatusCode(), delResult.getStatus());
         }
     }
 
     private JsonArray createSimplePatch(String operation, XURI xuri) throws Exception {
-
         if (!operation.matches("ADD|DEL")) {
             throw new Exception("You did not specify a valid patch operation (ADD|DEL)");
         }
@@ -589,10 +591,8 @@ public class AppTest {
     }
 
     @Test
-    public void test_resource_can_be_created() throws UnirestException {
-
+    public void test_resource_can_be_created() throws Exception {
         for (EntityType entityType : EntityType.values()) {
-
             if (entityType.equals(EntityType.PUBLICATION)) {
                 setUpKohaExpectation(SECOND_BIBLIO_ID);
             }
@@ -601,6 +601,18 @@ public class AppTest {
             HttpResponse<String> result = createEmptyResource(entityType);
             assertEquals(Status.CREATED.getStatusCode(), result.getStatus());
             assertEquals(EMPTY_STRING, result.getBody());
+            checkTimestampPresent(getLocation(result), "created");
+        }
+    }
+
+    private void checkTimestampPresent(String locationUri, final String fragment) throws Exception {
+        HttpResponse<JsonNode> jsonNodeHttpResponse = buildGetRequest(resolveLocally(locationUri)).asJson();
+        try {
+            Object createdObject = jsonNodeHttpResponse.getBody().getObject().get("deichman:" + fragment);
+            String createdDateTime = ((JSONObject) createdObject).get("@value").toString();
+            assertTrue("Missing deichman:" + fragment + " for " + new XURI(locationUri).getType(), createdDateTime.endsWith("Z"));
+        } catch (Exception e) {
+            fail(e.getMessage() + " Couldn't get " + fragment + " timestamp for " + new XURI(locationUri).getType());
         }
     }
 

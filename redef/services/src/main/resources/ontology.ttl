@@ -174,6 +174,18 @@ duo:Biography a rdfs:Class ;
   rdfs:label "Biography"@en ;
   rdfs:label "Biografisk innhold"@no .
 
+:created a rdfs:Property ;
+   rdfs:label "Opprettet"@no ;
+   rdfs:label "Created"@en ;
+   rdfs:range xsd:dateTime ;
+   rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument, :Event, :Publication, :Work, :Serial .
+
+:modified a rdfs:Property ;
+   rdfs:label "Sist endret"@no ;
+   rdfs:label "Modified"@en ;
+   rdfs:range xsd:dateTime ;
+   rdfs:domain :Person, :Corporation, :Concept, :Place, :Genre, :Subject, :CompositionType, :Instrument, :Event, :Publication, :Work, :Serial .
+
 :hasNumberOfPerformers a rdfs:Property ;
   rdfs:label "Performers"@en ;
   rdfs:label "Antall"@no ;

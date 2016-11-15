@@ -17,6 +17,14 @@ public final class Patch {
         this.graph = graph;
     }
 
+    public static Patch addPatch(Statement statement, String graph) {
+        return new Patch("ADD", statement, graph);
+    }
+
+    public static Patch delPatch(Statement statement, String graph) {
+        return new Patch("DEL", statement, graph);
+    }
+
     public String getOperation() {
         return operation;
     }
