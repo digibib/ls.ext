@@ -423,6 +423,12 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
+:hasExtent a rdfs:Property ;
+  rdfs:label "Extent"@en ;
+  rdfs:label "Omfang"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
 # ToDo: Erstattes med :hasISBN
 :isbn a rdfs:Property ;
   rdfs:label "ISBN"@en ;
