@@ -992,14 +992,14 @@ module.exports = (app) => {
               id: 'compositionTypeInput',
               type: 'searchable-with-result-in-side-panel',
               nameProperties: [ 'prefLabel' ],
-              indexTypes: [ 'compositionType' ],
+              indexTypes: [ 'compositiontype' ],
               labelForCreateButton: 'Opprett ny komposisjonstype',
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [
                     {
                       formId: 'create-compositiontype-form',
-                      targetType: 'compositionType'
+                      targetType: 'compositiontype'
                     }
                   ]
                 }
