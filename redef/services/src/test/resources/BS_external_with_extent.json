@@ -1,0 +1,58 @@
+[
+  {
+    "@graph": [
+      {
+        "deichman:audience": [
+          {
+            "@id": "http://data.deichman.no/audience#adult"
+          },
+          {
+            "@id": "http://data.deichman.no/audience#ages9To10"
+          },
+          {
+            "@id": "http://data.deichman.no/audience#ages11To12"
+          },
+          {
+            "@id": "http://data.deichman.no/audience#ages13To15"
+          }
+        ],
+        "deichman:literaryForm": [
+          {
+            "@id": "http://data.deichman.no/literaryForm#anthology"
+          },
+          {
+            "@id": "http://data.deichman.no/literaryForm#shortStory"
+          }
+        ],
+        "deichman:biography": {
+          "@id": "http://data.deichman.no/biography#biographicalContent"
+        },
+        "deichman:fictionNonfiction": {
+          "@id": "http://data.deichman.no/fictionNonfiction#fiction"
+        },
+        "@type": [
+          "deichman:Work",
+          "deichman:TopBanana"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:hasExtent": "3",
+        "deichman:publicationOf": {
+          "@id": "_:0000000"
+        },
+        "deichman:hasMediaType": {
+          "@id": "http://data.deichman.no/mediaType#Audiobook"
+        },
+        "deichman:ageLimit": 18,
+        "@type": [
+          "deichman:Publication"
+        ]
+      }
+    ],
+    "@context": {
+      "deichman": "http://deichman.no/ontology#",
+      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    }
+  }
+]

@@ -33,7 +33,7 @@
     require('isbn2')
     ISBN = ISBN || window.ISBN
 
-  var deepClone = function (object) {
+    var deepClone = function (object) {
       var clone = _.clone(object)
 
       _.each(clone, function (value, key) {
@@ -163,7 +163,29 @@
     var unloadResourceForDomain = function (domainType) {
       _.each(allInputs(), function (input) {
         if (input.domain && domainType === unPrefix(input.domain)) {
-          input.values = emptyValues(false)
+          let subjectType = input.values[ 0 ].subjectType
+          input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
+          input.values[ 0 ].subjectType = subjectType
+        } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
+          var valuesToRemove = []
+          _.each(input.values, function (value, index) {
+            if (value.subjectType === domainType) {
+              valuesToRemove.push(index)
+            }
+          })
+          var promises = []
+          _.each(valuesToRemove.reverse(), function (index) {
+            promises.push(ractive.splice(`${input.keypath}.values`, index, 1))
+          })
+          Promise.all(promises).then(function () {
+            let values = ractive.get(`${input.keypath}.values`)
+            if (values.length === 0) {
+              ractive.set(`${input.keypath}.values.0`, emptyValues(input.searchable))
+              if (input.parentInput.subjectTypes.length === 1) {
+                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
+              }
+            }
+          })
         }
       })
       ractive.update()
@@ -354,6 +376,7 @@
         } else if (options.source) {
           input.values[ index ].current.accepted = { source: options.source }
         }
+        ractive.update(`${input.keypath}.values.${index}`)
         return valuesAsArray
       }
     }
@@ -373,6 +396,7 @@
           },
           uniqueId: _.uniqueId()
         }
+        ractive.update(`${input.keypath}.values.${index}`)
       }
     }
 
@@ -391,6 +415,7 @@
         value: id
       }
       input.values[ index ].uniqueId = _.uniqueId()
+      ractive.update(`${input.keypath}.values.${index}`)
     }
 
     function setDisplayValue (input, index, root, options) {
@@ -440,6 +465,7 @@
             }
           }
         }
+        ractive.update(`${input.keypath}.values.${index}`)
       }
 
       if (isBlankNodeUri(uri)) {
@@ -741,6 +767,18 @@
       input.values[ index ].previewProperties = getDisplayPropertiesForNode(input.previewProperties, node)
     }
 
+    function these (collection) {
+      return {
+        orIf: function (when) {
+          return {
+            atLeast: function (value) {
+              return when ? (collection.length > 0 ? collection : value) : collection
+            }
+          }
+        }
+      }
+    }
+
     function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
       var graphData = ensureJSON(response.data)
@@ -783,10 +821,10 @@
                   promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
                 } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
                   if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
-                    _.each(root.outAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
+                    _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                       index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
                       setIdValue(node.id, input, index)
-                      if (options.source) {
+                      if (options.source && node.id !== '') {
                         setPreviewValues(input, node, index)
                       }
                       if (!options.onlyValueSuggestions) {
@@ -795,13 +833,15 @@
                         } else {
                           input.values[ index ].searchable = false
                         }
-                        promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
-                        if (!isBlankNodeUri(node.id)) {
-                          ractive.set(`${input.keypath}.values.${index}.deletable`, true)
-                          if (input.isSubInput && !options.source) {
-                            input.values[ index ].nonEditable = true
-                            ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
-                            input.parentInput.allowAddNewButton = true
+                        if (node.id !== '') {
+                          promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
+                          if (!isBlankNodeUri(node.id)) {
+                            ractive.set(`${input.keypath}.values.${index}.deletable`, true)
+                            if (input.isSubInput && !options.source) {
+                              input.values[ index ].nonEditable = true
+                              ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                              input.parentInput.allowAddNewButton = true
+                            }
                           }
                         }
                         setAllowNewButtonForInput(input)
@@ -810,6 +850,7 @@
                         input.values[ index ].searchable = true
                       }
                       input.values[ index ].subjectType = type
+                      ractive.update(`${input.keypath}.values.${index}`)
                     })
                   } else {
                     _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
@@ -822,7 +863,7 @@
                   }
                 } else if (input.type === 'select-predefined-value') {
                   if (!options.onlyValueSuggestions) {
-                    setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                    setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                     if (input.isSubInput && !options.source) {
                       input.values[ rootIndex + (offset) ].nonEditable = true
                       ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
@@ -851,17 +892,17 @@
                     setIdValue(value.id, input, 0)
                   })
                 } else {
-                  _.each(root.getAll(fragmentPartOf(predicate)), function (value, index) {
+                  _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { value: '' } ]), function (value, index) {
                     if (!options.onlyValueSuggestions) {
                       let valueIndex = input.isSubInput ? rootIndex : index
                       setSingleValue(value, input, (valueIndex) + (offset), options)
                       input.values[ valueIndex ].subjectType = type
                       if (input.isSubInput && !options.source) {
                         input.values[ valueIndex ].nonEditable = true
-                        ractive.update(`${input.keypath}.values.${valueIndex}`)
                         ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                         input.parentInput.allowAddNewButton = true
                       }
+                      ractive.update(`${input.keypath}.values.${valueIndex}`)
                       ractive.set(`${input.keypath}.allowAddNewButton`, true)
                     } else {
                       input.suggestedValues = input.suggestedValues || []
@@ -945,7 +986,7 @@
           if (patchBatch.length > 0) {
             executePatch(resourceUri, patchBatch, undefined, errors)
           }
-          blockUI()
+          blockUI(null, { noGracePeriod: true })
           ractive.update().then(unblockUI)
           return resourceUri
         })
@@ -1119,6 +1160,9 @@
           break
         case 'http://data.deichman.no/utility#duration':
           inputType = 'input-duration'
+          break
+        case 'http://www.w3.org/2001/XMLSchema#dateTime':
+          inputType = 'input-date-time'
           break
         case 'deichman:Place':
         case 'deichman:Work':
@@ -1410,6 +1454,15 @@
             }
             if (input.formatter) {
               ontologyInput.formatter = input.formatter
+            }
+            if (input.readOnly) {
+              ontologyInput.readOnly = input.readOnly
+            }
+            if (input.oneLiner) {
+              ontologyInput.oneLiner = input.oneLiner
+            }
+            if (input.showOnlyWhenInputHasValue) {
+              ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
           }
           copyResourceForms(input)
@@ -1739,16 +1792,28 @@
       unblockUI('Resetting ui blocking')
     }
 
-    function blockUI (complete, from) {
+    function blockUI (complete, options) {
+      options = options || {}
       uiBlockCounter++
-//      console.log(`uiBlockCounter -> ${uiBlockCounter} ${from}`)
+//      console.log(`uiBlockCounter -> ${uiBlockCounter} ${-options.from}`)
       if (uiBlockCounter === 1) {
-        let uiBlocker = $('#ui-blocker')
-        if (uiBlocker.length > 0) {
-          uiBlocker.fadeIn(100, complete)
-          uiBlockClearer = window.setTimeout(resetUnblock, 10000)
-        } else if (complete) {
-          complete()
+        let doBlock = function () {
+          if (uiBlockCounter === 1) {
+            let uiBlocker = $('#ui-blocker')
+            if (uiBlocker.length > 0) {
+              uiBlocker.fadeIn(100, complete)
+              uiBlockClearer = window.setTimeout(resetUnblock, 10000)
+            } else if (complete) {
+              complete()
+            }
+          } else if (complete) {
+            complete()
+          }
+        }
+        if (options.noGracePeriod) {
+          doBlock()
+        } else {
+          setTimeout(doBlock, 2000)
         }
       } else if (complete) {
         complete()
@@ -1778,7 +1843,7 @@
     }
 
     function executePatch (subject, patches, keypath, errors) {
-      blockUI()
+//      blockUI()
       ractive.set('save_status', 'arbeider...')
       // strip empty blank nodes
       let emptyBlankNodeIndexes = []
@@ -1824,7 +1889,7 @@
           console.log('HTTP PATCH failed with: ')
           errors.push('Noe gikk galt! Fikk ikke lagret endringene')
           ractive.set('save_status', '')
-          unblockUI()
+//          unblockUI()
         })
     }
 
@@ -1915,6 +1980,7 @@
           'input-lang-string',
           'input-gYear',
           'input-duration',
+          'input-date-time',
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
@@ -1942,6 +2008,7 @@
           'readonly-input-string-large',
           'readonly-input-gYear',
           'readonly-input-duration',
+          'readonly-input-date-time',
           'readonly-input-nonNegativeInteger',
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
@@ -2015,7 +2082,7 @@
           _.each(input.subInputs, function (subInput) {
             if (!(subInput.input.visible === false)) {
               var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || value.length > 0)) {
+              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
                 patch.push({
                   op: operation,
                   s: '_:b0',
@@ -2065,69 +2132,113 @@
         }
 
         var initRactive = function (applicationData) {
-          Ractive.decorators.select2.type.singleSelect = function (node) {
-            return {
-              maximumSelectionLength: 1,
-              templateSelection: templateSelection
-            }
-          }
-
-          Ractive.decorators.select2.type.multiSelect = function (node) {
-            return {
-              templateSelection: templateSelection
-            }
-          }
-
-          Ractive.decorators.select2.type.authoritySelectSingle = function (node) {
-            var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath))
-            if (_.isArray(inputDef.indexTypes) && inputDef.indexTypes.length > 1) {
-              throw new Error('searchable-authority-dropdown supports only supports singe indexType')
-            }
-            var indexType = _.isArray(inputDef.indexTypes) ? inputDef.indexTypes[ 0 ] : inputDef.indexTypes
-            var config = ractive.get('config')
-            return {
-              maximumSelectionLength: 1,
-              minimumInputLength: 3,
-              ajax: {
-                url: config.resourceApiUri + 'search/' + indexType + '/_search',
-                dataType: 'json',
-                delay: 250,
-                id: function (item) {
-                  return item._source.uri
-                },
-                data: function (params) {
-                  return {
-                    q: params.term + '*', // search term
-                    page: params.page
-                  }
-                },
-                processResults: function (data, params) {
-                  params.page = params.page || 1
-
-                  var select2Data = _.map(data.hits.hits, function (obj) {
-                    obj.id = obj._source.uri
-                    obj.text = _.map(inputDef.indexDocumentFields, function (field) {
-                      return obj._source[ field ]
-                    }).join(' - ')
-                    return obj
-                  })
-
-                  return {
-                    results: select2Data,
-                    pagination: {
-                      more: (params.page * 30) < data.total_count
+          // decorators
+          var select2 = function (node, mode) {
+            if (mode.mode === 'singleSelect') {
+              $(node).select2({
+                maximumSelectionLength: 1,
+                templateSelection: templateSelection
+              })
+            } else if (mode.mode === 'multiSelect') {
+              $(node).select2({
+                templateSelection: templateSelection
+              })
+            } else if (mode.mode === 'authoritySelectSingle') {
+              var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath))
+              if (_.isArray(inputDef.indexTypes) && inputDef.indexTypes.length > 1) {
+                throw new Error('searchable-authority-dropdown supports only supports singe indexType')
+              }
+              var indexType = _.isArray(inputDef.indexTypes) ? inputDef.indexTypes[ 0 ] : inputDef.indexTypes
+              var config = ractive.get('config')
+              $(node).select2({
+                maximumSelectionLength: 1,
+                minimumInputLength: 3,
+                ajax: {
+                  url: config.resourceApiUri + 'search/' + indexType + '/_search',
+                  dataType: 'json',
+                  delay: 250,
+                  id: function (item) {
+                    return item._source.uri
+                  },
+                  data: function (params) {
+                    return {
+                      q: params.term + '*', // search term
+                      page: params.page
                     }
-                  }
+                  },
+                  processResults: function (data, params) {
+                    params.page = params.page || 1
+
+                    var select2Data = _.map(data.hits.hits, function (obj) {
+                      obj.id = obj._source.uri
+                      obj.text = _.map(inputDef.indexDocumentFields, function (field) {
+                        return obj._source[ field ]
+                      }).join(' - ')
+                      return obj
+                    })
+
+                    return {
+                      results: select2Data,
+                      pagination: {
+                        more: (params.page * 30) < data.total_count
+                      }
+                    }
+                  },
+                  cache: true
                 },
-                cache: true
-              },
-              templateSelection: function (data) {
-                return data.text === '' ? ractive.get('authorityLabels[' + data.id + ']') : data.text
+                templateSelection: function (data) {
+                  return data.text === '' ? ractive.get('authorityLabels[' + data.id + ']') : data.text
+                }
+              })
+            } else {
+              throw Error("Value for as-select2 must be 'singleSelect', 'multiselect' or 'authoritySelectSingle")
+            }
+
+            var enableChange = false
+            $(node).on('select2:selecting select2:unselecting', function (event) {
+              enableChange = true
+            })
+            var setting = false
+            $(node).on('change', function (e) {
+              if (enableChange && !setting) {
+                setting = true
+                enableChange = false
+                var inputValue = Ractive.getNodeInfo(e.target)
+                var keypath = inputValue.keypath
+                ractive.set(keypath + '.current.value', $(e.target).val())
+                var inputNode = ractive.get(grandParentOf(keypath))
+                let target = ractive.get('targetUri.' + unPrefix(inputNode.domain))
+                if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') === -1)) {
+                  Main.patchResourceFromValue(target, inputNode.predicate,
+                    ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
+                }
+                ractive.updateModel()
+                setting = false
+              }
+            })
+
+            let keypath = this.getNodeInfo(node).resolve() + '.current.value'
+            var observer = ractive.observe(keypath, function (newvalue, oldValue) {
+              if (!setting && newvalue !== oldValue) {
+                setting = true
+                window.setTimeout(function () {
+                  if (newvalue === '') {
+                    $(node).select2('val', [])
+                  }
+                  $(node).val(newvalue).trigger('change')
+                  setting = false
+                }, 0)
+              }
+            })
+
+            return {
+              teardown: function () {
+                $(node).select2('destroy')
+                observer.cancel()
               }
             }
           }
 
-          // decorators
           var accordionDecorator = function (node) {
             $(node).accordion({
               collapsible: true,
@@ -2159,30 +2270,7 @@
               teardown: function () {}
             }
           }
-          var detectChange = function (node) {
-            var enableChange = false
-            $(node).on('select2:selecting select2:unselecting', function (event) {
-              enableChange = true
-            })
-            $(node).on('change', function (e) {
-              if (enableChange) {
-                enableChange = false
-                var inputValue = Ractive.getNodeInfo(e.target)
-                var keypath = inputValue.keypath
-                ractive.set(keypath + '.current.value', $(e.target).val())
-                var inputNode = ractive.get(grandParentOf(keypath))
-                let target = ractive.get('targetUri.' + unPrefix(inputNode.domain))
-                if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') === -1)) {
-                  Main.patchResourceFromValue(target, inputNode.predicate,
-                    ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
-                }
-                ractive.update()
-              }
-            })
-            return {
-              teardown: function () {}
-            }
-          }
+
           var handleAddNewBySelect2 = function (node) {
             var inputKeyPath = grandParentOf(Ractive.getNodeInfo(node).keypath)
             ractive.set(inputKeyPath + '.allowAddNewButton', false)
@@ -2193,16 +2281,18 @@
           }
           var clickOutsideSupportPanelDetector = function (node) {
             $(document).click(function (event) {
-              var outsideX = event.pageX < supportPanelLeftEdge || event.pageX > (supportPanelLeftEdge + supportPanelWidth)
-              var targetIsInsideSupportPanel = !outsideX && $(event.target).closest('span.support-panel').length
-              var targetIsSupportPanel = !outsideX && $(event.target).is('span.support-panel')
-              var targetIsASupportPanelButton = !outsideX && $(event.target).is('.support-panel-button')
+              if (!event.isDefaultPrevented()) {
+                var outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
+                var targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
+                var targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
+                var targetIsASupportPanelButton = !outsideX && $(event.originalEvent.target).is('.support-panel-button')
 
-              var targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.target).is('input[type=\'radio\'][value=\'on\']')
-              var targetIsEditResourceLink = !outsideX && $(event.target).is('a.edit-resource')
-              var targetIsASelect2RemoveSelectionCross = !outsideX && $(event.target).is('span.select2-selection__choice__remove') && !$(event.target).is('.overrride-outside-detect')
-              if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross || targetIsEditResourceLink)) {
-                clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
+                var targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.originalEvent.target).is('input[type=\'radio\'][value=\'on\']')
+                var targetIsEditResourceLink = !outsideX && $(event.originalEvent.target).is('a.edit-resource')
+                var targetIsASelect2RemoveSelectionCross = !outsideX && $(event.originalEvent.target).is('span.select2-selection__choice__remove') && !$(event.originalEvent.target).is('.overrride-outside-detect')
+                if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross || targetIsEditResourceLink)) {
+                  clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
+                }
               }
             })
             return {
@@ -2349,6 +2439,16 @@
               spy: function (node, nmode2) {
                 console.dir(node)
               },
+              formatDateTime: function (dateTime) {
+                if (dateTime) {
+                  let date = new Date(dateTime)
+                  if (!isNaN(date.getTime())) {
+                    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+                  } else {
+                    return dateTime
+                  }
+                }
+              },
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {
                 var publicationIdInput = _.find(ractive.get('inputs'), function (input) {
@@ -2437,14 +2537,14 @@
                   let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
                   let values = ractive.get(`${keyPath}.values`)
                   let index = _.findIndex(_.sortBy(_.filter(values, function (value) {
-                    return value.current.value !== null
+                    return value.current.value !== null && value.current.value !== ''
                   }), function (val) { return val.current.value }), function (v) {
                     return v.current.value === value
                   })
                   if (index > -1) {
                     return Number(index + 1).toString()
                   } else {
-                    return null
+                    return valueIndex + 1
                   }
                 } else {
                   return valueIndex + 1
@@ -2453,9 +2553,8 @@
               checkShouldInclude: checkShouldInclude
             },
             decorators: {
-              multi: require('ractive-multi-decorator'),
               repositionSupportPanel: repositionSupportPanel,
-              detectChange: detectChange,
+              select2: select2,
               handleAddNewBySelect2: handleAddNewBySelect2,
               clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
               unload: unload,
@@ -2577,7 +2676,7 @@
                     promises.push(new Promise(unblockUI))
                     sequentialPromiseResolver(promises)
                   })
-                })
+                }, { noGracePeriod: true })
               },
               deleteObject: function (event, parentInput, index) {
                 blockUI(function () {
@@ -2607,7 +2706,7 @@
                       ractive.fire('addValue', addValueEvent)
                     }
                   })
-                })
+                }, { noGracePeriod: true })
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
                 options = options || {}
@@ -2648,16 +2747,16 @@
                 }
                 Main.init(initOptions)
               },
-              selectSearchableItem: function (event, origin, displayValue, options) {
+              selectSearchableItem: function (event, context, origin, displayValue, options) {
                 if (!eventShouldBeIgnored(event)) {
                   options = options || {}
                   ractive.set(origin + '.searchResult', null)
                   var inputKeyPath = grandParentOf(origin)
                   var input = ractive.get(inputKeyPath)
-                  var uri = event.context.uri
+                  var uri = context.uri
                   var editWithTemplateSpec = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
                   if (editWithTemplateSpec) {
-                    ractive.fire('editResource', event, editWithTemplateSpec, uri)
+                    ractive.fire('editResource', null, editWithTemplateSpec, uri)
                   } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
                     var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
                     var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
@@ -2686,6 +2785,7 @@
                     }
                     ractive.set(origin + '.searchResult', null)
                   }
+                  event.original.preventDefault()
                 }
               },
               unselectEntity: function (event) {
@@ -2890,7 +2990,7 @@
                     .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
                     .then(clearInputsAndSearchResult)
                     .then(unblockUI)
-                })
+                }, { noGracePeriod: true })
               },
               cancelEdit: function (event) {
                 clearSupportPanels()
@@ -2971,7 +3071,7 @@
                         })
                       }
                     }).then(unblockUI)
-                  })
+                  }, { noGracePeriod: true })
                 }
 
                 if (searchValue && searchValue !== '') {
@@ -3091,7 +3191,7 @@
                     })
                     ractive.set('primarySuggestionAccepted', true)
                     ractive.update().then(unblockUI)
-                  }
+                  }, { noGracePeriod: true }
                 )
               },
               useSuggestion: function (event) {
@@ -3283,7 +3383,6 @@
               return 'Søker…'
             }
           })
-          require('ractive-decorators-select2')
           return applicationData
         }
 

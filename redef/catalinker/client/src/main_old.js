@@ -267,6 +267,9 @@
           case 'http://data.deichman.no/utility#duration':
             input.type = 'input-duration'
             break
+          case 'http://www.w3.org/2001/XMLSchema#dateTime':
+            input.type = 'input-string'
+            break
           case "deichman:Work":
           case "deichman:Person":
           case "deichman:Place":

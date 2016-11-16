@@ -12,14 +12,37 @@ a secrets.env:
 The resulting compose file can then be used with `docker-compose up -d` to provision.
 
 # Releases
-## 0.4.0 (2016-11-09)
 
-GITREF: 5180ccb93e764f80f627d2a76d49bbe1c3d4ab32
-KOHA:   90437fe3ee4e3d5af59182d7f3be477940b484f4
+## 0.5.0 (2016-11-16)
+
+GITREF:
+KOHA:   3df1e1097b2fa4d2eae7766745fc172184d2644c
+
+- koha:
+  - add pickupnumber to reserves table, update schema and add pickupnumber trigger
+  - boost starman workers
+  - replacementprice for Spill
+  - rewrite pidgeon service to use tempfiles
+  - add itemnumber to reserveslip for correct generation
+- sip:
+  - fix for missing AO in self checkout machines
+  - checkin: Override current location, set to institution ID (excluding API branch)
+- patron-client:
+  - update patron overview to use new pickupnumber
+- catalinker:
+  - fix replacing resource DEICH-435
+  - when patchcing objects, do not delete empty values DEICH-462
+  - add created and modified timestamp to all authorities DEICH-433
+  - map 300$a as extent or number of pages depending on mediatype DEICH-427
+  - fix composition type search
+- services:
+  - make publication class number searchable as 'kd' DEICH-161
+
+## 0.4.0 (2016-11-10) Bugfix release
 
 - catalinker:
-  - add alternativeName to autorities
-  
+  - DEICH-430_alternativt_navn_på_flere_autoriteter'
+
 ## 0.3.0 (2016-11-09)
 
 GITREF: 5eb52acd085ec5e88c19020a9c49ad44250bda68

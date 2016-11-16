@@ -5,7 +5,7 @@
         <div class="search-result-box" id="search-result">
             <div class="search-result-inner" >
             {{#each items:itemIndex}}
-            <div class="search-result pure-g {{#exactMatch}}exact-match{{/}}" data-automation-id="{{uri}}" {{#if itemIndex === highestScoreIndex}}id="highest-score-item"{{/if}}>
+            <div class="search-result pure-g" class-exact-match="{{exactMatch}}" data-automation-id="{{uri}}" {{#if itemIndex === highestScoreIndex}}id="highest-score-item"{{/if}}>
                 {{#if itemIndex === highestScoreIndex}}
                 <script>
                     var maxAttempts = 20
@@ -29,13 +29,13 @@
                         <div class="pure-u-1-12">
                             {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
                                 <a class="edit-resource" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
-                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
-                                   on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
+                                   on-keyup="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
+                                   on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
                                    title="Rediger"/>
                             {{else}}
                                 <a class="select-result-item" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
-                                   on-click="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
-                                   on-keyup="selectSearchableItem:{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
+                                   on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
+                                   on-keyup="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
                                    title="Velg"><span/></a>
                             {{/if}}
                         </div>
@@ -58,7 +58,7 @@
                                 {{# widgetOptions.showSelectItem}}
                                     <span class="search-result-work-selector pure-u-2-24">
                                         <input class="select-work-radio" type="radio" checked="{{isChecked}}"
-                                               on-click="selectSearchableItem:{{origin}},{{items[itemIndex].name}},{subItem: true}"/>
+                                               on-click="selectSearchableItem:{{.}},{{origin}},{{items[itemIndex].name}},{subItem: true}"/>
                                     </span>
                                 {{/}}
                             </div>
@@ -95,12 +95,14 @@
     <div class="search-result pure-u-1">
         {{#each inputs}}
             {{#if !(type === 'hidden-url-query-value')}}
-                <span data-uri-escaped-label="{{encodeURI(./label)}}">{{./label}}:</span>
-                {{#each values}}
-                    <span class="field pure-u-1-1">
-                        {{>type}}
-                    </span>
-                {{/each}}
+                <div>
+                    <span data-uri-escaped-label="{{encodeURI(./label)}}">{{./label}}:</span>
+                    {{#each values}}
+                        <span class="field" class-pure-u-1-1="{{!oneLiner}}">
+                            {{>(readOnly ? "readonly-" : "") + type}}
+                        </span>
+                    {{/each}}
+                </div>
             {{/if}}
         {{/each}}
         {{#if widgetOptions.enableCreateNewResource.showInputs === (inputValueIndex || 0)}}

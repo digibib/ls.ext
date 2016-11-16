@@ -1,4 +1,4 @@
-<span data-automation-id="{{../../dataAutomationId}}" {{#if ! nonEditable && !suggested}}class="pure-u-1-1" {{/if}}>
+<span data-automation-id="{{../../dataAutomationId}}" class-pure-u-1-1="{{! nonEditable && !suggested}}">
 {{#if ./nonEditable || suggested && subInputs}}
     {{current.displayValue}}
 {{else}}
@@ -26,7 +26,7 @@
         </div>
     {{/if}}
 {{#if ./searchable}}
-<a {{#if nonEditable}}style="display:none;" {{/if}} class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
+<a style-display="{{nonEditable ? 'none' : ''}}" class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
 {{/if}}
     {{#if ./deletable}}
         <div class="pure-u-1-1">
@@ -53,18 +53,25 @@
         </span>
         {{/if}}
         <span {{#if nonEditable}}style="display:none;" {{/if}}>
-            <div class="search-input pure-u-1-1 {{#error}}invalid-input{{else}}valid{{/error}}{{#deletable}} deletable{{/deletable}} {{#if ./searchable}}searchable{{/if}} {{#if ./current.accepted || ./suggested}}suggestion-source-{{./current.accepted.source || ./suggested.source}}{{/if}}">
+            <div class="search-input pure-u-1-1 suggestion-source-{{./current.accepted.source || ./suggested.source}}"
+                 class-invalid-input="{{error}}"
+                 class-valid="{{!(error)}}"
+                 class-deletable="{{./deletable}}"
+                 class-searchable="{{./searchable}}"
+            >
                 <span contenteditable="true" {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}}
                     on-click="{{#deletable}}unselectEntity{{/deletable}}"
-                    class="search-term {{#if ./bracketed === true}}bracketed{{/if}}"
-                    decorator="multi:{pasteSanitizer:[], searchable:[]}"
+                    class="search-term"
+                    class-bracketed={{./bracketed === true}}
+                    as-pasteSanitizer
+                    as-searchable
                     onFocus="document.main.$(this.parentElement).addClass('focus')"
                     onBlur="document.main.$(this.parentElement).removeClass('focus')"
                     data-automation-id="{{dataAutomationId}}"
                     on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
                     on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
                     value="{{./current.displayValue}}"/>
-                    {{#if ./previewProperties}}
+                    {{#if ./previewProperties && primarySuggestionAccepted === true}}
                         <span class="preview-properties">
                             {{#each ./previewProperties}}
                                 {{#if ./fragment}}

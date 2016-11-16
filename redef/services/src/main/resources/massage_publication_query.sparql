@@ -45,7 +45,8 @@ CONSTRUCT {
                deich:isbn ?isbn ;
                deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
-               deich:langTitles <http://ignore> .
+               deich:langTitles <http://ignore> ;
+               deich:kd ?locDewey .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -97,6 +98,8 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:inSerial ?serialBnode .
           ?serialBnode deich:serial ?serial .
           ?serial deich:mainTitle ?seriesTitle . }
+
+  UNION { <__PUBLICATIONURI__> deich:locationClassNumber ?locDewey }
 
   # 2. Information from other publications:
   UNION {

@@ -23,10 +23,3 @@ Egenskap: Legg til verk med tittel
     Når jeg legger til tittel for det nye verket
     Så viser systemet at tittel på verket har blitt registrert
     Og verkets tittel vises på verks-siden
-
-  @check-for-errors
-  Scenario: Katalogisator legger inn alternativ tittel på et verk
-    Gitt at det finnes et verk
-    Og at verket har en tittel
-    Når jeg legger til en inn alternativ tittel på det nye verket
-    Så viser systemet at alternativ tittel på verket har blitt registrert

@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 /**
  * Responsibility: TODO.
@@ -222,7 +223,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private Predicate<Statement> typeStatement(String type) {
         return s ->
-                s.getPredicate().equals(RDF.type) && s.getObject().equals(ResourceFactory.createResource(BaseURI.ontology() + type));
+                s.getPredicate().equals(RDF.type) && s.getObject().equals(createResource(BaseURI.ontology() + type));
     }
 
     @Override
@@ -364,11 +365,6 @@ public final class EntityServiceImpl implements EntityService {
         return uri;
     }
 
-    @Override
-    public void create(Model inputModel) throws Exception {
-        repository.createResource(inputModel);
-    }
-
     private String createPublication(Model inputModel) throws Exception {
 
         XURI publication = null;
@@ -406,8 +402,7 @@ public final class EntityServiceImpl implements EntityService {
         if (StringUtils.isBlank(ldPatchJson)) {
             throw new BadRequestException("Empty JSON-LD patch");
         }
-        repository.patch(PatchParser.parse(ldPatchJson));
-
+        repository.patch(PatchParser.parse(ldPatchJson), createResource(xuri.getUri()));
         return synchronizeKoha(xuri);
     }
 
@@ -435,7 +430,7 @@ public final class EntityServiceImpl implements EntityService {
         } else if (xuri.getTypeAsEntityType().equals(EntityType.PUBLICATION)) {
             model = retrieveById(xuri);
             if (model.getProperty(null, publicationOfProperty) != null) {
-                XURI workXURI = new XURI(model.getProperty(ResourceFactory.createResource(xuri.toString()), publicationOfProperty).getObject().toString());
+                XURI workXURI = new XURI(model.getProperty(createResource(xuri.toString()), publicationOfProperty).getObject().toString());
                 updatePublicationWithWork(workXURI, xuri);
             } else {
                 updatePublicationInKoha(xuri, model);

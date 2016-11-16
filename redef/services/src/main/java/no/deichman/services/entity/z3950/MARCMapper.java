@@ -32,23 +32,22 @@ import static java.util.stream.StreamSupport.stream;
  */
 @SuppressWarnings("checkstyle:MethodLength")
 public class MARCMapper {
-    public static final int TWENTY_TWO = 22;
-    public static final int THIRTY_THREE = 33;
-    public static final String SUBJECT_TYPE = "deichman:Subject";
-    public static final String GENRE_TYPE = "deichman:Genre";
-    public static final String PERSON_TYPE = "deichman:Person";
-    public static final String PLACE_TYPE = "deichman:Place";
+    private static final int TWENTY_TWO = 22;
+    private static final int THIRTY_THREE = 33;
+    private static final String SUBJECT_TYPE = "deichman:Subject";
+    private static final String GENRE_TYPE = "deichman:Genre";
+    private static final String PLACE_TYPE = "deichman:Place";
+    private static final String SERIAL_ISSUE_TYPE = "deichman:SerialIssue";
     private static final String CORPORATION_TYPE = "deichman:Corporation";
-    public static final int THIRTY_FOUR = 34;
-    public static final int THIRTY_FIVE = 35;
-    public static final int THIRTY_SEVEN = 37;
-    public static final Predicate<String> EMPTY_VALUES = s -> s != null;
-    public static final boolean WRAP = true;
-    public static final int THREE = 3;
-    public static final Function<String, String> MUL_FILTER = s -> s.replace("mul", "");
+    private static final String TOP_BANANA_TYPE = "deichman:TopBanana";
+    private static final int THIRTY_FOUR = 34;
+    private static final int THIRTY_FIVE = 35;
+    private static final int THIRTY_SEVEN = 37;
+    private static final Predicate<String> EMPTY_VALUES = s -> s != null;
+    private static final int THREE = 3;
+    private static final Function<String, String> MUL_FILTER = s -> s.replace("mul", "");
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
-    public static final Function<String, String> NOP = s -> s;
 
     public MARCMapper() {
     }
@@ -58,19 +57,15 @@ public class MARCMapper {
     }
 
     final List<Object> getMapping(String record) {
-
         MarcReader reader = new MarcXmlReader(IOUtils.toInputStream(record));
         List<Object> list = new ArrayList<>();
-
         while (reader.hasNext()) {
             list.add(mapRecordToMap(reader.next()));
         }
-
         return list;
     }
 
     private Object mapRecordToMap(org.marc4j.marc.Record r) {
-
         List<Person> persons = new ArrayList<>();
         List<Corporation> corporations = new ArrayList<>();
         List<Contribution> contributions = new ArrayList<>();
@@ -78,7 +73,7 @@ public class MARCMapper {
         List<Work> publicationPartWorks = new ArrayList<>();
 
         Work work = new Work();
-        work.addType("deichman:TopBanana");
+        work.addType(TOP_BANANA_TYPE);
 
         String workId = newBlankNodeId();
         work.setId(workId);
@@ -106,17 +101,18 @@ public class MARCMapper {
             String tag = dataField.getTag();
             switch (tag) {
                 case "019":
-                    setUriObject(dataField, 'a', "audience", work::setAudience, Audience::translate);
-                    setUriObject(dataField, 'b', "format", publication::setFormat, Format::translate);
-                    setUriObject(dataField, 'b', "mediaType", publication::setMediaType, MediaType::translate);
-                    setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", work::addLiteraryForm, LiteraryForm::translate, WRAP);
-                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaption", work::addContentAdaption, ContentAdaption::translate, WRAP);
-                    setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaption", publication::addFormatAdaption, FormatAdaption::translate, WRAP);
+                    setUriObject(dataField, 'a', "audience", Audience::translate, work::setAudience);
+                    setUriObject(dataField, 'b', "format", Format::translate, publication::setFormat);
+                    setUriObject(dataField, 'b', "mediaType", MediaType::translateUnitedMediaType, publication::setUnitedMediaType);
+                    setUriObject(dataField, 'b', "mediaType", MediaType::translatePagedMediaType, publication::setPagedMediaType);
+                    setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", LiteraryForm::translate, work::addLiteraryForm);
+                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaption", ContentAdaption::translate, work::addContentAdaption);
+                    setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaption", FormatAdaption::translate, publication::addFormatAdaption);
                     getSubfieldValue(dataField, 's').ifPresent(publication::setAgeLimit);
                     break;
                 case "020":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
-                    setUriObject(dataField, 'b', "binding", publication::setBinding, Binding::translate);
+                    setUriObject(dataField, 'b', "binding", Binding::translate, publication::setBinding);
                     break;
                 case "041":
                     setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
@@ -126,7 +122,7 @@ public class MARCMapper {
                 case "082":
                     getSubfieldValue(dataField, 'a').ifPresent(classificationNumber -> {
                         Classification classification = new Classification(newBlankNodeId(), classificationNumber);
-                        setUriObject(dataField, '2', "classificationSource", classification::setClassificationSource, ClassificationSource::translate);
+                        setUriObject(dataField, '2', "classificationSource", ClassificationSource::translate, classification::setClassificationSource);
                         work.addClassification(classification);
                         graphList.add(classification);
                     });
@@ -185,7 +181,7 @@ public class MARCMapper {
                     getSubfieldValue(dataField, 'c').ifPresent(publication::setPublicationYear);
                     break;
                 case "300":
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setNumberOfPages);
+                    getSubfieldValue(dataField, 'a').ifPresent(publication::setExtent);
                     getSubfieldValue(dataField, 'b').ifPresent(b -> {
                         stream(b.split(","))
                                 .map(this::unPunctuate)
@@ -205,7 +201,7 @@ public class MARCMapper {
                             addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
                         });
                         Map<String, Object> serialIssue = new HashMap<>();
-                        serialIssue.put("@type", "deichman:SerialIssue");
+                        serialIssue.put("@type", SERIAL_ISSUE_TYPE);
                         serialIssue.put("serial", of("@id", serial.getId()));
                         getSubfieldValue(dataField, 'v').ifPresent(v -> {
                             serialIssue.put("issue", v);
@@ -505,7 +501,7 @@ public class MARCMapper {
                 .ifPresent(contribution::setRole);
     }
 
-    private void setUriObject(DataField dataField, char subField, String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper) {
+    private void setUriObject(DataField dataField, char subField, String path, Function<String, String> mapper, Consumer<ExternalDataObject> setterFunction) {
         getSubfieldValues(dataField, subField)
                 .map(String::toLowerCase)
                 .map(this::unPunctuate)
@@ -518,13 +514,13 @@ public class MARCMapper {
     }
 
     private void setUriObjectFixedValueWidth(DataField dataField, char subField, int valueWidth,
-                                             String path, Consumer<ExternalDataObject> setterFunction, Function<String, String> mapper, boolean wrap) {
+                                             String path, Function<String, String> mapper, Consumer<ExternalDataObject> setterFunction) {
         getFixedWidthSubfieldValues(dataField, subField, valueWidth)
                 .map(String::toLowerCase)
                 .map(mapper)
                 .filter(StringUtils::isNotBlank)
-                .map(fragment -> wrap ? path(path, fragment) : fragment)
-                .map(s -> wrap ? dataPrefix(s) : s)
+                .map(fragment -> path(path, fragment))
+                .map(s -> dataPrefix(s))
                 .map(this::asExternalObject)
                 .forEach(setterFunction);
     }
@@ -593,7 +589,7 @@ public class MARCMapper {
         return punctuated.replace(".", "");
     }
 
-    private String dataPrefix(String unprefixed) {
+    public final String dataPrefix(String unprefixed) {
         return "http://data.deichman.no/" + unprefixed;
     }
 

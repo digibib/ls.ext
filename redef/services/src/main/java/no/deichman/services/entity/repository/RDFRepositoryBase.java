@@ -6,7 +6,9 @@ import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
@@ -34,18 +36,24 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.stream;
+import static no.deichman.services.entity.patch.Patch.addPatch;
+import static org.apache.commons.lang3.tuple.Pair.of;
+
 /**
  * Responsibility: TODO.
  */
 public abstract class RDFRepositoryBase implements RDFRepository {
 
-    private static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
+    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
     public static final SimpleSelector WITH_MIGRATION_FILTER = new SimpleSelector() {
         @Override
         public boolean test(Statement s) {
@@ -74,7 +82,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final Model retrieveResourceByURI(XURI xuri) {
-        log.debug("Attempting to retrieve resource <" + xuri.getUri() +">");
+        log.debug("Attempting to retrieve resource <" + xuri.getUri() + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(xuri.getUri()))) {
             disableCompression(qexec);
             return qexec.execDescribe().query(WITH_MIGRATION_FILTER);
@@ -155,13 +163,14 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         return createResource(inputModel, type);
     }
 
-    private String createResource(Model inputModel, String type) throws Exception {
-        inputModel.add(tempTypeStatement(type));
+    private String createResource(Model inputModel, String type, Pair<String, String>... additionalProperties) throws Exception {
+        Model createModel = inputModel.add(tempTypeStatement(type)).add(createdStatement(PLACEHOLDER_RESOURCE));
+        if (additionalProperties != null) {
+            stream(additionalProperties).forEach(pair -> createModel.add(simpleStatement(pair.getKey(), pair.getValue())));
+        }
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
-
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
-
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
+        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), createModel);
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(createModel));
         executeUpdate(updateRequest);
         return uri;
     }
@@ -188,14 +197,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final String createSubject(Model inputModel) throws Exception {
-        String type = "Subject";
-        inputModel.add(tempTypeStatement(type));
-        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
-
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
-        executeUpdate(updateRequest);
-        return uri;
+        return createResource(inputModel, "Subject");
     }
 
     @Override
@@ -220,30 +222,20 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final void createResource(Model inputModel) throws Exception {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel.add(createdStatement(PLACEHOLDER_RESOURCE))));
         executeUpdate(updateRequest);
     }
 
     @Override
     public final String createPublication(Model inputModel, String recordId) throws Exception {
-        String type = "Publication";
-
-        inputModel.add(tempTypeStatement(type));
-        String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
-
-        inputModel.add(tempRecordIdStatement(recordId));
-
-        UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), inputModel);
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(inputModel));
-        executeUpdate(updateRequest);
-        return uri;
+        return createResource(inputModel, "Publication", of("recordId", recordId));
     }
 
-    private Statement tempRecordIdStatement(String recordId) {
+    private static Statement simpleStatement(String fragment, String value) {
         return ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(BaseURI.ontology() + "recordId"),
-                ResourceFactory.createTypedLiteral(recordId, XSDDatatype.XSDstring));
+                ResourceFactory.createProperty(BaseURI.ontology() + fragment),
+                ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDstring));
     }
 
     private Statement tempTypeStatement(String clazz) {
@@ -251,6 +243,22 @@ public abstract class RDFRepositoryBase implements RDFRepository {
                 PLACEHOLDER_RESOURCE,
                 RDF.type,
                 ResourceFactory.createResource(BaseURI.ontology() + clazz));
+    }
+
+    private Statement createdStatement(Resource subject) {
+        return createTimestampStatement(subject, "created");
+    }
+
+    private Statement modifiedStatement(Resource subject) {
+        return createTimestampStatement(subject, "modified");
+    }
+
+    private Statement createTimestampStatement(Resource subject, String predicate) {
+        XSDDateTime xsdDateTime = new XSDDateTime(GregorianCalendar.getInstance());
+        return ResourceFactory.createStatement(
+                subject,
+                ResourceFactory.createProperty(BaseURI.ontology() + predicate),
+                ResourceFactory.createTypedLiteral(xsdDateTime.toString(), XSDDatatype.XSDdateTime));
     }
 
     @Override
@@ -276,8 +284,10 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final void patch(List<Patch> patches) {
-        UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(patches));
+    public final void patch(List<Patch> patches, Resource subject) {
+        ArrayList<Patch> copy = newArrayList(patches);
+        copy.add(addPatch(modifiedStatement(subject), null));
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(copy, subject));
         executeUpdate(updateRequest);
     }
 

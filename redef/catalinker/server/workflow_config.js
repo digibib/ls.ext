@@ -28,6 +28,22 @@ function maintenanceInputs (label, type) {
   }
 }
 
+function createdTimestamp () {
+  return  {
+    rdfProperty: 'created',
+    readOnly: true,
+    oneLiner: true
+  }
+}
+
+function modifiedTimestamp () {
+  return  {
+    rdfProperty: 'modified',
+    readOnly: true,
+    oneLiner: true
+  }
+}
+
 module.exports = (app) => {
   app.get('/config', function (request, response) {
     response.setHeader('Cache-Control', 'public, max-age=3600')
@@ -77,7 +93,9 @@ module.exports = (app) => {
             {
               rdfProperty: 'ordinal',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -101,7 +119,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -125,7 +145,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -161,7 +183,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -256,7 +280,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -297,7 +323,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -324,7 +352,9 @@ module.exports = (app) => {
               indexTypes: 'corporation',
               nameProperties: [ 'name', 'subdivision', '(specification)' ],
               indexDocumentFields: [ 'name', 'subdivision', 'specification' ]
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -347,7 +377,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         },
         {
@@ -370,7 +402,9 @@ module.exports = (app) => {
               label: 'Alternativt navn',
               rdfProperty: 'alternativeName',
               type: 'input-string'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ]
         }
       ],
@@ -461,7 +495,7 @@ module.exports = (app) => {
               },
               showOnlyWhen: {
                 inputId: 'missingMainEntry',
-                valueAsStringMatches: '^false$'
+                valueAsStringMatches: '^false$|^null$|^undefined'
               },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'contributor', // the rdf property of the resource
@@ -615,6 +649,12 @@ module.exports = (app) => {
               rdfProperty: 'numberOfPages',
               multiple: true,
               addAnotherLabel: 'Legg til et sidetall'
+            },
+            {
+              includeOnlyWhen: { hasMediaType: [ 'Other', 'Audiobook', 'Film', 'MusicRecording', 'LanguageCourse', 'Game' ] },
+              rdfProperty: 'hasExtent',
+              multiple: true,
+              addAnotherLabel: 'Legg til et omfang'
             },
             { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter', multiple: true },
             {
@@ -788,7 +828,9 @@ module.exports = (app) => {
                   } ]
                 }
               }
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Beskriv verk',
@@ -914,7 +956,9 @@ module.exports = (app) => {
             {
               rdfProperty: 'hasSummary',
               type: 'input-string-large'
-            }
+            },
+            createdTimestamp(),
+            modifiedTimestamp()
           ],
           nextStep: {
             buttonLabel: 'Neste steg: Emneopplysninger',
@@ -948,14 +992,14 @@ module.exports = (app) => {
               id: 'compositionTypeInput',
               type: 'searchable-with-result-in-side-panel',
               nameProperties: [ 'prefLabel' ],
-              indexTypes: [ 'compositionType' ],
+              indexTypes: [ 'compositiontype' ],
               labelForCreateButton: 'Opprett ny komposisjonstype',
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [
                     {
                       formId: 'create-compositiontype-form',
-                      targetType: 'compositionType'
+                      targetType: 'compositiontype'
                     }
                   ]
                 }

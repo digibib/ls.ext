@@ -8,12 +8,23 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
+import static no.deichman.services.entity.z3950.Publication.Extent.Paged;
+import static no.deichman.services.entity.z3950.Publication.Extent.United;
 
 /**
  * Responsibility: provide object for publications.
  */
 @SuppressWarnings("checkstyle:DesignForExtension")
 public class Publication extends BibliographicObjectExternal {
+    /**
+     * Whether publication has number of pages or an extent.
+     */
+    public enum Extent {
+        Paged, United
+    }
+
+    Publication() {
+    }
 
     @SerializedName("deichman:isbn")
     private String isbn;
@@ -32,6 +43,9 @@ public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:numberOfPages")
     private String numberOfPages;
+
+    @SerializedName("deichman:hasExtent")
+    private String extent;
 
     @SerializedName("deichman:hasPublicationPart")
     private List<Map<String, String>> hasPublicationPart;
@@ -56,7 +70,7 @@ public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:ageLimit")
     private Integer ageLimit;
-    
+
     @SerializedName("deichman:hasSubtitles")
     private List<ExternalDataObject> hasSubtitles;
 
@@ -68,6 +82,8 @@ public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:locationFormat")
     private String locationFormat;
+
+    private transient Extent extentType;
 
     public final String getIsbn() {
         return isbn;
@@ -97,14 +113,6 @@ public class Publication extends BibliographicObjectExternal {
         this.publishedBy = of("@id", publishedBy.getId());
     }
 
-    final String getNumberOfPages() {
-        return numberOfPages;
-    }
-
-    final void setNumberOfPages(String numberOfPages) {
-        this.numberOfPages = numberOfPages;
-    }
-
     final Map<String, String> getPublicationOf() {
         return this.publicationOf;
     }
@@ -116,8 +124,6 @@ public class Publication extends BibliographicObjectExternal {
         hasPublicationPart.add(of("@id", publicationPart.getId()));
     }
 
-    Publication() {
-    }
 
     @Override
     protected void assignType() {
@@ -132,7 +138,13 @@ public class Publication extends BibliographicObjectExternal {
         this.format = format;
     }
 
-    public final void setMediaType(ExternalDataObject mediaType) {
+    public final void setUnitedMediaType(ExternalDataObject mediaType) {
+        this.extentType = United;
+        this.mediaType = mediaType;
+    }
+
+    public final void setPagedMediaType(ExternalDataObject mediaType) {
+        this.extentType = Paged;
         this.mediaType = mediaType;
     }
 
@@ -140,10 +152,6 @@ public class Publication extends BibliographicObjectExternal {
         return format;
     }
 
-
-    public Map<String, String> getHasPlaceOfPublication() {
-        return hasPlaceOfPublication;
-    }
 
     public void setIllustrativeMatter(ExternalDataObject illustrativeMatter) {
         if (this.illustrativeMatter == null) {
@@ -191,5 +199,13 @@ public class Publication extends BibliographicObjectExternal {
 
     public void locationFormat(String locationFormat) {
         this.locationFormat = locationFormat;
+    }
+
+    public void setExtent(String extent) {
+        if (extentType == United) {
+            this.extent = extent;
+        } else {
+            numberOfPages = extent;
+        }
     }
 }
