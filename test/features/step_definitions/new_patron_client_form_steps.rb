@@ -3,7 +3,7 @@ When(/^jeg tester feltet "([^"]*)" for påkrevd og XSS$/) do |field|
   @site.PatronClientForms.has_xss_protection?(field)
 end
 
-When(/^jeg tester fødselsdatofeltet for for gyldighetsjekk$/) do
+When(/^jeg tester fødselsdatofeltet for gyldighetsjekk$/) do
   @site.PatronClientForms.is_invalid?('day', '')
   @site.PatronClientForms.is_invalid?('day', '0')
   @site.PatronClientForms.is_invalid?('day', '-1')
@@ -25,7 +25,7 @@ When(/^jeg tester fødselsdatofeltet for for gyldighetsjekk$/) do
   @site.PatronClientForms.is_invalid?('year', '-1')
   @site.PatronClientForms.is_invalid?('year', '999')
   @site.PatronClientForms.is_invalid?('year', '1899')
-  @site.PatronClientForms.is_invalid?('year', Date.today.year - 4)
+  @site.PatronClientForms.is_invalid?('year', Date.today.year + 1)
   @site.PatronClientForms.is_invalid?('year', '20000')
   @site.PatronClientForms.is_invalid?('year', 'a')
   @site.PatronClientForms.is_valid?('year', '1900')
