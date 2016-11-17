@@ -25,7 +25,7 @@ module.exports = {
     }
   },
   year: year => {
-    if (!/^\d{4}$/.test(year) || year < 1900 || year > new Date().getFullYear() - 5) { /* What is the actual requirements for age? */
+    if (!/^\d{4}$/.test(year) || year < 1900 || year >= new Date().getFullYear()) {
       return 'invalidYear'
     }
   },

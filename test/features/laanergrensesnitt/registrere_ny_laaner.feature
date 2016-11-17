@@ -53,7 +53,7 @@ Egenskap: Registrere låner
     Så skal jeg se registreringsskjemaet
     Og jeg tester feltet "firstName" for påkrevd og XSS
     Og jeg tester feltet "lastName" for påkrevd og XSS
-    Og jeg tester fødselsdatofeltet for for gyldighetsjekk
+    Og jeg tester fødselsdatofeltet for gyldighetsjekk
     Og jeg tester id-nummerfeltet for gyldighetssjekk
     Når jeg legger inn mine personalia som "voksen"
     Og jeg trykker på knappen for å sjekke om jeg er registrert fra før
