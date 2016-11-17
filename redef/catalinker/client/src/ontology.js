@@ -86,7 +86,7 @@
             if (_.isArray(oldValue) && !_.isArray(currentValue)) {
                 currentValue = [ currentValue ];
             }
-            if (([ 'string', 'number', 'boolean' ].indexOf(typeof currentValue) > -1) && currentValue != oldValue) {
+            if (([ 'string', 'number', 'boolean' ].indexOf(typeof currentValue) > -1) && currentValue !== oldValue) {
                 if (currentValue !== "" && (typeof currentValue !== 'boolean' || currentValue !== false)) {
                     var addPatch = { op: "add", s: subject, p: predicate, o: { value: currentValue, type: datatype } };
                     if (oldAndCurrentValue.current.lang !== "") {
@@ -95,7 +95,7 @@
                     addPatches.push(addPatch);
                 }
 
-                if (oldValue !== "" && oldValue !== null && currentValue !== '') {
+                if (oldValue !== "" && oldValue !== null) {
                     var delPatch = { op: "del", s: subject, p: predicate, o: { value: oldValue } };
                     if (oldAndCurrentValue.old.lang !== "") {
                         delPatch.o.lang = oldAndCurrentValue.old.lang;
