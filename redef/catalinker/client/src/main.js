@@ -1049,8 +1049,8 @@
 
     function emptyValues (predefined, searchable) {
       return [ {
-        old: { value: '', lang: '' },
-        current: { value: predefined ? [] : null, lang: '', displayValue: '' },
+        old: { value: predefined ? [] : undefined, lang: '' },
+        current: { value: predefined ? [] : undefined, lang: '', displayValue: '' },
         uniqueId: _.uniqueId(),
         searchable: searchable
       } ]
@@ -2205,26 +2205,22 @@
                 enableChange = false
                 var inputValue = Ractive.getNodeInfo(e.target)
                 var keypath = inputValue.keypath
-                ractive.set(keypath + '.current.value', $(e.target).val())
+                ractive.set(keypath + '.current.value', $(e.target).val() || [])
                 var inputNode = ractive.get(grandParentOf(keypath))
                 let target = ractive.get('targetUri.' + unPrefix(inputNode.domain))
                 if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') === -1)) {
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
                 }
-                ractive.updateModel()
                 setting = false
               }
             })
 
             let keypath = this.getNodeInfo(node).resolve() + '.current.value'
             var observer = ractive.observe(keypath, function (newvalue, oldValue) {
-              if (!setting && newvalue !== oldValue) {
+              if (!setting) {
                 setting = true
                 window.setTimeout(function () {
-                  if (newvalue === '') {
-                    $(node).select2('val', [])
-                  }
                   $(node).val(newvalue).trigger('change')
                   setting = false
                 }, 0)
@@ -3546,13 +3542,11 @@
         }
 
         let initValuesFromQuery = function (applicationData) {
-          var ractiveNeedsUpdate
           _.each(allInputs(), function (input) {
             if (input.widgetOptions && input.widgetOptions.queryParameter &&
               ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])) {
               let queryValue = (input.widgetOptions.prefix || '') + ((options.presetValues || {})[ input.widgetOptions.queryParameter ] || query[ input.widgetOptions.queryParameter ])
               if (queryValue) {
-                ractiveNeedsUpdate = true
                 input.values = [ {
                   current: {
                     value: [ queryValue ]
@@ -3561,12 +3555,10 @@
                     value: undefined
                   }
                 } ]
+                ractive.update(input.keypath)
               }
             }
           })
-          if (ractiveNeedsUpdate) {
-            ractive.update()
-          }
           setTaskDescription(query.task)
           return applicationData
         }
