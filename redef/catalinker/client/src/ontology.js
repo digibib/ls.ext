@@ -95,7 +95,7 @@
                     addPatches.push(addPatch);
                 }
 
-                if (oldValue !== "" && oldValue !== null) {
+                if (oldValue !== "" && oldValue !== null && oldValue !== undefined) {
                     var delPatch = { op: "del", s: subject, p: predicate, o: { value: oldValue } };
                     if (oldAndCurrentValue.old.lang !== "") {
                         delPatch.o.lang = oldAndCurrentValue.old.lang;
