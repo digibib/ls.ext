@@ -9,6 +9,7 @@ module.exports = form => values => {
     const value = values[ field ]
     if (requiredFields.includes(field) && !value) {
       errors[ field ] = 'required'
+      return
     } else if (!value) {
       return
     }

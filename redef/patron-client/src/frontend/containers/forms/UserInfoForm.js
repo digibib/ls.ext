@@ -11,7 +11,7 @@ import fields from '../../../common/forms/userInfoForm'
 import ValidationMessage from '../../components/ValidationMessage'
 import asyncValidate from '../../utils/asyncValidate'
 import FormInputField from '../../components/FormInputField'
-import validate from '../../../common/validation/validator'
+import validator from '../../../common/validation/validator'
 
 const formName = 'userInfo'
 
@@ -41,7 +41,7 @@ class UserInfoForm extends React.Component {
 
   render () {
     return (
-      <form name="change-user-details" id="change-user-details">
+      <form name="change-user-details" id="change-user-details" data-automation-id="change-user-details">
         <FormInputField name="address"
                         message={messages.address}
                         formName={formName}
@@ -160,7 +160,7 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: formName,
-  validate: validate(fields),
   asyncValidate,
-  asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation)
+  asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
+  validate: validator(fields)
 })(intlUserInfoForm))

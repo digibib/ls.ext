@@ -93,7 +93,7 @@ ItemType = Struct.new(:code, :desc) do
   end
 end unless defined?(ItemType)
 
-Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password, :debarred, :userid, :email, :dateenrolled, :dateexpiry) do
+Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch, :category, :password, :debarred, :userid, :email, :dateenrolled, :dateexpiry, :mobile, :address, :zipcode, :city) do
   def initialize
     self.cardnumber = generateRandomString
     self.surname    = generateRandomString
@@ -104,6 +104,10 @@ Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch,
     self.debarred   = false
     self.dateenrolled = Time.now.strftime('%F')
     self.dateexpiry = (Time.now + (4*7*24*60*60)).strftime('%F')
+    self.mobile = '%08d' % rand(10**8)
+    self.address = generateRandomString
+    self.zipcode = '%04d' % rand(10000)
+    self.city = (0...8).map { (65 + rand(26)).chr }.join
   end
 end unless defined?(Patron)
 
