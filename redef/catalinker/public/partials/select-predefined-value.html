@@ -16,7 +16,7 @@
                 as-select2="{mode: 'singleSelect'}"
             {{/if}}
             as-handleAddNewBySelect2
-            value="{{.//current.value || ''}}"
+            value="{{./current.value}}"
             data-automation-id="{{dataAutomationId || ../../dataAutomationId}}"
             multiple="multiple"
             {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
