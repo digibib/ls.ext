@@ -10,7 +10,7 @@ class BiblioDetail < IntraPage
   end
 
   def header
-    @browser.div(:id => 'catalogue_detail_biblio').h3.text
+    @browser.div(:id => 'catalogue_detail_biblio').h1.text
   end
 
   def status
