@@ -33,6 +33,8 @@ class GlobalSetup
     SVC::Preference.new(@growser).set("NoRenewalBeforePrecision", "exact_time")
 
     sql = %Q{
+DROP TRIGGER IF EXISTS autoBiblioFrameworkCode;
+
 INSERT IGNORE INTO branches  (branchcode, branchname)
 VALUES ('hutl','Hovedbiblioteket');
 
