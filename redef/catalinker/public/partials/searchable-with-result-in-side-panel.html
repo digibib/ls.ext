@@ -25,9 +25,7 @@
             {{/if}}
         </div>
     {{/if}}
-{{#if ./searchable}}
-<a style-display="{{nonEditable ? 'none' : ''}}" class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a>
-{{/if}}
+<a style-display="{{(nonEditable || !./searchable) ? 'none' : ''}}" class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a><span class="save-placeholder"></span>
     {{#if ./deletable}}
         <div class="pure-u-1-1">
             <span class="select2 select2-container select2-container--default select2-container--above select2-container--focus"
