@@ -8,7 +8,7 @@ module.exports = form => values => {
   Object.keys(form).forEach(field => {
     const value = values[ field ]
     if (requiredFields.includes(field) && !value) {
-      errors[ field ] = 'required'
+      errors[ field ] = form[field].requiredMessageOverride || 'required'
       return
     } else if (!value) {
       return
