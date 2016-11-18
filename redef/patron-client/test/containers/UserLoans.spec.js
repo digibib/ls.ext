@@ -47,6 +47,7 @@ function setup (propOverrides) {
     ],
     reservations: [
       {
+        reserveId: 'reserveId_1',
         recordId: 'recordId_1',
         title: 'title_1',
         author: 'author_1',
@@ -55,6 +56,7 @@ function setup (propOverrides) {
         branchCode: 'branchCode_1'
       },
       {
+        reserveId: 'reserveId_2',
         recordId: 'recordId_2',
         title: 'title_2',
         author: 'author_2',

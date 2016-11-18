@@ -103,7 +103,7 @@ module.exports = (app) => {
           throw Error(res.statusText)
         }
       }).then(json => {
-        const promises = json.map(hold => fetchHoldFromBiblioNumber(hold, request))
+        const promises = json.map(hold => fetchHoldFromBiblioNumber(hold))
         return Promise.all(promises)
       }).then(holds => {
         return holds
@@ -148,14 +148,14 @@ module.exports = (app) => {
           throw Error(res.statusText)
         }
       }).then(json => {
-        const promises = json.map(loan => fetchLoanFromItemNumber(loan, request))
+        const promises = json.map(loan => fetchLoanFromItemNumber(loan))
         return Promise.all(promises)
       }).then(loans => {
         return loans
       })
   }
 
-  function fetchLoanFromItemNumber (loan, request) {
+  function fetchLoanFromItemNumber (loan) {
     return fetch(`http://xkoha:8081/api/v1/items/${loan.itemnumber}/biblio`)
       .then(res => {
         if (res.status === 200) {
