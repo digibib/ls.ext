@@ -19,7 +19,7 @@ class UserLoans extends React.Component {
       <section className="pickup">
         <h1><FormattedMessage {...messages.canBePickedUp} /></h1>
         {this.props.loansAndReservations.pickups.map(item => (
-          <article key={item.recordId}
+          <article key={item.pickupNumber}
                    className="single-entry"
                    data-automation-id="UserLoans_pickup"
                    data-recordid={item.recordId}>
@@ -70,7 +70,7 @@ class UserLoans extends React.Component {
             </tr>
             </thead>
             <tbody>{this.props.loansAndReservations.reservations.map(item => (
-              <tr key={item.recordId} data-automation-id="UserLoans_reservation" data-recordid={item.recordId}>
+              <tr key={item.reserveId} data-automation-id="UserLoans_reservation" data-recordid={item.recordId}>
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
@@ -93,7 +93,7 @@ class UserLoans extends React.Component {
           <div>
             {this.props.loansAndReservations.reservations.map(item => (
               <div className="reserved-entry-content"
-                   key={item.recordId}
+                   key={item.reserveId}
                    data-automation-id="UserLoans_reservation"
                    data-recordid={item.recordId}
               >
@@ -164,7 +164,7 @@ class UserLoans extends React.Component {
           <FormattedMessage {...messages.renewAllLoans} />
         </button>
         {this.props.loansAndReservations.loans.map(item => (
-          <article key={item.recordId}
+          <article key={item.checkoutId}
                    className="single-entry"
                    data-automation-id="UserLoans_loan"
                    data-recordid={item.recordId}>
