@@ -14,7 +14,8 @@ import {
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
   LOGIN_SUCCESS,
-  LOGOUT_SUCCESS
+  LOGOUT_SUCCESS,
+  CHANGE_PICKUP_LOCATION_SUCCESS
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -94,6 +95,17 @@ export default function profile (state = initialState, action) {
       return initialState
     case LOGOUT_SUCCESS:
       return initialState
+    case CHANGE_PICKUP_LOCATION_SUCCESS:
+      return {
+        ...state, loansAndReservations: {
+          ...state.loansAndReservations, reservations: state.loansAndReservations.reservations.map(reservation => {
+            if (reservation.reserveId === action.payload.reserveId) {
+              reservation.branchCode = action.payload.branchCode
+            }
+            return reservation
+          })
+        }
+      }
     default:
       return state
   }
