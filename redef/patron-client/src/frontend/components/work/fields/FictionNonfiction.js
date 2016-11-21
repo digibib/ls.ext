@@ -5,10 +5,9 @@ import MetaItem from '../../MetaItem'
 const FictionNonfiction = ({ fictionNonfiction, intl }) => {
   if (fictionNonfiction) {
     return (
-      <MetaItem content={intl.formatMessage({ id: fictionNonfiction })}
-                label={messages.labelFictionNonfiction}
-                data-automation-id="work_fictionNonfiction"
-      />
+      <MetaItem label={messages.labelFictionNonfiction} data-automation-id="work_fictionNonfiction">
+        {intl.formatMessage({ id: fictionNonfiction })}
+      </MetaItem>
     )
   } else {
     return null

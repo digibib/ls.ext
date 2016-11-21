@@ -91,6 +91,9 @@
       "@id": "deichman:isRelatedTo",
       "@container": "@set"
     },
+    "ean": {
+      "@id": "deichman:hasEan"
+    },
     "prefLabel": {
       "@id": "deichman:prefLabel"
     },
@@ -188,11 +191,15 @@
     "edition": {
       "@id": "deichman:edition"
     },
+    "extent": {
+      "@id": "deichman:hasExtent"
+    },
     "numberOfPages": {
       "@id": "deichman:numberOfPages"
     },
     "isbn": {
-      "@id": "deichman:isbn"
+      "@id": "deichman:isbn",
+      "@container": "@set"
     },
     "literaryForms": {
       "@id": "deichman:literaryForm",
@@ -251,7 +258,7 @@
       "@id": "deichman:genre",
       "@type": "@id"
     },
-    "hasPublicationPart": {
+    "publicationParts": {
       "@id": "deichman:hasPublicationPart",
       "@container": "@set"
     },
@@ -355,6 +362,10 @@
   "publications": {
     "type": "deichman:Publication",
     "@embed": "@always",
+    "publicationParts": {
+      "@embed": "@always",
+      "type": "deichman:PublicationPart"
+    },
     "contributors": {
       "@embed": "@always",
       "type": "deichman:Contribution",

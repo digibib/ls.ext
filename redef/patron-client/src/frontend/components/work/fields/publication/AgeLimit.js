@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
 import { defineMessages } from 'react-intl'
-import MetaItem from '../../MetaItem'
+import MetaItem from '../../../MetaItem'
 
 const AgeLimit = ({ ageLimit }) => {
   if (ageLimit) {
     return (
-      <MetaItem label={messages.ageLimit} content={ageLimit} data-automation-id="work_ageLimit" />
+      <MetaItem label={messages.ageLimit} data-automation-id="publication_ageLimit">{ageLimit}</MetaItem>
     )
   } else {
     return null

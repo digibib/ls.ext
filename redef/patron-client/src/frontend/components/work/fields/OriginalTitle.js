@@ -1,17 +1,14 @@
 import React, { PropTypes } from 'react'
 import { defineMessages } from 'react-intl'
 import MetaItem from '../../MetaItem'
+import title from '../../../utils/title'
 
 const OriginalTitle = ({ mainTitle, subtitle, partNumber, partTitle }) => {
   if (mainTitle) {
     return (
-      <MetaItem label={messages.labelOriginalTitle}
-                data-automation-id="work_originalTitle"
-                content={
-                  <span>
-                    {mainTitle}{(subtitle || partNumber || partTitle) ? ':' : null}{subtitle ? ` ${subtitle}.` : null}{partNumber ? ` ${partNumber}.` : null}{partTitle ? ` ${partTitle}` : null}
-                  </span>
-                } />
+      <MetaItem label={messages.labelOriginalTitle} data-automation-id="work_originalTitle">
+        {title({ mainTitle, subtitle, partNumber, partTitle })}
+      </MetaItem>
     )
   } else {
     return null
