@@ -775,6 +775,9 @@ body {
           padding: 8px;
           .inputs {
             .input {
+              .index-type-select {
+                min-height: 37px;
+              }
               background: $mintgreen;
               padding: 0 12px;
               margin-bottom: -1px;
