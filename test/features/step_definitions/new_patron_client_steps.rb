@@ -214,6 +214,7 @@ When(/^det skal ikke være bøker klare til avhenting eller i historikk$/) do
 end
 
 When(/^skal jeg se at boka er utlånt$/) do
+  sleep 2
   wait_for {
     loans = @site.PatronClientLoansAndReservationsPage.loans
     loans.size.eql?(1) && loans.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
