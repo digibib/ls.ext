@@ -5,8 +5,9 @@ import MetaItem from '../../MetaItem'
 const CompositionTypes = ({ compositionTypes }) => {
   if (compositionTypes.length > 0) {
     return (
-      <MetaItem content={compositionTypes.join(', ')} label={messages.labelCompositionTypes}
-                data-automation-id="work_compositionTypes" />
+      <MetaItem label={messages.labelCompositionTypes} data-automation-id="work_compositionTypes">
+        {compositionTypes.join(', ')}
+      </MetaItem>
     )
   } else {
     return null

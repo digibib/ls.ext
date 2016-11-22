@@ -10,7 +10,6 @@ import Biographies from './fields/Biographies'
 import CompositionTypes from './fields/CompositionTypes'
 import FictionNonfiction from './fields/FictionNonfiction'
 import Key from './fields/Key'
-import AgeLimit from './fields/AgeLimit'
 import ContentAdaptations from './fields/ContentAdaptations'
 
 const AdditionalInformationContent = ({ work }) => (
@@ -33,7 +32,6 @@ const AdditionalInformationContent = ({ work }) => (
     <Biographies biographies={work.biographies} />
     <CompositionTypes compositionTypes={work.compositionTypes} />
     <FictionNonfiction fictionNonfiction={work.fictionNonfiction} />
-    <AgeLimit ageLimit={work.ageLimit} />
     <Key key={work.key} />
     <Subjects subjects={work.subjects} />
     <Genres genres={work.genres} />

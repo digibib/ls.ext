@@ -41,8 +41,11 @@
         "deichman:publicationOf": {
           "@id": "_:0000000"
         },
+        "deichman:format": {
+          "@id": "http://data.deichman.no/format#DVD"
+        },
         "deichman:hasMediaType": {
-          "@id": "http://data.deichman.no/mediaType#Audiobook"
+          "@id": "http://data.deichman.no/mediaType#Film"
         },
         "deichman:ageLimit": 18,
         "@type": [

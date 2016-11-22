@@ -5,10 +5,9 @@ import MetaItem from '../../MetaItem'
 const TargetAudience = ({ audiences, intl }) => {
   if (audiences.length > 0) {
     return (
-      <MetaItem label={messages.labelTargetAudience}
-                content={audiences.map(audience => intl.formatMessage({ id: audience })).join(', ')}
-                data-automation-id="work_audiences"
-      />
+      <MetaItem label={messages.labelTargetAudience} data-automation-id="work_audiences">
+        {audiences.map(audience => intl.formatMessage({ id: audience })).join(', ')}
+      </MetaItem>
     )
   } else {
     return null

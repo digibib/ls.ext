@@ -5,6 +5,44 @@ import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
 import * as ProfileActions from './ProfileActions'
+import { action, errorAction } from './GenericActions'
+
+export function changePickupLocation (reserveId, branchCode) {
+  const url = '/api/v1/holds/'
+  return dispatch => {
+    dispatch(requestChangePickupLocation(reserveId, branchCode))
+    return fetch(url, {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ reserveId, branchCode })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          setTimeout(() => {
+            dispatch(changePickupLocationSuccess(reserveId, branchCode))
+          }, 500)
+        } else {
+          throw Error(Errors.reservation.GENERIC_CHANGE_PICKUP_LOCATION_ERROR)
+        }
+      })
+      .catch(error => dispatch(changePickupLocationFailure(error)))
+  }
+}
+
+export const requestChangePickupLocation = (reserveId, branchCode) => action(types.REQUEST_CHANGE_PICKUP_LOCATION, {
+  reserveId,
+  branchCode
+})
+
+export const changePickupLocationSuccess = (reserveId, branchCode) => action(types.CHANGE_PICKUP_LOCATION_SUCCESS, {
+  reserveId,
+  branchCode
+})
+
+export const changePickupLocationFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
 
 export function startReservation (recordId) {
   return requireLoginBeforeAction(showModal(ModalComponents.RESERVATION, { recordId: recordId }))

@@ -78,8 +78,8 @@ class UserInfo extends React.Component {
                 {personalInformation.address}
               </span><br />
               <span data-automation-id="UserInfo_zipcode" property="schema:postalCode" className="address-zip">
-                {personalInformation.zipcode}&nbsp;
-              </span>
+                {personalInformation.zipcode}
+              </span>&nbsp;
               <span data-automation-id="UserInfo_city" property="schema:addressLocality" className="address-city">
                 {personalInformation.city}
               </span><br />
@@ -110,9 +110,9 @@ class UserInfo extends React.Component {
     return (
       <footer className={classNames.join(' ')}>
         {editable
-          ? <button className="black-btn" type="button" onClick={this.handleSubmit}>
+          ? <button className="black-btn" type="button" onClick={this.handleSubmit} data-automation-id="save_profile_changes_button">
           <FormattedMessage {...messages.saveChanges} /></button>
-          : <button className="black-btn" type="button" onClick={this.handleChangeClick}>
+          : <button className="black-btn" type="button" onClick={this.handleChangeClick} data-automation-id="change_profile_info_button">
           <FormattedMessage {...messages.editPersonalInfo} /></button>}
         <div className="last-updated">
           <FormattedMessage {...messages.lastUpdated} />:&nbsp;

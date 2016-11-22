@@ -7,7 +7,8 @@ export default {
     TOO_MANY_RESERVES: 'tooManyReserves',
     GENERIC_RESERVATION_ERROR: 'genericReservationError',
     GENERIC_EXTEND_LOAN_ERROR: 'genericExtendLoanError',
-    GENERIC_CANCEL_RESERVATION_ERROR: 'genericCancelReservationError'
+    GENERIC_CANCEL_RESERVATION_ERROR: 'genericCancelReservationError',
+    GENERIC_CHANGE_PICKUP_LOCATION_ERROR: 'genericChangePickupLocationError'
   },
   profile: {
     CURRENT_PIN_NOT_CORRRECT: 'currentPinNotCorrect',

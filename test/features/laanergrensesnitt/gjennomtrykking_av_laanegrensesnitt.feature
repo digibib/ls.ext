@@ -103,16 +103,6 @@ Egenskap: Gå gjennom lånegrensesnittet
       | Filial                    | Hylleplass | Status        |
       | random_migrate_branchcode | placement1 | 0 av 1 ledige |
 
-  Scenario: Logge inn på Min Side
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
-    Og at jeg er i søkegrensesnittet
-    Når jeg går til Min Side
-    Så skal jeg se innloggingsvinduet
-    Når jeg logger inn
-    Og jeg trykker på personopplysninger
-    Så skal jeg se informasjonen min
-
   Scenario: Låner reserverer bok på verkssiden
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
@@ -161,23 +151,6 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg bekrefter at jeg skal avbestille reservasjonen
     Så skal jeg ikke ha noen reservasjoner
 
-  Scenario: Låner endrer personlige innstillinger
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
-    Og at jeg er i søkegrensesnittet
-    Når jeg går til Min Side
-    Så skal jeg se innloggingsvinduet
-    Når jeg logger inn
-    Og jeg går til innstillinger
-    Når slår på alle avkrysningsboksene inne på innstillinger
-    Og jeg trykker lagre inne på innstillinger
-    Og jeg trykker oppfrisk i nettleseren
-    Så skal alle avkrysningsboksene være skrudd på inne på innstillinger
-    Når jeg skrur av alle avkrysningsnboksene inne på innstillinger
-    Og jeg trykker lagre inne på innstillinger
-    Og jeg trykker oppfrisk i nettleseren
-    Så skal ingen av avkrysningsboksene være skrudd på inne på innstillinger
-
   Scenario: Sortering på verkssiden
     Gitt at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
@@ -185,19 +158,3 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg se "11" utgivelser
     Og skal utgivelsene være inndelt etter medietype
     Og utgivelsene skal være sortert på språk (med norsk, engelsk, dansk og svensk først), utgivelsesår og format
-
-  Scenario: Bytte PIN
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
-    Og at jeg er i søkegrensesnittet
-    Når jeg går til Min Side
-    Så skal jeg se innloggingsvinduet
-    Når jeg logger inn
-    Og jeg går til innstillinger
-    Og jeg fyller inn gammel PIN og ny PIN riktig
-    Og trykker på endre PIN-kode
-    Så skal jeg se at PIN-koden har blitt endret
-    Når jeg logger ut
-    Når jeg trykker logg inn
-    Så skal jeg se innloggingsvinduet
-    Og jeg logger inn

@@ -10,6 +10,7 @@ import rootReducer from '../../src/frontend/reducers'
 import { Provider } from 'react-redux'
 import * as LibraryActions from '../../src/frontend/actions/LibraryActions'
 import * as ProfileActions from '../../src/frontend/actions/ProfileActions'
+import { formatDate } from '../../src/frontend/utils/dateFormatter'
 
 function setup (propOverrides) {
   const props = {
@@ -21,7 +22,8 @@ function setup (propOverrides) {
   const store = createStore(rootReducer)
   const libraries = {
     'branchCode_1': 'library_1',
-    'branchCode_2': 'library_2'
+    'branchCode_2': 'library_2',
+    'branchCode_3': 'library_3'
   }
   store.dispatch(LibraryActions.receiveLibraries(libraries))
   const loansAndReservations = {
@@ -52,7 +54,9 @@ function setup (propOverrides) {
         title: 'title_1',
         author: 'author_1',
         orderedDate: '03/10/2016',
-        waitingPeriod: 'waitingPeriod_1',
+        queuePlace: '1',
+        expected: '1–2',
+        expectedTestData: '(approx. 1–2 weeks)',
         branchCode: 'branchCode_1'
       },
       {
@@ -61,8 +65,21 @@ function setup (propOverrides) {
         title: 'title_2',
         author: 'author_2',
         orderedDate: '04/10/2016',
-        waitingPeriod: 'waitingPeriod_2',
+        queuePlace: '6',
+        expected: '12',
+        expectedTestData: '(more than 12 weeks)',
         branchCode: 'branchCode_2'
+      },
+      {
+        reserveId: 'reserveId_3',
+        recordId: 'recordId_3',
+        title: 'title_3',
+        author: 'author_3',
+        orderedDate: '05/10/2016',
+        queuePlace: '10',
+        expected: 'unknown',
+        expectedTestData: '(Unknown waiting period)',
+        branchCode: 'branchCode_3'
       }
     ],
     loans: [
@@ -88,7 +105,8 @@ function setup (propOverrides) {
 
   const messages = {
     'branchCode_1': 'Branch 1',
-    'branchCode_2': 'Branch 2'
+    'branchCode_2': 'Branch 2',
+    'UserLoans.unknown': '(Unknown waiting period)'
   }
 
   const output = TestUtils.renderIntoDocument(
@@ -118,7 +136,7 @@ describe('containers', () => {
       Array.prototype.forEach.call(pickups, (pickup, index) => {
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_title']").textContent).toEqual(loansAndReservations.pickups[ index ].title)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].author)
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(loansAndReservations.pickups[ index ].expiry)
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(formatDate(loansAndReservations.pickups[ index ].expiry))
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_pickupNumber']").textContent).toEqual(loansAndReservations.pickups[ index ].pickupNumber)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(messages[loansAndReservations.pickups[ index ].branchCode])
       })
@@ -129,13 +147,15 @@ describe('containers', () => {
       const { loansAndReservations } = store.getState().profile
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
-      expect(reservations.length).toEqual(2)
+      expect(reservations.length).toEqual(3)
       Array.prototype.forEach.call(reservations, (reservation, index) => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(loansAndReservations.reservations[ index ].orderedDate)
-        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
+        const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
+        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })
 
@@ -144,13 +164,15 @@ describe('containers', () => {
       const { loansAndReservations } = store.getState().profile
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
-      expect(reservations.length).toEqual(2)
+      expect(reservations.length).toEqual(3)
       Array.prototype.forEach.call(reservations, (reservation, index) => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(loansAndReservations.reservations[ index ].orderedDate)
-        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
+        const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
+        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })
 
@@ -163,7 +185,7 @@ describe('containers', () => {
         expect(loan.querySelector("[data-automation-id='UserLoans_loan_title']").textContent).toEqual(loansAndReservations.loans[ index ].title)
         expect(loan.querySelector("[data-automation-id='UserLoans_loan_author']").textContent).toEqual(loansAndReservations.loans[ index ].author)
         expect(loan.querySelector("[data-automation-id='UserLoans_loan_publicationYear']").textContent).toEqual(loansAndReservations.loans[ index ].publicationYear)
-        expect(loan.querySelector("[data-automation-id='UserLoans_loan_dueDate']").textContent).toEqual(loansAndReservations.loans[ index ].dueDate)
+        expect(loan.querySelector("[data-automation-id='UserLoans_loan_dueDate']").textContent).toEqual(formatDate(loansAndReservations.loans[ index ].dueDate))
       })
     })
   })

@@ -33,6 +33,7 @@ module.exports = {
   },
   acceptTerms: {
     required: true,
-    asyncValidation: true
+    asyncValidation: true,
+    requiredMessageOverride: 'termsMustBeAccepted'
   }
 }

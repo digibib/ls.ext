@@ -54,11 +54,6 @@ module.exports = {
     if (values.pin !== values.repeatPin) {
       return 'pinsMustBeEqual'
     }
-  },
-  acceptTerms: acceptTerms => {
-    if (!acceptTerms) {
-      return 'termsMustBeAccepted'
-    }
   }
 }
 

@@ -81,6 +81,9 @@ body {
   }
 
   .select2-container {
+      .select2-selection--multiple {
+        min-height: 38px !important;
+      }
     .select2-selection {
       &:focus {
         @include focus()
@@ -95,7 +98,6 @@ body {
       background-repeat: no-repeat;
       background-position: 99% 6px;
       padding-top: 1px;
-      min-height: 36px;
       margin: -3px 1px !important;
       padding: 0px 0px 1px 5px !important;
       ul {
@@ -558,7 +560,7 @@ body {
           left: 271px;
           top: 28px;
           display: block;
-          margin-top: -12px;
+          margin-top: -23px;
         }
         .support-panel-expander {
           display: inline-block;
@@ -773,6 +775,9 @@ body {
           padding: 8px;
           .inputs {
             .input {
+              .index-type-select {
+                min-height: 37px;
+              }
               background: $mintgreen;
               padding: 0 12px;
               margin-bottom: -1px;

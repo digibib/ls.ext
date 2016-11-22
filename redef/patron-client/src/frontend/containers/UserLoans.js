@@ -12,6 +12,8 @@ import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
 import ClickableElement from '../components/ClickableElement'
 import { formatDate } from '../utils/dateFormatter'
+import Libraries from '../components/Libraries'
+import Loading from '../components/Loading'
 
 class UserLoans extends React.Component {
   renderPickups () {
@@ -74,8 +76,13 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
-                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
-                <td data-automation-id="Userloans_reservation_queue_place">{item.queuePlace}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
+                <td>
+                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                  <span>&nbsp;</span>
+                  <span
+                    data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
+                </td>
                 <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.reserveId}>
@@ -95,8 +102,7 @@ class UserLoans extends React.Component {
               <div className="reserved-entry-content"
                    key={item.reserveId}
                    data-automation-id="UserLoans_reservation"
-                   data-recordid={item.recordId}
-              >
+                   data-recordid={item.recordId}>
                 <div className="meta-item">
                   <div className="meta-label">
                     <FormattedMessage {...messages.title} />
@@ -125,8 +131,11 @@ class UserLoans extends React.Component {
                   <div className="meta-label">
                     <FormattedMessage {...messages.placeInQueue} />
                   </div>
-                  <div className="meta-content" data-automation-id="Userloans_reservation_queue_place">
-                    {item.queuePlace}
+                  <div className="meta-content">
+                    <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                    <span>&nbsp;</span>
+                    <span
+                      data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
                   </div>
                 </div>
                 <div className="meta-item">
@@ -134,7 +143,7 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.pickupLocation} />
                   </div>
                   <div className="meta-content" data-automation-id="UserLoans_reservation_library">
-                    {this.props.libraries[ item.branchCode ]}
+                    {this.renderLibrarySelect(item)}
                   </div>
                 </div>
                 <div className="meta-item">
@@ -151,6 +160,28 @@ class UserLoans extends React.Component {
         </MediaQuery>
       </NonIETransitionGroup>
     )
+  }
+
+  renderLibrarySelect (item) {
+    return (
+      <div style={{ minWidth: '10em' }}>
+        {this.props.isRequestingChangePickupLocation
+          ? <Loading />
+          : (
+          <div className="select-container">
+            <Libraries libraries={this.props.libraries} selectedBranchCode={item.branchCode}
+                       onChangeAction={this.props.reservationActions.changePickupLocation} reserveId={item.reserveId} />
+          </div>
+        )}
+      </div>)
+  }
+
+  renderWaitingPeriod (expected = 'unknown') {
+    if (expected === 'unknown') {
+      return <FormattedMessage {...messages.unknown} />
+    } else {
+      return <span>({this.renderExpectedEstimationPrefix(expected)} {expected} <FormattedMessage {...messages.weeks} />)</span>
+    }
   }
 
   renderLoans () {
@@ -221,6 +252,18 @@ class UserLoans extends React.Component {
     }
   }
 
+  renderExpectedEstimationPrefix (estimate) {
+    if (estimate.includes('–')) {
+      return (
+        <FormattedMessage {...messages.approx} />
+      )
+    } else {
+      return (
+        <FormattedMessage {...messages.moreThan} />
+      )
+    }
+  }
+
   renderTabs () {
     const tabList = [
       { label: 'Oversikt', path: '/profile/loans/overview' },
@@ -260,6 +303,7 @@ UserLoans.propTypes = {
   libraries: PropTypes.object.isRequired,
   loanActions: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
+  isRequestingChangePickupLocation: PropTypes.bool.isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired
@@ -350,6 +394,26 @@ export const messages = defineMessages({
     id: 'UserLoans.placeInQueue',
     description: 'The header over a reservations\' place in holds queue',
     defaultMessage: 'Place in queue'
+  },
+  approx: {
+    id: 'UserLoans.approximately',
+    description: 'The abbreviation used to mean approximately',
+    defaultMessage: 'approx.'
+  },
+  weeks: {
+    id: 'UserLoans.weeks',
+    description: 'The word used to mean weeks',
+    defaultMessage: 'weeks'
+  },
+  moreThan: {
+    id: 'UserLoans.moreThan',
+    description: 'The words used to mean more than',
+    defaultMessage: 'more than'
+  },
+  unknown: {
+    id: 'UserLoans.unknown',
+    description: 'Text displayed when unable to estimate waiting period',
+    defaultMessage: '(Unknown waiting period)'
   }
 })
 
@@ -358,7 +422,8 @@ function mapStateToProps (state) {
     loansAndReservationError: state.profile.loansAndReservationError,
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations,
     loansAndReservations: state.profile.loansAndReservations,
-    libraries: state.application.libraries
+    libraries: state.application.libraries,
+    isRequestingChangePickupLocation: state.reservation.isRequestingChangePickupLocation
   }
 }
 

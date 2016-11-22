@@ -10,7 +10,7 @@ class BiblioDetail < IntraPage
   end
 
   def header
-    @browser.div(:id => 'catalogue_detail_biblio').h3.text
+    @browser.div(:id => 'catalogue_detail_biblio').h1.text
   end
 
   def status
@@ -44,6 +44,6 @@ class BiblioDetail < IntraPage
   end
 
   def find_first_available_exemplar
-    @browser.table(class: 'items_table').trs.select { |tr| tr.td.present? && tr.td(class: 'status').text.include?('Available')}.first.tds[5].text
+    @browser.table(class: 'items_table').trs.select { |tr| tr.td.present? && tr.td(class: 'status').text.include?('Available')}.first.tds[7].text
   end
 end

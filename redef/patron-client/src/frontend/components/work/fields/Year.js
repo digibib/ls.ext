@@ -5,9 +5,9 @@ import MetaItem from '../../MetaItem'
 const Year = ({ year }) => {
   if (year) {
     return (
-      <MetaItem label={messages.labelOriginalReleaseDate}
-                content={year}
-                data-automation-id="work_originalReleaseDate" />
+      <MetaItem label={messages.labelOriginalReleaseDate} data-automation-id="work_originalReleaseDate">
+        {year}
+      </MetaItem>
     )
   } else {
     return null

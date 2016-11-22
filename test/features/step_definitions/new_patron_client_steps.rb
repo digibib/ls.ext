@@ -214,6 +214,7 @@ When(/^det skal ikke være bøker klare til avhenting eller i historikk$/) do
 end
 
 When(/^skal jeg se at boka er utlånt$/) do
+  sleep 2
   wait_for {
     loans = @site.PatronClientLoansAndReservationsPage.loans
     loans.size.eql?(1) && loans.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
@@ -327,11 +328,10 @@ end
 
 When(/^jeg fyller inn resten av skjemaet$/) do
   @browser.text_field(name: 'email').set @active[:patron].email
-  @browser.text_field(name: 'mobile').set '%08d' % rand(10**8)
-  @browser.text_field(name: 'address').set generateRandomString
-  @browser.text_field(name: 'zipcode').set '%04d' % rand(10000)
-  @browser.text_field(name: 'city').set (0...8).map { (65 + rand(26)).chr }.join
-  #@browser.select_list(data_automation_id: 'gender_selection').select_value 'female' # TODO: Must be fixed in patron-client
+  @browser.text_field(name: 'mobile').set @active[:patron].mobile
+  @browser.text_field(name: 'address').set @active[:patron].address
+  @browser.text_field(name: 'zipcode').set @active[:patron].zipcode
+  @browser.text_field(name: 'city').set @active[:patron].city
   @browser.text_field(name: 'pin').set '1234'
   @browser.text_field(name: 'repeatPin').set '1234'
 end
@@ -421,4 +421,45 @@ end
 
 When(/^jeg trykker på registrer deg$/) do
   @browser.element(data_automation_id: 'registration_element').click
+end
+
+Then(/^får jeg tilbakemelding i en egen dialogboks$/) do
+  wait_for { @browser.element(data_automation_id: 'registration_success_modal').present? || @browser.element(data_automation_id: 'registration_error_modal').present? }
+end
+
+When(/^skal jeg se personopplysningene mine$/) do
+  wait_for {
+    @browser.element(data_automation_id: 'change_profile_info_button').present?
+  }
+  @browser.element(data_automation_id: 'UserInfo_address').text.should eq @active[:patron].address
+  @browser.element(data_automation_id: 'UserInfo_zipcode').text.should eq @active[:patron].zipcode
+  @browser.element(data_automation_id: 'UserInfo_mobile').text.should eq @active[:patron].mobile
+  @browser.element(data_automation_id: 'UserInfo_email').text.should eq @active[:patron].email
+end
+
+When(/^jeg trykker på endre personopplysninger$/) do
+  @browser.element(data_automation_id: 'change_profile_info_button').click
+end
+
+When(/^jeg fyller ut personopplysningene mine riktig$/) do
+  @active[:patron].email = "#{generateRandomString}@#{generateRandomString}.dot"
+  @browser.text_field(name: 'email').set @active[:patron].email
+  @active[:patron].mobile = '%08d' % rand(10**8)
+  @browser.text_field(name: 'mobile').set @active[:patron].mobile
+  @active[:patron].address = generateRandomString
+  @browser.text_field(name: 'address').set @active[:patron].address
+  @active[:patron].zipcode = '%04d' % rand(10000)
+  @browser.text_field(name: 'zipcode').set @active[:patron].zipcode
+  @active[:patron].city = (0...8).map { (65 + rand(26)).chr }.join
+  @browser.text_field(name: 'city').set @active[:patron].city
+end
+
+When(/^jeg trykker på lagre personopplysninger$/) do
+  @browser.element(data_automation_id: 'save_profile_changes_button').click
+end
+
+When(/^skal jeg se et skjema med personopplysninger$/) do
+  wait_for {
+    @browser.element(data_automation_id: 'change-user-details').present?
+  }
 end

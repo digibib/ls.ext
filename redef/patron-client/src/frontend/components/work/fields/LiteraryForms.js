@@ -5,11 +5,9 @@ import MetaItem from '../../MetaItem'
 const LiteraryForms = ({ literaryForms, intl }) => {
   if (literaryForms.length > 0) {
     return (
-      <MetaItem
-        content={literaryForms.map(literaryForm => intl.formatMessage({ id: literaryForm })).join(', ')}
-        label={messages.labelLiteraryForms}
-        data-automation-id="work_literaryForms"
-      />
+      <MetaItem label={messages.labelLiteraryForms} data-automation-id="work_literaryForms">
+        {literaryForms.map(literaryForm => intl.formatMessage({ id: literaryForm })).join(', ')}
+      </MetaItem>
     )
   } else {
     return null

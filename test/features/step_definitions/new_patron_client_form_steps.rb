@@ -4,7 +4,7 @@ When(/^jeg tester feltet "([^"]*)" for påkrevd og XSS$/) do |field|
 end
 
 When(/^jeg tester fødselsdatofeltet for gyldighetsjekk$/) do
-  @site.PatronClientForms.is_invalid?('day', '')
+  @site.PatronClientForms.is_required?('day')
   @site.PatronClientForms.is_invalid?('day', '0')
   @site.PatronClientForms.is_invalid?('day', '-1')
   @site.PatronClientForms.is_invalid?('day', '32')
@@ -12,7 +12,7 @@ When(/^jeg tester fødselsdatofeltet for gyldighetsjekk$/) do
   @site.PatronClientForms.is_valid?('day', '1')
   @site.PatronClientForms.is_valid?('day', '31')
 
-  @site.PatronClientForms.is_invalid?('month', '')
+  @site.PatronClientForms.is_required?('month')
   @site.PatronClientForms.is_invalid?('month', '0')
   @site.PatronClientForms.is_invalid?('month', '-1')
   @site.PatronClientForms.is_invalid?('month', '13')
@@ -20,7 +20,7 @@ When(/^jeg tester fødselsdatofeltet for gyldighetsjekk$/) do
   @site.PatronClientForms.is_valid?('month', '1')
   @site.PatronClientForms.is_valid?('month', '12')
 
-  @site.PatronClientForms.is_invalid?('year', '')
+  @site.PatronClientForms.is_required?('year')
   @site.PatronClientForms.is_invalid?('year', '0')
   @site.PatronClientForms.is_invalid?('year', '-1')
   @site.PatronClientForms.is_invalid?('year', '999')
@@ -33,6 +33,7 @@ When(/^jeg tester fødselsdatofeltet for gyldighetsjekk$/) do
 end
 
 When(/^jeg tester id\-nummerfeltet for gyldighetssjekk$/) do
+  @site.PatronClientForms.is_required?('ssn')
   @site.PatronClientForms.is_invalid?('ssn', 'a')
   @site.PatronClientForms.is_invalid?('ssn', '13119788041')
   @site.PatronClientForms.is_invalid?('ssn', '15084630264')
@@ -43,6 +44,8 @@ When(/^jeg tester id\-nummerfeltet for gyldighetssjekk$/) do
 end
 
 When(/^jeg sjekker om epost og mobil\/telefon valideres riktig$/) do
+  @site.PatronClientForms.is_valid?('mobile', '')
+
   message = 'Eposten må være i et gyldig format'
   @site.PatronClientForms.triggers_message?('email', 'a', message)
   @site.PatronClientForms.triggers_message?('email', 'a@@', message)
@@ -61,6 +64,7 @@ When(/^jeg sjekker om epost og mobil\/telefon valideres riktig$/) do
 end
 
 When(/^jeg sjekker om postnummer valideres riktig$/) do
+  @site.PatronClientForms.is_required?('zipcode')
   @site.PatronClientForms.is_invalid?('zipcode', '999')
   @site.PatronClientForms.is_invalid?('zipcode', '99999')
   @site.PatronClientForms.is_invalid?('zipcode', 'a999')
@@ -78,7 +82,7 @@ When(/^jeg sjekker at poststed valideres riktig$/) do
 end
 
 When(/^jeg tester om PIN\-kode valideres riktig$/) do
-  @site.PatronClientForms.triggers_message?('pin', '', 'PIN-koden må være 4 siffer')
+  @site.PatronClientForms.is_required?('pin')
   @site.PatronClientForms.triggers_message?('pin', '999', 'PIN-koden må være 4 siffer')
   @site.PatronClientForms.triggers_message?('pin', '999a', 'PIN-koden må være 4 siffer')
   @site.PatronClientForms.triggers_message?('pin', 'aaaa', 'PIN-koden må være 4 siffer')
@@ -91,3 +95,16 @@ end
 When(/^får jeg melding om at brukervilkårene må godkjennes$/) do
   @site.PatronClientForms.get_validator('acceptTerms').text.should eq 'Brukervilkårene må godkjennes'
 end
+
+When(/^jeg tester fornavn for påkrevd og XSS$/) do
+  step 'jeg tester feltet "firstName" for påkrevd og XSS'
+end
+
+When(/^jeg tester etternavn for påkrevd og XSS$/) do
+  step 'jeg tester feltet "lastName" for påkrevd og XSS'
+end
+
+When(/^jeg tester adresse for påkrevd og XSS$/) do
+  step 'jeg tester feltet "address" for påkrevd og XSS'
+end
+
