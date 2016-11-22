@@ -97,8 +97,10 @@ export default function profile (state = initialState, action) {
       return initialState
     case CHANGE_PICKUP_LOCATION_SUCCESS:
       return {
-        ...state, loansAndReservations: {
-          ...state.loansAndReservations, reservations: state.loansAndReservations.reservations.map(reservation => {
+        ...state,
+        loansAndReservations: {
+          ...state.loansAndReservations,
+          reservations: state.loansAndReservations.reservations.map(reservation => {
             if (reservation.reserveId === action.payload.reserveId) {
               reservation.branchCode = action.payload.branchCode
             }

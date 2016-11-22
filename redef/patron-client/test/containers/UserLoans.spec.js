@@ -135,7 +135,8 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(loansAndReservations.reservations[ index ].orderedDate)
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
+        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })
 
@@ -150,7 +151,8 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(loansAndReservations.reservations[ index ].orderedDate)
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].waitingPeriod)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
+        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })
 

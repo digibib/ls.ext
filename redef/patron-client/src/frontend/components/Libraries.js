@@ -43,7 +43,8 @@ Libraries.propTypes = {
   libraries: PropTypes.object.isRequired,
   selectProps: PropTypes.object,
   selectedBranchCode: PropTypes.string,
-  reserveId: PropTypes.string
+  reserveId: PropTypes.string,
+  onChangeAction: PropTypes.func
 }
 
 export default Libraries

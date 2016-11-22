@@ -11,10 +11,12 @@ describe('reducers', () => {
       ).toEqual({
         isRequestingReservation: false,
         reservationError: false,
+        changePickupLocationError: false,
         isRequestingExtendLoan: false,
         extendLoanError: false,
         isRequestingCancelReservation: false,
-        cancelReservationError: false
+        cancelReservationError: false,
+        isRequestingChangePickupLocation: false
       })
     })
 
