@@ -198,20 +198,9 @@
             "xbox360, xbox 360 => xbox 360-spill",
             "inst, instrument => musikkinstrument"
           ]
-        },
-        "norwegian_folding": {
-          "type": "icu_folding",
-          "unicodeSetFilter": "[^æøåÆØÅ]"
         }
       },
       "analyzer": {
-        "default": {
-          "tokenizer": "icu_tokenizer",
-          "filter": [
-            "norwegian_folding",
-            "lowercase"
-          ]
-        },
         "format_analyzer": {
           "type": "custom",
           "tokenizer": "keyword",
