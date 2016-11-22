@@ -58,6 +58,7 @@
     "ractive-events-keys": "0.2.1",
     "ractive-express": "^0.1.5",
     "select2": "git+https://github.com/select2/select2.git#4.0.2",
+    "spin": "0.0.1",
     "timepicker": "^1.11.1",
     "underscore": "^1.8.3",
     "urijs": "^1.17.0"

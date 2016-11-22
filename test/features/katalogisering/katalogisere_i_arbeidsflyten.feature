@@ -32,8 +32,19 @@ Egenskap: Katalogisere i arbeidsflyt
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og jeg venter litt
     Og legger inn opplysningene om utgivelsen
-    Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
     Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
+    Så debugger jeg
     Så velger jeg et sted fra treffliste fra stedregisteret
     Så skriver jeg inn "12" som utgivelsens nummer i serien
     Så jeg venter litt
@@ -116,7 +127,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at utgivelsen er tilkoplet riktig utgitt av
     Og at utgivelsen har samme hovedtittel som verket
     Og at utgivelsen har samme undertittel som verket
-    Så jeg åpner verket for lesing
+    Og jeg åpner verket for lesing
+    Og jeg venter litt
     Og at verket er tilkoplet riktig emne
     Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
@@ -267,7 +279,6 @@ Egenskap: Katalogisere i arbeidsflyt
   Scenario: Redigere emne i katalogisering
     Gitt at jeg vil opprette et emne
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
-    Så at jeg vil skru av ui-blokkering
     Og at jeg skriver inn tilfeldig emne i feltet "Emner" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt generelt emne"-knappen
