@@ -13,9 +13,27 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.6.0 (2016-11-22)
+
+KOHA:   3df1e1097b2fa4d2eae7766745fc172184d2644c
+
+- catalinker:
+  - DEICH-469_manglende_oppdatering_ved_sletting_av_opplysninger
+  - DEICH-471_registrerte_opplysninger_vises_ikke_i_skjema
+- patron-client:
+  - DEICH-466-validering_aarstall_registrering
+  - DEICH-274 fix multiple items on profile page
+  - DEICH-149: Add components for publication fields
+  - DEICH-476: Remove Bjerke from dropdown
+  - DEICH-445: mypage: add expected date
+  - DEICH-467: Add select to change pickup location
+- services:
+  - map more 300$b values to media types
+
+
 ## 0.5.0 (2016-11-16)
 
-GITREF:
+GITREF: f7f4fbd3bcd03236e2e2f325a650a417c8e01b8e
 KOHA:   3df1e1097b2fa4d2eae7766745fc172184d2644c
 
 - koha:
