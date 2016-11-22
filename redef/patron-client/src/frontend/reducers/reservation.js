@@ -7,7 +7,10 @@ import {
   EXTEND_LOAN_SUCCESS,
   REQUEST_CANCEL_RESERVATION,
   CANCEL_RESERVATION_FAILURE,
-  CANCEL_RESERVATION_SUCCESS
+  CANCEL_RESERVATION_SUCCESS,
+  REQUEST_CHANGE_PICKUP_LOCATION,
+  CHANGE_PICKUP_LOCATION_SUCCESS,
+  CHANGE_PICKUP_LOCATION_FAILURE
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -16,7 +19,9 @@ const initialState = {
   isRequestingExtendLoan: false,
   extendLoanError: false,
   isRequestingCancelReservation: false,
-  cancelReservationError: false
+  cancelReservationError: false,
+  isRequestingChangePickupLocation: false,
+  changePickupLocationError: false
 }
 
 export default function reservation (state = initialState, action) {
@@ -39,6 +44,12 @@ export default function reservation (state = initialState, action) {
       return { ...state, isRequestingCancelReservation: false, cancelReservationError: false }
     case CANCEL_RESERVATION_FAILURE:
       return { ...state, isRequestingCancelReservation: false, cancelReservationError: action.payload.error }
+    case REQUEST_CHANGE_PICKUP_LOCATION:
+      return { ...state, isRequestingChangePickupLocation: true, changePickupLocationError: false }
+    case CHANGE_PICKUP_LOCATION_SUCCESS:
+      return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: false }
+    case CHANGE_PICKUP_LOCATION_FAILURE:
+      return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: action.payload.error }
     default:
       return state
   }

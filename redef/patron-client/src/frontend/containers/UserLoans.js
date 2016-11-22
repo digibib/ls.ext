@@ -12,6 +12,8 @@ import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
 import ClickableElement from '../components/ClickableElement'
 import { formatDate } from '../utils/dateFormatter'
+import Libraries from '../components/Libraries'
+import Loading from '../components/Loading'
 
 class UserLoans extends React.Component {
   renderPickups () {
@@ -74,7 +76,7 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
-                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
                 <td>
                   <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
                   <span>&nbsp;</span>
@@ -141,7 +143,7 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.pickupLocation} />
                   </div>
                   <div className="meta-content" data-automation-id="UserLoans_reservation_library">
-                    {this.props.libraries[ item.branchCode ]}
+                    {this.renderLibrarySelect(item)}
                   </div>
                 </div>
                 <div className="meta-item">
@@ -158,6 +160,20 @@ class UserLoans extends React.Component {
         </MediaQuery>
       </NonIETransitionGroup>
     )
+  }
+
+  renderLibrarySelect (item) {
+    return (
+      <div style={{ minWidth: '10em' }}>
+        {this.props.isRequestingChangePickupLocation
+          ? <Loading />
+          : (
+          <div className="select-container">
+            <Libraries libraries={this.props.libraries} selectedBranchCode={item.branchCode}
+                       onChangeAction={this.props.reservationActions.changePickupLocation} reserveId={item.reserveId} />
+          </div>
+        )}
+      </div>)
   }
 
   renderWaitingPeriod (expected = 'unknown') {
@@ -287,6 +303,7 @@ UserLoans.propTypes = {
   libraries: PropTypes.object.isRequired,
   loanActions: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
+  isRequestingChangePickupLocation: PropTypes.bool.isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired
@@ -405,7 +422,8 @@ function mapStateToProps (state) {
     loansAndReservationError: state.profile.loansAndReservationError,
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations,
     loansAndReservations: state.profile.loansAndReservations,
-    libraries: state.application.libraries
+    libraries: state.application.libraries,
+    isRequestingChangePickupLocation: state.reservation.isRequestingChangePickupLocation
   }
 }
 

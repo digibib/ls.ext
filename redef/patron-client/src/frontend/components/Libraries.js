@@ -1,9 +1,14 @@
 import React, { PropTypes } from 'react'
 
 class Libraries extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
+  }
+
   renderOptions () {
     const branchOptions = []
-    const libraries = this.props.libraries
+    const { libraries } = this.props
     Object.keys(libraries).forEach(branchCode => {
       const branchName = libraries[ branchCode ]
       branchOptions.push(
@@ -19,10 +24,15 @@ class Libraries extends React.Component {
     return this.select.value
   }
 
+  handleSelectChange () {
+    this.props.onChangeAction(this.props.reserveId, this.select.value)
+  }
+
   render () {
-    const { selectProps } = this.props
+    const { selectProps, selectedBranchCode, onChangeAction } = this.props
     return (
-      <select ref={e => this.select = e} {...selectProps}>
+      <select ref={e => this.select = e} {...selectProps} defaultValue={selectedBranchCode}
+              onChange={onChangeAction ? this.handleSelectChange : undefined}>
         {this.renderOptions()}
       </select>
     )
@@ -31,7 +41,10 @@ class Libraries extends React.Component {
 
 Libraries.propTypes = {
   libraries: PropTypes.object.isRequired,
-  selectProps: PropTypes.object
+  selectProps: PropTypes.object,
+  selectedBranchCode: PropTypes.string,
+  reserveId: PropTypes.string,
+  onChangeAction: PropTypes.func
 }
 
 export default Libraries

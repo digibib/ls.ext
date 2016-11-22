@@ -39,4 +39,23 @@ module.exports = (app) => {
       response.sendStatus(500)
     })
   })
+
+  app.put('/api/v1/holds', jsonParser, (request, response) => {
+    fetch(`http://xkoha:8081/api/v1/holds/${request.body.reserveId}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        branchcode: request.body.branchCode,
+        priority: 1
+      })
+    }).then(res => {
+      if (res.status === 200) {
+        response.sendStatus(200)
+      } else {
+        throw Error('Could not change pickup location')
+      }
+    }).catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
 }
