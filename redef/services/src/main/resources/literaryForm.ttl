@@ -5,6 +5,9 @@ literaryForm:novel a duo:LiteraryForm ;
   duo:code "r" ;
   rdfs:label "Roman"@no ;
   rdfs:label "Novel"@en .
+literaryForm:shortProse a duo:LiteraryForm ;
+  rdfs:label "Kortprosa"@no ;
+  rdfs:label "Short prose"@en .
 literaryForm:shortStory a duo:LiteraryForm ;
   duo:code "n" ;
   rdfs:label "Novelle/fortelling"@no ;
