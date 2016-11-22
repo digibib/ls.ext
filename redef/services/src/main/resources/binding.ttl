@@ -9,3 +9,7 @@ binding:heftet a duo:Binding ;
   duo:code "h" ;
   rdfs:label "Heftet"@no ;
   rdfs:label "Paperback"@en .
+binding:spiralrygg a duo:Binding ;
+  duo:code "spiralrygg" ;
+  rdfs:label "Spiralrygg"@no ;
+  rdfs:label "Spiral binding"@en .
