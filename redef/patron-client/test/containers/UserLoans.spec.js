@@ -169,9 +169,9 @@ describe('containers', () => {
     })
 
     it('should display reservations on smaller screens', () => {
-      const { node, store } = setup({ mediaQueryValues: { width: 991 } })
-      const { loansAndReservations } = store.getState().profile
-      const { libraries } = store.getState().application
+      const {node, store} = setup({mediaQueryValues: {width: 991}})
+      const {loansAndReservations} = store.getState().profile
+      const {libraries} = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
       expect(reservations.length).toEqual(3)
       // indexMap is used because the component sorts the output
