@@ -1,22 +1,24 @@
-module.exports.estimateWaitingPeriod = (queuePlace, items) => {
-  if (items.length < 1) {
-    return 'unknown'
-  }
-  if (queuePlace === 0) {
-    return 'inTransit'
-  }
+module.exports.estimateWaitingPeriod = function (queuePlace, items) {
+  return (queuePlace, items) => {
+    if (items.length < 1) {
+      return 'unknown'
+    }
+    if (queuePlace === 0) {
+      return 'inTransit'
+    }
 
-  const reservableItems = items.filter(isReservable)
+    const reservableItems = items.filter(isReservable)
 
-  if (reservableItems.length < 1) {
-    return 'unknown'
-  }
+    if (reservableItems.length < 1) {
+      return 'unknown'
+    }
 
-  const availableItems = reservableItems.filter(isAvailable)
-  if (queuePlace <= availableItems.length) {
-    return 'pending'
-  } else {
-    return getWaitPeriod(queuePlace, reservableItems)
+    const availableItems = reservableItems.filter(isAvailable)
+    if (availableItems.length > 0 && queuePlace === 1) {
+      return 'pending'
+    } else {
+      return getWaitPeriod(queuePlace, reservableItems)
+    }
   }
 }
 
@@ -91,5 +93,5 @@ function getOldestLoan (items) {
     (a, b) => {
       return a.onloan > b.onloan
     })
-  return sorted[ 0 ]
+  return sorted[0]
 }

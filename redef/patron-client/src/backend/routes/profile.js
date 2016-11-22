@@ -119,8 +119,9 @@ module.exports = (app) => {
           } else {
             throw Error(res.statusText)
           }
-        })
-    ]).then((json) => {
+        }),
+      getExpectedAvailableDateByBiblio(hold.biblionumber)
+    ]).then(([json, items]) => {
       const biblio = json[0].biblio
       const items = json[0].items
       const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[2]}/${hold.reserve_id}` : 'unknown'
@@ -143,6 +144,9 @@ module.exports = (app) => {
         pickupNumber: pickupNumber,
         queuePlace: hold.priority,
         suspended: hold.suspend === '1'
+        pickupNumber: pickupNumber,
+        queuePlace: hold.priority
+
       }
     })
   }
@@ -181,6 +185,19 @@ module.exports = (app) => {
           publicationYear: json.publicationyear,
           checkoutId: loan.issue_id
         }
+      })
+  }
+
+  function getExpectedAvailableDateByBiblio (biblionumber) {
+    return fetch(`http://xkoha:8081/api/v1/biblios/${biblionumber}/items`)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw Error(res.statusText)
+        }
+      }).then(json => {
+        return json.items
       })
   }
 

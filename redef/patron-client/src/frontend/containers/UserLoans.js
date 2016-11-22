@@ -76,17 +76,11 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
-                <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td>
-                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                    ? item.queuePlace
-                    : <FormattedMessage {...messages.enRoute} />}</span>
+                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
                   <span>&nbsp;</span>
-                   <span
-                   data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
-                </td>
-                <td>
-                  {this.renderResumeSuspendReservationButton(item)}
+                  <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
                 </td>
                 <td>
                   {this.renderResumeSuspendReservationButton(item)}
@@ -146,13 +140,9 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.placeInQueue} />
                   </div>
                   <div className="meta-content">
-                    <span
-                      data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                      ? item.queuePlace
-                      : <FormattedMessage {...messages.enRoute} />}</span>
-                     <span>&nbsp;</span>
-                     <span
-                     data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
+                    <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                    <span>&nbsp;</span>
+                    <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
                   </div>
                 </div>
                 <div className="meta-item">
