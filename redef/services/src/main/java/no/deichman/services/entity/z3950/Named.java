@@ -3,7 +3,7 @@ package no.deichman.services.entity.z3950;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Responsibility: mapping of contributors.
+ * Responsibility: mapping of things with a name.
  */
 public class Named extends ExternalDataObject {
     @SerializedName("deichman:name")

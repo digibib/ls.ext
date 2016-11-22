@@ -1495,6 +1495,12 @@ module.exports = (app) => {
           enableCreateNewResource: true
         },
         {
+          resourceType: 'Serial',
+          wrappedIn: 'SerialIssue',
+          predicate: 'serial',
+          enableCreateNewResmource: true
+        },
+        {
           resourceType: 'Person',
           wrappedIn: '/Work',
           predicate: 'subject',

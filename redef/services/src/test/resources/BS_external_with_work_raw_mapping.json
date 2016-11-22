@@ -193,11 +193,7 @@
         ],
         "deichman:inSerial": [
           {
-            "issue": "12",
-            "serial": {
-              "@id": "_:0000000"
-            },
-            "@type": "deichman:SerialIssue"
+            "@id": "_:0000000"
           }
         ],
         "deichman:hasMediaType": {
@@ -263,7 +259,8 @@
         ],
         "@type": [
           "deichman:Publication"
-        ]
+        ],
+        "@id": "_:0000000"
       },
       {
         "deichman:hasClassificationNumber": "839.823",
@@ -297,7 +294,7 @@
         "deichman:publishedBy": {
           "@id": "_:0000000"
         },
-        "deichman:name": "Karsten og Petra-bøkene",
+        "deichman:mainTitle": "Karsten og Petra-bøkene",
         "@type": [
           "deichman:Serial"
         ],
@@ -309,6 +306,16 @@
           "deichman:Corporation"
         ],
         "@id": "_:0000000"
+      },
+      {
+        "@type": [
+          "deichman:SerialIssue"
+        ],
+        "@id": "_:0000000",
+        "deichman:issue": "12",
+        "deichman:serial": {
+          "@id": "_:0000000"
+        }
       },
       {
         "@type": [

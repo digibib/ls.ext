@@ -50,7 +50,8 @@
         "deichman:ageLimit": 18,
         "@type": [
           "deichman:Publication"
-        ]
+        ],
+        "@id": "_:0000000"
       }
     ],
     "@context": {

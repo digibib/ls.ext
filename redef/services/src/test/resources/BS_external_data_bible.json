@@ -63,7 +63,8 @@
         ],
         "@type": [
           "deichman:Publication"
-        ]
+        ],
+        "@id": "_:0000000"
       },
       {
         "deichman:hasClassificationNumber": "225.53982",

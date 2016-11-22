@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Splitter.fixedLength;
 import static com.google.common.collect.ImmutableMap.of;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -80,6 +81,7 @@ public class MARCMapper {
 
         Publication publication = new Publication();
         publication.setPublicationOf(work);
+        publication.setId(newBlankNodeId());
 
         List<Object> graphList = new ArrayList<>();
         graphList.add(work);
@@ -201,12 +203,15 @@ public class MARCMapper {
                             addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
                         });
                         Map<String, Object> serialIssue = new HashMap<>();
-                        serialIssue.put("@type", SERIAL_ISSUE_TYPE);
-                        serialIssue.put("serial", of("@id", serial.getId()));
+                        serialIssue.put("@type", newArrayList(SERIAL_ISSUE_TYPE));
+                        String serialIssueId = newBlankNodeId();
+                        serialIssue.put("@id", serialIssueId);
+                        serialIssue.put("deichman:serial", of("@id", serial.getId()));
                         getSubfieldValue(dataField, 'v').ifPresent(v -> {
-                            serialIssue.put("issue", v);
+                            serialIssue.put("deichman:issue", v);
                         });
-                        publication.setSerial(serialIssue);
+                        graphList.add(serialIssue);
+                        publication.setSerial(of("@id", serialIssueId));
                     });
                     break;
                 case "520":
@@ -474,6 +479,15 @@ public class MARCMapper {
         addObjectFunction.accept(named);
         graphList.add(named);
         return named;
+    }
+
+    private Titled addMainTitled(Collection<Object> graphList, String mainTitle, String type, Consumer<ExternalDataObject> addObjectFunction) {
+        String objectId = newBlankNodeId();
+        Titled mainTitled = new Titled(mainTitle, objectId);
+        mainTitled.setType(type);
+        addObjectFunction.accept(mainTitled);
+        graphList.add(mainTitled);
+        return mainTitled;
     }
 
     private ExternalDataObject asExternalObject(String subjectId, String type) {
