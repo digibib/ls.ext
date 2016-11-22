@@ -116,6 +116,9 @@ public class MARCMapper {
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
                     setUriObject(dataField, 'b', "binding", Binding::translate, publication::setBinding);
                     break;
+                case "025":
+                    getSubfieldValue(dataField, 'a').ifPresent(publication::setEan);
+                    break;
                 case "041":
                     setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
                     setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
