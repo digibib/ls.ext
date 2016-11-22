@@ -4,6 +4,7 @@ const userSettingsMapper = require('../utils/userSettingsMapper')
 const bcrypt = require('bcrypt-nodejs')
 const userInfoForm = require('../../common/forms/userInfoForm')
 const extendedValidator = require('../utils/extendedValidator')(userInfoForm)
+const reservationUtils = require('../utils/reservationUtils')
 
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
@@ -122,9 +123,10 @@ module.exports = (app) => {
         }),
       getExpectedAvailableDateByBiblio(hold.biblionumber)
     ]).then(([json, items]) => {
+      const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[2]}/${hold.reserve_id}` : 'unknown'
       const waitingPeriod = hold.found === 'T' ? '1-2 dager' : 'cirka 2-4 uker'
       const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ] : 'unknown'
-      const expectedDate = estimateExpectedWait(hold.priority, items)
+      const expectedDate = reservationUtils.estimateWaitingPeriod(hold.priority, items)
       return {
         recordId: hold.biblionumber,
         reserveId: hold.reserve_id,
@@ -138,7 +140,7 @@ module.exports = (app) => {
         waitingDate: hold.waitingdate,
         expiry: expiry,
         waitingPeriod: waitingPeriod,
-        pickupNumber: hold.pickupnumber,
+        pickupNumber: pickupNumber,
         queuePlace: hold.priority
 
       }
@@ -193,77 +195,6 @@ module.exports = (app) => {
       }).then(json => {
         return json.items
       })
-  }
-
-  function estimateExpectedWait (queuePlace, items) {
-    const queued = queuePlace || 1
-    const eligibleItems = getEligibleItems(items)
-    const numberOfItems = eligibleItems.length
-    const resultOfQueryForLengthOfLoanForItem = getEstimatedPeriod(eligibleItems)
-    if (resultOfQueryForLengthOfLoanForItem === 'unknown') {
-      return resultOfQueryForLengthOfLoanForItem
-    }
-    const estimate = ((queued / numberOfItems) * resultOfQueryForLengthOfLoanForItem)
-    let ceiling = Math.ceil(estimate)
-    const floor = Math.floor(estimate)
-
-    if (floor === estimate) {
-      ceiling = ceiling + 1
-    }
-
-    let returnVal = `${floor}–${ceiling}`
-
-    if (ceiling >= 12) {
-      returnVal = 12
-    }
-
-    return String(returnVal)
-  }
-
-  function getEligibleItems (items) {
-    return items.filter(isIncludedItemType).filter(isIncludedByAttribute)
-  }
-
-  function getEstimatedPeriod (items) {
-    const secondsInAWeek = 1000 * 60 * 60 * 24 * 7
-    if (items.length > 0) {
-      const from = Date.parse(items[ 0 ].datelastborrowed)
-      const to = Date.parse(items[ 0 ].onloan)
-      const estimate = Math.ceil((to - from) / secondsInAWeek)
-      return isNaN(estimate) ? 'unknown' : estimate
-    } else {
-      return 'unknown'
-    }
-  }
-
-  function isIncludedItemType (item) {
-    const itemType = item.itype
-    let included = true
-    switch (itemType) {
-      case 'DAGSLAAN' :
-      case 'EBOK' :
-      case 'REALIA' :
-      case 'TOUKESLAAN' :
-      case 'UKESLAAN' :
-      case 'UKJENT' :
-        included = false
-        break
-      default :
-        included = true
-        break
-    }
-    return included
-  }
-
-  function isIncludedByAttribute (item) {
-    let returnValue = true
-    if (item.withdrawn !== '0' ||
-      item.notforloan !== '0' ||
-      item.itemlost !== '0' ||
-      item.damaged !== '0') {
-      returnValue = false
-    }
-    return returnValue
   }
 
   app.post('/api/v1/profile/settings', jsonParser, (request, response) => {

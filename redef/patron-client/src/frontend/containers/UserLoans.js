@@ -76,14 +76,11 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
-                <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td>
-                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                    ? item.queuePlace
-                    : <FormattedMessage {...messages.enRoute} />}</span>
-                  {/* <span>&nbsp;</span>
-                   <span
-                   data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span> */}
+                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                  <span>&nbsp;</span>
+                  <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
                 </td>
                 <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
@@ -134,13 +131,9 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.placeInQueue} />
                   </div>
                   <div className="meta-content">
-                    <span
-                      data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                      ? item.queuePlace
-                      : <FormattedMessage {...messages.enRoute} />}</span>
-                    {/* <span>&nbsp;</span>
-                     <span
-                     data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span> */}
+                    <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                    <span>&nbsp;</span>
+                    <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
                   </div>
                 </div>
                 <div className="meta-item">
@@ -260,11 +253,11 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderExpectedEstimationPrefix (estimate) {
-    return estimate.includes('–')
-      ? <FormattedMessage {...messages.approx} />
-      : <FormattedMessage {...messages.moreThan} />
-  }
+    renderExpectedEstimationPrefix (estimate) {
+        return estimate.includes('–')
+            ? <FormattedMessage {...messages.approx} />
+    : <FormattedMessage {...messages.moreThan} />
+    }
 
   renderTabs () {
     const tabList = [
@@ -397,6 +390,16 @@ export const messages = defineMessages({
     description: 'The header over a reservations\' place in holds queue',
     defaultMessage: 'Place in queue'
   },
+  unknown: {
+    id: 'UserLoans.unknown',
+    description: 'Text displayed when unable to estimate waiting period',
+    defaultMessage: '(Unknown waiting period)'
+  },
+  enRoute: {
+    id: 'UserLoans.enRoute',
+    description: 'Text displayed when item is en route',
+    defaultMessage: 'En route'
+  },
   approx: {
     id: 'UserLoans.approximately',
     description: 'The abbreviation used to mean approximately',
@@ -411,16 +414,6 @@ export const messages = defineMessages({
     id: 'UserLoans.moreThan',
     description: 'The words used to mean more than',
     defaultMessage: 'more than'
-  },
-  unknown: {
-    id: 'UserLoans.unknown',
-    description: 'Text displayed when unable to estimate waiting period',
-    defaultMessage: '(Unknown waiting period)'
-  },
-  enRoute: {
-    id: 'UserLoans.enRoute',
-    description: 'Text displayed when item is en route',
-    defaultMessage: 'En route'
   }
 })
 
