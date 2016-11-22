@@ -9,6 +9,7 @@ import { createStore } from 'redux'
 import rootReducer from '../../src/frontend/reducers'
 import { Provider } from 'react-redux'
 import * as ProfileActions from '../../src/frontend/actions/ProfileActions'
+import { formatDate } from '../../src/frontend/utils/dateFormatter'
 
 function setup (propOverrides) {
   const props = {
@@ -23,7 +24,7 @@ function setup (propOverrides) {
     city: 'city',
     country: 'country',
     email: 'email',
-    lastUpdated: '01/01/2016',
+    lastUpdated: '01/11/2016',
     loanerCardIssued: 'loanerCardIssued',
     loanerCategory: 'loanerCategory',
     mobile: 'mobile',
@@ -56,7 +57,10 @@ describe('containers', () => {
       const { node, store } = setup({ location: { query: {} } })
       const { personalInformation } = store.getState().profile
       Object.keys(personalInformation).forEach(key => {
-        const value = personalInformation[ key ]
+        let value = personalInformation[ key ]
+        if (key === 'lastUpdated') {
+          value = formatDate(value)
+        }
         expect(node.querySelector(`[data-automation-id='UserInfo_${key}']`).textContent.trim()).toEqual(value)
       })
     })

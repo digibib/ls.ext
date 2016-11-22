@@ -75,7 +75,11 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
                 <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
-                <td data-automation-id="Userloans_reservation_queue_place">{item.queuePlace}</td>
+                <td>
+                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                  <span>&nbsp;</span>
+                  <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
+                </td>
                 <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.reserveId}>
@@ -95,8 +99,7 @@ class UserLoans extends React.Component {
               <div className="reserved-entry-content"
                    key={item.reserveId}
                    data-automation-id="UserLoans_reservation"
-                   data-recordid={item.recordId}
-              >
+                   data-recordid={item.recordId}>
                 <div className="meta-item">
                   <div className="meta-label">
                     <FormattedMessage {...messages.title} />
@@ -125,8 +128,10 @@ class UserLoans extends React.Component {
                   <div className="meta-label">
                     <FormattedMessage {...messages.placeInQueue} />
                   </div>
-                  <div className="meta-content" data-automation-id="Userloans_reservation_queue_place">
-                    {item.queuePlace}
+                  <div className="meta-content">
+                    <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                    <span>&nbsp;</span>
+                    <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
                   </div>
                 </div>
                 <div className="meta-item">
@@ -217,6 +222,18 @@ class UserLoans extends React.Component {
     if (publicationYear) {
       return (
         <span className="published" data-automation-id="UserLoans_loan_publicationYear">{publicationYear}</span>
+      )
+    }
+  }
+
+  renderExpectedEstimationPrefix (estimate) {
+    if (estimate.includes('–')) {
+      return (
+        <FormattedMessage {...messages.approx} />
+      )
+    } else {
+      return (
+          <FormattedMessage {...messages.moreThan} />
       )
     }
   }
@@ -350,6 +367,21 @@ export const messages = defineMessages({
     id: 'UserLoans.placeInQueue',
     description: 'The header over a reservations\' place in holds queue',
     defaultMessage: 'Place in queue'
+  },
+  approx: {
+    id: 'UserLoans.approximately',
+    description: 'The abbreviation used to mean approximately',
+    defaultMessage: 'approx.'
+  },
+  weeks: {
+    id: 'UserLoans.weeks',
+    description: 'The word used to mean weeks',
+    defaultMessage: 'weeks'
+  },
+  moreThan: {
+    id: 'UserLoans.moreThan',
+    description: 'The words used to mean more than',
+    defaultMessage: 'more than'
   }
 })
 
