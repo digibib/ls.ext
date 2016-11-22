@@ -14,7 +14,6 @@
     <link rel="stylesheet" type="text/css" href="/style/style.scss">
 </head>
 <body>
-<span id="ui-blocker"></span>
 <div id="block"></div>
 <div id="iframecontainer">
     <div id="loader"></div>
@@ -25,6 +24,9 @@
 <div id="container">
     <script src="/js/bundle.js"></script>
 </div>
-<span id="ui-blocker-blocker" onclick="document.main.$('#ui-blocker').remove()"></span>
+<div id="growler">
+    <span class="save-placeholder"></span>
+    <div id="growlerMessage">Vent litt...</div>
+</div>
 </body>
 </html>

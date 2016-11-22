@@ -36,33 +36,38 @@ $mintgreen: #DCFC9F;
   font-weight: bold;
 }
 
-.spinner {
-  background-image: url(/images/ajax-loader.gif);
-  background-size: 100%;
-  background-repeat: no-repeat;
-  padding: 6px;
-  margin: -6px 0px -2px 1px;
-}
+//.spinner {
+//  background-image: url(/images/ajax-loader.gif);
+//  background-size: 100%;
+//  background-repeat: no-repeat;
+//  padding: 6px;
+//  margin: -6px 0px -2px 1px;
+//}
 
-#ui-blocker {
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  display: block;
-  z-index: 2000;
-  opacity: 50;
-  background: rgba(20, 20, 20, .3) url(/images/ajax-loader.gif) no-repeat center;
-  position: fixed;
-  display: none;
-  cursor: wait;
-}
-
-#ui-blocker-blocker {
+#growler{
   position: absolute;
-  bottom: 0px;
-  right: 0px;
-  padding: 3px;
+  width: 300px;
+  height: 200px;
+  background: white;
+  top: 50%;
+  left: 50%;
+  border: 1px solid black;
+  border-radius: 8px;
+  align-self: auto;
+  margin-top: -100px;
+  margin-left: -150px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  .save-placeholder {
+    display: block;
+    height: 80%;
+    padding-left: 50%;
+    padding-right: 50%;
+    padding-top: 74px;
+  }
+  #growlerMessage {
+    text-align: center;
+  }
 }
 
 body {
@@ -251,6 +256,17 @@ body {
         margin-top: 20px;
         float: right;
       }
+      button.saving{
+        opacity: 0;
+      }
+      .save-placeholder {
+        float: right;
+      }
+      button.saving+.save-placeholder {
+        top: -14px;
+        right: -299px;
+      }
+
       .prop-input {
         &.boolean-separator {
           height: 2px;
@@ -260,7 +276,23 @@ body {
         }
         .add-item-button {
           float: right;
-          margin-bottom: 12px;
+          margin-bottom: 9px;
+        }
+
+        .save-placeholder {
+          position: relative;
+          //opacity: 0;
+          .spinner{
+            zoom: 0.5;
+          }
+        }
+        .input-wrapper button.saving + .save-placeholder {
+          top: -2px;
+          right: -247px;
+        }
+        .input-wrapper .subject-type-association button.saving + .save-placeholder {
+          top: 16px;
+          right: -50px;
         }
         .label {
           padding: 12px 12px 4px 12px;
@@ -327,7 +359,7 @@ body {
               border: none;
               padding: 13px;
               display: none;
-              &+span>.add-new-btn-row {
+              & + span > .add-new-btn-row {
                 margin-top: 13px;
               }
             }
@@ -375,10 +407,37 @@ body {
               padding-right: 0px;
             }
           }
-
           .field {
+            .index-type-select {
+              margin-bottom: 6px;
+            }
+            input[type="checkbox"] + .save-placeholder {
+              top: 11px;
+              float: right;
+              right: -90px;
+            }
+            input:not([type=checkbox]) + .save-placeholder {
+              top: 17px;
+              right: 18px;
+            }
+            a.support-panel-expander.saving {
+              display: none;
+            }
+            :not(.sub-field) .index-type-select + a.support-panel-expander + .save-placeholder {
+              top: 47px;
+              right: 18px;
+            }
+            :not(.sub-field) a.support-panel-expander + .save-placeholder {
+              top: 18px;
+              right: 18px;
+            }
+            .sub-field a.support-panel-expander + .save-placeholder {
+              top: 15px;
+              right: 16px;
+            }
             padding: 0px 12px 15px 12px;
             background: $input-background;
+
             input[type=checkbox] {
               width: auto;
               margin-top: -4px;
@@ -409,6 +468,11 @@ body {
                 .pure-button {
                   float: right;
                   margin-top: 14px;
+                  padding-left: 25px;
+                  padding-right: 25px;
+                  &+.save-placeholder {
+                    left: 251px;
+                  }
                 }
                 span {
                   float: left;
@@ -467,11 +531,11 @@ body {
           }
           background-color: white;
           border: 1px solid lightgrey;
-          padding-top: 5px;
           .search-term {
-            height: 26px;
+            height: 37px;
             vertical-align: middle;
             padding-left: 7px;
+            padding-top: 8px;
             display: block;
             &:focus {
               outline: none;
@@ -541,7 +605,7 @@ body {
         .explainable {
           position: relative;
           right: 54px;
-          top: 28px;
+          top: 30px;
           float: right;
           font-style: italic;
           background: lightgray;
@@ -551,14 +615,14 @@ body {
           margin-top: -24px;
         }
         :not(.input-wrapper) .support-panel-expander {
-          left: 290px;
-          top: 28px;
+          left: 294px;
+          top: 32px;
           display: block;
-          margin-top: -12px;
+          margin-top: -22px;
         }
         .input-wrapper .support-panel-expander {
-          left: 271px;
-          top: 28px;
+          margin-right: 298px;
+          top: 32px;
           display: block;
           margin-top: -23px;
         }
@@ -580,6 +644,8 @@ body {
         //}
         .searchable {
           padding-right: 13px;
+          height: auto;
+          border-radius: 2px;
         }
         span.legend {
           display: none;
@@ -608,11 +674,11 @@ body {
         }
         .suggestion-source-bibbi {
           @include source-logo-bibbi;
-          background-position: 90% 3px;
+          background-position: 90% 7px;
         }
         .suggestion-source-loc {
           @include source-logo-loc;
-          background-position: 85% 5px;
+          background-position: 85% 9px;
         }
 
         .search-result {
