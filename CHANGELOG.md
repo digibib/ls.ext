@@ -13,8 +13,14 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.6.1 (2016-11-22) extra feature
+
+- catalinker:
+  - DEICH-460_erstatte_ui_blocker_med_spinnere
+
 ## 0.6.0 (2016-11-22)
 
+GITREF: 0a4f14f4a44b89155de06d5795d8ccaea2e499bf
 KOHA:   3df1e1097b2fa4d2eae7766745fc172184d2644c
 
 - catalinker:

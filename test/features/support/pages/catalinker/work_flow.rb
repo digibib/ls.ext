@@ -96,7 +96,6 @@ class WorkFlow < CatalinkerPage
   end
 
   def finish
-    wait_for_ui_blocker
     @browser.elements(:text => "Avslutt registrering av utgivelsen").first.click
   end
 end

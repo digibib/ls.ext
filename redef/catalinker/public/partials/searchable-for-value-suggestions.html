@@ -7,7 +7,7 @@ on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}"
 as-formatter="format: {{searchForValueSuggestions.formatter}}"
-{{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled="disabled"{{/if}}/>
+{{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled="disabled"{{/if}}/><span class="save-placeholder"></span>
 <span class="legend">
     {{#if current.value && !../../searchForValueSuggestions.hitsFromPreferredSource.length > 0 }}
         {{#if !searchForValueSuggestions.pattern || RegExp(searchForValueSuggestions.pattern).test(current.value) }}
@@ -30,7 +30,8 @@ as-formatter="format: {{searchForValueSuggestions.formatter}}"
                     <div class="main-line">{{main}}</div>
                     <div class="details-line">{{details}}</div>
                 </span>
-                <button {{#if primarySuggestionAccepted}}disabled title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</button>
+                <button {{#if primarySuggestionAccepted}}style="opacity:0;" title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</button>
+                <span class="save-placeholder"></span>
             </li>
             {{/each}}
         </ul>
