@@ -78,7 +78,8 @@ class UserLoans extends React.Component {
                 <td>
                   <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
                   <span>&nbsp;</span>
-                  <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
+                  <span
+                    data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
                 </td>
                 <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
@@ -131,7 +132,8 @@ class UserLoans extends React.Component {
                   <div className="meta-content">
                     <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
                     <span>&nbsp;</span>
-                    <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
+                    <span
+                      data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
                   </div>
                 </div>
                 <div className="meta-item">
@@ -156,6 +158,14 @@ class UserLoans extends React.Component {
         </MediaQuery>
       </NonIETransitionGroup>
     )
+  }
+
+  renderWaitingPeriod (expected) {
+    if (expected === 'unknown') {
+      return <FormattedMessage {...messages.unknown} />
+    } else {
+      return <span>({this.renderExpectedEstimationPrefix(expected)} {expected} <FormattedMessage {...messages.weeks} />)</span>
+    }
   }
 
   renderLoans () {
@@ -233,7 +243,7 @@ class UserLoans extends React.Component {
       )
     } else {
       return (
-          <FormattedMessage {...messages.moreThan} />
+        <FormattedMessage {...messages.moreThan} />
       )
     }
   }
@@ -382,6 +392,11 @@ export const messages = defineMessages({
     id: 'UserLoans.moreThan',
     description: 'The words used to mean more than',
     defaultMessage: 'more than'
+  },
+  unknown: {
+    id: 'UserLoans.unknown',
+    description: 'Text displayed when unable to estimate waiting period',
+    defaultMessage: '(Unknown waiting period)'
   }
 })
 

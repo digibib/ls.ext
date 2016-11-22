@@ -122,9 +122,9 @@ module.exports = (app) => {
         }),
       getExpectedAvailableDateByBiblio(hold.biblionumber)
     ]).then(([json, items]) => {
-      const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[2]}/${hold.reserve_id}` : 'unknown'
+      const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[ 2 ]}/${hold.reserve_id}` : 'unknown'
       const waitingPeriod = hold.found === 'T' ? '1-2 dager' : 'cirka 2-4 uker'
-      const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[0] : 'unknown'
+      const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ] : 'unknown'
       const expectedDate = estimateExpectedWait(hold.priority, items)
       return {
         recordId: hold.biblionumber,
@@ -201,6 +201,9 @@ module.exports = (app) => {
     const eligibleItems = getEligibleItems(items)
     const numberOfItems = eligibleItems.length
     const resultOfQueryForLengthOfLoanForItem = getEstimatedPeriod(eligibleItems)
+    if (resultOfQueryForLengthOfLoanForItem === 'unknown') {
+      return resultOfQueryForLengthOfLoanForItem
+    }
     const estimate = ((queued / numberOfItems) * resultOfQueryForLengthOfLoanForItem)
     let ceiling = Math.ceil(estimate)
     const floor = Math.floor(estimate)
@@ -225,11 +228,11 @@ module.exports = (app) => {
   function getEstimatedPeriod (items) {
     const secondsInAWeek = 1000 * 60 * 60 * 24 * 7
     if (items.length > 0) {
-      const from = Date.parse(items[0].datelastborrowed)
-      const to = Date.parse(items[0].onloan)
+      const from = Date.parse(items[ 0 ].datelastborrowed)
+      const to = Date.parse(items[ 0 ].onloan)
       return Math.ceil((to - from) / secondsInAWeek)
     } else {
-      console.log('Something went seriously wrong when trying to get estimated period')
+      return 'unknown'
     }
   }
 
@@ -255,9 +258,9 @@ module.exports = (app) => {
   function isIncludedByAttribute (item) {
     let returnValue = true
     if (item.withdrawn !== '0' ||
-        item.notforloan !== '0' ||
-        item.itemlost !== '0' ||
-        item.damaged !== '0') {
+      item.notforloan !== '0' ||
+      item.itemlost !== '0' ||
+      item.damaged !== '0') {
       returnValue = false
     }
     return returnValue

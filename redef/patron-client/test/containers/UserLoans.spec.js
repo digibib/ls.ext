@@ -22,7 +22,8 @@ function setup (propOverrides) {
   const store = createStore(rootReducer)
   const libraries = {
     'branchCode_1': 'library_1',
-    'branchCode_2': 'library_2'
+    'branchCode_2': 'library_2',
+    'branchCode_3': 'library_3'
   }
   store.dispatch(LibraryActions.receiveLibraries(libraries))
   const loansAndReservations = {
@@ -68,6 +69,17 @@ function setup (propOverrides) {
         expected: '12',
         expectedTestData: '(more than 12 weeks)',
         branchCode: 'branchCode_2'
+      },
+      {
+        reserveId: 'reserveId_3',
+        recordId: 'recordId_3',
+        title: 'title_3',
+        author: 'author_3',
+        orderedDate: '05/10/2016',
+        queuePlace: '10',
+        expected: 'unknown',
+        expectedTestData: '(Unknown waiting period)',
+        branchCode: 'branchCode_3'
       }
     ],
     loans: [
@@ -93,7 +105,8 @@ function setup (propOverrides) {
 
   const messages = {
     'branchCode_1': 'Branch 1',
-    'branchCode_2': 'Branch 2'
+    'branchCode_2': 'Branch 2',
+    'UserLoans.unknown': '(Unknown waiting period)'
   }
 
   const output = TestUtils.renderIntoDocument(
@@ -134,7 +147,7 @@ describe('containers', () => {
       const { loansAndReservations } = store.getState().profile
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
-      expect(reservations.length).toEqual(2)
+      expect(reservations.length).toEqual(3)
       Array.prototype.forEach.call(reservations, (reservation, index) => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
@@ -150,7 +163,7 @@ describe('containers', () => {
       const { loansAndReservations } = store.getState().profile
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
-      expect(reservations.length).toEqual(2)
+      expect(reservations.length).toEqual(3)
       Array.prototype.forEach.call(reservations, (reservation, index) => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)

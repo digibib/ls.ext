@@ -267,6 +267,7 @@ export default {
   'UserLoans.weeks': 'uker',
   'UserLoans.title': 'Tittel',
   'UserLoans.waitingPeriod': 'Ventetid',
+  'UserLoans.unknown': '(Uviss ventetid)',
   'UserSettings.alerts': 'Varslinger',
   'UserSettings.byEmail': 'På epost',
   'UserSettings.bySms': 'På SMS',
