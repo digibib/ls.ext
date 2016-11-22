@@ -230,7 +230,8 @@ module.exports = (app) => {
     if (items.length > 0) {
       const from = Date.parse(items[ 0 ].datelastborrowed)
       const to = Date.parse(items[ 0 ].onloan)
-      return Math.ceil((to - from) / secondsInAWeek)
+      const estimate = Math.ceil((to - from) / secondsInAWeek)
+      return isNaN(estimate) ? 'unknown' : estimate
     } else {
       return 'unknown'
     }

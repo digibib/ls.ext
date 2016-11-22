@@ -160,7 +160,7 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderWaitingPeriod (expected) {
+  renderWaitingPeriod (expected = 'unknown') {
     if (expected === 'unknown') {
       return <FormattedMessage {...messages.unknown} />
     } else {
