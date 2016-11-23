@@ -29,10 +29,12 @@ class Libraries extends React.Component {
   }
 
   render () {
-    const { selectProps, selectedBranchCode, onChangeAction } = this.props
+    const { selectProps, selectedBranchCode, onChangeAction, disabled } = this.props
     return (
-      <select ref={e => this.select = e} {...selectProps} defaultValue={selectedBranchCode}
-              onChange={onChangeAction ? this.handleSelectChange : undefined}>
+      <select ref={e => this.select = e} {...selectProps}
+              defaultValue={selectedBranchCode}
+              onChange={onChangeAction ? this.handleSelectChange : undefined}
+              disabled={disabled}>
         {this.renderOptions()}
       </select>
     )
@@ -44,7 +46,8 @@ Libraries.propTypes = {
   selectProps: PropTypes.object,
   selectedBranchCode: PropTypes.string,
   reserveId: PropTypes.string,
-  onChangeAction: PropTypes.func
+  onChangeAction: PropTypes.func,
+  disabled: PropTypes.bool
 }
 
 export default Libraries

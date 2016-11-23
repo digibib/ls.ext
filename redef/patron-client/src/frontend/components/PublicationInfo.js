@@ -63,7 +63,8 @@ class PublicationInfo extends React.Component {
                 <td data-automation-id="item_shelfmark">{item.shelfmark} {this.renderLocation(item.location)}</td>
                 <td data-automation-id="item_status">{this.renderAvailability(item)}</td>
               </tr>
-            ) }) }
+            )
+          })}
           </tbody>
         </NonIETransitionGroup>
       )
@@ -80,7 +81,8 @@ class PublicationInfo extends React.Component {
     } else {
       return (
         <span>
-          {item.available} <FormattedMessage {...messages.of} /> {item.total} <FormattedMessage {...messages.available} />
+          {item.available} <FormattedMessage {...messages.of} /> {item.total}
+          <FormattedMessage {...messages.available} />
         </span>
       )
     }

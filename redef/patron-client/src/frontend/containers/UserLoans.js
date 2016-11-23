@@ -165,12 +165,15 @@ class UserLoans extends React.Component {
   renderLibrarySelect (item) {
     return (
       <div style={{ minWidth: '10em' }}>
-        {this.props.isRequestingChangePickupLocation
+        {this.props.isRequestingChangePickupLocation === item.reserveId
           ? <Loading />
           : (
           <div className="select-container">
-            <Libraries libraries={this.props.libraries} selectedBranchCode={item.branchCode}
-                       onChangeAction={this.props.reservationActions.changePickupLocation} reserveId={item.reserveId} />
+            <Libraries libraries={this.props.libraries}
+                       selectedBranchCode={item.branchCode}
+                       disabled={this.props.isRequestingChangePickupLocation !== false}
+                       onChangeAction={this.props.reservationActions.changePickupLocation}
+                       reserveId={item.reserveId} />
           </div>
         )}
       </div>)
@@ -253,15 +256,9 @@ class UserLoans extends React.Component {
   }
 
   renderExpectedEstimationPrefix (estimate) {
-    if (estimate.includes('–')) {
-      return (
-        <FormattedMessage {...messages.approx} />
-      )
-    } else {
-      return (
-        <FormattedMessage {...messages.moreThan} />
-      )
-    }
+    return estimate.includes('–')
+      ? <FormattedMessage {...messages.approx} />
+      : <FormattedMessage {...messages.moreThan} />
   }
 
   renderTabs () {
@@ -303,7 +300,7 @@ UserLoans.propTypes = {
   libraries: PropTypes.object.isRequired,
   loanActions: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
-  isRequestingChangePickupLocation: PropTypes.bool.isRequired,
+  isRequestingChangePickupLocation: PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]).isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired

@@ -36,7 +36,7 @@ class Publication extends React.Component {
     const { publication, startReservation } = this.props
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
-    const publicationYearLanguageSeparator = function () {
+    const publicationYearLanguageSeparator = () => {
       if (publication.publicationYear && publication.languages.length > 0) {
         return ', '
       }
@@ -68,7 +68,7 @@ class Publication extends React.Component {
               <span data-automation-id="publication_record_id">{publication.recordId}</span>
             </div>
           </div>
-          {(publication.items.length > 0 && publication.items.filter(item => { return item.reservable }).length > 0) ? (
+          {(publication.items.length > 0 && publication.items.filter(item => item.reservable).length > 0) ? (
             <div className="reserve-button">
               <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
                 <button className="red-btn" type="button"
