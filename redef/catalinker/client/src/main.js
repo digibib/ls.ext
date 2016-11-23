@@ -2177,13 +2177,11 @@
 
             let keypath = this.getNodeInfo(node).resolve() + '.current.value'
             var observer = ractive.observe(keypath, function (newvalue, oldValue) {
-              if (!setting) {
-                setting = true
-                window.setTimeout(function () {
-                  $(node).val(newvalue).trigger('change')
-                  setting = false
-                }, 0)
-              }
+              setting = true
+              window.setTimeout(function () {
+                $(node).val(newvalue).trigger('change')
+                setting = false
+              }, 0)
             })
 
             return {
