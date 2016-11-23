@@ -118,7 +118,7 @@ module RandomMigrate
       # There should be two media types, book and music recording, also one publication without a media type
       # The books have a language combination to test the special language sorting rules (Norwegian, English, Danish, Swedish, the rest in alphabetical order)
       specialized_migrate(branchcode)
-
+      puts "Random migrate id: #{@id}"
       @id
     end
 
