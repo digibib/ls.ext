@@ -218,7 +218,7 @@ module.exports = (app) => {
       returnVal = 12
     }
 
-    return returnVal
+    return String(returnVal)
   }
 
   function getEligibleItems (items) {
@@ -231,7 +231,7 @@ module.exports = (app) => {
       const from = Date.parse(items[ 0 ].datelastborrowed)
       const to = Date.parse(items[ 0 ].onloan)
       const estimate = Math.ceil((to - from) / secondsInAWeek)
-      return isNaN(estimate) ? 'unknown' : String(estimate)
+      return isNaN(estimate) ? 'unknown' : estimate
     } else {
       return 'unknown'
     }
