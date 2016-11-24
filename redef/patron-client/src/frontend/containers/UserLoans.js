@@ -143,7 +143,7 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.pickupLocation} />
                   </div>
                   <div className="meta-content" data-automation-id="UserLoans_reservation_library">
-                    {this.renderLibrarySelect(item)}
+                    {this.props.libraries[ item.branchCode ]}
                   </div>
                 </div>
                 <div className="meta-item">

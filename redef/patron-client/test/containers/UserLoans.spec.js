@@ -154,8 +154,10 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
-        const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
-        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        // TODO: Uncomment these and remove last line when change of pickup location is fixed
+        // const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
+        // expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })
 
@@ -171,8 +173,10 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
-        const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
-        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        // TODO: Uncomment these and remove last line when change of pickup location is fixed
+        // const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
+        // expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_library']").textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
       })
     })
 
