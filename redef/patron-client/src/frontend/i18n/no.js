@@ -269,6 +269,7 @@ export default {
   'UserLoans.title': 'Tittel',
   'UserLoans.waitingPeriod': 'Ventetid',
   'UserLoans.unknown': '(Uviss ventetid)',
+  'UserLoans.enRoute': 'På vei',
   'UserSettings.alerts': 'Varslinger',
   'UserSettings.byEmail': 'På epost',
   'UserSettings.bySms': 'På SMS',
