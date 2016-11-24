@@ -76,12 +76,14 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
-                <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
                 <td>
-                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
-                  <span>&nbsp;</span>
-                  <span
-                    data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
+                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
+                    ? item.queuePlace
+                    : <FormattedMessage {...messages.enRoute} />}</span>
+                  {/* <span>&nbsp;</span>
+                   <span
+                   data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span> */}
                 </td>
                 <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
@@ -132,10 +134,13 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.placeInQueue} />
                   </div>
                   <div className="meta-content">
-                    <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
-                    <span>&nbsp;</span>
                     <span
-                      data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
+                      data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
+                      ? item.queuePlace
+                      : <FormattedMessage {...messages.enRoute} />}</span>
+                    {/* <span>&nbsp;</span>
+                     <span
+                     data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span> */}
                   </div>
                 </div>
                 <div className="meta-item">
@@ -143,7 +148,7 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.pickupLocation} />
                   </div>
                   <div className="meta-content" data-automation-id="UserLoans_reservation_library">
-                    {this.renderLibrarySelect(item)}
+                    {this.props.libraries[ item.branchCode ]}
                   </div>
                 </div>
                 <div className="meta-item">
@@ -165,12 +170,15 @@ class UserLoans extends React.Component {
   renderLibrarySelect (item) {
     return (
       <div style={{ minWidth: '10em' }}>
-        {this.props.isRequestingChangePickupLocation
+        {this.props.isRequestingChangePickupLocation === item.reserveId
           ? <Loading />
           : (
           <div className="select-container">
-            <Libraries libraries={this.props.libraries} selectedBranchCode={item.branchCode}
-                       onChangeAction={this.props.reservationActions.changePickupLocation} reserveId={item.reserveId} />
+            <Libraries libraries={this.props.libraries}
+                       selectedBranchCode={item.branchCode}
+                       disabled={this.props.isRequestingChangePickupLocation !== false}
+                       onChangeAction={this.props.reservationActions.changePickupLocation}
+                       reserveId={item.reserveId} />
           </div>
         )}
       </div>)
@@ -253,15 +261,9 @@ class UserLoans extends React.Component {
   }
 
   renderExpectedEstimationPrefix (estimate) {
-    if (estimate.includes('–')) {
-      return (
-        <FormattedMessage {...messages.approx} />
-      )
-    } else {
-      return (
-        <FormattedMessage {...messages.moreThan} />
-      )
-    }
+    return estimate.includes('–')
+      ? <FormattedMessage {...messages.approx} />
+      : <FormattedMessage {...messages.moreThan} />
   }
 
   renderTabs () {
@@ -303,7 +305,7 @@ UserLoans.propTypes = {
   libraries: PropTypes.object.isRequired,
   loanActions: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
-  isRequestingChangePickupLocation: PropTypes.bool.isRequired,
+  isRequestingChangePickupLocation: PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]).isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired
@@ -414,6 +416,11 @@ export const messages = defineMessages({
     id: 'UserLoans.unknown',
     description: 'Text displayed when unable to estimate waiting period',
     defaultMessage: '(Unknown waiting period)'
+  },
+  enRoute: {
+    id: 'UserLoans.enRoute',
+    description: 'Text displayed when item is en route',
+    defaultMessage: 'En route'
   }
 })
 

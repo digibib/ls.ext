@@ -29,6 +29,9 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:isbn")
     private String isbn;
 
+    @SerializedName("deichman:hasEan")
+    private String ean;
+
     @SerializedName("deichman:binding")
     private ExternalDataObject binding;
 
@@ -91,6 +94,10 @@ public class Publication extends BibliographicObjectExternal {
 
     final void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public void setEan(String ean) {
+        this.ean = ean;
     }
 
     final void setBinding(ExternalDataObject binding) {

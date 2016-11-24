@@ -88,7 +88,7 @@ class RegistrationFormPartOne extends React.Component {
       <form onSubmit={this.props.handleSubmit(this.props.registrationActions.checkForExistingUser)}>
         <h1><FormattedMessage {...messages.registerAsLoaner} /></h1>
         {/* IE11-hack begin: Make the first fieldset with firstName and lastName display with correct width */}
-        { isIe() ? <fieldset style={{ visibility: 'hidden' }}><input /></fieldset> : null }
+        {isIe() ? <fieldset style={{ visibility: 'hidden' }}><input /></fieldset> : null}
         {/* IE11-hack end */}
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.nameLabel} /></legend>

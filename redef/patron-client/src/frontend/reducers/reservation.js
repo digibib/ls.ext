@@ -45,7 +45,7 @@ export default function reservation (state = initialState, action) {
     case CANCEL_RESERVATION_FAILURE:
       return { ...state, isRequestingCancelReservation: false, cancelReservationError: action.payload.error }
     case REQUEST_CHANGE_PICKUP_LOCATION:
-      return { ...state, isRequestingChangePickupLocation: true, changePickupLocationError: false }
+      return { ...state, isRequestingChangePickupLocation: action.payload.reserveId, changePickupLocationError: false }
     case CHANGE_PICKUP_LOCATION_SUCCESS:
       return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: false }
     case CHANGE_PICKUP_LOCATION_FAILURE:

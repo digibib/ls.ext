@@ -218,7 +218,7 @@ module.exports = (app) => {
       returnVal = 12
     }
 
-    return returnVal
+    return String(returnVal)
   }
 
   function getEligibleItems (items) {

@@ -9,7 +9,7 @@ import static com.google.common.collect.ImmutableMap.of;
 /**
  * Responsibility: map serials.
  */
-public class Serial extends Named {
+public class Serial extends Titled {
     @SerializedName("deichman:publishedBy")
     private Map<String, String> publishedBy;
     @SerializedName("deichman:ordinal")
@@ -20,8 +20,8 @@ public class Serial extends Named {
         setType("deichman:Serial");
     }
 
-    public Serial(String name, String id) {
-        super(name, id);
+    public Serial(String mainTitle, String id) {
+        super(mainTitle, id);
     }
 
     public final void setPublisher(ExternalDataObject publisher) {

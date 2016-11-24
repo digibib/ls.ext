@@ -63,23 +63,33 @@ module.exports = (app) => {
         itemResponses.forEach(itemResponse => {
           const items = {}
           itemResponse.items.forEach(item => {
+            if (item.status === 'Utilgjengelig') {
+              // Theese items should not count, or be processed further,
+              // as they are not available to end users.
+              return
+            }
             const newItem = {
               shelfmark: item.itemcallnumber,
               status: item.status,
+              reservable: item.reservable === 1,
               branchcode: item.homebranch,
               barcode: item.barcode,
-              location: item.location
+              location: item.location,
+              notforloan: item.status === 'Ikke til hjemlån'
             }
-            const key = `${newItem.branchcode}_${newItem.shelfmark}_${item.location}`
+            const key = `${newItem.branchcode}_${newItem.shelfmark}_${newItem.location}_${newItem.notforloan}`
             if (!items[ key ]) {
               newItem.available = 0
               newItem.total = 0
               items[ key ] = newItem
             }
-            if (newItem.status === 'Ledig') {
+            if (newItem.status === 'Ledig' || newItem.notforloan) {
               items[ key ].available++
             }
             items[ key ].total++
+            if (newItem.reservable) {
+              items[ key ].reservable = true
+            }
           })
           itemsByRecordId[ itemResponse.biblio.biblionumber ] = items
         })

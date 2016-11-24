@@ -20,13 +20,25 @@ import Subtitles from './work/fields/publication/Subtitles'
 
 class PublicationInfo extends React.Component {
   renderLocation (location) {
-    if (location !== '') {
+    if (location && location !== '') {
       return <span className="item-location">{location}</span>
     }
   }
 
   renderItems (items) {
     if (items) {
+      items.sort((a, b) => {
+        // Sort items by branch, shelfmark, and "Ikke til hjemlån"-status
+        const keya = `${this.props.intl.formatMessage({ id: a.branchcode })}${a.shelfmark}${a.notforloan}`
+        const keyb = `${this.props.intl.formatMessage({ id: b.branchcode })}${b.shelfmark}${b.notforloan}`
+        if (keya > keyb) {
+          return 1
+        }
+        if (keya < keyb) {
+          return -1
+        }
+        return 0
+      })
       return (
         <NonIETransitionGroup
           transitionName="fade-in"
@@ -44,25 +56,36 @@ class PublicationInfo extends React.Component {
           </tr>
           </thead>
           <tbody data-automation-id="work_items">
-          {items.map(item => (
-            <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
-              <td data-automation-id="item_location">{this.props.intl.formatMessage({ id: item.branchcode })}</td>
-              <td data-automation-id="item_shelfmark">{item.shelfmark} {this.renderLocation(item.location)}</td>
-              <td data-automation-id="item_status">{this.renderAvailability(item.available, item.total)}</td>
-            </tr>
-          ))}
+          {items.map(item => {
+            return (
+              <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
+                <td data-automation-id="item_location">{this.props.intl.formatMessage({ id: item.branchcode })}</td>
+                <td data-automation-id="item_shelfmark">{item.shelfmark} {this.renderLocation(item.location)}</td>
+                <td data-automation-id="item_status">{this.renderAvailability(item)}</td>
+              </tr>
+            )
+          })}
           </tbody>
         </NonIETransitionGroup>
       )
     }
   }
 
-  renderAvailability (available, total) {
-    return (
-      <span>
-        {available} <FormattedMessage {...messages.of} /> {total} <FormattedMessage {...messages.available} />
-      </span>
-    )
+  renderAvailability (item) {
+    if (item.notforloan) {
+      return (
+        <span>
+          {item.total} <FormattedMessage {...messages.available} /> - <FormattedMessage {...messages.onlyInhouse} />
+        </span>
+      )
+    } else {
+      return (
+        <span>
+          {item.available} <FormattedMessage {...messages.of} /> {item.total}
+          <FormattedMessage {...messages.available} />
+        </span>
+      )
+    }
   }
 
   render () {
@@ -156,6 +179,11 @@ export const messages = defineMessages({
     id: 'PublicationInfo.branch',
     description: 'Table header for publication items table',
     defaultMessage: 'Branch'
+  },
+  onlyInhouse: {
+    id: 'PublicationInfo.onlyInhouse',
+    description: 'Label stating that item can only be used in the library',
+    defaultMessage: 'Only for use in the library'
   }
 })
 
