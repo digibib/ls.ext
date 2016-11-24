@@ -2860,7 +2860,7 @@
                     }
                   })
                 }
-                ractive.set(origin + '.searchResult.hidden', true)
+                ractive.set(`${origin}.searchResult.hidden`, true)
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
                 let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
                 if (suggestedValuesGraphNode) {
@@ -2872,7 +2872,7 @@
                     overrideMainEntry: true
                   }, suggestedValuesGraphNode, event.context.rdfType)
                 }
-                var searchTerm = ractive.get(origin + '.searchResult.searchTerm')
+                let searchTerm = ractive.get(`${origin}.searchResult.searchTerm`)
                 if (searchTerm) {
                   _.each(event.context.inputs, function (input) {
                     if (input.preFillFromSearchField) {
@@ -2883,14 +2883,14 @@
                 }
               },
               createNewResource: function (event, origin) {
-                var maintenance = origin.indexOf('maintenanceInputs') !== -1
-                var displayValueInput = _.find(event.context.inputs, function (input) {
+                let maintenance = origin.indexOf('maintenanceInputs') !== -1
+                let displayValueInput = _.find(event.context.inputs, function (input) {
                   return input.displayValueSource === true
                 })
                 let searchOriginInput = ractive.get(grandParentOf(event.keypath))
                 let useAfterCreation = searchOriginInput.useAfterCreation
 
-                var setCreatedResourceUriInSearchInput = function (resourceUri) {
+                let setCreatedResourceUriInSearchInput = function (resourceUri) {
                   if (!maintenance) {
                     ractive.set(origin + '.current.value', resourceUri)
                     if (displayValueInput) {
@@ -2908,33 +2908,35 @@
                   ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
                   return resourceUri
                 }
-                var patchMotherResource = function (resourceUri) {
-                  var targetInput = ractive.get(grandParentOf(origin))
+                let patchMotherResource = function (resourceUri) {
+                  let targetInput = ractive.get(grandParentOf(origin))
                   if (!useAfterCreation && !targetInput.isSubInput) {
                     Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                   }
                   return resourceUri
                 }
-                var setCreatedResourceValuesInInputs = function (resourceUri) {
-                  if (useAfterCreation) {
-                    ractive.set('targetUri.' + event.context.rdfType, resourceUri)
-                    var groupInputs = ractive.get('inputGroups')
-                    _.each(event.context.inputs, function (input) {
-                      _.each(groupInputs, function (group) {
-                        _.each(group.inputs, function (groupInput) {
-                          if (groupInput.predicate === input.predicate && groupInput.rdfType === input.rdfType) {
-                            groupInput.values = deepClone(input.values)
-                          }
-                        })
+                function setCreatedResourceValuesInMainInputs () {
+                  let groupInputs = ractive.get('inputGroups')
+                  _.each(event.context.inputs, function (input) {
+                    _.each(groupInputs, function (group) {
+                      _.each(group.inputs, function (groupInput) {
+                        if (groupInput.predicate === input.predicate && groupInput.rdfType === input.rdfType) {
+                          ractive.set(`${groupInput.keypath}.values`, deepClone(input.values))
+                        }
                       })
                     })
+                  })
+                }
+                let setTargetUri = function (resourceUri) {
+                  if (useAfterCreation) {
+                    ractive.set('targetUri.' + event.context.rdfType, resourceUri)
                     updateInputsForDependentResources(event.context.rdfType, resourceUri)
                     ractive.update()
                     updateBrowserLocationWithUri(event.context.rdfType, resourceUri)
                   }
                   return resourceUri
                 }
-                var clearInputsAndSearchResult = function () {
+                let clearInputsAndSearchResult = function () {
                   if (ractive.get(origin + '.searchResult')) {
                     ractive.set(origin + '.searchResult', null)
                   }
@@ -2944,15 +2946,18 @@
                   ractive.set(event.keypath + '.showInputs', false)
                   ractive.set(grandParentOf(origin) + '.allowAddNewButton', true)
                 }
-                var nop = function (uri) {
+                let nop = function (uri) {
                   return uri
                 }
                 let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                 let wait = ractive.get('waitHandler').newWaitable(originTarget)
-                saveInputs(_.union(event.context.inputs, ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : []), event.context.rdfType)
+                if (!maintenance) {
+                  setCreatedResourceValuesInMainInputs()
+                }
+                saveInputs(ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
                   .then(setCreatedResourceUriInSearchInput)
                   .then(!maintenance ? patchMotherResource : nop)
-                  .then(!maintenance ? setCreatedResourceValuesInInputs : nop)
+                  .then(!maintenance ? setTargetUri : nop)
                   .then(clearInputsAndSearchResult)
                   .then(wait.cancel)
               },
