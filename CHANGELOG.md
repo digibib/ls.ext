@@ -13,7 +13,7 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
-## 0.6.1 (2016-11-24) bugfixes/extras/reverts
+## 0.6.2 (2016-11-24) bugfixes/extras/reverts
 
 KOHA:   2ad15d86c314e0ef882fb9cf1eb9515f98dacf2a
 
