@@ -12,6 +12,9 @@ literaryForm:shortStory a duo:LiteraryForm ;
   duo:code "n" ;
   rdfs:label "Novelle/fortelling"@no ;
   rdfs:label "Short story"@en .
+literaryForm:essay a duo:LiteraryForm ;
+  rdfs:label "Essay"@no ;
+  rdfs:label "Essay"@en .
 literaryForm:poetry a duo:LiteraryForm ;
   duo:code "d" ;
   rdfs:label "Dikt"@no ;
