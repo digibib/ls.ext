@@ -2295,7 +2295,7 @@
           var formatter = function (node, formatter) {
             if (formatter === 'isbn') {
               $(node).on('input', function () {
-                let value = $(this).val()
+                let value = $(this).val().trim()
                 let parsedIsbn = ISBN.parse(value)
                 if (parsedIsbn) {
                   if (parsedIsbn.isIsbn10()) {
@@ -2954,7 +2954,7 @@
                 if (!maintenance) {
                   setCreatedResourceValuesInMainInputs()
                 }
-                saveInputs(ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
+                saveInputs((!maintenance && ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`)) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
                   .then(setCreatedResourceUriInSearchInput)
                   .then(!maintenance ? patchMotherResource : nop)
                   .then(!maintenance ? setTargetUri : nop)
