@@ -13,10 +13,21 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
-## 0.6.1 (2016-11-22) extra feature
+## 0.6.1 (2016-11-24) bugfixes/extras/reverts
 
+KOHA:   2ad15d86c314e0ef882fb9cf1eb9515f98dacf2a
+
+- patron-client:
+  - DEICH-173: Make search less strict
+  - temporarily disable due to instability:
+    - DEICH-445: mypage: add expected date
+    - DEICH-467: Add select to change pickup location
 - catalinker:
   - DEICH-460_erstatte_ui_blocker_med_spinnere
+  - DEICH-482 fix prefilling of predefined values
+  - DEICH-484: fix unwanted storing of suggested data
+- services:
+  - DEICH-475: map 025$a as EAN of publication
 
 ## 0.6.0 (2016-11-22)
 
