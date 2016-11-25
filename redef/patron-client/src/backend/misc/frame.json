@@ -360,7 +360,7 @@
   },
   "type": "Work",
   "subjects": {
-      "@embed": "@always",
+      "@embed": "@always"
    },
   "publications": {
     "type": "deichman:Publication",
