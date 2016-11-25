@@ -122,7 +122,6 @@ module.exports = (app) => {
         }),
       getExpectedAvailableDateByBiblio(hold.biblionumber)
     ]).then(([json, items]) => {
-      const pickupNumber = hold.waitingdate ? `${hold.waitingdate.split('-')[ 2 ]}/${hold.reserve_id}` : 'unknown'
       const waitingPeriod = hold.found === 'T' ? '1-2 dager' : 'cirka 2-4 uker'
       const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ] : 'unknown'
       const expectedDate = estimateExpectedWait(hold.priority, items)
@@ -139,7 +138,7 @@ module.exports = (app) => {
         waitingDate: hold.waitingdate,
         expiry: expiry,
         waitingPeriod: waitingPeriod,
-        pickupNumber: pickupNumber,
+        pickupNumber: hold.pickupnumber,
         queuePlace: hold.priority
 
       }
