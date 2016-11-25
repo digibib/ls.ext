@@ -197,9 +197,9 @@ module.exports = (app) => {
             {
               label: 'Hovedtittel',
               rdfProperty: 'mainTitle',
-              type: 'input-string',
-              // input type must be defined explicitly, otherwise it will inherit from the search field above
-              preFillFromSearchField: true // value of this field should be copied from the search field above
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
             },
             {
               label: 'Undertittel',
@@ -234,9 +234,9 @@ module.exports = (app) => {
             {
               label: 'Hovedtittel',
               rdfProperty: 'mainTitle',
-              type: 'input-string',
-              // input type must be defined explicitly, otherwise it will inherit from the search field above
-              preFillFromSearchField: true // value of this field should be copied from the search field above
+              type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
             },
             {
               label: 'Undertittel',
