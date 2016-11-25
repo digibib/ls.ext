@@ -49,8 +49,8 @@ class SIP2Client < Service
     @socket = TCPSocket.open(host.to_s, port.to_i)
   end
 
-  def connect
-    send("9300CNautouser|COautopass|")
+  def connect(user="autouser",pass="autopass")
+    send("9300CN#{user}|CO#{pass}|")
   end
 
   def status
