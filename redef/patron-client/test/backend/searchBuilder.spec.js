@@ -22,7 +22,7 @@ describe('searchBuilder', () => {
                     simple_query_string: {
                       query: queryWant,
                       default_operator: 'and',
-                      fields: ['mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series']
+                      fields: ['mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt']
                     }
                   }
                 ],
