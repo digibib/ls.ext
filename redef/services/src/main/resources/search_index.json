@@ -199,6 +199,21 @@
             "inst, instrument => musikkinstrument"
           ]
         },
+        "mediatype_synonym_filter": {
+          "type": "synonym",
+          "synonyms": [
+            "book => bok",
+            "e-book => e-bok",
+            "audiobook => lydbok",
+            "comic book => tegneserie",
+            "language course => språkkurs",
+            "music record => musikkopptak",
+            "sheet music => noter",
+            "game => spill",
+            "other => andre",
+            "periodical, magazine => periodika"
+          ]
+        },
         "norwegian_folding": {
           "type": "icu_folding",
           "unicodeSetFilter": "[^æøåÆØÅ]"
@@ -210,6 +225,14 @@
           "filter": [
             "norwegian_folding",
             "lowercase"
+          ]
+        },
+        "mediatype_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "mediatype_synonym_filter"
           ]
         },
         "format_analyzer": {
