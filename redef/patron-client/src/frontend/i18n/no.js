@@ -219,7 +219,7 @@ export default {
   'SearchResultsText.searching': 'Søker...',
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',
   'SearchResultsText.totalHitsMobile': '<span data-automation-id="hits-total">{totalHits}</span> treff',
-  'SerialIssues.labelSerialIssues': 'SerialIssues.labelSerialIssues',
+  'SerialIssues.labelSerialIssues': 'Serie',
   'Subjects.subjects': 'Emner:',
   'Subtitles.labelSubtitles': 'Undertekster',
   'TargetAudience.labelTargetAudience': 'Målgruppe',
