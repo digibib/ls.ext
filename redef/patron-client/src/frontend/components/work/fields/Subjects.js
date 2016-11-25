@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 
 class Subjects extends React.Component {
   renderLabel (subject) {
-    let label = subject.prefLabel
+    let label = subject.prefLabel || subject.name || subject.mainTitle
     if (subject.specification) {
       label += ` (${subject.specification})`
     }
@@ -17,7 +17,7 @@ class Subjects extends React.Component {
 
   render () {
     if (this.props.subjects.length > 0) {
-      const subjects = this.props.subjects.filter(subject => subject.prefLabel).map(subject => this.renderLabel(subject))
+      const subjects = this.props.subjects.map(subject => this.renderLabel(subject))
       return (
         <aside className="work-subjects">
           <h2><FormattedMessage {...messages.subjects} /></h2>
