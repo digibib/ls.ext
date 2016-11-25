@@ -1162,7 +1162,7 @@ module.exports = (app) => {
               label: 'Verk som inngår i samling',
               multiple: true,
               reportFormat: {
-                topLevel: true
+                topLevel: true // this input is promoted to act on behalf of its group in the report
               },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'hasPublicationPart', // the rdf property of the resource

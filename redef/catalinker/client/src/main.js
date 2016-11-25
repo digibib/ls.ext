@@ -1859,16 +1859,15 @@
       }
     }
 
+    let closePreview = function () {
+      $('#iframecontainer').hide()
+      $('#block').fadeOut()
+    }
+
     function showOverlay (uri) {
-      let closePreview = function () {
-        $('#iframecontainer').hide()
-        $('#block').fadeOut()
-      }
-      $('#block').click(closePreview)
-      $('#block').fadeIn()
+      $('#block').click(closePreview).fadeIn()
       $('#close-preview-button').click(closePreview)
-      $('#iframecontainer').fadeIn()
-      $('#iframecontainer iframe').attr('src', uri).load(function () {
+      $('#iframecontainer').fadeIn().find('iframe').attr('src', uri).load(function () {
         $('#loader').fadeOut(function () {
           $('iframe').fadeIn()
         })
@@ -2915,6 +2914,7 @@
                   }
                   return resourceUri
                 }
+
                 function setCreatedResourceValuesInMainInputs () {
                   let groupInputs = ractive.get('inputGroups')
                   _.each(event.context.inputs, function (input) {
@@ -2927,6 +2927,7 @@
                     })
                   })
                 }
+
                 let setTargetUri = function (resourceUri) {
                   if (useAfterCreation) {
                     ractive.set('targetUri.' + event.context.rdfType, resourceUri)
@@ -3730,6 +3731,11 @@
           .then(setDisplayMode)
           .then(function (applicationData) {
             setTaskDescription(options.task)
+            $(document).keyup(function (e) {
+              if (e.keyCode === 27) {
+                closePreview()
+              }
+            })
             return applicationData
           })
           .then(hideGrowler)
