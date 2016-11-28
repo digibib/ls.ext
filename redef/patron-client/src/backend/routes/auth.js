@@ -44,8 +44,12 @@ module.exports = (app) => {
         }
       })
       .then(json => {
-        request.session.borrowerName = `${json.firstname} ${json.surname}`
-        response.send({ isLoggedIn: true, borrowerNumber: request.session.borrowerNumber })
+        const borrowerName = request.session.borrowerName = `${json.firstname ? json.firstname : ''}${json.firstname && json.surname ? ' ' : ''}${json.surname ? json.surname : ''}`
+        response.send({
+          isLoggedIn: true,
+          borrowerNumber: request.session.borrowerNumber,
+          borrowerName: borrowerName
+        })
       })
       .catch(error => {
         console.log(error.message)
@@ -60,7 +64,8 @@ module.exports = (app) => {
   app.get('/api/v1/loginStatus', (request, response) => {
     response.send({
       isLoggedIn: request.session.borrowerNumber !== undefined,
-      borrowerNumber: request.session.borrowerNumber
+      borrowerNumber: request.session.borrowerNumber,
+      borrowerName: request.session.borrowerName
     })
   })
 

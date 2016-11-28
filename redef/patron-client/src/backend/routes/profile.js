@@ -62,7 +62,6 @@ module.exports = (app) => {
         const holds = holdsAndPickups.filter(item => item.status !== 'W')
         const pickups = holdsAndPickups.filter(item => item.status === 'W')
         response.send({
-          name: `${request.session.borrowerName}`,
           loans: checkouts,
           reservations: holds,
           pickups: pickups
@@ -341,8 +340,8 @@ module.exports = (app) => {
       email: patron.email || '',
       birthdate: patron.dateofbirth || '',
       loanerCardIssued: patron.dateenrolled || '',
-      loanerCategory: patron.categorycode || '',
-      lastUpdated: '2016-02-01'
+      /* lastUpdated: '2016-02-01', TODO does not exist in koha yet */
+      loanerCategory: patron.categorycode || ''
     }
   }
 }

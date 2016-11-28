@@ -462,3 +462,9 @@ When(/^skal jeg se et skjema med personopplysninger$/) do
     @browser.element(data_automation_id: 'change-user-details').present?
   }
 end
+
+When(/^skal jeg se at jeg er logget inn$/) do
+  wait_for {
+    @browser.element(data_automation_id: 'borrowerName').text.should eq @active[:patron].surname
+  }
+end
