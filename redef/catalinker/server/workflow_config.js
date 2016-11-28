@@ -651,7 +651,6 @@ module.exports = (app) => {
               addAnotherLabel: 'Legg til et sidetall'
             },
             {
-              includeOnlyWhen: { hasMediaType: [ 'Other', 'Audiobook', 'Film', 'MusicRecording', 'LanguageCourse', 'Game' ] },
               rdfProperty: 'hasExtent',
               multiple: true,
               addAnotherLabel: 'Legg til et omfang'
