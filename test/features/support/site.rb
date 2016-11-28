@@ -33,7 +33,9 @@ class Site
         'fjerde' => 4,
         'femte' => 5,
         'navn' => 'name',
-        'verksnavnet' => 'verksnavn_name'
+        'verksnavnet' => 'verksnavn_name',
+        'nasjonalitet' => 'nationality',
+        'opprinnelsesland' => 'nationality'
     }[concept.downcase] || concept
   end
 

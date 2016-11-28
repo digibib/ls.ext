@@ -399,12 +399,13 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
-    Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
-    Så krysser jeg av i avkrysningboksen for "Ikke eget verk"
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
+    Og jeg venter litt
+    Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
-    Så verifiserer jeg innskrevet verdi for "Mangler hovedansvarlig"
-    Så verifiserer jeg innskrevet verdi for "Ikke eget verk"
+    Så verifiserer jeg innskrevet verdi for "Verket har ikke hovedansvarlig", som i gammelt grensesnitt heter "Mangler hovedansvarlig"
+    Så verifiserer jeg innskrevet verdi for "Skal ikke vises som verk", som i gammelt grensesnitt heter "Ikke eget verk"
 
   Scenario: katalogisere verk med relasjon til annet verk
     Gitt jeg kan dikte opp en verkstittel
@@ -413,7 +414,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
-    Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg venter litt
@@ -430,4 +431,21 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så frisker jeg opp nettleseren
     Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Verk" stemmer med verksnavnet
+
+  Scenario: katalogisere verk med nasjonalitet
+    Gitt jeg kan dikte opp en verkstittel
+    Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Og jeg venter litt
+    Og jeg velger verdien "Norge" for "Opprinnelsesland", som i gammelt grensesnitt heter "Nasjonalitet"
+    Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
+    Så verifiserer jeg valgt verdi for "Nasjonalitet"
 

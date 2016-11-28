@@ -413,8 +413,7 @@ body {
             }
             input[type="checkbox"] + .save-placeholder {
               top: 11px;
-              float: right;
-              right: -90px;
+              padding-left: 52%;
             }
             input:not([type=checkbox]) + .save-placeholder {
               top: 17px;
@@ -440,7 +439,7 @@ body {
 
             input[type=checkbox] {
               width: auto;
-              margin-top: -4px;
+              margin-top: -7px;
             }
             .explanation {
               margin-left: 0.5em;

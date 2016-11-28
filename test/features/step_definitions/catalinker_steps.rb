@@ -760,8 +760,13 @@ def verify_by_label(label, prop_get_method)
   batch_verify_props @site.RegWork, resource_type, data, :locate_by_label
 end
 
-When(/^verifiserer jeg innskrevet verdi for "([^"]*)"$/) do |fragment|
-  verify_fragment(fragment, :get_prop_by_label)
+When(/^verifiserer jeg innskrevet verdi for "([^"]*)"$/) do |label|
+  verify_fragment(label, :get_prop_by_label)
+end
+
+When(/^verifiserer jeg innskrevet verdi for "([^"]*)", som i gammelt grensesnitt heter "([^"]*)"$/) do |label, old_label|
+  @context[old_label] = @context[label]
+  verify_fragment(old_label, :get_prop_by_label)
 end
 
 When(/^verifiserer jeg valgt verdi for "([^"]*)"$/) do |label|

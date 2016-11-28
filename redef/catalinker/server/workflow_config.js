@@ -483,7 +483,7 @@ module.exports = (app) => {
             }
             ,
             {
-              label: "Verket har ikke hovedansvarlig",
+              label: 'Verket har ikke hovedansvarlig',
               id: 'missingMainEntry',
               rdfProperty: 'missingMainEntry',
             },
@@ -874,6 +874,10 @@ module.exports = (app) => {
             { rdfProperty: 'partTitle' },
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'publicationYear' },
+            {
+              rdfProperty: 'nationality',
+              label: 'Opprinnelsesland'
+            },
             { rdfProperty: 'language', multiple: true },
             {
               rdfProperty: 'hasWorkType',
