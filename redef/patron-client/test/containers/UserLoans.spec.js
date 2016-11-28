@@ -10,6 +10,7 @@ import rootReducer from '../../src/frontend/reducers'
 import { Provider } from 'react-redux'
 import * as LibraryActions from '../../src/frontend/actions/LibraryActions'
 import * as ProfileActions from '../../src/frontend/actions/ProfileActions'
+import * as LoginActions from '../../src/frontend/actions/LoginActions'
 import { formatDate } from '../../src/frontend/utils/dateFormatter'
 
 function setup (propOverrides) {
@@ -26,6 +27,7 @@ function setup (propOverrides) {
     'branchCode_3': 'library_3'
   }
   store.dispatch(LibraryActions.receiveLibraries(libraries))
+  store.dispatch(LoginActions.loginSuccess('test_username', 'test_borrowernumber', 'test_borrowerName'))
   const loansAndReservations = {
     pickups: [
       {

@@ -84,6 +84,7 @@ export default {
   'Navigation.logIn': 'Logg inn',
   'Navigation.logout': 'Logg ut',
   'Navigation.register': 'Registrer deg',
+  'Navigation.loggedInAs': 'Logget inn som:',
   'NumberOfPages.numberOfPages': 'Sidetall',
   'OriginalLanguage.labelOriginalLanguage': 'Originalspråk',
   'OriginalTitle.labelOriginalTitle': 'Originaltittel',

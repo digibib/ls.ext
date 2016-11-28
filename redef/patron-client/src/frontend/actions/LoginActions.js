@@ -4,25 +4,15 @@ import * as types from '../constants/ActionTypes'
 import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
+import { action } from './GenericActions'
 
-export function requestLogin (username) {
-  return {
-    type: types.REQUEST_LOGIN,
-    payload: {
-      username: username
-    }
-  }
-}
+export const requestLogin = (username) => action(types.REQUEST_LOGIN, { username })
 
-export function loginSuccess (username, borrowerNumber) {
-  return {
-    type: types.LOGIN_SUCCESS,
-    payload: {
-      username: username,
-      borrowerNumber: borrowerNumber
-    }
-  }
-}
+export const loginSuccess = (username, borrowerNumber, borrowerName) => action(types.LOGIN_SUCCESS, {
+  username,
+  borrowerNumber,
+  borrowerName
+})
 
 export function loginFailure (username, error) {
   console.log(error)
@@ -69,33 +59,18 @@ export function login (username, password, successActions = []) {
         }
       })
       .then(json => {
-        dispatch(loginSuccess(username, json.borrowerNumber))
+        dispatch(loginSuccess(username, json.borrowerNumber, json.borrowerName))
         successActions.forEach(successAction => dispatch(successAction))
       })
       .catch(error => dispatch(loginFailure(username, error)))
   }
 }
 
-export function requestLogout () {
-  return {
-    type: types.REQUEST_LOGOUT
-  }
-}
+export const requestLogout = () => action(types.REQUEST_LOGOUT)
 
-export function logoutSuccess () {
-  return {
-    type: types.LOGOUT_SUCCESS
-  }
-}
+export const logoutSuccess = () => action(types.LOGOUT_SUCCESS)
 
-export function logoutFailure (error) {
-  console.log(error)
-  return {
-    type: types.LOGOUT_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const logoutFailure = (error) => action(types.LOGOUT_FAILURE, error)
 
 export function logout () {
   const url = '/api/v1/logout'
@@ -115,30 +90,15 @@ export function logout () {
   }
 }
 
-export function requestLoginStatus () {
-  return {
-    type: types.REQUEST_LOGIN_STATUS
-  }
-}
+export const requestLoginStatus = () => action(types.REQUEST_LOGIN_STATUS)
 
-export function receiveLoginStatus (isLoggedIn, borrowerNumber) {
-  return {
-    type: types.RECEIVE_LOGIN_STATUS,
-    payload: {
-      isLoggedIn: isLoggedIn,
-      borrowerNumber: borrowerNumber
-    }
-  }
-}
+export const receiveLoginStatus = (isLoggedIn, borrowerNumber, borrowerName) => action(types.RECEIVE_LOGIN_STATUS, {
+  isLoggedIn,
+  borrowerNumber,
+  borrowerName
+})
 
-export function loginStatusFailure (error) {
-  console.log(error)
-  return {
-    type: types.LOGIN_STATUS_FAILURE,
-    payload: error,
-    error: true
-  }
-}
+export const loginStatusFailure = (error) => action(types.LOGIN_STATUS_FAILURE, error)
 
 export function updateLoginStatus () {
   const url = '/api/v1/loginStatus'
@@ -152,7 +112,7 @@ export function updateLoginStatus () {
       },
       credentials: 'same-origin'
     }).then(response => response.json())
-      .then(json => dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber)))
+      .then(json => dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName)))
       .catch(error => dispatch(loginStatusFailure(error)))
   }
 }
@@ -174,7 +134,7 @@ export function updateLoginStatusBeforeAction (successAction) {
       credentials: 'same-origin'
     }).then(response => response.json())
       .then(json => {
-        dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber))
+        dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName))
         dispatch(successAction)
       })
       .catch(error => dispatch(loginStatusFailure(error)))

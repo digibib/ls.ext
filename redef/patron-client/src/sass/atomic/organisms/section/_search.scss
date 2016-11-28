@@ -68,6 +68,12 @@
 
 @include breakpoint($small) {
 
+  .logged-in-message {
+    @include wrapper-container;
+    padding-bottom: 0;
+    padding-left: rhythm(2);
+  }
+
   .search-box-wrapper {
     @include wrapper-container;
     padding-bottom: 0;

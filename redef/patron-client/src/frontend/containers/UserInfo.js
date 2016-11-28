@@ -7,7 +7,6 @@ import * as ParameterActions from '../actions/ParameterActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
 import UserInfoForm from './forms/UserInfoForm'
-import { formatDate } from '../utils/dateFormatter'
 import Constants from '../constants/Constants'
 
 class UserInfo extends React.Component {
@@ -114,12 +113,12 @@ class UserInfo extends React.Component {
           <FormattedMessage {...messages.saveChanges} /></button>
           : <button className="black-btn" type="button" onClick={this.handleChangeClick} data-automation-id="change_profile_info_button">
           <FormattedMessage {...messages.editPersonalInfo} /></button>}
-        <div className="last-updated">
+        {/* <div className="last-updated">
           <FormattedMessage {...messages.lastUpdated} />:&nbsp;
           <span data-automation-id="UserInfo_lastUpdated" className="green-text">
               {formatDate(this.props.personalInformation.lastUpdated)}
             </span>
-        </div>
+        </div> */}
       </footer>
     )
   }
@@ -131,7 +130,7 @@ class UserInfo extends React.Component {
       return <FormattedMessage {...messages.personalInformationError} />
     }
     const editable = this.props.location.query.edit === Constants.enabledParameter
-    const { personalInformation } = this.props
+    const { personalInformation, borrowerName } = this.props
 
     return (
       <NonIETransitionGroup
@@ -143,7 +142,7 @@ class UserInfo extends React.Component {
         component="section"
         className="user-info">
         <header>
-          <h1 data-automation-id="UserInfo_name">{personalInformation.name}</h1>
+          <h1 data-automation-id="UserInfo_name">{borrowerName}</h1>
           <div className="card-number"><FormattedMessage {...messages.cardNumber} />: <span
             data-automation-id="UserInfo_cardNumber">{personalInformation.cardNumber}</span></div>
         </header>
@@ -162,6 +161,7 @@ UserInfo.propTypes = {
   parameterActions: PropTypes.object.isRequired,
   isRequestingPersonalInformation: PropTypes.bool.isRequired,
   loginActions: PropTypes.object.isRequired,
+  borrowerName: PropTypes.string.isRequired,
   personalInformationError: PropTypes.object,
   intl: intlShape.isRequired
 }
@@ -264,7 +264,8 @@ function mapStateToProps (state) {
     personalInformationError: state.profile.personalInformationError,
     isRequestingPersonalInformation: state.profile.isRequestingPersonalInformation,
     personalInformation: state.profile.personalInformation,
-    initialValues: state.profile.personalInformation
+    initialValues: state.profile.personalInformation,
+    borrowerName: state.profile.borrowerName
   }
 }
 

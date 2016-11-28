@@ -15,10 +15,12 @@ import {
   CHANGE_PASSWORD_FAILURE,
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
-  CHANGE_PICKUP_LOCATION_SUCCESS
+  CHANGE_PICKUP_LOCATION_SUCCESS,
+  RECEIVE_LOGIN_STATUS
 } from '../constants/ActionTypes'
 
 const initialState = {
+  borrowerName: null,
   isRequestingLoansAndReservations: false,
   loansAndReservationsError: null,
   loansAndReservations: {
@@ -92,7 +94,7 @@ export default function profile (state = initialState, action) {
         changePasswordSuccess: false
       }
     case LOGIN_SUCCESS:
-      return initialState
+      return { ...initialState, borrowerName: action.payload.borrowerName }
     case LOGOUT_SUCCESS:
       return initialState
     case CHANGE_PICKUP_LOCATION_SUCCESS:
@@ -108,6 +110,8 @@ export default function profile (state = initialState, action) {
           })
         }
       }
+    case RECEIVE_LOGIN_STATUS:
+      return { ...state, borrowerName: action.payload.borrowerName }
     default:
       return state
   }

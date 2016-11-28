@@ -14,8 +14,9 @@ Egenskap: Min Side
     Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
     Når jeg logger inn
-    Og jeg trykker på personopplysninger
-    Når jeg trykker på endre personopplysninger
+    Så skal jeg se at jeg er logget inn
+    Når jeg trykker på personopplysninger
+    Og jeg trykker på endre personopplysninger
     Så skal jeg se et skjema med personopplysninger
     Og jeg sjekker om epost og mobil/telefon valideres riktig
     Og jeg sjekker om postnummer valideres riktig

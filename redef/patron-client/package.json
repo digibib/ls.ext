@@ -39,7 +39,8 @@
     "verify": "npm run lint && npm test",
     "es5": "rimraf es5-compiled && cross-env BABEL_ENV=test babel test --watch --out-dir es5-compiled/test --source-maps inline & cross-env BABEL_ENV=test babel src --watch --out-dir es5-compiled/src --source-maps inline",
     "dev": "KOHA_API_USER=api KOHA_API_PASS=secret PORT=8001 npm start",
-    "devnode": "KOHA_API_USER=api KOHA_API_PASS=secret PORT=8001 node --debug src/backend/server.js"
+    "devnode": "KOHA_API_USER=api KOHA_API_PASS=secret PORT=8001 node --debug src/backend/server.js",
+    "killcompass": "ps aux | grep compass | awk '{print $2}' | xargs kill -9"
   },
   "devDependencies": {
     "babel-eslint": "7.0.0",

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
+import { Provider } from 'react-redux'
 
 import App from '../containers/App'
 import Search from '../containers/Search'
@@ -22,6 +23,7 @@ export default (store) => {
 
   const history = syncHistoryWithStore(browserHistory, store)
   return (
+    <Provider store={store}>
       <Router history={history}>
         <Route path="/" component={App}>
           <IndexRoute component={Search} />
@@ -37,5 +39,6 @@ export default (store) => {
           </Route>
         </Route>
       </Router>
+    </Provider>
   )
 }

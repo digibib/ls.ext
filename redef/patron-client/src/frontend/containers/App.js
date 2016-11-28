@@ -48,6 +48,7 @@ class App extends React.Component {
                       startRegistration={this.props.registrationActions.startRegistration}
                       showMobileNavigation={this.props.showMobileNavigation}
                       mobileNavigationActions={this.props.mobileNavigationActions}
+                      borrowerName={this.props.borrowerName}
         />
         {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
@@ -69,7 +70,8 @@ App.propTypes = {
   registrationActions: PropTypes.object.isRequired,
   mobileNavigationActions: PropTypes.object.isRequired,
   showMobileNavigation: PropTypes.bool.isRequired,
-  windowActions: PropTypes.object.isRequired
+  windowActions: PropTypes.object.isRequired,
+  borrowerName: PropTypes.string
 
 }
 
@@ -78,7 +80,8 @@ function mapStateToProps (state) {
     routing: state.routing,
     locale: state.application.locale,
     isLoggedIn: state.application.isLoggedIn,
-    showMobileNavigation: state.mobileNavigation.visible
+    showMobileNavigation: state.mobileNavigation.visible,
+    borrowerName: state.profile.borrowerName
   }
 }
 
