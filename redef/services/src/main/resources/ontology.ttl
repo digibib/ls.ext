@@ -347,7 +347,7 @@ duo:Biography a rdfs:Class ;
 :nationality a rdfs:Property ;
   rdfs:label "Nationality"@en ;
   rdfs:label "Nasjonalitet"@no ;
-  rdfs:domain :Person, :Corporation ;
+  rdfs:domain :Person, :Corporation, :Work ;
   rdfs:range duo:Nationality ;
   duo:valuesFrom values:nationality .
 
