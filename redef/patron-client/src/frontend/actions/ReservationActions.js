@@ -12,7 +12,7 @@ export function changePickupLocation (reserveId, branchCode) {
   return dispatch => {
     dispatch(requestChangePickupLocation(reserveId, branchCode))
     return fetch(url, {
-      method: 'PUT',
+      method: 'PATCH',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
