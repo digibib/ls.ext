@@ -66,7 +66,9 @@ module.exports = (app) => {
       })))
       .then(itemResponses => {
         const itemsByRecordId = {}
+        const holdsByRecordId = {}
         itemResponses.filter(itemResponse => itemResponse).forEach(itemResponse => {
+          holdsByRecordId[ itemResponse.biblio.biblionumber ] = itemResponse.biblio
           const items = {}
           itemResponse.items.forEach(item => {
             if (item.status === 'Utilgjengelig') {
@@ -99,11 +101,16 @@ module.exports = (app) => {
           })
           itemsByRecordId[ itemResponse.biblio.biblionumber ] = items
         })
-        const itemsyo = {}
+        const publications = {}
         Object.keys(itemsByRecordId).forEach(key => {
-          itemsyo[ key ] = Object.keys(itemsByRecordId[ key ]).map(key2 => itemsByRecordId[ key ][ key2 ])
+          publications[ key ] = {
+            items: Object.keys(itemsByRecordId[ key ]).map(key2 => itemsByRecordId[ key ][ key2 ])
+          }
         })
-        response.status(200).send(itemsyo)
+        Object.keys(holdsByRecordId).forEach(recordId => {
+          publications[ recordId ].numHolds = holdsByRecordId[ recordId ].numholds
+        })
+        response.status(200).send(publications)
       }).catch(error => {
         console.log(error)
         response.sendStatus(500)

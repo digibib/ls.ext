@@ -94,6 +94,7 @@ export default {
   'Publication.available': 'Ledig',
   'Publication.coverImageOf': 'Omslagsbilde av: {title}',
   'Publication.hideInfo': 'Lukk info om utgivelsen',
+  'Publication.inQueue': 'på venteliste',
   'Publication.order': 'Bestill',
   'Publication.showInfo': 'Mer info om utgivelsen',
   'Publication.showStatus': 'Vis status',
