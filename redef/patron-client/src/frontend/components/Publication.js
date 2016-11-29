@@ -76,6 +76,9 @@ class Publication extends React.Component {
                   <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
                 </button>
               </ClickableElement>
+          {(publication.numHolds > 0) ? (
+            <span className="numholds strong"><strong>({publication.numHolds} <FormattedMessage {...messages.inQueue} />)</strong></span>
+          ) : null}
             </div>
           ) : null}
         </div>
@@ -145,6 +148,11 @@ export const messages = defineMessages({
     id: 'Publication.hideInfo',
     description: 'Clickable item to collapse info about a publication',
     defaultMessage: 'Hide info about this publication'
+  },
+  inQueue: {
+    id: 'Publication.inQueue',
+    description: 'Label describing the number of holds on publication',
+    defaultMessage: 'in the queue'
   }
 })
 
