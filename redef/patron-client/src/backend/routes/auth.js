@@ -33,7 +33,7 @@ module.exports = (app) => {
           })
         }
       })
-      .then(({ borrowerNumber, res }) => {
+      .then(res => {
         if (res.status === 201) {
           request.session.borrowerNumber = borrowerNumber
           request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
