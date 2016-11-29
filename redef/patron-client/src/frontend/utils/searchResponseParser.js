@@ -85,7 +85,7 @@ export function processSearchResponse (response, locationQuery) {
       }
 
       if (selected.subtitle) {
-        result.titleLine1 = `${selected.mainTitle}: ${selected.subtitle}`
+        result.titleLine1 = `${selected.mainTitle} : ${selected.subtitle}`
       } else {
         result.titleLine1 = selected.mainTitle
       }

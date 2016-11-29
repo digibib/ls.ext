@@ -7,7 +7,7 @@ const MainAndSubTitle = ({ mainTitle, subtitle }) => (
       {mainTitle || <FormattedMessage {...messages.noMainTitle} />}
     </span>
     <span data-automation-id="work_subtitle">
-      {subtitle ? `: ${subtitle}` : null}
+      {subtitle ? ` : ${subtitle}` : null}
     </span>
   </h1>
 )
