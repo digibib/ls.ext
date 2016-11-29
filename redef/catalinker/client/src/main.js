@@ -1184,6 +1184,8 @@
         case 'deichman:CompositionType':
         case 'deichman:ClassificationSource':
         case 'deichman:ClassificationEntry':
+        case 'deichman:WorkSeries' :
+        case 'deichman:WorkSeriesPart':
         case 'http://www.w3.org/2001/XMLSchema#anyURI':
           rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
           inputType = 'input-string'

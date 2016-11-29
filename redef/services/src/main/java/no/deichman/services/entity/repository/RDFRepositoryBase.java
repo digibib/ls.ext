@@ -384,6 +384,12 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         }
     }
 
+    @Override
+    public final String createWorkSeries(Model inputModel) throws Exception {
+        String type = "WorkSeries";
+        return createResource(inputModel, type);
+    }
+
     private void disableCompression(QueryExecution qexec) {
         if (qexec instanceof QueryEngineHTTP) {
             ((QueryEngineHTTP) qexec).setAllowGZip(false);

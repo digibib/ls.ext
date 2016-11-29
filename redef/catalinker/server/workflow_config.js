@@ -259,6 +259,25 @@ module.exports = (app) => {
           ]
         },
         {
+          id: 'create-workseries-form',
+          labelForCreateButton: 'Opprett ny verksserie',
+          rdfType: 'WorkSeries',
+          inputs: [
+            {
+              label: 'Hovedtittel',
+              rdfProperty: 'mainTitle',
+              type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
+            },
+            {
+              label: 'Underserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'subtitle'
+            }
+          ]
+        },
+        {
           id: 'create-place-form',
           labelForCreateButton: 'Opprett nytt sted',
           rdfType: 'Place',
@@ -957,6 +976,46 @@ module.exports = (app) => {
               subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
             },
             {
+              label: 'Verksserie',
+              multiple: true,
+              addAnotherLabel: 'Knytt til en verksserie til',
+              reportFormat: {
+                list: true
+              },
+              subInputs: {
+                rdfProperty: 'isPartOfWorkSeries',
+                range: 'WorkSeriesPart',
+                inputs: [
+                  {
+                    label: 'Serie',
+                    rdfProperty: 'workSeries',
+                    id: 'partOfWorkSeriesInput',
+                    required: true,
+                    indexTypes: [ 'workseries' ],
+                    type: 'searchable-with-result-in-side-panel',
+                    nameProperties: [ 'mainTitle', 'subtitle', 'partNumber' ],
+                    widgetOptions: {
+                      enableCreateNewResource: {
+                        formRefs: [
+                          {
+                            formId: 'create-workseries-form',
+                            targetType: 'workseries'
+                          }
+                        ],
+                        useAfterCreation: false
+                      }
+                    }
+                  },
+                  {
+                    label: 'Del',
+                    rdfProperty: 'partNumber',
+                    id: 'workSeriesPartNumberInput'
+                  }
+                ]
+              },
+              subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+            },
+            {
               rdfProperty: 'hasSummary',
               type: 'input-string-large'
             },
@@ -1223,7 +1282,7 @@ module.exports = (app) => {
                     }
                   },
                   {
-                    label: 'Del nummer',
+                    label: 'Del',
                     rdfProperty: 'partNumber'
                   },
                   // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
@@ -1331,7 +1390,8 @@ module.exports = (app) => {
             maintenanceInputs('Steder', 'place'),
             maintenanceInputs('Hendelser', 'event'),
             maintenanceInputs('Sjangre', 'genre'),
-            maintenanceInputs('Serier', 'serial'),
+            maintenanceInputs('Forlagserier', 'serial'),
+            maintenanceInputs('Verksserier', 'workseries'),
             maintenanceInputs('Musikkinstrumenter', 'instrument'),
             maintenanceInputs('Komposisjonstyper', 'compositiontype'),
             {
@@ -1462,6 +1522,12 @@ module.exports = (app) => {
           selectIndexLabel: 'Komposisjonstype',
           sortedListQueryForField: 'prefLabel',
           resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
+        },
+        workseries: {
+          type: 'workSeries',
+          selectIndexLabel: 'Verksserie',
+          sortedListQueryForField: 'workSeriesMainTitle',
+          resultItemLabelProperties: [ 'workSeriesMainTitle', 'subtitle' ]
         }
       },
       typeMap: {
@@ -1478,9 +1544,11 @@ module.exports = (app) => {
         corporation: 'Corporation',
         instrument: 'Instrument',
         compositionType: 'CompositionType',
+        workSeries: 'WorkSeries',
       },
       resourceTypeAliases: {
-        'compositiontype': 'compositionType'
+        'compositiontype': 'compositionType',
+        'workseries': 'workSeries'
       },
       prefillValuesFromExternalSources: [
         { resourceType: 'Work', demandTopBanana: true },

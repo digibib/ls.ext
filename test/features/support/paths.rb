@@ -95,6 +95,7 @@ module Paths
         :workflow => "/cataloguing?template=workflow&hasMediaType=Book&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true",
         :place => "/place",
         :serial => "/serial",
+        :work_series=> "/workSeries",
         :corporation => "/corporation",
         :subject => "/subject",
         :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true"

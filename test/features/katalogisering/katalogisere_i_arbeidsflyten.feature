@@ -449,3 +449,25 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så verifiserer jeg valgt verdi for "Nasjonalitet"
 
+  Scenario: katalogisere verk som er del av en verksserie
+    Gitt at jeg har en bok
+    Og at det finnes et verk med forfatter
+    Og jeg vil lage en ny verksserie
+    Så leverer systemet en ny ID for den nye verksserien
+    Og jeg kan legge inn verksseriens navn
+    Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
+    Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
+    Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Så skriver jeg inn "12" som verkets nummer i serien
+    Så jeg venter litt
+    Og at jeg skriver inn verksserie i feltet "Serie" og trykker enter
+    Så velger jeg en serie fra treffliste fra serieregisteret
+    Så jeg venter litt
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+

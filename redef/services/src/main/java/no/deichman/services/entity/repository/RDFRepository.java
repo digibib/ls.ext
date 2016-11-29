@@ -79,4 +79,6 @@ public interface RDFRepository {
     Map getNumberOfRelationsForResource(XURI uri);
 
     Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection);
+
+    String createWorkSeries(Model inputModel) throws Exception;
 }

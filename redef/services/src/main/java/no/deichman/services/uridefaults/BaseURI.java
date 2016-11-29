@@ -73,4 +73,8 @@ public final class BaseURI {
     public static String event() {
         return BASE_URI_ROOT + "event/";
     }
+
+    public static String workSeries() {
+        return BASE_URI_ROOT + "workSeries/";
+    }
 }

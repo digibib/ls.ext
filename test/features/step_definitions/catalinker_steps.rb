@@ -552,6 +552,10 @@ When(/^jeg vil lage en ny serie/) do
   @site.RegSerial.visit
 end
 
+When(/^jeg vil lage en ny verksserie/) do
+  @site.RegWorkSeries.visit
+end
+
 When(/^jeg vil lage et nytt emne/) do
   @site.RegSubject.visit
 end
@@ -573,6 +577,11 @@ end
 When(/^leverer systemet en ny ID for den nye serien/) do
   @context[:serial_identifier] = @site.RegSerial.get_id()
   @context[:serial_identifier].should_not be_empty
+end
+
+When(/^leverer systemet en ny ID for den nye verksserien/) do
+  @context[:work_series_identifier] = @site.RegWorkSeries.get_id()
+  @context[:work_series_identifier].should_not be_empty
 end
 
 When(/^leverer systemet en ny ID for det nye emnet/) do
