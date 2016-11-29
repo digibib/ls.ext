@@ -1463,6 +1463,9 @@
             if (input.oneLiner) {
               ontologyInput.oneLiner = input.oneLiner
             }
+            if (input.label) {
+              ontologyInput.label = input.label
+            }
             if (input.showOnlyWhenInputHasValue) {
               ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }

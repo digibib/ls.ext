@@ -177,6 +177,12 @@ When(/^jeg velger verdien "([^"]*)" for "([^"]*)"$/) do |value, selectable_param
   @context[selectable_parameter_label] = value
 end
 
+When(/^jeg velger verdien "([^"]*)" for "([^"]*)", som i gammelt grensesnitt heter "([^"]*)"$/) do |value, selectable_parameter_label, old_label|
+  do_select_value(selectable_parameter_label, value)
+  @context[selectable_parameter_label] = value
+  @context[old_label] = @context[selectable_parameter_label]
+end
+
 When(/^jeg velger verdiene "([^"]*)" og "([^"]*)" for "([^"]*)"$/) do |value_1, value_2, selectable_parameter_label|
   do_select_value(selectable_parameter_label, value_1)
   do_select_value(selectable_parameter_label, value_2)
@@ -666,4 +672,9 @@ When(/^jeg legger inn samme ISBN\-nummer i ISBN\-feltet til utgivelsen$/) do
   isbn_text_field = @browser.text_field(:data_automation_id => 'Publication_http://data.deichman.no/ontology#isbn_0')
   isbn_text_field.set @context['isbn']
   isbn_text_field.send_keys :tab
+end
+
+When(/^velger jeg "([^"]*)" som nasjonalitet på verket$/) do |nationality|
+  @browser.span(:data_automation_id => "Work_http://data.deichman.no/ontology#nationality_0").text_field().set(nationality)
+  @browser.ul(:class => "select2-results__options").lis().first.click
 end
