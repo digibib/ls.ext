@@ -34,7 +34,6 @@ services:
       SMTP_SERVER_HOST: mailrelay # access through network 'backend'
       SMTP_SERVER_PORT: 2525
       MESSAGE_QUEUE_FREQUENCY: 1
-      SMS_SERVER_HOST: "${SMS_SERVER_HOST}"
       SMS_SENDER: "${SMS_SENDER}"
       SMS_DRIVER: "${SMS_DRIVER}"
       SMS_USER: "${SMS_USER}"
@@ -145,16 +144,18 @@ services:
 
   sms:
     container_name: smsproxy
-    image: "digibib/tcp-proxy:14dc5417bf211317351a0bae084db12c64a1dd45"
+    image: "digibib/proximity:3ce6b65df303302420d2fb85bd6b625744bfb907"
     networks:
       - backend
     ports:
-      - "8101:9999" # Can be removed, as we use docker networking for access
+      - "8101:9999"
+    environment:
+      FORWARD_SMS: https://tcpsink:9999
     command:
-      - "/app/tcp-proxy"
-      - "-vv"
+      - "/proximity"
+      - "-no-verify"
       - "-r"
-      - "${SMS_FORWARD_URL}"
+      - '${FORWARD_SMS}'
     logging:
       driver: "json-file"
       options:
