@@ -22,18 +22,20 @@ module.exports = (app) => {
         if (json.length !== 1) {
           return Promise.reject({ message: 'User not unique', status: 403 })
         } else {
-          borrowerNumber = json[ 0 ].borrowernumber
-          return fetch('http://xkoha:8081/api/v1/auth/session', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-              'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-            },
-            body: `userid=${encodeURIComponent(json[ 0 ].userid)}&password=${encodeURIComponent(request.body.password)}`
-          })
+          return {
+            borrowerNumber: json[ 0 ].borrowernumber,
+            res: fetch('http://xkoha:8081/api/v1/auth/session', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+              },
+              body: JSON.stringify({ userid: json[ 0 ].userid, password: request.body.password })
+            })
+          }
         }
       })
-      .then(res => {
+      .then(({ borrowerNumber, res }) => {
         if (res.status === 201) {
           request.session.borrowerNumber = borrowerNumber
           request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
