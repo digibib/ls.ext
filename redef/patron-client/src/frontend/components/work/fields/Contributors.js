@@ -12,7 +12,7 @@ const Contributors = ({ contributors, intl }) => {
             <span className="content" key={person.relativeUri + role}>
                 <Link
                   data-automation-id="work_contributor_link"
-                  to={person.relativeUri}>{person.name}
+                  to={`/search?query=agents%3A"${person.name}"`}>{person.name}
                 </Link>
               </span>
           )}

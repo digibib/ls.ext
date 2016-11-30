@@ -104,9 +104,9 @@ describe('components', () => {
         }
       })
       expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.name)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
+      // expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
       expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 1 ].agent.name)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 1 ].agent.relativeUri)
+      // expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 1 ].agent.relativeUri)
     })
 
     it('should render formats', () => {
