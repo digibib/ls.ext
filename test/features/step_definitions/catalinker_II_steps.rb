@@ -47,7 +47,7 @@ When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne
   end
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted|verksserie) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verksserie)registeret$/) do |art, type_1, type_2|
   sleep 1
   wait_for {
     @browser.div(:class => 'exact-match').present?
@@ -481,6 +481,7 @@ end
 When(/^åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter$/) do
   sleep 4
   @site.WorkFlow.visit_landing_page_auth_maintenance
+  sleep 1
 end
 
 

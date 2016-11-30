@@ -237,6 +237,12 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så trykker jeg på "Neste steg: Beskriv verk"-knappen
+    Så skriver jeg inn "12" som verkets nummer i serien
+    Og at jeg skriver inn tilfeldig verksserie i feltet "Serie" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny verksserie"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
@@ -357,6 +363,18 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige sted i feltet "Steder" og trykker enter
     Så velger jeg en sted fra treffliste fra stedsregisteret
+
+  Scenario: Redigere verksserie i katalogisering
+    Gitt at jeg vil opprette en verksserie
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig verksserie i feltet "Verksserier" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny verksserie"-knappen
+    Så skriver jeg inn samme tilfeldige verksserie i feltet "Underserie" og trykker enter
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige verksserie i feltet "Verksserier" og trykker enter
+    Så velger jeg en verksserie fra treffliste fra verksserieregisteret
 
   Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
     Gitt at det finnes et verk med forfatter

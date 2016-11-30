@@ -977,8 +977,6 @@ module.exports = (app) => {
             },
             {
               label: 'Verksserie',
-              multiple: true,
-              addAnotherLabel: 'Knytt til en verksserie til',
               reportFormat: {
                 list: true
               },
