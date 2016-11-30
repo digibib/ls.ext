@@ -29,6 +29,7 @@ Egenskap: Finn verk
     Når jeg søker på verket i lånergrensesnittet basert på det første og siste leddet i tittelen
     Så vil jeg finne verket i trefflista
 
+  @ignore
   Scenario: Finn andre verk av samme forfatter
     Når jeg vil finne verket i trefflista
     Og jeg klikker på det første verket
