@@ -142,7 +142,10 @@ class UserLoans extends React.Component {
                   <div className="meta-content">
                     <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
                     <span>&nbsp;</span>
-                    <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
+                    <span
+                      data-automation-id="UserLoans_reservation_waitingPeriod">
+                      ({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)
+                    </span>
                   </div>
                 </div>
                 <div className="meta-item">
@@ -286,11 +289,11 @@ class UserLoans extends React.Component {
     }
   }
 
-    renderExpectedEstimationPrefix (estimate) {
-        return estimate.includes('–')
-            ? <FormattedMessage {...messages.approx} />
-    : <FormattedMessage {...messages.moreThan} />
-    }
+  renderExpectedEstimationPrefix (estimate) {
+    return estimate.includes('–')
+      ? <FormattedMessage {...messages.approx} />
+      : <FormattedMessage {...messages.moreThan} />
+  }
 
   renderTabs () {
     const tabList = [
