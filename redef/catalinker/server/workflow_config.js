@@ -914,7 +914,8 @@ module.exports = (app) => {
             { rdfProperty: 'publicationYear' },
             {
               rdfProperty: 'nationality',
-              label: 'Opprinnelsesland'
+              label: 'Opprinnelsesland',
+              multiple: 'true'
             },
             { rdfProperty: 'language', multiple: true },
             {
