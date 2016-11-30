@@ -84,6 +84,7 @@ public class EntityServiceImplTest {
     private String placeURI;
     private String corporationURI;
     private String serialURI;
+    private String workSeriesURI;
     private String subjectURI;
     private String genreURI;
     private String instrumentURI;
@@ -122,6 +123,7 @@ public class EntityServiceImplTest {
         placeURI = BaseURI.place();
         corporationURI = BaseURI.corporation();
         serialURI = BaseURI.serial();
+        workSeriesURI = BaseURI.workSeries();
         subjectURI = BaseURI.subject();
         genreURI = BaseURI.genre();
         instrumentURI = BaseURI.instrument();
@@ -546,6 +548,10 @@ public class EntityServiceImplTest {
             case "serial":
                 resourceClass = "Serial";
                 resourceURI = serialURI;
+                break;
+            case "workseries":
+                resourceClass = "WorkSeries";
+                resourceURI = workSeriesURI;
                 break;
             case "subject":
                 resourceClass = "Subject";

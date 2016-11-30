@@ -1184,6 +1184,8 @@
         case 'deichman:CompositionType':
         case 'deichman:ClassificationSource':
         case 'deichman:ClassificationEntry':
+        case 'deichman:WorkSeries' :
+        case 'deichman:WorkSeriesPart':
         case 'http://www.w3.org/2001/XMLSchema#anyURI':
           rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
           inputType = 'input-string'
@@ -1346,7 +1348,7 @@
                 _.each(resourceForm.inputs, function (formInput) {
                   var predicate = ontologyUri + formInput.rdfProperty
                   var ontologyInput = inputMap[ resourceForm.rdfType + '.' + predicate ]
-                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
+                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', 'label'))
                   formInput[ 'values' ] = emptyValues(false)
                   formInput[ 'rdfType' ] = resourceForm.rdfType
                   if (targetResourceIsMainEntry) {

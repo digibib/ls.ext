@@ -56,6 +56,7 @@ public final class EmbeddedElasticsearchServer {
         prepareMappingOf("work");
         prepareMappingOf("corporation");
         prepareMappingOf("serial");
+        prepareMappingOf("workSeries");
         prepareMappingOf("subject");
         prepareMappingOf("genre");
         prepareMappingOf("publication");

@@ -48,4 +48,6 @@ public interface SearchService {
     Response sortedList(String type, String prefix, int minSize, String field);
 
     Response searchWorkWhereUriIsSubject(String subjectUri, int maxSize);
+
+    Response searchWorkSeries(String query);
 }

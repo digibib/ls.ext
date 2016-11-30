@@ -237,6 +237,12 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så trykker jeg på "Neste steg: Beskriv verk"-knappen
+    Så skriver jeg inn "12" som verkets nummer i serien
+    Og at jeg skriver inn tilfeldig verksserie i feltet "Serie" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny verksserie"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
@@ -358,6 +364,18 @@ Egenskap: Katalogisere i arbeidsflyt
     Så skriver jeg inn samme tilfeldige sted i feltet "Steder" og trykker enter
     Så velger jeg en sted fra treffliste fra stedsregisteret
 
+  Scenario: Redigere verksserie i katalogisering
+    Gitt at jeg vil opprette en verksserie
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig verksserie i feltet "Verksserier" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny verksserie"-knappen
+    Så skriver jeg inn samme tilfeldige verksserie i feltet "Underserie" og trykker enter
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige verksserie i feltet "Verksserier" og trykker enter
+    Så velger jeg en verksserie fra treffliste fra verksserieregisteret
+
   Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
     Gitt at det finnes et verk med forfatter
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
@@ -448,4 +466,26 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg velger verdien "Norge" for "Opprinnelsesland", som i gammelt grensesnitt heter "Nasjonalitet"
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så verifiserer jeg valgt verdi for "Nasjonalitet"
+
+  Scenario: katalogisere verk som er del av en verksserie
+    Gitt at jeg har en bok
+    Og at det finnes et verk med forfatter
+    Og jeg vil lage en ny verksserie
+    Så leverer systemet en ny ID for den nye verksserien
+    Og jeg kan legge inn verksseriens navn
+    Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
+    Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
+    Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Så skriver jeg inn "12" som verkets nummer i serien
+    Så jeg venter litt
+    Og at jeg skriver inn verksserie i feltet "Serie" og trykker enter
+    Så velger jeg en serie fra treffliste fra serieregisteret
+    Så jeg venter litt
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
 

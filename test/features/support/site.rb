@@ -14,6 +14,7 @@ class Site
         'utgiver' => 'corporation',
         'utgitt av' => 'publishedBy',
         'serie' => 'serial',
+        'verksserie' => 'work_series',
         'emne' => 'subject',
         'hendelse' => 'event',
         'sjanger' => 'genre',

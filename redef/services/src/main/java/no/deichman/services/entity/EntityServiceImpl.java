@@ -344,6 +344,9 @@ public final class EntityServiceImpl implements EntityService {
             case SERIAL:
                 uri = repository.createSerial(inputModel);
                 break;
+            case WORK_SERIES:
+                uri = repository.createWorkSeries(inputModel);
+                break;
             case SUBJECT:
                 uri = repository.createSubject(inputModel);
                 break;

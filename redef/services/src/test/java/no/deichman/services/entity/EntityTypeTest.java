@@ -8,7 +8,7 @@ import org.junit.Test;
  */
 public class EntityTypeTest {
 
-    private static final String[] ENTITIES = new String[]{"work", "publication", "person", "place", "corporation", "serial", "subject", "genre", "instrument", "compositionType", "event"};
+    private static final String[] ENTITIES = new String[]{"work", "publication", "person", "place", "corporation", "serial", "workSeries", "subject", "genre", "instrument", "compositionType", "event"};
 
     @Test
     public void test_all_types_pattern_is_available() {
@@ -22,7 +22,6 @@ public class EntityTypeTest {
         for (String entityType : ENTITIES) {
             Assert.assertNotNull(EntityType.get(entityType));
         }
-
     }
 
 }

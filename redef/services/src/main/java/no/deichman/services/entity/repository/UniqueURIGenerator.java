@@ -36,6 +36,8 @@ class UniqueURIGenerator {
                 break;
             case "Serial": result = BaseURI.serial() + "s" + uniquePart;
                 break;
+            case "WorkSeries": result = BaseURI.workSeries() + "v" + uniquePart;
+                break;
             case "Subject": result = BaseURI.subject() + "e" + uniquePart;
                 break;
             case "Genre": result = BaseURI.genre() + "m" + uniquePart;

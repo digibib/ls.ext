@@ -76,6 +76,8 @@ public class SearchResource extends ResourceBase {
                 return getSearchService().searchCorporation(query);
             case "serial":
                 return getSearchService().searchSerial(query);
+            case "workSeries":
+                return getSearchService().searchWorkSeries(query);
             case "subject":
                 return getSearchService().searchSubject(query);
             case "genre":

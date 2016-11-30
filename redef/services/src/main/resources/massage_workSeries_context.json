@@ -1,0 +1,12 @@
+{
+  "type": "WorkSeries",
+  "@context": {
+    "deichman": "__ONTOLOGY__",
+    "workSeriesMainTitle": "deichman:mainTitle",
+    "subtitle": "deichman:subtitle",
+    "WorkSeries": "deichman:WorkSeries",
+    "type": "@type",
+    "uri": "@id",
+    "graph": "@graph"
+  }
+}
