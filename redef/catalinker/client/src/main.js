@@ -1348,7 +1348,7 @@
                 _.each(resourceForm.inputs, function (formInput) {
                   var predicate = ontologyUri + formInput.rdfProperty
                   var ontologyInput = inputMap[ resourceForm.rdfType + '.' + predicate ]
-                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', 'label'))
+                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', formInput.label ? 'label' : ''))
                   formInput[ 'values' ] = emptyValues(false)
                   formInput[ 'rdfType' ] = resourceForm.rdfType
                   if (targetResourceIsMainEntry) {

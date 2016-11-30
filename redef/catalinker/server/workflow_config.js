@@ -1388,7 +1388,7 @@ module.exports = (app) => {
             maintenanceInputs('Steder', 'place'),
             maintenanceInputs('Hendelser', 'event'),
             maintenanceInputs('Sjangre', 'genre'),
-            maintenanceInputs('Forlagserier', 'serial'),
+            maintenanceInputs('Forlagsserier', 'serial'),
             maintenanceInputs('Verksserier', 'workseries'),
             maintenanceInputs('Musikkinstrumenter', 'instrument'),
             maintenanceInputs('Komposisjonstyper', 'compositiontype'),

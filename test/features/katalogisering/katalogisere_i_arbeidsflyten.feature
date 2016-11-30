@@ -94,7 +94,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
-    Og jeg skriver verdien "1" for "Del nummer"
+    Og jeg skriver verdien "1" for "Del"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
     Og jeg trykker på "Legg til"-knappen
@@ -320,7 +320,7 @@ Egenskap: Katalogisere i arbeidsflyt
   Scenario: Redigere serie i katalogisering
     Gitt at jeg vil opprette en serie
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
-    Og at jeg skriver inn tilfeldig serie i feltet "Serier" og trykker enter
+    Og at jeg skriver inn tilfeldig serie i feltet "Forlagsserier" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny serie"-knappen
     Så trykker jeg på "Opprett"-knappen
@@ -444,7 +444,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg velger verdien "Del av" for "Type relasjon"
     Og jeg venter litt
-    Og jeg skriver verdien "1" for "Del nummer"
+    Og jeg skriver verdien "1" for "Del"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så frisker jeg opp nettleseren
