@@ -36,7 +36,7 @@ services:
       - build_patron_client
       - services
 
-	catalinker:
+  catalinker:
     build:
       context: "${LSEXTPATH:-..}/redef/catalinker"
       dockerfile: Dockerfile

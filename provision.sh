@@ -43,15 +43,10 @@ else
   echo "You also need envsubst (TODO find a cross-platform solution)"
 fi
 
-echo -e "\n4) Making sure secrets.env is present\n"
-if [ ! -f "$LSEXTPATH/docker-compose/secrets.env" ]; then
-  touch "$LSEXTPATH/docker-compose/secrets.env"
-fi
-
-echo -e "\n5) Provisioning system with docker-compose\n"
+echo -e "\n4) Provisioning system with docker-compose\n"
 cd "$LSEXTPATH/docker-compose"
 source docker-compose.env
-source secrets.env
+
 export OVERVIEW_BUILD_DIR="$LSEXTPATH/redef/overview"
 
 if [ "$LSEXTPATH" = "/vagrant" ]; then
@@ -60,19 +55,20 @@ else
   export MOUNTPATH=$LSEXTPATH
 fi
 
+CMD="sudo KOHA_IMAGE_TAG=${KOHA_IMAGE_TAG} GITREF=${GITREF} docker-compose -f common.yml"
+$CMD stop overview && $CMD rm -f overview
+
 case "$LSENV" in
   'build')
-  envsubst < "docker-compose-template-dev-CI.yml" > "docker-compose.yml"
+  $CMD -f dev-common.yml -f ci.yml up -d
   ;;
   'prod')
-  envsubst < "docker-compose-template-prod.yml" > "docker-compose.yml"
+  $CMD -f prod.yml up -d
   ;;
   *)
-  envsubst < "docker-compose-template-dev.yml" > "docker-compose.yml"
+  $CMD -f dev-common.yml -f dev.yml up -d
   ;;
 esac
-sudo docker-compose stop overview && sudo docker-compose rm -f overview
-sudo docker-compose up -d
 
 if [ "$LSENV" == "prod" ]; then
   exit 0
