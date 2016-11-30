@@ -264,16 +264,26 @@ module.exports = (app) => {
           rdfType: 'WorkSeries',
           inputs: [
             {
-              label: 'Hovedtittel',
+              label: 'Serietittel',
               rdfProperty: 'mainTitle',
               type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
               preFillFromSearchField: true, // value of this field should be copied from the search field above
               displayValueSource: true // after creation, send actual value in this field back to where the search started
             },
             {
-              label: 'Underserie',
+              label: 'Undertittel',
               type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
               rdfProperty: 'subtitle'
+            },
+            {
+              label: 'Nummer på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partNumber'
+            },
+            {
+              label: 'Tittel på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partTitle'
             }
           ]
         },
@@ -353,16 +363,26 @@ module.exports = (app) => {
           rdfType: 'Serial',
           inputs: [
             {
-              label: 'Hovedtittel',
+              label: 'Serietittel',
               rdfProperty: 'mainTitle',
-              type: 'input-string',
-              displayValueSource: true,
-              preFillFromSearchField: true
+              type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
             },
             {
               label: 'Undertittel',
-              rdfProperty: 'subtitle',
-              type: 'input-string'
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'subtitle'
+            },
+            {
+              label: 'Nummer på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partNumber'
+            },
+            {
+              label: 'Tittel på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partTitle'
             },
             {
               label: 'Utgiver',

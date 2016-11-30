@@ -325,7 +325,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett ny serie"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
-    Så skriver jeg inn samme tilfeldige serie i feltet "Serier" og trykker enter
+    Så skriver jeg inn samme tilfeldige serie i feltet "Forlagsserier" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
 
   Scenario: Redigere organisasjon i katalogisering
@@ -370,7 +370,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tilfeldig verksserie i feltet "Verksserier" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny verksserie"-knappen
-    Så skriver jeg inn samme tilfeldige verksserie i feltet "Underserie" og trykker enter
+    Så skriver jeg inn samme tilfeldige verksserie i feltet "Undertittel" og trykker enter
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige verksserie i feltet "Verksserier" og trykker enter
