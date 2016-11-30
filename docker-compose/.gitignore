@@ -2,3 +2,4 @@
 docker-compose.yml
 secrets.env
 docker-compose.dot
+.env
