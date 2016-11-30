@@ -1,0 +1,71 @@
+---
+version: '2.1'
+
+services:
+  fuseki:
+    ports:
+      - "3030:3030"
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+
+  mail:
+    ports:
+      - "8100:8000"
+
+  sms:
+    ports:
+      - "8101:9999"
+
+  cuke_tests:
+    container_name: cuke_tests
+    build:
+      context: "${LSEXTPATH:-..}/test"
+    networks:
+      - backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "${LSEXTPATH:-..}/test:/tests"
+    environment:
+      HOST: "${HOST}"
+      KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
+      KOHA_API_USER: "${KOHA_API_USER:-api}"
+      KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
+
+  nlsink: # Fake NL response, for testing
+    container_name: nlsink
+    image: "alpine:3.3"
+    networks:
+      - backend
+    ports:
+      - "9998:9999"
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "mkfifo pipe; while true ; do { read line<pipe;echo -e 'HTTP/1.1 200 OK\nContent-Type: text/xml; charset=utf-8\n\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ns0:Envelope xmlns:ns0=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\"http://lanekortet.no\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ns0:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n<ns0:Body>\n<ns1:hentResponse>\n<return xsi:type=\"ns1:Resultat\">\n<status xsi:type=\"xsd:boolean\">true</status>\n<melding xsi:type=\"xsd:string\">OK</melding>\n<antall_treff xsi:type=\"xsd:int\">0</antall_treff>\n<antall_poster_returnert xsi:type=\"xsd:int\">0</antall_poster_returnert>\n<neste_indeks xsi:type=\"xsd:int\">0</neste_indeks>\n<server_tid xsi:type=\"xsd:string\">2016-07-07T11:29:08</server_tid>\n</return>\n</ns1:hentResponse>\n</ns0:Body>\n</ns0:Envelope>\n' ; } | nc -l -p 9999 > pipe; done"
+
+  tcpsink: # Fake webserver response, for testing
+    container_name: tcpsink
+    image: "alpine:3.3"
+    networks:
+      - backend
+    ports:
+      - "9999:9999"
+    command:
+      - "/bin/sh"
+      - "-c"
+      - "mkfifo pipe; while true ; do { read line<pipe;echo -e 'HTTP/1.1 200 OK\\r\\n' ; } | nc -l -p 9999 > pipe; done"
+
+  migration:
+    container_name: migration
+    build:
+      context: "${LSEXTPATH:-..}/docker-compose/dockerfiles/migration"
+      args:
+        - MYSQL_DATABASE=koha_${KOHA_INSTANCE:-name}
+        - MYSQL_USER=${KOHA_ADMINUSER:-admin}
+        - MYSQL_PASSWORD=${KOHA_ADMINPASS:-secret}
+    networks:
+      - backend

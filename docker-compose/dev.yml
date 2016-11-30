@@ -1,0 +1,49 @@
+---
+version: '2.1'
+
+services:
+
+  koha_mysql:
+    ports:
+      - "3306:3306"
+
+  catalinker:
+    build:
+      context: "${LSEXTPATH:-..}/redef/catalinker"
+      dockerfile: Dockerfile-dev
+    volumes:
+      - "${MOUNTPATH:-..}/redef/catalinker/client:/usr/src/app/client"
+      - "${MOUNTPATH:-..}/redef/catalinker/public:/usr/src/app/public"
+      - "${MOUNTPATH:-..}/redef/catalinker/server:/usr/src/app/server"
+
+  build_services:
+    container_name: build_services
+    build:
+      context: "${LSEXTPATH:-..}/redef/services"
+      dockerfile: Dockerfile.build
+    volumes:
+      - "${LSEXTPATH:-..}/redef/services/build:/services/build"
+
+  services:
+    build:
+      context: "${LSEXTPATH:-..}/redef/services"
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - build_services
+      - fuseki
+      - koha
+    ports:
+      - "8005:8005"
+      - "8006:8006"
+      - "5070:5070"
+
+  patron_client:
+    build:
+      context: "${LSEXTPATH:-..}/redef/patron-client"
+      dockerfile: Dockerfile-dev
+    volumes:
+      - "${MOUNTPATH:-..}/redef/patron-client/src:/usr/src/app/src"
+      - "${MOUNTPATH:-..}/redef/patron-client/test:/usr/src/app/test"
+    ports:
+      - "8000:8000"
+      - "35729:35729"

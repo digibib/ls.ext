@@ -1,0 +1,306 @@
+---
+version: '2.1'
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  koha_index: {}
+  koha_state: {}
+  koha_mysql_data: {}
+  elasticsearch_data: {}
+  fuseki_data: {}
+
+services:
+  koha:
+    container_name: xkoha
+    image: "digibib/koha:${KOHA_IMAGE_TAG}"
+    networks:
+      - backend
+    depends_on:
+      - sms
+      - mail
+      - sip_proxy
+    cap_add:
+      - SYS_NICE
+      - DAC_READ_SEARCH
+      - MKNOD
+    environment:
+      KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
+      KOHA_DBHOST: koha_mysql
+      DEFAULT_LANGUAGE: nb-NO
+      EMAIL_ENABLED: "True"
+      SMTP_SERVER_HOST: mailrelay # access through network 'backend'
+      SMTP_SERVER_PORT: 2525
+      MESSAGE_QUEUE_FREQUENCY: "${MESSAGE_QUEUE_FREQUENCY:-5}"
+      SMS_SENDER: "${SMS_SENDER:-Deichman}"
+      SMS_DRIVER: "${SMS_DRIVER:-NO::LinkMobilityHTTP}"
+      SMS_USER: "${SMS_USER:-smsuser}"
+      SMS_PASS: "${SMS_PASS:-smspass}"
+      API_PASSPHRASE: "${API_PASSPHRASE:-ChangeMe}"
+      NLBASEUSER: "${NLBASEUSER:-nlbaseuser}"
+      NLBASEPASS: "${NLBASEPASS:-nlbasepass}"
+      NLVENDORURL: "${NLVENDORURL:-nlvendorurl}"
+      NLVENDORUSER: "${NLVENDORUSER:-nlvendoruser}"
+      NLVENDORPASS: "${NLVENDORPASS:-nlvendorpass}"
+      NLVENDORKEY: "${NLVENDORKEY:-nlvendorkey}"
+      PIDGEON_URL: "${PIDGEON_URL:-pidgeonurl}"
+      PIDGEON_USER: "${PIDGEON_USER:-pidgeonuser}"
+      PIDGEON_PASS: "${PIDGEON_PASS:-pidgeonpass}"
+      SIP_AUTOPASS: "${SIP_AUTOPASS:-autopass}"
+      SIP_WORKERS: "${SIP_WORKERS:-5}"
+      APACHE_MINSERVERS: "${APACHE_MINSERVERS:-5}"
+      APACHE_TIMEOUT: "${APACHE_TIMEOUT:-300}"
+      APACHE_SERVER_STATUS_NET: "${APACHE_SERVER_STATUS_NET:-127.0.0.1/24}"
+      APACHE_REMOTE_INTERNAL_PROXY: "${APACHE_REMOTE_INTERNAL_PROXY:-172.19.0.0/16}"
+    ports:
+      - "6001:6001"
+      - "8081:8081"
+    volumes:
+      - "koha_index:/var/lib/koha/${KOHA_INSTANCE:-name}"
+      - "koha_state:/var/lib/state"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  koha_mysql:
+    container_name: koha_mysql
+    image: mysql:5.6.20
+    networks:
+      - backend
+    cap_add:
+      - MKNOD
+    command:
+      - mysqld
+      - "--datadir=/var/lib/mysql"
+      - "--user=mysql"
+      - "--max_allowed_packet=64M"
+      - "--wait_timeout=6000"
+      - "--bind-address=0.0.0.0"
+    environment:
+      MYSQL_DATABASE: "koha_${KOHA_INSTANCE:-name}"
+      MYSQL_PASSWORD: "${KOHA_ADMINPASS:-secret}"
+      MYSQL_ROOT_PASSWORD: "${KOHA_ADMINPASS:-secret}"
+      MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "koha_mysql_data:/var/lib/mysql"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  catalinker:
+    container_name: catalinker
+    image: "digibib/redef-catalinker:${GITREF}"
+    networks:
+      - backend
+    depends_on:
+      - services
+      - z3950proxy
+    ports:
+      - "8010:8010"
+    environment:
+      KOHA_OPAC_PORT: "http://xkoha:8080"
+      KOHA_INTRA_PORT: "http://xkoha:8081"
+      SERVICES_PORT: "http://services:8005"
+      GITREF: "${GITREF:-0}"
+      BUILD_TAG: "${BUILD_TAG:-0}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  services:
+    container_name: services
+    image: "digibib/redef-services:${GITREF}"
+    networks:
+      - backend
+    depends_on:
+      - fuseki
+      - koha
+    environment:
+      KOHA_MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_MYSQL_PASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_MYSQL_DB: "koha_${KOHA_INSTANCE:-name}"
+      KOHA_API_USER: "${KOHA_API_USER:-api}"
+      KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
+      KOHA_API_PASS_ENCRYPTED: "${KOHA_API_PASS_ENCRYPTED_ESCAPED:-$$2a$$08$$7WnfE3Fyh5W0C28Xp2SWH.NfgqLEZzw9oZI4qZ3MHf.lQS8yvv6hC}" # For mysql regeneration
+      GITREF: "${GITREF:-0}"
+      BUILD_TAG: "${BUILD_TAG:-0}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  patron_client:
+    container_name: patron_client
+    image: "digibib/redef-patron-client:${GITREF}"
+    networks:
+      - backend
+    depends_on:
+      - services
+    environment:
+      SERVICES_PORT: "http://services:${SERVICES_PORT:-8005}"
+      GITREF: "${GITREF:-0}"
+      BUILD_TAG: "${BUILD_TAG:-0}"
+      KOHA_API_USER: "${KOHA_API_USER:-api}"
+      KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: digibib/elasticsearch:6bf766734e7f82a6f0d4a406ca9a528a67c02801
+    networks:
+      - backend
+    volumes:
+      - "elasticsearch_data:/usr/share/elasticsearch/data"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  fuseki:
+    container_name: fuseki
+    image: "digibib/fuseki2"
+    networks:
+      - backend
+    volumes:
+      - "fuseki_data:/data/databases/ds"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  overview:
+    container_name: overview
+    build:
+      context: "${LSEXTPATH:-..}/redef/overview"
+    networks:
+      - backend
+    ports:
+      - "${OVERVIEW_PORT:-80}:${OVERVIEW_PORT:-80}"
+    environment:
+      HOST: "${HOST:-localhost}"
+      PATRON_CLIENT_PORT: "8000"
+      SERVICES_PORT: "8005"
+      CATALINKER_PORT: "8010"
+      KOHA_OPAC_PORT: "8080"
+      KOHA_INTRA_PORT: "8081"
+      JAMON_PORT: "5070"
+      TRIPLESTORE_PORT: "${TRIPLESTORE_PORT:-3030}"
+      ELASTICSEARCH_PORT: "${ELASTICSEARCH_PORT:-8200}"
+      KOHA_VERSION: "${KOHA_IMAGE_TAG:-0}"
+      GITREF: "${GITREF:-0}"
+      BUILD_TAG: "${BUILD_TAG:-0}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  sms:
+    container_name: smsproxy
+    image: "digibib/proximity:3ce6b65df303302420d2fb85bd6b625744bfb907"
+    networks:
+      - backend
+    environment:
+      FORWARD_SMS: http://tcpsink:9999
+    command:
+      - "/proximity"
+      - "-no-verify"
+      - "-r"
+      - '${FORWARD_SMS}'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  mail:
+    container_name: mailrelay
+    image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
+    networks:
+      - backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  sip_proxy:
+    container_name: sip_proxy
+    image: "digibib/sip2proxy:a387e6d35e38c488b0f4ec7bc0c7292e19dd61df"
+    networks:
+      - backend
+    ports:
+      - "6002:9999"
+    command:
+      - "/sip2proxy"
+      - "-from=:9999"
+      - "-to=xkoha:${SIP_PORT:-6001}"
+      - "-log-messages=true"
+      - "-replace-10=true"
+      - "-log-metrics-every-s=300"
+      - "-ensure-branch=true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  rfidhub:
+    container_name: rfidhub
+    image: "digibib/rfidhub2:5cc223d57472232557fbcc608c45f7ac22372fb9"
+    networks:
+      - backend
+    depends_on:
+      - sip_proxy
+    ports:
+      - "6006:6006"
+      - "8899:8899"
+    environment:
+      SIP_SERVER: sip_proxy:9999
+      TCP_PORT: 6006
+      SIP_USER: rfidhub
+      SIP_PASS: "${SIP_AUTOPASS:-autopass}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  z3950proxy:
+    container_name: z3950proxy
+    image: "digibib/z3950proxy:331137ac40ba155760c311e5197fa9fa73cf4c27"
+    networks:
+      - backend
+    ports:
+      - 3000:3000
+    environment:
+      APPSECRET: "${Z3950SECRET:-replaceme}"
+      BS_SERVER: "${BS_SERVER:-replaceme}"
+      BS_PORT: "${BS_PORT:-replaceme}"
+      BS_DB: "${BS_DB:-replaceme}"
+      BS_USER: "${BS_USER:-replaceme}"
+      BS_PASS: "${BS_PASS:-replaceme}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"

@@ -1,0 +1,66 @@
+---
+version: '2.1'
+
+services:
+  koha:
+    logging:
+      driver: "journald"
+
+  koha_mysql:
+    command:
+      - mysqld
+      - "--datadir=/var/lib/mysql"
+      - "--user=mysql"
+      - "--max_allowed_packet=64M"
+      - "--wait_timeout=6000"
+      - "--bind-address=0.0.0.0"
+      - "--innodb-buffer-pool-size=16G"
+      - "--max-connections=500"
+      - "--innodb-flush-method=O_DIRECT"
+      - "--skip-name-resolve"
+    logging:
+      driver: "journald"
+
+  services:
+    logging:
+      driver: "journald"
+
+  catalinker:
+    logging:
+      driver: "journald"
+
+  patron_client:
+    logging:
+      driver: "journald"
+
+  rfidhub:
+    logging:
+      driver: "journald"
+
+  mail:
+    environment:
+      FORWARD_SMTP: "${FORWARD_SMTP}"
+    logging:
+      driver: "journald"
+
+  sms:
+    environment:
+      FORWARD_SMS: "${FORWARD_SMS}"
+    logging:
+      driver: "journald"
+
+  elasticsearch:
+    logging:
+      driver: "journald"
+
+  fuseki:
+    logging:
+      driver: "journald"
+
+  sip_proxy:
+    logging:
+      driver: "journald"
+
+  overview:
+    logging:
+      driver: "journald"
