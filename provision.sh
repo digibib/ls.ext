@@ -27,7 +27,7 @@ if [[ `uname -s` == 'Linux' && "$LSENV" != 'prod' ]]; then
   fi
 
   echo -e "\n2) Installing Docker-compose\n"
-  COMPOSEVERSION=1.8.0
+  COMPOSEVERSION=1.9.0
   INSTALLED=`docker-compose -v | cut -d',' -f1 | cut -d' ' -f3`
   if [ $COMPOSEVERSION = "$INSTALLED" ] ; then
     echo "docker-compose version $COMPOSEVERSION already installed"
