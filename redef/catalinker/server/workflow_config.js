@@ -197,9 +197,9 @@ module.exports = (app) => {
             {
               label: 'Hovedtittel',
               rdfProperty: 'mainTitle',
-              type: 'input-string',
-              // input type must be defined explicitly, otherwise it will inherit from the search field above
-              preFillFromSearchField: true // value of this field should be copied from the search field above
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
             },
             {
               label: 'Undertittel',
@@ -234,9 +234,9 @@ module.exports = (app) => {
             {
               label: 'Hovedtittel',
               rdfProperty: 'mainTitle',
-              type: 'input-string',
-              // input type must be defined explicitly, otherwise it will inherit from the search field above
-              preFillFromSearchField: true // value of this field should be copied from the search field above
+              type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
             },
             {
               label: 'Undertittel',
@@ -255,6 +255,35 @@ module.exports = (app) => {
             },
             {
               rdfProperty: 'hasWorkType'
+            }
+          ]
+        },
+        {
+          id: 'create-workseries-form',
+          labelForCreateButton: 'Opprett ny verksserie',
+          rdfType: 'WorkSeries',
+          inputs: [
+            {
+              label: 'Serietittel',
+              rdfProperty: 'mainTitle',
+              type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
+            },
+            {
+              label: 'Undertittel',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'subtitle'
+            },
+            {
+              label: 'Nummer på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partNumber'
+            },
+            {
+              label: 'Tittel på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partTitle'
             }
           ]
         },
@@ -334,16 +363,26 @@ module.exports = (app) => {
           rdfType: 'Serial',
           inputs: [
             {
-              label: 'Hovedtittel',
+              label: 'Serietittel',
               rdfProperty: 'mainTitle',
-              type: 'input-string',
-              displayValueSource: true,
-              preFillFromSearchField: true
+              type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+              preFillFromSearchField: true, // value of this field should be copied from the search field above
+              displayValueSource: true // after creation, send actual value in this field back to where the search started
             },
             {
               label: 'Undertittel',
-              rdfProperty: 'subtitle',
-              type: 'input-string'
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'subtitle'
+            },
+            {
+              label: 'Nummer på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partNumber'
+            },
+            {
+              label: 'Tittel på delserie',
+              type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+              rdfProperty: 'partTitle'
             },
             {
               label: 'Utgiver',
@@ -483,7 +522,7 @@ module.exports = (app) => {
             }
             ,
             {
-              label: "Verket har ikke hovedansvarlig",
+              label: 'Verket har ikke hovedansvarlig',
               id: 'missingMainEntry',
               rdfProperty: 'missingMainEntry',
             },
@@ -651,7 +690,6 @@ module.exports = (app) => {
               addAnotherLabel: 'Legg til et sidetall'
             },
             {
-              includeOnlyWhen: { hasMediaType: [ 'Other', 'Audiobook', 'Film', 'MusicRecording', 'LanguageCourse', 'Game' ] },
               rdfProperty: 'hasExtent',
               multiple: true,
               addAnotherLabel: 'Legg til et omfang'
@@ -874,6 +912,10 @@ module.exports = (app) => {
             { rdfProperty: 'partTitle' },
             { rdfProperty: 'partNumber' },
             { rdfProperty: 'publicationYear' },
+            {
+              rdfProperty: 'nationality',
+              label: 'Opprinnelsesland'
+            },
             { rdfProperty: 'language', multiple: true },
             {
               rdfProperty: 'hasWorkType',
@@ -948,6 +990,44 @@ module.exports = (app) => {
                       valueAsStringMatches: '^.*partOf$',
                       initial: 'hide'
                     },
+                  }
+                ]
+              },
+              subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+            },
+            {
+              label: 'Verksserie',
+              reportFormat: {
+                list: true
+              },
+              subInputs: {
+                rdfProperty: 'isPartOfWorkSeries',
+                range: 'WorkSeriesPart',
+                inputs: [
+                  {
+                    label: 'Serie',
+                    rdfProperty: 'workSeries',
+                    id: 'partOfWorkSeriesInput',
+                    required: true,
+                    indexTypes: [ 'workseries' ],
+                    type: 'searchable-with-result-in-side-panel',
+                    nameProperties: [ 'mainTitle', 'subtitle', 'partNumber' ],
+                    widgetOptions: {
+                      enableCreateNewResource: {
+                        formRefs: [
+                          {
+                            formId: 'create-workseries-form',
+                            targetType: 'workseries'
+                          }
+                        ],
+                        useAfterCreation: false
+                      }
+                    }
+                  },
+                  {
+                    label: 'Del',
+                    rdfProperty: 'partNumber',
+                    id: 'workSeriesPartNumberInput'
                   }
                 ]
               },
@@ -1162,7 +1242,7 @@ module.exports = (app) => {
               label: 'Verk som inngår i samling',
               multiple: true,
               reportFormat: {
-                topLevel: true
+                topLevel: true // this input is promoted to act on behalf of its group in the report
               },
               subInputs: { // input is a group of sub inputs, which are connected to resource as other ends of a blank node
                 rdfProperty: 'hasPublicationPart', // the rdf property of the resource
@@ -1220,7 +1300,7 @@ module.exports = (app) => {
                     }
                   },
                   {
-                    label: 'Del nummer',
+                    label: 'Del',
                     rdfProperty: 'partNumber'
                   },
                   // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
@@ -1328,7 +1408,8 @@ module.exports = (app) => {
             maintenanceInputs('Steder', 'place'),
             maintenanceInputs('Hendelser', 'event'),
             maintenanceInputs('Sjangre', 'genre'),
-            maintenanceInputs('Serier', 'serial'),
+            maintenanceInputs('Forlagsserier', 'serial'),
+            maintenanceInputs('Verksserier', 'workseries'),
             maintenanceInputs('Musikkinstrumenter', 'instrument'),
             maintenanceInputs('Komposisjonstyper', 'compositiontype'),
             {
@@ -1459,6 +1540,12 @@ module.exports = (app) => {
           selectIndexLabel: 'Komposisjonstype',
           sortedListQueryForField: 'prefLabel',
           resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
+        },
+        workseries: {
+          type: 'workSeries',
+          selectIndexLabel: 'Verksserie',
+          sortedListQueryForField: 'workSeriesMainTitle',
+          resultItemLabelProperties: [ 'workSeriesMainTitle', 'subtitle' ]
         }
       },
       typeMap: {
@@ -1475,9 +1562,11 @@ module.exports = (app) => {
         corporation: 'Corporation',
         instrument: 'Instrument',
         compositionType: 'CompositionType',
+        workSeries: 'WorkSeries',
       },
       resourceTypeAliases: {
-        'compositiontype': 'compositionType'
+        'compositiontype': 'compositionType',
+        'workseries': 'workSeries'
       },
       prefillValuesFromExternalSources: [
         { resourceType: 'Work', demandTopBanana: true },

@@ -157,4 +157,4 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg trykker på første treff
     Så skal jeg se "11" utgivelser
     Og skal utgivelsene være inndelt etter medietype
-    Og utgivelsene skal være sortert på språk (med norsk, engelsk, dansk og svensk først), utgivelsesår og format
+    Og utgivelsene skal være sortert på språk (med norsk, engelsk, svensk og dansk først), utgivelsesår og format

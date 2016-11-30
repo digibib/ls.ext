@@ -32,7 +32,7 @@ class SearchResult extends React.Component {
           <span key={contribution.agent.relativeUri}>
             {/* <strong>{this.props.intl.formatMessage({ id: contribution.role })}</strong> */}
             <strong>Av</strong>
-            <Link to={contribution.agent.relativeUri}> {contribution.agent.name} </Link>
+            <Link to={this.agentSearchLink(contribution.agent.name)}> {contribution.agent.name} </Link>
           </span>
         ))}
         </p>
@@ -74,6 +74,10 @@ class SearchResult extends React.Component {
 
   seriesSearchLink (series) {
     return `/search?query=series%3A${series}`
+  }
+
+  agentSearchLink (agent) {
+    return `/search?query=agents%3A"${agent}"`
   }
 
   renderSubjects (result) {

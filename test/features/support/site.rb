@@ -14,6 +14,7 @@ class Site
         'utgiver' => 'corporation',
         'utgitt av' => 'publishedBy',
         'serie' => 'serial',
+        'verksserie' => 'work_series',
         'emne' => 'subject',
         'hendelse' => 'event',
         'sjanger' => 'genre',
@@ -33,7 +34,9 @@ class Site
         'fjerde' => 4,
         'femte' => 5,
         'navn' => 'name',
-        'verksnavnet' => 'verksnavn_name'
+        'verksnavnet' => 'verksnavn_name',
+        'nasjonalitet' => 'nationality',
+        'opprinnelsesland' => 'nationality'
     }[concept.downcase] || concept
   end
 

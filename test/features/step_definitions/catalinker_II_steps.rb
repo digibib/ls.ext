@@ -47,7 +47,7 @@ When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne
   end
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted|verksserie) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verksserie)registeret$/) do |art, type_1, type_2|
   sleep 1
   wait_for {
     @browser.div(:class => 'exact-match').present?
@@ -175,6 +175,12 @@ end
 When(/^jeg velger verdien "([^"]*)" for "([^"]*)"$/) do |value, selectable_parameter_label|
   do_select_value(selectable_parameter_label, value)
   @context[selectable_parameter_label] = value
+end
+
+When(/^jeg velger verdien "([^"]*)" for "([^"]*)", som i gammelt grensesnitt heter "([^"]*)"$/) do |value, selectable_parameter_label, old_label|
+  do_select_value(selectable_parameter_label, value)
+  @context[selectable_parameter_label] = value
+  @context[old_label] = @context[selectable_parameter_label]
 end
 
 When(/^jeg velger verdiene "([^"]*)" og "([^"]*)" for "([^"]*)"$/) do |value_1, value_2, selectable_parameter_label|
@@ -315,6 +321,11 @@ When(/^jeg kan legge inn seriens navn$/) do
   @site.RegSerial.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:serial_name])
 end
 
+When(/^jeg kan legge inn verksseriens navn$/) do
+  @context[:work_series_name] = generateRandomString
+  @site.RegWorkSeries.add_prop("http://data.deichman.no/ontology#mainTitle", @context[:work_series_name])
+end
+
 When(/^jeg kan legge inn emnets navn$/) do
   @context[:subject_name] = generateRandomString
   @site.RegSubject.add_prop("http://data.deichman.no/ontology#prefLabel", @context[:subject_name])
@@ -327,6 +338,14 @@ end
 
 When(/^skriver jeg inn "([^"]*)" som utgivelsens nummer i serien$/) do |issue|
   data_automation_id = "SerialIssue_http://data.deichman.no/ontology#issue_0"
+  issue_field = @browser.text_field(:data_automation_id => data_automation_id)
+  issue_field.focus()
+  issue_field.set(issue)
+  sleep 1
+end
+
+When(/^skriver jeg inn "([^"]*)" som verkets nummer i serien$/) do |issue|
+  data_automation_id = "WorkSeriesPart_http://data.deichman.no/ontology#partNumber_0"
   issue_field = @browser.text_field(:data_automation_id => data_automation_id)
   issue_field.focus()
   issue_field.set(issue)
@@ -462,6 +481,7 @@ end
 When(/^åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter$/) do
   sleep 4
   @site.WorkFlow.visit_landing_page_auth_maintenance
+  sleep 1
 end
 
 
@@ -666,4 +686,9 @@ When(/^jeg legger inn samme ISBN\-nummer i ISBN\-feltet til utgivelsen$/) do
   isbn_text_field = @browser.text_field(:data_automation_id => 'Publication_http://data.deichman.no/ontology#isbn_0')
   isbn_text_field.set @context['isbn']
   isbn_text_field.send_keys :tab
+end
+
+When(/^velger jeg "([^"]*)" som nasjonalitet på verket$/) do |nationality|
+  @browser.span(:data_automation_id => "Work_http://data.deichman.no/ontology#nationality_0").text_field().set(nationality)
+  @browser.ul(:class => "select2-results__options").lis().first.click
 end

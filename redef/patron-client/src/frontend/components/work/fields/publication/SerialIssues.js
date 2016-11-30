@@ -31,7 +31,7 @@ export const messages = defineMessages({
   labelSerialIssues: {
     id: 'SerialIssues.labelSerialIssues',
     description: 'Label for serialIssues meta',
-    defaultMessage: 'SerialIssues'
+    defaultMessage: 'Series'
   }
 })
 

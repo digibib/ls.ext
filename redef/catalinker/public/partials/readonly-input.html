@@ -4,14 +4,14 @@
         {{#if ! reportFormat.topLevel}}
             <span class="pure-u-1-2 label" data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
         {{/if}}
-        <span class-pure-u-1-1="{{reportFormat.topLevel}}" class-pure-u-1-2="{{!reportFormat.topLevel}}">
+        <span class-pure-u-1-1="{{reportFormat.topLevel}}" class-pure-u-1-2="{{!reportFormat.topLevel}}" class="multi-value">
                 {{#each values:inputValueIndex}}
                     <span class="value" class-separate-lines="{{reportFormat.separateLines}}">
                         {{>"readonly-" + type}}
                     </span>
                 {{/each}}
                 {{#if subInputs}}
-                    <span class="pure-g">
+                    <span class-pure-g="{{!reportFormat.list}}">
                         {{#each subInputs[0].input.values:inputValueIndex}}
                         <span class-compound="{{reportFormat.topLevel}}">
                         {{#if ./nonEditable}}

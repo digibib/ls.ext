@@ -311,6 +311,15 @@ public class SearchServiceImpl implements SearchService {
         return searchWithJson(body, getIndexUriBuilder().setPath("/search/work/_search"));
     }
 
+    @Override
+    public final Response searchWorkSeries(String query) {
+        return doSearch(query, getWorkSeriesSearchUriBuilder());
+    }
+
+    private URIBuilder getWorkSeriesSearchUriBuilder() {
+        return getIndexUriBuilder().setPath("/search/workSeries/_search");
+    }
+
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
         Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));

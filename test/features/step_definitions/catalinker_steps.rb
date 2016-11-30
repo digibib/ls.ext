@@ -552,6 +552,10 @@ When(/^jeg vil lage en ny serie/) do
   @site.RegSerial.visit
 end
 
+When(/^jeg vil lage en ny verksserie/) do
+  @site.RegWorkSeries.visit
+end
+
 When(/^jeg vil lage et nytt emne/) do
   @site.RegSubject.visit
 end
@@ -573,6 +577,11 @@ end
 When(/^leverer systemet en ny ID for den nye serien/) do
   @context[:serial_identifier] = @site.RegSerial.get_id()
   @context[:serial_identifier].should_not be_empty
+end
+
+When(/^leverer systemet en ny ID for den nye verksserien/) do
+  @context[:work_series_identifier] = @site.RegWorkSeries.get_id()
+  @context[:work_series_identifier].should_not be_empty
 end
 
 When(/^leverer systemet en ny ID for det nye emnet/) do
@@ -760,8 +769,13 @@ def verify_by_label(label, prop_get_method)
   batch_verify_props @site.RegWork, resource_type, data, :locate_by_label
 end
 
-When(/^verifiserer jeg innskrevet verdi for "([^"]*)"$/) do |fragment|
-  verify_fragment(fragment, :get_prop_by_label)
+When(/^verifiserer jeg innskrevet verdi for "([^"]*)"$/) do |label|
+  verify_fragment(label, :get_prop_by_label)
+end
+
+When(/^verifiserer jeg innskrevet verdi for "([^"]*)", som i gammelt grensesnitt heter "([^"]*)"$/) do |label, old_label|
+  @context[old_label] = @context[label]
+  verify_fragment(old_label, :get_prop_by_label)
 end
 
 When(/^verifiserer jeg valgt verdi for "([^"]*)"$/) do |label|

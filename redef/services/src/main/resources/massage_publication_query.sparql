@@ -19,6 +19,7 @@ CONSTRUCT {
                deich:contributor ?contrib ;
                deich:hasImage ?img ;
                deich:mediaType ?pubMediaType ;
+               deich:mt ?mtNo ;
                deich:hasMediaTypeAll ?mediaType ;
                deich:workUri ?workUri ;
                deich:subject ?subjectLabel ;
@@ -72,7 +73,11 @@ WHERE {
             deich:publicationOf ?work  .
             BIND(str(?work) AS ?workUri ) }
   UNION { <__PUBLICATIONURI__> deich:fictionNonfiction ?ficturi .BIND(str(?ficturi) AS ?fictionNonfiction) }
-  UNION { <__PUBLICATIONURI__> deich:hasMediaType ?mturi .BIND(str(?mturi) AS ?pubMediaType) }
+  UNION { <__PUBLICATIONURI__> deich:hasMediaType ?mturi .
+          ?mturi rdfs:label ?mtNoLang .
+          BIND(str(?mtNoLang) AS ?mtNo)
+          FILTER(lang(?mtNoLang) = "no")
+          BIND(str(?mturi) AS ?pubMediaType) }
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
   UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }

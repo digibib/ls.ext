@@ -279,6 +279,7 @@
           case 'deichman:CompositionType':
           case 'deichman:Instrument':
           case 'deichman:ClassificationSource':
+          case 'deichman:WorkSeries' :
             // TODO infer from ontology that this is an URI
             // (because deichman:Work a rdfs:Class)
             input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";
@@ -290,6 +291,7 @@
           case 'deichman:WorkRelation':
           case 'deichman:Instrumentation':
           case 'deichman:ClassificationEntry':
+          case 'deichman:WorkSeriesPart':
             break;
           default:
             throw "Doesn't know which input-type to assign to range: " + input.range;

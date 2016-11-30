@@ -359,6 +359,9 @@
     }
   },
   "type": "Work",
+  "subjects": {
+      "@embed": "@always"
+   },
   "publications": {
     "type": "deichman:Publication",
     "@embed": "@always",

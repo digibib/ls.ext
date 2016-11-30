@@ -13,6 +13,28 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.6.5 (2016-11-30)
+
+KOHA: 008a33634de04bda2287dd7fc8d89a53c7bc968d
+
+- koha:
+  - DEICH-488/DEICH-400: Fiks og forbedring av håndtering av kemnersaker
+  - DEICH-431: Sletting av fjerner også fra søkeindeks
+- patron-client:
+  - DEICH-423: Vis alle emner på verkssiden
+  - DEICH-467: Man kan nå endre henteavdeling på reservasjoner
+  - DEICH-496: person/orgianisasjonslinker peker til søk (personsiden midl. avviklet)
+  - DEICH-225: Fritekstsøk søker også i format og medietype
+  - DEICH-303: Navn på innlogget låner synlig
+- catalinker:
+  - DEICH-470: Import fra BS håndterer nå alle UTF-8 tegn
+  - DEICH-472: Fiks feil søkeuttrykk i verkstittel
+  - DEICH-485: Fiks feil der flere verdier vises som én
+  - DEICH-441: Nytt felt for verk: opprinnelsesland
+  - DEICH-481: Registrere verksserie
+- services:
+  - DEICH-481/DEICH-225: Beskrevet over
+
 ## 0.6.2 (2016-11-24) bugfixes/extras/reverts
 
 KOHA:   2ad15d86c314e0ef882fb9cf1eb9515f98dacf2a

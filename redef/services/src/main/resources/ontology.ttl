@@ -57,6 +57,14 @@
   rdfs:label "Series"@en ;
   rdfs:label "Serie"@no .
 
+:WorkSeries a rdfs:Class ;
+  rdfs:label "Work series"@en ;
+  rdfs:label "Verksserie"@no .
+
+:WorkSeriesPart a rdfs:Class ;
+  rdfs:label "Work series part"@en ;
+  rdfs:label "Del av verksserie"@no .
+
 # ToDo: Erstattes med :Issue
 :SerialIssue a rdfs:Class ;
   rdfs:label "Serial issue"@en ;
@@ -211,6 +219,18 @@ duo:Biography a rdfs:Class ;
   rdfs:range :RelationType ;
   rdfs:domain :WorkRelation .
 
+:isPartOfWorkSeries a rdfs:Property ;
+  rdfs:label "Part of work series"@en ;
+  rdfs:label "Del av verksserie"@no ;
+  rdfs:range :WorkSeriesPart ;
+  rdfs:domain :Work .
+
+:workSeries a rdfs:Property ;
+  rdfs:label "Work series"@en ;
+  rdfs:label "Verksserie"@no ;
+  rdfs:range :WorkSeries ;
+  rdfs:domain :WorkSeriesPart .
+
 :work a rdfs:Property ;
   rdfs:label "Related to"@en ;
   rdfs:label "Relatert til"@no ;
@@ -347,7 +367,7 @@ duo:Biography a rdfs:Class ;
 :nationality a rdfs:Property ;
   rdfs:label "Nationality"@en ;
   rdfs:label "Nasjonalitet"@no ;
-  rdfs:domain :Person, :Corporation ;
+  rdfs:domain :Person, :Corporation, :Work ;
   rdfs:range duo:Nationality ;
   duo:valuesFrom values:nationality .
 
@@ -386,28 +406,28 @@ duo:Biography a rdfs:Class ;
 :mainTitle a rdfs:Property ;
   rdfs:label "Main title"@en ;
   rdfs:label "Hovedtittel"@no ;
-  rdfs:domain :Work, :Publication, :PublicationPart, :Serial ;
+  rdfs:domain :Work, :Publication, :PublicationPart, :Serial, :WorkSeries ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartTitle
 :partTitle a rdfs:Property ;
   rdfs:label "Part mainTitle"@no ;
   rdfs:label "Deltittel"@no ;
-  rdfs:domain :Publication, :Work ;
+  rdfs:domain :Publication, :Work, :Serial, :WorkSeries  ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasSubtitle
 :subtitle a rdfs:Property ;
   rdfs:label "Subtitle"@en ;
   rdfs:label "Undertittel"@no ;
-  rdfs:domain :Publication, :Work, :PublicationPart, :Serial ;
+  rdfs:domain :Publication, :Work, :PublicationPart, :Serial, :WorkSeries ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartNumber
 :partNumber a rdfs:Property ;
   rdfs:label "Part number"@en ;
-  rdfs:label "Delnummer"@no ;
-  rdfs:domain :Publication, :Work, :WorkRelation, :PublicationPart ;
+  rdfs:label "Del nummer"@no ;
+  rdfs:domain :Publication, :Work, :WorkRelation, :PublicationPart, :WorkSeriesPart, :WorkSeries, :Serial ;
   rdfs:range xsd:string .
 
 :edition a rdfs:Property ;

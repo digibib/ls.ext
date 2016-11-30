@@ -368,23 +368,22 @@ Then(/^jeg kan søkes opp i systemet som låner$/) do
   @browser.div(class: 'patroninfo').text.should include(@active[:patron].surname)
 end
 
-When(/^utgivelsene skal være sortert på språk \(med norsk, engelsk, dansk og svensk først\), utgivelsesår og format$/) do
+When(/^utgivelsene skal være sortert på språk \(med norsk, engelsk, svensk og dansk først\), utgivelsesår og format$/) do
   publications = @site.PatronClientWorkPage.publication_entries('http://data.deichman.no/mediaType#Book')
 
   def check(element, prefix, postfix)
     text = element.element(data_automation_id: 'publication_title').text
     (text.start_with?(prefix) && text.end_with?(postfix)).should eq true
   end
-
   check(publications[0], 'pubprefix0', 'nob')
-  check(publications[1], 'pubprefix1', 'eng')
-  check(publications[2], 'pubprefix0', 'eng')
+  check(publications[1], 'pubprefix0', 'eng')
+  check(publications[2], 'pubprefix1', 'eng')
   check(publications[3], 'pubprefix0', 'swe')
   check(publications[4], 'pubprefix1', 'dan')
-  check(publications[5], 'pubprefix3', 'cze')
-  check(publications[6], 'pubprefix2', 'cze')
-  check(publications[7], 'pubprefix1', 'cze')
-  check(publications[8], 'pubprefix0', 'cze')
+  check(publications[5], 'pubprefix1', 'cze')
+  check(publications[6], 'pubprefix3', 'cze')
+  check(publications[7], 'pubprefix0', 'cze')
+  check(publications[8], 'pubprefix2', 'cze')
 end
 
 When(/^skal utgivelsene være inndelt etter medietype$/) do

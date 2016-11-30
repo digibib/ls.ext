@@ -57,10 +57,16 @@ module.exports = (app) => {
           response.status(res.status).send(res.statusText)
           throw Error()
         }
-      }).then(json => Promise.all(json.recordIds.map(recordId => fetch(`http://xkoha:8081/api/v1/biblios/${recordId}/expanded`).then(res => res.json())))
+      }).then(json => Promise.all(json.recordIds.map(recordId => fetch(`http://xkoha:8081/api/v1/biblios/${recordId}/expanded`).then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          return undefined
+        }
+      })))
       .then(itemResponses => {
         const itemsByRecordId = {}
-        itemResponses.forEach(itemResponse => {
+        itemResponses.filter(itemResponse => itemResponse).forEach(itemResponse => {
           const items = {}
           itemResponse.items.forEach(item => {
             if (item.status === 'Utilgjengelig') {

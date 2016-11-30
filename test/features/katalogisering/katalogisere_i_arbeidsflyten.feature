@@ -94,7 +94,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
-    Og jeg skriver verdien "1" for "Del nummer"
+    Og jeg skriver verdien "1" for "Del"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
     Og jeg trykker på "Legg til"-knappen
@@ -237,6 +237,12 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så trykker jeg på "Neste steg: Beskriv verk"-knappen
+    Så skriver jeg inn "12" som verkets nummer i serien
+    Og at jeg skriver inn tilfeldig verksserie i feltet "Serie" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny verksserie"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
     Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
     Så velger jeg emnetype "Generelt"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
@@ -314,12 +320,12 @@ Egenskap: Katalogisere i arbeidsflyt
   Scenario: Redigere serie i katalogisering
     Gitt at jeg vil opprette en serie
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
-    Og at jeg skriver inn tilfeldig serie i feltet "Serier" og trykker enter
+    Og at jeg skriver inn tilfeldig serie i feltet "Forlagsserier" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny serie"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
-    Så skriver jeg inn samme tilfeldige serie i feltet "Serier" og trykker enter
+    Så skriver jeg inn samme tilfeldige serie i feltet "Forlagsserier" og trykker enter
     Så velger jeg en serie fra treffliste fra serieregisteret
 
   Scenario: Redigere organisasjon i katalogisering
@@ -357,6 +363,18 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så skriver jeg inn samme tilfeldige sted i feltet "Steder" og trykker enter
     Så velger jeg en sted fra treffliste fra stedsregisteret
+
+  Scenario: Redigere verksserie i katalogisering
+    Gitt at jeg vil opprette en verksserie
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tilfeldig verksserie i feltet "Verksserier" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny verksserie"-knappen
+    Så skriver jeg inn samme tilfeldige verksserie i feltet "Undertittel" og trykker enter
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så skriver jeg inn samme tilfeldige verksserie i feltet "Verksserier" og trykker enter
+    Så velger jeg en verksserie fra treffliste fra verksserieregisteret
 
   Scenario: Søke opp verk og velge riktig ut fra detaljer om forfatteren
     Gitt at det finnes et verk med forfatter
@@ -399,12 +417,13 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
-    Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
-    Så krysser jeg av i avkrysningboksen for "Ikke eget verk"
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
+    Og jeg venter litt
+    Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
-    Så verifiserer jeg innskrevet verdi for "Mangler hovedansvarlig"
-    Så verifiserer jeg innskrevet verdi for "Ikke eget verk"
+    Så verifiserer jeg innskrevet verdi for "Verket har ikke hovedansvarlig", som i gammelt grensesnitt heter "Mangler hovedansvarlig"
+    Så verifiserer jeg innskrevet verdi for "Skal ikke vises som verk", som i gammelt grensesnitt heter "Ikke eget verk"
 
   Scenario: katalogisere verk med relasjon til annet verk
     Gitt jeg kan dikte opp en verkstittel
@@ -413,7 +432,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
-    Så krysser jeg av i avkrysningboksen for "Mangler hovedansvarlig"
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg venter litt
@@ -425,9 +444,48 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg velger verdien "Del av" for "Type relasjon"
     Og jeg venter litt
-    Og jeg skriver verdien "1" for "Del nummer"
+    Og jeg skriver verdien "1" for "Del"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så frisker jeg opp nettleseren
     Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Verk" stemmer med verksnavnet
+
+  Scenario: katalogisere verk med nasjonalitet
+    Gitt jeg kan dikte opp en verkstittel
+    Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Og jeg venter litt
+    Og jeg velger verdien "Norge" for "Opprinnelsesland", som i gammelt grensesnitt heter "Nasjonalitet"
+    Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
+    Så verifiserer jeg valgt verdi for "Nasjonalitet"
+
+  Scenario: katalogisere verk som er del av en verksserie
+    Gitt at jeg har en bok
+    Og at det finnes et verk med forfatter
+    Og jeg vil lage en ny verksserie
+    Så leverer systemet en ny ID for den nye verksserien
+    Og jeg kan legge inn verksseriens navn
+    Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
+    Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
+    Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Så skriver jeg inn "12" som verkets nummer i serien
+    Så jeg venter litt
+    Og at jeg skriver inn verksserie i feltet "Serie" og trykker enter
+    Så velger jeg en serie fra treffliste fra serieregisteret
+    Så jeg venter litt
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
 

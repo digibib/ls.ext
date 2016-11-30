@@ -82,6 +82,11 @@ format:NintendoDSGame a duo:Format ;
   rdfs:label "Nintendo DS-spill"@no ;
   rdfs:label "Nintendo DS game"@en .
 
+format:Nintendo3DSGame a duo:Format ;
+  duo:code "mr" ;
+  rdfs:label "Nintendo 3DS-spill"@no ;
+  rdfs:label "Nintendo 3DS game"@en .
+
 format:NintendoWiiGame a duo:Format ;
   duo:code "mo" ;
   rdfs:label "Nintendo Wii-spill"@no ;

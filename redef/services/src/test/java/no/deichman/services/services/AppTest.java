@@ -499,6 +499,25 @@ public class AppTest {
     }
 
     @Test
+    public void work_series_is_searchable() throws UnirestException, InterruptedException {
+        HttpResponse<String> result1 = buildCreateRequest(appURI + "workSeries", "{}").asString();
+
+        String op = "ADD";
+        String s = getLocation(result1);
+        String p1 = BaseURI.ontology("mainTitle");
+        String o1 = "Sagaen om Isfolket";
+        String type = "http://www.w3.org/2001/XMLSchema#string";
+
+        JsonArray body = Json.createArrayBuilder()
+                .add(buildLDPatch(buildPatchStatement(op, s, p1, o1, type)).get(0))
+                .build();
+
+        HttpResponse<String> result2 = buildPatchRequest(resolveLocally(s), body).asString();
+        assertEquals(Status.OK.getStatusCode(), result2.getStatus());
+        doSearchForWorkSeries("Sagaen om Isfolket");
+    }
+
+    @Test
     public void subject_is_searchable() throws UnirestException, InterruptedException {
         HttpResponse<String> result1 = buildCreateRequest(appURI + "subject", "{}").asString();
 
@@ -897,6 +916,23 @@ public class AppTest {
         } while (!foundSerial && attempts-- > 0);
 
         assertTrue("Should have found name of serial in index by now", foundSerial);
+    }
+
+    private void doSearchForWorkSeries(String mainTitle) throws UnirestException, InterruptedException {
+        boolean foundWorkSeries;
+        int attempts = TEN_TIMES;
+        do {
+            HttpRequest request = Unirest.get(appURI + "search/workSeries/_search").queryString("q", "mainTitle:" + mainTitle);
+            HttpResponse<?> response = request.asJson();
+            String responseBody = response.getBody().toString();
+            foundWorkSeries = responseBody.contains(mainTitle);
+            if (!foundWorkSeries) {
+                LOG.info("WorkSeries not found in index yet, waiting one second");
+                Thread.sleep(ONE_SECOND);
+            }
+        } while (!foundWorkSeries && attempts-- > 0);
+
+        assertTrue("Should have found mainTitle of workSeries in index by now", foundWorkSeries);
     }
 
     private void doSearchForPublicationByRecordId(String recordId) throws UnirestException, InterruptedException {
