@@ -584,7 +584,7 @@ module.exports = (app) => {
               // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
             },
             {
-              label: "Skal ikke vises som verk",
+              label: "Skal ikke inngå i verksliste",
               rdfProperty: 'improperWork',
             },
             {
@@ -1324,7 +1324,7 @@ module.exports = (app) => {
                     }
                   },
                   {
-                    label: 'Skal ikke vises som verk',
+                    label: 'Skal ikke inngå i verksliste',
                     rdfProperty: 'improperWork'
                   }
                 ]
