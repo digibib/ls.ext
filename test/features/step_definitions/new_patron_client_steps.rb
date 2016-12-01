@@ -375,6 +375,7 @@ When(/^utgivelsene skal være sortert på språk \(med norsk, engelsk, svensk og
     text = element.element(data_automation_id: 'publication_title').text
     (text.start_with?(prefix) && text.end_with?(postfix)).should eq true
   end
+
   check(publications[0], 'pubprefix0', 'nob')
   check(publications[1], 'pubprefix0', 'eng')
   check(publications[2], 'pubprefix1', 'eng')
@@ -466,5 +467,21 @@ end
 When(/^skal jeg se at jeg er logget inn$/) do
   wait_for {
     @browser.element(data_automation_id: 'borrowerName').text.should eq @active[:patron].surname
+  }
+end
+
+When(/^jeg skriver inn riktig brukernavn men feil passord$/) do
+  @site.PatronClientCommon.login(@active[:patron].userid, 'WRONG', true)
+end
+
+When(/^skal jeg se en melding om feil brukernavn og\/eller passord$/) do
+  wait_for {
+    @browser.element(data_automation_id: 'login_error_message').present?
+  }
+end
+
+When(/^skal jeg se at jeg ikke er logget inn$/) do
+  wait_for {
+    @browser.element(data_automation_id: 'login_element').present?
   }
 end

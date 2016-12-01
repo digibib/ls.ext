@@ -16,7 +16,7 @@ class PatronClientCommon < PageRoot
     @browser.element(data_automation_id: 'change_language_element').click
   end
 
-  def login(username = nil, password = nil)
+  def login(username = nil, password = nil, skip_validate_logged_in = false)
     if (username && password)
       unless @browser.element(data_automation_id: 'login_modal').exists?
         if @browser.element(data_automation_id: 'logout_element').exists?
@@ -28,9 +28,11 @@ class PatronClientCommon < PageRoot
       @browser.element(data_automation_id: 'login_modal').text_fields.first.set(username)
       @browser.element(data_automation_id: 'login_modal').text_fields.last.set(password)
       @browser.element(data_automation_id: 'login_button').click
-      wait_retry { @browser.element(data_automation_id: 'logout_element').exists? }
+      unless skip_validate_logged_in
+        wait_retry { @browser.element(data_automation_id: 'logout_element').exists? }
+      end
     else
-      if (@browser.element(data_automation_id: 'login_element').present? && !@browser.element(data_automation_id: 'login_modal').exists?)
+      if (@browser.element(data_automation_id: 'login_element').present? && !@browser.element(data_automation_id: 'login_modal').present?)
         @browser.element(data_automation_id: 'login_element').click
       end
     end
