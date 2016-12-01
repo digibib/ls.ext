@@ -20,7 +20,7 @@ services:
       - backend
     depends_on:
       - sms
-      - mail
+      - smtp
       - sip_proxy
     cap_add:
       - SYS_NICE
@@ -232,7 +232,7 @@ services:
         max-size: "1m"
         max-file: "2"
 
-  mail:
+  smtp:
     container_name: mailrelay
     image: "digibib/gosmtpd:e51ec0b872867560461ab1e8c12b10fd63f5d3c1"
     networks:
