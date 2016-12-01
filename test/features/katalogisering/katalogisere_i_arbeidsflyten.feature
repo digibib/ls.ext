@@ -96,7 +96,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
     Og jeg skriver verdien "1" for "Del"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
-    Så krysser jeg av i avkrysningboksen for "Skal ikke vises som verk"
+    Så krysser jeg av i avkrysningboksen for "Skal ikke inngå i verksliste"
     Og jeg trykker på "Legg til"-knappen
     Og bekrefter for å gå videre til "Biinnførsler"
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
