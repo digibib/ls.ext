@@ -145,6 +145,8 @@ services:
       - backend
     depends_on:
       - services
+    ports:
+      - "8000:8000"
     environment:
       SERVICES_PORT: "http://services:${SERVICES_PORT:-8005}"
       GITREF: "${GITREF:-0}"
