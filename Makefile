@@ -21,6 +21,10 @@ DOCKER_GW=$(HOST)
 NOVAGRANT=false
 endif
 
+ifndef DOCKER_COMPOSE
+DOCKER_COMPOSE=source docker-compose.env && docker-compose -f common.yml -f dev-common.yml
+endif
+
 all: cycle_ship test                       		## Run tests after (re)loading and (re)provisioning environment.
 
 cycle_ship: halt_ship up_ship provision
@@ -38,13 +42,13 @@ reload_ship: halt_ship up_ship                        ##
 
 halt_ship:
 	@$(NOVAGRANT) || vagrant halt $(SHIP)
-	@$(NOVAGRANT) && sudo $(CMD) -c "cd $(LSEXTPATH)/docker-compose && sudo docker-compose down" || true
+	@$(NOVAGRANT) && sudo $(CMD) -c "cd $(LSEXTPATH)/docker-compose && ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml down" || true
 
 up: up_ship 						## Start box.
 
 up_ship:                                              ##
 	@$(NOVAGRANT) || vagrant up $(SHIP)
-	@$(NOVAGRANT) && sudo $(CMD) -c "cd $(LSEXTPATH)/docker-compose && sudo docker-compose up -d" || true
+	@$(NOVAGRANT) && sudo $(CMD) -c "cd $(LSEXTPATH)/docker-compose && ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml up -d" || true
 
 shell_provision_ship:					## Run ONLY shell provisioners
 	@$(NOVAGRANT) || vagrant provision $(SHIP) --provision-with shell
@@ -91,18 +95,18 @@ FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
 rebuild=$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
-	  sudo docker-compose stop $(1) || true &&\
-	  sudo docker-compose rm -f $(1) || true &&\
-	  sudo docker-compose build $(1) &&\
-	  sudo docker-compose up --force-recreate --no-deps -d $(1)"
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml stop $(1) || true &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml rm -f $(1) || true &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml build $(1) &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml up --force-recreate --no-deps -d $(1)"
 
 rebuild_services: docker_cleanup			## Force rebuilds services
 	@echo "======= FORCE RECREATING SERVICES ======\n"
 	$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
-	  sudo docker-compose stop build_services || true &&\
-	  sudo docker-compose rm -f build_services || true &&\
-	  sudo docker-compose build build_services &&\
-	  sudo docker-compose run build_services"
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml stop build_services || true &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml rm -f build_services || true &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml build build_services &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml run build_services"
 	$(call rebuild,services)
 
 rebuild_catalinker:					## Force rebuilds catalinker
@@ -113,10 +117,10 @@ rebuild_patron_client:					## Force rebuilds patron-client
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
 ifeq ($(LSDEVMODE),build)
 	$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
-	  sudo docker-compose stop build_patron_client || true &&\
-	  sudo docker-compose rm -f build_patron_client || true &&\
-	  sudo docker-compose build build_patron_client &&\
-	  sudo docker-compose run build_patron_client"
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml stop build_patron_client || true &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml rm -f build_patron_client || true &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml build build_patron_client &&\
+	  ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml run build_patron_client"
 endif
 	$(call rebuild,patron_client)
 
@@ -140,7 +144,7 @@ cuke_test:						## Run Cucumber tests
 
 test_one:						## Run 'utlaan_via_adminbruker'.
 	@$(XHOST_ADD)
-	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && sudo docker-compose run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
+	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
 	@$(XHOST_REMOVE)
 
 stop_koha:
@@ -188,7 +192,7 @@ test_redef: test_patron_client test_catalinker cuke_redef  ## Test only Redef (e
 cuke_redef:						## Run only redef cucumber tests
 	@$(XHOST_ADD)
 	$(CMD) -c "rm -rf $(LSEXTPATH)/test/report/*.* && \
-	  cd $(LSEXTPATH)/docker-compose && sudo docker-compose run --rm $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
+	  cd $(LSEXTPATH)/docker-compose && ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml run --rm $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && cucumber --profile rerun \
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt \
 		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)'"
