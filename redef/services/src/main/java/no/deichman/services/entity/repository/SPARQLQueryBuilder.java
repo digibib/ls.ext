@@ -115,13 +115,19 @@ public final class SPARQLQueryBuilder {
         String queryString = format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                + "DESCRIBE <%2$s> ?name ?nationality ?nationalityLabel \n"
+                + "DESCRIBE <%2$s> ?nationality ?nationalityLabel ?place\n"
                 + "WHERE {\n"
-                + "    <%2$s> a deichman:Corporation .\n"
-                + "    optional { <%2$s> deichman:name ?name . }\n"
-                + "    optional { <%2$s> deichman:nationality ?nationality . \n"
-                + "                 ?nationality rdfs:label ?nationalityLabel .\n"
-                + "             }\n"
+                + "     {\n"
+                + "      <%2$s> a deichman:Corporation .\n"
+                + "      optional { <%2$s> deichman:nationality ?nationality . \n"
+                + "                  ?nationality rdfs:label ?nationalityLabel .\n"
+                + "     }\n"
+                + "  } \n"
+                + "   UNION {"
+                + "      <%2$s> deichman:place ?place . \n"
+                + "      ?place a deichman:Place .\n"
+                + "      <%2$s> deichman:place ?place . \n"
+                + "  }\n"
                 + "}", BaseURI.ontology(), corporationId);
         return QueryFactory.create(queryString);
     }
@@ -533,5 +539,39 @@ public final class SPARQLQueryBuilder {
 
     public String patch(List<Patch> deleteModelAsPatches) {
         return patch(deleteModelAsPatches, null);
+    }
+
+    public Query describeEventAndLinkedResources(XURI eventUri) {
+        String queryString = format("#\n"
+                + "PREFIX deichman: <%1$s>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "DESCRIBE <%2$s> ?place\n"
+                + "WHERE {\n"
+                + "   { <%2$s> a deichman:Event . }\n"
+                + "  UNION {"
+                + "      <%2$s> deichman:place ?place . \n"
+                + "      ?place a deichman:Place .\n"
+                + "  }\n"
+                + "}", BaseURI.ontology(), eventUri);
+        return QueryFactory.create(queryString);
+    }
+
+    public Query describeSerialAndLinkedResources(XURI serialUri) {
+        String queryString = format("#\n"
+                + "PREFIX deichman: <%1$s>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "DESCRIBE <%2$s> ?publisher ?publisherPlace\n"
+                + "WHERE {\n"
+                + "   { <%2$s> a deichman:Serial . }\n"
+                + "  UNION {"
+                + "      <%2$s> deichman:publishedBy ?publisher . \n"
+                + "  }\n"
+                + "  UNION {"
+                + "      <%2$s> deichman:publishedBy ?publisher . \n"
+                + "      ?publisher deichman:place ?publisherPlace . \n"
+                + "      ?publisherPlace a deichman:Place .\n"
+                + "  }\n"
+                + "}", BaseURI.ontology(), serialUri);
+        return QueryFactory.create(queryString);
     }
 }

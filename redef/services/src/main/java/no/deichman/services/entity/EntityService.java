@@ -46,4 +46,8 @@ public interface EntityService {
     Map<String, Integer> getNumberOfRelationsForResource(XURI uri);
 
     Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection);
+
+    Model retrieveEventWithLinkedResources(XURI eventUri);
+
+    Model retrieveSerialWithLinkedResources(XURI serialUri);
 }

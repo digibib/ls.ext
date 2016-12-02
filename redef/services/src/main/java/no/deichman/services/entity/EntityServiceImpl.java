@@ -617,4 +617,18 @@ public final class EntityServiceImpl implements EntityService {
     public Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection) {
         return repository.retrieveResourceByQuery(entityType, queryParameters, projection);
     }
+
+    @Override
+    public Model retrieveEventWithLinkedResources(XURI eventUri) {
+        Model m = ModelFactory.createDefaultModel();
+        m.add(repository.retrieveEventAndLinkedResourcesByURI(eventUri));
+        return m;
+    }
+
+    @Override
+    public Model retrieveSerialWithLinkedResources(XURI serialUri) {
+        Model m = ModelFactory.createDefaultModel();
+        m.add(repository.retrieveSerialAndLinkedResourcesByURI(serialUri));
+        return m;
+    }
 }

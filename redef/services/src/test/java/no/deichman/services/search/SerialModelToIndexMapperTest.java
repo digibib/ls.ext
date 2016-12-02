@@ -15,10 +15,22 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 /**
  * Responsibility: unit test ModelToIndexMapper serial.
  */
-public class SerialModelToIndexMapperTest {
+public class SerialModelToIndexMapperTest extends ModelToIndexMapperTestSupport {
+
+    public SerialModelToIndexMapperTest() throws Exception {
+    }
 
     @Test
-    public void testModelToIndexDocument() throws Exception {
+    public void testModelToIndexDocument_withAlternativePublisherName() throws Exception {
+        doTest(true);
+    }
+
+    @Test
+    public void testModelToIndexDocument_withoutAlternativePublisherName() throws Exception {
+        doTest(false);
+    }
+
+    private void doTest(boolean withAlternativePublisherName) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), EntityType.SERIAL.getPath(), "s000000001");
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
@@ -36,6 +48,8 @@ public class SerialModelToIndexMapperTest {
                 ResourceFactory.createProperty(BaseURI.ontology("subtitle")),
                 ResourceFactory.createPlainLiteral("Følelser i sentrum")));
 
+        addPublishedByToModel(withAlternativePublisherName, xuri, model);
+
         String jsonDocument = new ModelToIndexMapper("serial").createIndexDocument(model, xuri);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
@@ -43,6 +57,11 @@ public class SerialModelToIndexMapperTest {
                 + "  \"uri\": \"" + xuri.getUri() + "\","
                 + "  \"serialMainTitle\": \"Blå Lanterne\","
                 + "  \"subtitle\": \"Følelser i sentrum\","
+                + "  \"publishedByName\": \"" + getPublishedByName() + "\","
+                + "  \"publishedByPlacePrefLabel\": \"" + getPlacePrefLabel() + "\","
+                + (withAlternativePublisherName ? "  \"publishedByAlternativeName\": \"" + getPublishedByAlternativeName() + "\"," : "")
+                + (withAlternativePublisherName ? "  \"publishedByPlaceAlternativeName\": \"" + getPlaceAlternativeName() + "\"" : "")
                 + "}").allowingAnyArrayOrdering());
     }
+
 }

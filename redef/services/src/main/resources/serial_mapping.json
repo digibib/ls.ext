@@ -12,6 +12,18 @@
     "uri": {
       "type": "string",
       "index": "no"
+    },
+    "publishedByName": {
+      "type": "string"
+    },
+    "publishedByAlternativeName": {
+      "type": "string"
+    },
+    "publishedByPlacePrefLabel": {
+      "type": "string"
+    },
+    "publishedByPlaceAlternativeName": {
+      "type": "string"
     }
   }
 }

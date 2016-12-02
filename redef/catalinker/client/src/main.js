@@ -422,6 +422,9 @@
     function setDisplayValue (input, index, root, options) {
       options = options || {}
       var uri = input.values[ index ].current.value
+      if (input.type === 'searchable-authority-dropdown') {
+        uri = uri[0]
+      }
 
       function fromRoot (root) {
         var values = _.pluck(getDisplayPropertiesForNode(input.nameProperties || [ 'name', 'prefLabel' ], root) || [], 'val')
@@ -824,7 +827,7 @@
                   if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                     _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                       index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                      setIdValue(node.id, input, index)
+                      setIdValue(input.type === 'searchable-authority-dropdown' ? [node.id] : node.id, input, index)
                       if (options.source && node.id !== '') {
                         setPreviewValues(input, node, index)
                       }
@@ -2134,9 +2137,9 @@
 
                     var select2Data = _.map(data.hits.hits, function (obj) {
                       obj.id = obj._source.uri
-                      obj.text = _.map(inputDef.indexDocumentFields, function (field) {
+                      obj.text = _.compact(_.map(inputDef.indexDocumentFields, function (field) {
                         return obj._source[ field ]
-                      }).join(' - ')
+                      })).join(' - ')
                       return obj
                     })
 
@@ -2181,11 +2184,13 @@
 
             let keypath = this.getNodeInfo(node).resolve() + '.current.value'
             var observer = ractive.observe(keypath, function (newvalue, oldValue) {
-              setting = true
-              window.setTimeout(function () {
-                $(node).val(newvalue).trigger('change')
-                setting = false
-              }, 0)
+              if (!setting && (newvalue || [])[0] !==  (oldValue || [])[0]) {
+                setting = true
+                window.setTimeout(function () {
+                  $(node).val(newvalue).trigger('change')
+                  setting = false
+                }, 0)
+              }
             })
 
             return {

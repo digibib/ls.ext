@@ -6,7 +6,9 @@ CONSTRUCT {
             :specification ?specification ;
             :ordinal ?ordinal ;
             :date ?date ;
-            :alternativeName  ?alternativeName .
+            :alternativeName  ?alternativeName ;
+            :placePrefLabel ?placePrefLabel ;
+            :placeAlternativeName ?placeAlternativeName .
 }
 
 WHERE {
@@ -17,4 +19,13 @@ WHERE {
   OPTIONAL { ?eventUri :specification ?specification }
   OPTIONAL { ?eventUri :ordinal ?ordinal }
   OPTIONAL { ?eventUri :date ?date }
+  OPTIONAL
+    {
+      ?eventUri  :place  ?placeUri .
+      ?placeUri a :Place ;
+                :prefLabel ?placePrefLabel.
+      OPTIONAL {
+          ?placeUri :alternativeName ?placeAlternativeName .
+      }
+    }
 }

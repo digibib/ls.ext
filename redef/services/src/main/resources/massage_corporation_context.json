@@ -6,6 +6,8 @@
     "alternativeName": "deichman:alternativeName",
     "subdivision": "deichman:subdivision",
     "specification": "deichman:specification",
+    "placePrefLabel": "deichman:placePrefLabel",
+    "placeAlternativeName": "deichman:placeAlternativeName",
     "Corporation": "deichman:Corporation",
     "type": "@type",
     "uri": "@id",

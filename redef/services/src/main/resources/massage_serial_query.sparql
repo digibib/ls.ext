@@ -1,12 +1,16 @@
 PREFIX  :     <__ONTOLOGY__>
 
 CONSTRUCT
-  { ?serialUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Serial .
-    ?serialUri :mainTitle ?mainTitle .
-    ?serialUri :subtitle ?subtitle .
+  { ?serialUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Serial ;
+               :mainTitle ?mainTitle ;
+               :subtitle ?subtitle ;
+               :publishedByName ?publishedByName ;
+               :publishedByAlternativeName ?publishedByAlternativeName ;
+               :publishedByPlacePrefLabel ?publishedByPlacePrefLabel ;
+               :publishedByPlaceAlternativeName ?publishedByPlaceAlternativeName .
   }
 WHERE
-  { SELECT DISTINCT  ?serialUri ?mainTitle ?subtitle
+  { SELECT DISTINCT  ?serialUri ?mainTitle ?subtitle ?publishedByName ?publishedByAlternativeName ?publishedByPlacePrefLabel ?publishedByPlaceAlternativeName
     WHERE
       { BIND(uri("__SERIALURI__") AS ?serialUri)
         ?serialUri  a                   :Serial ;
@@ -16,6 +20,23 @@ WHERE
           }
         OPTIONAL
           { ?serialUri  :subtitle  ?subtitle
+          }
+        OPTIONAL
+          {
+            ?serialUri  :publishedBy  ?publishedByUri .
+            ?publishedByUri :name ?publishedByName .
+            OPTIONAL {
+                ?publishedByUri :alternativeName ?publishedByAlternativeName .
+            }
+            OPTIONAL {
+                ?publishedByUri :place ?publishedByPlaceUri .
+                ?publishedByPlaceUri a :Place ;
+                                     :prefLabel ?publishedByPlacePrefLabel .
+                OPTIONAL {
+                    ?publishedByPlaceUri :alternativeName ?publishedByPlaceAlternativeName .
+                }
+
+            }
           }
       }
   }

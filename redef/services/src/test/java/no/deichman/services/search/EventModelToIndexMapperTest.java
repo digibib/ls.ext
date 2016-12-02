@@ -15,40 +15,56 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 /**
  * Responsibility: unit test PlaceModelToIndexMapper.
  */
-public class EventModelToIndexMapperTest {
+public class EventModelToIndexMapperTest extends ModelToIndexMapperTestSupport {
+
+    public EventModelToIndexMapperTest() throws Exception {
+    }
 
     @Test
-    public void testModelToIndexDocument() throws Exception {
-        XURI placeXuri1 = new XURI(BaseURI.root(), EntityType.EVENT.getPath(), "e000000001");
+    public void testModelToIndexDocument_withAlternativeName() throws Exception {
+        doTest(true);
+    }
+
+    @Test
+    public void testModelToIndexDocument_withoutAlternativeName() throws Exception {
+        doTest(false);
+    }
+
+    private void doTest(boolean withAlternativePlaceName) throws Exception {
+        XURI eventUri = new XURI(BaseURI.root(), EntityType.EVENT.getPath(), "e000000001");
         Model model = ModelFactory.createDefaultModel();
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createResource(eventUri.getUri()),
                 RDF.type,
                 ResourceFactory.createResource(BaseURI.ontology("Event"))));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createResource(eventUri.getUri()),
                 ResourceFactory.createProperty(BaseURI.ontology("specification")),
                 ResourceFactory.createPlainLiteral("Jesus (pron. Hey-soos) returns to earth")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createResource(eventUri.getUri()),
                 ResourceFactory.createProperty(BaseURI.ontology("prefLabel")),
                 ResourceFactory.createPlainLiteral("Jesus returns")));
 
         model.add(ResourceFactory.createStatement(
-                ResourceFactory.createResource(placeXuri1.getUri()),
+                ResourceFactory.createResource(eventUri.getUri()),
                 ResourceFactory.createProperty(BaseURI.ontology("alternativeName")),
                 ResourceFactory.createPlainLiteral("alternativeName_value")));
 
-        String jsonDocument = new ModelToIndexMapper("event").createIndexDocument(model, placeXuri1);
+        addPlaceToModel(withAlternativePlaceName, eventUri, model);
+
+        String jsonDocument = new ModelToIndexMapper("event").createIndexDocument(model, eventUri);
 
         Assert.assertThat(jsonDocument, sameJSONAs(""
                 + "{"
-                + "  \"uri\": \"" + placeXuri1.getUri() + "\","
+                + "  \"uri\": \"" + eventUri.getUri() + "\","
                 + "  \"prefLabel\": \"Jesus returns\","
                 + "  \"alternativeName\": \"alternativeName_value\","
                 + "  \"specification\": \"Jesus (pron. Hey-soos) returns to earth\","
+                + "  \"placePrefLabel\": \"" + getPlacePrefLabel() + "\","
+                + (withAlternativePlaceName ? "  \"placeAlternativeName\": \"" + getPlaceAlternativeName() + "\"" : "")
                 + "}").allowingAnyArrayOrdering());
     }
 }

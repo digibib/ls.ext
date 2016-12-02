@@ -5,10 +5,12 @@ CONSTRUCT
      :name ?name ;
      :subdivision ?subdivision ;
      :specification ?specification ;
-     :alternativeName  ?alternativeName .
+     :alternativeName  ?alternativeName ;
+     :placePrefLabel ?placePrefLabel ;
+     :placeAlternativeName ?placeAlternativeName .
   }
 WHERE
-  { SELECT DISTINCT  ?corporationUri ?name ?subdivision ?specification ?alternativeName
+  { SELECT DISTINCT  ?corporationUri ?name ?subdivision ?specification ?alternativeName ?placePrefLabel ?placeAlternativeName
     WHERE
       { BIND(uri("__CORPORATIONURI__") AS ?corporationUri)
         ?corporationUri  a                   :Corporation ;
@@ -24,6 +26,15 @@ WHERE
           }
         OPTIONAL
           { ?corporationUri  :alternativeName  ?alternativeName
+          }
+        OPTIONAL
+          {
+            ?corporationUri  :place  ?placeUri .
+            ?placeUri a :Place ;
+                      :prefLabel ?placePrefLabel .
+            OPTIONAL {
+                ?placeUri :alternativeName ?placeAlternativeName .
+            }
           }
       }
   }

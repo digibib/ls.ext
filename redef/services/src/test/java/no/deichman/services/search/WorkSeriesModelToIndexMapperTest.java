@@ -33,6 +33,16 @@ public class WorkSeriesModelToIndexMapperTest {
 
         model.add(ResourceFactory.createStatement(
                 ResourceFactory.createResource(xuri.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology() + "partTitle"),
+                ResourceFactory.createPlainLiteral("På lykke og fromme")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(xuri.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology() + "partNumber"),
+                ResourceFactory.createPlainLiteral("42")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(xuri.getUri()),
                 ResourceFactory.createProperty(BaseURI.ontology("subtitle")),
                 ResourceFactory.createPlainLiteral("Sagaen om Bård og Passop")));
 
@@ -43,6 +53,8 @@ public class WorkSeriesModelToIndexMapperTest {
                 + "  \"uri\": \"" + xuri.getUri() + "\","
                 + "  \"workSeriesMainTitle\": \"Hellerudfolket\","
                 + "  \"subtitle\": \"Sagaen om Bård og Passop\","
+                + "  \"partTitle\": \"På lykke og fromme\","
+                + "  \"partNumber\": \"42\","
                 + "}").allowingAnyArrayOrdering());
     }
 }
