@@ -6,6 +6,8 @@
     "alternativeName": "deichman:alternativeName",
     "ordinal": "deichman:ordinal",
     "date": "deichman:date",
+    "placePrefLabel": "deichman:placePrefLabel",
+    "placeAlternativeName": "deichman:placeAlternativeName",
     "Event": "deichman:Event",
     "deichman": "__ONTOLOGY__",
     "type": "@type",
