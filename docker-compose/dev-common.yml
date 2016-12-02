@@ -18,6 +18,13 @@ services:
     ports:
       - "8101:9999"
 
+  services:
+    environment:
+      KOHA_MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_MYSQL_PASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_MYSQL_DB: "koha_${KOHA_INSTANCE:-name}"
+      KOHA_API_PASS_ENCRYPTED: "${KOHA_API_PASS_ENCRYPTED}"
+
   cuke_tests:
     container_name: cuke_tests
     build:
