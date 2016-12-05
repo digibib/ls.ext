@@ -136,7 +136,7 @@ graph:                              ## Redraw graph of components (replaces dock
 cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
 	$(CMD) -c "rm -rf $(LSEXTPATH)/test/report/*.* && \
-	  cd $(LSEXTPATH)/docker-compose && sudo docker-compose run --rm $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
+	  cd $(LSEXTPATH)/docker-compose && ${DOCKER_COMPOSE} -f ${LSDEVMODE}.yml run --rm $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && \
 		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
 		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)'"
