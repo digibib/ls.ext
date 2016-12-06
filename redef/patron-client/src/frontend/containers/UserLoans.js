@@ -86,9 +86,12 @@ class UserLoans extends React.Component {
                    data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span> */}
                 </td>
                 <td>
+                  {this.renderResumeSuspendReservationButton(item)}
+                </td>
+                <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.reserveId}>
-                    <button className="black-btn">
+                    <button className="black-btn" data-automation-id="cancel_reservation_button">
                       <FormattedMessage {...messages.cancelReservation} />
                     </button>
                   </ClickableElement>
@@ -152,9 +155,12 @@ class UserLoans extends React.Component {
                   </div>
                 </div>
                 <div className="meta-item">
+                  {this.renderResumeSuspendReservationButton(item)}
+                </div>
+                <div className="meta-item">
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.reserveId}>
-                    <button className="black-btn">
+                    <button className="black-btn" data-automation-id="cancel_reservation_button">
                       <FormattedMessage {...messages.cancelReservation} />
                     </button>
                   </ClickableElement>
@@ -169,7 +175,7 @@ class UserLoans extends React.Component {
 
   renderLibrarySelect (item) {
     return (
-      <div style={{ minWidth: '10em' }}>
+      <div className="select-branch">
         {this.props.isRequestingChangePickupLocation === item.reserveId
           ? <Loading />
           : (
@@ -182,6 +188,27 @@ class UserLoans extends React.Component {
           </div>
         )}
       </div>)
+  }
+
+  renderResumeSuspendReservationButton (item) {
+    return (
+      <div>
+        {this.props.isRequestingChangeReservationSuspension === item.reserveId
+          ? <Loading />
+          : (
+          <ClickableElement onClickAction={this.props.reservationActions.changeReservationSuspension}
+                            onClickArguments={[ item.reserveId, !item.suspended ]}>
+            <button className={item.suspended ? 'red-btn' : 'black-btn'}
+                    disabled={this.props.isRequestingChangeReservationSuspension !== false}
+                    data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
+              {item.suspended
+                ? <FormattedMessage {...messages.resumeReservation} />
+                : <FormattedMessage {...messages.suspendReservation} />}
+            </button>
+          </ClickableElement>
+        )}
+      </div>
+    )
   }
 
   renderWaitingPeriod (expected = 'unknown') {
@@ -305,6 +332,7 @@ UserLoans.propTypes = {
   libraries: PropTypes.object.isRequired,
   loanActions: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
+  isRequestingChangeReservationSuspension: PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]).isRequired,
   isRequestingChangePickupLocation: PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]).isRequired,
   borrowerName: PropTypes.string.isRequired,
   loansAndReservationError: PropTypes.object,
@@ -422,6 +450,16 @@ export const messages = defineMessages({
     id: 'UserLoans.enRoute',
     description: 'Text displayed when item is en route',
     defaultMessage: 'En route'
+  },
+  suspendReservation: {
+    id: 'UserLoans.suspendReservation',
+    description: 'Text when button suspends the reservation',
+    defaultMessage: 'Suspend'
+  },
+  resumeReservation: {
+    id: 'UserLoans.resumeReservation',
+    description: 'Text when button resumes the reservation',
+    defaultMessage: 'Resume'
   }
 })
 
@@ -432,6 +470,7 @@ function mapStateToProps (state) {
     loansAndReservations: state.profile.loansAndReservations,
     libraries: state.application.libraries,
     isRequestingChangePickupLocation: state.reservation.isRequestingChangePickupLocation,
+    isRequestingChangeReservationSuspension: state.reservation.isRequestingChangeReservationSuspension,
     borrowerName: state.profile.borrowerName
   }
 }

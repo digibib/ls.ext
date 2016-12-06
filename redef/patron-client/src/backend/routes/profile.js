@@ -138,8 +138,8 @@ module.exports = (app) => {
         expiry: expiry,
         waitingPeriod: waitingPeriod,
         pickupNumber: hold.pickupnumber,
-        queuePlace: hold.priority
-
+        queuePlace: hold.priority,
+        suspended: hold.suspend === '1'
       }
     })
   }
