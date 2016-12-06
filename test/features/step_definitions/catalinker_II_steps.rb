@@ -2,6 +2,10 @@ When(/^debugger jeg$/) do
   sleep(1)
 end
 
+When(/^avbryter jeg$/) do
+  fail 'Aborting'
+end
+
 When(/^at jeg har en bok$/) do
   #
 end
@@ -281,9 +285,14 @@ When(/^trykker jeg på knappen for legge til mer$/) do
   @browser.elements(:xpath => "//div[./div[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//*[text()='Legg til ny']").first.click
 end
 
-When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor personen jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, role_name, association|
+When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisasjonen) jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, agent_type, role_name, association|
   data_automation_id_agent = "Contribution_http://data.deichman.no/ontology#agent_0"
-  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{@context[:person_name]}']")
+  if agent_type == 'personen'
+    name_line = "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}"
+  else
+    name_line = "#{@context[:person_name]}"
+  end
+  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{name_line}']")
   Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
     name.exists?
   }
@@ -486,7 +495,7 @@ end
 
 
 When(/^sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid$/) do
-  @browser.element(:text => "(#{@context[:person_birthyear]}–#{@context[:person_deathyear]}) #{@context[:person_nationality]}").should exist
+  @browser.element(:text => "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}").should exist
 end
 
 When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do
@@ -502,7 +511,7 @@ When(/^at jeg legger navnet på verket og trykker enter$/) do
 end
 
 When(/^ser jeg at det står forfatter med navn og levetid i resultatlisten$/) do
-  @browser.p(:text => "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]})").should exist
+  @browser.p(:text => "#{@context[:work_publicationyear]}, #{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}").should exist
 end
 
 When(/^så trykker jeg på Legg til ny biinnførsel\-knappen$/) do

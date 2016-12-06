@@ -419,18 +419,31 @@
       ractive.update(`${input.keypath}.values.${index}`)
     }
 
+    function valuePropertyFromNode (node) {
+      return function (propNameCore) {
+        let propVal = (node.getAll(propNameCore)[ 0 ] || { value: undefined }).value
+        if (propVal === undefined) {
+          propVal = (node.outAll(propNameCore)[ 0 ] || { 'id': undefined }).id
+        }
+        return propVal
+      }
+    }
+
     function setDisplayValue (input, index, root, options) {
       options = options || {}
       var uri = input.values[ index ].current.value
       if (input.type === 'searchable-authority-dropdown') {
-        uri = uri[0]
+        uri = uri[ 0 ]
       }
 
       function fromRoot (root) {
-        var values = _.pluck(getDisplayPropertiesForNode(input.nameProperties || [ 'name', 'prefLabel' ], root) || [], 'val')
-          .slice(options.onlyFirstField ? 0 : undefined, options.onlyFirstField ? 1 : undefined)
-          .join(' ')
+        function getValues (onlyFirstField) {
+          return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
+            .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
+            .join(' ').replace(/[,\.]$/, '')
+        }
 
+        var values = getValues(options.onlyFirstField)
         var typeMap = ractive.get('applicationData.config.typeMap')
         var selectedIndexType
         _.each(input.indexTypes, function (indexType) {
@@ -455,6 +468,7 @@
             input.suggestedValues = input.suggestedValues || []
             input.suggestedValues[ index ] = {
               value: values,
+              displayValue: getValues(),
               source: options.source,
               selectedIndexType: selectedIndexType
             }
@@ -713,62 +727,94 @@
       return typeMap[ resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ] ]
     }
 
-    function getDisplayPropertiesForNode (properties, node) {
+    function getDisplayProperties (properties, valueFromPropertyFunc, type) {
       var parensStarted
 
-      function checkEndParens (previewProp, ornamented) {
-        if (parensStarted && previewProp.indexOf(')') !== -1) {
+      function checkEndParens (propName, ornamented) {
+        if (parensStarted && propName.indexOf(')') !== -1) {
           ornamented += ')'
           parensStarted = false
         }
         return ornamented
       }
 
-      function ornament (unornamented, previewProp) {
+      function ornament (unornamented, propName) {
         var ornamented = unornamented
-        if (previewProp.lastIndexOf('.') >= previewProp.length - 2) {
-          ornamented += '.'
-        }
-        if (previewProp.indexOf('(') === 0) {
+        var checkEndPunctuation = false
+        _.each([ '.', ',', '/', ':' ], function (seperator) {
+          if (propName.lastIndexOf(seperator) >= propName.length - 2) {
+            ornamented += seperator
+            checkEndPunctuation = true
+          }
+          if (propName.lastIndexOf(seperator) === 0) {
+            ornamented = seperator + ' ' + unornamented
+          }
+        })
+        if (propName.indexOf('(') === 0) {
           ornamented = '(' + ornamented
           parensStarted = true
         }
-        if (previewProp.indexOf('-') !== -1) {
-          ornamented += '-'
+        if (propName.indexOf('-') !== -1) {
+          ornamented += '–'
         }
-        ornamented = checkEndParens(previewProp, ornamented)
+        ornamented = checkEndParens(propName, ornamented)
+        if (checkEndPunctuation && /.\)$/.test(ornamented)) {
+          ornamented = ornamented.replace('.)', ').')
+        }
         return ornamented
       }
 
       var displayProperties
-      _.each(properties, function (propName) {
-        let propNameCore = propName.split(/\.fragment|[\.\(\)-]/).join('')
-        let propVal = (node.getAll(propNameCore)[ 0 ] || { value: undefined }).value
-        if (propVal === undefined) {
-          propVal = (node.outAll(propNameCore)[ 0 ] || { 'id': undefined }).id
-        }
-
-        if (propVal) {
-          displayProperties = displayProperties || []
-          let property = { prop: propName }
-          if (propName.indexOf('.fragment') !== -1) {
-            property.val = ornament(fragmentPartOf(propVal), propName)
-          } else {
-            property.val = ornament(propVal, propName)
-          }
-          displayProperties.push(property)
+      _.each(properties, function (propSpec) {
+        var propName
+        if (typeof propSpec === 'object') {
+          propName = propSpec[ _.find(_.keys(propSpec), function (key) { return new RegExp(key).test(type) }) ]
         } else {
-          let endParensVal = checkEndParens(propName, '')
-          if (endParensVal !== '') {
-            displayProperties.push({ val: endParensVal })
+          propName = propSpec
+        }
+        if (propName) {
+          var propNameCore = propName.split(/\.fragment|[#\.,:\(\)-]/).join('')
+          var propVal = valueFromPropertyFunc(propNameCore)
+
+          if (propVal) {
+            displayProperties = displayProperties || []
+            let property = { prop: propNameCore }
+            var ornamented
+            if (propName.indexOf('.fragment') !== -1) {
+              ornamented = ornament(fragmentPartOf(propVal), propName)
+            } else {
+              ornamented = ornament(propVal, propName)
+            }
+            if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
+              let previousPropVal = _.last(displayProperties).val
+              _.last(displayProperties).val = previousPropVal.substr(0, previousPropVal.length)
+            }
+            property.val = ornamented
+            displayProperties.push(property)
+          } else {
+            let endParensVal = checkEndParens(propName, '')
+            if (endParensVal !== '') {
+              displayProperties.push({ val: endParensVal })
+            }
           }
         }
       })
       return displayProperties
     }
 
+    function indexTypeFromNode (node) {
+      var indexType
+      var typeMap = ractive.get('applicationData.config.typeMap')
+      _.each(_.keys(typeMap), function (typeMapKey) {
+        if (node.isA(typeMap[ typeMapKey ])) {
+          indexType = typeMapKey
+        }
+      })
+      return indexType
+    }
+
     function setPreviewValues (input, node, index) {
-      input.values[ index ].previewProperties = getDisplayPropertiesForNode(input.previewProperties, node)
+      input.values[ index ].previewProperties = getDisplayProperties(input.previewProperties || [], valuePropertyFromNode(node), indexTypeFromNode(node))
     }
 
     function these (collection) {
@@ -827,7 +873,7 @@
                   if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                     _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                       index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                      setIdValue(input.type === 'searchable-authority-dropdown' ? [node.id] : node.id, input, index)
+                      setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
                       if (options.source && node.id !== '') {
                         setPreviewValues(input, node, index)
                       }
@@ -850,7 +896,7 @@
                         }
                         setAllowNewButtonForInput(input)
                       } else {
-                        promises.push(setDisplayValue(input, index, node, options))
+                        setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
                         input.values[ index ].searchable = true
                       }
                       input.values[ index ].subjectType = type
@@ -1626,11 +1672,11 @@
         var creatorAgent = author.agent
         contributionTarget.creator = creatorAgent.name
         if (creatorAgent.birthYear) {
-          contributionTarget.creator += ' (' + creatorAgent.birthYear + '–'
+          contributionTarget.creator += ', ' + creatorAgent.birthYear + '–'
           if (creatorAgent.deathYear) {
             contributionTarget.creator += creatorAgent.deathYear
           }
-          contributionTarget.creator += ')'
+          contributionTarget.creator
         }
       }
       return contributionTarget
@@ -2184,7 +2230,7 @@
 
             let keypath = this.getNodeInfo(node).resolve() + '.current.value'
             var observer = ractive.observe(keypath, function (newvalue, oldValue) {
-              if (!setting && (newvalue || [])[0] !== (oldValue || [])[0]) {
+              if (!setting && (newvalue || [])[ 0 ] !== (oldValue || [])[ 0 ]) {
                 setting = true
                 window.setTimeout(function () {
                   $(node).val(newvalue).trigger('change')
@@ -2460,15 +2506,10 @@
                 return typeof ractive.get('targetUri.' + type) !== 'undefined'
               },
               getSearchResultItemLabel: function (item, itemLabelProperties) {
-                let inParensProperties = _.select(itemLabelProperties, function (property) {
-                  return property.indexOf('inParens:') === 0
+                let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
+                  return item[ prop ]
                 })
-                let inParensValues = _.create(item, _.mapObject(_.pick(item, _.map(inParensProperties, unPrefix)), function (value) {
-                  return `(${value})`
-                }))
-                return _.compact(_.values(_.pick(inParensValues, _.map(itemLabelProperties, unPrefix)))).join(' ')
-                  .replace('- (', ' (')
-                  .replace(') -', ') ')
+                return _.compact(_.pluck(searchResultItems, 'val')).join(' ').replace('– ', '–').replace(/,$/, '')
               },
               tabIdFromDocumentUrl: function () {
                 var uri = URI.parse(document.location.href)
