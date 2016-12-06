@@ -71,7 +71,7 @@ class UserLoans extends React.Component {
               <th><FormattedMessage {...messages.placeInQueue} /></th>
             </tr>
             </thead>
-            <tbody>{this.props.loansAndReservations.reservations.map(item => (
+            <tbody>{[ ...this.props.loansAndReservations.reservations ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
               <tr key={item.reserveId} data-automation-id="UserLoans_reservation" data-recordid={item.recordId}>
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
@@ -100,7 +100,7 @@ class UserLoans extends React.Component {
 
         <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
           <div>
-            {this.props.loansAndReservations.reservations.map(item => (
+            {[ ...this.props.loansAndReservations.reservations ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
               <div className="reserved-entry-content"
                    key={item.reserveId}
                    data-automation-id="UserLoans_reservation"
@@ -201,7 +201,7 @@ class UserLoans extends React.Component {
         <button className="black-btn patron-placeholder">
           <FormattedMessage {...messages.renewAllLoans} />
         </button>
-        {this.props.loansAndReservations.loans.map(item => (
+        {[ ...this.props.loansAndReservations.loans ].sort((a, b) => a.dueDate > b.dueDate).map(item => (
           <article key={item.checkoutId}
                    className="single-entry"
                    data-automation-id="UserLoans_loan"
