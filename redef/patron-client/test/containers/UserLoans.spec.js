@@ -78,7 +78,7 @@ function setup (propOverrides) {
         title: 'title_3',
         author: 'author_3',
         orderedDate: '05/10/2016',
-        queuePlace: '10',
+        queuePlace: '3',
         expected: 'unknown',
         expectedTestData: '(Unknown waiting period)',
         branchCode: 'branchCode_3'
@@ -90,7 +90,7 @@ function setup (propOverrides) {
         title: 'title_1',
         author: 'author_1',
         publicationYear: 'publicationYear_1',
-        dueDate: '01/01/2017',
+        dueDate: '2017-01-01',
         checkoutId: 'checkoutId_1'
       },
       {
@@ -98,7 +98,7 @@ function setup (propOverrides) {
         title: 'title_2',
         author: 'author_2',
         publicationYear: 'publicationYear_2',
-        dueDate: '06/10/2016',
+        dueDate: '2016-12-12',
         checkoutId: 'checkoutId_2'
       }
     ]
@@ -140,7 +140,7 @@ describe('containers', () => {
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].author)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(formatDate(loansAndReservations.pickups[ index ].expiry))
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_pickupNumber']").textContent).toEqual(loansAndReservations.pickups[ index ].pickupNumber)
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(messages[loansAndReservations.pickups[ index ].branchCode])
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(messages[ loansAndReservations.pickups[ index ].branchCode ])
       })
     })
 
@@ -150,15 +150,21 @@ describe('containers', () => {
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
       expect(reservations.length).toEqual(3)
+      // indexMap is used because the component sorts the output
+      const indexMap = {
+        0: 0,
+        1: 2,
+        2: 1
+      }
       Array.prototype.forEach.call(reservations, (reservation, index) => {
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ indexMap[ index ] ].orderedDate))
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
         // TODO: Uncomment below line when enabling estimates again
-        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
+        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
-        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(select.options[ select.selectedIndex ].textContent).toEqual(libraries[ loansAndReservations.reservations[ indexMap[ index ] ].branchCode ])
       })
     })
 
@@ -168,15 +174,21 @@ describe('containers', () => {
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
       expect(reservations.length).toEqual(3)
+      // indexMap is used because the component sorts the output
+      const indexMap = {
+        0: 0,
+        1: 2,
+        2: 1
+      }
       Array.prototype.forEach.call(reservations, (reservation, index) => {
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ indexMap[ index ] ].orderedDate))
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
         // TODO: Uncomment below line when enabling estimates again
-        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
+        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
-        expect(select.options[select.selectedIndex].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(select.options[ select.selectedIndex ].textContent).toEqual(libraries[ loansAndReservations.reservations[ indexMap[ index ] ].branchCode ])
       })
     })
 
@@ -185,11 +197,16 @@ describe('containers', () => {
       const { loansAndReservations } = store.getState().profile
       const loans = node.querySelectorAll("[data-automation-id='UserLoans_loan']")
       expect(loans.length).toEqual(2)
+      // indexMap is used because the component sorts the output
+      const indexMap = {
+        0: 1,
+        1: 0
+      }
       Array.prototype.forEach.call(loans, (loan, index) => {
-        expect(loan.querySelector("[data-automation-id='UserLoans_loan_title']").textContent).toEqual(loansAndReservations.loans[ index ].title)
-        expect(loan.querySelector("[data-automation-id='UserLoans_loan_author']").textContent).toEqual(loansAndReservations.loans[ index ].author)
-        expect(loan.querySelector("[data-automation-id='UserLoans_loan_publicationYear']").textContent).toEqual(loansAndReservations.loans[ index ].publicationYear)
-        expect(loan.querySelector("[data-automation-id='UserLoans_loan_dueDate']").textContent).toEqual(formatDate(loansAndReservations.loans[ index ].dueDate))
+        expect(loan.querySelector("[data-automation-id='UserLoans_loan_title']").textContent).toEqual(loansAndReservations.loans[ indexMap[ index ] ].title)
+        expect(loan.querySelector("[data-automation-id='UserLoans_loan_author']").textContent).toEqual(loansAndReservations.loans[ indexMap[ index ] ].author)
+        expect(loan.querySelector("[data-automation-id='UserLoans_loan_publicationYear']").textContent).toEqual(loansAndReservations.loans[ indexMap[ index ] ].publicationYear)
+        expect(loan.querySelector("[data-automation-id='UserLoans_loan_dueDate']").textContent).toEqual(formatDate(loansAndReservations.loans[ indexMap[ index ] ].dueDate))
       })
     })
   })
