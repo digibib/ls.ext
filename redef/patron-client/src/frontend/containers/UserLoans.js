@@ -92,6 +92,9 @@ class UserLoans extends React.Component {
                   {this.renderResumeSuspendReservationButton(item)}
                 </td>
                 <td>
+                  {this.renderResumeSuspendReservationButton(item)}
+                </td>
+                <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.reserveId}>
                     <button className="black-btn" data-automation-id="cancel_reservation_button">
@@ -460,6 +463,16 @@ export const messages = defineMessages({
     id: 'UserLoans.moreThan',
     description: 'The words used to mean more than',
     defaultMessage: 'more than'
+  },
+  suspendReservation: {
+    id: 'UserLoans.suspendReservation',
+    description: 'Text when button suspends the reservation',
+    defaultMessage: 'Suspend'
+  },
+  enRoute: {
+    id: 'UserLoans.enRoute',
+    description: 'Text displayed when item is en route',
+    defaultMessage: 'En route'
   },
   suspendReservation: {
     id: 'UserLoans.suspendReservation',
