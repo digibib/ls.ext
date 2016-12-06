@@ -81,4 +81,8 @@ public interface RDFRepository {
     Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection);
 
     String createWorkSeries(Model inputModel) throws Exception;
+
+    Model retrieveEventAndLinkedResourcesByURI(XURI eventUri);
+
+    Model retrieveSerialAndLinkedResourcesByURI(XURI serialUri);
 }

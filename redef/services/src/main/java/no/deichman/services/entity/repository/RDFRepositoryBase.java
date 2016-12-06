@@ -390,6 +390,24 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         return createResource(inputModel, type);
     }
 
+    @Override
+    public final Model retrieveEventAndLinkedResourcesByURI(XURI eventUri) {
+        log.debug("Attempting to retrieve: <" + eventUri.getUri() + ">");
+        try (QueryExecution qexec = getQueryExecution(sqb.describeEventAndLinkedResources(eventUri))) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
+    public final Model retrieveSerialAndLinkedResourcesByURI(XURI serialUri) {
+        log.debug("Attempting to retrieve: <" + serialUri.getUri() + ">");
+        try (QueryExecution qexec = getQueryExecution(sqb.describeSerialAndLinkedResources(serialUri))) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
+
     private void disableCompression(QueryExecution qexec) {
         if (qexec instanceof QueryEngineHTTP) {
             ((QueryEngineHTTP) qexec).setAllowGZip(false);

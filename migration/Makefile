@@ -216,6 +216,8 @@ endif
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/subject/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/serial/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/compositionType/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/event/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/workseries/reindex_all'
 	@echo "-- Start syncing MARC records..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X PUT services:8005/publication/sync_all'
 	@echo "   Migration is complete. Goodbye!"

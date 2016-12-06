@@ -1,12 +1,14 @@
 PREFIX  :     <__ONTOLOGY__>
 
 CONSTRUCT
-  { ?workSeriesUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :WorkSeries .
-    ?workSeriesUri :mainTitle ?mainTitle .
-    ?workSeriesUri :subtitle ?subtitle .
+  { ?workSeriesUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :WorkSeries ;
+                    :mainTitle ?mainTitle ;
+                    :subtitle ?subtitle ;
+                    :partTitle ?partTitle ;
+                    :partNumber ?partNumber .
   }
 WHERE
-  { SELECT DISTINCT  ?workSeriesUri ?mainTitle ?subtitle
+  { SELECT DISTINCT  ?workSeriesUri ?mainTitle ?subtitle ?partTitle ?partNumber
     WHERE
       { BIND(uri("__WORKSERIESURI__") AS ?workSeriesUri)
         ?workSeriesUri  a                   :WorkSeries ;
@@ -16,6 +18,12 @@ WHERE
           }
         OPTIONAL
           { ?workSeriesUri  :subtitle  ?subtitle
+          }
+        OPTIONAL
+          { ?workSeriesUri  :partTitle  ?partTitle
+          }
+        OPTIONAL
+          { ?workSeriesUri  :partNumber ?partNumber
           }
       }
   }
