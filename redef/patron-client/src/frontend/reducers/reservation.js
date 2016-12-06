@@ -10,7 +10,10 @@ import {
   CANCEL_RESERVATION_SUCCESS,
   REQUEST_CHANGE_PICKUP_LOCATION,
   CHANGE_PICKUP_LOCATION_SUCCESS,
-  CHANGE_PICKUP_LOCATION_FAILURE
+  CHANGE_PICKUP_LOCATION_FAILURE,
+  REQUEST_CHANGE_RESERVATION_SUSPENSION,
+  CHANGE_RESERVATION_SUSPENSION_SUCCESS,
+  CHANGE_RESERVATION_SUSPENSION_FAILURE
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -21,7 +24,9 @@ const initialState = {
   isRequestingCancelReservation: false,
   cancelReservationError: false,
   isRequestingChangePickupLocation: false,
-  changePickupLocationError: false
+  changePickupLocationError: false,
+  isRequestingChangeReservationSuspension: false,
+  changeReservationSuspensionError: false
 }
 
 export default function reservation (state = initialState, action) {
@@ -50,6 +55,12 @@ export default function reservation (state = initialState, action) {
       return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: false }
     case CHANGE_PICKUP_LOCATION_FAILURE:
       return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: action.payload.error }
+    case REQUEST_CHANGE_RESERVATION_SUSPENSION:
+      return { ...state, isRequestingChangeReservationSuspension: action.payload.reserveId, changeReservationSuspensionError: false }
+    case CHANGE_RESERVATION_SUSPENSION_SUCCESS:
+      return { ...state, isRequestingChangeReservationSuspension: false, changeReservationSuspensionError: false }
+    case CHANGE_RESERVATION_SUSPENSION_FAILURE:
+      return { ...state, isRequestingChangeReservationSuspension: false, changeReservationSuspensionError: action.payload.error }
     default:
       return state
   }

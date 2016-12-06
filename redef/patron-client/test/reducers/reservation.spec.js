@@ -14,7 +14,9 @@ describe('reducers', () => {
         changePickupLocationError: false,
         isRequestingExtendLoan: false,
         extendLoanError: false,
+        changeReservationSuspensionError: false,
         isRequestingCancelReservation: false,
+        isRequestingChangeReservationSuspension: false,
         cancelReservationError: false,
         isRequestingChangePickupLocation: false
       })

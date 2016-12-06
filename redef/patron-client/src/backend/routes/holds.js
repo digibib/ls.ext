@@ -42,11 +42,11 @@ module.exports = (app) => {
 
   app.patch('/api/v1/holds', jsonParser, (request, response) => {
     const reserveModifications = {}
-    if (request.body.branchCode) {
+    if (request.body.branchCode !== undefined) {
       reserveModifications.branchcode = request.body.branchCode
     }
-    if (request.body.suspended) {
-      reserveModifications.suspended = request.body.suspended ? 1 : 0
+    if (request.body.suspended !== undefined) {
+      reserveModifications.suspend = request.body.suspended ? 1 : 0
     }
     fetch(`http://xkoha:8081/api/v1/holds/${request.body.reserveId}`, {
       method: 'PATCH',

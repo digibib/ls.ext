@@ -239,7 +239,7 @@ When(/^skal jeg se en dato lenger frem i tid$/) do
 end
 
 When(/^jeg trykker på avbestill reservasjon$/) do
-  @site.PatronClientLoansAndReservationsPage.reservations.first.button.click
+  @site.PatronClientLoansAndReservationsPage.reservations.first.button(data_automation_id: 'cancel_reservation_button').click
   wait_for { @browser.element(data_automation_id: 'cancel_reservation_modal').present? }
 end
 
@@ -464,6 +464,40 @@ When(/^skal jeg se et skjema med personopplysninger$/) do
   }
 end
 
+When(/^jeg trykker på utsett reservasjon$/) do
+  @site.PatronClientLoansAndReservationsPage.reservations.first.button(data_automation_id: 'suspend_reservation_button').click
+end
+
+When(/^skal jeg se at reservasjonen kan aktiveres$/) do
+  wait_for { @browser.element(data_automation_id: 'resume_reservation_button').present? }
+end
+
+When(/^jeg trykker på fortsett reservasjon$/) do
+  @site.PatronClientLoansAndReservationsPage.reservations.first.button(data_automation_id: 'resume_reservation_button').click
+end
+
+When(/^skal jeg se at reservasjonen kan utsettes$/) do
+  wait_for { @browser.element(data_automation_id: 'suspend_reservation_button').present? }
+end
+
+When(/^at reservasjonen er på riktig avdeling$/) do
+  wait_for {
+    @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql? @context[:random_migrate_branchcode]
+  }
+end
+
+When(/^jeg endrer avdeling$/) do
+  @site.PatronClientLoansAndReservationsPage.reservations.first.select.select_value(@active[:branch].code)
+  wait_for {
+    @site.PatronClientLoansAndReservationsPage.reservations.first.select.present?
+  }
+end
+
+When(/^skal reservasjonen være på ny avdeling$/) do
+  wait_for {
+    @site.PatronClientLoansAndReservationsPage.reservations.first && @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql?(@active[:branch].code)
+  }
+end
 When(/^skal jeg se at jeg er logget inn$/) do
   wait_for {
     @browser.element(data_automation_id: 'borrowerName').text.should eq @active[:patron].surname

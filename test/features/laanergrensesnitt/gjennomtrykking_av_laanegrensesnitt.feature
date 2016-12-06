@@ -132,7 +132,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg bekrefter at jeg skal forlenge lånet
     Så skal jeg se en dato lenger frem i tid
 
-  Scenario: Låner reserverer og avbestiller reservasjon
+  Scenario: Låner reserverer, bytter avdeling på, utsetter, aktiverer og avbestiller reservasjon
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
     Og at jeg er i søkegrensesnittet
@@ -147,6 +147,14 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så får låneren tilbakemelding om at boka er reservert
     Når jeg går til Lån og reservasjoner på Min Side
     Så skal jeg se reservasjonen
+    Og at reservasjonen er på riktig avdeling
+    Når jeg endrer avdeling
+    Og jeg trykker oppfrisk i nettleseren
+    Så skal reservasjonen være på ny avdeling
+    Når jeg trykker på utsett reservasjon
+    Så skal jeg se at reservasjonen kan aktiveres
+    Når jeg trykker på fortsett reservasjon
+    Så skal jeg se at reservasjonen kan utsettes
     Når jeg trykker på avbestill reservasjon
     Og jeg bekrefter at jeg skal avbestille reservasjonen
     Så skal jeg ikke ha noen reservasjoner

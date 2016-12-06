@@ -272,6 +272,8 @@ export default {
   'UserLoans.waitingPeriod': 'Ventetid',
   'UserLoans.unknown': '(Uviss ventetid)',
   'UserLoans.enRoute': 'På vei',
+  'UserLoans.suspendReservation': 'Utsett',
+  'UserLoans.resumeReservation': 'Aktiver',
   'UserSettings.alerts': 'Varslinger',
   'UserSettings.byEmail': 'På epost',
   'UserSettings.bySms': 'På SMS',

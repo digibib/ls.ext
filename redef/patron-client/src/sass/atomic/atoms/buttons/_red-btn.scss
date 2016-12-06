@@ -2,7 +2,7 @@
   @include semiBoldFont;
   padding-bottom: 0.5em;
   background: $redColor;
-  padding: rhythm(1);
+  padding: rhythm(2);
   border-radius: 2px;
   font-size: 1em;
   color: $white;
@@ -10,6 +10,10 @@
   &:hover, &:active, &:focus {
     background: $darkGreyColor;
     cursor: pointer;
+  }
+
+  &:disabled {
+    background: $redGreyColor;
   }
 
   a, a:hover {

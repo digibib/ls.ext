@@ -27,7 +27,7 @@
 
   .single-entry {
     margin-bottom: rhythm(2);
-    
+
     .entry-details {
       @include span(12);
     }
@@ -52,7 +52,7 @@
 
   .loan-expire, .loan-pickup-number, .loan-pickup-location {
     @include span(6);
-    
+
     h2 {
       text-transform: uppercase;
       margin: 0;
@@ -73,6 +73,17 @@
 }
 
 .reserve {
+  .red-btn, .black-btn {
+    min-width: rhythm(16);
+  }
+
+  .select-branch {
+    min-width: rhythm(32);
+  }
+
+  td, th, select {
+    font-size: rhythm(2);
+  }
 
   .reserved-entry-content {
     @include span(12);
@@ -104,7 +115,7 @@
 }
 
 .registered {
-  
+
   > h1 {
 
     span {
@@ -121,7 +132,7 @@
 
   .single-entry {
     margin-bottom: rhythm(2);
-    
+
     .entry-details {
       @include span(12);
     }
@@ -139,7 +150,6 @@
     }
 
   }
-
 
   .due-date {
     @include span(12);
