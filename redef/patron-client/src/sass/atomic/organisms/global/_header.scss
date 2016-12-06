@@ -19,6 +19,10 @@ header {
     padding: rhythm(2);
   }
 
+  .logged-in-message {
+    @include span(12 first);
+    padding: rhythm(2);
+  }
 }
 
 @include breakpoint($small) {
@@ -48,6 +52,10 @@ header {
 
       .mobile-menu-toggle {
         @include span(9 last);
+      }
+
+      .logged-in-message {
+        @include span(12 first);
       }
 
     }

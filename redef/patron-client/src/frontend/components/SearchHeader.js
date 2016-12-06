@@ -98,15 +98,32 @@ class SearchHeader extends React.Component {
     )
   }
 
+  loggedInMessage () {
+    const { borrowerName } = this.props
+    return (
+      <span>
+        <FormattedMessage {...messages.loggedInAs} /> <strong><span data-automation-id="borrowerName">{borrowerName}</span></strong>
+      </span>
+    )
+  }
+
   /**
    * Renders the menu, and/or the mobile menu
    */
   renderNavigationLinks () {
+    const { borrowerName } = this.props
     return (
       <ul>
         {this.faqLink()}
         {this.profileLink()}
         {this.registrationLink()}
+        {borrowerName
+          ? (
+          <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
+            <li>{this.loggedInMessage()}</li>
+          </MediaQuery>
+        )
+          : null}
         {this.loginLink()}
         {this.logoutLink()}
       </ul>
@@ -126,6 +143,7 @@ class SearchHeader extends React.Component {
   }
 
   render () {
+    const { borrowerName } = this.props
     const mobileNavClass = this.props.showMobileNavigation ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
       <div>
@@ -156,6 +174,14 @@ class SearchHeader extends React.Component {
               {this.renderNavigationLinks()}
             </nav>
           </MediaQuery>
+
+          {borrowerName
+            ? (<MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
+            <div className="logged-in-message">
+              {this.loggedInMessage()}
+            </div>
+          </MediaQuery>)
+            : null}
 
         </NonIETransitionGroup>
 
@@ -213,7 +239,8 @@ SearchHeader.propTypes = {
   intl: intlShape.isRequired,
   startRegistration: PropTypes.func.isRequired,
   showMobileNavigation: PropTypes.bool.isRequired,
-  mobileNavigationActions: PropTypes.object.isRequired
+  mobileNavigationActions: PropTypes.object.isRequired,
+  borrowerName: PropTypes.string
 }
 
 export const messages = defineMessages({
@@ -276,6 +303,11 @@ export const messages = defineMessages({
     id: 'Navigation.faq',
     description: 'Faq link in main menu',
     defaultMessage: 'FAQ'
+  },
+  loggedInAs: {
+    id: 'Navigation.loggedInAs',
+    description: 'Shown then logged',
+    defaultMessage: 'Logged in as:'
   }
 })
 

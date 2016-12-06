@@ -17,6 +17,12 @@
     },
     "alternativeName": {
       "type": "string"
+    },
+    "placePrefLabel": {
+      "type": "string"
+    },
+    "placeAlternativeName": {
+      "type": "string"
     }
   }
 }

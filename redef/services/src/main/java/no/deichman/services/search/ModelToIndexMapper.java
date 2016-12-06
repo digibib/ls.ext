@@ -82,7 +82,7 @@ public class ModelToIndexMapper {
                     nodeIndex.put(uri, map);
                 }
             }
-             map.forEach((key, value) -> indexNodes(value));
+            map.forEach((key, value) -> indexNodes(value));
         } else if (input instanceof List) {
             List list = (List) input;
             list.forEach(this::indexNodes);

@@ -63,6 +63,8 @@ public class SearchServiceImpl implements SearchService {
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
+    private ModelToIndexMapper eventModelToIndexMapper = new ModelToIndexMapper("event");
+    private ModelToIndexMapper serialModelToIndexMapper = new ModelToIndexMapper("serial");
     private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
     private ModelToIndexMapper corporationModelToIndexMapper = new ModelToIndexMapper("corporation");
     private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
@@ -87,6 +89,12 @@ public class SearchServiceImpl implements SearchService {
             case PUBLICATION:
                 doIndexPublication(xuri);
                 break;
+            case EVENT:
+                doIndexEvent(xuri);
+                break;
+            case SERIAL:
+                doIndexSerial(xuri);
+                break;
             default:
                 doIndex(xuri);
         }
@@ -104,9 +112,25 @@ public class SearchServiceImpl implements SearchService {
             case PUBLICATION:
                 doIndexPublication(xuri);
                 break;
+            case EVENT:
+                doIndexEvent(xuri);
+                break;
+            case SERIAL:
+                doIndexSerial(xuri);
+                break;
             default:
                 doIndex(xuri);
         }
+    }
+
+    private void doIndexEvent(XURI xuri) {
+        Model eventModelWithLinkedResources = entityService.retrieveEventWithLinkedResources(xuri);
+        indexDocument(xuri, eventModelToIndexMapper.createIndexDocument(eventModelWithLinkedResources, xuri));
+    }
+
+    private void doIndexSerial(XURI xuri) {
+        Model serialModelWithLinkedResources = entityService.retrieveSerialWithLinkedResources(xuri);
+        indexDocument(xuri, serialModelToIndexMapper.createIndexDocument(serialModelWithLinkedResources, xuri));
     }
 
     @Override
@@ -175,6 +199,8 @@ public class SearchServiceImpl implements SearchService {
             putIndexMapping(httpclient, "publication");
             putIndexMapping(httpclient, "instrument");
             putIndexMapping(httpclient, "compositionType");
+            putIndexMapping(httpclient, "event");
+            putIndexMapping(httpclient, "workSeries");
 
             return Response.status(Response.Status.OK).build();
         } catch (Exception e) {

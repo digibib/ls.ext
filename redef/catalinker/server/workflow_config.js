@@ -389,8 +389,8 @@ module.exports = (app) => {
               rdfProperty: 'publishedBy',
               type: 'searchable-authority-dropdown',
               indexTypes: 'corporation',
-              nameProperties: [ 'name', 'subdivision', '(specification)' ],
-              indexDocumentFields: [ 'name', 'subdivision', 'specification' ]
+              nameProperties: [ 'name', 'subdivision', 'placePrefLabel', '(specification)' ],
+              indexDocumentFields: [ 'name', 'subdivision', 'placePrefLabel', 'specification' ]
             },
             createdTimestamp(),
             modifiedTimestamp()
@@ -584,7 +584,7 @@ module.exports = (app) => {
               // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
             },
             {
-              label: "Skal ikke vises som verk",
+              label: "Skal ikke inngå i verksliste",
               rdfProperty: 'improperWork',
             },
             {
@@ -694,7 +694,7 @@ module.exports = (app) => {
               multiple: true,
               addAnotherLabel: 'Legg til et omfang'
             },
-            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] }, rdfProperty: 'illustrativeMatter', multiple: true },
+            { includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] }, rdfProperty: 'illustrativeMatter', multiple: true },
             {
               includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
               rdfProperty: 'isbn',
@@ -760,10 +760,9 @@ module.exports = (app) => {
               id: 'publishedByInput',
               rdfProperty: 'publishedBy',
               authority: true, // this indicates it is an authorized entity
-              nameProperties: [ 'name' ], // these are property names used to label already connected entities
+              nameProperties: [ 'name', 'subdivision' ], // these are property names used to label already connected entities
               indexTypes: [ 'corporation', 'person' ], // this is the name of the elasticsearch index type from which authorities are searched within
               preselectFirstIndexType: true,
-              indexDocumentFields: [ 'name' ], // these are indexed document JSON properties from which the labels f
               // or authority select list are concatenated
               type: 'searchable-with-result-in-side-panel',
               widgetOptions: {
@@ -1217,7 +1216,6 @@ module.exports = (app) => {
               authority: true,
               nameProperties: [ 'prefLabel', '(specification)' ],
               indexTypes: [ 'genre' ],
-              indexDocumentFields: [ 'prefLabel', 'specification' ],
               widgetOptions: {
                 enableCreateNewResource: {
                   formRefs: [ {
@@ -1290,7 +1288,6 @@ module.exports = (app) => {
                     type: 'searchable-with-result-in-side-panel',
                     nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
                     indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
-                    indexDocumentFields: [ 'mainTitle' ],
                     widgetOptions: {
                       enableCreateNewResource: {
                         formRefs: [ {
@@ -1324,7 +1321,7 @@ module.exports = (app) => {
                     }
                   },
                   {
-                    label: 'Skal ikke vises som verk',
+                    label: 'Skal ikke inngå i verksliste',
                     rdfProperty: 'improperWork'
                   }
                 ]
@@ -1495,27 +1492,34 @@ module.exports = (app) => {
           type: 'corporation',
           selectIndexLabel: 'Organisasjon',
           sortedListQueryForField: "name",
-          resultItemLabelProperties: [ 'name', 'subdivision' ],
+          resultItemLabelProperties: [ 'name', 'subdivision', 'placePrefLabel', 'inParens:placeAlternativeName'],
           resultItemDetailsLabelProperties: [ 'inParens:specification' ]
         },
         place: {
           type: 'place',
           selectIndexLabel: 'Sted',
           sortedListQueryForField: "prefLabel",
-          resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
+          resultItemLabelProperties: [ 'prefLabel', 'inParens:alternativeName' ],
+          resultItemDetailsLabelProperties: [ 'specification' ]
         },
         event: {
           type: 'event',
           selectIndexLabel: 'Hendelse',
           sortedListQueryForField: "prefLabel",
           resultItemLabelProperties: [ 'prefLabel', 'inParens:ordinal', 'date' ],
-          resultItemDetailsLabelProperties: [ 'specification' ]
+          resultItemDetailsLabelProperties: [ 'placePrefLabel', 'inParens:placeAlternativeName', 'specification' ]
         },
         serial: {
           type: 'serial',
           selectIndexLabel: 'Serie',
           sortedListQueryForField: "serialMainTitle",
-          resultItemLabelProperties: [ 'serialMainTitle', 'inParens:subtitle' ]
+          resultItemLabelProperties: [ 'serialMainTitle', 'subtitle' ],
+          resultItemDetailsLabelProperties: [
+            'publishedByName',
+            'inParens:publishedByAlternativeName',
+            'publishedByPlacePrefLabel',
+            'inParens:publishedByPlaceAlternativeName'
+          ]
         },
         publication: {
           type: 'publication',
@@ -1546,7 +1550,8 @@ module.exports = (app) => {
           type: 'workSeries',
           selectIndexLabel: 'Verksserie',
           sortedListQueryForField: 'workSeriesMainTitle',
-          resultItemLabelProperties: [ 'workSeriesMainTitle', 'subtitle' ]
+          resultItemLabelProperties: [ 'workSeriesMainTitle', 'subtitle' ],
+          resultItemDetailsLabelProperties: [ 'partNumber', 'partTitle' ]
         }
       },
       typeMap: {

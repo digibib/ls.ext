@@ -9,6 +9,12 @@
     "subtitle": {
       "type": "string"
     },
+    "partTitle": {
+      "type": "string"
+    },
+    "partNumber": {
+      "type": "string"
+    },
     "uri": {
       "type": "string",
       "index": "no"

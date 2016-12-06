@@ -196,7 +196,7 @@ class UserLoans extends React.Component {
     return (
       <section className="registered">
         <h1>
-          <FormattedMessage {...messages.name} values={{ name: this.props.loansAndReservations.name }} />
+          <FormattedMessage {...messages.name} values={{ name: this.props.borrowerName }} />
           {this.renderCurrentDateTime()}
         </h1>
         <button className="black-btn patron-placeholder">
@@ -306,6 +306,7 @@ UserLoans.propTypes = {
   loanActions: PropTypes.object.isRequired,
   reservationActions: PropTypes.object.isRequired,
   isRequestingChangePickupLocation: PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]).isRequired,
+  borrowerName: PropTypes.string.isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired
@@ -430,7 +431,8 @@ function mapStateToProps (state) {
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations,
     loansAndReservations: state.profile.loansAndReservations,
     libraries: state.application.libraries,
-    isRequestingChangePickupLocation: state.reservation.isRequestingChangePickupLocation
+    isRequestingChangePickupLocation: state.reservation.isRequestingChangePickupLocation,
+    borrowerName: state.profile.borrowerName
   }
 }
 

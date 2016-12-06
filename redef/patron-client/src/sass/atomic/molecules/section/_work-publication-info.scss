@@ -29,6 +29,14 @@
   .meta-info {
     @include span(9 last);
     @include container;
+
+    .numholds {
+      @include push(1);
+
+      font-weight: bold;
+      font-size: smaller;
+      color: $redColor;
+    }
   }
 
   .publication-text-container {

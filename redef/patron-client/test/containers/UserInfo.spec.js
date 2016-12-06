@@ -9,6 +9,7 @@ import { createStore } from 'redux'
 import rootReducer from '../../src/frontend/reducers'
 import { Provider } from 'react-redux'
 import * as ProfileActions from '../../src/frontend/actions/ProfileActions'
+import * as LoginActions from '../../src/frontend/actions/LoginActions'
 import { formatDate } from '../../src/frontend/utils/dateFormatter'
 
 function setup (propOverrides) {
@@ -24,15 +25,16 @@ function setup (propOverrides) {
     city: 'city',
     country: 'country',
     email: 'email',
-    lastUpdated: '01/11/2016',
+    /* lastUpdated: '01/11/2016', */
     loanerCardIssued: 'loanerCardIssued',
     loanerCategory: 'loanerCategory',
     mobile: 'mobile',
-    name: 'name',
+    /* name: 'name', */
     zipcode: 'zipcode'
   }
 
   const store = createStore(rootReducer)
+  store.dispatch(LoginActions.loginSuccess('test_username', 'test_borrowernumber', 'test_borrowerName'))
   store.dispatch(ProfileActions.receiveProfileInfo(profileInformation))
 
   const output = TestUtils.renderIntoDocument(

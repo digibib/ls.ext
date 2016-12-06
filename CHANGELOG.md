@@ -13,6 +13,30 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.7.0 (2016-12-06)
+
+KOHA: 3edb4bf7e759c00d98c4ded6392869c3b3814971
+
+- Koha:
+  - Oppgradert til mainline versjon: 16.11
+    slik at vi er mer i sync med koha community
+  - bruk sms proxy ved utsendelse av SMS for bedre feilsøking
+  - API expanded items return number of holds
+  - fixes in NL sync
+  - DEICH-400: automatic limit on patrons with long overdue
+- Catalinker:
+  - DEICH-425: extend index mapping for work series, corporation (with place), serial (with publisher) and event (with place)
+  - DEICH-497: add more fields to Serials and work series
+- Patron-client:
+  - DEICH-444: show number of holds per publication
+  - DEICH-303: Add logged in name to header
+  - DEICH-492: Reset default messaging prefs for item_due to none
+  - DEICH-498: Fix default mapping of messaging prefs
+  - DEICH-501: Standard messaging prefs for new registrations
+- Services:
+  - Include more media types for illustrative matter
+
+
 ## 0.6.5 (2016-11-30)
 
 KOHA: 008a33634de04bda2287dd7fc8d89a53c7bc968d

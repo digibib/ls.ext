@@ -14,8 +14,9 @@ Egenskap: Min Side
     Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
     Når jeg logger inn
-    Og jeg trykker på personopplysninger
-    Når jeg trykker på endre personopplysninger
+    Så skal jeg se at jeg er logget inn
+    Når jeg trykker på personopplysninger
+    Og jeg trykker på endre personopplysninger
     Så skal jeg se et skjema med personopplysninger
     Og jeg sjekker om epost og mobil/telefon valideres riktig
     Og jeg sjekker om postnummer valideres riktig
@@ -57,3 +58,15 @@ Egenskap: Min Side
     Og jeg trykker lagre inne på innstillinger
     Og jeg trykker oppfrisk i nettleseren
     Så skal ingen av avkrysningsboksene være skrudd på inne på innstillinger
+
+  Scenario: Låner skriver feil passord
+    Gitt at jeg er logget inn som adminbruker
+    Og at det finnes en låner med passord
+    Og at jeg er i søkegrensesnittet
+    Når jeg trykker logg inn
+    Så skal jeg se innloggingsvinduet
+    Når jeg skriver inn riktig brukernavn men feil passord
+    Så skal jeg se en melding om feil brukernavn og/eller passord
+    Når jeg trykker oppfrisk i nettleseren
+    Så skal jeg se at jeg ikke er logget inn
+
