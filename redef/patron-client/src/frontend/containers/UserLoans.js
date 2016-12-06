@@ -89,6 +89,9 @@ class UserLoans extends React.Component {
                   {this.renderResumeSuspendReservationButton(item)}
                 </td>
                 <td>
+                  {this.renderResumeSuspendReservationButton(item)}
+                </td>
+                <td>
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.reserveId}>
                     <button className="black-btn" data-automation-id="cancel_reservation_button">
