@@ -836,139 +836,144 @@
       type = type || typeFromUri(resourceUri)
       root = root || ldGraph.parse(graphData).byId(resourceUri)
 
+      let inputs = options.inputs || allInputs()
       var promises = []
       var skipRest = false
-      _.each(options.inputs || allInputs(), function (input, index) {
-        if (!skipRest &&
-          ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
-          (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
-          (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain)))) {
-          let ownerInput = inputFromInputId(input.belongsToCreateResourceFormOfInput)
-          if (ownerInput.domain &&
-            input.belongsToCreateResourceFormOfInput &&
-            ((input.targetResourceIsMainEntry || false) === (options.wrapperObject && options.wrapperObject.isA('MainEntry')) || false) &&
-            (unPrefix(ownerInput.domain) === options.wrappedIn || !options.wrappedIn) &&
-            (options.wrapperObject && options.wrapperObject.isA(options.wrappedIn) || !options.wrapperObject)) {
-            let inputParentOfCreateNewResourceFormKeypath = ractive.get(`inputLinks.${input.belongsToCreateResourceFormOfInput}`)
-            ractive.push(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource`, root)
-            skipRest = true
-          } else {
-            input.offset = input.offset || {}
-            var offset = 0
-            if (input.offset[ offsetCrossTypes[ type ] ]) {
-              offset = input.offset[ offsetCrossTypes[ type ] ]
-            }
-            var predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
-            var actualRoots = input.isSubInput ? root.outAll(fragmentPartOf(input.parentInput.predicate)) : [ root ]
-            var rootIndex = 0
-            _.each(actualRoots, function (root) {
-              var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
-              var mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
-              if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
-                if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
-                  var index = 0
-                  let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
-                  promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
-                } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
-                  if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
-                    _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
-                      index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                      setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
-                      if (options.source && node.id !== '') {
-                        setPreviewValues(input, node, index)
-                      }
-                      if (!options.onlyValueSuggestions) {
-                        if (options.source) {
-                          input.values[ index ].searchable = true
-                        } else {
-                          input.values[ index ].searchable = false
-                        }
-                        if (node.id !== '') {
-                          promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
-                          if (!isBlankNodeUri(node.id)) {
-                            ractive.set(`${input.keypath}.values.${index}.deletable`, true)
-                            if (input.isSubInput && !options.source) {
-                              input.values[ index ].nonEditable = true
-                              ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
-                              input.parentInput.allowAddNewButton = true
-                            }
+      _.each([ true, false ], function (onlyDoSuggestionForCreateNewResource) {
+        _.each(inputs, function (input, index) {
+          if (!skipRest &&
+            ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
+            (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
+            (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain)))) {
+            let ownerInput = inputFromInputId(input.belongsToCreateResourceFormOfInput)
+            if (ownerInput.domain &&
+              input.belongsToCreateResourceFormOfInput &&
+              ((input.targetResourceIsMainEntry || false) === (options.wrapperObject && options.wrapperObject.isA('MainEntry')) || false) &&
+              (unPrefix(ownerInput.domain) === options.wrappedIn || !options.wrappedIn) &&
+              (options.wrapperObject && options.wrapperObject.isA(options.wrappedIn) || !options.wrapperObject)) {
+              let inputParentOfCreateNewResourceFormKeypath = ractive.get(`inputLinks.${input.belongsToCreateResourceFormOfInput}`)
+              ractive.push(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource`, root)
+              skipRest = true
+            } else {
+              if (!onlyDoSuggestionForCreateNewResource) {
+                input.offset = input.offset || {}
+                var offset = 0
+                if (input.offset[ offsetCrossTypes[ type ] ]) {
+                  offset = input.offset[ offsetCrossTypes[ type ] ]
+                }
+                var predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
+                var actualRoots = input.isSubInput ? root.outAll(fragmentPartOf(input.parentInput.predicate)) : [ root ]
+                var rootIndex = 0
+                _.each(actualRoots, function (root) {
+                  var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
+                  var mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
+                  if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
+                    if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
+                      var index = 0
+                      let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
+                      promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
+                    } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
+                      if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
+                        _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
+                          index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
+                          setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
+                          if (options.source && node.id !== '') {
+                            setPreviewValues(input, node, index)
                           }
-                        }
-                        setAllowNewButtonForInput(input)
+                          if (!options.onlyValueSuggestions) {
+                            if (options.source) {
+                              input.values[ index ].searchable = true
+                            } else {
+                              input.values[ index ].searchable = false
+                            }
+                            if (node.id !== '') {
+                              promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
+                              if (!isBlankNodeUri(node.id)) {
+                                ractive.set(`${input.keypath}.values.${index}.deletable`, true)
+                                if (input.isSubInput && !options.source) {
+                                  input.values[ index ].nonEditable = true
+                                  ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                                  input.parentInput.allowAddNewButton = true
+                                }
+                              }
+                            }
+                            setAllowNewButtonForInput(input)
+                          } else {
+                            setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
+                            input.values[ index ].searchable = true
+                          }
+                          input.values[ index ].subjectType = type
+                          ractive.update(`${input.keypath}.values.${index}`)
+                        })
                       } else {
-                        setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
-                        input.values[ index ].searchable = true
-                      }
-                      input.values[ index ].subjectType = type
-                      ractive.update(`${input.keypath}.values.${index}`)
-                    })
-                  } else {
-                    _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
-                      input.suggestedValues = input.suggestedValues || []
-                      input.suggestedValues.push({
-                        value: node.value,
-                        source: options.source
-                      })
-                    })
-                  }
-                } else if (input.type === 'select-predefined-value') {
-                  if (!options.onlyValueSuggestions) {
-                    setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                    if (input.isSubInput && !options.source) {
-                      input.values[ rootIndex + (offset) ].nonEditable = true
-                      ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
-                      ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
-                    }
-                  } else {
-                    var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-                    _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                      if (input.isSubInput && multiple) {
-                        setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                        input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
-                      } else {
-                        input.suggestedValues = input.suggestedValues || []
-                        input.suggestedValues.push({
-                          value: {
-                            value: value.id,
-                            label: Main.predefinedLabelValue(input.fragment, value.id)
-                          },
-                          source: options.source
+                        _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
+                          input.suggestedValues = input.suggestedValues || []
+                          input.suggestedValues.push({
+                            value: node.value,
+                            source: options.source
+                          })
                         })
                       }
-                    })
-                  }
-                } else if (input.type === 'hidden-url-query-value') {
-                  _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                    setIdValue(value.id, input, 0)
-                  })
-                } else {
-                  _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { value: '' } ]), function (value, index) {
-                    if (!options.onlyValueSuggestions) {
-                      let valueIndex = input.isSubInput ? rootIndex : index
-                      setSingleValue(value, input, (valueIndex) + (offset), options)
-                      input.values[ valueIndex ].subjectType = type
-                      if (input.isSubInput && !options.source) {
-                        input.values[ valueIndex ].nonEditable = true
-                        ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
-                        input.parentInput.allowAddNewButton = true
+                    } else if (input.type === 'select-predefined-value') {
+                      if (!options.onlyValueSuggestions) {
+                        setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                        if (input.isSubInput && !options.source) {
+                          input.values[ rootIndex + (offset) ].nonEditable = true
+                          ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
+                          ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
+                        }
+                      } else {
+                        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
+                        _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
+                          if (input.isSubInput && multiple) {
+                            setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                            input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                          } else {
+                            input.suggestedValues = input.suggestedValues || []
+                            input.suggestedValues.push({
+                              value: {
+                                value: value.id,
+                                label: Main.predefinedLabelValue(input.fragment, value.id)
+                              },
+                              source: options.source
+                            })
+                          }
+                        })
                       }
-                      ractive.update(`${input.keypath}.values.${valueIndex}`)
-                      ractive.set(`${input.keypath}.allowAddNewButton`, true)
+                    } else if (input.type === 'hidden-url-query-value') {
+                      _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
+                        setIdValue(value.id, input, 0)
+                      })
                     } else {
-                      input.suggestedValues = input.suggestedValues || []
-                      input.suggestedValues.push({
-                        value: value.value,
-                        source: options.source
+                      _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { value: '' } ]), function (value, index) {
+                        if (!options.onlyValueSuggestions) {
+                          let valueIndex = input.isSubInput ? rootIndex : index
+                          setSingleValue(value, input, (valueIndex) + (offset), options)
+                          input.values[ valueIndex ].subjectType = type
+                          if (input.isSubInput && !options.source) {
+                            input.values[ valueIndex ].nonEditable = true
+                            ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
+                            input.parentInput.allowAddNewButton = true
+                          }
+                          ractive.update(`${input.keypath}.values.${valueIndex}`)
+                          ractive.set(`${input.keypath}.allowAddNewButton`, true)
+                        } else {
+                          input.suggestedValues = input.suggestedValues || []
+                          input.suggestedValues.push({
+                            value: value.value,
+                            source: options.source
+                          })
+                        }
                       })
                     }
-                  })
-                }
-                rootIndex++
+                    rootIndex++
+                  }
+                })
+                input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
               }
-            })
-            input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+            }
           }
-        }
+        })
       })
       Promise.all(promises).then(function () {
         if (!options.deferUpdate || promises.length > 0) {
@@ -2315,7 +2320,7 @@
           }
           var timePicker = function (node) {
             require('timepicker')
-            $(node).timepicker({ 'timeFormat': 'H:i:s', step: 50000 })
+            $(node).timepicker({ 'timeFormat': 'H:i:s', step: 50000, 'wrapHours': false })
             return {
               teardown: function () {}
             }
