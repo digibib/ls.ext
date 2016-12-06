@@ -29,7 +29,7 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
-    Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Dirigent" knyttet til "verket"
+    Så sjekker jeg at det finnes en hovedinnførsel hvor organisasjonen jeg valgte har rollen "Dirigent" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
     Og jeg venter litt
@@ -101,7 +101,7 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
-    Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Dirigent" knyttet til "verket"
+    Så sjekker jeg at det finnes en hovedinnførsel hvor organisasjonen jeg valgte har rollen "Dirigent" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
     Og jeg legger inn samme ISBN-nummer i ISBN-feltet til utgivelsen

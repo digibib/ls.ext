@@ -64,6 +64,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg legger inn emnet i søkefelt for emne og trykker enter
     Så velger jeg et emne fra treffliste fra emneregisteret
     Så sjekker jeg at emnet er listet opp på verket
+    Og jeg venter litt
+    Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv deler"
     Så velger jeg aktørtype "Organisasjon"
     Og jeg legger inn et nytt navn
@@ -127,10 +129,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at utgivelsen er tilkoplet riktig utgitt av
     Og at utgivelsen har samme hovedtittel som verket
     Og at utgivelsen har samme undertittel som verket
-    Og jeg åpner verket for lesing
-    Og jeg venter litt
-    Og at verket er tilkoplet riktig emne
-    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
+@    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
   Scenario: Slette verk
     Gitt at jeg har en bok
@@ -212,7 +211,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg velger rollen "Forfatter"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
-    Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
+    Så sjekker jeg at det finnes en hovedinnførsel hvor organisasjonen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Og at jeg skriver inn tilfeldig organisasjon i feltet "Utgitt av" og trykker enter
     Så får jeg ingen treff
