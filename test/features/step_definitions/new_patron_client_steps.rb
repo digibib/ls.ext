@@ -365,6 +365,7 @@ end
 
 Then(/^jeg kan søkes opp i systemet som låner$/) do
   @site.Patrons.visit.search @active[:patron].surname
+  wait_for { @browser.div(class: 'patroninfo').present? }
   @browser.div(class: 'patroninfo').text.should include(@active[:patron].surname)
 end
 
