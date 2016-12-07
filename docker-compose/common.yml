@@ -21,6 +21,7 @@ services:
     depends_on:
       - sms
       - smtp
+      - koha_mysql
       - sip_proxy
     cap_add:
       - SYS_NICE
