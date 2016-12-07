@@ -309,7 +309,7 @@ public class SearchServiceImpl implements SearchService {
     public final Response sortedList(String type, String prefix, int minSize, String field) {
         List<Map> musts = new ArrayList<>();
         for (int i = 0; i < prefix.length(); i++) {
-            musts.add(of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))));
+            musts.add(of("constant_score", of("boost", prefix.length() - i, "query", of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
         }
         String body = GSON.toJson(of(
                 "size", minSize,
