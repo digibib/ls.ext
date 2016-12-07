@@ -161,9 +161,10 @@ INSERT {
 }
 
 WHERE {
-  ?pub :tag tag:xmusikkinstrumenter ;
+  ?pub :tags ?tag ;
     :format format:PhysicalBody ;
     a :Publication .
+  FILTER (REGEX(?tag, "musikkinstrument", "i"))
 }
 ;
 
