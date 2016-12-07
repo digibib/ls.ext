@@ -81,9 +81,9 @@ ifndef NOKOHA
 	@echo "-- Populating Koha with static configuration data"
 	@cp config_data/* out/
 	@cp sql/*.sql out/
-	@wget -q http://static.deichman.no/koha/setup.sql -O out/setup.sql
-	@echo "-- Loading MARC-framework and notices"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup.sql'
+	#@wget -q http://static.deichman.no/koha/setup.sql -O out/setup.sql
+	#@echo "-- Loading MARC-framework and notices"
+	#@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup.sql'
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
 	@echo "-- Populating table defining extended patron attribute types"
