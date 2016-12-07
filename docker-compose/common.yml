@@ -44,7 +44,7 @@ services:
       API_PASSPHRASE: "${API_PASSPHRASE:-ChangeMe}"
       NLBASEUSER: "${NLBASEUSER:-nlbaseuser}"
       NLBASEPASS: "${NLBASEPASS:-nlbasepass}"
-      NLVENDORURL: "${NLVENDORURL:-nlvendorurl}"
+      NLVENDORURL: "${NLVENDORURL:-http://nlsink:9999}"
       NLVENDORUSER: "${NLVENDORUSER:-nlvendoruser}"
       NLVENDORPASS: "${NLVENDORPASS:-nlvendorpass}"
       NLVENDORKEY: "${NLVENDORKEY:-nlvendorkey}"
