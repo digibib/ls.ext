@@ -81,9 +81,9 @@ ifndef NOKOHA
 	@echo "-- Populating Koha with static configuration data"
 	@cp config_data/* out/
 	@cp sql/*.sql out/
-	@wget -q http://static.deichman.no/koha/setup.sql -O out/setup.sql
-	@echo "-- Loading MARC-framework and notices"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup.sql'
+	#@wget -q http://static.deichman.no/koha/setup.sql -O out/setup.sql
+	#@echo "-- Loading MARC-framework and notices"
+	#@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/setup.sql'
 	@echo "-- Populating authorized values"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/avalues.sql'
 	@echo "-- Populating table defining extended patron attribute types"
@@ -217,7 +217,7 @@ endif
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/serial/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/compositionType/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/event/reindex_all'
-	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/workseries/reindex_all'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/workSeries/reindex_all'
 	@echo "-- Start syncing MARC records..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X PUT services:8005/publication/sync_all'
 	@echo "   Migration is complete. Goodbye!"

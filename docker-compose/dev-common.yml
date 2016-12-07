@@ -23,7 +23,7 @@ services:
       KOHA_MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
       KOHA_MYSQL_PASS: "${KOHA_ADMINPASS:-secret}"
       KOHA_MYSQL_DB: "koha_${KOHA_INSTANCE:-name}"
-      KOHA_API_PASS_ENCRYPTED: "${KOHA_API_PASS_ENCRYPTED}"
+      KOHA_API_PASS_ENCRYPTED: "$$2a$$08$$7WnfE3Fyh5W0C28Xp2SWH.NfgqLEZzw9oZI4qZ3MHf.lQS8yvv6hC"
 
   cuke_tests:
     container_name: cuke_tests

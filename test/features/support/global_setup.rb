@@ -43,6 +43,9 @@ VALUES ('B','Bok');
 
 INSERT IGNORE INTO categories (categorycode, description, category_type, enrolmentperioddate)
 VALUES('V','Voksen','A','2999-12-31');
+
+INSERT IGNORE INTO borrower_attribute_types (code, description, unique_id, staff_searchable, class)
+VALUES('fnr','Fødselsnummer',1,1,'fnr');
 }.gsub(/\s+/, " ").strip
 
     `mysql --default-character-set=utf8 -h koha_mysql -u#{ENV['KOHA_ADMINUSER']} -p#{ENV['KOHA_ADMINPASS']} koha_name -e "#{sql}"`

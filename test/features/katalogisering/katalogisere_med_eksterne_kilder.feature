@@ -29,7 +29,7 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
-    Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Dirigent" knyttet til "verket"
+    Så sjekker jeg at det finnes en hovedinnførsel hvor organisasjonen jeg valgte har rollen "Dirigent" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
     Og jeg venter litt
@@ -56,7 +56,7 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg venter litt
     Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
     Og jeg trykker på "Legg til"-knappen
-    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "utgivelsen"
+    Så sjekker jeg at det finnes en biinnførsel hvor organisasjonen jeg valgte har rollen "Forfatter" knyttet til "utgivelsen"
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
     Så trykker jeg på "Opprett ny person"-knappen
     Så noterer jeg ned navnet på personen
@@ -65,7 +65,7 @@ Egenskap: katalogisere med eksterne kilder
     Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
-    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Oversetter" knyttet til "utgivelsen"
+    Så sjekker jeg at det finnes en biinnførsel hvor organisasjonen jeg valgte har rollen "Oversetter" knyttet til "utgivelsen"
     Og jeg trykker på "Bruk forslag"-knappen
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
     Så trykker jeg på "Opprett ny person"-knappen
@@ -75,7 +75,7 @@ Egenskap: katalogisere med eksterne kilder
     Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
-    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"
+    Så sjekker jeg at det finnes en biinnførsel hvor organisasjonen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"
 
     
   Scenario: Legge inn et ISBN-nummer som finnes fra før
@@ -101,7 +101,7 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
-    Så sjekker jeg at det finnes en hovedinnførsel hvor personen jeg valgte har rollen "Dirigent" knyttet til "verket"
+    Så sjekker jeg at det finnes en hovedinnførsel hvor organisasjonen jeg valgte har rollen "Dirigent" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Så sjekker jeg at verdien for "Utgivelsesår" er "1998"
     Og jeg legger inn samme ISBN-nummer i ISBN-feltet til utgivelsen
