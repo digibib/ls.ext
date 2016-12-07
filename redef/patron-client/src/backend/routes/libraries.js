@@ -21,7 +21,7 @@ module.exports = (app) => {
 
   function filterLibraries (libraries) {
     return libraries.filter(library => {
-      if (![ 'api', 'hsko', 'ukjent', 'fbje' ].includes(library.branchcode)) { return true }
+      if (![ 'api', 'hsko', 'ukjent', 'fbje', 'hlsf' ].includes(library.branchcode)) { return true }
     })
   }
 }
