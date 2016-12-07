@@ -4,13 +4,15 @@ CONSTRUCT
   { ?serialUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Serial ;
                :mainTitle ?mainTitle ;
                :subtitle ?subtitle ;
+               :partTitle ?partTitle ;
+               :partNumber ?partNumber ;
                :publishedByName ?publishedByName ;
                :publishedByAlternativeName ?publishedByAlternativeName ;
                :publishedByPlacePrefLabel ?publishedByPlacePrefLabel ;
                :publishedByPlaceAlternativeName ?publishedByPlaceAlternativeName .
   }
 WHERE
-  { SELECT DISTINCT  ?serialUri ?mainTitle ?subtitle ?publishedByName ?publishedByAlternativeName ?publishedByPlacePrefLabel ?publishedByPlaceAlternativeName
+  { SELECT DISTINCT  ?serialUri ?mainTitle ?subtitle ?publishedByName ?publishedByAlternativeName ?publishedByPlacePrefLabel ?publishedByPlaceAlternativeName ?partTitle ?partNumber
     WHERE
       { BIND(uri("__SERIALURI__") AS ?serialUri)
         ?serialUri  a                   :Serial ;
@@ -20,6 +22,12 @@ WHERE
           }
         OPTIONAL
           { ?serialUri  :subtitle  ?subtitle
+          }
+        OPTIONAL
+          { ?serialUri  :partTitle  ?partTitle
+          }
+        OPTIONAL
+          { ?serialUri  :partNumber ?partNumber
           }
         OPTIONAL
           {

@@ -4,6 +4,8 @@
     "deichman": "__ONTOLOGY__",
     "serialMainTitle": "deichman:mainTitle",
     "subtitle": "deichman:subtitle",
+    "partTitle": "deichman:partTitle",
+    "partNumber": "deichman:partNumber",
     "publishedByName": "deichman:publishedByName",
     "publishedByAlternativeName": "deichman:publishedByAlternativeName",
     "publishedByPlacePrefLabel": "deichman:publishedByPlacePrefLabel",

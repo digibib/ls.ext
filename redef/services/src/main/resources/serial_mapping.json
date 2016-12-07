@@ -24,6 +24,12 @@
     },
     "publishedByPlaceAlternativeName": {
       "type": "string"
+    },
+    "partTitle": {
+      "type": "string"
+    },
+    "partNumber": {
+      "type": "string"
     }
   }
 }

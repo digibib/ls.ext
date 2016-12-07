@@ -48,6 +48,16 @@ public class SerialModelToIndexMapperTest extends ModelToIndexMapperTestSupport 
                 ResourceFactory.createProperty(BaseURI.ontology("subtitle")),
                 ResourceFactory.createPlainLiteral("Følelser i sentrum")));
 
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(xuri.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology() + "partTitle"),
+                ResourceFactory.createPlainLiteral("Sinne")));
+
+        model.add(ResourceFactory.createStatement(
+                ResourceFactory.createResource(xuri.getUri()),
+                ResourceFactory.createProperty(BaseURI.ontology() + "partNumber"),
+                ResourceFactory.createPlainLiteral("12")));
+
         addPublishedByToModel(withAlternativePublisherName, xuri, model);
 
         String jsonDocument = new ModelToIndexMapper("serial").createIndexDocument(model, xuri);
@@ -59,6 +69,8 @@ public class SerialModelToIndexMapperTest extends ModelToIndexMapperTestSupport 
                 + "  \"subtitle\": \"Følelser i sentrum\","
                 + "  \"publishedByName\": \"" + getPublishedByName() + "\","
                 + "  \"publishedByPlacePrefLabel\": \"" + getPlacePrefLabel() + "\","
+                + "  \"partTitle\": \"Sinne\","
+                + "  \"partNumber\": \"12\","
                 + (withAlternativePublisherName ? "  \"publishedByAlternativeName\": \"" + getPublishedByAlternativeName() + "\"," : "")
                 + (withAlternativePublisherName ? "  \"publishedByPlaceAlternativeName\": \"" + getPlaceAlternativeName() + "\"" : "")
                 + "}").allowingAnyArrayOrdering());
