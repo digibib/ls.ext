@@ -1593,13 +1593,8 @@ module.exports = (app) => {
             type: 'serial',
             selectIndexLabel: 'Serie',
             sortedListQueryForField: "serialMainTitle",
-            resultItemLabelProperties: [ 'serialMainTitle', 'subtitle' ],
-            resultItemDetailsLabelProperties: [
-              'publishedByName',
-              'inParens:publishedByAlternativeName',
-              'publishedByPlacePrefLabel',
-              'inParens:publishedByPlaceAlternativeName'
-            ]
+            resultItemLabelProperties: [ 'serialMainTitle:', 'subtitle' ],
+            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ]
           },
           publication: {
             type: 'publication',
