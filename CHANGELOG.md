@@ -13,6 +13,22 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
+## 0.7.1 (2016-12-06)
+
+KOHA: c759c872b832b5517faee92dc46a2c941dfe174c
+
+- Koha:
+  - temporary fix for patron search result, redirect if one hit
+- Patron-client:
+  - DEICH-447: suspend and resume hold
+  - DEICH-337: sorting of loans
+- Services:
+  - DEICH-506: use constant scoring and decrreasing boost to improve alphabetical list search
+- Catalinker:
+  - DEICH-497: add partNumer and partTitle to serial mapping
+  - DEICH-500: allow duration longer than 24h
+  - DEICH-90: authority label templating in a more uniform fashion
+
 ## 0.7.0 (2016-12-06)
 
 KOHA: 3edb4bf7e759c00d98c4ded6392869c3b3814971
