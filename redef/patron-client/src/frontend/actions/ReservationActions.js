@@ -44,6 +44,43 @@ export const changePickupLocationSuccess = (reserveId, branchCode) => action(typ
 
 export const changePickupLocationFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
 
+export function changeReservationSuspension (reserveId, suspended) {
+  const url = '/api/v1/holds/'
+  return dispatch => {
+    dispatch(requestChangeReservationSuspension(reserveId, suspended))
+    return fetch(url, {
+      method: 'PATCH',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ reserveId, suspended })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          setTimeout(() => {
+            dispatch(changeReservationSuspensionSuccess(reserveId, suspended))
+          }, 500)
+        } else {
+          throw Error(Errors.reservation.GENERIC_CHANGE_RESERVATION_SUSPENSION_ERROR)
+        }
+      })
+      .catch(error => dispatch(changeReservationSuspensionFailure(error)))
+  }
+}
+
+export const requestChangeReservationSuspension = (reserveId, suspended) => action(types.REQUEST_CHANGE_RESERVATION_SUSPENSION, {
+  reserveId,
+  suspended
+})
+
+export const changeReservationSuspensionSuccess = (reserveId, suspended) => action(types.CHANGE_RESERVATION_SUSPENSION_SUCCESS, {
+  reserveId,
+  suspended
+})
+
+export const changeReservationSuspensionFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
+
 export function startReservation (recordId) {
   return requireLoginBeforeAction(showModal(ModalComponents.RESERVATION, { recordId: recordId }))
 }

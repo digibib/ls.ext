@@ -15,8 +15,9 @@ import {
   CHANGE_PASSWORD_FAILURE,
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
+  RECEIVE_LOGIN_STATUS,
   CHANGE_PICKUP_LOCATION_SUCCESS,
-  RECEIVE_LOGIN_STATUS
+  CHANGE_RESERVATION_SUSPENSION_SUCCESS
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -110,6 +111,20 @@ export default function profile (state = initialState, action) {
           })
         }
       }
+    case CHANGE_RESERVATION_SUSPENSION_SUCCESS:
+      return {
+        ...state,
+        loansAndReservations: {
+          ...state.loansAndReservations,
+          reservations: state.loansAndReservations.reservations.map(reservation => {
+            if (reservation.reserveId === action.payload.reserveId) {
+              reservation.suspended = action.payload.suspended
+            }
+            return reservation
+          })
+        }
+      }
+
     case RECEIVE_LOGIN_STATUS:
       return { ...state, borrowerName: action.payload.borrowerName }
     default:
