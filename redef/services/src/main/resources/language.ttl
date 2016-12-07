@@ -565,3 +565,7 @@ language:zza	a	lvont:Language ;
 language:zul	a	lvont:Language ;
 	rdfs:label	"Zulu"@no ;
 	rdfs:label	"Zulu"@en .
+
+language:ing	a	lvont:Language ;
+	rdfs:label	"Ingen"@no ;
+	rdfs:label	"None"@en .
