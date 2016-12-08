@@ -721,7 +721,7 @@ module.exports = (app) => {
                 addAnotherLabel: 'Legg til et omfang'
               },
               {
-                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic' ] },
+                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
                 rdfProperty: 'illustrativeMatter',
                 multiple: true
               },
