@@ -2,7 +2,7 @@
 
 # wait until database is responding and has been populated by koha web installer
 while true; do
-  mysql --protocol=tcp -h koha_mysql -u"$KOHA_MYSQL_USER" -p"$KOHA_MYSQL_PASS" "$KOHA_MYSQL_DB" -e "SELECT 1 FROM categories,branches,borrowers"
+  mysql --protocol=tcp -h koha_mysql -u"$KOHA_MYSQL_USER" -p"$KOHA_MYSQL_PASS" "$KOHA_MYSQL_DB" -e "SELECT 1 FROM categories,branches,borrowers LIMIT 1"
   if [ $? = 0 ]; then break; fi;
   sleep 3s;
 done;

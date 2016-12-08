@@ -2514,7 +2514,11 @@
                 let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
                   return item[ prop ]
                 })
-                return _.compact(_.pluck(searchResultItems, 'val')).join(' ').replace('– ', '–').replace(/,$/, '')
+                return _.compact(_.pluck(searchResultItems, 'val'))
+                  .join(' ')
+                  .replace('– ', '–')
+                  .replace(/[,:]$/, '')
+                  .replace(': ', ' : ')
               },
               tabIdFromDocumentUrl: function () {
                 var uri = URI.parse(document.location.href)
