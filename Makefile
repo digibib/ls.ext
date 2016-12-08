@@ -226,13 +226,3 @@ create_dev_stack_image:
 		-t digibib/docker-compose-dot:$(DOCKER_COMPOSE_DOT_IMAGE) \
 		./app /tmp/docker-compose-template-dev.yml | \
 		dot -Tpng > $(LSEXTPATH)/docker-compose/dev-stack.png"
-
-prepare_prod: # provision for prod, assuming docker & docker-compose installed
-	@echo "Preparing docker-compose template"
-	@bash -c  "cd docker-compose && \
-		source docker-compose.env && \
-		source secrets.env && \
-		LSEXTPATH=$$(pwd) && \
-		envsubst < docker-compose-template-prod.yml > docker-compose.yml"
-	@echo "Fetching containers (using GITREF=$(GITREF))"
-	@docker-compose -f docker-compose/docker-compose.yml pull
