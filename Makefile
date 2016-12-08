@@ -41,7 +41,7 @@ halt: halt_ship						## Halt boxes.
 reload_ship: halt_ship up_ship                        ##
 
 docker_compose_up:
-	$(CMD) -c "cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) up -d"]
+	$(CMD) -c "cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) up -d"
 
 halt_ship:
 	@$(NOVAGRANT) || vagrant halt $(SHIP)
