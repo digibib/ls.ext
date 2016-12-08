@@ -101,7 +101,7 @@ endif
 rebuild=$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
 	  $(DOCKER_COMPOSE) stop $(1) || true &&\
 	  $(DOCKER_COMPOSE) rm -f $(1) || true &&\
-	  $(DOCKER_COMPOSE) $(CACHE_ARG) build $(1) &&\
+	  $(DOCKER_COMPOSE) build $(CACHE_ARG) $(1) &&\
 	  $(DOCKER_COMPOSE) up --force-recreate --no-deps -d $(1)"
 
 rebuild_services: docker_cleanup			## Force rebuilds services
