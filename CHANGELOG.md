@@ -13,7 +13,15 @@ The resulting compose file can then be used with `docker-compose up -d` to provi
 
 # Releases
 
-## 0.7.1 (2016-12-06)
+## 0.7.2 (2016-12-08) bugfix
+
+- Infrastructure:
+  - docker-compose upgrade: (1.9.0) and fixes
+- Catalinker:
+  - DEICH-90: minor title fixes
+  - re-introduce illustratitveMatter field appearance for media tytpe ComicBook, LanguageCourse andE-book lost in merge
+
+## 0.7.1 (2016-12-06) update
 
 KOHA: c759c872b832b5517faee92dc46a2c941dfe174c
 
