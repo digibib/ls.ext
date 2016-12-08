@@ -94,10 +94,14 @@ ifdef FAIL_FAST
 FAIL_FAST_ARG=-e FAIL_FAST=1
 endif
 
+ifeq ($(LSDEVMODE),ci)
+CACHE_ARG=--no-cache
+endif
+
 rebuild=$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
 	  $(DOCKER_COMPOSE) stop $(1) || true &&\
 	  $(DOCKER_COMPOSE) rm -f $(1) || true &&\
-	  $(DOCKER_COMPOSE) build $(1) &&\
+	  $(DOCKER_COMPOSE) $(CACHE_ARG) build $(1) &&\
 	  $(DOCKER_COMPOSE) up --force-recreate --no-deps -d $(1)"
 
 rebuild_services: docker_cleanup			## Force rebuilds services
@@ -119,7 +123,7 @@ ifeq ($(LSDEVMODE),ci)
 	$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
 	  $(DOCKER_COMPOSE) stop build_patron_client || true &&\
 	  $(DOCKER_COMPOSE) rm -f build_patron_client || true &&\
-	  $(DOCKER_COMPOSE) build build_patron_client &&\
+	  $(DOCKER_COMPOSE) build --no-cache build_patron_client &&\
 	  $(DOCKER_COMPOSE) run build_patron_client"
 endif
 	$(call rebuild,patron_client)
