@@ -1,5 +1,6 @@
 import { relativeUri, getId } from './uriParser'
 import Constants from '../constants/Constants'
+import title from './title'
 
 export function processSearchResponse (response, locationQuery) {
   const processedResponse = {}
@@ -84,20 +85,12 @@ export function processSearchResponse (response, locationQuery) {
         selected = result.publication
       }
 
-      if (selected.subtitle) {
-        result.titleLine1 = `${selected.mainTitle} : ${selected.subtitle}`
-      } else {
-        result.titleLine1 = selected.mainTitle
-      }
-      if (selected.partNumber && selected.partTitle) {
-        result.titleLine2 = `${selected.partNumber}. ${selected.partTitle}`
-      } else if (selected.partNumber) {
-        result.titleLine2 = selected.partNumber
-      } else if (selected.partTitle) {
-        result.titleLine2 = selected.partTitle
-      } else {
-        result.titleLine2 = ''
-      }
+      result.title = title({
+        mainTitle: selected.mainTitle,
+        subtitle: selected.subtitle,
+        partNumber: selected.partNumber,
+        partTitle: selected.partTitle
+      })
 
       if (selected.pubUri) {
         result.relativePublicationUri = `${result.relativeUri}${relativeUri(selected.pubUri)}`

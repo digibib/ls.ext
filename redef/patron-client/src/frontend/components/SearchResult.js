@@ -44,8 +44,7 @@ class SearchResult extends React.Component {
     return (
       <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
         <h1 className="workTitle" data-automation-id="work-title">
-          <span className="title-text">{result.titleLine1}</span><br />
-          <span className="title-text">{result.titleLine2}</span>
+          <span className="title-text">{result.title}</span>
           <span className="caret"><i className="icon-angle-wide" /></span>
         </h1>
       </Link>
