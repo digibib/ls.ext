@@ -74,7 +74,6 @@ export default {
   'Login.logIn': 'Logg inn',
   'Login.password': 'PIN-kode:',
   'Login.username': 'Lånernummer eller epost:',
-  'MainAndSubTitle.noMainTitle': '<Mangler tittel>',
   'MyPage.loansAndReservations': 'Lån og reservasjoner',
   'MyPage.mustBeLoggedIn': 'Du må være logget inn for å se Min Side.',
   'MyPage.personalInformation': 'Personopplysninger',
