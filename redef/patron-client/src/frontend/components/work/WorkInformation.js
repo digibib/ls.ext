@@ -9,8 +9,8 @@ import Contributors from './fields/Contributors'
 import OriginalLanguage from './fields/OriginalLanguage'
 import OriginalTitle from './fields/OriginalTitle'
 import LiteraryForms from './fields/LiteraryForms'
-import MainAndSubTitle from './fields/MainAndSubTitle'
-import PartNumberAndTitle from './fields/PartNumberAndTitle'
+import Title from './fields/Title'
+import title from '../../utils/title'
 
 const WorkInformation = ({ work, publicationId, showAdditionalInformation, toggleShowAdditionalInformation, mediaQueryValues }) => {
   const chosenPublication = work.publications.find(publication => publication.id === publicationId)
@@ -18,11 +18,11 @@ const WorkInformation = ({ work, publicationId, showAdditionalInformation, toggl
   const partTitle = chosenPublication ? chosenPublication.partTitle : work.partTitle
   const partNumber = chosenPublication ? chosenPublication.partNumber : work.partNumber
   const subtitle = chosenPublication ? chosenPublication.subtitle : work.subtitle
+  const completeTitle = title({mainTitle, subtitle, partNumber, partTitle})
 
   return (
     <section className="work-information">
-      <MainAndSubTitle mainTitle={mainTitle} subtitle={subtitle} />
-      <PartNumberAndTitle partNumber={partNumber} partTitle={partTitle} />
+      <Title title={completeTitle} />
       <Author by={work.by} />
       <OriginalTitle mainTitle={work.mainTitle} subtitle={work.subtitle} partNumber={work.partNumber}
                      partTitle={work.partTitle} />
