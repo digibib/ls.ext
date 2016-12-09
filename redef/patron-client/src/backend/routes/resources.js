@@ -83,7 +83,8 @@ module.exports = (app) => {
               branchcode: item.homebranch,
               barcode: item.barcode,
               location: item.location,
-              notforloan: item.status === 'Ikke til hjemlån'
+              notforloan: item.status === 'Ikke til hjemlån' || item.status === 'Ikke til hjemlån (utlånt)',
+              notforloanAndCheckedOut: item.status === 'Ikke til hjemlån (utlånt)'
             }
             const key = `${newItem.branchcode}_${newItem.shelfmark}_${newItem.location}_${newItem.notforloan}`
             if (!items[ key ]) {
@@ -91,7 +92,7 @@ module.exports = (app) => {
               newItem.total = 0
               items[ key ] = newItem
             }
-            if (newItem.status === 'Ledig' || newItem.notforloan) {
+            if (newItem.status === 'Ledig' || (newItem.notforloan && !newItem.notforloanAndCheckedOut)) {
               items[ key ].available++
             }
             items[ key ].total++
