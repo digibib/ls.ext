@@ -3844,6 +3844,12 @@
             regex_strip: "^0+"
     -
       '008':
+        cataloguingDate:
+          predicate: "MIGRATION.cataloguingDate"
+          object:
+            datatype: "literall"
+            substr_length: 6
+            substr_offset: 0
         language:
           predicate: "ONTOLOGY.language"
           object:

@@ -270,39 +270,39 @@ WHERE {
 
 
 # 24) Merge works for parent-child records
-
-SPARQL
-DEFINE sql:log-enable 2
-PREFIX : <http://data.deichman.no/ontology#>
-PREFIX migration: <http://migration.deichman.no/>
-
-WITH <http://deichman.no/migration>
-
-MODIFY
-
-DELETE {
-  ?child :publicationOf ?childWork .
-  ?childWork ?p ?o .
-}
-
-INSERT {
-  ?child :publicationOf ?parentWork .
-}
-
-WHERE {
-  ?child migration:parentRecordId ?parentId ;
-    :publicationOf ?childWork ;
-    :mainTitle ?title .
-  ?parent :recordId ?parentId ;
-    :mainTitle ?title ;
-    :publicationOf ?parentWork .
-  ?childWork ?p ?o .
-  MINUS {
-    ?other :publicationOf ?childWork .
-    FILTER (?other != ?child)
-  }
-}
-;
+# 
+# SPARQL
+# DEFINE sql:log-enable 2
+# PREFIX : <http://data.deichman.no/ontology#>
+# PREFIX migration: <http://migration.deichman.no/>
+# 
+# WITH <http://deichman.no/migration>
+# 
+# MODIFY
+# 
+# DELETE {
+#   ?child :publicationOf ?childWork .
+#   ?childWork ?p ?o .
+# }
+# 
+# INSERT {
+#   ?child :publicationOf ?parentWork .
+# }
+# 
+# WHERE {
+#   ?child migration:parentRecordId ?parentId ;
+#     :publicationOf ?childWork ;
+#     :mainTitle ?title .
+#   ?parent :recordId ?parentId ;
+#     :mainTitle ?title ;
+#     :publicationOf ?parentWork .
+#   ?childWork ?p ?o .
+#   MINUS {
+#     ?other :publicationOf ?childWork .
+#     FILTER (?other != ?child)
+#   }
+# }
+# ;
 
 
 
