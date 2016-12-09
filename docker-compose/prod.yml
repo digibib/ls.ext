@@ -58,6 +58,15 @@ services:
       driver: "journald"
 
   sip_proxy:
+    command:
+      - "/sip2proxy"
+      - "-from=:9999"
+      - "-to=xkoha:6001"
+      - "-log-messages=true"
+      - "-replace-10=true"
+      - "-log-metrics-every-s=300"
+      - "-ensure-branch=true"
+      - "-gelf=udp://10.172.2.16:12201"
     logging:
       driver: "journald"
 
