@@ -15,6 +15,7 @@ Egenskap: Varsling på epost
     Og systemet sender ut en velkomst-epost
     Så vil låneren motta en velkomst-epost fra biblioteket
 
+  @wip
   Scenario: Epost om reservert tittel som er klar til avhenting
     Gitt at det finnes en låner med lånekort
       | firstname | dateenrolled | dateexpiry | gonenoaddress | lost  | debarred | password | flags |
