@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     software-properties-common \
+    libxi6 \
+    libgconf-2-4 \
     chromium-browser \
     mysql-client \
     apparmor && \
@@ -24,10 +26,6 @@ RUN wget --quiet https://github.com/Medium/phantomjs/releases/download/v2.1.1/ph
     mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin &&\
     rm phantomjs-2.1.1-linux-x86_64.tar &&\
     rm -r phantomjs-2.1.1-linux-x86_64
-
-RUN wget --quiet http://heanet.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_49.0.1-0ubuntu1_amd64.deb && \
-    dpkg -i firefox-mozilla-build_49.0.1-0ubuntu1_amd64.deb && \
-    rm -rf firefox-mozilla-build_49.0.1-0ubuntu1_amd64.deb
 
 RUN gem install \
     rspec \

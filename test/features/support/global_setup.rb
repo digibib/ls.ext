@@ -8,7 +8,7 @@ class GlobalSetup
 
   def initialize
     STDOUT.puts "SETUP: Populating global test settings"
-    @growser = (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+    @growser = Watir::Browser.new :phantomjs
     Site.new(@growser).Login.visit.login(ENV['KOHA_ADMINUSER'], ENV['KOHA_ADMINPASS'])
 
     # Set language to English during testing, use global var to avvoid running before each scenario
