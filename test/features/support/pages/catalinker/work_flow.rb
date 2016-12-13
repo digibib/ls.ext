@@ -6,7 +6,7 @@ class WorkFlow < CatalinkerPage
   def visit
     retry_wait do
       @browser.goto catalinker(:workflow)
-      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+      Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
         @browser.elements(:class => 'prop-input').size > 1
       end # wait until dom-tree has been populated
     end
@@ -16,7 +16,7 @@ class WorkFlow < CatalinkerPage
   def visit_landing_page_auth_maintenance
     retry_wait do
       @browser.goto catalinker(:landing_page_auth_maintenance)
-      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+      Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
         @browser.elements(:class => 'prop-input').size > 1
       end # wait until dom-tree has been populated
     end
@@ -28,7 +28,7 @@ class WorkFlow < CatalinkerPage
   end
 
   def assert_selected_tab(name_of_visible_tag)
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
       @browser.ul(:id => 'workflow-tabs').a(:class => 'grid-tab-link-selected').text.eql? name_of_visible_tag
     end
   end
@@ -69,7 +69,7 @@ class WorkFlow < CatalinkerPage
   def get_resource_uri(type)
     attribute_name = "data-#{type.downcase}-uri"
     element = @browser.div(:data_automation_id => 'targetresources-uris')
-#    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+#    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
 #      not element.attribute_value(attribute_name).empty?
 #    end
     element.attribute_value(attribute_name)

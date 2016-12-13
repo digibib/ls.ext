@@ -1,4 +1,4 @@
-require 'watir-webdriver'
+require 'watir'
 require 'socket'
 
 require_relative './site.rb'

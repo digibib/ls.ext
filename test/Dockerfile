@@ -38,7 +38,7 @@ RUN gem install \
 
 RUN gem install cucumber -v 2.4.0
 RUN gem install selenium-webdriver -v 3.0.3
-RUN gem install watir-webdriver -v 0.9.9
+RUN gem install watir -v 6.0.2
 
 RUN wget https://get.docker.com/builds/Linux/x86_64/docker-1.10.3 && mv docker-1.10.3 /usr/bin/docker && chmod +x /usr/bin/docker
 

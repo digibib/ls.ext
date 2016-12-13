@@ -38,7 +38,7 @@ end
 
 def wait_retry
   retries ||= 1
-  Watir::Wait.until(3) do
+  Watir::Wait.until(timeout: 3) do
     yield
   end
 rescue Watir::Wait::TimeoutError
@@ -52,7 +52,7 @@ rescue Watir::Wait::TimeoutError
 end
 
 def wait_for
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
     yield
   end
 end
