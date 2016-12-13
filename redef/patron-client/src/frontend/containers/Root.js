@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router'
-import createRoutes from '../routes';
+import createRoutes from '../routes'
 
 const Root = ({ locale, messages, history, store }) => (
   <Provider store={store}>
     <IntlProvider key="intl"
                   locale={locale}
                   messages={messages[ locale ]}>
-      <Router history={history} routes={createRoutes(store)}  />
+      <Router history={history} routes={createRoutes(store)} />
     </IntlProvider>
   </Provider>
 )

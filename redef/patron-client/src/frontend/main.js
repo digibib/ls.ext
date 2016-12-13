@@ -6,10 +6,9 @@ import Root from './containers/Root'
 import { addLocaleData } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import no from 'react-intl/locale-data/no'
-import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router'
 
 const store = configureStore()
 const history = syncHistoryWithStore(browserHistory, store)
