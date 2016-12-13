@@ -73,6 +73,9 @@ module.exports = (app) => {
                     },
                     {
                       "@id": "_:b10"
+                    },
+                    {
+                      "@id": "_:b12"
                     }
                     ],
                   'http://migration.deichman.no/originalLanguage': {
@@ -193,6 +196,14 @@ module.exports = (app) => {
                     "deichman:PublicationPart"
                   ],
                   "@id": "_:b9"
+                },
+                {
+                  "deichman:improperWork": false,
+                  "deichman:mainTitle": "Tittel uten bidragsyter",
+                  "@type": [
+                    "deichman:PublicationPart"
+                  ],
+                  "@id": "_:b12"
                 },
                 {
                   "deichman:improperWork": false,

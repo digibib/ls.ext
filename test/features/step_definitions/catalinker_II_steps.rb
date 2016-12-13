@@ -682,6 +682,11 @@ When(/^sjekker jeg at den tilfeldige verdien jeg la inn for feltet "([^"]*)" ste
   value_span.text.should eq @context["random_#{@site.translate(concept)}".to_sym]
 end
 
+When(/^sjekker jeg at den verdien jeg la inn for "([^"]*)" inneholder (.*)/) do |parameter_label, concept|
+  value_span = @browser.spans(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}'][#{contains_class 'value'}]/span|//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}'][#{contains_class 'value'}]//li/span[@class='value']").find(&:visible?)
+  value_span.text.should include @context["#{@site.translate(concept)}".to_sym]
+end
+
 When(/^frisker jeg opp nettleseren$/) do
   @browser.refresh
   sleep 5
@@ -700,4 +705,14 @@ end
 When(/^velger jeg "([^"]*)" som nasjonalitet på verket$/) do |nationality|
   @browser.span(:data_automation_id => "Work_http://data.deichman.no/ontology#nationality_0").text_field().set(nationality)
   @browser.ul(:class => "select2-results__options").lis().first.click
+end
+
+When(/^jeg fjerner valgt verdi for "([^"]*)"$/) do |label|
+  deletable = @site.WorkFlow.get_deletable_from_label(label)
+  deletable.click
+end
+
+When(/^lukker jeg dialogen$/) do
+  @browser.element(:class => 'ui-dialog-titlebar-close').wait_until_present(timeout: BROWSER_WAIT_TIMEOUT*5)
+  @browser.element(:class => 'ui-dialog-titlebar-close').click
 end
