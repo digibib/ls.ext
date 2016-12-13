@@ -30,6 +30,7 @@ class ModalRoot extends React.Component {
         isOpen
         onRequestClose={this.props.modalActions.hideModal}
         className="modal-content"
+        contentLabel={this.props.modalType}
         overlayClassName={ModalClasses}>
         <SpecificModal {...this.props.modalProps} />
       </Modal>
