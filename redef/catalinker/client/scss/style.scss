@@ -1106,4 +1106,13 @@ body {
       }
     }
   }
+
+  #additional-suggestions-dialog {
+    div.allow-partial-checkbox {
+      float:left
+    }
+    p.warn-when-partial-suggestions {
+      padding-left: 20px;
+    }
+  }
 }

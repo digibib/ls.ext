@@ -48,6 +48,7 @@ Egenskap: katalogisere med eksterne kilder
     Så trykker jeg på "Neste steg: Beskriv verk"-knappen
     Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
     Så trykker jeg på "Neste steg: Beskriv deler"-knappen
+    Så lukker jeg dialogen
     Så trykker jeg på "Neste steg: Biinnførsler"-knappen
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
     Så trykker jeg på "Opprett ny person"-knappen

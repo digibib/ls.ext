@@ -67,6 +67,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv deler"
+    Så sjekker jeg at den verdien jeg la inn for "Aktør" inneholder personnavnet
+    Og jeg fjerner valgt verdi for "Aktør"
+    Og jeg fjerner valgt verdi for "Rolle"
     Så velger jeg aktørtype "Organisasjon"
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
@@ -84,6 +87,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og jeg trykker på "Legg til et delverk til"-knappen
+    Og jeg fjerner valgt verdi for "Aktør"
+    Og jeg fjerner valgt verdi for "Rolle"
     Så velger jeg aktørtype "Person"
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
@@ -129,7 +134,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at utgivelsen er tilkoplet riktig utgitt av
     Og at utgivelsen har samme hovedtittel som verket
     Og at utgivelsen har samme undertittel som verket
-@    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
+    Så vises opplysningene brukerne skal se om utgivelsen på verkssiden
 
   Scenario: Slette verk
     Gitt at jeg har en bok
