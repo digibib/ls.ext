@@ -1,13 +1,18 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
+import { Provider } from 'react-redux'
+import { Router } from 'react-router'
+import createRoutes from '../routes';
 
-const Root = ({ locale, messages, routes }) => (
-  <IntlProvider key="intl"
-                locale={locale}
-                messages={messages[ locale ]}>
-    {routes}
-  </IntlProvider>
+const Root = ({ locale, messages, history, store }) => (
+  <Provider store={store}>
+    <IntlProvider key="intl"
+                  locale={locale}
+                  messages={messages[ locale ]}>
+      <Router history={history} routes={createRoutes(store)}  />
+    </IntlProvider>
+  </Provider>
 )
 
 Root.propTypes = {
