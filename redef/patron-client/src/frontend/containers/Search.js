@@ -127,18 +127,17 @@ class Search extends React.Component {
                              scrollTargetNode={this}
                              isSearching={this.props.isSearching}
                              windowWidth={this.props.windowWidth}
-        />,
-          <SearchResults key="searchResults"
-                         locationQuery={this.props.location.query}
-                         searchActions={this.props.searchActions}
-                         searchResults={this.props.searchResults}
-                         totalHits={this.props.totalHits}
-                         searchError={this.props.searchError}
-                         fetchWorkResource={this.props.resourceActions.fetchWorkResource}
-                         resources={this.props.resources}
-                         page={this.props.location.query.page}
-                         items={this.props.items}
-          /> ]
+        />, <SearchResults key="searchResults"
+                           locationQuery={this.props.location.query}
+                           searchActions={this.props.searchActions}
+                           searchResults={this.props.searchResults}
+                           totalHits={this.props.totalHits}
+                           searchError={this.props.searchError}
+                           fetchWorkResource={this.props.resourceActions.fetchWorkResource}
+                           resources={this.props.resources}
+                           page={this.props.location.query.page}
+                           items={this.props.items}
+        /> ]
           : null}
         {this.renderPagination()}
       </NonIETransitionGroup>
