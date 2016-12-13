@@ -17,6 +17,9 @@ class Checkin < Circulation
   end
 
 	def confirm_checkin
+    wait_for {
+      @browser.button(class: 'approve').present?
+    }
 	  @browser.button(class: 'approve').click
 	end
 

@@ -251,7 +251,7 @@ When(/^jeg sletter eksisterende forfatter på verket$/) do
   begin
     deletables = @browser.inputs(:class => 'deletable').size
     @browser.inputs(:data_automation_id => "http://data.deichman.no/ontology#creator"+"_0").first.click
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.inputs(:class => 'deletable').size == deletables - 1 } #Allow some time for the UI to update after clicking the red X
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.inputs(:class => 'deletable').size == deletables - 1 } #Allow some time for the UI to update after clicking the red X
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
     if (tries == 0)
@@ -312,7 +312,7 @@ When(/^jeg søker på navn til opphavsperson for det nye verket$/) do
   tries = 3
   begin
     @site.RegWork.search_resource("http://data.deichman.no/ontology#creator", @context[:person_name])
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => @context[:person_identifier]) }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.div(:data_automation_id => @context[:person_identifier]) }
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
     if (tries == 0)
@@ -476,7 +476,7 @@ Then(/^jeg kan legge til tittel med tre ledd for utgivelsen$/) do
 end
 
 Then(/^grensesnittet viser at endringene er lagret$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
 end
 
 Then(/^får jeg beskjed om at noe er feil$/) do
@@ -623,7 +623,7 @@ end
 
 
 When(/^grensesnittet viser at personen er lagret$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === "alle endringer er lagret" }
 end
 
 When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
@@ -631,7 +631,7 @@ When(/^jeg klikker på linken ved urien kommer jeg til personsiden$/) do
 end
 
 When(/^personens navn vises på personsiden$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getPersonName.include? @context[:person_name] }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @site.PatronClientPersonPage.getPersonName.include? @context[:person_name] }
 end
 
 When(/^at jeg har lagt til en person$/) do
@@ -684,17 +684,17 @@ When(/^jeg venter litt$/) do
 end
 
 When(/^viser trefflisten at personen har et verk fra før$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "search-result-name", :text => @context[:person_name]).exists? }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "search-result-name", :text => @context[:person_name]).exists? }
 end
 
 When(/^trefflisten viser at personen har riktig nasjonalitet$/) do
   # TODO nasjonalitet er nå indeksert med uri
-  #Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text => @context[:person_nationality]).exists? }
+  #Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "nationality", :text => @context[:person_nationality]).exists? }
 end
 
 When(/^trefflisten viser at personen har riktig levetid$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "birthYear", :text => @context[:person_birthyear]).exists? }
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text => @context[:person_deathyear]).exists? }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "birthYear", :text => @context[:person_birthyear]).exists? }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.span(:class => "deathYear", :text => @context[:person_deathyear]).exists? }
 end
 
 When(/^jeg verifiserer opplysningene om utgivelsen$/) do

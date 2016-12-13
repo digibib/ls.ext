@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 Then(/^kommer jeg til verks\-siden for det aktuelle verket$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.element(data_automation_id: /work_title/).present? }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.element(data_automation_id: /work_title/).present? }
   @site.PatronClientWorkPage.title.should include(@context[:publication_maintitle] || @context[:work_maintitle]) #Work page will show publication title
 end
 
@@ -29,7 +29,7 @@ Then(/^språket til verkets tittel vises på verks\-siden$/) do
 end
 
 Then(/^ser jeg informasjon om verkets tittel og utgivelsesår$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @site.PatronClientWorkPage.title != "" }
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @site.PatronClientWorkPage.title != "" }
   @site.PatronClientWorkPage.title.should include(@context[:publication_maintitle] || @context[:work_maintitle]) #Work page will show publication title
   @site.PatronClientWorkPage.getDate.should include(@context[:work_publicationyear])
 end

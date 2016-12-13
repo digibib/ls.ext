@@ -40,7 +40,7 @@ def contains_class(class_name)
 end
 
 When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)indeksen$/) do |art, type_1, type_2|
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT*5) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT*5) {
     @browser.element(:xpath => "//a[#{contains_class('edit-resource')}]|//a[#{contains_class('select-result-item')}]").present?
   }
   if @browser.a(:class => 'edit-resource').present?
@@ -293,7 +293,7 @@ When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisa
     name_line = "#{@context[:person_name]}"
   end
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{name_line}']")
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     name.exists?
   }
   name.should exist
@@ -368,13 +368,13 @@ end
 
 When(/^sjekker jeg at utgivelsen er nummer "([^"]*)" i serien$/) do |issue|
   data_automation_id_serial = "SerialIssue_http://data.deichman.no/ontology#serial_0"
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']").present?
   }
   name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_serial}'][normalize-space()='#{@context[:serial_name]}']")
   name.should exist
   data_automation_id_issue = "SerialIssue_http://data.deichman.no/ontology#issue_0"
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_issue}'][normalize-space()='#{issue}']").present?
   }
 end
@@ -415,7 +415,7 @@ end
 
 When(/^får jeg ingen treff$/) do
   empty_result_set_div = @browser.div(:class => 'support-panel-content').div(:class => 'search-result')
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     empty_result_set_div.present?
   }
   @browser.div(:class => 'support-panel-content').div(:class => 'search-result').span(:class => 'exact-match').should_not exist
@@ -469,13 +469,13 @@ end
 
 
 When(/^trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
-  @browser.element(:text => button_label, :class => 'pure-button').wait_until_present(BROWSER_WAIT_TIMEOUT*5)
+  @browser.element(:text => button_label, :class => 'pure-button').wait_until_present(timeout: BROWSER_WAIT_TIMEOUT*5)
   @browser.element(:text => button_label, :class => 'pure-button').click
 end
 
 When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
   button = @browser.button(:xpath => "//button[span[@class='ui-button-text'][normalize-space()='#{button_label}']]")
-  button.wait_until_present(BROWSER_WAIT_TIMEOUT)
+  button.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT)
   button.click
 end
 
@@ -543,7 +543,7 @@ When(/^jeg legger inn samme ISBN\-nummer på startsida og trykker enter/) do
 end
 
 When(/^Sjekker jeg at det vises treff fra preferert ekstern kilde$/) do
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     @browser.li(:xpath => '//*[@class="external-source-results"]//ul/li[@class="external-hit"]').present?
   }
 end
@@ -575,13 +575,13 @@ When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal
     suggestion_list = @browser.div(:xpath => "//span[descendant::span/input[@data-automation-id='#{data_automation_id}']]/span/div[@class='external-sources']")
   end
 
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     suggestion_list.span(:class => 'unexpanded').present?
   }
   suggestion_list.span(:class => 'unexpanded').click
   support_panel_expander_link = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").span(:class => 'support-panel-expander')
   use_suggestion_button = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").button(:class => 'suggested-value')
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     support_panel_expander_link.present? || use_suggestion_button.present?
   }
   if support_panel_expander_link.exists?
@@ -610,14 +610,14 @@ end
 When(/^noterer jeg ned navnet på personen$/) do
   data_automation_id = "Person_http://data.deichman.no/ontology#name_0"
   name_field = @browser.text_field(:xpath => "//span[@class='support-panel']//input[@data-automation-id='#{data_automation_id}']")
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     name_field.present?
   }
   @context[:person_name] = name_field.value
 end
 
 When(/^sjekker jeg at "([^"]*)" er blant verdiene som er valgt for (.*)$/) do |value, parameter_label|
-  Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     @browser.li(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//ul/li[@class='select2-selection__choice'][@title='#{value}']").present?
   }
 end

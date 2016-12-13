@@ -461,7 +461,7 @@ end
 When(/^ser jeg tittelen i bokposten$/) do
   tries = 5
   begin
-    @browser.div(:id => 'catalogue_detail_biblio').h1.when_present(BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_maintitle]
+    @browser.div(:id => 'catalogue_detail_biblio').h1.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_maintitle]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -477,7 +477,7 @@ end
 When(/^ser jeg forfatteren i bokposten$/) do
   tries = 5
   begin
-    @browser.div(:id => 'catalogue_detail_biblio').h5.when_present(BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
+    @browser.div(:id => 'catalogue_detail_biblio').h5.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -493,7 +493,7 @@ end
 When(/^ser jeg tittelen i plukklisten$/) do
   tries = 3
   begin
-    @browser.table(:id => "holdst").when_present(BROWSER_WAIT_TIMEOUT).trs.take_while { |row|
+    @browser.table(:id => "holdst").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).trs.take_while { |row|
       row.td(:class => "hq-title") }.any? { |element| element.text.include? @context[:publication_maintitle] }.should be true
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
@@ -510,7 +510,7 @@ end
 When(/^ser jeg forfatteren i plukklisten$/) do
   tries = 3
   begin
-    @browser.table(:id => "holdst").when_present(BROWSER_WAIT_TIMEOUT).divs(:class => 'hq-author').any? { |element| element.text.include? @context[:work_creator] }.should be true
+    @browser.table(:id => "holdst").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).divs(:class => 'hq-author').any? { |element| element.text.include? @context[:work_creator] }.should be true
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -559,7 +559,7 @@ Then(/^vil låneren få epost om at boka er klar til avhenting$/) do
   usermail = @context[:patrons][0].email
   retry_wait do
     step "meldingskøen kjøres"
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
       inbox = Messaging::EmailAPI.new.get_inbox(usermail)
       mail = inbox[0]
       mail["To"].eql?(usermail) && mail["Data"].include?(usermail)
@@ -590,7 +590,7 @@ Then(/^vil låneren motta en velkomst\-epost fra biblioteket$/) do
   usermail = @active[:patron].email
   retry_wait do
     step "meldingskøen kjøres"
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) do
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
       inbox = Messaging::EmailAPI.new.get_inbox(usermail)
       mail = inbox[0]
       mail["To"].eql?(usermail) && mail["Data"].include?(usermail)

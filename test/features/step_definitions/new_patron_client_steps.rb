@@ -45,8 +45,8 @@ end
 
 When(/^jeg slår på et filter for et vilkårlig format$/) do
   # To get nice styling for checkboxes, they are effectively set to invisible while images are displayed in their place.
-  # Watir does not allow interaction with invisible items, therefore clicking the parent (which has the click handler)
-  @browser.element(data_automation_id: 'filter_format').checkboxes.to_a.select { |checkbox| not checkbox.set? }.sample.element(xpath: './following-sibling::*').click # The sibling is the label
+  # Watir does not allow interaction with invisible items, therefore we click the label (which has a click handler)
+  @browser.element(data_automation_id: 'filter_format').elements(data_automation_id: 'filter_label', data_checked: 'false').to_a.sample.click
 end
 
 When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do

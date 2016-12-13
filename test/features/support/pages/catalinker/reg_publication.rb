@@ -13,7 +13,7 @@ class RegPublication < CatalinkerPage
 
   def get_link
     retry_wait do
-      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { not @browser.inputs(:data_automation_id => 'resource_uri').first.value.to_s.empty? }
+      Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { not @browser.inputs(:data_automation_id => 'resource_uri').first.value.to_s.empty? }
     end
     @browser.inputs(:data_automation_id => 'resource_uri').first.value
   end

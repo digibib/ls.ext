@@ -19,7 +19,7 @@ class ItemTypes < AdminPage
     @browser.execute_script("document.getElementById('newitemtype').click()")
 
     # wait for page to be partially re-render by ajax
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
       @browser.h3(:text => "Add item type").present?
     }
 

@@ -117,7 +117,6 @@
     "express-request-proxy": "2.0.0",
     "express-session": "1.14.1",
     "jsonld": "0.4.11",
-    "jsonld-request": "0.1.1",
     "node-mysql": "0.4.2",
     "node-uuid": "1.4.7",
     "query-string": "4.2.3",
