@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
+import { connect, Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
-import { Provider } from 'react-redux'
 import { Router } from 'react-router'
 import createRoutes from '../routes'
 
@@ -18,7 +17,9 @@ const Root = ({ locale, messages, history, store }) => (
 Root.propTypes = {
   locale: PropTypes.string.isRequired,
   messages: PropTypes.object.isRequired,
-  routes: PropTypes.object.isRequired
+  routes: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 function mapStateToProps (state) {
