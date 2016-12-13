@@ -15,23 +15,23 @@ import * as RegistrationActions from '../actions/RegistrationActions'
 class App extends React.Component {
   constructor (props) {
     super(props)
-    this.handleResizeWindow = this.handleResizeWindow.bind(this)
+    this.handleResizeWindowWidth = this.handleResizeWindowWidth.bind(this)
   }
 
   componentWillMount () {
     this.props.loginActions.updateLoginStatus()
     this.props.languageActions.loadLanguage()
     this.props.libraryActions.fetchLibraries()
-    this.props.windowActions.resizeWindow(window.innerWidth)
-    window.addEventListener('resize', this.handleResizeWindow)
+    this.props.windowActions.resizeWindowWidth(window.innerWidth)
+    window.addEventListener('resize', this.handleResizeWindowWidth)
   }
 
   componentWillUnmount () {
-    window.removeEventListener('resize', this.handleResizeWindow)
+    window.removeEventListener('resize', this.handleResizeWindowWidth)
   }
 
-  handleResizeWindow (event) {
-    this.props.windowActions.resizeWindow(event.target.innerWidth)
+  handleResizeWindowWidth (event) {
+    this.props.windowActions.resizeWindowWidth(event.target.innerWidth)
   }
 
   render () {
