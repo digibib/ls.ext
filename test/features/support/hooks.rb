@@ -38,7 +38,14 @@ Before do
 end
 
 Before do |scenario|
-  @browser = @browser || (Watir::Browser.new (ENV['BROWSER'] || "phantomjs").to_sym)
+  case ENV['BROWSER']
+  when "chrome"
+    @browser = @browser || (Watir::Browser.new :chrome, :switches => %w[--no-sandbox --user-data-dir=.])
+  when "firefox"
+    raise Exception.new ("firefox is not supported ATM")
+  else
+    @browser = @browser || (Watir::Browser.new :phantomjs)
+  end
   @browser.window.resize_to(1200, 1024) unless ENV['BROWSER']
   @site = @site || Site.new(@browser)
 end

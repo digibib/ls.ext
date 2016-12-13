@@ -339,7 +339,7 @@ nationality:kappverd a duo:Nationality ;
 	rdfs:label	"Cape Verde"@en .
 
 nationality:kas a duo:Nationality ;
-	rdfs:label	"Kasakstan"@no ;
+	rdfs:label	"Kasakhstan"@no ;
 	rdfs:label	"Kazakhstan"@en .
 
 nationality:ken a duo:Nationality ;
@@ -475,7 +475,7 @@ nationality:mesop a duo:Nationality ;
 	rdfs:label	"Mesopotamian"@en .
 
 nationality:mex a duo:Nationality ;
-	rdfs:label	"Meksico"@no ;
+	rdfs:label	"Mexico"@no ;
 	rdfs:label	"Mexico"@en .
 
 nationality:mold a duo:Nationality ;

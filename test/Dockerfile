@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     software-properties-common \
+    libxi6 \
+    libgconf-2-4 \
     chromium-browser \
     mysql-client \
     apparmor && \
@@ -25,10 +27,6 @@ RUN wget --quiet https://github.com/Medium/phantomjs/releases/download/v2.1.1/ph
     rm phantomjs-2.1.1-linux-x86_64.tar &&\
     rm -r phantomjs-2.1.1-linux-x86_64
 
-RUN wget --quiet http://heanet.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_49.0.1-0ubuntu1_amd64.deb && \
-    dpkg -i firefox-mozilla-build_49.0.1-0ubuntu1_amd64.deb && \
-    rm -rf firefox-mozilla-build_49.0.1-0ubuntu1_amd64.deb
-
 RUN gem install \
     rspec \
     pry \
@@ -39,8 +37,8 @@ RUN gem install \
     nokogiri
 
 RUN gem install cucumber -v 2.4.0
-RUN gem install selenium-webdriver -v 2.53.4
-RUN gem install watir-webdriver -v 0.9.3
+RUN gem install selenium-webdriver -v 3.0.3
+RUN gem install watir-webdriver -v 0.9.9
 
 RUN wget https://get.docker.com/builds/Linux/x86_64/docker-1.10.3 && mv docker-1.10.3 /usr/bin/docker && chmod +x /usr/bin/docker
 
