@@ -17,7 +17,6 @@ const Root = ({ locale, messages, history, store }) => (
 Root.propTypes = {
   locale: PropTypes.string.isRequired,
   messages: PropTypes.object.isRequired,
-  routes: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired
 }
