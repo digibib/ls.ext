@@ -7,9 +7,12 @@ import { addLocaleData } from 'react-intl'
 import en from 'react-intl/locale-data/en'
 import no from 'react-intl/locale-data/no'
 import { Provider } from 'react-redux'
-import routes from './routes'
+import { AppContainer } from 'react-hot-loader'
+import { syncHistoryWithStore } from 'react-router-redux'
+import { browserHistory } from 'react-router';
 
 const store = configureStore()
+const history = syncHistoryWithStore(browserHistory, store)
 
 const areIntlLocalesSupported = require('intl-locales-supported')
 
@@ -37,4 +40,17 @@ if (global.Intl) {
 addLocaleData(en)
 addLocaleData(no)
 
-ReactDOM.render(<Provider store={store}><Root routes={routes(store)} /></Provider>, document.getElementById('app'))
+ReactDOM.render(
+  <AppContainer><Root store={store} history={history} /></AppContainer>,
+  document.getElementById('app')
+)
+
+if (module.hot) {
+  module.hot.accept('./containers/Root', () => {
+    const NewRoot = require('./containers/Root').default
+    ReactDOM.render(
+      <AppContainer><NewRoot store={store} history={history} /></AppContainer>,
+      document.getElementById('app')
+    )
+  })
+}
