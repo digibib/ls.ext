@@ -333,6 +333,39 @@
       })
     }
 
+    var alertAboutAdditionalSuggestions = function (spec, proceed) {
+      ractive.set('additionalSuggestionsDialog', spec)
+      $('#additional-suggestions-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 550,
+        title: 'Forslag til forhåndsfylte verdier',
+        class: 'additionl-suggestions-dialog',
+        buttons: [
+          {
+            text: 'Bruk forslag',
+            class: 'default',
+            click: function () {
+              $(this).dialog('close')
+              proceed(ractive.get('additionalSuggestionsDialog.allowPartialSuggestions'))
+            }
+          },
+          {
+            text: 'Ignorer',
+            click: function () {
+              $(this).dialog('close')
+            }
+          }
+        ],
+        open: function () {
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        },
+        close: function () {
+          ractive.set(`inputGroups.${spec.group}.additionalSuggestions`, null)
+        }
+      })
+    }
+
     function i18nLabelValue (label) {
       if (Array.isArray(label)) {
         return _.find(label, function (labelValue) {
@@ -352,6 +385,13 @@
 
     function fragmentPartOf (predicate) {
       return typeof predicate === 'string' ? _.last(predicate.split('#')) : predicate
+    }
+
+    function setSuggestionsAreAcceptedForParentInput (input, index) {
+      if (input.isSubInput) {
+        input.parentInput.hasAcceptedSuggestions = input.parentInput.hasAcceptedSuggestions || []
+        input.parentInput.hasAcceptedSuggestions[ index ] = true
+      }
     }
 
     function setMultiValues (values, input, index, options) {
@@ -376,6 +416,7 @@
           input.suggestedValues = valuesAsArray
         } else if (options.source) {
           input.values[ index ].current.accepted = { source: options.source }
+          setSuggestionsAreAcceptedForParentInput(input, index)
         }
         ractive.update(`${input.keypath}.values.${index}`)
         return valuesAsArray
@@ -396,6 +437,9 @@
             accepted: options.source ? { source: options.source } : undefined
           },
           uniqueId: _.uniqueId()
+        }
+        if (input.values[ index ].current.accepted) {
+          setSuggestionsAreAcceptedForParentInput(input, index)
         }
         ractive.update(`${input.keypath}.values.${index}`)
       }
@@ -719,7 +763,9 @@
 
     function inputFromInputId (inputId) {
       let keypath = ractive.get(`inputLinks.${inputId}`)
-      return ractive.get(keypath)
+      if (keypath) {
+        return ractive.get(keypath)
+      }
     }
 
     function typeFromUri (resourceUri) {
@@ -846,7 +892,7 @@
             (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
             (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain)))) {
             let ownerInput = inputFromInputId(input.belongsToCreateResourceFormOfInput)
-            if (ownerInput.domain &&
+            if (ownerInput && ownerInput.domain &&
               input.belongsToCreateResourceFormOfInput &&
               ((input.targetResourceIsMainEntry || false) === (options.wrapperObject && options.wrapperObject.isA('MainEntry')) || false) &&
               (unPrefix(ownerInput.domain) === options.wrappedIn || !options.wrappedIn) &&
@@ -1552,6 +1598,7 @@
           group.enableSpecialInput = inputGroup.enableSpecialInput
         }
 
+        group.handledAdditionalSuggestions = false
         markFirstAndLastInputsInGroup(group)
         inputGroups.push(group)
       }
@@ -1933,6 +1980,14 @@
       })
     }
 
+    function inputHasAcceptedSuggestions (targetInput, inputIndex) {
+      return (!targetInput.isSubInput || ((targetInput.parentInput.hasAcceptedSuggestions || [])[ inputIndex ]))
+    }
+
+    function inputCanReceiveAdditionalSuggestions (targetInput) {
+      return targetInput.widgetOptions && targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -2018,6 +2073,7 @@
           'delete-resource-dialog',
           'confirm-enable-special-input-dialog',
           'alert-existing-resource-dialog',
+          'additional-suggestions-dialog',
           'accordion-header-for-collection',
           'readonly-input',
           'readonly-input-string',
@@ -2146,6 +2202,10 @@
           var source = $(selection.element.parentElement).attr('data-accepted-source')
           var sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
           return $(`<span>${selection.text}${sourceSpan}</span>`)
+        }
+
+        function inputLabelWithContext (input) {
+          return input.isSubInput ? input.parentInput.label + ': ' + ractive.get(`${parentOf(input.keypath)}.label`) : input.label
         }
 
         var initRactive = function (applicationData) {
@@ -2379,6 +2439,16 @@
             data: applicationData
           })
 
+          var valueOfInputById = function (inputId, valueIndex) {
+            var keyPath = ractive.get(`inputLinks.${inputId}`)
+            return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
+          }
+
+          var displayValueOfInputById = function (inputId, valueIndex) {
+            var keyPath = ractive.get(`inputLinks.${inputId}`)
+            return ractive.get(`${keyPath}.values.${valueIndex}.current.displayValue`)
+          }
+
           // Initialize ractive component from template
           ractive = new Ractive({
             el: 'container',
@@ -2532,10 +2602,7 @@
               },
               isAdvancedQuery: isAdvancedQuery,
               advancedSearchCharacters: advancedSearchCharacters,
-              valueOfInputById: function (inputId, valueIndex) {
-                var keyPath = ractive.get(`inputLinks.${inputId[ 0 ]}`)
-                return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
-              },
+              valueOfInputById: valueOfInputById,
               checkRequiredInputValueForShow: function (showOnlyWhenInputHasValueSpec) {
                 if (!(showOnlyWhenInputHasValueSpec && showOnlyWhenInputHasValueSpec.showOnlyWhenInputHasValue)) {
                   return true
@@ -2638,6 +2705,7 @@
                 ractive.set(event.keypath + '.allowAddNewButton', false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
+                copyAdditionalSuggestionsForGroup(4)
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
@@ -3225,6 +3293,65 @@
                       }
                     })
                   })
+                  let numberOfAdditionalSuggestions = []
+                  let sources = []
+                  let targets = []
+                  let suggestableMap = [] // an array of arrays with flags indicating which inputs may receive additional suggestion values
+                  let suggestedMap = []
+                  let warnWhenCopyingSubset = []
+                  forAllGroupInputs(function (targetInput, groupIndex, inputIndex, subInputIndex) {
+                    suggestableMap[ groupIndex ] = suggestableMap[ groupIndex ] || []
+                    suggestedMap[ groupIndex ] = suggestedMap[ groupIndex ] || []
+                    if (inputHasAcceptedSuggestions(targetInput, inputIndex) && inputCanReceiveAdditionalSuggestions(targetInput)) {
+                      suggestableMap[ groupIndex ][ subInputIndex ] = true
+                      _.each(targetInput.values, function (value, valueIndex) {
+                        if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                          (targetInput.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '')) {
+                          value.additionalSuggestion = {
+                            value: valueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0),
+                            displayValue: displayValueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0)
+                          }
+                          suggestedMap[ groupIndex ][ subInputIndex ] = suggestedMap[ groupIndex ][ subInputIndex ] || []
+                          suggestedMap[ groupIndex ][ subInputIndex ][ valueIndex ] = true
+                          numberOfAdditionalSuggestions[ groupIndex ] = numberOfAdditionalSuggestions[ groupIndex ] || [ 0 ]
+                          numberOfAdditionalSuggestions[ groupIndex ]++
+                          var sourceInput = inputFromInputId(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
+                          sources[ groupIndex ] = sources[ groupIndex ] || []
+                          sources[ groupIndex ] = _.union(sources[ groupIndex ], [ inputLabelWithContext(sourceInput) ])
+                          targets[ groupIndex ] = targets[ groupIndex ] || []
+                          targets[ groupIndex ] = _.union(targets[ groupIndex ], [ inputLabelWithContext(targetInput) ])
+                        }
+                      })
+                      if (targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset) {
+                        warnWhenCopyingSubset[ groupIndex ] = targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset
+                      }
+                    }
+                  })
+                  var incompleteSuggestions = []
+                  _.each(suggestedMap, function (suggestedForGroup, groupIndex) {
+                    _.each(suggestedForGroup, function (suggestedForInput, inputIndex) {
+                      if (!_.isEqual(suggestedForGroup[ inputIndex ], suggestableMap[ groupIndex ][ inputIndex ])) {
+                        incompleteSuggestions[ groupIndex ] = incompleteSuggestions[ groupIndex ] || []
+                        incompleteSuggestions[ groupIndex ][ inputIndex ] = true
+                      }
+                    })
+                  })
+                  _.each(numberOfAdditionalSuggestions, function (numberOfSuggestionsForGroup, groupIndex) {
+                    if (numberOfSuggestionsForGroup > 0) {
+                      ractive.set(`inputGroups.${groupIndex}.additionalSuggestions`, {
+                        numberOfSuggestionsForGroup: numberOfSuggestionsForGroup,
+                        numberOfInCompleteForGroup: _.reduce(incompleteSuggestions[ groupIndex ], function (count, isIncomplete) {
+                          return count + isIncomplete ? 1 : 0
+                        }, 0),
+                        sources: sources[ groupIndex ],
+                        targets: targets[ groupIndex ],
+                        incompleteSuggestions: incompleteSuggestions[ groupIndex ],
+                        warnWhenCopyingSubset: warnWhenCopyingSubset[ groupIndex ],
+                        allowPartialSuggestions: warnWhenCopyingSubset[ groupIndex ].allowByDefault,
+                        group: groupIndex
+                      })
+                    }
+                  })
                   ractive.update().then(waiter.done)
                 })
               },
@@ -3351,9 +3478,52 @@
             }
           }, { init: false })
 
+          function copyAdditionalSuggestionsForGroup (groupIndex) {
+            forAllGroupInputs(function (input, groupIndex1) {
+              if (groupIndex1 === Number(groupIndex) && input.widgetOptions && input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom) {
+                var sourceInput = inputFromInputId(input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
+                if (sourceInput) {
+                  var value = _.last(input.values)
+                  if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                    (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object') {
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}`, {
+                      current: {
+                        value: sourceInput.values[ 0 ].current.value,
+                        displayValue: sourceInput.values[ 0 ].current.displayValue
+                      },
+                      searchable: sourceInput.values[ 0 ].searchable,
+                      deletable: sourceInput.values[ 0 ].deletable,
+                      subjectType: input.values[ 0 ].subjectType // keep subject type
+                    })
+                  }
+                }
+              }
+            })
+          }
+
           ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
+            var groupIndex = keypath.split('.')[ 1 ]
             if (newValue === true) {
-              updateBrowserLocationWithTab(keypath.split('.')[ 1 ])
+              updateBrowserLocationWithTab(groupIndex)
+              var additionalSuggestionsForGroup = ractive.get(`inputGroups.${groupIndex}.additionalSuggestions`)
+              if (additionalSuggestionsForGroup) {
+                setTimeout(function () {
+                  alertAboutAdditionalSuggestions(additionalSuggestionsForGroup, function (allowPartialSuggestions) {
+                    forAllGroupInputs(function (input, groupIndex1) {
+                      if (groupIndex1 === Number(groupIndex)) {
+                        _.each(input.values, function (value, valueIndex) {
+                          if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion) {
+                            ractive.set(`${input.keypath}.values.${valueIndex}.current`, value.additionalSuggestion)
+                            ractive.set(`${input.keypath}.values.${valueIndex}.additionalSuggestion`, null)
+                          }
+                        })
+                      }
+                    })
+                  })
+                })
+              } else {
+                copyAdditionalSuggestionsForGroup(groupIndex)
+              }
             }
           }, { init: false, defer: true })
 

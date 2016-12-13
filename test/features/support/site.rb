@@ -35,6 +35,7 @@ class Site
         'femte' => 5,
         'navn' => 'name',
         'verksnavnet' => 'verksnavn_name',
+        'personnavnet' => 'person_name',
         'nasjonalitet' => 'nationality',
         'opprinnelsesland' => 'nationality'
     }[concept.downcase] || concept
