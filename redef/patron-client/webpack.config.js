@@ -7,6 +7,7 @@ module.exports = {
   entry: [
     'es5-shim',
     'babel-polyfill',
+    'react-hot-loader/patch',
     'webpack-hot-middleware/client',
     './src/frontend/main'
   ],
