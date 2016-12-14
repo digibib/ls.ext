@@ -158,7 +158,7 @@ class SearchResult extends React.Component {
   renderItems (result) {
     const work = this.props.resources[ result.id ]
     if (work) {
-      const items = [].concat.apply([], work.publications.map(publication => this.props.items[ publication.recordId ].items || []).filter(array => array.length > 0))
+      const items = [].concat(...work.publications.map(publication => (this.props.items[ publication.recordId ] || []).items || []).filter(array => array.length > 0))
       return groupByBranch(items).map(el => {
         return (
           <div className="items-by-branch" key={el.branchcode}>
