@@ -39,7 +39,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: [
           path.join(__dirname, 'src/frontend'),
           path.join(__dirname, 'src/common')
