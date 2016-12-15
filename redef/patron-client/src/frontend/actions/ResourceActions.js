@@ -85,7 +85,7 @@ export function fetchWorkItems (workId) {
 function processItems (allItems, work) {
   if (work) {
     work.publications.forEach(publication => {
-      const items = allItems[ publication.recordId ].items
+      const items = (allItems[ publication.recordId ] || {}).items
       if (items) {
         items.forEach(item => {
           item.mediaTypes = publication.mediaTypes
