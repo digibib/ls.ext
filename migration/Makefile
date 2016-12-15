@@ -108,7 +108,7 @@ ifndef NOKOHA
 	-@sudo docker exec xkoha /bin/sh -c 'koha-shell $$KOHA_INSTANCE -c "zebraidx -c /etc/koha/sites/$$KOHA_INSTANCE/zebra-biblios.cfg commit"' 2> /dev/null
 	@sudo docker run --net=dockercompose_backend --rm -v dockercompose_koha_state:/data -v $(shell pwd)/out:/out busybox cp /out/catalogue.mrc /data/
 	@echo "-- Importing to Koha with bulkmarcimport"
-	@sudo docker exec xkoha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -m MARCXML -b -framework DCHM -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
+	@sudo docker exec xkoha koha-shell -c "/usr/share/koha/bin/migration_tools/bulkmarcimport.pl -m MARCXML -b -file /var/lib/state/catalogue.mrc -commit 1000" $(KOHA_INSTANCE)
 	@echo "OK Done importing catalogue into Koha\n"
 endif
 	@touch out/done.migrate_catalogue_to_koha
@@ -290,8 +290,6 @@ transactions: out/done.massage_input_data out/done.migrate_patrons
 zebra:
 	@echo "-- Populating zebra queue"
 	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) < /out/populate_zebraqueue.sql'
-	@echo "-- Setting MARC framework code on all biblios to DCHM"
-	@$(MIGRATION_RUN_CMD) '$(MYSQL_CMD) -e "UPDATE biblio SET frameworkcode=\"DCHM\";"'
 	@echo "-- Starting Zebra indexer"
 	@sudo docker exec xkoha /bin/sh -c 'supervisorctl -u$$KOHA_ADMINUSER -p$$KOHA_ADMINPASS start zebra_indexer'
 
