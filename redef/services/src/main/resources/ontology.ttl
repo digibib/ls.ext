@@ -702,3 +702,10 @@ duo:Biography a rdfs:Class ;
   rdfs:label "Beskrivelse"@no ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
+
+:issn a rdfs:Property ;
+  rdfs:label "ISSN"@en ;
+  rdfs:label "ISSN"@no ;
+  rdfs:domain :Serial ;
+  rdfs:range xsd:string .
+

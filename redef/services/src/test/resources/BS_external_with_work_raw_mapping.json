@@ -295,6 +295,7 @@
         "deichman:publishedBy": {
           "@id": "_:0000000"
         },
+        "deichman:issn": "1234-0098",
         "deichman:mainTitle": "Karsten og Petra-bøkene",
         "@type": [
           "deichman:Serial"

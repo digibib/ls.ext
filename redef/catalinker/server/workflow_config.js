@@ -376,13 +376,18 @@ module.exports = (app) => {
               },
               {
                 label: 'Nummer på delserie',
-                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string',
                 rdfProperty: 'partNumber'
               },
               {
                 label: 'Tittel på delserie',
-                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string',
                 rdfProperty: 'partTitle'
+              },
+              {
+                label: 'ISSN',
+                type: 'input-string',
+                rdfProperty: 'issn'
               },
               {
                 label: 'Utgiver',
@@ -1607,7 +1612,7 @@ module.exports = (app) => {
             selectIndexLabel: 'Serie',
             sortedListQueryForField: "serialMainTitle",
             resultItemLabelProperties: [ 'serialMainTitle:', 'subtitle' ],
-            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ]
+            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ]
           },
           publication: {
             type: 'publication',

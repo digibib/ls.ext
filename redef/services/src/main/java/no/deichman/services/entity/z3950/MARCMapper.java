@@ -201,6 +201,7 @@ public class MARCMapper {
                 case "440":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
                         Serial serial = new Serial(a, newBlankNodeId());
+                        getSubfieldValue(dataField, 'x').ifPresent(serial::setIssn);
                         graphList.add(serial);
                         getSubfieldValue(dataField, 'b').ifPresent(publishedBy -> {
                             addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
