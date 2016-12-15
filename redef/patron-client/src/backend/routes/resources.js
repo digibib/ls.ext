@@ -61,7 +61,7 @@ module.exports = (app) => {
         if (res.status === 200) {
           return res.json()
         } else {
-          return undefined
+          return Promise.resolve(undefined)
         }
       })))
       .then(itemResponses => {
