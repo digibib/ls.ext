@@ -36,8 +36,6 @@ if [[ `uname -s` == 'Linux' && "$LSENV" != 'prod' ]]; then
     sudo chmod +x /usr/local/bin/docker-compose
   fi
 
-  echo -e "\n3) Installing Graphviz\n"
-  which dot > /dev/null || sudo apt-get install -y graphviz
 else
   echo "Cannot provision for OSX; please install docker & docker-compose yourself"
   echo "You also need envsubst (TODO find a cross-platform solution)"
