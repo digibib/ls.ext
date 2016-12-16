@@ -18,7 +18,7 @@ and [Docker Engine](https://www.docker.com/docker-engine) for Docker container o
 
 ## Usage
 
-For local setup and to run tests, we use a vagrant setup (see [Illustration](#illustration)).
+For local setup and to run tests, we use a vagrant setup.
 
 Docker containers are used both in development and in production.
 
@@ -217,6 +217,3 @@ and finally
 ```
 git push
 ```
-
-## Illustration
-![Alt text](docker-compose/dev-stack.png?raw=true "Dev environment")
