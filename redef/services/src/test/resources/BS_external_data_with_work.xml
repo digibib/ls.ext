@@ -23,6 +23,9 @@
             <subfield code="b">ib.</subfield>
             <subfield code="c">Nkr 199.00</subfield>
         </datafield>
+        <datafield tag="024" ind1=" " ind2=" ">
+            <subfield code="a">M 23000399-5</subfield>
+        </datafield>
         <datafield tag="025" ind1=" " ind2=" ">
             <subfield code="a">8717418326272</subfield>
         </datafield>

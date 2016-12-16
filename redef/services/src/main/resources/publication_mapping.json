@@ -131,6 +131,10 @@
       "type": "string",
       "analyzer": "isbn_analyzer"
     },
+    "ismn": {
+      "type": "string",
+      "analyzer": "isbn_analyzer"
+    },
     "series": {
       "type": "string"
     },

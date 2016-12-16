@@ -739,6 +739,12 @@ module.exports = (app) => {
                 addAnotherLabel: 'Legg til nytt ISBN'
               },
               {
+                includeOnlyWhen: { hasMediaType: [ 'Other', 'SheetMusic' ] },
+                rdfProperty: 'hasIsmn',
+                multiple: true,
+                addAnotherLabel: 'Legg til nytt ISMN'
+              },
+              {
                 includeOnlyWhen: { hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Game' ] },
                 rdfProperty: 'hasEan'
               },

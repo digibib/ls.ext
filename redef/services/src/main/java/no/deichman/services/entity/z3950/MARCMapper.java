@@ -119,6 +119,9 @@ public class MARCMapper {
                 case "025":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setEan);
                     break;
+                case "024":
+                    getSubfieldValue(dataField, 'a').ifPresent(publication::setIsmn);
+                    break;
                 case "041":
                     setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
                     setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
