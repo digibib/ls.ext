@@ -456,6 +456,12 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
+:hasIsmn a rdfs:Property ;
+  rdfs:label "ISMN"@en ;
+  rdfs:label "ISMN"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
 # ToDo: Erstattes med :hasLiteraryForm
 :literaryForm a rdfs:Property;
   rdfs:label "Litterær form"@no ;
