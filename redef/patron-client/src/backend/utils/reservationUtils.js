@@ -1,24 +1,22 @@
-module.exports.estimateWaitingPeriod = function (queuePlace, items) {
-  return (queuePlace, items) => {
-    if (items.length < 1) {
-      return 'unknown'
-    }
-    if (queuePlace === 0) {
-      return 'inTransit'
-    }
+module.exports.estimateWaitingPeriod = (queuePlace, items) => {
+  if (items.length < 1) {
+    return 'unknown'
+  }
+  if (queuePlace === 0) {
+    return 'inTransit'
+  }
 
-    const reservableItems = items.filter(isReservable)
+  const reservableItems = items.filter(isReservable)
 
-    if (reservableItems.length < 1) {
-      return 'unknown'
-    }
+  if (reservableItems.length < 1) {
+    return 'unknown'
+  }
 
-    const availableItems = reservableItems.filter(isAvailable)
-    if (availableItems.length > 0 && queuePlace === 1) {
-      return 'pending'
-    } else {
-      return getWaitPeriod(queuePlace, reservableItems)
-    }
+  const availableItems = reservableItems.filter(isAvailable)
+  if (queuePlace <= availableItems.length) {
+    return 'pending'
+  } else {
+    return getWaitPeriod(queuePlace, reservableItems)
   }
 }
 
@@ -47,24 +45,19 @@ function getWaitPeriod (queuePlace, items) {
 
 function getEstimatedPeriod (queuePlace, items) {
   // Explanation:
-  // We're checking that there are items available to loan, then we find the item with the earliest onloan date
-  // then we get the loan period based on the itemtype, multiplying this by seconds in a day (assumes loan periods
-  // are expressed in days). This number is then added to the earliest loan date expressed as seconds and then we
-  // subtract the current date in seconds; this gives us the number of seconds until the earliest loan will become
-  // available. If the product of this calculation is less than zero (indicating that a loan is outstanding), we
-  // simply use zero as a base, if not, we use the product. We then add the product to the product of adding
-  // item-loan length multiplied by queue-place-minus-one (because in reality, if you're first in the queue, you're
-  // number zero, i.e. you get it as soon as the previous borrower returns it) divided by the number of seconds in a
-  // week, which gives you an indication of how many weeks one has to wait.
+  // Generate starting point by finding the oldest loan, add that to the loan-length multiplied by the queue:items ratio
+  // divide by seconds in a week and finally divide by the number of items
 
   if (items) {
     const secondsInDay = 1000 * 60 * 60 * 24
     const secondsInAWeek = secondsInDay * 7
     const oldestLoan = getOldestLoan(items)
     const itemLoanLength = getLoanPeriod(oldestLoan.itype) * secondsInDay
-    const initialTo = (Date.parse(oldestLoan.onloan) + itemLoanLength) - Date.now()
-    const startDate = (initialTo > 0) ? initialTo : 0
-    const estimate = Math.ceil(((startDate + (itemLoanLength * (queuePlace - 1))) / secondsInAWeek))
+    const startDateFromItem = Date.parse(oldestLoan.onloan)
+    const initialTo = (startDateFromItem + itemLoanLength) - Date.now()
+    const startDate = (initialTo <= 0) || isNaN(initialTo) ? 0 : initialTo
+    const multiplicator = Math.ceil((queuePlace >= items.length) ? (queuePlace / items.length) : (items.length / queuePlace))
+    const estimate = Math.ceil(((startDate + (itemLoanLength * multiplicator)) / secondsInAWeek) / items.length)
     return isNaN(estimate) ? 'unknown' : estimate
   } else {
     return 'unknown'
@@ -98,5 +91,5 @@ function getOldestLoan (items) {
     (a, b) => {
       return a.onloan > b.onloan
     })
-  return sorted[0]
+  return sorted[ 0 ]
 }
