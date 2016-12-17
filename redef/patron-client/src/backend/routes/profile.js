@@ -188,19 +188,6 @@ module.exports = (app) => {
       })
   }
 
-  function getExpectedAvailableDateByBiblio (biblionumber) {
-    return fetch(`http://xkoha:8081/api/v1/biblios/${biblionumber}/items`)
-      .then(res => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          throw Error(res.statusText)
-        }
-      }).then(json => {
-        return json.items
-      })
-  }
-
   app.post('/api/v1/profile/settings', jsonParser, (request, response) => {
     fetch(`http://xkoha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`, {
       method: 'PUT',
