@@ -76,7 +76,7 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
-                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
                 <td>
                   <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
                     ? item.queuePlace
