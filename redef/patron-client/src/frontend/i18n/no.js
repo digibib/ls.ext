@@ -260,6 +260,7 @@ export default {
   'UserLoans.moreThan': 'mer enn',
   'UserLoans.name': 'Lån registrert på {name}',
   'UserLoans.orderedDate': 'Reservasjonsdato',
+  'UserLoans.pending': '(Kommer snart)',
   'UserLoans.pickupLocation': 'Hentested',
   'UserLoans.pickupNumber': 'Hentenummer',
   'UserLoans.placeInQueue': 'Køplass',

@@ -76,17 +76,14 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
-                <td data-automation-id="UserLoans_reservation_library">{this.props.libraries[ item.branchCode ]}</td>
+                <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
                 <td>
-                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
+                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
+                    ? item.queuePlace
+                    : <FormattedMessage {...messages.enRoute} />}</span>
                   <span>&nbsp;</span>
-                  <span data-automation-id="UserLoans_reservation_waitingPeriod">({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)</span>
-                  <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
-                  <span>&nbsp;</span>
-                  <span
-                    data-automation-id="UserLoans_reservation_waitingPeriod">
-                    ({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)
-                  </span>
+                   <span
+                   data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
                 </td>
                 <td>
                   {this.renderResumeSuspendReservationButton(item)}
@@ -140,12 +137,13 @@ class UserLoans extends React.Component {
                     <FormattedMessage {...messages.placeInQueue} />
                   </div>
                   <div className="meta-content">
-                    <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span>
-                    <span>&nbsp;</span>
                     <span
-                      data-automation-id="UserLoans_reservation_waitingPeriod">
-                      ({this.renderExpectedEstimationPrefix(item.expected)} {item.expected} <FormattedMessage {...messages.weeks} />)
-                    </span>
+                      data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
+                      ? item.queuePlace
+                      : <FormattedMessage {...messages.enRoute} />}</span>
+                     <span>&nbsp;</span>
+                     <span
+                     data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
                   </div>
                 </div>
                 <div className="meta-item">
@@ -214,7 +212,9 @@ class UserLoans extends React.Component {
   }
 
   renderWaitingPeriod (expected = 'unknown') {
-    if (expected === 'unknown') {
+    if (expected === 'pending') {
+      return <FormattedMessage {...messages.pending} />
+    } else if (expected === 'unknown') {
       return <FormattedMessage {...messages.unknown} />
     } else {
       return <span>({this.renderExpectedEstimationPrefix(expected)} {expected} <FormattedMessage {...messages.weeks} />)</span>
@@ -433,6 +433,11 @@ export const messages = defineMessages({
     description: 'Text displayed when unable to estimate waiting period',
     defaultMessage: '(Unknown waiting period)'
   },
+  pending: {
+    id: 'UserLoans.pending',
+    description: 'Text displayed when a loan is pending',
+    defaultMessage: '(Soon available)'
+  },
   enRoute: {
     id: 'UserLoans.enRoute',
     description: 'Text displayed when item is en route',
@@ -452,16 +457,6 @@ export const messages = defineMessages({
     id: 'UserLoans.moreThan',
     description: 'The words used to mean more than',
     defaultMessage: 'more than'
-  },
-  unknown: {
-    id: 'UserLoans.unknown',
-    description: 'Text displayed when unable to estimate waiting period',
-    defaultMessage: '(Unknown waiting period)'
-  },
-  enRoute: {
-    id: 'UserLoans.enRoute',
-    description: 'Text displayed when item is en route',
-    defaultMessage: 'En route'
   },
   suspendReservation: {
     id: 'UserLoans.suspendReservation',

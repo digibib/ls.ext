@@ -157,13 +157,14 @@ describe('containers', () => {
         2: 1
       }
       Array.prototype.forEach.call(reservations, (reservation, index) => {
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ index ].title)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ indexMap[ index ] ].orderedDate))
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
+        // TODO: Uncomment below line when enabling estimates again
+        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
-        expect(select.options[ select.selectedIndex ].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(select.options[ select.selectedIndex ].textContent).toEqual(libraries[ loansAndReservations.reservations[ indexMap[ index ] ].branchCode ])
       })
     })
 
@@ -172,17 +173,22 @@ describe('containers', () => {
       const { loansAndReservations } = store.getState().profile
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
-      expect(reservations.length
-      ).toEqual(3)
+      expect(reservations.length).toEqual(3)
+      // indexMap is used because the component sorts the output
+      const indexMap = {
+        0: 0,
+        1: 2,
+        2: 1
+      }
       Array.prototype.forEach.call(reservations, (reservation, index) => {
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent
-        ).toEqual(loansAndReservations.reservations[ index ].title)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ index ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ index ].orderedDate))
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ index ].queuePlace)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ index ].expectedTestData)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ indexMap[ index ] ].orderedDate))
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
+        // TODO: Uncomment below line when enabling estimates again
+        // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
-        expect(select.options[ select.selectedIndex ].textContent).toEqual(libraries[ loansAndReservations.reservations[ index ].branchCode ])
+        expect(select.options[ select.selectedIndex ].textContent).toEqual(libraries[ loansAndReservations.reservations[ indexMap[ index ] ].branchCode ])
       })
     })
 
