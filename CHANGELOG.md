@@ -4,7 +4,9 @@ Library Extended (ls.ext) Release changelog.
 Tags refer to built and pushed docker images.
 
 To reproduce the state of the release, set GITREF to the chosen TAG in `docker-compose.env`.
-To provision/configure, add overrides to variables in `.env`:
+Add configuration overrides to variables in `.env`:
+
+Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_TAG:
 
 `source docker-compose.env && docker-compose -f common.env -f prod.env up -d`
 
