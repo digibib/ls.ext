@@ -4,15 +4,15 @@ Library Extended (ls.ext) Release changelog.
 Tags refer to built and pushed docker images.
 
 To reproduce the state of the release, set GITREF to the chosen TAG in `docker-compose.env`.
-To provision/configure, substitute the variables in `docker-compose-template-prod.yml` with e.g.
-a secrets.env:
+To provision/configure, add overrides to variables in `.env`:
 
-`source secrets.env && envsubst < docker-compose-template-prod.yml > docker-compose.yml`
-
-The resulting compose file can then be used with `docker-compose up -d` to provision.
+`source docker-compose.env && docker-compose -f common.env -f prod.env up -d`
 
 # Releases
 ## 0.8.0 (2016-12-20)
+
+KOHA:
+GITREF:
 
 - Koha:
   - DEICH-514 various fixes for NL sync
