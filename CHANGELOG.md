@@ -12,6 +12,18 @@ a secrets.env:
 The resulting compose file can then be used with `docker-compose up -d` to provision.
 
 # Releases
+## 0.8.0 (2016-12-20)
+
+- Koha:
+  - DEICH-514 various fixes for NL sync
+  - DEICH-512 available item status update
+- Catalinker:
+  - DEICH-504: New field ISSN
+  - DEICH-525: New field ISMN
+  - DEICH-456: work main responsibility on parts
+- Patron-client:
+  - DEICH-512: correcct status on not-for-loan material issued
+
 ## 0.7.5 (2016-12-13)
 
 - Koha:
