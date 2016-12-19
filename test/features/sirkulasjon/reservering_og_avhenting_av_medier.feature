@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@wip
 Egenskap: Reservering og avhenting av medier
   Som låner
   For å slippe å lete selv
