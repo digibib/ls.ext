@@ -12,6 +12,16 @@ a secrets.env:
 The resulting compose file can then be used with `docker-compose up -d` to provision.
 
 # Releases
+## 0.7.5 (2016-12-13)
+
+- Koha:
+  - Fix for holds bug in SIP checkin DEICH-487
+- Patron-client:
+  - Forbedre visning av tittelopplysninger DEICH-508
+- Catalinker:
+  - Fiks mapping av opprinnelsesland fra BS DEICH-507
+- Services:
+  - Legg til manglende rolleDEICH-517
 
 ## 0.7.2 (2016-12-08) bugfix
 
