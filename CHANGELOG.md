@@ -11,7 +11,7 @@ To provision/configure, add overrides to variables in `.env`:
 # Releases
 ## 0.8.0 (2016-12-20)
 
-KOHA:
+KOHA:   15345ae973ca75a0d46cbfa8ca8433506458ae15
 GITREF:
 
 - Koha:
