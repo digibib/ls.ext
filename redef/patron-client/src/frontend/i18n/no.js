@@ -196,6 +196,7 @@ export default {
   'SearchFilter.showMore': 'Vis flere +',
   'SearchFilterBox.title.search': 'Avgrenset til:',
   'SearchFilterBox.title.work': 'Utgivelser som passer din avgrensning:',
+  'SearchFilterBoxItem.title.filter': 'Filtrert på',
   'SearchFilters.limit': 'Avgrens søket ditt',
   'SearchHeader.contactUs': 'Kontakt oss',
   'SearchHeader.logoAlt': 'Sort logo med tekst',
