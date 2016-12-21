@@ -6,7 +6,7 @@ class CatalinkerPage < PageRoot
 
   def visit_sub_page(page)
     @browser.goto catalinker(page)
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
       @browser.url != catalinker(page) && # wait until we have been redirected
           @browser.divs(:class => "prop-input").size > 1 # wait until dom-tree has been populated
     }
@@ -15,13 +15,13 @@ class CatalinkerPage < PageRoot
 
   def open(resource, res_type)
     @browser.goto "#{catalinker(:home)}/#{res_type}?resource=#{resource}"
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.divs(:class => "prop-input").size > 1 }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.divs(:class => "prop-input").size > 1 }
     self
   end
 
   def open_readonly(resource, res_type)
     @browser.goto "#{catalinker(:home)}/#{res_type}?resource=#{resource}&readOnly=true"
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.divs(:class => "prop-input").size > 1 }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.divs(:class => "prop-input").size > 1 }
     self
   end
 
@@ -33,12 +33,12 @@ class CatalinkerPage < PageRoot
     input = @browser.elements(:data_automation_id => predicate+"_#{nr}").find(&:visible?).to_subtype
     input.focus
     input.set('')
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value == '' }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { input.value == '' }
     input.set(value)
     input.fire_event :blur
     unless skip_wait
       retry_wait do
-        Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === 'alle endringer er lagret' }
+        Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === 'alle endringer er lagret' }
       end
     end
     self
@@ -53,7 +53,7 @@ class CatalinkerPage < PageRoot
   def select_resource(uri)
     tries = 3
     begin
-      @browser.div(:data_automation_id => uri).when_present(BROWSER_WAIT_TIMEOUT).click
+      @browser.div(:data_automation_id => uri).wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).click
     rescue Watir::Wait::TimeoutError
       STDERR.puts "TIMEOUT: retrying .... #{(tries -= 1)}"
       retry unless tries == 0
@@ -65,12 +65,12 @@ class CatalinkerPage < PageRoot
       domain="_#{domain}"
     end
     input = @browser.select_list(:data_automation_id => "#{domain}#{predicate}_#{nr}")
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.length > 1 }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { input.length > 1 }
     input.select(value)
 #    @browser.screenshot.save "./report/#{Time.now}_screenshot.png"
     unless skip_wait
       retry_wait do
-        Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === 'alle endringer er lagret' }
+        Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.div(:id => /save-stat/).text === 'alle endringer er lagret' }
       end
     end
     self
@@ -90,19 +90,19 @@ class CatalinkerPage < PageRoot
 
   def get_prop(predicate, nr=0)
     input = @browser.text_field(:data_automation_id => "#{predicate}_#{nr}")
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value != "" }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { input.value != "" }
     input.value
   end
 
   def get_prop_from_span(predicate, nr=0)
     span = @browser.span(:data_automation_id => "#{predicate}_#{nr}")
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { span.text != "" }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { span.text != "" }
     span.text
   end
 
   def get_prop_by_label(input_label, nr=0)
     input = @browser.inputs(:xpath => '//label[@data-uri-escaped-label="' + URI::escape(input_label) + '"]/../../following-sibling::div/input')[0]
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { input.value != "" }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { input.value != "" }
     input.value
   end
 
@@ -129,7 +129,7 @@ class CatalinkerPage < PageRoot
   end
 
   def get_id
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.input(:data_automation_id => /resource_uri/).value != "" }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.input(:data_automation_id => /resource_uri/).value != "" }
     @browser.input(:data_automation_id => /resource_uri/).value
   end
 

@@ -105,6 +105,7 @@
     "subtitle": "deichman:subtitle",
     "subtitles": "deichman:subtitles",
     "isbn": "deichman:isbn",
+    "ismn": "deichman:ismn",
     "compType": "deichman:compType",
     "fictionNonfiction": "deichman:fictionNonfiction",
     "title1": "deichman:titleFirst",

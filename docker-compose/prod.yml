@@ -57,16 +57,37 @@ services:
     logging:
       driver: "journald"
 
-  sip_proxy:
+  tagvision_sip_proxy:
+    container_name: tagvision_sip_proxy
+    image: "digibib/sip2proxy:c83305db07f0567971229aefcb76d222509b4fef"
+    ports:
+      - "6002:9999"
     command:
       - "/sip2proxy"
       - "-from=:9999"
-      - "-to=xkoha:6001"
+      - "-to=xkoha:${SIP_PORT:-6001}"
       - "-log-messages=true"
       - "-replace-10=true"
       - "-log-metrics-every-s=300"
       - "-ensure-branch=true"
       - "-gelf=udp://10.172.2.16:12201"
+      - "-extended-id=true"
+    logging:
+      driver: "journald"
+
+  sip_proxy:
+    container_name: sip_proxy
+    image: "digibib/sip2proxy:c83305db07f0567971229aefcb76d222509b4fef"
+    command:
+      - "/sip2proxy"
+      - "-from=:9999"
+      - "-to=xkoha:${SIP_PORT:-6001}"
+      - "-log-messages=true"
+      - "-replace-10=true"
+      - "-log-metrics-every-s=300"
+      - "-ensure-branch=true"
+      - "-gelf=udp://10.172.2.16:12201"
+      - "-extended-id=false"
     logging:
       driver: "journald"
 

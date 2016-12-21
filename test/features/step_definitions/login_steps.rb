@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'watir-webdriver'
+require 'watir'
 
 Given(/^at jeg er logget inn som adminbruker$/) do
   step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"

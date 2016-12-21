@@ -135,11 +135,6 @@ rebuild_overview:					## Force rebuilds overview
 	@echo "======= FORCE RECREATING OVERVIEW ======\n"
 	$(call rebuild,overview)
 
-graph:                              ## Redraw graph of components (replaces docker-compose/dev-stack.png)
-	$(CMD) -c "cd $(LSEXTPATH)/docker-compose &&\
-	sudo docker run --rm -v $(LSEXTPATH)/docker-compose:/tmp digibib/docker-compose-dot:21af6b4fd714903cebd3d4658ad35da4d0db0051 ./app /tmp/docker-compose.yml 2> /dev/null 1> docker-compose.dot && \
-	dot docker-compose.dot -Tpng > dev-stack.png"
-
 cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
 	$(CMD) -c "rm -rf $(LSEXTPATH)/test/report/*.* && \

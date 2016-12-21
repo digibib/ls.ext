@@ -5,24 +5,24 @@ require_relative '../page_root.rb'
 class PatronClientWorkPage < PageRoot
   def visit(workId)
     @browser.goto patron_client(:work) + "/" + workId
-    Watir::Wait.until(BROWSER_WAIT_TIMEOUT) { @browser.element(data_automation_id: /work_title/).exists? }
+    Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) { @browser.element(data_automation_id: /work_title/).exists? }
     self
   end
 
   def title
-    @browser.element(data_automation_id: /work_title/).when_present(BROWSER_WAIT_TIMEOUT).text
+    @browser.element(data_automation_id: /work_title/).wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
   end
 
   def getAuthor
-    return @browser.a(data_automation_id: /work_contributor_link/).when_present(BROWSER_WAIT_TIMEOUT).text
+    return @browser.a(data_automation_id: /work_contributor_link/).wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
   end
 
   def getAuthorLink
-    return @browser.a(:'data_automation_id' => /work_contributor_link/).when_present(BROWSER_WAIT_TIMEOUT)
+    return @browser.a(:'data_automation_id' => /work_contributor_link/).wait_until_present(timeout: BROWSER_WAIT_TIMEOUT)
   end
 
   def getDate
-    return @browser.element(data_automation_id: /work_originalReleaseDate/).when_present(BROWSER_WAIT_TIMEOUT).text
+    return @browser.element(data_automation_id: /work_originalReleaseDate/).wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
   end
 
   def exists_exemplar?
@@ -41,7 +41,7 @@ class PatronClientWorkPage < PageRoot
   end
 
   def get_items(publication_identifier)
-    @browser.element(data_automation_id: "publication_#{publication_identifier}").when_present(BROWSER_WAIT_TIMEOUT).click
+    @browser.element(data_automation_id: "publication_#{publication_identifier}").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).click
     publication_info = @browser.element(data_automation_id: "publication_info_#{publication_identifier}")
     wait_retry { publication_info.present? }
     publication_info.table.rows.select { |row| row.ths.size === 0 && row.tds.size > 0 }

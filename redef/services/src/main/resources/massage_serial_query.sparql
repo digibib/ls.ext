@@ -9,10 +9,11 @@ CONSTRUCT
                :publishedByName ?publishedByName ;
                :publishedByAlternativeName ?publishedByAlternativeName ;
                :publishedByPlacePrefLabel ?publishedByPlacePrefLabel ;
-               :publishedByPlaceAlternativeName ?publishedByPlaceAlternativeName .
+               :publishedByPlaceAlternativeName ?publishedByPlaceAlternativeName ;
+               :issn ?issn .
   }
 WHERE
-  { SELECT DISTINCT  ?serialUri ?mainTitle ?subtitle ?publishedByName ?publishedByAlternativeName ?publishedByPlacePrefLabel ?publishedByPlaceAlternativeName ?partTitle ?partNumber
+  { SELECT DISTINCT  ?serialUri ?mainTitle ?subtitle ?publishedByName ?publishedByAlternativeName ?publishedByPlacePrefLabel ?publishedByPlaceAlternativeName ?partTitle ?partNumber ?issn
     WHERE
       { BIND(uri("__SERIALURI__") AS ?serialUri)
         ?serialUri  a                   :Serial ;
@@ -28,6 +29,9 @@ WHERE
           }
         OPTIONAL
           { ?serialUri  :partNumber ?partNumber
+          }
+        OPTIONAL
+          { ?serialUri  :issn ?issn
           }
         OPTIONAL
           {

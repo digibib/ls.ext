@@ -376,13 +376,18 @@ module.exports = (app) => {
               },
               {
                 label: 'Nummer på delserie',
-                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string',
                 rdfProperty: 'partNumber'
               },
               {
                 label: 'Tittel på delserie',
-                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string',
                 rdfProperty: 'partTitle'
+              },
+              {
+                label: 'ISSN',
+                type: 'input-string',
+                rdfProperty: 'issn'
               },
               {
                 label: 'Utgiver',
@@ -597,6 +602,7 @@ module.exports = (app) => {
                       }
                     },
                     {
+                      id:'mainEntryRoleInput',
                       label: 'Rolle',
                       rdfProperty: 'role',
                       required: true
@@ -731,6 +737,12 @@ module.exports = (app) => {
                 multiple: true,
                 formatter: 'isbn',
                 addAnotherLabel: 'Legg til nytt ISBN'
+              },
+              {
+                includeOnlyWhen: { hasMediaType: [ 'Other', 'SheetMusic' ] },
+                rdfProperty: 'hasIsmn',
+                multiple: true,
+                addAnotherLabel: 'Legg til nytt ISMN'
               },
               {
                 includeOnlyWhen: { hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Game' ] },
@@ -1347,12 +1359,24 @@ module.exports = (app) => {
                             }
                           ],
                           useAfterCreation: false
+                        },
+                        whenEmptyExternalSuggestionCopyValueFrom: {
+                          inputRef: 'mainEntryPersonInput'
                         }
                       }
                     },
                     {
                       label: 'Rolle',
-                      rdfProperty: 'role'
+                      rdfProperty: 'role',
+                      widgetOptions: {
+                        whenEmptyExternalSuggestionCopyValueFrom: {
+                          inputRef: 'mainEntryRoleInput',
+                          warnWhenCopyingSubset: {
+                            message: 'Fyll inn verdi for Rolle også for deler som bare har forslag om Aktør fra før',
+                            allowByDefault: false
+                          }
+                        }
+                      }
                     },
                     {
                       label: 'Tittel på delverk',
@@ -1543,8 +1567,8 @@ module.exports = (app) => {
               wildcard: true
             } ],
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
-            resultItemLabelProperties2: [ 'partNumber.', 'partTitle'],
-            resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator'],
+            resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
+            resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
             itemHandler: 'workItemHandler'
           },
           workUnstructured: {
@@ -1556,9 +1580,9 @@ module.exports = (app) => {
               { field: 'publicationYear' }
             ],
             legend: 'Søk etter tittel og/eller utgivelsesår',
-            resultItemLabelProperties: [ 'mainTitle', ':subtitle'],
-            resultItemLabelProperties2: [ 'partNumber.', 'partTitle'],
-            resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator'  ],
+            resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
+            resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
+            resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
             itemHandler: 'workItemHandler',
             subItemsExpandTooltip: 'Vis/skjul utgivelser'
           },
@@ -1594,7 +1618,7 @@ module.exports = (app) => {
             selectIndexLabel: 'Serie',
             sortedListQueryForField: "serialMainTitle",
             resultItemLabelProperties: [ 'serialMainTitle:', 'subtitle' ],
-            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ]
+            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ]
           },
           publication: {
             type: 'publication',

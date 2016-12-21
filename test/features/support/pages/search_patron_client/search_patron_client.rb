@@ -11,7 +11,7 @@ class SearchPatronClient < PageRoot
   def search_with_text(search_term)
     @browser.text_field(data_automation_id: 'search_input_field').set search_term
     @browser.element(data_automation_id: 'search_button').click
-    wait_retry { not @browser.element(data_automation_id: 'is_searching').present? }
+    wait_for { not @browser.element(data_automation_id: 'is_searching').present? }
   end
 
   def get_search_result_list

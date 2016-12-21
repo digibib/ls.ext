@@ -14,7 +14,7 @@ import {
   REQUEST_LIBRARIES,
   RECEIVE_LIBRARIES,
   LIBRARIES_FAILURE,
-  RESIZE_WINDOW
+  RESIZE_WINDOW_WIDTH
 } from '../constants/ActionTypes'
 import * as i18n from '../i18n'
 
@@ -97,7 +97,7 @@ export default function application (state = initialState, action) {
       return { ...state, isRequestingLibraries: false, libraries: action.payload.libraries }
     case LIBRARIES_FAILURE:
       return { ...state, isRequestingLibraries: false, libraryError: action.payload.message }
-    case RESIZE_WINDOW:
+    case RESIZE_WINDOW_WIDTH:
       return { ...state, windowWidth: action.payload.windowWidth }
     default:
       return state

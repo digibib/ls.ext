@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'watir-webdriver'
+require 'watir'
 require_relative 'intra_page.rb'
 
 class Branches < IntraPage

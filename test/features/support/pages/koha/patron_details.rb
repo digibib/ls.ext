@@ -17,7 +17,7 @@ class PatronDetails < IntraPage
     if @browser.link(:id => 'issues-table-load-now-button').exists?
       @browser.link(:id => 'issues-table-load-now-button').click
       @browser.table(:id => "issues-table").wait_until_present
-      Watir::Wait.until(BROWSER_WAIT_TIMEOUT) {
+      Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
         @browser.tr(:id => "group-id-issues-table_-strong-today-s-checkouts-strong-").exists? ||
         @browser.tr(:id => "group-id-issues-table_-strong-previous-s-checkouts-strong-").exists?
       }
