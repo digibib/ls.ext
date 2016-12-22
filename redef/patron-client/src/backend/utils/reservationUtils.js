@@ -44,20 +44,16 @@ function getWaitPeriod (queuePlace, items) {
 }
 
 function getEstimatedPeriod (queuePlace, items) {
-  // Explanation:
-  // Generate starting point by finding the oldest loan, add that to the loan-length multiplied by the queue:items ratio
-  // divide by seconds in a week and finally divide by the number of items
-
   if (items) {
     const secondsInDay = 1000 * 60 * 60 * 24
     const secondsInAWeek = secondsInDay * 7
     const oldestLoan = getOldestLoan(items)
-    const itemLoanLength = getLoanPeriod(oldestLoan.itype) * secondsInDay
-    const startDateFromItem = Date.parse(oldestLoan.onloan)
-    const initialTo = (startDateFromItem + itemLoanLength) - Date.now()
-    const startDate = (initialTo <= 0) || isNaN(initialTo) ? 0 : initialTo
-    const multiplicator = Math.ceil((queuePlace >= items.length) ? (queuePlace / items.length) : (items.length / queuePlace))
-    const estimate = Math.ceil(((startDate + (itemLoanLength * multiplicator)) / secondsInAWeek) / items.length)
+    const oldestLoanLoaned = Date.parse(oldestLoan.onloan)
+    const subtractWeeks = (isNaN(oldestLoanLoaned)) ? 0 : Math.floor((Date.now() - oldestLoanLoaned) / secondsInAWeek)
+    const preLoaned = (subtractWeeks < 0) ? 0 : subtractWeeks
+    const loanPeriodAsWeeks = ((getLoanPeriod(oldestLoan.itype) * secondsInDay) / secondsInAWeek)
+    const fixedQueuePlace = (preLoaned > 0) ? queuePlace : queuePlace - 1
+    const estimate = (loanPeriodAsWeeks * ((queuePlace === 1) ? 1 : fixedQueuePlace)) - preLoaned
     return isNaN(estimate) ? 'unknown' : estimate
   } else {
     return 'unknown'

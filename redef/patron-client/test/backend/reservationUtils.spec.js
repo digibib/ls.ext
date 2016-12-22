@@ -11,7 +11,7 @@ describe('reservation utils', () => {
       const items = []
       const queuePlace = 0
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('unknown')
     })
 
@@ -19,7 +19,7 @@ describe('reservation utils', () => {
       const items = [{}]
       const queuePlace = 0
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('inTransit')
     })
 
@@ -27,7 +27,7 @@ describe('reservation utils', () => {
       const items = [{}]
       const queuePlace = 1
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('unknown')
     })
 
@@ -39,7 +39,7 @@ describe('reservation utils', () => {
       }]
       const queuePlace = 1
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('pending')
     })
 
@@ -52,7 +52,7 @@ describe('reservation utils', () => {
       }]
       const queuePlace = 1
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('0–1')
     })
 
@@ -65,7 +65,7 @@ describe('reservation utils', () => {
       }]
       const queuePlace = 1
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('1–2')
     })
 
@@ -78,12 +78,12 @@ describe('reservation utils', () => {
       }]
       const queuePlace = 1
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('2–3')
     })
 
     it('should know a reserve has a waiting time of 0-1, 1-2...11-12 weeks', () => {
-      [4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6, -7].forEach((n) => {
+      [4, 3, 2, 1, 0].forEach((n) => {
         const date = new Date(dayToday - (oneWeekInSeconds * n)).toISOString()
         const items = [{
           'onloan': date.substring(0, date.indexOf('T')),
@@ -92,22 +92,9 @@ describe('reservation utils', () => {
         }]
         const queuePlace = 1
         expect(
-          estimateWaitingPeriod()(queuePlace, items)
+          estimateWaitingPeriod(queuePlace, items)
         ).toEqual(`${(4 - n)}–${(4 - n) + 1}`)
       })
-    })
-
-    it('should know a reserve has a waiting time of more than 12 weeks', () => {
-      const date = new Date(dayToday - (oneWeekInSeconds * -8)).toISOString()
-      const items = [{
-        'onloan': date.substring(0, date.indexOf('T')),
-        'itype': 'BOK',
-        'reservable': 1
-      }]
-      const queuePlace = 1
-      expect(
-        estimateWaitingPeriod()(queuePlace, items)
-      ).toEqual('12')
     })
 
     it('should know a reserve has a waiting time of 1-2 weeks from multiple reserves', () => {
@@ -124,12 +111,24 @@ describe('reservation utils', () => {
       }]
       const queuePlace = 1
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('1–2')
     })
 
+    it('should know a reserve has a waiting time of 4-5 weeks', () => {
+      const items = [{
+        'onloan': null,
+        'itype': 'BOK',
+        'reservable': 1
+      }]
+      const queuePlace = 2
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('4–5')
+    })
+
     it('should know a reserve has a waiting time of 0-1, 1-2...11-12 weeks', () => {
-      [2, 3].forEach((n) => {
+      [3].forEach((n) => {
         const from = (n === 2) ? 4 : 8
         const items = [{
           'onloan': null,
@@ -138,7 +137,7 @@ describe('reservation utils', () => {
         }]
         const queuePlace = n
         expect(
-          estimateWaitingPeriod()(queuePlace, items)
+          estimateWaitingPeriod(queuePlace, items)
         ).toEqual(`${from}–${from + 1}`)
       })
     })
@@ -152,7 +151,7 @@ describe('reservation utils', () => {
       }]
       const queuePlace = 4
       expect(
-        estimateWaitingPeriod()(queuePlace, items)
+        estimateWaitingPeriod(queuePlace, items)
       ).toEqual('12')
     })
 
@@ -165,7 +164,7 @@ describe('reservation utils', () => {
         }]
         const queuePlace = 2
         expect(
-          estimateWaitingPeriod()(queuePlace, items)
+          estimateWaitingPeriod(queuePlace, items)
         ).toEqual('4–5')
       })
     })
