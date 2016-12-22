@@ -50,7 +50,7 @@
       }
     }
     span:last-child {
-      float:right;
+      float: right;
     }
   }
 }
@@ -59,7 +59,7 @@
 .secondary-navigation {
   @include span(12);
 
-  a, a:hover{
+  a, a:hover {
     color: $white;
   }
 
@@ -102,6 +102,9 @@
   .tab-bar-tab {
     display: inline-block;
     float: left;
+    &:not(.tab-bar-tab-active) a {
+      cursor: pointer;
+    }
   }
 
   li {
@@ -110,6 +113,7 @@
     &.tab-bar-tab-active {
       a {
         border-bottom: 2px solid $blackColor;
+        color: $blackColor;
         text-decoration: none;
         font-weight: bold;
         margin-bottom: 0;
@@ -117,12 +121,12 @@
     }
 
   }
-
   a {
     border-bottom: 1px solid $greyColor;
     margin-bottom: 1px;
-    display: block;
+    display: inline-block;
     padding: 0.5em;
+    text-align: center;
 
     &:hover, &:active, &:focus {
       border-bottom: 2px solid $blackColor;
@@ -130,7 +134,15 @@
       font-weight: bold;
       margin-bottom: 0;
     }
-
+    &::after {
+      display: block;
+      content: attr(title);
+      font-weight: bold;
+      height: 1px;
+      color: transparent;
+      overflow: hidden;
+      visibility: hidden;
+    }
   }
 
 }
