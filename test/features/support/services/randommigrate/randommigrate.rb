@@ -78,13 +78,28 @@ module RandomMigrate
       return work_title, ntriples
     end
 
-    def generate_publication(work_uri, language = nil, prefix = nil)
+    def generate_publication(work_uri, language = nil, prefix = nil, part_creator_uri = nil)
       publication_title = generate_random_string
       ntriples = "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Publication> .
                   <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#publicationOf> <#{work_uri}> .
                   <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#mainTitle> \"#{prefix} #{publication_title}\" .
                   <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#format> <http://data.deichman.no/format##{@formats.sample}> .
-                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#language> <#{language || @languages.sample}> ."
+                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#language> <#{language || @languages.sample}> .
+                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#hasPublicationPart> _:b0 .
+                  _:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#PublicationPart> .
+                  _:b0 <http://data.deichman.no/ontology#agent> <#{part_creator_uri}> .
+                  _:b0 <http://data.deichman.no/ontology#role> <http://data.deichman.no/role#author> .
+                  _:b0 <http://data.deichman.no/ontology#mainTitle> \"Påfuglsommer\" .
+                  _:b0 <http://data.deichman.no/ontology#startsAtPage> \"1\"^^<http://www.w3.org/2001/XMLSchema#positiveInteger> .
+                  _:b0 <http://data.deichman.no/ontology#endsAtPage> \"100\"^^<http://www.w3.org/2001/XMLSchema#positiveInteger> .
+                  <http://data.deichman.no/publication/p1> <http://data.deichman.no/ontology#hasPublicationPart> _:b1 .
+                  _:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#PublicationPart> .
+                  _:b1 <http://data.deichman.no/ontology#agent> <#{part_creator_uri}> .
+                  _:b1 <http://data.deichman.no/ontology#role> <http://data.deichman.no/role#author> .
+                  _:b1 <http://data.deichman.no/ontology#mainTitle> \"På to hjul i svingen\" .
+                  _:b1 <http://data.deichman.no/ontology#startsAtPage> \"101\"^^<http://www.w3.org/2001/XMLSchema#positiveInteger> .
+                  _:b1 <http://data.deichman.no/ontology#endsAtPage> \"200\"^^<http://www.w3.org/2001/XMLSchema#positiveInteger> .
+                "
       return publication_title, ntriples
     end
 
@@ -128,7 +143,7 @@ module RandomMigrate
         number_of_works_per_person.times do
           work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
           number_of_publications_per_work.times do
-            @publication_uris << post_ntriples('publication', generate_publication(work_uri, nil, prefix)[1])
+            @publication_uris << post_ntriples('publication', generate_publication(work_uri, nil, prefix, person_uri)[1])
           end
           index('work', work_uri)
         end

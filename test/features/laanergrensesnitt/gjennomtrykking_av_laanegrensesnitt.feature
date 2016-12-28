@@ -103,6 +103,19 @@ Egenskap: Gå gjennom lånegrensesnittet
       | Filial                    | Hylleplass | Status        |
       | random_migrate_branchcode | placement1 | 0 av 1 ledige |
 
+  Scenario: Se utgivelse med deler
+    Gitt at jeg er i søkegrensesnittet
+    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
+    Og jeg trykker på første treff
+    Så skal jeg se "11" utgivelser
+    Når jeg trykker på utgivelsen med "Svensk" språk
+    Så skal jeg se et panel med informasjon om utgivelsen
+    Så klikker jeg på fanen "Deler av utgivelsen"
+    Og den skal inneholde utgivelsesdelinformasjonen
+      | Deltittel                    | Hovedansvarlig | Side        |
+      | random_migrate_branchcode | placement1 | 1 av 2 ledige |
+      | random_migrate_branchcode | placement2 | 0 av 1 ledige |
+
   Scenario: Låner reserverer bok på verkssiden
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
