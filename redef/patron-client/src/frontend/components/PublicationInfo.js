@@ -1,22 +1,23 @@
-import React, { PropTypes } from 'react'
-import NonIETransitionGroup from './NonIETransitionGroup'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import AgeLimit from './work/fields/publication/AgeLimit'
-import BiblioNumber from './work/fields/publication/BiblioNumber'
-import Binding from './work/fields/publication/Binding'
-import Contributors from './work/fields/Contributors'
-import Duration from './work/fields/publication/Duration'
-import Ean from './work/fields/publication/Ean'
-import Edition from './work/fields/publication/Edition'
-import FormatAdaptations from './work/fields/publication/FormatAdaptations'
-import Formats from './work/fields/publication/Formats'
-import Isbn from './work/fields/publication/Isbn'
-import NumberOfPages from './work/fields/publication/NumberOfPages'
-import PlaceOfPublication from './work/fields/publication/PlaceOfPublication'
-import Publishers from './work/fields/publication/Publishers'
-import PublisherSeries from './work/fields/publication/PublisherSeries'
-import SerialIssues from './work/fields/publication/SerialIssues'
-import Subtitles from './work/fields/publication/Subtitles'
+import React, {PropTypes} from "react"
+import NonIETransitionGroup from "./NonIETransitionGroup"
+import {injectIntl, intlShape, defineMessages, FormattedMessage} from "react-intl"
+import AgeLimit from "./work/fields/publication/AgeLimit"
+import BiblioNumber from "./work/fields/publication/BiblioNumber"
+import Binding from "./work/fields/publication/Binding"
+import Contributors from "./work/fields/Contributors"
+import Duration from "./work/fields/publication/Duration"
+import Ean from "./work/fields/publication/Ean"
+import Edition from "./work/fields/publication/Edition"
+import FormatAdaptations from "./work/fields/publication/FormatAdaptations"
+import Formats from "./work/fields/publication/Formats"
+import Isbn from "./work/fields/publication/Isbn"
+import NumberOfPages from "./work/fields/publication/NumberOfPages"
+import PlaceOfPublication from "./work/fields/publication/PlaceOfPublication"
+import Publishers from "./work/fields/publication/Publishers"
+import PublisherSeries from "./work/fields/publication/PublisherSeries"
+import SerialIssues from "./work/fields/publication/SerialIssues"
+import Subtitles from "./work/fields/publication/Subtitles"
+import Tabs from "./Tabs"
 
 class PublicationInfo extends React.Component {
   renderLocation (location) {
@@ -71,6 +72,38 @@ class PublicationInfo extends React.Component {
     }
   }
 
+  renderParts(parts) {
+    return (
+      <NonIETransitionGroup
+        transitionName="fade-in"
+        transitionAppear
+        transitionAppearTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+        component="table"
+        className="test">
+        <thead>
+        <tr>
+          <th><FormattedMessage {...messages.partTitle} /></th>
+          <th><FormattedMessage {...messages.partMainEntry} /></th>
+          <th><FormattedMessage {...messages.pageNumber} /></th>
+        </tr>
+        </thead>
+        <tbody data-automation-id="work_parts">
+        {parts.map((part, index) => {
+          return (
+            <tr key={index}>
+              <td data-automation-id="part_title">{part.partTitle}</td>
+              <td data-automation-id="part_main_entry">{part.mainEntry}</td>
+              <td data-automation-id="part_page_number">{[part.startsAtPage, part.endsAtPage].filter(e => {return e !== undefined}).join('–')}</td>
+            </tr>
+          )
+        })}
+        </tbody>
+      </NonIETransitionGroup>
+    )
+  }
+
   renderAvailability (item) {
     if (item.notforloan) {
       return (
@@ -89,6 +122,11 @@ class PublicationInfo extends React.Component {
 
   render () {
     const { publication, publication: { items } } = this.props
+    const tabList = [
+      { label: this.props.intl.formatMessage(messages.items), tabId: 'items'},
+      (publication.publicationParts && publication.publicationParts.length > 0 ?
+      { label: this.props.intl.formatMessage(messages.parts), tabId: 'parts'} : undefined)
+    ].filter( e => { return e !== undefined})
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -124,8 +162,15 @@ class PublicationInfo extends React.Component {
           <p className="note">{publication.description}</p>
         </div>
         <div className="entry-items">
-          <h2><FormattedMessage {...messages.items} /></h2>
-          {this.renderItems(items)}
+          <Tabs label={this.props.intl.formatMessage({ ...messages.publicationInfoMenu })}
+                tabList={tabList}
+                menuId="showDetails"
+                currentTab={this.props.query.showDetails || 'items'}/>
+          {
+            (this.props.query.showDetails || 'items') === 'items'
+              ? this.renderItems(items)
+              : this.renderParts(publication.publicationParts)
+          }
         </div>
       </NonIETransitionGroup>
     )
@@ -135,7 +180,8 @@ class PublicationInfo extends React.Component {
 PublicationInfo.propTypes = {
   publication: PropTypes.object.isRequired,
   expandSubResource: PropTypes.func.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  query: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({
@@ -148,6 +194,36 @@ export const messages = defineMessages({
     id: 'PublicationInfo.items',
     description: 'Heading for items',
     defaultMessage: 'Items'
+  },
+  publicationInfoMenu: {
+    id: 'PublicationInfo.publicationInfoMenu',
+    description: 'menu for publication info',
+    defaultMessage: 'Parts'
+  },
+  parts: {
+    id: 'PublicationInfo.parts',
+    description: 'Heading for parts',
+    defaultMessage: 'Parts'
+  },
+  partTitle: {
+    id: 'PublicationInfo.parts.title',
+    description: 'Heading for part title',
+    defaultMessage: 'Part title'
+  },
+  partMainEntry: {
+    id: 'PublicationInfo.parts.mainEntry',
+    description: 'Heading for part\'s main entry',
+    defaultMessage: 'Main entry'
+  },
+  partExtent: {
+    id: 'PublicationInfo.parts.extent',
+    description: 'Heading for part\'s extent',
+    defaultMessage: 'Extent'
+  },
+  pageNumber: {
+    id: 'PublicationInfo.parts.pageNumber',
+    description: 'Heading for part\'s page number or range',
+    defaultMessage: 'Page'
   },
   note: {
     id: 'PublicationInfo.note',

@@ -119,7 +119,7 @@ When(/^jeg trykker på utgivelsen med "([^"]*)" språk$/) do |language|
   @browser.elements(data_automation_id: /^publication_http/).select { |element| element.elements(data_automation_id: 'publication_languages').select { |element| element.text.include? language }[0] }[0].button(data_automation_id: 'publication_open_show_more_info').click
 end
 
-When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
+When(/^den skal inneholde (eksemplarinformasjonen|utgivelsesdelinformasjonen)$/) do |info_type, table|
   table = table.hashes.sort_by { |r| r.to_s }
   table.each do |row|
     if row['Filial'].eql? 'random_migrate_branchcode'
