@@ -20,7 +20,7 @@ class SearchPatronClient < PageRoot
 
   def follow_first_item_in_search_result
     wait_retry { @browser.link(data_automation_id: 'work-link').present? }
-    @browser.link(data_automation_id: 'work-link').click
+    @browser.link(data_automation_id: 'work-link').h1.click
   end
 
   def search_term
