@@ -73,6 +73,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker oppfrisk i nettleseren
     Så skal språket "English" være valgt
     Og søkeknappen skal vise ordet "SEARCH"
+    Og jeg trykker for å bytte språk
 
   Scenario: Se informasjon om utgivelse
     Gitt at jeg er i søkegrensesnittet
@@ -105,16 +106,16 @@ Egenskap: Gå gjennom lånegrensesnittet
 
   Scenario: Se utgivelse med deler
     Gitt at jeg er i søkegrensesnittet
-    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
+    Når jeg søker på "prefix0" (+ id på vilkårlig migrering)
     Og jeg trykker på første treff
-    Så skal jeg se "11" utgivelser
-    Når jeg trykker på utgivelsen med "Svensk" språk
+    Så skal jeg se "2" utgivelser
+    Og jeg trykker på den første utgivelsen
     Så skal jeg se et panel med informasjon om utgivelsen
     Så klikker jeg på fanen "Deler av utgivelsen"
     Og den skal inneholde utgivelsesdelinformasjonen
       | Deltittel                    | Hovedansvarlig | Side        |
-      | random_migrate_branchcode | placement1 | 1 av 2 ledige |
-      | random_migrate_branchcode | placement2 | 0 av 1 ledige |
+      | På to hjul i svingen |  random_migrate_person_name | 101–200 |
+      | Påfuglsommer |  random_migrate_person_name | 1–100 |
 
   Scenario: Låner reserverer bok på verkssiden
     Gitt at jeg er logget inn som adminbruker
