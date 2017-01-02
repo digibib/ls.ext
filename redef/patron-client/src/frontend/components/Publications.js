@@ -57,7 +57,7 @@ class Publications extends React.Component {
             <PublicationInfo expandSubResource={this.props.expandSubResource}
                              publication={showMorePublication}
                              startReservation={this.props.startReservation}
-                             query={this.props.query}/>
+                             query={this.props.query} />
           </div>
         )
       }
