@@ -40,7 +40,7 @@ end
 Before do |scenario|
   case ENV['BROWSER']
   when "chrome"
-    @browser = @browser || (Watir::Browser.new :chrome, :switches => %w[--no-sandbox --user-data-dir=.])
+      @browser = @browser || (Watir::Browser.new :chrome, :switches => %w[--no-sandbox --user-data-dir=.])
   when "firefox"
     raise Exception.new ("firefox is not supported ATM")
   else
@@ -57,6 +57,7 @@ Before do |scenario|
   if scenario.source_tag_names.include?('@random_migrate')
     step "at jeg er logget inn som adminbruker"
     unless $random_migrate
+      $random_migrate_person_names = Hash.new
       $random_migrate_branchcode = generateRandomString
       step "at det er aktivert en standard sirkulasjonsregel"
       @site.Branches.visit.create(generateRandomString, $random_migrate_branchcode)
@@ -64,6 +65,8 @@ Before do |scenario|
       migrator = RandomMigrate::Migrator.new("http://#{ENV['HOST']}:#{port(:services)}")
       $random_migrate = migrator.generate_quick_test_set($random_migrate_branchcode)
       $random_migrate_record_ids = migrator.get_record_ids
+      $random_migrate_person_names = migrator.get_part_creator_person_names
+
       # TODO: Randommigrated data should be properly cleaned up after tests are done
       #      @cleanup.push("removing randomigrated publications for migration #{@context[:random_migrate_id]}" =>
       #                    lambda do
@@ -74,6 +77,7 @@ Before do |scenario|
     @context[:random_migrate_branchcode] = $random_migrate_branchcode
     @context[:random_migrate_id] = $random_migrate
     @context[:record_ids] = $random_migrate_record_ids
+    @context[:random_migrate_person_names] = $random_migrate_person_names
   end
 end
 
