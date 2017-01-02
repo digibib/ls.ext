@@ -1,8 +1,8 @@
-import React, {PropTypes} from "react"
-import {Link} from "react-router"
-import {connect} from "react-redux"
-import {bindActionCreators} from "redux"
-import * as ResourceActions from "../actions/ResourceActions"
+import React, {PropTypes} from 'react'
+import {Link} from 'react-router'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import * as ResourceActions from '../actions/ResourceActions'
 
 class Tab extends React.Component {
   constructor (props) {
