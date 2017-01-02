@@ -1,9 +1,9 @@
-import fetch from "isomorphic-fetch"
-import {push, replace} from "react-router-redux"
-import * as types from "../constants/ActionTypes"
-import {parsePersonResponse} from "../utils/graphParse"
-import Constants from "../constants/Constants"
-import {action, errorAction} from "./GenericActions"
+import fetch from 'isomorphic-fetch'
+import {push, replace} from 'react-router-redux'
+import * as types from '../constants/ActionTypes'
+import {parsePersonResponse} from '../utils/graphParse'
+import Constants from '../constants/Constants'
+import {action, errorAction} from './GenericActions'
 
 export const requestResource = id => action(types.REQUEST_RESOURCE, { id })
 
@@ -35,7 +35,7 @@ export function fetchPersonResource (personId) {
           throw Error('Error fetching works for person')
         }
       }) ]
-    ).then(([personResponse, worksResponse]) => parsePersonResponse(personResponse, worksResponse))
+    ).then(([ personResponse, worksResponse ]) => parsePersonResponse(personResponse, worksResponse))
       .then(person => dispatch(receiveResource(personId, person)))
       .catch(error => dispatch(resourceFailure(error)))
   }
@@ -121,11 +121,11 @@ export function selectTab (tabId, replacePath, menuId = 'showTab') {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     if (!tabId) {
-      delete locationQuery[menuId]
-    } else if (locationQuery[menuId] === tabId) {
+      delete locationQuery[ menuId ]
+    } else if (locationQuery[ menuId ] === tabId) {
       return
     } else {
-      locationQuery[menuId] = tabId
+      locationQuery[ menuId ] = tabId
     }
     const locationDescriptor = {
       pathname: getState().routing.locationBeforeTransitions.pathname,

@@ -1,18 +1,18 @@
-import React, {PropTypes} from "react"
-import ReactDOM from "react-dom"
-import {injectIntl, intlShape, defineMessages, FormattedMessage} from "react-intl"
-import MediaQuery from "react-responsive"
-import firstBy from "thenby"
-import NonIETransitionGroup from "./NonIETransitionGroup"
-import Publication from "./Publication"
-import PublicationInfo from "./PublicationInfo"
-import {getId, getFragment} from "../utils/uriParser"
-import ClickableElement from "./ClickableElement"
-import {getCategorizedFilters} from "../utils/filterParser"
-import Constants from "../constants/Constants"
-import ShowFilteredPublicationsLabel from "../components/ShowFilteredPublicationsLabel"
-import SearchFilterBox from "../components/SearchFilterBox"
-import MediaType from "../components/MediaType"
+import React, {PropTypes} from 'react'
+import ReactDOM from 'react-dom'
+import {injectIntl, intlShape, defineMessages, FormattedMessage} from 'react-intl'
+import MediaQuery from 'react-responsive'
+import firstBy from 'thenby'
+import NonIETransitionGroup from './NonIETransitionGroup'
+import Publication from './Publication'
+import PublicationInfo from './PublicationInfo'
+import {getId, getFragment} from '../utils/uriParser'
+import ClickableElement from './ClickableElement'
+import {getCategorizedFilters} from '../utils/filterParser'
+import Constants from '../constants/Constants'
+import ShowFilteredPublicationsLabel from '../components/ShowFilteredPublicationsLabel'
+import SearchFilterBox from '../components/SearchFilterBox'
+import MediaType from '../components/MediaType'
 
 class Publications extends React.Component {
   constructor (props) {
