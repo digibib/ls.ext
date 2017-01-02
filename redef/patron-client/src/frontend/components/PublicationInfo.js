@@ -72,7 +72,7 @@ class PublicationInfo extends React.Component {
     }
   }
 
-  renderParts(parts) {
+  renderParts (parts) {
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -95,7 +95,8 @@ class PublicationInfo extends React.Component {
             <tr key={index}>
               <td data-automation-id="part_title">{part.partTitle}</td>
               <td data-automation-id="part_main_entry">{part.mainEntry}</td>
-              <td data-automation-id="part_page_number">{[part.startsAtPage, part.endsAtPage].filter(e => {return e !== undefined}).join('–')}</td>
+              <td
+                data-automation-id="part_page_number">{[ part.startsAtPage, part.endsAtPage ].filter(e => { return e !== undefined }).join('–') }</td>
             </tr>
           )
         })}
@@ -108,13 +109,15 @@ class PublicationInfo extends React.Component {
     if (item.notforloan) {
       return (
         <span>
-          {item.available} <FormattedMessage {...messages.of} /> {item.total} <FormattedMessage {...messages.available} /> - <FormattedMessage {...messages.onlyInhouse} />
+          {item.available} <FormattedMessage {...messages.of} /> {item.total}
+          <FormattedMessage {...messages.available} /> - <FormattedMessage {...messages.onlyInhouse} />
         </span>
       )
     } else {
       return (
         <span>
-          {item.available} <FormattedMessage {...messages.of} /> {item.total} <FormattedMessage {...messages.available} />
+          {item.available} <FormattedMessage {...messages.of} /> {item.total}
+          <FormattedMessage {...messages.available} />
         </span>
       )
     }
@@ -123,10 +126,11 @@ class PublicationInfo extends React.Component {
   render () {
     const { publication, publication: { items } } = this.props
     const tabList = [
-      { label: this.props.intl.formatMessage(messages.items), tabId: 'items'},
-      (publication.publicationParts && publication.publicationParts.length > 0 ?
-      { label: this.props.intl.formatMessage(messages.parts), tabId: 'parts'} : undefined)
-    ].filter( e => { return e !== undefined})
+      { label: this.props.intl.formatMessage(messages.items), tabId: 'items' },
+      (publication.publicationParts && publication.publicationParts.length > 0
+        ? { label: this.props.intl.formatMessage(messages.parts), tabId: 'parts' }
+        : undefined)
+    ].filter(e => { return e !== undefined })
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -165,7 +169,7 @@ class PublicationInfo extends React.Component {
           <Tabs label={this.props.intl.formatMessage({ ...messages.publicationInfoMenu })}
                 tabList={tabList}
                 menuId="showDetails"
-                currentTab={this.props.query.showDetails || 'items'}/>
+                currentTab={this.props.query.showDetails || 'items'} />
           {
             (this.props.query.showDetails || 'items') === 'items'
               ? this.renderItems(items)
