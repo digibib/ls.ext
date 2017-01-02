@@ -1,6 +1,6 @@
-import React, {PropTypes} from "react"
-import {matchPattern} from "react-router/lib/PatternUtils"
-import Tab from "./Tab"
+import React, {PropTypes} from 'react'
+import {matchPattern} from 'react-router/lib/PatternUtils'
+import Tab from './Tab'
 
 class Tabs extends React.Component {
   render () {
@@ -11,6 +11,7 @@ class Tabs extends React.Component {
             <Tab key={tab.label}
                  tab={tab}
                  menuId={this.props.menuId}
+                 store={this.props.store}
                  className={(tab.path ? matchPattern(tab.path, this.props.currentPath) : tab.tabId === this.props.currentTab) ? `${this.props.tabClass} ${this.props.tabActiveClass}` : this.props.tabClass}
                  ariaSelected={(tab.path ? matchPattern(tab.path, this.props.currentPath) : tab.tabId === this.props.currentTab) ? 'true' : 'false'}
                  push={this.props.push} />
@@ -30,6 +31,7 @@ Tabs.propTypes = {
   tabBarClass: PropTypes.string.isRequired,
   tabClass: PropTypes.string.isRequired,
   tabActiveClass: PropTypes.string.isRequired,
+  store: PropTypes.object.isRequired,
   menuId: PropTypes.string
 }
 

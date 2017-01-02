@@ -1,23 +1,23 @@
-import React, {PropTypes} from "react"
-import NonIETransitionGroup from "./NonIETransitionGroup"
-import {injectIntl, intlShape, defineMessages, FormattedMessage} from "react-intl"
-import AgeLimit from "./work/fields/publication/AgeLimit"
-import BiblioNumber from "./work/fields/publication/BiblioNumber"
-import Binding from "./work/fields/publication/Binding"
-import Contributors from "./work/fields/Contributors"
-import Duration from "./work/fields/publication/Duration"
-import Ean from "./work/fields/publication/Ean"
-import Edition from "./work/fields/publication/Edition"
-import FormatAdaptations from "./work/fields/publication/FormatAdaptations"
-import Formats from "./work/fields/publication/Formats"
-import Isbn from "./work/fields/publication/Isbn"
-import NumberOfPages from "./work/fields/publication/NumberOfPages"
-import PlaceOfPublication from "./work/fields/publication/PlaceOfPublication"
-import Publishers from "./work/fields/publication/Publishers"
-import PublisherSeries from "./work/fields/publication/PublisherSeries"
-import SerialIssues from "./work/fields/publication/SerialIssues"
-import Subtitles from "./work/fields/publication/Subtitles"
-import Tabs from "./Tabs"
+import React, {PropTypes} from 'react'
+import NonIETransitionGroup from './NonIETransitionGroup'
+import {injectIntl, intlShape, defineMessages, FormattedMessage} from 'react-intl'
+import AgeLimit from './work/fields/publication/AgeLimit'
+import BiblioNumber from './work/fields/publication/BiblioNumber'
+import Binding from './work/fields/publication/Binding'
+import Contributors from './work/fields/Contributors'
+import Duration from './work/fields/publication/Duration'
+import Ean from './work/fields/publication/Ean'
+import Edition from './work/fields/publication/Edition'
+import FormatAdaptations from './work/fields/publication/FormatAdaptations'
+import Formats from './work/fields/publication/Formats'
+import Isbn from './work/fields/publication/Isbn'
+import NumberOfPages from './work/fields/publication/NumberOfPages'
+import PlaceOfPublication from './work/fields/publication/PlaceOfPublication'
+import Publishers from './work/fields/publication/Publishers'
+import PublisherSeries from './work/fields/publication/PublisherSeries'
+import SerialIssues from './work/fields/publication/SerialIssues'
+import Subtitles from './work/fields/publication/Subtitles'
+import Tabs from './Tabs'
 
 class PublicationInfo extends React.Component {
   renderLocation (location) {
@@ -169,6 +169,7 @@ class PublicationInfo extends React.Component {
           <Tabs label={this.props.intl.formatMessage({ ...messages.publicationInfoMenu })}
                 tabList={tabList}
                 menuId="showDetails"
+                store={this.props.store}
                 currentTab={(this.props.query || {}).showDetails || 'items'} />
           {
             ((this.props.query || {}).showDetails || 'items') === 'items'
@@ -185,6 +186,7 @@ PublicationInfo.propTypes = {
   publication: PropTypes.object.isRequired,
   expandSubResource: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
+  store: PropTypes.object.isRequired,
   query: PropTypes.object
 }
 
