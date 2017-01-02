@@ -50,6 +50,7 @@ module RandomMigrate
       @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob http://lexvo.org/id/iso639-3/fin http://lexvo.org/id/iso639-3/jpn http://lexvo.org/id/iso639-3/swe)
       @audiences = %w(juvenile ages11To12 ages13To15 ages13To15)
       @publication_uris = []
+      @part_creator_person_name = Hash.new
     end
 
     def generate_random_string()
@@ -138,12 +139,15 @@ module RandomMigrate
     end
 
     def random_migrate(number_of_persons, number_of_works_per_person, number_of_publications_per_work, prefix)
+      part_creator_person = generate_person
+      @part_creator_person_name[prefix] = part_creator_person[0]
+      part_creator_person_uri = post_ntriples 'person', part_creator_person[1]
       number_of_persons.times do
         person_uri = post_ntriples 'person', generate_person[1]
         number_of_works_per_person.times do
           work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
           number_of_publications_per_work.times do
-            @publication_uris << post_ntriples('publication', generate_publication(work_uri, nil, prefix, person_uri)[1])
+            @publication_uris << post_ntriples('publication', generate_publication(work_uri, nil, prefix, part_creator_person_uri)[1])
           end
           index('work', work_uri)
         end
@@ -295,6 +299,10 @@ module RandomMigrate
         record_ids << JSON.parse(res)['deichman:recordId']
       end
       record_ids
+    end
+
+    def get_part_creator_person_names
+      @part_creator_person_name
     end
   end
 end
