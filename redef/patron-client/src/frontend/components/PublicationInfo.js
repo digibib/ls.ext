@@ -109,15 +109,13 @@ class PublicationInfo extends React.Component {
     if (item.notforloan) {
       return (
         <span>
-          {item.available} <FormattedMessage {...messages.of} /> {item.total}
-          <FormattedMessage {...messages.available} /> - <FormattedMessage {...messages.onlyInhouse} />
+          {item.available} <FormattedMessage {...messages.of} /> {item.total} <FormattedMessage {...messages.available} /> - <FormattedMessage {...messages.onlyInhouse} />
         </span>
       )
     } else {
       return (
         <span>
-          {item.available} <FormattedMessage {...messages.of} /> {item.total}
-          <FormattedMessage {...messages.available} />
+          {item.available} <FormattedMessage {...messages.of} /> {item.total} <FormattedMessage {...messages.available} />
         </span>
       )
     }
