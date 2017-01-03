@@ -169,7 +169,6 @@ class PublicationInfo extends React.Component {
           <Tabs label={this.props.intl.formatMessage({ ...messages.publicationInfoMenu })}
                 tabList={tabList}
                 menuId="showDetails"
-                store={this.props.store}
                 currentTab={(this.props.query || {}).showDetails || 'items'} />
           {
             ((this.props.query || {}).showDetails || 'items') === 'items'
@@ -186,7 +185,6 @@ PublicationInfo.propTypes = {
   publication: PropTypes.object.isRequired,
   expandSubResource: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
-  store: PropTypes.object.isRequired,
   query: PropTypes.object
 }
 
