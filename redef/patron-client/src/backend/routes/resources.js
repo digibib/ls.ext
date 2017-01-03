@@ -207,7 +207,7 @@ function transformPublicationParts (input) {
   try {
     return input.map(inputPublicationPart => {
       return {
-        mainEntry: inputPublicationPart.agent.name,
+        mainEntry: inputPublicationPart.agent ? inputPublicationPart.agent.name : undefined,
         partTitle: inputPublicationPart.mainTitle,
         startsAtPage: inputPublicationPart.startsAtPage,
         endsAtPage: inputPublicationPart.endsAtPage,
