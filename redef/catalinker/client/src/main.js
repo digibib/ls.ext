@@ -2705,7 +2705,7 @@
                 ractive.set(event.keypath + '.allowAddNewButton', false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
-                copyAdditionalSuggestionsForGroup(4)
+                copyAdditionalSuggestionsForGroup(Number(event.keypath.split(".")[1]))
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
@@ -3486,15 +3486,13 @@
                   var value = _.last(input.values)
                   if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
                     (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object') {
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}`, {
-                      current: {
-                        value: sourceInput.values[ 0 ].current.value,
-                        displayValue: sourceInput.values[ 0 ].current.displayValue
-                      },
-                      searchable: sourceInput.values[ 0 ].searchable,
-                      deletable: sourceInput.values[ 0 ].deletable,
-                      subjectType: input.values[ 0 ].subjectType // keep subject type
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
+                      value: sourceInput.values[ 0 ].current.value,
+                      displayValue: sourceInput.values[ 0 ].current.displayValue
                     })
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.searchable`, sourceInput.values[ 0 ].searchable)
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.deletable`, sourceInput.values[ 0 ].deletable)
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.subjectType`, input.values[ 0 ].subjectType)
                   }
                 }
               }
