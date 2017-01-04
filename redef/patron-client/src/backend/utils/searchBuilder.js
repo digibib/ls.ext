@@ -12,6 +12,7 @@ function initCommonQuery () {
       byWork: {
         terms: {
           field: 'workUri',
+          order: { top: 'desc' },
           size: Constants.maxSearchResults
         },
         aggs: {
@@ -19,7 +20,10 @@ function initCommonQuery () {
             top_hits: {
               size: 1
             }
-          }
+          },
+          top: {
+            max: { script: { lang: 'expression', inline: '_score' }}
+	  }
         }
       },
       workCount: {
@@ -41,12 +45,19 @@ function initSimpleQuery (query) {
       },
       query: {
         bool: {
-          filter: [
+          should: [
             {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
                 fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt' ]
+              }
+            },
+            {
+              multi_match: {
+                query: query,
+                fuzziness: "AUTO",
+		fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt' ]
               }
             }
           ],
