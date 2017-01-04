@@ -984,7 +984,7 @@ module.exports = (app) => {
                 }
               },
               {
-                includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
                 rdfProperty: 'literaryForm',
                 multiple: true,
                 headlinePart: {
