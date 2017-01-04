@@ -11,10 +11,21 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 `source docker-compose.env && docker-compose -f common.env -f prod.env up -d`
 
 # Releases
+## 0.8.1 (2017-01-04) minor update
+
+KOHA: 15345ae973ca75a0d46cbfa8ca8433506458ae15
+GITREF:
+
+- Catalinker:
+  - DEICH-533: fix not showing last of publication parts
+- Patron-client:
+  - DEICH-495: show parts of publication
+  - fix handling empty main entry
+
 ## 0.8.0 (2016-12-20)
 
 KOHA:   15345ae973ca75a0d46cbfa8ca8433506458ae15
-GITREF:
+GITREF: 3d80fe232e2731e97063309b3e763330b1d9dc81
 
 - Koha:
   - DEICH-514 various fixes for NL sync
