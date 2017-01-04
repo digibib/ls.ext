@@ -2705,7 +2705,7 @@
                 ractive.set(event.keypath + '.allowAddNewButton', false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
-                copyAdditionalSuggestionsForGroup(Number(event.keypath.split(".")[1]))
+                copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[1]))
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
