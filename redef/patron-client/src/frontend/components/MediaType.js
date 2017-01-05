@@ -22,8 +22,8 @@ class MediaType extends React.Component {
   render () {
     const mediaType = this.props.mediaType
     return (
-      <div key={mediaType.uri} className="entry-content-icon-single">
-        <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} />
+      <div role="button" key={mediaType.uri} className="entry-content-icon-single" tabIndex="0">
+        <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} aria-hidden="true"/>
         {this.props.intl.formatMessage({ id: mediaType.uri })}
         {this.renderFormats(mediaType.uri, mediaType.formats)}
       </div>

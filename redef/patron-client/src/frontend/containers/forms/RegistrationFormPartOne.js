@@ -19,11 +19,27 @@ class RegistrationFormPartOne extends React.Component {
   constructor (props) {
     super(props)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleKey = this.handleKey.bind(this)
+    this.handleKeyToggle = this.handleKeyToggle.bind(this)
   }
 
   handleCancel (event) {
     event.preventDefault()
     this.props.modalActions.hideModal()
+  }
+
+  handleKey (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.handleCancel(event)
+    }
+  }
+
+  handleKeyToggle (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.props.registrationActions.showSSNInfo()
+    }
   }
 
   renderSSNInfo () {
@@ -62,7 +78,7 @@ class RegistrationFormPartOne extends React.Component {
           <FormattedMessage {...messages.checkForExistingUser} />
         </button>
 
-        <a className="cancel-link" onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a>
+        <a role="button" tabIndex="0" className="cancel-link" onKeyDown={this.handleKey} onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a>
       </p>
     )
   }
@@ -109,7 +125,7 @@ class RegistrationFormPartOne extends React.Component {
         <fieldset disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.ssnHeader} /></legend>
           <p>
-            <a onClick={this.props.registrationActions.showSSNInfo} title="ssnLink">
+            <a role="button" tabIndex="0" aria-expanded={this.props.showSSNInfo} onKeyDown={this.handleKeyToggle} onClick={this.props.registrationActions.showSSNInfo} title="ssnLink">
               <FormattedMessage {...messages.ssnLink} />
             </a>
           </p>

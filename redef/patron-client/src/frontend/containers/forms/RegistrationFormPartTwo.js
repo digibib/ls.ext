@@ -24,6 +24,7 @@ class RegistrationFormPartTwo extends React.Component {
     this.handleAcceptTerms = this.handleAcceptTerms.bind(this)
     this.handleRegistration = this.handleRegistration.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
+    this.handleKey = this.handleKey.bind(this)
   }
 
   handleCheckForExistingUser () {
@@ -35,6 +36,7 @@ class RegistrationFormPartTwo extends React.Component {
   }
 
   handleAcceptTerms () {
+    console.log('In reg terms')
     this.props.registrationActions.toggleAcceptTerms()
   }
 
@@ -45,6 +47,13 @@ class RegistrationFormPartTwo extends React.Component {
   handleCancel (event) {
     event.preventDefault()
     this.props.modalActions.hideModal()
+  }
+
+  handleKey (event) {
+    if (event.keyCode === 32) { // Space for button
+      event.preventDefault()
+      this.handleCancel(event)
+    }
   }
 
   getValidator (field) {
@@ -104,7 +113,7 @@ class RegistrationFormPartTwo extends React.Component {
                     data-automation-id="register_button">
               <FormattedMessage {...messages.register} />
             </button>
-            <a className="cancel-link" onClick={this.handleCancel}
+            <a role="button" tabIndex="0" className="cancel-link" onKeyDown={this.handleKey} onClick={this.handleCancel}
                title="cancel"><FormattedMessage {...messages.cancel} /></a>
           </p>
         </fieldset>

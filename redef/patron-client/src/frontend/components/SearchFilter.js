@@ -11,7 +11,7 @@ class SearchFilter extends React.Component {
     super(props)
     this.handleCollapse = this.handleCollapse.bind(this)
     this.handleShowAllClick = this.handleShowAllClick.bind(this)
-    this.handleEnter = this.handleEnter.bind(this)
+    this.handleKey = this.handleKey.bind(this)
   }
 
   handleShowAllClick () {
@@ -19,8 +19,8 @@ class SearchFilter extends React.Component {
     ReactDOM.findDOMNode(this).scrollIntoView()
   }
 
-  handleEnter (event) {
-    if (event.keyCode === 13) {
+  handleKey (event) {
+    if (event.keyCode === 32) { // Space for button
       event.preventDefault()
       this.handleShowAllClick()
     }
@@ -73,7 +73,7 @@ class SearchFilter extends React.Component {
       return
     }
     return (
-      <div className="show-more" onClick={this.handleShowAllClick} onKeyDown={this.handleEnter}>
+      <div className="show-more" onClick={this.handleShowAllClick} onKeyDown={this.handleKey}>
         <h3>{this.shouldShowMore() || this.props.filters.length <= Constants.maxVisibleFilterItems
           ? <a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.showLess} /></a>
           : <a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showMore} /></a>}</h3>

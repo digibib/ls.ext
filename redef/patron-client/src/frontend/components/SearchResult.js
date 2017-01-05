@@ -48,7 +48,7 @@ class SearchResult extends React.Component {
         <h1 className="workTitle" data-automation-id="work-title">
           <span className="title-text">{result.titleLine1}</span><br />
           <span className="title-text">{result.titleLine2}</span>
-          <span className="caret"><i className="icon-angle-wide" /></span>
+          <span className="caret"><i className="icon-angle-wide" aria-hidden="true" /></span>
         </h1>
       </Link>
     )
@@ -181,7 +181,7 @@ class SearchResult extends React.Component {
   }
 
   handleEnter (event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 32) { // Space code
       event.preventDefault()
       this.handleShowStatusClick(event)
     }

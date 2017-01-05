@@ -10,7 +10,7 @@ class SearchFilterItem extends React.Component {
   constructor (props) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
-    this.handleSpaceBar = this.handleSpaceBar.bind(this)
+    this.handleKey = this.handleKey.bind(this)
   }
 
   handleClick (event) {
@@ -20,8 +20,8 @@ class SearchFilterItem extends React.Component {
     // ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView()
   }
 
-  handleSpaceBar (event) {
-    if (event.keyCode === 32) {
+  handleKey (event) {
+    if (event.keyCode === 32) { // Space for checkbox
       event.preventDefault()
       this.handleClick(event)
     }
@@ -33,7 +33,7 @@ class SearchFilterItem extends React.Component {
     return (
       <li data-automation-id={id}>
         <input type="checkbox" id={id} name="filter" checked={filter.active} onChange={this.handleClick} aria-hidden="true" />
-        <label htmlFor={id} onKeyDown={this.handleSpaceBar}>
+        <label htmlFor={id} onKeyDown={this.handleKey}>
           <div className="checkbox-wrapper">
             <i
               role="checkbox"
