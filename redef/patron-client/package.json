@@ -82,7 +82,7 @@
     "react-dom": "15.3.2",
     "react-intl": "2.1.5",
     "react-modal": "1.5.2",
-    "react-paginate": "2.2.3",
+    "react-paginate": "4.1.0",
     "react-redux": "4.4.5",
     "react-responsive": "1.2.1",
     "react-router": "2.8.1",
@@ -121,6 +121,7 @@
     "node-mysql": "0.4.2",
     "node-uuid": "1.4.7",
     "query-string": "4.2.3",
+    "react-paginate": "^4.1.0",
     "sanitize-html": "1.13.0",
     "url-loader": "0.5.7",
     "xml2js": "0.4.17"

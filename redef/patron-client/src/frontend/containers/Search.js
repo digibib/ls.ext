@@ -42,6 +42,7 @@ class Search extends React.Component {
   }
 
   handlePageClick (data) {
+    console.log(data)
     const page = String(data.selected + 1)
     if (page !== this.props.location.query.page) {
       const newQuery = {
@@ -62,16 +63,19 @@ class Search extends React.Component {
             <ReactPaginate
               previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
               nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
-              breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
+              // breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
+              breakLabel={<span aria-hidden="true">...</span>}
               forceSelected={this.props.location.query.page - 1 || 0}
               marginPagesDisplayed={1}
               pageRangeDisplayed={5}
               pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
-              clickCallback={this.handlePageClick}
+              // clickCallback={this.handlePageClick}
+              onPageChange={this.handlePageClick}
               containerClassName={'pagination'}
               subContainerClassName={'pages pagination'}
               activeClassName={'active'}
               items={this.props.items}
+              pageLinkClassName={'test-class'}
             />
           </nav>
         </section>
