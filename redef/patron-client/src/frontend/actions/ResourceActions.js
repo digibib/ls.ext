@@ -117,15 +117,15 @@ export function expandSubResource (id, replacePath) {
   }
 }
 
-export function selectTab (tabId, replacePath, menuId = 'showTab') {
+export function updateUrlQueryValue (parameter, value, replacePath) {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
-    if (!tabId) {
-      delete locationQuery[ menuId ]
-    } else if (locationQuery[ menuId ] === tabId) {
+    if (!value) {
+      delete locationQuery[ parameter ]
+    } else if (locationQuery[ parameter ] === value) {
       return
     } else {
-      locationQuery[ menuId ] = tabId
+      locationQuery[ parameter ] = value
     }
     const locationDescriptor = {
       pathname: getState().routing.locationBeforeTransitions.pathname,

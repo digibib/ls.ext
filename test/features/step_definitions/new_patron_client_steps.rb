@@ -124,8 +124,11 @@ When(/^jeg trykker på den første utgivelsen$/) do
   @browser.buttons(data_automation_id: 'publication_open_show_more_info').first.click
 end
 
-When(/^den skal inneholde (eksemplarinformasjonen|utgivelsesdelinformasjonen)$/) do |info_type, table|
-  table = table.hashes.sort_by { |r| r.to_s }
+When(/^den skal inneholde (i riktig rekkefølge |)(eksemplarinformasjonen|utgivelsesdelinformasjonen|delinformasjonen)$/) do |table_should_be_in_same_order, info_type, table|
+  table = table.hashes
+  unless table_should_be_in_same_order
+    table = table.sort_by { |r| r.to_s }
+  end
   table.each do |row|
     if row['Filial'].eql? 'random_migrate_branchcode'
       row['Filial'] = @context[:random_migrate_branchcode]
@@ -135,7 +138,11 @@ When(/^den skal inneholde (eksemplarinformasjonen|utgivelsesdelinformasjonen)$/)
     end
   end
   wait_retry { @browser.element(data_automation_id: /^publication_info_/).present? }
-  publication_info = @browser.element(data_automation_id: /^publication_info_/).table.hashes.sort_by { |r| r.to_s }
+  publication_info = @browser.element(data_automation_id: /^publication_info_/).table
+  publication_info = publication_info.hashes
+  unless table_should_be_in_same_order
+    publication_info = publication_info.sort_by { |r| r.to_s }
+  end
   table.should eq publication_info
 end
 
@@ -527,4 +534,8 @@ When(/^skal jeg se at jeg ikke er logget inn$/) do
   wait_for {
     @browser.element(data_automation_id: 'login_element').present?
   }
+end
+
+When(/^trykker jeg på sorteringsknappen etter "([^"]*)"$/) do |column_name|
+  @browser.element(:text => column_name).button(:class => 'sorter').click
 end
