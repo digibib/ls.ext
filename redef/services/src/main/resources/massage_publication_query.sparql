@@ -26,6 +26,7 @@ CONSTRUCT {
                deich:genre ?genreLabel ;
                deich:audience ?audience ;
                deich:agents ?contribAgentName ;
+               deich:agents ?pubPartAgentName ;
                ?contribRoleURI ?contribAgentName ;
                deich:mainEntryName ?mainEntryName ;
                deich:recordId ?recordId ;
@@ -39,6 +40,7 @@ CONSTRUCT {
                deich:title ?pubPartTitle ;
                deich:title ?pubSubtitle ;
                deich:title ?pubPartNumber ;
+               deich:title ?pubPartMainTitle ;
                deich:litform ?litform ;
                deich:subtitles ?subtitles ;
                deich:subtitle ?pubSubtitle ;
@@ -182,10 +184,10 @@ WHERE {
 
     UNION {
             { <__PUBLICATIONURI__> deich:contributor ?contrib }
-      UNION { <__PUBLICATIONURI__> deich:publicationOf ?work . ?work deich:contributor ?contrib }
+      UNION { <__PUBLICATIONURI__> deich:publicationOf ?work . ?work a deich:Work ; deich:contributor ?contrib }
         ?contrib a deich:Contribution ;
-            deich:agent ?contribAgent ;
-            deich:role ?contribRoleURI .
+                 deich:agent ?contribAgent ;
+                 deich:role ?contribRoleURI .
         ?contribAgent deich:name ?contribAgentName .
          BIND(str(?contribRoleURI) AS ?contribRole)
          OPTIONAL {
@@ -197,6 +199,19 @@ WHERE {
              FILTER(lang(?nationLabelLang) = "no")
              }
            }
+    }
+    UNION {
+        <__PUBLICATIONURI__> deich:hasPublicationPart ?pubPart .
+        ?pubPart a deich:PublicationPart ;
+                 deich:mainTitle ?pubPartMainTitle ;
+                 OPTIONAL {
+                    ?pubPart deich:agent ?pubPartAgent .
+                    ?pubPartAgent deich:name ?pubPartAgentName
+                 }
+                 OPTIONAL {
+                     ?pubPart deich:role ?pubPartRoleURI
+                     BIND(str(?pubPartRoleURI) AS ?pubPartRole)
+                 }
     }
 
   UNION { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }
