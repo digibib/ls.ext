@@ -28,6 +28,7 @@ CONSTRUCT {
                deich:agents ?contribAgentName ;
                deich:agents ?pubPartAgentName ;
                ?contribRoleURI ?contribAgentName ;
+               ?pubPartRoleURI ?pubPartAgentName ;
                deich:mainEntryName ?mainEntryName ;
                deich:recordId ?recordId ;
                deich:summary ?summary ;
