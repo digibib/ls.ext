@@ -22,8 +22,13 @@ function initCommonQuery () {
             }
           },
           top: {
-            max: { script: { lang: 'expression', inline: '_score' }}
-	  }
+            max: {
+              script: {
+                lang: 'expression',
+                inline: '_score'
+              }
+            }
+          }
         }
       },
       workCount: {
@@ -50,15 +55,15 @@ function initSimpleQuery (query) {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt' ]
+                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt' ]
               }
             },
             {
               multi_match: {
                 query: query,
-                fuzziness: "AUTO",
+                fuzziness: 'AUTO',
                 type: 'cross_fields',
-		fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt' ]
+                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt' ]
               }
             }
           ],
