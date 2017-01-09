@@ -46,7 +46,7 @@ function initSimpleQuery (query) {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt' ]
+                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt', 'title' ]
               }
             }
           ],
