@@ -539,3 +539,8 @@ end
 When(/^trykker jeg på sorteringsknappen etter "([^"]*)"$/) do |column_name|
   @browser.element(:text => column_name).button(:class => 'sorter').click
 end
+
+When(/^jeg søker etter forfatter av del med tittel "([^"]*)"$/) do |title|
+  @site.SearchPatronClient.search_with_text "author:#{@context[:random_migrate_person_names]['prefix0' + @context[:random_migrate_id]]} title:#{title}"
+  @context[:prefix] = 'prefix0'
+end

@@ -128,6 +128,19 @@ Egenskap: Gå gjennom lånegrensesnittet
       | På to hjul i svingen |  random_migrate_person_name | 101–200 |
       | Påfuglsommer |  random_migrate_person_name | 1–100 |
 
+  Scenario: Søk etter utgivelse ut fra navn på forfatter av del
+    Gitt at jeg er i søkegrensesnittet
+    Når jeg søker etter forfatter av del med tittel "Påfuglsommer"
+    Og jeg trykker på første treff
+    Så skal jeg se "2" utgivelser
+    Og jeg trykker på den første utgivelsen
+    Så skal jeg se et panel med informasjon om utgivelsen
+    Så klikker jeg på fanen "Deler av utgivelsen"
+    Og den skal inneholde i riktig rekkefølge delinformasjonen
+      | Deltittel                    | Hovedansvarlig | Side        |
+      | På to hjul i svingen |  random_migrate_person_name | 101–200 |
+      | Påfuglsommer |  random_migrate_person_name | 1–100 |
+
   Scenario: Låner reserverer bok på verkssiden
     Gitt at jeg er logget inn som adminbruker
     Og at det finnes en låner med passord
