@@ -10,6 +10,7 @@ class UserSettings extends React.Component {
   constructor (props) {
     super(props)
     this.handleSaveClick = this.handleSaveClick.bind(this)
+    this.handleKey = this.handleKey.bind(this)
   }
 
   handleSaveClick (event) {
@@ -35,6 +36,13 @@ class UserSettings extends React.Component {
       }
     }
     this.props.profileActions.postProfileSettings(profileSettings)
+  }
+
+  handleKey (event, checkBoxInput) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      checkBoxInput.click()
+    }
   }
 
   render () {
@@ -68,10 +76,10 @@ class UserSettings extends React.Component {
                    id="user-settings-sms-reminder"
                    ref={e => this.reminderOfDueDateSmsCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfDueDate.sms} />
-            <label htmlFor="user-settings-sms-reminder">
+            <label htmlFor="user-settings-sms-reminder" onKeyDown={(e) => { this.handleKey(e, this.reminderOfDueDateSmsCheckbox) }}>
               <span className="checkbox-wrapper">
-                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
-                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+                <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
+                <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
               </span>
               <FormattedMessage {...messages.bySms} />
             </label>
@@ -85,10 +93,10 @@ class UserSettings extends React.Component {
                    ref={e => this.reminderOfDueDateEmailCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfDueDate.email} />
 
-            <label htmlFor="user-settings-reminder-email">
+            <label htmlFor="user-settings-reminder-email" onKeyDown={(e) => { this.handleKey(e, this.reminderOfDueDateEmailCheckbox) }}>
               <span className="checkbox-wrapper">
-                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
-                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+                <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
+                <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
               </span>
               <FormattedMessage {...messages.byEmail} />
             </label>
@@ -115,10 +123,10 @@ class UserSettings extends React.Component {
                    id="user-settings-delivery-reminder-sms"
                    ref={e => this.reminderOfPickupSmsCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfPickup.sms} />
-            <label htmlFor="user-settings-delivery-reminder-sms">
+            <label htmlFor="user-settings-delivery-reminder-sms" onKeyDown={(e) => { this.handleKey(e, this.reminderOfPickupSmsCheckbox) }}>
               <span className="checkbox-wrapper">
-                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
-                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+                <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
+                <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
               </span>
               <FormattedMessage {...messages.bySms} />
             </label>
@@ -129,10 +137,10 @@ class UserSettings extends React.Component {
                    id="user-settings-delivery-reminder-email"
                    ref={e => this.reminderOfPickupEmailCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfPickup.email} />
-            <label htmlFor="user-settings-delivery-reminder-email">
+            <label htmlFor="user-settings-delivery-reminder-email" onKeyDown={(e) => { this.handleKey(e, this.reminderOfPickupEmailCheckbox) }}>
               <span className="checkbox-wrapper">
-                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
-                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+                <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
+                <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
               </span>
               <FormattedMessage {...messages.byEmail} />
             </label>
@@ -148,10 +156,10 @@ class UserSettings extends React.Component {
                    id="receipt-loans-email"
                    ref={e => this.receiptOnLoansEmailCheckbox = e}
                    defaultChecked={settings.receipts.loans.email} />
-            <label htmlFor="receipt-loans-email">
+            <label htmlFor="receipt-loans-email" onKeyDown={(e) => { this.handleKey(e, this.receiptOnLoansEmailCheckbox) }}>
               <span className="checkbox-wrapper">
-                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
-                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+                <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
+                <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
               </span>
               <FormattedMessage {...messages.loanReceipt} />
             </label>
@@ -164,10 +172,10 @@ class UserSettings extends React.Component {
                    id="receipt-returns-email"
                    ref={e => this.receiptOnReturnsEmailCheckbox = e}
                    defaultChecked={settings.receipts.returns.email} />
-            <label htmlFor="receipt-returns-email">
+            <label htmlFor="receipt-returns-email" onKeyDown={(e) => { this.handleKey(e, this.receiptOnReturnsEmailCheckbox) }}>
               <span className="checkbox-wrapper">
-                <i className="icon-check-empty checkbox-unchecked" aria-hidden="true" />
-                <i className="icon-ok-squared checkbox-checked" aria-hidden="true" />
+                <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
+                <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
               </span>
               <FormattedMessage {...messages.returnReceipt} />
             </label>
