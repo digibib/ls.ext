@@ -67,7 +67,6 @@
     "mainEntry": "deichman:mainEntry",
     "mainEntryName": "deichman:mainEntryName",
     "agent": "deichman:agent",
-    "pubPartMainTitle": "deichman:pubPartMainTitle",
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
     "image": "deichman:hasImage",
