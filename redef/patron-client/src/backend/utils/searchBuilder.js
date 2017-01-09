@@ -57,6 +57,7 @@ function initSimpleQuery (query) {
               multi_match: {
                 query: query,
                 fuzziness: "AUTO",
+                type: 'cross_fields',
 		fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt' ]
               }
             }
