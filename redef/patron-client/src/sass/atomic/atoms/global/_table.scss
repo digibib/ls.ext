@@ -13,7 +13,7 @@ table {
   th, td {
     padding: 0.5rem;
 
-    @include breakpoint($small){
+    @include breakpoint($small) {
       padding: 0.5rem 1rem;
     }
   }
@@ -22,6 +22,24 @@ table {
     @include semiBoldFont;
     text-align: left;
     text-transform: capitalize;
+    button.sorter {
+      margin: 0px 0px -6px 3px;
+      position: relative;
+      top: -6px;
+      padding: 0px 1px 0px 1px;
+      cursor: pointer;
+      span.sort-button {
+        display: block;
+        font-size: 60%;
+        opacity: 0.0;
+        &.visible {
+          opacity: 1.0;
+        }
+      }
+      &:focus {
+        outline: none;
+      }
+    }
   }
 
   tr:nth-child(odd) {

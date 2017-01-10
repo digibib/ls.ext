@@ -18,11 +18,12 @@ import PublisherSeries from './work/fields/publication/PublisherSeries'
 import SerialIssues from './work/fields/publication/SerialIssues'
 import Subtitles from './work/fields/publication/Subtitles'
 import Tabs from './Tabs'
+import Sorter from './Sorter'
 
 class PublicationInfo extends React.Component {
   renderLocation (location) {
     if (location && location !== '') {
-      return <span className="item-location">{location}</span>
+      return <span className="item-location" >{location}</span>
     }
   }
 
@@ -48,7 +49,7 @@ class PublicationInfo extends React.Component {
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="table"
-          className="test">
+          className="test" >
           <thead>
           <tr>
             <th><FormattedMessage {...messages.branch} /></th>
@@ -56,13 +57,13 @@ class PublicationInfo extends React.Component {
             <th><FormattedMessage {...messages.status} /></th>
           </tr>
           </thead>
-          <tbody data-automation-id="work_items">
+          <tbody data-automation-id="work_items" >
           {items.map(item => {
             return (
-              <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'}>
-                <td data-automation-id="item_location">{this.props.intl.formatMessage({ id: item.branchcode })}</td>
-                <td data-automation-id="item_shelfmark">{item.shelfmark} {this.renderLocation(item.location)}</td>
-                <td data-automation-id="item_status">{this.renderAvailability(item)}</td>
+              <tr key={item.barcode} className={(item.available > 0) ? 'available' : 'not-available'} >
+                <td data-automation-id="item_location" >{this.props.intl.formatMessage({ id: item.branchcode })}</td>
+                <td data-automation-id="item_shelfmark" >{item.shelfmark} {this.renderLocation(item.location)}</td>
+                <td data-automation-id="item_status" >{this.renderAvailability(item)}</td>
               </tr>
             )
           })}
@@ -72,7 +73,29 @@ class PublicationInfo extends React.Component {
     }
   }
 
+  static sortOptions (column) {
+    const options = {}
+    options[ `${column}.asc` ] = 'asc'
+    options[ `${column}.desc` ] = 'desc'
+    return options
+  }
+
   renderParts (parts) {
+    const sortPartsByWithDir = ((this.props.query || {}).sortPartsBy) || 'partTitle.asc'
+    const sortBy = sortPartsByWithDir.split('.')
+    const sortDir = sortBy[ 1 ] === 'asc' ? 1 : -1
+    parts.sort((a, b) => {
+      const keya = a[ sortBy[ 0 ] ]
+      const keyb = b[ sortBy[ 0 ] ]
+      if (keya > keyb) {
+        return sortDir
+      }
+      if (keya < keyb) {
+        return -1 * sortDir
+      }
+      return 0
+    })
+
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -81,22 +104,34 @@ class PublicationInfo extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="table"
-        className="test">
+        className="test" >
         <thead>
         <tr>
-          <th><FormattedMessage {...messages.partTitle} /></th>
-          <th><FormattedMessage {...messages.partMainEntry} /></th>
-          <th><FormattedMessage {...messages.pageNumber} /></th>
+          <th>
+            <FormattedMessage {...messages.partTitle} />
+            <Sorter sortParameter={'sortPartsBy'} sortColumn={'partTitle'}
+                    sortOrder={PublicationInfo.sortOptions('partTitle')[ sortPartsByWithDir ]} />
+          </th>
+          <th>
+            <FormattedMessage {...messages.partMainEntry} />
+            <Sorter sortParameter={'sortPartsBy'} sortColumn={'mainEntry'}
+                    sortOrder={PublicationInfo.sortOptions('mainEntry')[ sortPartsByWithDir ]} />
+          </th>
+          <th>
+            <FormattedMessage {...messages.pageNumber} />
+            <Sorter sortParameter={'sortPartsBy'} sortColumn={'startsAtPage'}
+                    sortOrder={PublicationInfo.sortOptions('startsAtPage')[ sortPartsByWithDir ]} />
+          </th>
         </tr>
         </thead>
-        <tbody data-automation-id="work_parts">
+        <tbody data-automation-id="work_parts" >
         {parts.map((part, index) => {
           return (
-            <tr key={index}>
-              <td data-automation-id="part_title">{part.partTitle}</td>
-              <td data-automation-id="part_main_entry">{part.mainEntry}</td>
+            <tr key={index} >
+              <td data-automation-id="part_title" >{part.partTitle}</td>
+              <td data-automation-id="part_main_entry" >{part.mainEntry}</td>
               <td
-                data-automation-id="part_page_number">{[ part.startsAtPage, part.endsAtPage ].filter(e => { return e !== undefined }).join('–') }</td>
+                data-automation-id="part_page_number" >{[ part.startsAtPage, part.endsAtPage ].filter(e => { return e !== undefined }).join('–') }</td>
             </tr>
           )
         })}
@@ -138,8 +173,8 @@ class PublicationInfo extends React.Component {
         transitionLeaveTimeout={500}
         component="section"
         className="publication-info"
-        data-automation-id={`publication_info_${publication.uri}`}>
-        <div className="left">
+        data-automation-id={`publication_info_${publication.uri}`} >
+        <div className="left" >
           <AgeLimit ageLimit={publication.ageLimit} />
           <Contributors contributors={publication.contributors} />
           <NumberOfPages numberOfPages={publication.numberOfPages} />
@@ -149,7 +184,7 @@ class PublicationInfo extends React.Component {
           <Subtitles subtitles={publication.subtitles} />
           <SerialIssues serialIssues={publication.serialIssues} />
         </div>
-        <div className="right">
+        <div className="right" >
           <Formats formats={publication.formats} />
           <Isbn isbn={publication.isbn} />
           <BiblioNumber biblioNumber={publication.recordId} />
@@ -159,11 +194,11 @@ class PublicationInfo extends React.Component {
           <Duration duration={publication.duration} />
           <Ean ean={publication.ean} />
         </div>
-        <div className="wide">
-          <div className="meta-label"><FormattedMessage {...messages.note} /></div>
-          <p className="note">{publication.description}</p>
+        <div className="wide" >
+          <div className="meta-label" ><FormattedMessage {...messages.note} /></div>
+          <p className="note" >{publication.description}</p>
         </div>
-        <div className="entry-items">
+        <div className="entry-items" >
           <Tabs label={this.props.intl.formatMessage({ ...messages.publicationInfoMenu })}
                 tabList={tabList}
                 menuId="showDetails"

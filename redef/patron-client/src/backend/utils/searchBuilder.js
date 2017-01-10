@@ -55,7 +55,7 @@ function initSimpleQuery (query) {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt' ]
+                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt', 'title' ]
               }
             },
             {
@@ -63,7 +63,7 @@ function initSimpleQuery (query) {
                 query: query,
                 fuzziness: 'AUTO',
                 type: 'cross_fields',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt' ]
+                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt', 'title' ]
               }
             }
           ],

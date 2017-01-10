@@ -227,6 +227,8 @@ export default {
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff på "<span data-automation-id="current-search-term" class="result-name">{searchQuery}</span>"',
   'SearchResultsText.totalHitsMobile': '<span data-automation-id="hits-total">{totalHits}</span> treff',
   'SerialIssues.labelSerialIssues': 'Serie',
+  'Sorting.sort.asc': 'Sorter stigende',
+  'Sorting.sort.desc': 'Sorter synkende',
   'Subjects.subjects': 'Emner:',
   'Subtitles.labelSubtitles': 'Undertekster',
   'TargetAudience.labelTargetAudience': 'Målgruppe',
