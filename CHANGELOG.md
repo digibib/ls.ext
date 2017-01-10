@@ -14,11 +14,13 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 ## 0.8.2 (2017-01-10)
 
-KOHA: 8b0b42dc4702a525993ab12d0962d20dc14fa6de
+KOHA: aa1ff583761d252e8e581fac4bd73fa6693d5a59
 GITREF:
 
 - Koha:
   - Oppgradert til mainstream koha release 16.11.01
+  - Ny meråpentfilial Bjerke
+  - Nye automatfilialer: Bjerke, Nordtvet, Romsås, Bjørnholt, Smestad
   - DEICH-520: hindre at automat trigger reserveringer
   - DEICH-565: nye poster er ikke søkbare i koha
   - DEICH-463: slettede poster i catalinker legges i deletedbiblios
