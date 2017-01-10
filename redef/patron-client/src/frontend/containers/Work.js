@@ -136,8 +136,8 @@ class Work extends React.Component {
           {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
             ? (
             <header className="back-to-results">
-              <Link to={this.props.location.query.back} alt="Back to search page">
-                <i className="icon-angle-double-left" />Tilbake til søkeresultat
+              <Link to={this.props.location.query.back}>
+                <i className="icon-angle-double-left" aria-hidden="true" />Tilbake til søkeresultat
               </Link>
             </header>
           ) : ''}

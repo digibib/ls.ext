@@ -208,7 +208,7 @@ class SearchResult extends React.Component {
     })
 
     const formats = [ ...pubFormats ]
-    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: result.displayTitle })
+    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: result.titleLine1 })
 //    Unused?
 //    const missingCoverImage = '/images/no-cover.png'
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
@@ -223,8 +223,8 @@ class SearchResult extends React.Component {
         component="div"
         className="single-entry"
         data-formats={formats.join(', ')}>
-        <aside className="book-cover">
-          <Link to={this.getResultUrl(result)} className="book-cover-item">
+        <aside className="book-cover" aria-hidden="true">
+          <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
             {result.image ? <img src={result.image} alt={coverAltText} />
               : <i aria-label={missingCoverAltText}
                    className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
