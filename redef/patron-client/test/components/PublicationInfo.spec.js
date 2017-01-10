@@ -3,8 +3,11 @@ import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
-import PublicationInfo, { __RewireAPI__ as DefaultExportPublicationInfoRewireApi } from '../../src/frontend/components/PublicationInfo'
+import {IntlProvider} from 'react-intl'
+import PublicationInfo, {__RewireAPI__ as DefaultExportPublicationInfoRewireApi} from '../../src/frontend/components/PublicationInfo'
+import {Provider} from 'react-redux'
+import rootReducer from '../../src/frontend/reducers'
+import {createStore} from 'redux'
 
 function setup (propOverrides) {
   const props = {
@@ -21,11 +24,14 @@ function setup (propOverrides) {
     startReservation: () => {},
     ...propOverrides
   }
+  const store = createStore(rootReducer, { modal: props })
 
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale="en">
-      <PublicationInfo {...props} />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale="en">
+        <PublicationInfo {...props} />
+      </IntlProvider>
+    </Provider>
   )
 
   return {

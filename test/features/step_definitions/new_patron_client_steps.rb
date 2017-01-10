@@ -7,6 +7,7 @@ end
 
 When(/^jeg søker på "([^"]*)" \(\+ id på vilkårlig migrering\)$/) do |query|
   @site.SearchPatronClient.search_with_text "#{query}#{@context[:random_migrate_id]}"
+  @context[:prefix] = query
 end
 
 When(/^skal jeg få "([^"]*)" treff$/) do |hits|
@@ -119,11 +120,18 @@ When(/^jeg trykker på utgivelsen med "([^"]*)" språk$/) do |language|
   @browser.elements(data_automation_id: /^publication_http/).select { |element| element.elements(data_automation_id: 'publication_languages').select { |element| element.text.include? language }[0] }[0].button(data_automation_id: 'publication_open_show_more_info').click
 end
 
-When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
+When(/^jeg trykker på den første utgivelsen$/) do
+  @browser.buttons(data_automation_id: 'publication_open_show_more_info').first.click
+end
+
+When(/^den skal inneholde (eksemplarinformasjonen|utgivelsesdelinformasjonen)$/) do |info_type, table|
   table = table.hashes.sort_by { |r| r.to_s }
   table.each do |row|
     if row['Filial'].eql? 'random_migrate_branchcode'
       row['Filial'] = @context[:random_migrate_branchcode]
+    end
+    if row['Hovedansvarlig'].eql? 'random_migrate_person_name'
+      row['Hovedansvarlig'] = @context[:random_migrate_person_names][@context[:prefix] + @context[:random_migrate_id]]
     end
   end
   wait_retry { @browser.element(data_automation_id: /^publication_info_/).present? }
