@@ -60,6 +60,7 @@ public class SearchServiceImpl implements SearchService {
     public static final Property AGENT = createProperty(BaseURI.ontology("agent"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
+    public static final int SIXTY_ONE = 61;
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -309,7 +310,10 @@ public class SearchServiceImpl implements SearchService {
     public final Response sortedList(String type, String prefix, int minSize, String field) {
         List<Map> musts = new ArrayList<>();
         for (int i = 0; i < prefix.length(); i++) {
-            musts.add(of("constant_score", of("boost", prefix.length() - i, "query", of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
+            musts.add(
+                    of("constant_score",
+                            of("boost", 2 << Math.max(prefix.length() - i, SIXTY_ONE), "query",
+                                    of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
         }
         String body = GSON.toJson(of(
                 "size", minSize,

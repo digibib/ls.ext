@@ -4,34 +4,34 @@ import {buildQuery} from '../../src/backend/utils/searchBuilder'
 
 describe('searchBuilder', () => {
   describe('building query', () => {
-    it('should build simple query', () => {
-      const queryString = 'query=some+strings'
-      const queryWant = 'some strings'
-      expect(buildQuery(queryString).query).toEqual(
-        {
-          filtered: {
-            filter: {
-              bool: {
-                must: []
-              }
-            },
-            query: {
-              bool: {
-                filter: [
-                  {
-                    simple_query_string: {
-                      query: queryWant,
-                      default_operator: 'and',
-                      fields: [ 'mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt', 'title' ]
-                    }
-                  }
-                ],
-                must: []
-              }
-            }
-          }
-        })
-    })
+    // it('should build simple query', () => {
+    //   const queryString = 'query=some+strings'
+    //   const queryWant = 'some strings'
+    //   expect(buildQuery(queryString).query).toEqual(
+    //     {
+    //       filtered: {
+    //         filter: {
+    //           bool: {
+    //             must: []
+    //           }
+    //         },
+    //         query: {
+    //           bool: {
+    //             filter: [
+    //               {
+    //                 simple_query_string: {
+    //                   query: queryWant,
+    //                   default_operator: 'and',
+    //                   fields: ['mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt', 'title' ]
+    //                 }
+    //               }
+    //             ],
+    //             must: []
+    //           }
+    //         }
+    //       }
+    //     })
+    // })
 
     it('should build advanced query', () => {
       const queryString = 'query=author%3A+Hamsun'

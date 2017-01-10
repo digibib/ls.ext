@@ -73,3 +73,7 @@ deichman-role:conductor a duo:Role;
 deichman-role:coreographer a duo:Role;
 	rdfs:label "Koregograf"@no ;
 	rdfs:label "Coreographer"@en .
+
+deichman-role:producer a duo:Role;
+	rdfs:label "Produsent"@no ;
+	rdfs:label "Producer"@en .
