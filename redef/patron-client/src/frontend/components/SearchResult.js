@@ -7,11 +7,13 @@ import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
 import { groupByBranch } from '../utils/sorting'
+import ClickableElement from '../components/ClickableElement'
 
 class SearchResult extends React.Component {
   constructor (props) {
     super(props)
     this.handleShowStatusClick = this.handleShowStatusClick.bind(this)
+    this.handleEnter = this.handleEnter.bind(this)
   }
 
   componentWillMount () {
@@ -44,8 +46,9 @@ class SearchResult extends React.Component {
     return (
       <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
         <h1 className="workTitle" data-automation-id="work-title">
-          <span className="title-text">{result.title}</span>
-          <span className="caret"><i className="icon-angle-wide" /></span>
+          <span className="title-text">{result.titleLine1}</span><br />
+          <span className="title-text">{result.titleLine2}</span>
+          <span className="caret"><i className="icon-angle-wide" aria-hidden="true" /></span>
         </h1>
       </Link>
     )
@@ -177,6 +180,13 @@ class SearchResult extends React.Component {
     this.props.showStatus(this.props.result.id)
   }
 
+  handleEnter (event) {
+    if (event.keyCode === 32) { // Space code
+      event.preventDefault()
+      this.handleShowStatusClick(event)
+    }
+  }
+
   shouldShowStatus () {
     const { locationQuery: { showStatus }, result: { id } } = this.props
     return (showStatus && showStatus === id || (Array.isArray(showStatus) && showStatus.includes(id)))
@@ -244,16 +254,16 @@ class SearchResult extends React.Component {
         </article>
 
         {this.shouldShowStatus()
-          ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}>
-          <p><FormattedMessage {...messages.hideStatus} /></p>
-          <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" />
+          ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
+            <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
+          <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
         </div>),
           (<div key="entry-more-content" className="entry-content-more">
             {this.renderItems(result)}
           </div>) ]
-          : (<div className="show-more-content" onClick={this.handleShowStatusClick}>
-          <p><FormattedMessage {...messages.showStatus} /></p>
-          <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" />
+          : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
+            <p><a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showStatus} /></a></p>
+          <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
         </div>)
         }
 
