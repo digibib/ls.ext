@@ -356,7 +356,7 @@ public class SearchServiceImpl implements SearchService {
                     )
             ));
         }
-        return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search"));
+        return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search").setParameter("size", Integer.toString(minSize)));
     }
 
     private static String urlEncode(String uri) {
