@@ -12,6 +12,7 @@ import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
@@ -405,6 +406,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         try (QueryExecution qexec = getQueryExecution(sqb.describeSerialAndLinkedResources(serialUri))) {
             disableCompression(qexec);
             return qexec.execDescribe();
+        }
+    }
+
+    @Override
+    public final ResultSet retrieveAllNamesOfType(String type) {
+        log.debug("retrieving all names for type: " + type);
+        try (QueryExecution qexec = getQueryExecution(sqb.retrieveAllNamesForType(type))) {
+            disableCompression(qexec);
+            return ResultSetFactory.copyResults(qexec.execSelect());
         }
     }
 

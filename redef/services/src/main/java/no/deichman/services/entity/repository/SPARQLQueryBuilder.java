@@ -574,4 +574,16 @@ public final class SPARQLQueryBuilder {
                 + "}", BaseURI.ontology(), serialUri);
         return QueryFactory.create(queryString);
     }
+
+    public Query retrieveAllNamesForType(String type) {
+        String queryString = format("#\n"
+                + "PREFIX deich:<%1$s>\n"
+                + "select distinct ?uri ?name\n"
+                + " {\n"
+                + "  ?uri a deich:%2$s ;\n"
+                + "          deich:name ?name .\n"
+                + "}\n"
+                + "order by ?name\n", BaseURI.ontology(), type);
+        return QueryFactory.create(queryString);
+    }
 }

@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.search.NameEntry;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 
@@ -50,4 +51,8 @@ public interface EntityService {
     Model retrieveEventWithLinkedResources(XURI eventUri);
 
     Model retrieveSerialWithLinkedResources(XURI serialUri);
+
+    Collection<NameEntry> neighbourhoodOfName(String type, String name, int width);
+
+    void addIndexedName(String typeAsEntityType, String name, String uri);
 }

@@ -3,6 +3,7 @@ package no.deichman.services.entity.repository;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.uridefaults.XURI;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
@@ -85,4 +86,6 @@ public interface RDFRepository {
     Model retrieveEventAndLinkedResourcesByURI(XURI eventUri);
 
     Model retrieveSerialAndLinkedResourcesByURI(XURI serialUri);
+
+    ResultSet retrieveAllNamesOfType(String type);
 }
