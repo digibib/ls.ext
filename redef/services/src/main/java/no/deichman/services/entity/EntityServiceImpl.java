@@ -7,6 +7,8 @@ import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
+import no.deichman.services.search.NameEntry;
+import no.deichman.services.search.NameIndexer;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +35,7 @@ import org.apache.jena.vocabulary.RDF;
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -97,6 +100,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
     private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
+    private static Map<String, NameIndexer> nameIndexers = new HashMap<>();
 
     public EntityServiceImpl(RDFRepository repository, KohaAdapter kohaAdapter) {
         this.repository = repository;
@@ -634,5 +638,28 @@ public final class EntityServiceImpl implements EntityService {
         Model m = ModelFactory.createDefaultModel();
         m.add(repository.retrieveSerialAndLinkedResourcesByURI(serialUri));
         return m;
+    }
+
+    @Override
+    public Collection<NameEntry> neighbourhoodOfName(String type, String name, int width) {
+        return getNameIndexer(type).neighbourhoodOf(name, width);
+    }
+
+    private NameIndexer getNameIndexer(String type) {
+        String lowerCasedType = type.toLowerCase();
+        NameIndexer nameIndexer = nameIndexers.get(lowerCasedType);
+        if (nameIndexer == null) {
+            ResultSet resultSet = repository.retrieveAllNamesOfType(StringUtils.capitalize(type));
+            nameIndexer = new NameIndexer(resultSet);
+            if (!nameIndexer.isEmpty()) {
+                nameIndexers.put(lowerCasedType, nameIndexer);
+            }
+        }
+        return nameIndexer;
+    }
+
+    @Override
+    public void addIndexedName(String type, String name, String uri) {
+        getNameIndexer(type).addNamedItem(name, uri);
     }
 }

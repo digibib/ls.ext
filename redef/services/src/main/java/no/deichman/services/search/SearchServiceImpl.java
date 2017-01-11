@@ -27,6 +27,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +42,17 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
+import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -308,21 +312,55 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response sortedList(String type, String prefix, int minSize, String field) {
-        List<Map> musts = new ArrayList<>();
-        for (int i = 0; i < prefix.length(); i++) {
-            musts.add(
-                    of("constant_score",
-                            of("boost", 2 << Math.max(prefix.length() - i, SIXTY_ONE), "query",
-                                    of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
+        String body;
+        if (type.equals("person")) {
+            Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName("Person", prefix, minSize);
+            List<Map> should = new ArrayList<>();
+            should.add(of("match_phrase_prefix", of("name", prefix)));
+            should.addAll(nameEntries
+                    .stream()
+                    .filter(NameEntry::isBestMatch)
+                    .map(e -> of(
+                            "ids", of("values", newArrayList(urlEncode(e.getUri())))))
+                    .collect(toList()));
+            should.add(of(
+                    "ids", of("values",
+                            nameEntries
+                                    .stream()
+                                    .map(NameEntry::getUri)
+                                    .map(SearchServiceImpl::urlEncode)
+                                    .collect(toList())
+                    )
+            ));
+            body = GSON.toJson(
+                    of(
+                            "size", minSize,
+                            "query", of(
+                                    "bool", of("should", should)
+                            )
+                    )
+            );
+        } else {
+            List<Map> should = new ArrayList<>();
+            for (int i = 0; i < prefix.length(); i++) {
+                should.add(
+                        of("constant_score",
+                                of("boost", 2 << Math.max(prefix.length() - i, SIXTY_ONE), "query",
+                                        of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
+            }
+            body = GSON.toJson(of(
+                    "size", minSize,
+                    "query", of(
+                            "bool", of(
+                                    "should", should)
+                    )
+            ));
         }
-        String body = GSON.toJson(of(
-                "size", minSize,
-                "query", of(
-                        "bool", of(
-                                "should", musts)
-                )
-        ));
         return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search"));
+    }
+
+    private static String urlEncode(String uri) {
+        return uri.replace(":", "%3A").replace("/", "%2F");
     }
 
     @Override
@@ -414,10 +452,12 @@ public class SearchServiceImpl implements SearchService {
             case PERSON:
                 indexDocument(creatorUri, personModelToIndexMapper
                         .createIndexDocument(entityService.retrievePersonWithLinkedResources(creatorUri).add(works), creatorUri));
+                cacheNameIndex(creatorUri, works);
                 break;
             case CORPORATION:
                 indexDocument(creatorUri, corporationModelToIndexMapper
                         .createIndexDocument(entityService.retrieveCorporationWithLinkedResources(creatorUri).add(works), creatorUri));
+                cacheNameIndex(creatorUri, works);
                 break;
             default:
                 throw new RuntimeException(format(
@@ -430,6 +470,21 @@ public class SearchServiceImpl implements SearchService {
     private void doIndex(XURI xuri) throws Exception {
         Model indexModel = entityService.retrieveById(xuri);
         indexDocument(xuri, new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri));
+        cacheNameIndex(xuri, indexModel);
+    }
+
+    private void cacheNameIndex(XURI xuri, Model indexModel) {
+        indexModel.listStatements(new SimpleSelector() {
+            @Override
+            public boolean test(Statement s) {
+                return s.getPredicate().getURI().equals("http://data.deichman.no/ontology#name");
+            }
+        }).forEachRemaining(statement -> {
+            entityService.addIndexedName(
+                    xuri.getTypeAsEntityType().getPath(),
+                    statement.getObject().asLiteral().toString(),
+                    statement.getSubject().getURI());
+        });
     }
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {
