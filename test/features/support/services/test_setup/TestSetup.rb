@@ -11,14 +11,14 @@ module TestSetup
   class Koha
     attr_accessor :api, :basedir, :apiuser, :apipass, :sipuser, :sippass, :http, :headers, :patrons, :biblio, :holds
 
-    def initialize(host="localhost",apiuser="api",apipass="secret",sipuser="autohb",sippass="autopass",dbversion="16.1100000",basedir="./features/support/services/test_setup")
+    def initialize(host="localhost",apiuser="api",apipass="secret",sipuser="autohb",sippass="autopass",dbversion="16.1101000",basedir="./features/support/services/test_setup")
       @api = URI.parse("http://#{host}:8081/api/v1/")
       @basedir = basedir
       @apiuser = apiuser
       @apipass = apipass
       @sipuser = sipuser
       @sippass = sippass
-      setup_db(apipass,sippass,dbversion)
+      setup_db(dbversion)
       uri = @api + "auth/session"
       res = Net::HTTP.post_form(uri, {userid: apiuser, password: apipass})
       @headers = { "Cookie" => res.response["set-cookie"] }
@@ -27,14 +27,23 @@ module TestSetup
     end
 
     # make sure koha is populated with neccessary tables and api user and sip user in place
-    def setup_db(apipass,sippass,dbversion)
-      apipassenc = BCrypt::Password.create(apipass, cost: 8)
-      sippassenc = BCrypt::Password.create(sippass, cost: 8)
+    def setup_db(dbversion)
+      apipassenc = BCrypt::Password.create(@apipass, cost: 8)
+      sippassenc = BCrypt::Password.create(@sippass, cost: 8)
+      # dump koha db before setup
+      STDOUT.puts "Dumping koha db..."
+      STDOUT.puts `docker run --rm -v dockercompose_koha_mysql_data:/from alpine ash -c "cd /from ; tar -cf - ." > kohadb.tar`
 
+      STDOUT.puts "Importing pre-populated koha db..."
       mysqlcmd = "mysql --local-infile=1 --default-character-set=utf8 --init-command=\"SET SESSION FOREIGN_KEY_CHECKS=0;\" -h koha_mysql -u\$MYSQL_USER -p\$MYSQL_PASSWORD koha_name"
       `sed -e "s/__KOHA_DBVERSION__/#{dbversion}/" #{@basedir}/deich_koha_base.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
-      `sed -e "s?__API_PASS__?#{apipassenc}?" #{@basedir}/api_user.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
-      `sed -e "s?__SIP_PASS__?#{sippassenc}?" #{@basedir}/sip_user.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
+      `awk -v pass='#{apipassenc}' '{gsub(/__API_PASS__/, pass)};1' #{@basedir}/api_user.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
+      `awk -v pass='#{sippassenc}' '{gsub(/__SIP_PASS__/, pass)};1' #{@basedir}/sip_user.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
+    end
+
+    def self.restore_db
+      # restore the previosly stored koha db
+      `cat kohadb.tar | docker run -i --rm -v dockercompose_koha_mysql_data:/to alpine ash -c "cd /to ; tar -xf -"`
     end
 
     def populate(args = {patrons: 1, items: 1, holds: 1})

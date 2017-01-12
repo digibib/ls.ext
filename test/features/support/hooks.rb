@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'pp'
+require_relative './services/test_setup/TestSetup.rb'
 
 # TODO: Should pull report dir (if any) from cucumber command options
 REPORT_DIR = 'report'
@@ -51,8 +52,17 @@ Before do |scenario|
 end
 
 Before do |scenario|
+  # Global triggers to activate import of data
   $random_migrate ||= false
   $random_migrate_branchcode ||= false
+  $kohadb_setup ||= false
+
+  if scenario.source_tag_names.include?('@kohadb')
+    # Pre-populate Koha once before tests are run
+    STDOUT.puts "Pre-populating koha db"
+    $kohadb_setup = TestSetup::Koha.new "xkoha"
+    @context[:koha] = $kohadb_setup
+  end
 
   if scenario.source_tag_names.include?('@random_migrate')
     step "at jeg er logget inn som adminbruker"
