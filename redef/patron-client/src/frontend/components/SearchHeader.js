@@ -198,7 +198,8 @@ class SearchHeader extends React.Component {
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="section"
-          className="search-box-wrapper">
+          className="search-box-wrapper"
+          role="search">
           <div className="search-box">
             <form onSubmit={this.handleSearch}>
               <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>

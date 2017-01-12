@@ -209,8 +209,6 @@ class SearchResult extends React.Component {
 
     const formats = [ ...pubFormats ]
     const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: result.titleLine1 })
-//    Unused?
-//    const missingCoverImage = '/images/no-cover.png'
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
     const mediaTypeURI = result.mediaTypes[ 0 ] ? result.mediaTypes[ 0 ].uri : ''
     return (

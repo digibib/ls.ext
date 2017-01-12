@@ -91,10 +91,12 @@ class Search extends React.Component {
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
-        component="div"
+        component="main"
+        role="main"
         className="wrapper">
         {this.props.locationQuery.query
           ? (<div className="search-results-header">
+            <a href="#main-search-content" className="is-vishidden focusable">{this.props.intl.formatMessage(messages.jumpToMainContent)}</a>
           <div className="search-results-summary">
             <SearchResultsText totalHits={this.props.totalHits}
                                totalHitsPublications={this.props.totalHitsPublications}
@@ -198,6 +200,11 @@ function mapDispatchToProps (dispatch) {
 }
 
 export const messages = defineMessages({
+  jumpToMainContent: {
+    id: 'Search.jumpToMainContent',
+    description: 'Jump to main content on search page',
+    defaultMessage: 'Jump to search results'
+  },
   paginationLabel: {
     id: 'Search.paginationLabel',
     description: 'The ARIA label for the pagination bar',

@@ -124,7 +124,7 @@ class Work extends React.Component {
     const { back } = this.props.location.query
 
     return (
-      <div className="wrapper">
+      <main role="main" className="wrapper">
         <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
@@ -164,7 +164,7 @@ class Work extends React.Component {
 
         </NonIETransitionGroup>
 
-      </div>
+      </main>
     )
   }
 }

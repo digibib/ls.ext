@@ -14,7 +14,7 @@ class MediaType extends React.Component {
     })
     return <ul className="mediaTypeFormats">
       {filtered.map(format => {
-        return <li key={format}>{this.props.intl.formatMessage({ id: format })} &nbsp;</li>
+        return <li aria-labelledby={this.props.intl.formatMessage({ id: mediaType })} key={format}>{this.props.intl.formatMessage({ id: format })} &nbsp;</li>
       })}
     </ul>
   }

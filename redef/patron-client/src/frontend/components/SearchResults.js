@@ -23,7 +23,8 @@ class SearchResults extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="section"
-        className="search-results">
+        className="search-results"
+        id="main-search-content">
         <div data-automation-id="search-result-entries">
           {this.props.locationQuery.query
             ? this.props.searchResults.slice(from, to).map(result => (

@@ -35,14 +35,14 @@ class MyPage extends React.Component {
       { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' }
     ]
     return (
-      <div data-automation-id="profile_page" className="mypage-wrapper">
+      <main role="main" data-automation-id="profile_page" className="mypage-wrapper">
         <Tabs label={this.props.intl.formatMessage(messages.profileMenuLabel)}
               tabList={tabList}
               currentPath={this.props.location.pathname}
               push={this.props.routerActions.push} />
         <hr />
         {this.props.children}
-      </div>
+      </main>
     )
   }
 }

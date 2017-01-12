@@ -41,7 +41,6 @@ class Tab extends React.Component {
         className={className}
         onClick={this.handleClick}
         onKeyDown={this.handleKey}
-        aria-role="presentation"
       >
         <Link
           to="#"
@@ -57,6 +56,8 @@ class Tab extends React.Component {
 }
 
 Tab.propTypes = {
+  findPrevTab: PropTypes.func.isRequired,
+  findNextTab: PropTypes.func.isRequired,
   tab: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
