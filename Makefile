@@ -1,4 +1,4 @@
-.PHONY: all test clean help
+.PHONY: all provision test clean help
 
 ifdef LSDEVMODE
 SHIP=$(LSDEVMODE)-ship
