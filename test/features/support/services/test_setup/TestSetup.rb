@@ -30,19 +30,16 @@ module TestSetup
     def setup_db(dbversion)
       apipassenc = BCrypt::Password.create(@apipass, cost: 8)
       sippassenc = BCrypt::Password.create(@sippass, cost: 8)
-      # dump koha db before setup
       STDOUT.puts "Dumping koha db..."
       STDOUT.puts `docker run --rm -v dockercompose_koha_mysql_data:/from alpine ash -c "cd /from ; tar -cf - ." > kohadb.tar`
 
-      STDOUT.puts "Importing pre-populated koha db..."
+      STDOUT.puts "Pre-populating koha db..."
       mysqlcmd = "mysql --local-infile=1 --default-character-set=utf8 --init-command=\"SET SESSION FOREIGN_KEY_CHECKS=0;\" -h koha_mysql -u\$MYSQL_USER -p\$MYSQL_PASSWORD koha_name"
       `sed -e "s/__KOHA_DBVERSION__/#{dbversion}/" #{@basedir}/deich_koha_base.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
-      `awk -v pass='#{apipassenc}' '{gsub(/__API_PASS__/, pass)};1' #{@basedir}/api_user.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
-      `awk -v pass='#{sippassenc}' '{gsub(/__SIP_PASS__/, pass)};1' #{@basedir}/sip_user.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
+      `awk -v apipass='#{apipassenc}' -v sippass='#{sippassenc}' '{gsub(/__API_PASS__/, apipass); gsub(/__SIP_PASS__/, sippass)};1' #{@basedir}/users.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
     end
 
     def self.restore_db
-      # restore the previosly stored koha db
       `cat kohadb.tar | docker run -i --rm -v dockercompose_koha_mysql_data:/to alpine ash -c "cd /to ; tar -xf -"`
     end
 
