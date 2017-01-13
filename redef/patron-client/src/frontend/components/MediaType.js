@@ -25,7 +25,7 @@ class MediaType extends React.Component {
     const tabIndex = this.props.buttonTabIndex
     return (
       <div role={role} key={mediaType.uri} className="entry-content-icon-single" tabIndex={tabIndex}>
-        <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} aria-hidden="true"/>
+        <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} aria-hidden="true" />
         {this.props.intl.formatMessage({ id: mediaType.uri })}
         {this.renderFormats(mediaType.uri, mediaType.formats)}
       </div>
@@ -35,7 +35,9 @@ class MediaType extends React.Component {
 
 MediaType.propTypes = {
   mediaType: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  buttonRole: PropTypes.string,
+  buttonTabIndex: PropTypes.string
 }
 
 export default injectIntl(MediaType)

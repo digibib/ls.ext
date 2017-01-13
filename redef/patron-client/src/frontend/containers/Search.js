@@ -133,8 +133,7 @@ class Search extends React.Component {
                              scrollTargetNode={this}
                              isSearching={this.props.isSearching}
                              windowWidth={this.props.windowWidth}
-        />,
-          <SearchResults key="searchResults"
+        />, <SearchResults key="searchResults"
                          locationQuery={this.props.location.query}
                          searchActions={this.props.searchActions}
                          searchResults={this.props.searchResults}

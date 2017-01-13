@@ -110,8 +110,7 @@ class SearchFilter extends React.Component {
         {this.isCollapsed() ? null
           : [ <section className="filter-list" key="searchfilter_header">
           <ul className="searchfilters">{this.renderFilters()}</ul>
-        </section>,
-          <footer key="searchfilter_footer">{this.renderShowMore()}</footer> ]}
+        </section>, <footer key="searchfilter_footer">{this.renderShowMore()}</footer> ]}
       </NonIETransitionGroup>
     )
   }

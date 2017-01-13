@@ -7,7 +7,6 @@ import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
 import { groupByBranch } from '../utils/sorting'
-import ClickableElement from '../components/ClickableElement'
 
 class SearchResult extends React.Component {
   constructor (props) {

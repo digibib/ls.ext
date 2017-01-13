@@ -54,17 +54,16 @@ describe('components', () => {
 
     it('should push path when keydown arrow left', () => {
       const { output, props } = setup()
-      TestUtils.Simulate.keyDown(TestUtils.findRenderedDOMComponentWithTag(output, 'li'), {key: "Arrow left", keyCode: 37, which: 37})
+      TestUtils.Simulate.keyDown(TestUtils.findRenderedDOMComponentWithTag(output, 'li'), {key: 'Arrow left', keyCode: 37, which: 37})
       expect(props.push).toHaveBeenCalled()
       expect(props.push.calls[ 0 ].arguments[ 0 ]).toEqual({ pathname: props.tab.path })
     })
 
     it('should push path when keydown arrow right', () => {
       const { output, props } = setup()
-      TestUtils.Simulate.keyDown(TestUtils.findRenderedDOMComponentWithTag(output, 'li'), {key: "Arrow right", keyCode: 39, which: 39})
+      TestUtils.Simulate.keyDown(TestUtils.findRenderedDOMComponentWithTag(output, 'li'), {key: 'Arrow right', keyCode: 39, which: 39})
       expect(props.push).toHaveBeenCalled()
       expect(props.push.calls[ 0 ].arguments[ 0 ]).toEqual({ pathname: props.tab.path })
     })
-
   })
 })

@@ -97,13 +97,11 @@ describe('components', () => {
     it('should give circular next tab depending on current path', () => {
       const { findNextTab } = setup()
       expect(findNextTab()).toEqual({ label: 'label_3', path: '/path_3' })
-
     })
 
     it('should give circular prev tab depending on current path', () => {
       const { findPrevTab } = setup()
       expect(findPrevTab()).toEqual({ label: 'label_3', path: '/path_3' })
-
     })
   })
 })

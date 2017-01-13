@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Link, History } from 'react-router'
+import { Link } from 'react-router'
 
 class Tab extends React.Component {
   constructor (props) {
@@ -35,19 +35,17 @@ class Tab extends React.Component {
   }
 
   render () {
-    const { className, tab, ariaSelected} = this.props
+    const { className, tab, ariaSelected } = this.props
     return (
       <li
         className={className}
         onClick={this.handleClick}
-        onKeyDown={this.handleKey}
-      >
+        onKeyDown={this.handleKey}>
         <Link
           to="#"
           role="tab"
           aria-selected={ariaSelected}
-          tabIndex={ariaSelected === 'true' ? 0 : -1}
-        >
+          tabIndex={ariaSelected === 'true' ? 0 : -1}>
           {tab.label}
         </Link>
       </li>
@@ -65,5 +63,3 @@ Tab.propTypes = {
 }
 
 export default Tab
-
-//  <Link to="#" role="tab" aria-selected={ariaSelected}>{tab.label}</Link>
