@@ -31,16 +31,19 @@ module TestSetup
       apipassenc = BCrypt::Password.create(@apipass, cost: 8)
       sippassenc = BCrypt::Password.create(@sippass, cost: 8)
       STDOUT.puts "Dumping koha db..."
-      STDOUT.puts `docker run --rm -v dockercompose_koha_mysql_data:/from alpine ash -c "cd /from ; tar -cf - ." > kohadb.tar`
+      `docker run --rm -v dockercompose_koha_mysql_data:/from alpine ash -c "cd /from ; tar -cf - ." > kohadb.tar`
 
       STDOUT.puts "Pre-populating koha db..."
       mysqlcmd = "mysql --local-infile=1 --default-character-set=utf8 --init-command=\"SET SESSION FOREIGN_KEY_CHECKS=0;\" -h koha_mysql -u\$MYSQL_USER -p\$MYSQL_PASSWORD koha_name"
       `sed -e "s/__KOHA_DBVERSION__/#{dbversion}/" #{@basedir}/deich_koha_base.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
       `awk -v apipass='#{apipassenc}' -v sippass='#{sippassenc}' '{gsub(/__API_PASS__/, apipass); gsub(/__SIP_PASS__/, sippass)};1' #{@basedir}/users.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
+      `docker exec -i xkoha bash -c "supervisorctl -u#{@apiuser} -p#{@apipass} restart plack"`
     end
 
     def self.restore_db
+      `docker stop koha_mysql`
       `cat kohadb.tar | docker run -i --rm -v dockercompose_koha_mysql_data:/to alpine ash -c "cd /to ; tar -xf -"`
+      `docker start koha_mysql`
     end
 
     def populate(args = {patrons: 1, items: 1, holds: 1})

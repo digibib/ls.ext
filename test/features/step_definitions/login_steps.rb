@@ -1,6 +1,10 @@
 # encoding: utf-8
 require 'watir'
 
+Given(/^at jeg er logget inn som superbruker$/) do
+  step "jeg logger på som bruker \"super\" med passord \"secret\""
+end
+
 Given(/^at jeg er logget inn som adminbruker$/) do
   step "jeg fyller inn credentials for en adminbruker og trykker Logg inn"
 end
