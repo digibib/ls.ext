@@ -4,16 +4,59 @@ Library Extended (ls.ext) Release changelog.
 Tags refer to built and pushed docker images.
 
 To reproduce the state of the release, set GITREF to the chosen TAG in `docker-compose.env`.
-To provision/configure, substitute the variables in `docker-compose-template-prod.yml` with e.g.
-a secrets.env:
+Add configuration overrides to variables in `.env`:
 
-`source secrets.env && envsubst < docker-compose-template-prod.yml > docker-compose.yml`
+Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_TAG:
 
-The resulting compose file can then be used with `docker-compose up -d` to provision.
+`source docker-compose.env && docker-compose -f common.env -f prod.env up -d`
 
 # Releases
+## 0.8.1 (2017-01-04) minor update
 
-## 0.7.1 (2016-12-06)
+KOHA: 15345ae973ca75a0d46cbfa8ca8433506458ae15
+GITREF:
+
+- Catalinker:
+  - DEICH-533: fix not showing last of publication parts
+- Patron-client:
+  - DEICH-495: show parts of publication
+  - fix handling empty main entry
+
+## 0.8.0 (2016-12-20)
+
+KOHA:   15345ae973ca75a0d46cbfa8ca8433506458ae15
+GITREF: 3d80fe232e2731e97063309b3e763330b1d9dc81
+
+- Koha:
+  - DEICH-514 various fixes for NL sync
+  - DEICH-512 available item status update
+- Catalinker:
+  - DEICH-504: New field ISSN
+  - DEICH-525: New field ISMN
+  - DEICH-456: work main responsibility on parts
+- Patron-client:
+  - DEICH-512: correcct status on not-for-loan material issued
+
+## 0.7.5 (2016-12-13)
+
+- Koha:
+  - Fix for holds bug in SIP checkin DEICH-487
+- Patron-client:
+  - Forbedre visning av tittelopplysninger DEICH-508
+- Catalinker:
+  - Fiks mapping av opprinnelsesland fra BS DEICH-507
+- Services:
+  - Legg til manglende rolleDEICH-517
+
+## 0.7.2 (2016-12-08) bugfix
+
+- Infrastructure:
+  - docker-compose upgrade: (1.9.0) and fixes
+- Catalinker:
+  - DEICH-90: minor title fixes
+  - re-introduce illustratitveMatter field appearance for media tytpe ComicBook, LanguageCourse andE-book lost in merge
+
+## 0.7.1 (2016-12-06) update
 
 KOHA: c759c872b832b5517faee92dc46a2c941dfe174c
 

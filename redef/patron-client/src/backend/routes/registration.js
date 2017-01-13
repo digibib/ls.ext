@@ -55,7 +55,7 @@ module.exports = (app) => {
       dateofbirth: dateOfBirth,
       ssn: request.body.ssn,
       email: request.body.email,
-      mobile: request.body.mobile,
+      smsalertnumber: request.body.mobile,
       address: request.body.address,
       zipcode: request.body.zipcode,
       city: request.body.city,

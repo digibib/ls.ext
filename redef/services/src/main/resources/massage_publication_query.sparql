@@ -26,7 +26,9 @@ CONSTRUCT {
                deich:genre ?genreLabel ;
                deich:audience ?audience ;
                deich:agents ?contribAgentName ;
+               deich:agents ?pubPartAgentName ;
                ?contribRoleURI ?contribAgentName ;
+               ?pubPartRoleURI ?pubPartAgentName ;
                deich:mainEntryName ?mainEntryName ;
                deich:recordId ?recordId ;
                deich:summary ?summary ;
@@ -39,11 +41,13 @@ CONSTRUCT {
                deich:title ?pubPartTitle ;
                deich:title ?pubSubtitle ;
                deich:title ?pubPartNumber ;
+               deich:title ?pubPartMainTitle ;
                deich:litform ?litform ;
                deich:subtitles ?subtitles ;
                deich:subtitle ?pubSubtitle ;
                deich:partNumber ?pubPartNumber ;
                deich:isbn ?isbn ;
+               deich:ismn ?ismn ;
                deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
                deich:langTitles <http://ignore> ;
@@ -84,6 +88,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:partNumber ?pubPartNumber }
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
   UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
+  UNION { <__PUBLICATIONURI__> deich:ismn ?ismn }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO .
           BIND(str(?languageO) AS ?language) .
           BIND(afn:substr(?language, 29) AS ?langCode) }
@@ -180,10 +185,10 @@ WHERE {
 
     UNION {
             { <__PUBLICATIONURI__> deich:contributor ?contrib }
-      UNION { <__PUBLICATIONURI__> deich:publicationOf ?work . ?work deich:contributor ?contrib }
+      UNION { <__PUBLICATIONURI__> deich:publicationOf ?work . ?work a deich:Work ; deich:contributor ?contrib }
         ?contrib a deich:Contribution ;
-            deich:agent ?contribAgent ;
-            deich:role ?contribRoleURI .
+                 deich:agent ?contribAgent ;
+                 deich:role ?contribRoleURI .
         ?contribAgent deich:name ?contribAgentName .
          BIND(str(?contribRoleURI) AS ?contribRole)
          OPTIONAL {
@@ -195,6 +200,19 @@ WHERE {
              FILTER(lang(?nationLabelLang) = "no")
              }
            }
+    }
+    UNION {
+        <__PUBLICATIONURI__> deich:hasPublicationPart ?pubPart .
+        ?pubPart a deich:PublicationPart ;
+                 deich:mainTitle ?pubPartMainTitle ;
+                 OPTIONAL {
+                    ?pubPart deich:agent ?pubPartAgent .
+                    ?pubPartAgent deich:name ?pubPartAgentName
+                 }
+                 OPTIONAL {
+                     ?pubPart deich:role ?pubPartRoleURI
+                     BIND(str(?pubPartRoleURI) AS ?pubPartRole)
+                 }
     }
 
   UNION { ?contribAgent deich:birthYear ?pBirthYearO . BIND(str(?pBirthYearO) AS ?contribAgentBirthYear) }

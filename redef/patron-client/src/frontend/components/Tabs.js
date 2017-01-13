@@ -1,6 +1,5 @@
-import React, { PropTypes } from 'react'
-import { matchPattern } from 'react-router/lib/PatternUtils'
-
+import React, {PropTypes} from 'react'
+import {matchPattern} from 'react-router/lib/PatternUtils'
 import Tab from './Tab'
 
 class Tabs extends React.Component {
@@ -60,11 +59,14 @@ class Tabs extends React.Component {
 Tabs.propTypes = {
   label: PropTypes.string.isRequired,
   tabList: PropTypes.array.isRequired,
-  push: PropTypes.func.isRequired,
-  currentPath: PropTypes.string.isRequired,
+  push: PropTypes.func,
+  currentPath: PropTypes.string,
+  currentTab: PropTypes.string,
   tabBarClass: PropTypes.string.isRequired,
   tabClass: PropTypes.string.isRequired,
-  tabActiveClass: PropTypes.string.isRequired
+  tabActiveClass: PropTypes.string.isRequired,
+  store: PropTypes.object,
+  menuId: PropTypes.string
 }
 
 Tabs.defaultProps = {

@@ -119,6 +119,9 @@ public class MARCMapper {
                 case "025":
                     getSubfieldValue(dataField, 'a').ifPresent(publication::setEan);
                     break;
+                case "024":
+                    getSubfieldValue(dataField, 'a').ifPresent(publication::setIsmn);
+                    break;
                 case "041":
                     setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
                     setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
@@ -201,6 +204,7 @@ public class MARCMapper {
                 case "440":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
                         Serial serial = new Serial(a, newBlankNodeId());
+                        getSubfieldValue(dataField, 'x').ifPresent(serial::setIssn);
                         graphList.add(serial);
                         getSubfieldValue(dataField, 'b').ifPresent(publishedBy -> {
                             addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);

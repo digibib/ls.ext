@@ -371,8 +371,12 @@ public final class EntityServiceImpl implements EntityService {
     private String createPublication(Model inputModel) throws Exception {
 
         XURI publication = null;
-        if (inputModel.listStatements().hasNext()) {
-            publication = new XURI(inputModel.listStatements().next().getSubject().toString());
+        StmtIterator statements = inputModel.listStatements();
+        while (publication == null && statements.hasNext()) {
+            Resource subject = statements.next().getSubject();
+            if (!subject.isAnon()) {
+                publication = new XURI(subject.toString());
+            }
         }
 
         MarcRecord marcRecord;

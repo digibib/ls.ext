@@ -9,7 +9,7 @@ export HOST=$3
 echo -e "\n Provisioning for $LSENV env, LSENV=$LSENV, LSEXTPATH=$LSEXTPATH, HOST=$HOST\n"
 if [[ `uname -s` == 'Linux' && "$LSENV" != 'prod' ]]; then
   echo -e "\n1) Installing Docker\n"
-  VERSION="1.12.3-0~$(lsb_release -c -s)"
+  VERSION="1.12.5-0~ubuntu-$(lsb_release -c -s)"
   INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
   if [ $VERSION = "$INSTALLED" ] ; then
     echo "docker version $VERSION already installed";
@@ -36,8 +36,6 @@ if [[ `uname -s` == 'Linux' && "$LSENV" != 'prod' ]]; then
     sudo chmod +x /usr/local/bin/docker-compose
   fi
 
-  echo -e "\n3) Installing Graphviz\n"
-  which dot > /dev/null || sudo apt-get install -y graphviz
 else
   echo "Cannot provision for OSX; please install docker & docker-compose yourself"
   echo "You also need envsubst (TODO find a cross-platform solution)"

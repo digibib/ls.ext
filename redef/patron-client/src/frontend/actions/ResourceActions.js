@@ -1,10 +1,9 @@
 import fetch from 'isomorphic-fetch'
-import { push, replace } from 'react-router-redux'
-
+import {push, replace} from 'react-router-redux'
 import * as types from '../constants/ActionTypes'
-import { parsePersonResponse } from '../utils/graphParse'
+import {parsePersonResponse} from '../utils/graphParse'
 import Constants from '../constants/Constants'
-import { action, errorAction } from './GenericActions'
+import {action, errorAction} from './GenericActions'
 
 export const requestResource = id => action(types.REQUEST_RESOURCE, { id })
 
@@ -36,7 +35,7 @@ export function fetchPersonResource (personId) {
           throw Error('Error fetching works for person')
         }
       }) ]
-    ).then(([personResponse, worksResponse]) => parsePersonResponse(personResponse, worksResponse))
+    ).then(([ personResponse, worksResponse ]) => parsePersonResponse(personResponse, worksResponse))
       .then(person => dispatch(receiveResource(personId, person)))
       .catch(error => dispatch(resourceFailure(error)))
   }
@@ -85,7 +84,7 @@ export function fetchWorkItems (workId) {
 function processItems (allItems, work) {
   if (work) {
     work.publications.forEach(publication => {
-      const items = allItems[ publication.recordId ].items
+      const items = (allItems[ publication.recordId ] || {}).items
       if (items) {
         items.forEach(item => {
           item.mediaTypes = publication.mediaTypes
@@ -107,6 +106,26 @@ export function expandSubResource (id, replacePath) {
       return
     } else {
       locationQuery.showMore = id
+    }
+    const locationDescriptor = {
+      pathname: getState().routing.locationBeforeTransitions.pathname,
+      query: locationQuery
+    }
+    return replacePath
+      ? dispatch(replace(locationDescriptor))
+      : dispatch(push(locationDescriptor))
+  }
+}
+
+export function updateUrlQueryValue (parameter, value, replacePath) {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    if (!value) {
+      delete locationQuery[ parameter ]
+    } else if (locationQuery[ parameter ] === value) {
+      return
+    } else {
+      locationQuery[ parameter ] = value
     }
     const locationDescriptor = {
       pathname: getState().routing.locationBeforeTransitions.pathname,

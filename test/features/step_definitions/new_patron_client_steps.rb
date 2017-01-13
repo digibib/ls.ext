@@ -7,6 +7,7 @@ end
 
 When(/^jeg søker på "([^"]*)" \(\+ id på vilkårlig migrering\)$/) do |query|
   @site.SearchPatronClient.search_with_text "#{query}#{@context[:random_migrate_id]}"
+  @context[:prefix] = query
 end
 
 When(/^skal jeg få "([^"]*)" treff$/) do |hits|
@@ -45,8 +46,8 @@ end
 
 When(/^jeg slår på et filter for et vilkårlig format$/) do
   # To get nice styling for checkboxes, they are effectively set to invisible while images are displayed in their place.
-  # Watir does not allow interaction with invisible items, therefore clicking the parent (which has the click handler)
-  @browser.element(data_automation_id: 'filter_format').checkboxes.to_a.select { |checkbox| not checkbox.set? }.sample.element(xpath: './following-sibling::*').click # The sibling is the label
+  # Watir does not allow interaction with invisible items, therefore we click the label (which has a click handler)
+  @browser.element(data_automation_id: 'filter_format').elements(data_automation_id: 'filter_label', data_checked: 'false').to_a.sample.click
 end
 
 When(/^skal jeg kun se treff med valgte format tilgjengelig$/) do
@@ -119,15 +120,29 @@ When(/^jeg trykker på utgivelsen med "([^"]*)" språk$/) do |language|
   @browser.elements(data_automation_id: /^publication_http/).select { |element| element.elements(data_automation_id: 'publication_languages').select { |element| element.text.include? language }[0] }[0].button(data_automation_id: 'publication_open_show_more_info').click
 end
 
-When(/^den skal inneholde eksemplarinformasjonen$/) do |table|
-  table = table.hashes.sort_by { |r| r.to_s }
+When(/^jeg trykker på den første utgivelsen$/) do
+  @browser.buttons(data_automation_id: 'publication_open_show_more_info').first.click
+end
+
+When(/^den skal inneholde (i riktig rekkefølge |)(eksemplarinformasjonen|utgivelsesdelinformasjonen|delinformasjonen)$/) do |table_should_be_in_same_order, info_type, table|
+  table = table.hashes
+  unless table_should_be_in_same_order
+    table = table.sort_by { |r| r.to_s }
+  end
   table.each do |row|
     if row['Filial'].eql? 'random_migrate_branchcode'
       row['Filial'] = @context[:random_migrate_branchcode]
     end
+    if row['Hovedansvarlig'].eql? 'random_migrate_person_name'
+      row['Hovedansvarlig'] = @context[:random_migrate_person_names][@context[:prefix] + @context[:random_migrate_id]]
+    end
   end
   wait_retry { @browser.element(data_automation_id: /^publication_info_/).present? }
-  publication_info = @browser.element(data_automation_id: /^publication_info_/).table.hashes.sort_by { |r| r.to_s }
+  publication_info = @browser.element(data_automation_id: /^publication_info_/).table
+  publication_info = publication_info.hashes
+  unless table_should_be_in_same_order
+    publication_info = publication_info.sort_by { |r| r.to_s }
+  end
   table.should eq publication_info
 end
 
@@ -519,4 +534,13 @@ When(/^skal jeg se at jeg ikke er logget inn$/) do
   wait_for {
     @browser.element(data_automation_id: 'login_element').present?
   }
+end
+
+When(/^trykker jeg på sorteringsknappen etter "([^"]*)"$/) do |column_name|
+  @browser.element(:text => column_name).button(:class => 'sorter').click
+end
+
+When(/^jeg søker etter forfatter av del med tittel "([^"]*)"$/) do |title|
+  @site.SearchPatronClient.search_with_text "author:#{@context[:random_migrate_person_names]['prefix0' + @context[:random_migrate_id]]} title:#{title}"
+  @context[:prefix] = 'prefix0'
 end

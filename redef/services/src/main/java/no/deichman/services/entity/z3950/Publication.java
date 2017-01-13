@@ -16,6 +16,7 @@ import static no.deichman.services.entity.z3950.Publication.Extent.United;
  */
 @SuppressWarnings("checkstyle:DesignForExtension")
 public class Publication extends BibliographicObjectExternal {
+
     /**
      * Whether publication has number of pages or an extent.
      */
@@ -31,6 +32,9 @@ public class Publication extends BibliographicObjectExternal {
 
     @SerializedName("deichman:hasEan")
     private String ean;
+
+    @SerializedName("deichman:ismn")
+    private String ismn;
 
     @SerializedName("deichman:binding")
     private ExternalDataObject binding;
@@ -95,6 +99,11 @@ public class Publication extends BibliographicObjectExternal {
     final void setIsbn(String isbn) {
         this.isbn = isbn;
     }
+
+    final void setIsmn(String ismn) {
+        this.ismn = ismn;
+    }
+
 
     public void setEan(String ean) {
         this.ean = ean;

@@ -13,25 +13,25 @@ class PatronClientPersonPage < PageRoot
     end
 
     def getPersonName
-      return @browser.span(:data_automation_id => "person-name").when_present(BROWSER_WAIT_TIMEOUT).text
+      return @browser.span(:data_automation_id => "person-name").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
     end
 
     def getPersonTitle
-      return @browser.span(:data_automation_id => "person-title").when_present(BROWSER_WAIT_TIMEOUT).text
+      return @browser.span(:data_automation_id => "person-title").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
     end
 
     def getBirth
-      lifespan = @browser.span(:data_automation_id => "person-lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
+      lifespan = @browser.span(:data_automation_id => "person-lifespan").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
       return lifespan[1..lifespan.index("-")-1]
     end
 
     def getDeath
-      lifespan = @browser.span(:data_automation_id => "person-lifespan").when_present(BROWSER_WAIT_TIMEOUT).text
+      lifespan = @browser.span(:data_automation_id => "person-lifespan").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
       return lifespan[lifespan.index("-")+1..-2]
     end
 
     def getNationality
-      return @browser.span(:data_automation_id => "person-nationality").when_present(BROWSER_WAIT_TIMEOUT).text
+      return @browser.span(:data_automation_id => "person-nationality").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text
     end
 
     def getWorkslist

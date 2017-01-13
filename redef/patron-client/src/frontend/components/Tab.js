@@ -1,5 +1,8 @@
-import React, { PropTypes } from 'react'
-import { Link } from 'react-router'
+import React, {PropTypes} from 'react'
+import {Link} from 'react-router'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import * as ResourceActions from '../actions/ResourceActions'
 
 class Tab extends React.Component {
   constructor (props) {
@@ -17,7 +20,11 @@ class Tab extends React.Component {
   }
 
   handleClick (tab) {
-    this.props.push({ pathname: this.props.tab.path })
+    if (this.props.tab.path && this.props.push) {
+      this.props.push({ pathname: this.props.tab.path })
+    } else if (this.props.tab.tabId) {
+      this.props.selectTab(this.props.menuId, this.props.tab.tabId, true)
+    }
   }
 
   handleKey (event) {
@@ -57,9 +64,24 @@ Tab.propTypes = {
   findPrevTab: PropTypes.func.isRequired,
   findNextTab: PropTypes.func.isRequired,
   tab: PropTypes.object.isRequired,
-  push: PropTypes.func.isRequired,
+  push: PropTypes.func,
   className: PropTypes.string.isRequired,
-  ariaSelected: PropTypes.string.isRequired
+  ariaSelected: PropTypes.string.isRequired,
+  selectTab: PropTypes.func.isRequired,
+  menuId: PropTypes.string
 }
 
-export default Tab
+function mapStateToProps (state) {
+  return state
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    selectTab: bindActionCreators(ResourceActions.updateUrlQueryValue, dispatch)
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Tab)

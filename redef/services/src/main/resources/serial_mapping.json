@@ -30,6 +30,10 @@
     },
     "partNumber": {
       "type": "string"
+    },
+    "issn": {
+      "type": "string",
+      "analyzer": "isbn_analyzer"
     }
   }
 }

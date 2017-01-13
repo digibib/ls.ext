@@ -69,5 +69,4 @@ ifndef TAG
 	@echo "You must specify TAG when pushing"
 	exit 1
 endif
-	sudo docker tag dockercompose_catalinker $(IMAGE):$(TAG)
 	sudo docker push $(IMAGE):$(TAG)

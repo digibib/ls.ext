@@ -264,11 +264,11 @@
     },
     "startsAtPage": {
       "@id": "deichman:startsAtPage",
-      "@type": "xsd:nonNegativeInteger"
+      "@type": "xsd:integer"
     },
     "endsAtPage": {
       "@id": "deichman:endsAtPage",
-      "@type": "xsd:nonNegativeInteger"
+      "@type": "xsd:integer"
     },
     "improperWork": {
       "@id": "deichman:improperWork",

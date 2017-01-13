@@ -7,6 +7,7 @@ module.exports = {
   entry: [
     'es5-shim',
     'babel-polyfill',
+    'react-hot-loader/patch',
     'webpack-hot-middleware/client',
     './src/frontend/main'
   ],
@@ -38,7 +39,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: [
           path.join(__dirname, 'src/frontend'),
           path.join(__dirname, 'src/common')

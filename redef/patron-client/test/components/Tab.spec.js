@@ -2,9 +2,12 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import Tab, { __RewireAPI__ as DefaultExportTabRewireApi } from '../../src/frontend/components/Tab'
+import Tab, {__RewireAPI__ as DefaultExportTabRewireApi} from '../../src/frontend/components/Tab'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
+import {IntlProvider} from 'react-intl'
+import {Provider} from 'react-redux'
+import rootReducer from '../../src/frontend/reducers'
+import {createStore} from 'redux'
 
 function setup (propOverrides) {
   const props = {
@@ -16,11 +19,14 @@ function setup (propOverrides) {
     ariaSelected: 'false',
     ...propOverrides
   }
+  const store = createStore(rootReducer, { modal: props })
 
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale="en">
-      <Tab {...props} />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale="en">
+        <Tab {...props} />
+      </IntlProvider>
+    </Provider>
   )
 
   return {
