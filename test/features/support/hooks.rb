@@ -59,8 +59,10 @@ Before do |scenario|
 
   if scenario.source_tag_names.include?('@kohadb')
     # Pre-populate Koha once before tests are run
-    STDOUT.puts "Pre-populating koha db"
-    $kohadb_setup = TestSetup::Koha.new "xkoha"
+    unless $kohadb_setup
+      $kohadb_setup = TestSetup::Koha.new "xkoha"
+      $kohadb_setup.setup_db
+    end
     @context[:koha] = $kohadb_setup
   end
 

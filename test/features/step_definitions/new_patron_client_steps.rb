@@ -167,11 +167,20 @@ When(/^skal jeg se innloggingsvinduet$/) do
 end
 
 When(/^jeg logger inn$/) do
-  @site.PatronClientCommon.login(@active[:patron].userid, @active[:patron].password)
+  userid = @active[:patron] ?
+    @active[:patron].userid :
+    @context[:koha].patrons[0]["userid"]
+  password = @active[:patron] ?
+    @active[:patron].password :
+    "1234"
+  @site.PatronClientCommon.login(userid, password)
 end
 
 When(/^skal jeg se informasjonen min$/) do
-  @site.PatronClientProfilePage.card_number.should eq @active[:patron].cardnumber
+  cardnumber = @active[:patron] ?
+    @active[:patron].cardnumber :
+    @context[:koha].patrons[0]["cardnumber"]
+  @site.PatronClientProfilePage.card_number.should eq cardnumber
 end
 
 When(/^låneren trykker bestill på en utgivelse$/) do
@@ -503,7 +512,10 @@ When(/^at reservasjonen er på riktig avdeling$/) do
 end
 
 When(/^jeg endrer avdeling$/) do
-  @site.PatronClientLoansAndReservationsPage.reservations.first.select.select_value(@active[:branch].code)
+  branchcode = @active[:branch] ?
+    @active[:branch].code :
+    @context[:random_migrate_branchcode]
+  @site.PatronClientLoansAndReservationsPage.reservations.first.select.select_value(branchcode)
   wait_for {
     @site.PatronClientLoansAndReservationsPage.reservations.first.select.present?
   }
@@ -511,12 +523,15 @@ end
 
 When(/^skal reservasjonen være på ny avdeling$/) do
   wait_for {
-    @site.PatronClientLoansAndReservationsPage.reservations.first && @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql?(@active[:branch].code)
+    @site.PatronClientLoansAndReservationsPage.reservations.first && @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql?(@context[:random_migrate_branchcode])
   }
 end
 When(/^skal jeg se at jeg er logget inn$/) do
+  surname = @active[:patron] ?
+    @active[:patron].surname :
+    @context[:koha].patrons[0]["surname"]
   wait_for {
-    @browser.element(data_automation_id: 'borrowerName').text.should eq @active[:patron].surname
+    @browser.element(data_automation_id: 'borrowerName').text.should eq surname
   }
 end
 

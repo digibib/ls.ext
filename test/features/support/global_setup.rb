@@ -62,9 +62,7 @@ VALUES('fnr','Fødselsnummer',1,1,'fnr');
 
     SVC::Preference.new(@growser).set("pref_noItemTypeImages", "1")
 
-    STDOUT.puts "Restoring koha db..."
-    res = TestSetup::Koha.restore_db if $kohadb_setup
-    STDOUT.puts res
+    TestSetup::Koha.restore_db if $kohadb_setup
     @growser.close if @growser
   end
 end

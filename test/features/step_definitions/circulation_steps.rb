@@ -641,5 +641,12 @@ When(/^jeg leverer inn eksemplaret$/) do
 end
 
 When(/^jeg låner ut boka$/) do
-  step "materiale med strekkode \"#{@context[:first_available_exemplar_barcode]}\" lånes ut til \"#{@active[:patron].cardnumber}\""
+  cardnumber = @active[:patron] ?
+    @active[:patron].cardnumber :
+    @context[:koha].patrons[0]["cardnumber"]
+  barcode = @context[:first_available_exemplar_barcode] ?
+    @context[:first_available_exemplar_barcode] :
+    @context[:koha].biblio["items"][0]["barcode"]
+  @context[:circ] = TestSetup::Circulation.new "sip_proxy", "9999"
+  @context[:circ].checkout(@context[:random_migrate_branchcode], cardnumber, "1234", barcode)
 end

@@ -11,14 +11,13 @@ module TestSetup
   class Koha
     attr_accessor :api, :basedir, :apiuser, :apipass, :sipuser, :sippass, :http, :headers, :patrons, :biblio, :holds
 
-    def initialize(host="localhost",apiuser="api",apipass="secret",sipuser="autohb",sippass="autopass",dbversion="16.1101000",basedir="./features/support/services/test_setup")
+    def initialize(host="localhost",apiuser="api",apipass="secret",sipuser="autohb",sippass="autopass",basedir="./features/support/services/test_setup")
       @api = URI.parse("http://#{host}:8081/api/v1/")
       @basedir = basedir
       @apiuser = apiuser
       @apipass = apipass
       @sipuser = sipuser
       @sippass = sippass
-      setup_db(dbversion)
       uri = @api + "auth/session"
       res = Net::HTTP.post_form(uri, {userid: apiuser, password: apipass})
       @headers = { "Cookie" => res.response["set-cookie"] }
@@ -27,7 +26,7 @@ module TestSetup
     end
 
     # make sure koha is populated with neccessary tables and api user and sip user in place
-    def setup_db(dbversion)
+    def setup_db(dbversion="16.1101000")
       apipassenc = BCrypt::Password.create(@apipass, cost: 8)
       sippassenc = BCrypt::Password.create(@sippass, cost: 8)
       STDOUT.puts "Dumping koha db..."
@@ -35,9 +34,9 @@ module TestSetup
 
       STDOUT.puts "Pre-populating koha db..."
       mysqlcmd = "mysql --local-infile=1 --default-character-set=utf8 --init-command=\"SET SESSION FOREIGN_KEY_CHECKS=0;\" -h koha_mysql -u\$MYSQL_USER -p\$MYSQL_PASSWORD koha_name"
-      `sed -e "s/__KOHA_DBVERSION__/#{dbversion}/" #{@basedir}/deich_koha_base.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
-      `awk -v apipass='#{apipassenc}' -v sippass='#{sippassenc}' '{gsub(/__API_PASS__/, apipass); gsub(/__SIP_PASS__/, sippass)};1' #{@basedir}/users.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}'`
-      `docker exec -i xkoha bash -c "supervisorctl -u#{@apiuser} -p#{@apipass} restart plack"`
+      `sed -e "s/__KOHA_DBVERSION__/#{dbversion}/" #{@basedir}/deich_koha_base.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}' > /dev/null 2>&1`
+      `awk -v apipass='#{apipassenc}' -v sippass='#{sippassenc}' '{gsub(/__API_PASS__/, apipass); gsub(/__SIP_PASS__/, sippass)};1' #{@basedir}/users.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}' > /dev/null 2>&1`
+      `docker exec -i xkoha bash -c "supervisorctl -uadmin -p#{@apipass} restart plack"`
     end
 
     def self.restore_db
@@ -99,7 +98,7 @@ module TestSetup
       @headers["Content-Type"] = "text/xml"
       biblioxml = File.read("#{@basedir}/bibrecord.xml", :encoding => "UTF-8")
       itemxml = File.read("#{@basedir}/item.xml", :encoding => "UTF-8")
-      
+
       itemsxml = ''
       numberOfItems.to_i.times do
         item = itemxml.gsub("__BARCODE__", random_number(14))
@@ -152,7 +151,7 @@ module TestSetup
       @headers["Content-Type"] = "application/json"
       http = Net::HTTP.new(@api.host, @api.port)
       uri = URI(@api + "holds")
-      # /api/v1/holds still has no REST for GETting one hold by id 
+      # /api/v1/holds still has no REST for GETting one hold by id
       res, data = http.get("#{uri}/?reserve_id=#{id}", @headers)
 
       JSON.parse(res.body)
