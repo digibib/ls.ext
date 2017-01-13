@@ -42,9 +42,9 @@ class Tabs extends React.Component {
           {this.props.tabList.map(tab => (
             <Tab key={tab.label}
                  tab={tab}
-                 id={tab.label}
-                 className={matchPattern(tab.path, this.props.currentPath) ? `${this.props.tabClass} ${this.props.tabActiveClass}` : this.props.tabClass}
-                 ariaSelected={matchPattern(tab.path, this.props.currentPath) ? 'true' : 'false'}
+                 menuId={this.props.menuId}
+                 className={(tab.path ? matchPattern(tab.path, this.props.currentPath) : tab.tabId === this.props.currentTab) ? `${this.props.tabClass} ${this.props.tabActiveClass}` : this.props.tabClass}
+                 ariaSelected={(tab.path ? matchPattern(tab.path, this.props.currentPath) : tab.tabId === this.props.currentTab) ? 'true' : 'false'}
                  push={this.props.push}
                  findNextTab={this.findNextTab}
                  findPrevTab={this.findPrevTab}
@@ -76,4 +76,3 @@ Tabs.defaultProps = {
 }
 
 export default Tabs
-

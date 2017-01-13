@@ -49,7 +49,6 @@ class Tab extends React.Component {
         onClick={this.handleClick}
         onKeyDown={this.handleKey}>
         <Link
-          to="#"
           role="tab"
           aria-selected={ariaSelected}
           tabIndex={ariaSelected === 'true' ? 0 : -1}>
