@@ -9,6 +9,8 @@ const MetaItem = (props) => {
     <div className="meta-item">
       <span className="meta-label"><FormattedMessage {...label} />: </span>
       <span
+        role="definition"
+        aria-labelledby={label.defaultMessage}
         data-automation-id={dataAutomationId}
         className="meta-content">{children}</span>
     </div>

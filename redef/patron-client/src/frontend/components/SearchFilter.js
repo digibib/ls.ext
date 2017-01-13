@@ -103,8 +103,8 @@ class SearchFilter extends React.Component {
           <button onClick={this.handleCollapse} className="single-filter-close" type="button"
                   aria-label={buttonAriaLabel} aria-expanded={!this.isCollapsed()}>
             {this.isCollapsed()
-              ? <i className="icon-plus" alt="" />
-              : <i className="icon-minus" alt="" />}
+              ? <i className="icon-plus" aria-hidden="true" />
+              : <i className="icon-minus" aria-hidden="true" />}
           </button>
         </header>
         {this.isCollapsed() ? null

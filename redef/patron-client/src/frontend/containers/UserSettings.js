@@ -10,7 +10,12 @@ class UserSettings extends React.Component {
   constructor (props) {
     super(props)
     this.handleSaveClick = this.handleSaveClick.bind(this)
-    this.handleKey = this.handleKey.bind(this)
+    this.handleKeyReminderOfDueDateSms = this.handleKeyReminderOfDueDateSms.bind(this)
+    this.handleKeyReminderOfDueDateEmail = this.handleKeyReminderOfDueDateEmail.bind(this)
+    this.handleKeyReminderOfPickupSms = this.handleKeyReminderOfPickupSms.bind(this)
+    this.handleKeyReminderOfPickupEmail = this.handleKeyReminderOfPickupEmail.bind(this)
+    this.handleKeyReceiptOnLoansEmail = this.handleKeyReceiptOnLoansEmail.bind(this)
+    this.handleKeyReceiptOnReturnsEmail = this.handleKeyReceiptOnReturnsEmail.bind(this)
   }
 
   handleSaveClick (event) {
@@ -38,10 +43,45 @@ class UserSettings extends React.Component {
     this.props.profileActions.postProfileSettings(profileSettings)
   }
 
-  handleKey (event, checkBoxInput) {
+  handleKeyReminderOfDueDateSms (event) {
     if (event.keyCode === 32) { // Space for checkbox
       event.preventDefault()
-      checkBoxInput.click()
+      this.reminderOfDueDateSmsCheckbox.click()
+    }
+  }
+
+  handleKeyReminderOfDueDateEmail (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.reminderOfDueDateEmailCheckbox.click()
+    }
+  }
+
+  handleKeyReminderOfPickupSms (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.reminderOfPickupSmsCheckbox.click()
+    }
+  }
+
+  handleKeyReminderOfPickupEmail (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.reminderOfPickupEmailCheckbox.click()
+    }
+  }
+
+  handleKeyReceiptOnLoansEmail (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.receiptOnLoansEmailCheckbox.click()
+    }
+  }
+
+  handleKeyReceiptOnReturnsEmail (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.receiptOnReturnsEmailCheckbox.click()
     }
   }
 
@@ -76,7 +116,7 @@ class UserSettings extends React.Component {
                    id="user-settings-sms-reminder"
                    ref={e => this.reminderOfDueDateSmsCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfDueDate.sms} />
-            <label htmlFor="user-settings-sms-reminder" onKeyDown={(e) => { this.handleKey(e, this.reminderOfDueDateSmsCheckbox) }}>
+            <label htmlFor="user-settings-sms-reminder" onKeyDown={this.handleKeyReminderOfDueDateSms}>
               <span className="checkbox-wrapper">
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
@@ -93,7 +133,7 @@ class UserSettings extends React.Component {
                    ref={e => this.reminderOfDueDateEmailCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfDueDate.email} />
 
-            <label htmlFor="user-settings-reminder-email" onKeyDown={(e) => { this.handleKey(e, this.reminderOfDueDateEmailCheckbox) }}>
+            <label htmlFor="user-settings-reminder-email" onKeyDown={this.handleKeyReminderOfDueDateEmail}>
               <span className="checkbox-wrapper">
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
@@ -123,7 +163,7 @@ class UserSettings extends React.Component {
                    id="user-settings-delivery-reminder-sms"
                    ref={e => this.reminderOfPickupSmsCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfPickup.sms} />
-            <label htmlFor="user-settings-delivery-reminder-sms" onKeyDown={(e) => { this.handleKey(e, this.reminderOfPickupSmsCheckbox) }}>
+            <label htmlFor="user-settings-delivery-reminder-sms" onKeyDown={this.handleKeyReminderOfPickupSms}>
               <span className="checkbox-wrapper">
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
@@ -137,7 +177,7 @@ class UserSettings extends React.Component {
                    id="user-settings-delivery-reminder-email"
                    ref={e => this.reminderOfPickupEmailCheckbox = e}
                    defaultChecked={settings.alerts.reminderOfPickup.email} />
-            <label htmlFor="user-settings-delivery-reminder-email" onKeyDown={(e) => { this.handleKey(e, this.reminderOfPickupEmailCheckbox) }}>
+            <label htmlFor="user-settings-delivery-reminder-email" onKeyDown={this.handleKeyReminderOfPickupEmail}>
               <span className="checkbox-wrapper">
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
@@ -156,7 +196,7 @@ class UserSettings extends React.Component {
                    id="receipt-loans-email"
                    ref={e => this.receiptOnLoansEmailCheckbox = e}
                    defaultChecked={settings.receipts.loans.email} />
-            <label htmlFor="receipt-loans-email" onKeyDown={(e) => { this.handleKey(e, this.receiptOnLoansEmailCheckbox) }}>
+            <label htmlFor="receipt-loans-email" onKeyDown={this.handleKeyReceiptOnLoansEmail}>
               <span className="checkbox-wrapper">
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
@@ -172,7 +212,7 @@ class UserSettings extends React.Component {
                    id="receipt-returns-email"
                    ref={e => this.receiptOnReturnsEmailCheckbox = e}
                    defaultChecked={settings.receipts.returns.email} />
-            <label htmlFor="receipt-returns-email" onKeyDown={(e) => { this.handleKey(e, this.receiptOnReturnsEmailCheckbox) }}>
+            <label htmlFor="receipt-returns-email" onKeyDown={this.handleKeyReceiptOnReturnsEmail}>
               <span className="checkbox-wrapper">
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />

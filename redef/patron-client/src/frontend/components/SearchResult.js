@@ -7,7 +7,6 @@ import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
 import { groupByBranch } from '../utils/sorting'
-import ClickableElement from '../components/ClickableElement'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -208,9 +207,7 @@ class SearchResult extends React.Component {
     })
 
     const formats = [ ...pubFormats ]
-    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: result.displayTitle })
-//    Unused?
-//    const missingCoverImage = '/images/no-cover.png'
+    const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: result.titleLine1 })
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
     const mediaTypeURI = result.mediaTypes[ 0 ] ? result.mediaTypes[ 0 ].uri : ''
     return (
@@ -223,8 +220,8 @@ class SearchResult extends React.Component {
         component="div"
         className="single-entry"
         data-formats={formats.join(', ')}>
-        <aside className="book-cover">
-          <Link to={this.getResultUrl(result)} className="book-cover-item">
+        <aside className="book-cover" aria-hidden="true">
+          <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
             {result.image ? <img src={result.image} alt={coverAltText} />
               : <i aria-label={missingCoverAltText}
                    className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}

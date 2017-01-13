@@ -2,9 +2,7 @@
   ScrollIntoView ødelegger flytten, bør deaktiveres?
  */
 import React, { PropTypes } from 'react'
-import ReactDOM from 'react-dom'
 import { injectIntl, intlShape } from 'react-intl'
-
 
 class SearchFilterItem extends React.Component {
   constructor (props) {

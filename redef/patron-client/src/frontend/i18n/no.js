@@ -186,6 +186,7 @@ export default {
   'ReservationModal.messageSuccess': 'Du vil motta en beskjed når den er klar til henting.',
   'ReservationModal.reserve': 'Bestill',
   'ReservationModal.tooManyReserves': 'Brukeren har for mange reservasjoner.',
+  'Search.jumpToMainContent': 'Hopp til søkeresultatet',
   'Search.paginationLabel': 'Hopp til side',
   'Search.paginationNext': 'Neste',
   'Search.paginationPrevious': 'Forrige',

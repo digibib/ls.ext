@@ -17,7 +17,7 @@ module.exports = (app) => {
       } else if (res.status === 403) {
         response.sendStatus(403)
       } else {
-        throw Error('Could not reserve publication')
+        throw Error(`Could not reserve publication ${res.status}`)
       }
     }).catch(error => {
       console.log(error)
