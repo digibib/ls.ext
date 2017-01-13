@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
-import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -29,6 +28,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +53,10 @@ import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static no.deichman.services.uridefaults.BaseURI.ontology;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 
@@ -61,7 +64,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
  * Responsibility: perform indexing and searching.
  */
 public class SearchServiceImpl implements SearchService {
-    public static final Property AGENT = createProperty(BaseURI.ontology("agent"));
+    public static final Property AGENT = createProperty(ontology("agent"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
@@ -312,51 +315,71 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response sortedList(String type, String prefix, int minSize, String field) {
-        String body;
-        if (type.equals("person")) {
-            Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName("Person", prefix, minSize);
-            List<Map> should = new ArrayList<>();
-            should.add(of("match_phrase_prefix", of("name", prefix)));
-            should.addAll(nameEntries
-                    .stream()
-                    .filter(NameEntry::isBestMatch)
-                    .map(e -> of(
-                            "ids", of("values", newArrayList(urlEncode(e.getUri())))))
-                    .collect(toList()));
-            should.add(of(
-                    "ids", of("values",
-                            nameEntries
-                                    .stream()
-                                    .map(NameEntry::getUri)
-                                    .map(SearchServiceImpl::urlEncode)
-                                    .collect(toList())
-                    )
-            ));
-            body = GSON.toJson(
-                    of(
-                            "size", minSize,
-                            "query", of(
-                                    "bool", of("should", should)
-                            )
-                    )
-            );
-        } else {
-            List<Map> should = new ArrayList<>();
-            for (int i = 0; i < prefix.length(); i++) {
-                should.add(
-                        of("constant_score",
-                                of("boost", 2 << Math.max(prefix.length() - i, SIXTY_ONE), "query",
-                                        of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
-            }
-            body = GSON.toJson(of(
-                    "size", minSize,
-                    "query", of(
-                            "bool", of(
-                                    "should", should)
-                    )
-            ));
+        EntityType entityType = EntityType.get(type);
+        URIBuilder searchUriBuilder = getIndexUriBuilder().setPath("/search/" + type + "/_search").setParameter("size", Integer.toString(minSize));
+
+        switch (entityType) {
+            case PERSON:
+            case CORPORATION:
+            case PLACE:
+            case SUBJECT:
+            case EVENT:
+            case WORK_SERIES:
+            case SERIAL:
+            case GENRE:
+            case MUSICAL_INSTRUMENT:
+                return searchWithJson(createPreIndexedSearchQuery(prefix, minSize, entityType, field), searchUriBuilder);
+            default:
+                return searchWithJson(createSortedListQuery(prefix, minSize, field), searchUriBuilder);
         }
-        return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search").setParameter("size", Integer.toString(minSize)));
+    }
+
+    private String createSortedListQuery(String prefix, int minSize, String field) {
+        String sortedListQuery;
+        List<Map> should = new ArrayList<>();
+        for (int i = 0; i < prefix.length(); i++) {
+            should.add(
+                    of("constant_score",
+                            of("boost", 2 << Math.max(prefix.length() - i, SIXTY_ONE), "query",
+                                    of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
+        }
+        sortedListQuery = GSON.toJson(of(
+                "size", minSize,
+                "query", of(
+                        "bool", of(
+                                "should", should)
+                )
+        ));
+        return sortedListQuery;
+    }
+
+    private String createPreIndexedSearchQuery(String prefix, int minSize, EntityType entityType, String field) {
+        Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName(entityType, prefix, minSize);
+        List<Map> should = new ArrayList<>();
+        should.add(of("match_phrase_prefix", of(field, prefix)));
+        should.addAll(nameEntries
+                .stream()
+                .filter(NameEntry::isBestMatch)
+                .map(e -> of(
+                        "ids", of("values", newArrayList(urlEncode(e.getUri())))))
+                .collect(toList()));
+        should.add(of(
+                "ids", of("values",
+                        nameEntries
+                                .stream()
+                                .map(NameEntry::getUri)
+                                .map(SearchServiceImpl::urlEncode)
+                                .collect(toList())
+                )
+        ));
+        return GSON.toJson(
+                of(
+                        "size", minSize,
+                        "query", of(
+                                "bool", of("should", should)
+                        )
+                )
+        );
     }
 
     private static String urlEncode(String uri) {
@@ -390,7 +413,7 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
-        Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
+        Property publicationOfProperty = ResourceFactory.createProperty(ontology("publicationOf"));
         if (pubModel.getProperty(null, publicationOfProperty) != null) {
             String workUri = pubModel.getProperty(ResourceFactory.createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
             XURI workXURI = new XURI(workUri);
@@ -474,16 +497,22 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void cacheNameIndex(XURI xuri, Model indexModel) {
-        indexModel.listStatements(new SimpleSelector() {
+        statementsInModelAbout(xuri, indexModel, ontology("name"), ontology("prefLabel"), ontology("work"))
+                .forEachRemaining(statement -> {
+                    entityService.addIndexedName(
+                            xuri.getTypeAsEntityType(),
+                            statement.getObject().asLiteral().toString(),
+                            statement.getSubject().getURI());
+                });
+    }
+
+    private StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates) {
+        return indexModel.listStatements(new SimpleSelector() {
             @Override
             public boolean test(Statement s) {
-                return s.getPredicate().getURI().equals("http://data.deichman.no/ontology#name");
+                return (stream(predicates).anyMatch(p -> s.getPredicate().equals(ResourceFactory.createResource(p)))
+                        && indexModel.contains(s.getSubject(), RDF.type, ResourceFactory.createResource(ontology(xuri.getTypeAsEntityType().getRdfType()))));
             }
-        }).forEachRemaining(statement -> {
-            entityService.addIndexedName(
-                    xuri.getTypeAsEntityType().getPath(),
-                    statement.getObject().asLiteral().toString(),
-                    statement.getSubject().getURI());
         });
     }
 

@@ -575,15 +575,15 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-    public Query retrieveAllNamesForType(String type) {
+    public Query retrieveAllNamesForType(EntityType type) {
         String queryString = format("#\n"
                 + "PREFIX deich:<%1$s>\n"
                 + "select distinct ?uri ?name\n"
                 + " {\n"
                 + "  ?uri a deich:%2$s ;\n"
-                + "          deich:name ?name .\n"
+                + "          deich:%3$s ?name .\n"
                 + "}\n"
-                + "order by ?name\n", BaseURI.ontology(), type);
+                + "order by ?name\n", BaseURI.ontology(), type.getRdfType(), type.getSearchIndexField());
         return QueryFactory.create(queryString);
     }
 }

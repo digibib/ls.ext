@@ -31,6 +31,8 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
@@ -55,6 +57,8 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  * Responsibility: TODO.
  */
 public final class EntityServiceImpl implements EntityService {
+    private final Logger log = LoggerFactory.getLogger(EntityServiceImpl.class);
+
 
     public static final Integer THREE = 3;
 
@@ -100,7 +104,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
     private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
-    private static Map<String, NameIndexer> nameIndexers = new HashMap<>();
+    private static Map<EntityType, NameIndexer> nameIndexers = new HashMap<EntityType, NameIndexer>();
 
     public EntityServiceImpl(RDFRepository repository, KohaAdapter kohaAdapter) {
         this.repository = repository;
@@ -641,25 +645,27 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Collection<NameEntry> neighbourhoodOfName(String type, String name, int width) {
+    public Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width) {
         return getNameIndexer(type).neighbourhoodOf(name, width);
     }
 
-    private NameIndexer getNameIndexer(String type) {
-        String lowerCasedType = type.toLowerCase();
-        NameIndexer nameIndexer = nameIndexers.get(lowerCasedType);
+    private NameIndexer getNameIndexer(EntityType type) {
+        NameIndexer nameIndexer = nameIndexers.get(type);
         if (nameIndexer == null) {
-            ResultSet resultSet = repository.retrieveAllNamesOfType(StringUtils.capitalize(type));
+            log.info("Creating local index for " + type);
+            long start = System.currentTimeMillis();
+            ResultSet resultSet = repository.retrieveAllNamesOfType(type);
             nameIndexer = new NameIndexer(resultSet);
             if (!nameIndexer.isEmpty()) {
-                nameIndexers.put(lowerCasedType, nameIndexer);
+                nameIndexers.put(type, nameIndexer);
             }
+            log.info(String.format("Created local index for %s with %d entries. Took %d msec", type, nameIndexer.size(), System.currentTimeMillis() - start));
         }
         return nameIndexer;
     }
 
     @Override
-    public void addIndexedName(String type, String name, String uri) {
+    public void addIndexedName(EntityType type, String name, String uri) {
         getNameIndexer(type).addNamedItem(name, uri);
     }
 }
