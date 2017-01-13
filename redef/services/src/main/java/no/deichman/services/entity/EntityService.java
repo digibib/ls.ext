@@ -52,7 +52,7 @@ public interface EntityService {
 
     Model retrieveSerialWithLinkedResources(XURI serialUri);
 
-    Collection<NameEntry> neighbourhoodOfName(String type, String name, int width);
+    Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width);
 
-    void addIndexedName(String typeAsEntityType, String name, String uri);
+    void addIndexedName(EntityType type, String name, String uri);
 }

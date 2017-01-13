@@ -45,7 +45,7 @@ public class NameIndexer {
         this();
         while(resultSet.hasNext()) {
             Binding binding = resultSet.nextBinding();
-            String uri = binding.get(Var.alloc("uri")).getURI().toString();
+            String uri = binding.get(Var.alloc("uri")).getURI();
             String name = binding.get(Var.alloc("name")).getLiteral().toString();
             alphabeticalList.add(new NameEntry(uri, name));
         }
@@ -139,5 +139,9 @@ public class NameIndexer {
 
     public final boolean isEmpty() {
         return alphabeticalList.isEmpty();
+    }
+
+    public final int size() {
+        return alphabeticalList.size();
     }
 }

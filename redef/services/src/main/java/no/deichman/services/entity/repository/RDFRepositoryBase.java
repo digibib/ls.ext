@@ -410,7 +410,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final ResultSet retrieveAllNamesOfType(String type) {
+    public final ResultSet retrieveAllNamesOfType(EntityType type) {
         log.debug("retrieving all names for type: " + type);
         try (QueryExecution qexec = getQueryExecution(sqb.retrieveAllNamesForType(type))) {
             disableCompression(qexec);
