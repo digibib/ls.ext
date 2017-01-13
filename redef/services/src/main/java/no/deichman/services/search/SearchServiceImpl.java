@@ -328,6 +328,7 @@ public class SearchServiceImpl implements SearchService {
             case SERIAL:
             case GENRE:
             case MUSICAL_INSTRUMENT:
+            case MUSICAL_COMPOSITION_TYPE:
                 return searchWithJson(createPreIndexedSearchQuery(prefix, minSize, entityType, field), searchUriBuilder);
             default:
                 return searchWithJson(createSortedListQuery(prefix, minSize, field), searchUriBuilder);
