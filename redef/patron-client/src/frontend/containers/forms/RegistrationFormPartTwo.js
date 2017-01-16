@@ -74,7 +74,7 @@ class RegistrationFormPartTwo extends React.Component {
     const { submitting } = this.props
     return (
       <form onSubmit={this.props.handleSubmit(this.handleRegistration)}>
-        <fieldset>
+        <div>
           <legend><FormattedMessage {...messages.contactInfoLegend} /></legend>
           <FormInputField name="email" message={messages.email} formName={formName} type="email"
                           getValidator={this.getValidator} />
@@ -87,8 +87,8 @@ class RegistrationFormPartTwo extends React.Component {
                             getValidator={this.getValidator} />
             <FormInputField name="city" message={messages.city} formName={formName} getValidator={this.getValidator} />
           </address>
-        </fieldset>
-        <fieldset>
+        </div>
+        <div>
           <legend><FormattedMessage {...messages.choosePin} /></legend>
           <FormInputField name="pin" message={messages.pin} formName={formName} type="password"
                           getValidator={this.getValidator} />
@@ -116,7 +116,7 @@ class RegistrationFormPartTwo extends React.Component {
             <a role="button" tabIndex="0" className="cancel-link" onKeyDown={this.handleKey} onClick={this.handleCancel}
                title="cancel"><FormattedMessage {...messages.cancel} /></a>
           </p>
-        </fieldset>
+        </div>
       </form>
     )
   }

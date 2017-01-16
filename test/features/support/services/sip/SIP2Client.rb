@@ -65,7 +65,7 @@ class SIP2Client < Service
 
   def checkout(branch,user,pin,barcode,date=nil)
     timestamp = date ? Date.parse(date).strftime("%Y%m%d    %H%M%S") : Time.now.strftime("%Y%m%d    %H%M%S")
-    send("11YN#{timestamp}                  AO#{branch}|AA#{user}|AB#{barcode}|AD#{pin}|BON|BIN|")
+    send("11YN#{timestamp}                  AO#{branch}|AA#{user}|AB#{barcode}|AD#{pin}|")
   end
 
   def checkin(branch,barcode,date=nil)
@@ -81,9 +81,9 @@ class SIP2Client < Service
   def send(msg)
     begin
       STDERR.puts "Sending SIP-msg: '#{msg}'"
-      @socket.send(msg+"\r", 0)   # Add <CR> and infinite length
+      @socket.puts("#{msg}\r\n")
 
-      result = @socket.recv(1024) # max buffer - 1024 bytes
+      result = @socket.gets("\r").chomp("\r")
       STDERR.puts "Received SIP-msg: '#{result.strip}'"
       return renderSIPmessage(result)
     rescue SystemCallError => e

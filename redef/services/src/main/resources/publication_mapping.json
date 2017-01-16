@@ -32,6 +32,38 @@
         }
       }
     },
+    "parts": {
+      "type": "nested",
+      "properties": {
+        "role": {
+          "type": "string",
+          "index": "no"
+        },
+        "agent": {
+          "type": "nested",
+          "properties": {
+            "uri": {
+              "type": "string",
+              "index": "not_analyzed"
+            },
+            "name": {
+              "type": "string"
+            },
+            "birthYear": {
+              "type": "string",
+              "index": "no"
+            },
+            "deathYear": {
+              "type": "string",
+              "index": "no"
+            }
+          }
+        },
+        "mainTitle": {
+          "type": "string"
+        }
+      }
+    },
     "dewey": {
       "type": "string"
     },

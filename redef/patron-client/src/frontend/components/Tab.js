@@ -8,6 +8,15 @@ class Tab extends React.Component {
   constructor (props) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
+    this.handleKey = this.handleKey.bind(this)
+  }
+
+  // Make sure the focus is moved to active a-element
+  componentDidUpdate () {
+    const el = document.getElementsByClassName('tab-bar-tab-active')
+    if (el[0] !== undefined) {
+      el[ 0 ].firstChild.focus()
+    }
   }
 
   handleClick (tab) {
@@ -18,17 +27,41 @@ class Tab extends React.Component {
     }
   }
 
+  handleKey (event) {
+    if (event.keyCode === 39) { // Arrow right
+      event.preventDefault()
+      const nextTab = this.props.findNextTab()
+      this.props.push({ pathname: nextTab.path })
+    }
+
+    if (event.keyCode === 37) { // Arrow left
+      event.preventDefault()
+      const prevTab = this.props.findPrevTab()
+      this.props.push({ pathname: prevTab.path })
+    }
+  }
+
   render () {
     const { className, tab, ariaSelected } = this.props
     return (
-      <li className={className} onClick={this.handleClick} role="presentation">
-        <Link tabIndex="0" role="tab" aria-selected={ariaSelected} title={tab.label}>{tab.label}</Link>
+      <li
+        className={className}
+        onClick={this.handleClick}
+        onKeyDown={this.handleKey}>
+        <Link
+          role="tab"
+          aria-selected={ariaSelected}
+          tabIndex={ariaSelected === 'true' ? 0 : -1}>
+          {tab.label}
+        </Link>
       </li>
     )
   }
 }
 
 Tab.propTypes = {
+  findPrevTab: PropTypes.func.isRequired,
+  findNextTab: PropTypes.func.isRequired,
   tab: PropTypes.object.isRequired,
   push: PropTypes.func,
   className: PropTypes.string.isRequired,
@@ -51,4 +84,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Tab)
-

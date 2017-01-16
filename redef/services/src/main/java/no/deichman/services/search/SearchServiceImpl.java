@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
-import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -41,15 +40,19 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
+import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static no.deichman.services.uridefaults.BaseURI.ontology;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 
@@ -57,10 +60,11 @@ import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
  * Responsibility: perform indexing and searching.
  */
 public class SearchServiceImpl implements SearchService {
-    public static final Property AGENT = createProperty(BaseURI.ontology("agent"));
+    public static final Property AGENT = createProperty(ontology("agent"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
+    public static final String[] LOCAL_INDEX_SEARCH_FIELDS = {ontology("name"), ontology("prefLabel")};
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -308,21 +312,78 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response sortedList(String type, String prefix, int minSize, String field) {
-        List<Map> musts = new ArrayList<>();
+        EntityType entityType = EntityType.get(type);
+        URIBuilder searchUriBuilder = getIndexUriBuilder().setPath("/search/" + type + "/_search").setParameter("size", Integer.toString(minSize));
+
+        switch (entityType) {
+            case PERSON:
+            case CORPORATION:
+            case PLACE:
+            case SUBJECT:
+            case EVENT:
+            case WORK_SERIES:
+            case SERIAL:
+            case GENRE:
+            case MUSICAL_INSTRUMENT:
+            case MUSICAL_COMPOSITION_TYPE:
+                return searchWithJson(createPreIndexedSearchQuery(prefix, minSize, entityType, field), searchUriBuilder);
+            default:
+                return searchWithJson(createSortedListQuery(prefix, minSize, field), searchUriBuilder);
+        }
+    }
+
+    private String createSortedListQuery(String prefix, int minSize, String field) {
+        String sortedListQuery;
+        List<Map> should = new ArrayList<>();
         for (int i = 0; i < prefix.length(); i++) {
-            musts.add(
+            should.add(
                     of("constant_score",
                             of("boost", 2 << Math.max(prefix.length() - i, SIXTY_ONE), "query",
                                     of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
         }
-        String body = GSON.toJson(of(
+        sortedListQuery = GSON.toJson(of(
                 "size", minSize,
                 "query", of(
                         "bool", of(
-                                "should", musts)
+                                "should", should)
                 )
         ));
-        return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search"));
+        return sortedListQuery;
+    }
+
+    private String createPreIndexedSearchQuery(String prefix, int minSize, EntityType entityType, String field) {
+        Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName(entityType, prefix, minSize);
+        List<Map> should = new ArrayList<>();
+        if (!nameEntries.stream().anyMatch(NameEntry::isExactMatch)) {
+            should.add(of("match_phrase_prefix", of(field, prefix)));
+        }
+        should.addAll(nameEntries
+                .stream()
+                .filter(NameEntry::isBestMatch)
+                .map(e -> of(
+                        "ids", of("values", newArrayList(urlEncode(e.getUri())))))
+                .collect(toList()));
+        should.add(of(
+                "ids", of("values",
+                        nameEntries
+                                .stream()
+                                .map(NameEntry::getUri)
+                                .map(SearchServiceImpl::urlEncode)
+                                .collect(toList())
+                )
+        ));
+        return GSON.toJson(
+                of(
+                        "size", minSize,
+                        "query", of(
+                                "bool", of("should", should)
+                        )
+                )
+        );
+    }
+
+    private static String urlEncode(String uri) {
+        return uri.replace(":", "%3A").replace("/", "%2F");
     }
 
     @Override
@@ -352,7 +413,7 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
-        Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
+        Property publicationOfProperty = ResourceFactory.createProperty(ontology("publicationOf"));
         if (pubModel.getProperty(null, publicationOfProperty) != null) {
             String workUri = pubModel.getProperty(ResourceFactory.createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
             XURI workXURI = new XURI(workUri);
@@ -414,10 +475,12 @@ public class SearchServiceImpl implements SearchService {
             case PERSON:
                 indexDocument(creatorUri, personModelToIndexMapper
                         .createIndexDocument(entityService.retrievePersonWithLinkedResources(creatorUri).add(works), creatorUri));
+                cacheNameIndex(creatorUri, works);
                 break;
             case CORPORATION:
                 indexDocument(creatorUri, corporationModelToIndexMapper
                         .createIndexDocument(entityService.retrieveCorporationWithLinkedResources(creatorUri).add(works), creatorUri));
+                cacheNameIndex(creatorUri, works);
                 break;
             default:
                 throw new RuntimeException(format(
@@ -430,6 +493,17 @@ public class SearchServiceImpl implements SearchService {
     private void doIndex(XURI xuri) throws Exception {
         Model indexModel = entityService.retrieveById(xuri);
         indexDocument(xuri, new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri));
+        cacheNameIndex(xuri, indexModel);
+    }
+
+    private void cacheNameIndex(XURI xuri, Model indexModel) {
+        entityService.statementsInModelAbout(xuri, indexModel, LOCAL_INDEX_SEARCH_FIELDS)
+                .forEachRemaining(statement -> {
+                    entityService.addIndexedName(
+                            xuri.getTypeAsEntityType(),
+                            statement.getObject().asLiteral().toString(),
+                            statement.getSubject().getURI());
+                });
     }
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {

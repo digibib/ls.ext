@@ -1,4 +1,4 @@
-.PHONY: all test clean help
+.PHONY: all provision test clean help
 
 ifdef LSDEVMODE
 SHIP=$(LSDEVMODE)-ship
@@ -146,7 +146,7 @@ cuke_test:						## Run Cucumber tests
 
 test_one:						## Run 'utlaan_via_adminbruker'.
 	@$(XHOST_ADD)
-	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Adminbruker l.ner ut bok til Knut"'
+	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Superbruker l.ner ut bok til Knut"'
 	@$(XHOST_REMOVE)
 
 stop_koha:
