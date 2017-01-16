@@ -4,6 +4,7 @@ import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
+import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
@@ -26,6 +27,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
@@ -50,7 +52,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.groupingBy;
+import static no.deichman.services.search.SearchServiceImpl.LOCAL_INDEX_SEARCH_FIELDS;
+import static no.deichman.services.uridefaults.BaseURI.ontology;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 /**
@@ -417,7 +422,10 @@ public final class EntityServiceImpl implements EntityService {
         if (StringUtils.isBlank(ldPatchJson)) {
             throw new BadRequestException("Empty JSON-LD patch");
         }
-        repository.patch(PatchParser.parse(ldPatchJson), createResource(xuri.getUri()));
+        List<Patch> patches = PatchParser.parse(ldPatchJson);
+        repository.patch(patches, createResource(xuri.getUri()));
+        patches.stream().filter(patch -> patch.getOperation().equals("del") && isNameStatement(patch.getStatement(), LOCAL_INDEX_SEARCH_FIELDS))
+                .forEach(patch -> removeIndexedName(xuri.getTypeAsEntityType(), patch.getStatement().getString(), xuri.getUri()));
         return synchronizeKoha(xuri);
     }
 
@@ -649,6 +657,20 @@ public final class EntityServiceImpl implements EntityService {
         return getNameIndexer(type).neighbourhoodOf(name, width);
     }
 
+    public StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates) {
+        return indexModel.listStatements(new SimpleSelector() {
+            @Override
+            public boolean test(Statement s) {
+                return (isNameStatement(s, predicates)
+                        && indexModel.contains(s.getSubject(), RDF.type, ResourceFactory.createResource(ontology(xuri.getTypeAsEntityType().getRdfType()))));
+            }
+        });
+    }
+
+    private boolean isNameStatement(Statement s, String[] predicates) {
+        return stream(predicates).anyMatch(p -> s.getPredicate().equals(ResourceFactory.createResource(p)));
+    }
+
     private NameIndexer getNameIndexer(EntityType type) {
         NameIndexer nameIndexer = nameIndexers.get(type);
         if (nameIndexer == null) {
@@ -659,7 +681,7 @@ public final class EntityServiceImpl implements EntityService {
             if (!nameIndexer.isEmpty()) {
                 nameIndexers.put(type, nameIndexer);
             }
-            log.info(String.format("Created local index for %s with %d entries. Took %d msec", type, nameIndexer.size(), System.currentTimeMillis() - start));
+            log.info(String.format("Created local index for %s with %d entries in %d msec", type, nameIndexer.size(), System.currentTimeMillis() - start));
         }
         return nameIndexer;
     }
@@ -667,5 +689,9 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public void addIndexedName(EntityType type, String name, String uri) {
         getNameIndexer(type).addNamedItem(name, uri);
+    }
+
+    private void removeIndexedName(EntityType type, String name, String uri) {
+        getNameIndexer(type).removeNamedItem(name, uri);
     }
 }
