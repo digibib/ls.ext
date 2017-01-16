@@ -372,7 +372,7 @@ public class SearchServiceImpl implements SearchService {
                                 .collect(toList())
                 )
         ));
-        return GSON.toJson(
+        String query = GSON.toJson(
                 of(
                         "size", minSize,
                         "query", of(
@@ -380,6 +380,8 @@ public class SearchServiceImpl implements SearchService {
                         )
                 )
         );
+        LOG.info(query);
+        return query;
     }
 
     private static String urlEncode(String uri) {
