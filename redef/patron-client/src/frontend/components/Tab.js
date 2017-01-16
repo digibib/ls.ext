@@ -11,14 +11,6 @@ class Tab extends React.Component {
     this.handleKey = this.handleKey.bind(this)
   }
 
-  // Make sure the focus is moved to active a-element
-  componentDidUpdate () {
-    const el = document.getElementsByClassName('tab-bar-tab-active')
-    if (el[0] !== undefined) {
-      el[ 0 ].firstChild.focus()
-    }
-  }
-
   handleClick (tab) {
     if (this.props.tab.path && this.props.push) {
       this.props.push({ pathname: this.props.tab.path })
@@ -28,23 +20,39 @@ class Tab extends React.Component {
   }
 
   handleKey (event) {
+    let el
     if (event.keyCode === 39) { // Arrow right
       event.preventDefault()
       const nextTab = this.props.findNextTab()
       this.props.push({ pathname: nextTab.path })
+
+      // Make sure the focus is moved to active a-element
+      el = document.getElementById(nextTab.path)
+
+      if (el) {
+        el.firstChild.focus()
+      }
     }
 
     if (event.keyCode === 37) { // Arrow left
       event.preventDefault()
       const prevTab = this.props.findPrevTab()
       this.props.push({ pathname: prevTab.path })
+
+      // Make sure the focus is moved to active a-element
+      el = document.getElementById(prevTab.path)
+
+      if (el) {
+        el.firstChild.focus()
+      }
     }
   }
 
   render () {
-    const { className, tab, ariaSelected } = this.props
+    const { className, tab, ariaSelected, id } = this.props
     return (
       <li
+        id={id}
         className={className}
         onClick={this.handleClick}
         onKeyDown={this.handleKey}>
@@ -67,7 +75,8 @@ Tab.propTypes = {
   className: PropTypes.string.isRequired,
   ariaSelected: PropTypes.string.isRequired,
   selectTab: PropTypes.func.isRequired,
-  menuId: PropTypes.string
+  menuId: PropTypes.string,
+  id: PropTypes.string
 }
 
 function mapStateToProps (state) {

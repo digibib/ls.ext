@@ -95,22 +95,16 @@ When(/^jeg registrerer utlån av boka$/) do
 end
 
 When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
-  # TODO: deprecate in favour of SIP circulation?
-  if @context[:books]
-    book = @context[:books].find { |b| b.items.find { |i| i.barcode == "#{barcode}" } }
-    item = book[:items].find { |i| i.barcode == "#{barcode}" }
-  end
-
-  @site.Checkout.checkout(barcode)
-
+  c = TestSetup::Circulation.new "sip_proxy", "9999"
+  p = @context[:koha].patrons[0]
+  @context[:c] << c.checkout(p["branchcode"], p["cardnumber"], "1234", barcode)
   if @context[:books]
     @active[:book] = book
     @active[:item] = item
   end
   @cleanup.push("utlån #{barcode}" =>
                     lambda do
-                      @site.Home.visit.select_branch()
-                      @site.Checkin.visit.checkin(barcode)
+                      @context[:c] << c.checkin(p["branchcode"],barcode)
                     end
   )
 end

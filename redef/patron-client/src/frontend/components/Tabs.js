@@ -39,8 +39,9 @@ class Tabs extends React.Component {
     return (
       <div role="menubar">
         <ul className={this.props.tabBarClass} data-automation-id="tabs" role="tablist" aria-label={this.props.label}>
-          {this.props.tabList.map(tab => (
-            <Tab key={tab.label}
+          {this.props.tabList.map((tab, key) => (
+            <Tab key={key}
+                 id={tab.path}
                  tab={tab}
                  menuId={this.props.menuId}
                  className={(tab.path ? matchPattern(tab.path, this.props.currentPath) : tab.tabId === this.props.currentTab) ? `${this.props.tabClass} ${this.props.tabActiveClass}` : this.props.tabClass}
