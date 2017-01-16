@@ -12,6 +12,7 @@ public class NameEntry {
     private String name;
     private String uri;
     private boolean bestMatch;
+    private boolean exactMatch;
 
 
     public NameEntry(String uri, String name) {
@@ -71,5 +72,13 @@ public class NameEntry {
 
     public final boolean isBestMatch() {
         return bestMatch;
+    }
+
+    public final void setExactMatch(boolean exactMatch) {
+        this.exactMatch = exactMatch;
+    }
+
+    public final boolean isExactMatch() {
+        return exactMatch;
     }
 }

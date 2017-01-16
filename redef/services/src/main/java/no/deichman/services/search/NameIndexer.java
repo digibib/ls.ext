@@ -76,6 +76,9 @@ public class NameIndexer {
             if (!foundBestMatch && compareNames(next.getName(), name) >= 0) {
                 foundBestMatch = true;
                 next.setBestMatch(true);
+                if (next.getName().equalsIgnoreCase(name)) {
+                    next.setExactMatch(true);
+                }
             }
             retVal.add(next);
         }
