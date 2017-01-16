@@ -1829,7 +1829,7 @@
           }
         } else if (fieldForSortedListQuery && !isAdvancedQuery(searchString)) {
           axiosMethod = axios.get
-          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=20`
+          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSsize=20`
         } else {
           axiosMethod = axios.get
           var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {
@@ -1861,15 +1861,12 @@
                   work.isChecked = false
                 })
               }
-              highestScore = Math.max(highestScore, hit._score)
             })
             let items = _.sortBy(_.map(_.pluck(results.hits.hits, '_source'),
               Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]), fieldForSortedListQuery || 'name')
-            var highestScore = 0.0
             var highestScoreIndex
             _.each(items, function (item, index) {
-              if (item.score > highestScore) {
-                highestScore = item.score
+              if (item.score == results.hits.max_score) {
                 highestScoreIndex = index
               }
             })
@@ -1890,7 +1887,7 @@
       }
     }
 
-    let debouncedSearch = _.debounce(doSearch, 500)
+    let debouncedSearch = _.debounce(doSearch, 5)
 
     function updateInputsForDependentResources (targetType, resourceUri) {
       forAllGroupInputs(function (input) {

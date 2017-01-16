@@ -65,7 +65,7 @@ public class NameIndexer {
         }
         for (int i = 0; i < width && resultIterator.hasNext(); i++) {
             NameEntry next = resultIterator.next();
-            if (!foundBestMatch && coll.compare(next.getName(), name) > 0) {
+            if (!foundBestMatch && coll.compare(next.getName(), name) >= 0) {
                 foundBestMatch = true;
                 next.setBestMatch(true);
             }

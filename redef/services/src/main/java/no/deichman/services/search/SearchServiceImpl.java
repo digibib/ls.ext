@@ -26,10 +26,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +50,6 @@ import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static no.deichman.services.uridefaults.BaseURI.ontology;
@@ -68,6 +64,7 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
+    public static final String[] LOCAL_INDEX_SEARCH_FIELDS = {ontology("name"), ontology("prefLabel")};
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -498,23 +495,13 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void cacheNameIndex(XURI xuri, Model indexModel) {
-        statementsInModelAbout(xuri, indexModel, ontology("name"), ontology("prefLabel"), ontology("work"))
+        entityService.statementsInModelAbout(xuri, indexModel, LOCAL_INDEX_SEARCH_FIELDS)
                 .forEachRemaining(statement -> {
                     entityService.addIndexedName(
                             xuri.getTypeAsEntityType(),
                             statement.getObject().asLiteral().toString(),
                             statement.getSubject().getURI());
                 });
-    }
-
-    private StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates) {
-        return indexModel.listStatements(new SimpleSelector() {
-            @Override
-            public boolean test(Statement s) {
-                return (stream(predicates).anyMatch(p -> s.getPredicate().equals(ResourceFactory.createResource(p)))
-                        && indexModel.contains(s.getSubject(), RDF.type, ResourceFactory.createResource(ontology(xuri.getTypeAsEntityType().getRdfType()))));
-            }
-        });
     }
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {
