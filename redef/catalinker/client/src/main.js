@@ -1866,7 +1866,7 @@
               Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]), fieldForSortedListQuery || 'name')
             var highestScoreIndex
             _.each(items, function (item, index) {
-              if (item.score == results.hits.max_score) {
+              if (item.score === results.hits.max_score) {
                 highestScoreIndex = index
               }
             })
