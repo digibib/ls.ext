@@ -1879,8 +1879,8 @@
               items: items,
               origin: event.keypath,
               searchTerm: searchString,
-              highestScoreIndex: exactMatchWasFound ? items.length / 2 : highestScoreIndex
-            })
+              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : items.length / 2
+          })
             positionSupportPanels()
           })
         //    .catch(function (err) {
