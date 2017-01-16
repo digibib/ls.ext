@@ -1870,14 +1870,16 @@
                 highestScoreIndex = index
               }
             })
+            var exactMatchWasFound = false
             if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([ items[ highestScoreIndex ][ fieldForSortedListQuery ] ]).join().toLocaleLowerCase()) {
               items[ highestScoreIndex ].exactMatch = true
+              exactMatchWasFound = true
             }
             ractive.set(event.keypath + '.searchResult', {
               items: items,
               origin: event.keypath,
               searchTerm: searchString,
-              highestScoreIndex: highestScoreIndex
+              highestScoreIndex: exactMatchWasFound ? items.length / 2 : highestScoreIndex
             })
             positionSupportPanels()
           })
