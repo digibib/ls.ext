@@ -6,8 +6,6 @@ Egenskap: Sjekke aktive lån via API
   Siden jeg ønsker å ha oversikt
   Ønsker jeg å kunne se hvilke bøker jeg har lånt
 
-Bakgrunn:
-
   @kohadb
   Scenario: List aktive lån via API
     Gitt at jeg er logget inn som superbruker
