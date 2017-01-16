@@ -3,37 +3,69 @@ package no.deichman.services.search;
 import org.junit.Test;
 
 import java.io.InputStreamReader;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class NameIndexerTest {
+    public static final String[] EXPECTED_TEST_DATA_1 = {
+            "Abelsen, Heidi|http://data.deichman.no/uri/h13322200",
+            "Eriksen, Kari|http://data.deichman.no/uri/h13322200",
+            "Hansen, Johnny|http://data.deichman.no/uri/h13322200",
+            "Hansen, Åge|http://data.deichman.no/uri/h17607100",
+            "Hansen, Aage|http://data.deichman.no/uri/h15343300",
+            "Hansen, Aage Daniel|http://data.deichman.no/uri/h24785100",
+            "Hansen, Aase|http://data.deichman.no/uri/h13322200",
+            "Karlsen, Johnny|http://data.deichman.no/uri/h13322200",
+            "Karlsen, Kai|http://data.deichman.no/uri/h13322200",
+            "Karlsen, Kai-Tommy|http://data.deichman.no/uri/h13322202",
+            "Olderbolle, Felix|http://data.deichman.no/uri/h13322200",
+            "Olsen Johnny|http://data.deichman.no/uri/h17221900",
+            "Pettersen, Frans|http://data.deichman.no/uri/h28940200",
+            "Aagerkarlsen, Karl|http://data.deichman.no/uri/h13322200",
+            "Åleskjær, Aage|http://data.deichman.no/uri/h13322200"
+    };
+
+    public static final String[] EXPECTED_TEST_DATA_2 = {
+            "Bertilsen, Aage Tarald|http://data.deichman.no/person/p123456",
+            "Fjomsen, Aage Tarald|http://data.deichman.no/person/p123456",
+            "Frantzen, Aage Tarald|http://data.deichman.no/person/p123456",
+            "Gakksen, Aage Tarald|http://data.deichman.no/person/p123456",
+            "Hansen, Aage Tarald|http://data.deichman.no/person/p123456",
+            "Karlsen, Aage Tarald|http://data.deichman.no/person/p123456",
+            "Nilsen, Aage Tarald|http://data.deichman.no/person/p123456",
+            "Olsen, Aage Tarald|http://data.deichman.no/person/p123456"
+    };
 
     public static final int LENGTH = 100;
-    public static final int WIDTH = LENGTH;
+    public static final int WIDTH = 6;
 
     @Test
     public void when_searching_for_name_returns_alphabetical_list_with_name_in_it() throws Exception {
-        System.out.println("Creating index:");
-        long now = System.currentTimeMillis();
         NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
-        System.out.println(System.currentTimeMillis() - now);
-        now = System.currentTimeMillis();
-        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", WIDTH);
-        System.out.println(System.currentTimeMillis() - now);
-        nameEntries.forEach(System.out::println);
-        now = System.currentTimeMillis();
-        nameEntries = nameIndexer.neighbourhoodOf("Åserud, Gunda", WIDTH);
-        System.out.println(System.currentTimeMillis() - now);
-        nameEntries.forEach(System.out::println);
-        now = System.currentTimeMillis();
-        nameEntries = nameIndexer.neighbourhoodOf("Abba, Gabba", WIDTH);
-        System.out.println(System.currentTimeMillis() - now);
-        nameEntries.forEach(System.out::println);
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", 100);
+        assertThat(nameEntriesAsArray(nameEntries), equalTo(EXPECTED_TEST_DATA_1));
+    }
 
-        nameIndexer.addNamedItem("Hansen, Aage Tarald", "http://data.deichman.no/person/p123456");
-        nameEntries = nameIndexer.neighbourhoodOf("Gabrielsen, Gabriel", WIDTH);
-        System.out.println(System.currentTimeMillis() - now);
-        nameEntries.forEach(System.out::println);
+    @Test
+    public void when_searching_result_is_of_desired_size() throws Exception {
+        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        assertThat(nameIndexer.neighbourhoodOf("Hansen, T.", 10).size(), equalTo(10));
+    }
+
+    @Test
+    public void when_searching_with_size_1_correct_entry_is_returned() throws Exception {
+        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        //"Karlsen, Johnny", "Hansen, Aase",
+        Arrays.stream(new String[]{"Karlsen, Johnny", "Hansen, Aase", "Eriksen, Kari"}).forEach(name -> {
+            List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf(name, 1);
+            assertThat(nameEntries.size(), equalTo(1));
+            assertThat(nameEntries.get(0).getName(), equalTo(name));
+        });
     }
 
     @Test
@@ -48,17 +80,31 @@ public class NameIndexerTest {
         nameIndexer.addNamedItem("Bertilsen, Aage Tarald", "http://data.deichman.no/person/p123456");
         nameIndexer.addNamedItem("Fjomsen, Aage Tarald", "http://data.deichman.no/person/p123456");
         nameIndexer.addNamedItem("Gakksen, Aage Tarald", "http://data.deichman.no/person/p123456");
-        Collection<NameEntry> nameEntries = nameIndexer.getRegister(0, LENGTH);
-        nameEntries.forEach(System.out::println);
-        System.out.println();
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", 100);
+        assertThat(nameEntriesAsArray(nameEntries), equalTo(EXPECTED_TEST_DATA_2));
+    }
 
-        nameIndexer.removeNamedItem("Karlsen, Aage Tarald", "http://data.deichman.no/person/p123456");
-        nameEntries = nameIndexer.getRegister(0, LENGTH);
-        nameEntries.forEach(System.out::println);
-        System.out.println();
+    @Test
+    public final void when_removing_a_name_the_list_is_shortened_accordingly() throws Exception {
+        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", 100);
+        int initialSize = nameEntries.size();
+        assertThat(initialSize, greaterThan(10));
+        nameIndexer.removeNamedItem("Karlsen, Kai-Tommy", "http://data.deichman.no/uri/h13322202");
+        assertThat(nameIndexer.neighbourhoodOf("", 100).size(), equalTo(initialSize - 1));
+    }
 
-        nameIndexer.removeNamedItem("Hansen, Aage Tarald", "http://data.deichman.no/person/p123456");
-        nameEntries = nameIndexer.getRegister(0, LENGTH);
-        nameEntries.forEach(System.out::println);
+    @Test
+    public final void when_removing_a_name_with_wrong_uri_does_not_shorten_list() throws Exception {
+        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", 100);
+        int initialSize = nameEntries.size();
+        assertThat(initialSize, greaterThan(10));
+        nameIndexer.removeNamedItem("Karlsen, Kai-Tommy", "http://data.deichman.no/uri/h13423");
+        assertThat(nameIndexer.neighbourhoodOf("", 100).size(), equalTo(initialSize));
+    }
+
+    private Object[] nameEntriesAsArray(List<NameEntry> nameEntries) {
+        return nameEntries.stream().map(nameEntry -> nameEntry.getName() + "|" + nameEntry.getUri()).collect(Collectors.toList()).toArray();
     }
 }

@@ -24,7 +24,7 @@ public class NameIndexer {
     private Collator coll;
 
     public NameIndexer() {
-        coll = Collator.getInstance(Locale.forLanguageTag("no_NO"));
+        coll = Collator.getInstance(Locale.forLanguageTag("no"));
         coll.setStrength(Collator.PRIMARY);
         alphabeticalList = new LinkedList();
     }
@@ -53,7 +53,15 @@ public class NameIndexer {
     }
 
     private void sort() {
-        alphabeticalList.sort((o1, o2) -> coll.compare(o1.getName(), o2.getName()));
+        alphabeticalList.sort((o1, o2) -> compareNames(o1.getName(), o2.getName()));
+    }
+
+    private int compareNames(String name, String name1) {
+        return coll.compare(foldLetters(name), foldLetters(name1));
+    }
+
+    private String foldLetters(String name) {
+        return name.replace("Aa", "Å").replace("aa", "å");
     }
 
     public final List<NameEntry> neighbourhoodOf(String name, int width) {
@@ -65,7 +73,7 @@ public class NameIndexer {
         }
         for (int i = 0; i < width && resultIterator.hasNext(); i++) {
             NameEntry next = resultIterator.next();
-            if (!foundBestMatch && coll.compare(next.getName(), name) >= 0) {
+            if (!foundBestMatch && compareNames(next.getName(), name) >= 0) {
                 foundBestMatch = true;
                 next.setBestMatch(true);
             }
@@ -81,8 +89,8 @@ public class NameIndexer {
         while (!foundPosition && resultIterator.hasNext()) {
             step++;
             NameEntry candidate = resultIterator.next();
-            int compared = coll.compare(name, candidate.getName());
-            int skips = alphabeticalList.size() / (2 << step);
+            int compared = compareNames(name, candidate.getName());
+            int skips = (alphabeticalList.size() + 1) / (2 << step);
             if (compared > 0) {
                 if (skips > 0) {
                     while (skips > 0 && resultIterator.hasNext()) {
@@ -105,6 +113,10 @@ public class NameIndexer {
                 foundPosition = true;
                 if (resultIterator.hasPrevious()) {
                     resultIterator.previous();
+                }
+                if (resultIterator.hasPrevious()) {
+                    resultIterator.previous();
+                    resultIterator.next();
                 }
             }
         }
