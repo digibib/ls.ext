@@ -354,7 +354,7 @@ public class SearchServiceImpl implements SearchService {
     private String createPreIndexedSearchQuery(String prefix, int minSize, EntityType entityType, String field) {
         Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName(entityType, prefix, minSize);
         List<Map> should = new ArrayList<>();
-        if (nameEntries.stream().anyMatch(NameEntry::isExactMatch)) {
+        if (!nameEntries.stream().anyMatch(NameEntry::isExactMatch)) {
             should.add(of("match_phrase_prefix", of(field, prefix)));
         }
         should.addAll(nameEntries
