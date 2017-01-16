@@ -19,6 +19,10 @@ public class NameEntry {
         this.name = name;
     }
 
+    public NameEntry(NameEntry nameEntry) {
+        this(nameEntry.getUri(), nameEntry.getName());
+    }
+
     public final String getName() {
         return name;
     }

@@ -1829,7 +1829,7 @@
           }
         } else if (fieldForSortedListQuery && !isAdvancedQuery(searchString)) {
           axiosMethod = axios.get
-          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSsize=20`
+          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=20`
         } else {
           axiosMethod = axios.get
           var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {

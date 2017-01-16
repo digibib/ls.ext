@@ -40,21 +40,20 @@ public class NameIndexerTest {
             "Nilsen, Aage Tarald|http://data.deichman.no/person/p123456",
             "Olsen, Aage Tarald|http://data.deichman.no/person/p123456"
     };
-
     public static final int LENGTH = 100;
-    public static final int WIDTH = 6;
+    public static final int SMALL_LENGTH = 10;
 
     @Test
     public void when_searching_for_name_returns_alphabetical_list_with_name_in_it() throws Exception {
         NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
-        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", 100);
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", LENGTH);
         assertThat(nameEntriesAsArray(nameEntries), equalTo(EXPECTED_TEST_DATA_1));
     }
 
     @Test
     public void when_searching_result_is_of_desired_size() throws Exception {
         NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
-        assertThat(nameIndexer.neighbourhoodOf("Hansen, T.", 10).size(), equalTo(10));
+        assertThat(nameIndexer.neighbourhoodOf("Hansen, T.", SMALL_LENGTH).size(), equalTo(SMALL_LENGTH));
     }
 
     @Test
@@ -80,28 +79,28 @@ public class NameIndexerTest {
         nameIndexer.addNamedItem("Bertilsen, Aage Tarald", "http://data.deichman.no/person/p123456");
         nameIndexer.addNamedItem("Fjomsen, Aage Tarald", "http://data.deichman.no/person/p123456");
         nameIndexer.addNamedItem("Gakksen, Aage Tarald", "http://data.deichman.no/person/p123456");
-        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", 100);
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", LENGTH);
         assertThat(nameEntriesAsArray(nameEntries), equalTo(EXPECTED_TEST_DATA_2));
     }
 
     @Test
     public final void when_removing_a_name_the_list_is_shortened_accordingly() throws Exception {
         NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
-        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", 100);
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", LENGTH);
         int initialSize = nameEntries.size();
-        assertThat(initialSize, greaterThan(10));
+        assertThat(initialSize, greaterThan(SMALL_LENGTH));
         nameIndexer.removeNamedItem("Karlsen, Kai-Tommy", "http://data.deichman.no/uri/h13322202");
-        assertThat(nameIndexer.neighbourhoodOf("", 100).size(), equalTo(initialSize - 1));
+        assertThat(nameIndexer.neighbourhoodOf("", LENGTH).size(), equalTo(initialSize - 1));
     }
 
     @Test
     public final void when_removing_a_name_with_wrong_uri_does_not_shorten_list() throws Exception {
         NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
-        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", 100);
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", LENGTH);
         int initialSize = nameEntries.size();
-        assertThat(initialSize, greaterThan(10));
+        assertThat(initialSize, greaterThan(SMALL_LENGTH));
         nameIndexer.removeNamedItem("Karlsen, Kai-Tommy", "http://data.deichman.no/uri/h13423");
-        assertThat(nameIndexer.neighbourhoodOf("", 100).size(), equalTo(initialSize));
+        assertThat(nameIndexer.neighbourhoodOf("", LENGTH).size(), equalTo(initialSize));
     }
 
     private Object[] nameEntriesAsArray(List<NameEntry> nameEntries) {
