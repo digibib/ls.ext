@@ -65,6 +65,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  * Responsibility: TODO.
  */
 public final class EntityServiceImpl implements EntityService {
+    public static final int LENGTH = 100;
     private final Logger log = LoggerFactory.getLogger(EntityServiceImpl.class);
 
 
@@ -689,7 +690,7 @@ public final class EntityServiceImpl implements EntityService {
             nameIndexer = new NameIndexer(resultSet);
             if (!nameIndexer.isEmpty()) {
                 nameIndexers.put(type, nameIndexer);
-                nameIndexer.getRegister(0, 100).forEach(entry -> {
+                nameIndexer.getRegister(0, LENGTH).forEach(entry -> {
                     log.info(entry.toString());
                 });
             }
