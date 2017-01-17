@@ -1,12 +1,12 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
-import { Link } from 'react-router'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import {Link} from 'react-router'
+import {injectIntl, intlShape, defineMessages, FormattedMessage} from 'react-intl'
 import Items from '../components/Items'
 import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
-import { groupByBranch } from '../utils/sorting'
+import {groupByBranch} from '../utils/sorting'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -45,8 +45,7 @@ class SearchResult extends React.Component {
     return (
       <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
         <h1 className="workTitle" data-automation-id="work-title">
-          <span className="title-text">{result.titleLine1}</span><br />
-          <span className="title-text">{result.titleLine2}</span>
+          <span className="title-text">{result.title}</span>
           <span className="caret"><i className="icon-angle-wide" aria-hidden="true" /></span>
         </h1>
       </Link>
