@@ -65,7 +65,7 @@ class Search extends React.Component {
               nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
               // breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
               breakLabel={<span aria-hidden="true">...</span>}
-              forceSelected={this.props.location.query.page - 1 || 0}
+              forcePage={this.props.location.query.page - 1 || 0}
               marginPagesDisplayed={1}
               pageRangeDisplayed={5}
               pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
@@ -75,7 +75,6 @@ class Search extends React.Component {
               subContainerClassName={'pages pagination'}
               activeClassName={'active'}
               items={this.props.items}
-              pageLinkClassName={'test-class'}
             />
           </nav>
         </section>
