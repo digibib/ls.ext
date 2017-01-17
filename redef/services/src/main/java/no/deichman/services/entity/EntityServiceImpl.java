@@ -689,6 +689,9 @@ public final class EntityServiceImpl implements EntityService {
             nameIndexer = new NameIndexer(resultSet);
             if (!nameIndexer.isEmpty()) {
                 nameIndexers.put(type, nameIndexer);
+                nameIndexer.getRegister(0, 100).forEach(entry -> {
+                    log.info(entry.toString());
+                });
             }
             log.info(String.format("Created local index for %s with %d entries in %d msec", type, nameIndexer.size(), System.currentTimeMillis() - start));
         }
