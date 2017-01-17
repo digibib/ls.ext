@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -142,6 +145,12 @@ public final class EntityServiceImpl implements EntityService {
         locationDeweyProperty = ResourceFactory.createProperty(BaseURI.ontology("locationDewey"));
         locationSignatureProperty = ResourceFactory.createProperty(BaseURI.ontology("locationSignature"));
 
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Arrays.stream(EntityType.values()).forEach(type -> getNameIndexer(type));
+            }
+        }, 0);
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
