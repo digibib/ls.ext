@@ -8,13 +8,15 @@ import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.io.Reader;
 import java.text.Collator;
+import java.text.ParseException;
+import java.text.RuleBasedCollator;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.newLinkedList;
 
 /**
  * Responsibility: holds an alphabetical list of things with names.
@@ -22,11 +24,25 @@ import static com.google.common.collect.Lists.newArrayList;
 public class NameIndexer {
     private LinkedList<NameEntry> alphabeticalList;
     private Collator coll;
+    private static final String SORTING_RULES = ""
+            + "< a, á, à, ã, ä, A, Á, À, Ã, Ä < b, B < c, C < ð, Ð < d, D < e, é, è, ê, ë, E, É, È, Ê, Ë < f, F "
+            + "< g, G < h, H < i, í, ï, I, Í, Ï"
+            + "< j, J < k, K < l, L < m, M < n, ñ, N, Ñ < o, ó, ò, ô, O, Ó, Ò, Ô < p, P < q, Q < r, R"
+            + "< s, S < t, T < u, U, ü, Ü < v, V < w, W < x, X < y, Y < z, Z"
+            + "< \u00E6, \u00C6, ä, Ä"
+            + "< \u00F8, \u00D8, ö, Ö"
+            + "< \u00E5 = a\u030A,"
+            + "  \u00C5 = A\u030A;"
+            + "  aa, AA, Aa";
 
     public NameIndexer() {
-        coll = Collator.getInstance(Locale.forLanguageTag("no"));
+        try {
+            coll = new RuleBasedCollator(SORTING_RULES);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         coll.setStrength(Collator.PRIMARY);
-        alphabeticalList = new LinkedList();
+        alphabeticalList = newLinkedList();
     }
 
     public NameIndexer(Reader reader) {
@@ -53,15 +69,7 @@ public class NameIndexer {
     }
 
     private void sort() {
-        alphabeticalList.sort((o1, o2) -> compareNames(o1.getName(), o2.getName()));
-    }
-
-    private int compareNames(String name, String name1) {
-        return coll.compare(foldLetters(name), foldLetters(name1));
-    }
-
-    private String foldLetters(String name) {
-        return name.replace("Aa", "Å").replace("aa", "å");
+        alphabeticalList.sort((o1, o2) -> coll.compare(o1.getName(), o2.getName()));
     }
 
     public final List<NameEntry> neighbourhoodOf(String name, int width) {
@@ -73,7 +81,7 @@ public class NameIndexer {
         }
         for (int i = 0; i < width && resultIterator.hasNext(); i++) {
             NameEntry next = new NameEntry(resultIterator.next());
-            if (!foundBestMatch && compareNames(next.getName(), name) >= 0) {
+            if (!foundBestMatch && coll.compare(next.getName(), name) >= 0) {
                 foundBestMatch = true;
                 next.setBestMatch(true);
                 if (next.getName().equalsIgnoreCase(name)) {
@@ -92,7 +100,7 @@ public class NameIndexer {
         while (!foundPosition && resultIterator.hasNext()) {
             step++;
             NameEntry candidate = resultIterator.next();
-            int compared = compareNames(name, candidate.getName());
+            int compared = coll.compare(name, candidate.getName());
             int skips = (alphabeticalList.size() + 1) / (2 << step);
             if (compared > 0) {
                 if (skips > 0) {
