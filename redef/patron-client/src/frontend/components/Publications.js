@@ -273,12 +273,12 @@ class Publications extends React.Component {
                   <ClickableElement
                     onClickAction={this.props.toggleParameterValue}
                     onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
-                    <h2>
-                      <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} />
+                    <h2 role="button" tabIndex="0" aria-expanded={!collapsePublications.includes(mediaTypeFragment)}>
+                      <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} aria-hidden="true" />
                       {this.props.intl.formatMessage({ id: mediaTypeUri })}
                       {collapsePublications.includes(mediaTypeFragment)
-                        ? <i className="icon-down-open last" />
-                        : <i className="icon-up-open last" />}
+                        ? <i className="icon-down-open last" aria-hidden="true" />
+                        : <i className="icon-up-open last" aria-hidden="true" />}
                     </h2>
                   </ClickableElement>
                 </header>

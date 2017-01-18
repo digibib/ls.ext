@@ -85,6 +85,113 @@ KOHA: 3edb4bf7e759c00d98c4ded6392869c3b3814971
   - Include more media types for illustrative matter
 
 
+## 0.8.2 (2017-01-10)
+
+KOHA: aa1ff583761d252e8e581fac4bd73fa6693d5a59
+GITREF:
+
+- Koha:
+  - Oppgradert til mainstream koha release 16.11.01
+  - Ny meråpentfilial Bjerke
+  - Nye automatfilialer: Bjerke, Nordtvet, Romsås, Bjørnholt, Smestad
+  - DEICH-520: hindre at automat trigger reserveringer
+  - DEICH-565: nye poster er ikke søkbare i koha
+  - DEICH-463: slettede poster i catalinker legges i deletedbiblios
+  - DEICH-567: kemner: endring av tapt til regning betalt skal ikke trigge innlevering
+  - DEICH-516: fiks av samme purremeldinger på både sms/epost/brev
+- Catalinker:
+  - DEICH-362: søkbar tittel på del av utgivelse
+  - DEICH-490: tillat 'Andre' som verkstype
+- Patron-client:
+  - DEICH-531: sortering av utgivelsesdeler
+  - DEICH-537: fuzzy matching i søk, akseptere skrivefeil
+  - en rekke UI-fikser for wai/universell utforming
+
+## 0.8.1 (2017-01-04) minor update
+
+KOHA: 15345ae973ca75a0d46cbfa8ca8433506458ae15
+GITREF: 079bfab1b14387eb9b683b4a66d6700bb7fbd215
+
+- Catalinker:
+  - DEICH-533: fix not showing last of publication parts
+- Patron-client:
+  - DEICH-495: show parts of publication
+  - fix handling empty main entry
+
+## 0.8.0 (2016-12-20)
+
+KOHA:   15345ae973ca75a0d46cbfa8ca8433506458ae15
+GITREF: 3d80fe232e2731e97063309b3e763330b1d9dc81
+
+- Koha:
+  - DEICH-514 various fixes for NL sync
+  - DEICH-512 available item status update
+- Catalinker:
+  - DEICH-504: New field ISSN
+  - DEICH-525: New field ISMN
+  - DEICH-456: work main responsibility on parts
+- Patron-client:
+  - DEICH-512: correcct status on not-for-loan material issued
+
+## 0.7.5 (2016-12-13)
+
+- Koha:
+  - Fix for holds bug in SIP checkin DEICH-487
+- Patron-client:
+  - Forbedre visning av tittelopplysninger DEICH-508
+- Catalinker:
+  - Fiks mapping av opprinnelsesland fra BS DEICH-507
+- Services:
+  - Legg til manglende rolleDEICH-517
+
+## 0.7.2 (2016-12-08) bugfix
+
+- Infrastructure:
+  - docker-compose upgrade: (1.9.0) and fixes
+- Catalinker:
+  - DEICH-90: minor title fixes
+  - re-introduce illustratitveMatter field appearance for media tytpe ComicBook, LanguageCourse andE-book lost in merge
+
+## 0.7.1 (2016-12-06) update
+
+KOHA: c759c872b832b5517faee92dc46a2c941dfe174c
+
+- Koha:
+  - temporary fix for patron search result, redirect if one hit
+- Patron-client:
+  - DEICH-447: suspend and resume hold
+  - DEICH-337: sorting of loans
+- Services:
+  - DEICH-506: use constant scoring and decrreasing boost to improve alphabetical list search
+- Catalinker:
+  - DEICH-497: add partNumer and partTitle to serial mapping
+  - DEICH-500: allow duration longer than 24h
+  - DEICH-90: authority label templating in a more uniform fashion
+
+## 0.7.0 (2016-12-06)
+
+KOHA: 3edb4bf7e759c00d98c4ded6392869c3b3814971
+
+- Koha:
+  - Oppgradert til mainline versjon: 16.11
+    slik at vi er mer i sync med koha community
+  - bruk sms proxy ved utsendelse av SMS for bedre feilsøking
+  - API expanded items return number of holds
+  - fixes in NL sync
+  - DEICH-400: automatic limit on patrons with long overdue
+- Catalinker:
+  - DEICH-425: extend index mapping for work series, corporation (with place), serial (with publisher) and event (with place)
+  - DEICH-497: add more fields to Serials and work series
+- Patron-client:
+  - DEICH-444: show number of holds per publication
+  - DEICH-303: Add logged in name to header
+  - DEICH-492: Reset default messaging prefs for item_due to none
+  - DEICH-498: Fix default mapping of messaging prefs
+  - DEICH-501: Standard messaging prefs for new registrations
+- Services:
+  - Include more media types for illustrative matter
+
+
 ## 0.6.5 (2016-11-30)
 
 KOHA: 008a33634de04bda2287dd7fc8d89a53c7bc968d

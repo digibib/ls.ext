@@ -207,11 +207,11 @@ function transformPublicationParts (input) {
   try {
     return input.map(inputPublicationPart => {
       return {
-        mainEntry: inputPublicationPart.agent.name,
+        mainEntry: inputPublicationPart.agent ? inputPublicationPart.agent.name : undefined,
         partTitle: inputPublicationPart.mainTitle,
-        startsAtPage: inputPublicationPart.startsAtPage,
-        endsAtPage: inputPublicationPart.endsAtPage,
-        extent: inputPublicationPart.extent
+        startsAtPage: Number(inputPublicationPart.startsAtPage) || inputPublicationPart.startsAtPage,
+        endsAtPage: Number(inputPublicationPart.endsAtPage) || inputPublicationPart.endsAtPage,
+        partNumber: inputPublicationPart.partNumber
       }
     })
   } catch (error) {

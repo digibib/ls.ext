@@ -142,6 +142,7 @@
 
       &:nth-child(3) {
         @include span(4 last);
+        float: left;
       }
 
     }

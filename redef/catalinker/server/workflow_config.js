@@ -745,7 +745,7 @@ module.exports = (app) => {
                 addAnotherLabel: 'Legg til nytt ISMN'
               },
               {
-                includeOnlyWhen: { hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Game' ] },
+                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book', 'Film', 'MusicRecording', 'Game' ] },
                 rdfProperty: 'hasEan'
               },
               {
@@ -984,7 +984,7 @@ module.exports = (app) => {
                 }
               },
               {
-                includeOnlyWhen: { hasWorkType: [ 'Literature', 'Film' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
                 rdfProperty: 'literaryForm',
                 multiple: true,
                 headlinePart: {

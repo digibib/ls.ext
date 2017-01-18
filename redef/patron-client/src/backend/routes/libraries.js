@@ -21,8 +21,9 @@ module.exports = (app) => {
 
   function filterLibraries (libraries) {
     return libraries.filter(library => {
-      if (![ 'api', 'hsko', 'ukjent', 'hlsf', 'autoblr', 'autofuru', 'autolmb',
-        'autotoy', 'automaj' ].includes(library.branchcode)) { return true }
+      if ([ 'hutl', 'fbje', 'fbjo', 'fbol', 'ffur', 'fgry', 'fhol',
+        'flam', 'fmaj', 'fnor', 'fnyd', 'fopp', 'frik', 'frmm', 'from', 'froa',
+        'fsme', 'fsto', 'ftor', 'fgam' ].includes(library.branchcode)) { return true }
     })
   }
 }

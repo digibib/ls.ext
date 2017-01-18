@@ -54,7 +54,7 @@ public final class SPARQLQueryBuilder {
         String queryString = "#\n"
                 + "PREFIX deichman: <http://data.deichman.no/ontology#>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                + "DESCRIBE <__WORKURI__> ?publication ?workContributor ?compType ?format ?mediaType ?subject ?genre ?instrument"
+                + "DESCRIBE <__WORKURI__> ?publication ?workContributor ?compType ?format ?mediaType ?subject ?genre ?instrument ?publicationPart"
                 + "  ?litform ?hasWorkType ?serial ?nation ?pubContrib ?publicationContributor ?place ?publishedBy ?publicationPartValues\n"
                 + "WHERE {\n"
                 + "        { <__WORKURI__> a deichman:Work }\n"

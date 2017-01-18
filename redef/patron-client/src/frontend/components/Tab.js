@@ -14,7 +14,7 @@ class Tab extends React.Component {
     if (this.props.tab.path && this.props.push) {
       this.props.push({ pathname: this.props.tab.path })
     } else if (this.props.tab.tabId) {
-      this.props.selectTab(this.props.tab.tabId, true, this.props.menuId)
+      this.props.selectTab(this.props.menuId, this.props.tab.tabId, true)
     }
   }
 
@@ -43,7 +43,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    selectTab: bindActionCreators(ResourceActions.selectTab, dispatch)
+    selectTab: bindActionCreators(ResourceActions.updateUrlQueryValue, dispatch)
   }
 }
 

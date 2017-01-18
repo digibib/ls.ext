@@ -1,19 +1,28 @@
 import React, { PropTypes } from 'react'
-import { injectIntl, intlShape } from 'react-intl'
+import { injectIntl, intlShape, FormattedMessage, defineMessages } from 'react-intl'
 import ClickableElement from '../components/ClickableElement'
 
 const SearchFilterBoxItem = ({ filter, toggleFilter, intl }) => {
+  const filterText = <FormattedMessage {...messages.filterTitle} />
   return (
     <ClickableElement onClickAction={toggleFilter} onClickArguments={[ filter.id ]}>
-      <li className="active-filter" data-automation-id={filter.id}>
+      <li role="button" className="active-filter" data-automation-id={filter.id} tabIndex="0">
                 <span className="filter-label" data-automation-id="filter_label">
-                    {intl.formatMessage({ id: filter.bucket })}{/* ({filter.count}) */}
+                  <span className="is-vishidden">{filterText}</span> {intl.formatMessage({ id: filter.bucket })}{/* ({filter.count}) */}
                 </span>
         <span className="remove"><i className="icon-cancel-1" /></span>
       </li>
     </ClickableElement>
   )
 }
+
+export const messages = defineMessages({
+  filterTitle: {
+    id: 'SearchFilterBoxItem.title.filter',
+    description: 'title for search filters (UU) on the search page',
+    defaultMessage: 'Filtered on'
+  }
+})
 
 SearchFilterBoxItem.propTypes = {
   filter: PropTypes.object.isRequired,
