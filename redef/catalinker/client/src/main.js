@@ -1889,7 +1889,7 @@
       }
     }
 
-    let debouncedSearch = _.debounce(doSearch, 5)
+    let debouncedSearch = _.debounce(doSearch, 500)
 
     function updateInputsForDependentResources (targetType, resourceUri) {
       forAllGroupInputs(function (input) {
