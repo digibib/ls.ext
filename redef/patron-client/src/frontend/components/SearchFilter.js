@@ -11,11 +11,19 @@ class SearchFilter extends React.Component {
     super(props)
     this.handleCollapse = this.handleCollapse.bind(this)
     this.handleShowAllClick = this.handleShowAllClick.bind(this)
+    this.handleKey = this.handleKey.bind(this)
   }
 
   handleShowAllClick () {
     this.props.toggleFilterVisibility(this.props.aggregation)
     ReactDOM.findDOMNode(this).scrollIntoView()
+  }
+
+  handleKey (event) {
+    if (event.keyCode === 32) { // Space for button
+      event.preventDefault()
+      this.handleShowAllClick()
+    }
   }
 
   renderEmpty () {
@@ -65,10 +73,10 @@ class SearchFilter extends React.Component {
       return
     }
     return (
-      <div className="show-more" onClick={this.handleShowAllClick}>
+      <div className="show-more" onClick={this.handleShowAllClick} onKeyDown={this.handleKey}>
         <h3>{this.shouldShowMore() || this.props.filters.length <= Constants.maxVisibleFilterItems
-          ? <FormattedMessage {...messages.showLess} />
-          : <FormattedMessage {...messages.showMore} />}</h3>
+          ? <a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.showLess} /></a>
+          : <a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showMore} /></a>}</h3>
       </div>
     )
   }
@@ -93,7 +101,7 @@ class SearchFilter extends React.Component {
         <header className="filterTitle">
           <h1>{this.renderTitle()}</h1>
           <button onClick={this.handleCollapse} className="single-filter-close" type="button"
-                  aria-label={buttonAriaLabel}>
+                  aria-label={buttonAriaLabel} aria-expanded={!this.isCollapsed()}>
             {this.isCollapsed()
               ? <i className="icon-plus" alt="" />
               : <i className="icon-minus" alt="" />}

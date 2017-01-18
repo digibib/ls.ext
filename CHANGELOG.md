@@ -11,10 +11,33 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 `source docker-compose.env && docker-compose -f common.env -f prod.env up -d`
 
 # Releases
+
+## 0.8.2 (2017-01-10)
+
+KOHA: aa1ff583761d252e8e581fac4bd73fa6693d5a59
+GITREF:
+
+- Koha:
+  - Oppgradert til mainstream koha release 16.11.01
+  - Ny meråpentfilial Bjerke
+  - Nye automatfilialer: Bjerke, Nordtvet, Romsås, Bjørnholt, Smestad
+  - DEICH-520: hindre at automat trigger reserveringer
+  - DEICH-565: nye poster er ikke søkbare i koha
+  - DEICH-463: slettede poster i catalinker legges i deletedbiblios
+  - DEICH-567: kemner: endring av tapt til regning betalt skal ikke trigge innlevering
+  - DEICH-516: fiks av samme purremeldinger på både sms/epost/brev
+- Catalinker:
+  - DEICH-362: søkbar tittel på del av utgivelse
+  - DEICH-490: tillat 'Andre' som verkstype
+- Patron-client:
+  - DEICH-531: sortering av utgivelsesdeler
+  - DEICH-537: fuzzy matching i søk, akseptere skrivefeil
+  - en rekke UI-fikser for wai/universell utforming
+
 ## 0.8.1 (2017-01-04) minor update
 
 KOHA: 15345ae973ca75a0d46cbfa8ca8433506458ae15
-GITREF:
+GITREF: 079bfab1b14387eb9b683b4a66d6700bb7fbd215
 
 - Catalinker:
   - DEICH-533: fix not showing last of publication parts
