@@ -92,6 +92,7 @@ module TestSetup
         uri = URI(@api + "patrons/" + patron["borrowernumber"].to_s)
         res = http.delete(uri, @headers)
       end
+      @patrons = []
     end
 
     def add_biblio(numberOfItems=1)
@@ -127,6 +128,7 @@ module TestSetup
         res = http.delete(uri, @headers)
         STDOUT.puts res.header
       end
+      @biblio = []
     end
 
     # JSON params: borrowernumber, biblionumber, itemnumber, branchcode, expirationdate
@@ -163,6 +165,7 @@ module TestSetup
         uri = URI(@api + "holds/" + hold["reserve_id"].to_s)
         res = http.delete(uri, @headers)
       end
+      @holds = []
     end
 
     def random_string(length)
