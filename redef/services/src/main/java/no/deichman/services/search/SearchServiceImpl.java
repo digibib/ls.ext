@@ -64,7 +64,11 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
-    public static final String[] LOCAL_INDEX_SEARCH_FIELDS = {ontology("name"), ontology("prefLabel")};
+    public static final String[] LOCAL_INDEX_SEARCH_FIELDS = {
+            ontology("name"),
+            ontology("prefLabel"),
+            ontology("mainTitle")
+    };
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -136,6 +140,7 @@ public class SearchServiceImpl implements SearchService {
     private void doIndexSerial(XURI xuri) {
         Model serialModelWithLinkedResources = entityService.retrieveSerialWithLinkedResources(xuri);
         indexDocument(xuri, serialModelToIndexMapper.createIndexDocument(serialModelWithLinkedResources, xuri));
+        cacheNameIndex(xuri, serialModelWithLinkedResources);
     }
 
     @Override

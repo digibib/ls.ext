@@ -667,14 +667,18 @@ public final class EntityServiceImpl implements EntityService {
         return getNameIndexer(type).neighbourhoodOf(name, width);
     }
 
-    public StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates) {
+    public StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... possibleNamePredicates) {
         return indexModel.listStatements(new SimpleSelector() {
             @Override
             public boolean test(Statement s) {
-                return (isNameStatement(s, predicates)
-                        && indexModel.contains(s.getSubject(), RDF.type, ResourceFactory.createResource(ontology(xuri.getTypeAsEntityType().getRdfType()))));
+                return (isNameStatement(s, possibleNamePredicates)
+                        && isAboutRelevantType(s, indexModel, xuri));
             }
         });
+    }
+
+    private boolean isAboutRelevantType(Statement s, Model model, XURI xuri) {
+        return model.contains(s.getSubject(), RDF.type, ResourceFactory.createResource(ontology(xuri.getTypeAsEntityType().getRdfType())));
     }
 
     private boolean isNameStatement(Statement s, String[] predicates) {
