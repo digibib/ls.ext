@@ -16,7 +16,7 @@ public enum EntityType {
     PLACE("place", "Place", Constants.PREF_LABEL),
     CORPORATION("corporation", "Corporation", Constants.NAME),
     SERIAL("serial", "Serial", Constants.MAIN_TITLE),
-    WORK_SERIES("workSeries", "Workseries", Constants.MAIN_TITLE),
+    WORK_SERIES("workSeries", "WorkSeries", Constants.MAIN_TITLE),
     SUBJECT("subject", "Subject", Constants.PREF_LABEL),
     GENRE("genre", "Genre", Constants.PREF_LABEL),
     MUSICAL_INSTRUMENT("instrument", "Instrument", Constants.PREF_LABEL),
