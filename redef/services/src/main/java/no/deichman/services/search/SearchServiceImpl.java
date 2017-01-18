@@ -244,7 +244,7 @@ public class SearchServiceImpl implements SearchService {
             httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
             httpPost.setHeader(CONTENT_TYPE, "application/json");
             Pair<String, Header[]> searchResult = executeHttpRequest(httpPost);
-            if (jsonTranformer != null) {
+            if (jsonTranformer != null && jsonTranformer.length > 0) {
                 String transformed = jsonTranformer[0].apply(searchResult.getLeft());
                 Header[] headers = searchResult.getRight();
                 searchResult = Pair.of(transformed, removeHeader(headers, CONTENT_LENGTH));
