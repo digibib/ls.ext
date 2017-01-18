@@ -22,8 +22,10 @@ module.exports = form => values => {
       }
     }
   })
-  if (form.email && form.mobile && !values.email && !values.mobile) {
+
+  // Only email is required per 18.01.17
+  /* if (form.email && form.mobile && !values.email && !values.mobile) {
     errors.email = 'emailOrMobileRequired'
-  }
+  } */
   return errors
 }

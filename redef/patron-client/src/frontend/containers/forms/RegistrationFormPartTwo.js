@@ -36,7 +36,6 @@ class RegistrationFormPartTwo extends React.Component {
   }
 
   handleAcceptTerms () {
-    console.log('In reg terms')
     this.props.registrationActions.toggleAcceptTerms()
   }
 

@@ -17,7 +17,6 @@ class FormInputFieldTermsAndConditions extends React.Component {
   }
 
   renderTermsAndConditions (field) {
-    console.log('Field', field)
     return (
       <div className="terms_and_conditions">
         <input data-automation-id="accept_terms"
