@@ -135,6 +135,7 @@ public class SearchServiceImpl implements SearchService {
     private void doIndexEvent(XURI xuri) {
         Model eventModelWithLinkedResources = entityService.retrieveEventWithLinkedResources(xuri);
         indexDocument(xuri, eventModelToIndexMapper.createIndexDocument(eventModelWithLinkedResources, xuri));
+        cacheNameIndex(xuri, eventModelWithLinkedResources);
     }
 
     private void doIndexSerial(XURI xuri) {
