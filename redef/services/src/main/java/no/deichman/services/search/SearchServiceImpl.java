@@ -6,6 +6,7 @@ import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -16,7 +17,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ServerErrorException;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -41,8 +40,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static com.google.common.collect.Lists.newArrayList;
@@ -50,9 +51,13 @@ import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static no.deichman.services.uridefaults.BaseURI.ontology;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 
@@ -192,7 +197,7 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
             HttpPut createIndexRequest = new HttpPut(uri);
-            createIndexRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/search_index.json"), ContentType.APPLICATION_JSON));
+            createIndexRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/search_index.json"), APPLICATION_JSON));
             try (CloseableHttpResponse create = httpclient.execute(createIndexRequest)) {
                 int statusCode = create.getStatusLine().getStatusCode();
                 LOG.info("Create index request returned status " + statusCode);
@@ -223,7 +228,7 @@ public class SearchServiceImpl implements SearchService {
     private void putIndexMapping(CloseableHttpClient httpclient, String type) throws URISyntaxException, IOException {
         URI workIndexUri = getIndexUriBuilder().setPath("/search/_mapping/" + type).build();
         HttpPut putWorkMappingRequest = new HttpPut(workIndexUri);
-        putWorkMappingRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/" + type + "_mapping.json"), ContentType.APPLICATION_JSON));
+        putWorkMappingRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/" + type + "_mapping.json"), APPLICATION_JSON));
         try (CloseableHttpResponse create = httpclient.execute(putWorkMappingRequest)) {
             int statusCode = create.getStatusLine().getStatusCode();
             LOG.info("Create mapping request for " + type + " returned status " + statusCode);
@@ -233,29 +238,48 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private Response searchWithJson(String body, URIBuilder searchUriBuilder) {
+    private Response searchWithJson(String body, URIBuilder searchUriBuilder, Function<String, String>... jsonTranformer) {
         try {
             HttpPost httpPost = new HttpPost(searchUriBuilder.build());
             httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
-            httpPost.setHeader("Content-type", "application/json");
-            return executeHttpRequest(httpPost);
+            httpPost.setHeader(CONTENT_TYPE, "application/json");
+            Pair<String, Header[]> searchResult = executeHttpRequest(httpPost);
+            if (jsonTranformer != null) {
+                String transformed = jsonTranformer[0].apply(searchResult.getLeft());
+                Header[] headers = searchResult.getRight();
+                searchResult = Pair.of(transformed, removeHeader(headers, CONTENT_LENGTH));
+            }
+            return createResponse(searchResult);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
     }
 
-    private Response executeHttpRequest(HttpRequestBase httpRequestBase) throws IOException {
+    private Header[] removeHeader(Header[] headers, String headerName) {
+        return stream(headers)
+                .filter(header -> !header
+                        .getName()
+                        .toLowerCase()
+                        .equalsIgnoreCase(headerName))
+                .toArray(Header[]::new);
+    }
+
+    private Response createResponse(Pair<String, Header[]> searchResult) {
+        Response.ResponseBuilder responseBuilder = Response.ok(searchResult.getLeft());
+        for (Header header : searchResult.getRight()) {
+            responseBuilder = responseBuilder.header(header.getName(), header.getValue());
+        }
+        return responseBuilder.build();
+    }
+
+    private Pair<String, Header[]> executeHttpRequest(HttpRequestBase httpRequestBase) throws IOException {
         try (CloseableHttpClient httpclient = createDefault();
              CloseableHttpResponse response = httpclient.execute(httpRequestBase)) {
             HttpEntity responseEntity = response.getEntity();
             String jsonContent = IOUtils.toString(responseEntity.getContent());
-            Response.ResponseBuilder responseBuilder = Response.ok(jsonContent);
             Header[] headers = response.getAllHeaders();
-            for (Header header : headers) {
-                responseBuilder = responseBuilder.header(header.getName(), header.getValue());
-            }
-            return responseBuilder.build();
+            return Pair.<String, Header[]>of(jsonContent, headers);
         } catch (Exception e) {
             throw e;
         }
@@ -320,7 +344,6 @@ public class SearchServiceImpl implements SearchService {
     public final Response sortedList(String type, String prefix, int minSize, String field) {
         EntityType entityType = EntityType.get(type);
         URIBuilder searchUriBuilder = getIndexUriBuilder().setPath("/search/" + type + "/_search").setParameter("size", Integer.toString(minSize));
-
         switch (entityType) {
             case PERSON:
             case CORPORATION:
@@ -332,10 +355,31 @@ public class SearchServiceImpl implements SearchService {
             case GENRE:
             case MUSICAL_INSTRUMENT:
             case MUSICAL_COMPOSITION_TYPE:
-                return searchWithJson(createPreIndexedSearchQuery(prefix, minSize, entityType), searchUriBuilder);
+                Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName(entityType, prefix, minSize);
+                return searchWithJson(createPreIndexedSearchQuery(minSize, nameEntries),
+                        searchUriBuilder, orderResultByIdOrder(nameEntries
+                                .stream()
+                                .map(NameEntry::getUri)
+                                .collect(toList())));
             default:
                 return searchWithJson(createSortedListQuery(prefix, minSize, field), searchUriBuilder);
         }
+    }
+
+    private Function<String, String> orderResultByIdOrder(Collection<String> ids) {
+        Map<String, Integer> desiredOrder = new HashMap<>(ids.size());
+        final int[] i = new int[]{0};
+        ids.forEach(id -> desiredOrder.put(urlEncode(id), i[0]++));
+
+        return s -> {
+            Map fromJson = GSON.fromJson(s, Map.class);
+            ((List) ((Map) fromJson.get("hits")).get("hits")).sort((o1, o2) -> {
+                String id1 = (String) ((Map) o1).get("_id");
+                String id2 = (String) ((Map) o2).get("_id");
+                return desiredOrder.get(id1).compareTo(desiredOrder.get(id2));
+            });
+            return GSON.toJson(fromJson);
+        };
     }
 
     private String createSortedListQuery(String prefix, int minSize, String field) {
@@ -357,8 +401,7 @@ public class SearchServiceImpl implements SearchService {
         return sortedListQuery;
     }
 
-    private String createPreIndexedSearchQuery(String prefix, int minSize, EntityType entityType) {
-        Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName(entityType, prefix, minSize);
+    private String createPreIndexedSearchQuery(int minSize, Collection<NameEntry> nameEntries) {
         List<Map> should = new ArrayList<>();
         should.addAll(nameEntries
                 .stream()
@@ -519,7 +562,7 @@ public class SearchServiceImpl implements SearchService {
                     .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8))) // TODO drop urlencoded ID, and define _id in mapping from field uri
                     .build());
             httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
-            httpPut.setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.withCharset(UTF_8).toString());
+            httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
             try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
                 LOG.debug(putResponse.getStatusLine().toString());
             }
@@ -535,7 +578,7 @@ public class SearchServiceImpl implements SearchService {
                     .setParameter("q", query)
                     .setParameter("size", "100")
                     .build());
-            return executeHttpRequest(httpGet);
+            return createResponse(executeHttpRequest(httpGet));
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
