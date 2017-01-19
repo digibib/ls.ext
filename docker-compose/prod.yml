@@ -95,6 +95,7 @@ services:
       - "-strip-barcode=true"
       - "-log-messages=true"
       - "-log-metrics-every-s=300"
+      - "-gelf=udp://10.172.2.16:12201"
     hostname: sputnik/sip/axiell
     logging:
       driver: "journald"
