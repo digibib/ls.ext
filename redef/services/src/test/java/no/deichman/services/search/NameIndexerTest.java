@@ -60,7 +60,12 @@ public class NameIndexerTest {
     public void when_searching_with_size_1_correct_entry_is_returned() throws Exception {
         NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
         //"Karlsen, Johnny", "Hansen, Aase",
-        Arrays.stream(new String[]{"Karlsen, Johnny", "Hansen, Aase", "Eriksen, Kari"}).forEach(name -> {
+        Arrays.stream(new String[]{
+                "Hansen, Aase",
+                "Karlsen, Johnny",
+                "Eriksen, Kari",
+                "Olderbolle, Felix"
+        }).forEach(name -> {
             List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf(name, 1);
             assertThat(nameEntries.size(), equalTo(1));
             assertThat(nameEntries.get(0).getName(), equalTo(name));

@@ -25,7 +25,7 @@ public class NameIndexer {
     private LinkedList<NameEntry> alphabeticalList;
     private Collator coll;
     private static final String SORTING_RULES = ""
-            + "< a, á, à, ã, ä, A, Á, À, Ã, Ä < b, B < c, C < ð, Ð < d, D < e, é, è, ê, ë, E, É, È, Ê, Ë < f, F "
+            + ", '.' < a, á, à, ã, ä, A, Á, À, Ã, Ä < b, B < c, C < ð, Ð < d, D < e, é, è, ê, ë, E, É, È, Ê, Ë < f, F "
             + "< g, G < h, H < i, í, ï, I, Í, Ï"
             + "< j, J < k, K < l, L < m, M < n, ñ, N, Ñ < o, ó, ò, ô, O, Ó, Ò, Ô < p, P < q, Q < r, R"
             + "< s, S < t, T < u, U, ü, Ü < v, V < w, W < x, X < y, Y < z, Z"
@@ -96,16 +96,24 @@ public class NameIndexer {
     private ListIterator<NameEntry> findNamed(String name) {
         ListIterator<NameEntry> resultIterator = alphabeticalList.listIterator(alphabeticalList.size() / 2);
         boolean foundPosition = false;
+        int compared = 0;
+        NameEntry candidate = null;
         int step = 0;
         while (!foundPosition && resultIterator.hasNext()) {
-            step++;
-            NameEntry candidate = resultIterator.next();
-            int compared = coll.compare(name, candidate.getName());
-            int skips = (alphabeticalList.size() + 1) / (2 << step);
+            if (candidate == null) {
+                candidate = resultIterator.next();
+                compared = coll.compare(name, candidate.getName());
+                if (compared == 0) {
+                    resultIterator.previous();
+                }
+            } else {
+                compared = coll.compare(name, candidate.getName());
+            }
+            int skips = (alphabeticalList.size() + 1) / (2 << ++step);
             if (compared > 0) {
                 if (skips > 0) {
                     while (skips > 0 && resultIterator.hasNext()) {
-                        resultIterator.next();
+                        candidate = resultIterator.next();
                         skips--;
                     }
                 } else {
@@ -114,7 +122,7 @@ public class NameIndexer {
             } else if (compared < 0) {
                 if (skips > 0) {
                     while (skips >= 0 && resultIterator.hasPrevious()) {
-                        resultIterator.previous();
+                        candidate = resultIterator.previous();
                         skips--;
                     }
                 } else {
@@ -122,14 +130,18 @@ public class NameIndexer {
                 }
             } else {
                 foundPosition = true;
-                if (resultIterator.hasPrevious()) {
-                    resultIterator.previous();
-                }
-                if (resultIterator.hasPrevious()) {
-                    resultIterator.previous();
-                    resultIterator.next();
-                }
             }
+        }
+        boolean stepBack = false;
+        while (candidate != null && compared < 0 && resultIterator.hasPrevious() && coll.compare(name, candidate.getName()) < 0) {
+               candidate = resultIterator.previous();
+        }
+        while (candidate != null && compared > 0 && resultIterator.hasNext() && coll.compare(name, candidate.getName()) > 0) {
+               candidate = resultIterator.next();
+               stepBack = true;
+        }
+        if (stepBack) {
+            resultIterator.previous();
         }
         return resultIterator;
     }
