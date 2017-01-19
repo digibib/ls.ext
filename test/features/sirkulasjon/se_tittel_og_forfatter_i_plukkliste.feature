@@ -33,6 +33,7 @@ Egenskap: Se tittel og forfatter i plukkliste
     Og jeg oppretter et eksemplar av utgivelsen
     Og at Koha er populert med "1" lånere, "0" eksemplarer og "0" reserveringer
     Og at det finnes en reservasjon på materialet
+    Når reserveringskøen kjøres
     Så ser jeg tittelen i plukklisten
     Og ser jeg forfatteren i plukklisten
 
