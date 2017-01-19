@@ -29,11 +29,10 @@ public class NameIndexer {
             + "< g, G < h, H < i, í, ï, I, Í, Ï"
             + "< j, J < k, K < l, L < m, M < n, ñ, N, Ñ < o, ó, ò, ô, O, Ó, Ò, Ô < p, P < q, Q < r, R"
             + "< s, S < t, T < u, U, ü, Ü < v, V < w, W < x, X < y, Y < z, Z"
-            + "< \u00E6, \u00C6, ä, Ä"
-            + "< \u00F8, \u00D8, ö, Ö"
-            + "< \u00E5 = a\u030A,"
-            + "  \u00C5 = A\u030A;"
-            + "  aa, AA, Aa";
+            + "< æ, ä, Æ, Ä"
+            + "< ø, ö, Ø, Ö"
+            + "< å = a\u030A = aa, "
+            + "  Å = A\u030A = Aa";
 
     public NameIndexer() {
         try {
