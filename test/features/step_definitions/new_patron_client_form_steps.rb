@@ -47,7 +47,6 @@ When(/^jeg sjekker om epost og mobil\/telefon valideres riktig$/) do
   @site.PatronClientForms.is_valid?('mobile', '')
 
   message = 'Eposten må være i et gyldig format'
-  @site.PatronClientForms.triggers_message?('email', '', 'Feltet må fylles ut')
   @site.PatronClientForms.triggers_message?('email', 'a', message)
   @site.PatronClientForms.triggers_message?('email', 'a@@', message)
   @site.PatronClientForms.triggers_message?('email', '@a', message)
