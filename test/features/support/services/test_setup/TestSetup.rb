@@ -45,7 +45,7 @@ module TestSetup
       `docker start koha_mysql`
     end
 
-    def populate(args = {patrons: 1, items: 1, holds: 1})
+    def populate(args = {})
       self.add_patrons(args[:patrons])
       self.add_biblio(args[:items])
       self.add_hold(args[:holds])
@@ -132,13 +132,17 @@ module TestSetup
     end
 
     # JSON params: borrowernumber, biblionumber, itemnumber, branchcode, expirationdate
-    def add_hold(numberOfHolds=1)
+    def add_hold(args = {})
+      borrowernumber = args[:borrowernumber] ? args[:borrowernumber].to_i : @patrons[0]["borrowernumber"].to_i
+      biblionumber   = args[:biblionumber]   ? args[:biblionumber].to_i   : @biblio["biblio"]["biblionumber"].to_i
+      branchcode     = args[:branchcode]     ? args[:branchcode]          : "hutl"
+      numberOfHolds  = args[:numberOfHolds]  ? args[:numberOfHolds].to_i  : 0
       numberOfHolds.to_i.times do
         @headers["Content-Type"] = "application/json"
         params = {
-          borrowernumber: @patrons[0]["borrowernumber"].to_i,
-          biblionumber: @biblio["biblio"]["biblionumber"].to_i,
-          branchcode: "hutl"
+          borrowernumber: borrowernumber,
+          biblionumber: biblionumber,
+          branchcode: branchcode
         }
 
         http = Net::HTTP.new(@api.host, @api.port)

@@ -131,7 +131,8 @@ Given(/^at materialet ikke er holdt av til en annen låner$/) do
 end
 
 Given(/^at det finnes en reservasjon på materialet$/) do
-  step "at materialet er reservert av en annen låner"
+  biblionumber = @context[:publication_recordid]
+  @context[:koha].add_hold({numberOfHolds: 1, biblionumber: biblionumber.to_i})
 end
 
 Gitt(/^at det finnes en reservasjon på en annen avdeling$/) do

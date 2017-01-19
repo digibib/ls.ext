@@ -3,9 +3,8 @@ require_relative '../support/services/test_setup/TestSetup.rb'
 require 'pp'
 
 Given(/^at Koha er populert med "(.*)" lånere, "(.*)" eksemplarer og "(.*)" reserveringer$/) do |patrons,items,holds|
-  # table is a Cucumber::MultilineArgument::DataTable
 
-  @context[:koha].populate patrons: patrons, items: items, holds: holds
+  @context[:koha].populate({patrons: patrons, items: items, holds: {numberOfHolds: holds}})
   @context[:c] = []
   @cleanup.push( "cleaning up TestSetup, #{patrons} patrons, #{items} items and #{holds} holds" =>
     lambda do

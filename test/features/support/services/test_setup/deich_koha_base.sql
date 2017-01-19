@@ -537,6 +537,7 @@ UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'noItemTyp
 UPDATE TABLE `systempreferences` SET `value` = '0' WHERE `variable` = 'SessionRestrictionByIP';
 UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'ExtendedPatronAttributes';
 UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'EnhancedMessagingPreferences';
+UPDATE TABLE `systempreferences` SET `value` = '' WHERE `variable` = ' StaticHoldsQueueWeight ';
 UPDATE TABLE `systempreferences` SET `value` = 'softyes' WHERE `variable` = 'CheckPrevCheckout';
 UPDATE TABLE `systempreferences` SET `value` = 'exact_time' WHERE `variable` = 'NoRenewalBeforePrecision';
 UPDATE TABLE `systempreferences` SET `value` = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å' WHERE `variable` = 'alphabet';
