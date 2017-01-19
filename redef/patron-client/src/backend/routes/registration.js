@@ -158,7 +158,7 @@ module.exports = (app) => {
       if (res.status === 200) {
         return patron
       } else {
-        return Promise.reject({ message: 'Could not send patron account details', status: res.status })
+        return Promise.reject({ message: 'Could not send patron account details by E-mail', status: res.status })
       }
     })
   }
