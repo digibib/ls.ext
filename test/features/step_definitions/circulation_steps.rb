@@ -489,7 +489,7 @@ end
 When(/^ser jeg forfatteren i bokposten$/) do
   tries = 5
   begin
-    @browser.div(:id => 'catalogue_detail_biblio').h5.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
+    @browser.div(:id => 'catalogue_detail_biblio').p.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
