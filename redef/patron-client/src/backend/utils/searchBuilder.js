@@ -41,6 +41,22 @@ function initCommonQuery () {
 }
 
 function initSimpleQuery (query) {
+  const defaultFields = [
+    'agents',
+    'author',
+    'compType',
+    'format',
+    'genre',
+    'language',
+    'litform',
+    'mainTitle^2',
+    'mt',
+    'partNumber',
+    'partTitle',
+    'series',
+    'subject',
+    'title'
+  ]
   return {
     filtered: {
       filter: {
@@ -55,7 +71,7 @@ function initSimpleQuery (query) {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt', 'title' ]
+                fields: defaultFields
               }
             },
             {
@@ -63,7 +79,7 @@ function initSimpleQuery (query) {
                 query: query,
                 fuzziness: 'AUTO',
                 type: 'cross_fields',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt', 'title' ]
+                fields: defaultFields
               }
             }
           ],
