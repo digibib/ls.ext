@@ -82,7 +82,6 @@ describe('reservation utils', () => {
       ).toEqual('2–3')
     })
 
-
     it('should know a reserve has a waiting time of more than 12 weeks version 1', () => {
       const date = new Date(dayToday + (oneWeekInSeconds * 4)).toISOString()
       const items = [{
@@ -116,7 +115,7 @@ describe('reservation utils', () => {
 
     it('should know a reserve has a waiting time of 0-1, 1-2...11-12 weeks', () => {
       [2, 3].forEach((n) => {
-        const from = (n === 2) ? 4 :8
+        const from = (n === 2) ? 4 : 8
         const items = [{
           'onloan': null,
           'itype': 'BOK',

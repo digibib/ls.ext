@@ -55,27 +55,21 @@ function getEstimatedPeriod (queuePlace, items) {
     const oldestDueDate = oldestLoan.onloan
     const itemLoanLength = (getLoanPeriod(oldestLoan.itype) * secondsInDay) / secondsInAWeek
     const offset = getOffsetInWeeks(oldestDueDate)
-    const multiplicator = getMultiplicator(queuePlace, items.length)
-    const fil = (multiplicator < 1) ?  0 : multiplicator
-    const estimate = offset + Math.ceil((itemLoanLength * (queuePlace - 1)) * fil)
+    const multiplicator = Math.floor(getMultiplicator(queuePlace, items.length, offset))
+    const estimate = offset + Math.ceil((itemLoanLength * (queuePlace - 1)) * multiplicator)
     return isNaN(estimate) ? 'unknown' : estimate
   } else {
     return 'unknown'
   }
 }
 
-function getMultiplicator (queuePlace, items) {
-
-  switch (queuePlace) {
-    case queuePlace > items:
-      return queuePlace / items
-      break
-    case queuePlace < items:
-      return items / queuePlace
-      break
-    default:
-      return 1
-      break
+function getMultiplicator (queuePlace, items, offset) {
+  if (queuePlace > items && offset > 0) {
+    return queuePlace / items
+  } else if (queuePlace < items && offset > 0) {
+    return items / queuePlace
+  } else {
+    return 1
   }
 }
 
