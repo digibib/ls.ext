@@ -131,7 +131,8 @@ Given(/^at materialet ikke er holdt av til en annen låner$/) do
 end
 
 Given(/^at det finnes en reservasjon på materialet$/) do
-  step "at materialet er reservert av en annen låner"
+  biblionumber = @context[:publication_recordid]
+  @context[:koha].add_hold({numberOfHolds: 1, biblionumber: biblionumber.to_i})
 end
 
 Gitt(/^at det finnes en reservasjon på en annen avdeling$/) do
@@ -473,7 +474,7 @@ end
 When(/^ser jeg tittelen i bokposten$/) do
   tries = 5
   begin
-    @browser.div(:id => 'catalogue_detail_biblio').h1.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_maintitle]
+    @browser.div(:id => 'catalogue_detail_biblio').h3.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_maintitle]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -489,7 +490,7 @@ end
 When(/^ser jeg forfatteren i bokposten$/) do
   tries = 5
   begin
-    @browser.div(:id => 'catalogue_detail_biblio').h5.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
+    @browser.div(:id => 'catalogue_detail_biblio').p.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)

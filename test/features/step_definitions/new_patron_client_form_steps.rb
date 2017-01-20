@@ -55,12 +55,9 @@ When(/^jeg sjekker om epost og mobil\/telefon valideres riktig$/) do
   @site.PatronClientForms.triggers_message?('email', '<script>', message)
   @site.PatronClientForms.is_valid?('email', 'a@a')
 
-  #Either email or mobile must be filled out
-  @site.PatronClientForms.triggers_message?('email', '', 'Enten epost eller mobilnummer må fylles ut')
   @site.PatronClientForms.is_invalid?('mobile', 'invalid')
   @site.PatronClientForms.is_invalid?('mobile', '9999999')
   @site.PatronClientForms.is_invalid?('mobile', '999999999')
-  @site.PatronClientForms.is_valid?('email', '')
 end
 
 When(/^jeg sjekker om postnummer valideres riktig$/) do

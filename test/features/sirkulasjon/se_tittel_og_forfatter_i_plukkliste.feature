@@ -22,6 +22,7 @@ Egenskap: Se tittel og forfatter i plukkliste
     Og jeg sjekker om forfatteren finnes i MARC-dataene til utgivelsen
     Og ser jeg forfatteren i bokposten
 
+  @kohadb
   Scenario: Sjekker plukkliste
     Gitt at det finnes et verk med person og en utgivelse
     Og jeg sørger for at utgivelsen er synkronisert i Koha
@@ -30,7 +31,9 @@ Egenskap: Se tittel og forfatter i plukkliste
     Og jeg ser på utgivelsen i katalogiseringsgrensesnittet
     Og jeg følger lenken til posten i Koha
     Og jeg oppretter et eksemplar av utgivelsen
+    Og at Koha er populert med "1" lånere, "0" eksemplarer og "0" reserveringer
     Og at det finnes en reservasjon på materialet
+    Når reserveringskøen kjøres
     Så ser jeg tittelen i plukklisten
     Og ser jeg forfatteren i plukklisten
 

@@ -509,6 +509,9 @@ When(/^at reservasjonen er på riktig avdeling$/) do
   wait_for {
     @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql? @context[:random_migrate_branchcode]
   }
+  wait_for {
+    @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql? @context[:random_migrate_branchcode]
+  }
 end
 
 When(/^jeg endrer avdeling$/) do

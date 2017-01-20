@@ -1862,8 +1862,8 @@
                 })
               }
             })
-            let items = _.sortBy(_.map(_.pluck(results.hits.hits, '_source'),
-              Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]), fieldForSortedListQuery || 'name')
+            let items = _.map(_.pluck(results.hits.hits, '_source'),
+              Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ])
             var highestScoreIndex
             _.each(items, function (item, index) {
               if (item.score === results.hits.max_score) {

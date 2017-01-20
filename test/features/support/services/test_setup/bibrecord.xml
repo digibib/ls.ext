@@ -1,0 +1,62 @@
+<record>
+  <leader>00459cam a22     1  4500</leader>
+  <controlfield tag="001">0626460</controlfield>
+  <controlfield tag="008">040823                a          10nob 2</controlfield>
+  <datafield tag="015" ind1=" " ind2=" ">
+    <subfield code="a">0147191</subfield>
+    <subfield code="b">BIBBI</subfield>
+  </datafield>
+  <datafield tag="015" ind1=" " ind2=" ">
+    <subfield code="a">832303</subfield>
+    <subfield code="b">BibliofilID</subfield>
+  </datafield>
+  <datafield tag="019" ind1=" " ind2=" ">
+    <subfield code="b">l</subfield>
+    <subfield code="d">R</subfield>
+  </datafield>
+  <datafield tag="020" ind1=" " ind2=" ">
+    <subfield code="a">82-495-0272-8</subfield>
+    <subfield code="b">ib.</subfield>
+    <subfield code="c">Nkr 348.00</subfield>
+  </datafield>
+  <datafield tag="090" ind1=" " ind2=" ">
+    <subfield code="d">Rag</subfield>
+  </datafield>
+  <datafield tag="100" ind1=" " ind2="0">
+    <subfield code="a">Ragde, Anne B.</subfield>
+    <subfield code="c">forfatter</subfield>
+    <subfield code="d">1957-</subfield>
+    <subfield code="j">n.</subfield>
+    <subfield code="3">10834700</subfield>
+  </datafield>
+  <datafield tag="245" ind1="1" ind2="0">
+    <subfield code="a">Berlinerpoplene</subfield>
+    <subfield code="b">roman</subfield>
+    <subfield code="c">Anne Birkefeldt Ragde</subfield>
+  </datafield>
+  <datafield tag="260" ind1=" " ind2=" ">
+    <subfield code="a">Oslo</subfield>
+    <subfield code="b">Oktober</subfield>
+    <subfield code="c">2004</subfield>
+  </datafield>
+  <datafield tag="300" ind1=" " ind2=" ">
+    <subfield code="a">313 s.</subfield>
+  </datafield>
+  <datafield tag="503" ind1=" " ind2=" ">
+    <subfield code="a">Forts. i: Eremittkrepsene</subfield>
+  </datafield>
+  <datafield tag="599" ind1=" " ind2=" ">
+    <subfield code="a">04x0823kh a04-14</subfield>
+  </datafield>
+  <datafield tag="699" ind1=" " ind2="2">
+    <subfield code="a">Familieforhold</subfield>
+    <subfield code="x">Fortellinger</subfield>
+    <subfield code="1">306.87</subfield>
+    <subfield code="2">BS</subfield>
+  </datafield>
+  <datafield tag="850" ind1=" " ind2=" ">
+    <subfield code="a">DEICHM</subfield>
+    <subfield code="s">n</subfield>
+  </datafield>
+  __ITEMS__
+</record>

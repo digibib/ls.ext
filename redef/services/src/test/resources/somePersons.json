@@ -1,0 +1,162 @@
+{
+  "head": {
+    "vars": [
+      "uri",
+      "name"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h17221900"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Olsen Johnny"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h17607100"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hansen, Åge"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h15343300"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hansen, Aage"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h28940200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Pettersen, Frans"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h24785100"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hansen, Aage Daniel"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hansen, Aase"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Karlsen, Kai"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322202"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Karlsen, Kai-Tommy"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Olderbolle, Felix"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Aagerkarlsen, Karl"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Åleskjær, Aage"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Karlsen, Johnny"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Hansen, Johnny"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Eriksen, Kari"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h13322200"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Abelsen, Heidi"
+        }
+      }
+    ]
+  }
+}
