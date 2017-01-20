@@ -2,10 +2,10 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import { Search } from '../../src/frontend/containers/Search'
+import {Search} from '../../src/frontend/containers/Search'
 import Constants from '../../src/frontend/constants/Constants'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
+import {IntlProvider} from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
@@ -73,7 +73,7 @@ describe('containers', () => {
         totalHits: Constants.maxSearchResultsPerPage * 3
       })
       expect(node.querySelector("[data-automation-id='search-results-pagination']")
-        .getElementsByClassName('pagination')[ 0 ].children.length).toBe(5) // including next and prev
+        .getElementsByClassName('pagination')[ 0 ].children.length).toBe(10) // including next and prev
     })
   })
 })

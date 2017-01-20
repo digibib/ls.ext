@@ -52,15 +52,43 @@ function getEstimatedPeriod (queuePlace, items) {
     const secondsInDay = 1000 * 60 * 60 * 24
     const secondsInAWeek = secondsInDay * 7
     const oldestLoan = getOldestLoan(items)
-    const itemLoanLength = getLoanPeriod(oldestLoan.itype) * secondsInDay
-    const startDateFromItem = Date.parse(oldestLoan.onloan)
-    const initialTo = (startDateFromItem + itemLoanLength) - Date.now()
-    const startDate = (initialTo <= 0) || isNaN(initialTo) ? 0 : initialTo
-    const multiplicator = Math.ceil((queuePlace >= items.length) ? (queuePlace / items.length) : (items.length / queuePlace))
-    const estimate = Math.ceil(((startDate + (itemLoanLength * multiplicator)) / secondsInAWeek) / items.length)
+    const oldestDueDate = oldestLoan.onloan
+    const itemLoanLength = (getLoanPeriod(oldestLoan.itype) * secondsInDay) / secondsInAWeek
+    const offset = getOffsetInWeeks(oldestDueDate)
+    const multiplicator = getMultiplicator(queuePlace, items.length)
+    const fil = (multiplicator < 1) ?  0 : multiplicator
+    const estimate = offset + Math.ceil((itemLoanLength * (queuePlace - 1)) * fil)
     return isNaN(estimate) ? 'unknown' : estimate
   } else {
     return 'unknown'
+  }
+}
+
+function getMultiplicator (queuePlace, items) {
+
+  switch (queuePlace) {
+    case queuePlace > items:
+      return queuePlace / items
+      break
+    case queuePlace < items:
+      return items / queuePlace
+      break
+    default:
+      return 1
+      break
+  }
+}
+
+function getOffsetInWeeks (date) {
+  const currentDate = Date.now()
+  const parsedDate = Date.parse(date)
+  if (isNaN(parsedDate)) {
+    return 0
+  }
+  if (parsedDate < currentDate) {
+    return 0
+  } else {
+    return Math.ceil((parsedDate - currentDate) / (1000 * 60 * 60 * 24 * 7))
   }
 }
 

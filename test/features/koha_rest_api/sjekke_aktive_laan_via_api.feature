@@ -6,11 +6,11 @@ Egenskap: Sjekke aktive lån via API
   Siden jeg ønsker å ha oversikt
   Ønsker jeg å kunne se hvilke bøker jeg har lånt
 
-Bakgrunn:
-  Gitt at jeg er autentisert som superbruker via REST API
-  Og at det er registrert en låner via API
-
+  @kohadb
   Scenario: List aktive lån via API
-    Gitt at låneren har lånt en bok
+    Gitt at jeg er logget inn som superbruker
+    Og at Koha er populert med "1" lånere, "1" eksemplarer og "0" reserveringer
+    Når jeg går til lånerens side i Koha
+    Og jeg registrerer utlån av boka
     Når jeg sjekker lånerens aktive lån via API
     Så finnes boka i listen over aktive lån fra APIet

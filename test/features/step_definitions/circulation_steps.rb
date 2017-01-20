@@ -82,27 +82,29 @@ When(/^jeg registrerer "(.*?)" som aktiv låner$/) do |patron|
   @site.Home.visit.find_patron_for_checkout("#{patron} #{@active[:patron].surname}")
 end
 
+When(/^jeg går til lånerens side i Koha$/) do
+  @site.Home.visit.find_patron_for_checkout(@context[:koha].patrons[0]["cardnumber"])
+end
+
 When(/^jeg registrerer utlån av boka$/) do
   book = @active[:book]
-  step "jeg registrerer utlån med strekkode \"#{book.items.first.barcode}\""
+  barcode = book ?
+    book.items.first.barcode :
+    @context[:koha].biblio["items"][0]["barcode"]
+  step "jeg registrerer utlån med strekkode \"#{barcode}\""
 end
 
 When(/^jeg registrerer utlån med strekkode "(.*?)"$/) do |barcode|
-  if @context[:books]
-    book = @context[:books].find { |b| b.items.find { |i| i.barcode == "#{barcode}" } }
-    item = book[:items].find { |i| i.barcode == "#{barcode}" }
-  end
-
-  @site.Checkout.checkout(barcode)
-
+  c = TestSetup::Circulation.new "sip_proxy", "9999"
+  p = @context[:koha].patrons[0]
+  @context[:c] << c.checkout(p["branchcode"], p["cardnumber"], "1234", barcode)
   if @context[:books]
     @active[:book] = book
     @active[:item] = item
   end
   @cleanup.push("utlån #{barcode}" =>
                     lambda do
-                      @site.Home.visit.select_branch()
-                      @site.Checkin.visit.checkin(@context[:first_available_exemplar_barcode] || book.items.first.barcode)
+                      @context[:c] << c.checkin(p["branchcode"],barcode)
                     end
   )
 end
@@ -352,24 +354,34 @@ Then(/^systemet viser at aldersgrenser for utlån av materiale er aktivert$/) do
 end
 
 Then(/^registrerer systemet at boka er utlånt$/) do
-  @site.Home.visit.search_catalog @active[:book].title
+  title = @active[:book] ?
+    @active[:book].title :
+    @context[:koha].biblio["biblio"]["title"]
+  @site.Home.visit.search_catalog title
   while @browser.text == "Internal Server Error" do
-    @site.Home.visit.search_catalog @active[:book].title
+    @site.Home.visit.search_catalog title
   end
-  @browser.text.should include(@active[:book].title)
+  @browser.text.should include(title)
 end
 
 
 Then(/^systemet viser at låneren( ikke)? låner materialet$/) do |bool|
+  cardnumber = @active[:patron] ?
+    @active[:patron].cardnumber :
+    @context[:koha].patrons[0]["cardnumber"]
+
+  barcode = @active[:item] ?
+    @active[:item].barcode :
+    @context[:koha].biblio["items"][0]["barcode"]
   text = @site.Patrons.
       visit.
-      search(@active[:patron].cardnumber).
+      search(cardnumber).
       show_checkouts.
       checkouts_text
   if bool
-    text.should_not include(@active[:item].barcode)
+    text.should_not include(barcode)
   else
-    text.should include(@active[:item].barcode)
+    text.should include(barcode)
   end
 end
 
@@ -623,5 +635,12 @@ When(/^jeg leverer inn eksemplaret$/) do
 end
 
 When(/^jeg låner ut boka$/) do
-  step "materiale med strekkode \"#{@context[:first_available_exemplar_barcode]}\" lånes ut til \"#{@active[:patron].cardnumber}\""
+  cardnumber = @active[:patron] ?
+    @active[:patron].cardnumber :
+    @context[:koha].patrons[0]["cardnumber"]
+  barcode = @context[:first_available_exemplar_barcode] ?
+    @context[:first_available_exemplar_barcode] :
+    @context[:koha].biblio["items"][0]["barcode"]
+  @context[:circ] = TestSetup::Circulation.new "sip_proxy", "9999"
+  @context[:circ].checkout(@context[:random_migrate_branchcode], cardnumber, "1234", barcode)
 end

@@ -80,7 +80,7 @@ class SearchHeader extends React.Component {
     if (!this.props.isLoggedIn) {
       return (
         <li data-automation-id="registration_element">
-          <a onClick={this.handleRegistrationClick}
+          <a href="#" onClick={this.handleRegistrationClick}
              title="register"><FormattedMessage {...messages.register} /><span>&raquo;</span></a>
         </li>
       )
@@ -198,7 +198,8 @@ class SearchHeader extends React.Component {
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="section"
-          className="search-box-wrapper">
+          className="search-box-wrapper"
+          role="search">
           <div className="search-box">
             <form onSubmit={this.handleSearch}>
               <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>

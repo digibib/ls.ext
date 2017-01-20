@@ -106,14 +106,14 @@ class RegistrationFormPartOne extends React.Component {
         {/* IE11-hack begin: Make the first fieldset with firstName and lastName display with correct width */}
         {isIe() ? <fieldset style={{ visibility: 'hidden' }}><input /></fieldset> : null}
         {/* IE11-hack end */}
-        <fieldset disabled={this.props.checkForExistingUserSuccess}>
+        <div disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.nameLabel} /></legend>
           <FormInputField name="firstName" message={messages.firstName} formName={formName}
                           getValidator={this.getValidator} />
           <FormInputField name="lastName" message={messages.lastName} formName={formName}
                           getValidator={this.getValidator} />
-        </fieldset>
-        <fieldset disabled={this.props.checkForExistingUserSuccess}>
+        </div>
+        <div disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.birthdate} /></legend>
           <div className="date-of-birth">
             <FormInputField name="day" message={messages.day} formName={formName} getValidator={this.getValidator} />
@@ -121,8 +121,8 @@ class RegistrationFormPartOne extends React.Component {
                             getValidator={this.getValidator} />
             <FormInputField name="year" message={messages.year} formName={formName} getValidator={this.getValidator} />
           </div>
-        </fieldset>
-        <fieldset disabled={this.props.checkForExistingUserSuccess}>
+        </div>
+        <div disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.ssnHeader} /></legend>
           <p>
             <a role="button" tabIndex="0" aria-expanded={this.props.showSSNInfo} onKeyDown={this.handleKeyToggle} onClick={this.props.registrationActions.showSSNInfo} title="ssnLink">
@@ -134,7 +134,7 @@ class RegistrationFormPartOne extends React.Component {
           {this.props.isCheckingForExistingUser ? this.renderCheckingForExistingUser() : ''}
           {/* TODO: also handle all fields empty */}
           {this.props.checkForExistingUserSuccess ? null : this.renderContinueAndCancelButtons(submitting)}
-        </fieldset>
+        </div>
         {this.props.checkForExistingUserFailure ? this.renderCheckForExistingUserError(this.props.registrationError) : ''}
       </form>
     )

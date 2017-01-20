@@ -141,9 +141,9 @@ Egenskap: Gå gjennom lånegrensesnittet
       | På to hjul i svingen |  random_migrate_person_name | 101–200 |
       | Påfuglsommer |  random_migrate_person_name | 1–100 |
 
+  @kohadb
   Scenario: Låner reserverer bok på verkssiden
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
+    Gitt at Koha er populert med "1" lånere, "0" eksemplarer og "0" reserveringer
     Og at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
     Og jeg trykker på første treff
@@ -162,17 +162,16 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg leverer inn eksemplaret
     Når jeg går til Min Side
     Så skal jeg se at boka er klar til å hentes
-    Når at jeg er på Kohas interne forside
-    Og jeg låner ut boka
-    Når jeg går til Min Side
+    Når jeg låner ut boka
+    Og jeg går til Min Side
     Så skal jeg se at boka er utlånt
-    Når jeg trykker på forleng lånet
-    Og jeg bekrefter at jeg skal forlenge lånet
-    Så skal jeg se en dato lenger frem i tid
+    #Når jeg trykker på forleng lånet
+    #Og jeg bekrefter at jeg skal forlenge lånet
+    #Så skal jeg se en dato lenger frem i tid
 
+  @kohadb
   Scenario: Låner reserverer, bytter avdeling på, utsetter, aktiverer og avbestiller reservasjon
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
+    Gitt at Koha er populert med "1" lånere, "0" eksemplarer og "0" reserveringer
     Og at jeg er i søkegrensesnittet
     Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
     Og jeg trykker på første treff

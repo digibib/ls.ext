@@ -37,7 +37,7 @@ describe('components', () => {
   describe('SearchFilterBoxItem', () => {
     it('should render translated filter name', () => {
       const { node, messages, props } = setup()
-      expect(node.querySelector("[data-automation-id='filter_label']").textContent).toEqual(messages[props.filter.bucket])
+      expect(node.querySelector("[data-automation-id='filter_label']").textContent).toEqual(`Filtered on ${messages[props.filter.bucket]}`)
     })
 
     it('should toggle filter when clicked', () => {

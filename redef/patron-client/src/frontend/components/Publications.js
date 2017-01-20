@@ -229,7 +229,7 @@ class Publications extends React.Component {
             return (
               <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[ mediaTypeUri ]}
                                 key={mediaTypeUri}>
-                <div><MediaType key={mediaTypeUri} mediaType={mediaType} /></div>
+                <div><MediaType key={mediaTypeUri} mediaType={mediaType} buttonRole={'button'} buttonTabIndex={'0'} /></div>
               </ClickableElement>
             )
           })
