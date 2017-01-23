@@ -113,6 +113,7 @@
     "title1": "deichman:titleFirst",
     "title2": "deichman:titleSecond",
     "pubUri": "deichman:pubUri",
+    "publishedBy": "deichman:publishedBy",
     "partNumber": "deichman:partNumber",
     "kd": "deichman:kd",
     "mt": "deichman:mt",

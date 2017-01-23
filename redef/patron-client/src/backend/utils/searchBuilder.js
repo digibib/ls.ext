@@ -56,6 +56,7 @@ function initSimpleQuery (query) {
     'mt',
     'partNumber',
     'partTitle',
+    'publishedBy',
     'recordId',
     'series',
     'subject',

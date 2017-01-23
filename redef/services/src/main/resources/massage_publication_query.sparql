@@ -50,6 +50,7 @@ CONSTRUCT {
                deich:isbn ?isbn ;
                deich:ismn ?ismn ;
                deich:ean ?ean ;
+               deich:publishedBy ?publishedBy ;
                deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
                deich:langTitles <http://ignore> ;
@@ -117,6 +118,8 @@ WHERE {
            ?formatAdaptation rdfs:label ?formatAtaptNoLang .
            BIND(str(?formatAtaptNoLang) AS ?formatAdaptNo)
            FILTER(lang(?formatAtaptNoLang) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:publishedBy ?publisher .
+           ?publisher deich:name ?publishedBy . }
 
   # 2. Information from other publications:
   UNION {

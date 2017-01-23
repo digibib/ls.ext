@@ -251,6 +251,9 @@
     "compType": {
       "type": "string"
     },
+    "publishedBy": {
+      "type": "string"
+    },
     "langTitles": {
       "enabled": false
     },
