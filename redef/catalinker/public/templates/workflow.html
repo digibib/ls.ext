@@ -25,7 +25,7 @@
             {{#each inputGroups:groupIndex}}
                 {{#if checkRequiredInputValueForShow(.)}}
                     <li class="grid-tab pure-u">
-                        <a {{#if tabEnabled(tabSelected,domain)}}tabindex="0"{{else}}tabinedx="-1"{{/if}} class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link {{#tabEnabled(tabSelected,domain)}}{{else}}disabled{{/}}"
+                        <a {{#if tabEnabled(tabSelected,domain)}}tabindex="0"{{else}}tabindex="-1"{{/if}} class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link {{#tabEnabled(tabSelected,domain)}}{{else}}disabled{{/}}"
                            id="{{tabId}}-tab"
                            data-toggle="tab" role="tab"
                             on-click="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}"
