@@ -15,6 +15,7 @@ class SearchFilterItem extends React.Component {
     event.preventDefault()
     const { filter: { id } } = this.props
     this.props.toggleFilter(id)
+    this.props.toggleAllFilters(event)
     // ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView()
   }
 
@@ -61,7 +62,8 @@ SearchFilterItem.propTypes = {
   filter: PropTypes.object.isRequired,
   toggleFilter: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
-  scrollTargetNode: PropTypes.object.isRequired
+  scrollTargetNode: PropTypes.object.isRequired,
+  toggleAllFilters: PropTypes.func
 }
 
 export default injectIntl(SearchFilterItem)
