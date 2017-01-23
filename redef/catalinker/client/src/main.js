@@ -2865,6 +2865,19 @@
                 let prevItemId = $(event.node).attr('data-prev-sel-item')
                 $(`#${prevItemId}`).focus()
               },
+              focusNextSubItem: function (event) {
+                let nextSubItemId = $(event.node).attr('data-next-sub-item')
+                $(`#${nextSubItemId}`).focus()
+              },
+              focusPrevSubItem: function (event, itemIndex, subItemIndex) {
+                if (subItemIndex > 0) {
+                  let prevSubItemId = $(event.node).attr('data-prev-sub-item')
+                  $(`#${prevSubItemId}`).focus()
+                } else {
+                  $(event.node).blur()
+                  $(`#sel-item-${itemIndex}-details-toggle`).focus()
+                }
+              },
               focusDetailsToggle: function (event) {
                 const itemId = $(event.node).attr('id')
                 $(event.node).blur()

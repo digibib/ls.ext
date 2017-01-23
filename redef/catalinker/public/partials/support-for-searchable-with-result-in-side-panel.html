@@ -67,10 +67,15 @@ on-escape="cancelEdit">
                             {{#subItems.length || loadWorksAsSubjectOfItem}}
                             <a id="{{'sel-item-' + itemIndex + '-details-toggle'}}" tabindex="0"
                                class="toggle-show-sub-items"
+                               data-next-sub-item="sub-item-{{itemIndex}}-0"
                                {{#config.search[selectedIndexType].subItemsExpandTooltip}}title="{{config.search[selectedIndexType].subItemsExpandTooltip}}"{{/}}
                                on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
                                on-enter="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
-                               on-downarrow="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
+                               {{#toggleSubItem}}
+                                    on-downarrow="focusNextSubItem"
+                               {{else}}
+                                    on-downarrow="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
+                               {{/toggleSubItem}}
                                on-leftarrow="focusItem:{{'sel-item-' + itemIndex}}"
                                on-uparrow="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}">
                             {{#toggleSubItem}}&#x25B2;{{else}}&#x25BC;{{/toggleSubItem}}</a>
@@ -79,14 +84,19 @@ on-escape="cancelEdit">
                         {{>"additional-search-result-item-info-for-"+selectedIndexType}}
                         {{#toggleSubItem}}
                         <div class="work-items pure-u-1">
-                            {{#subItems}}
+                            {{#subItems:subItemIndex}}
                             <div class="search-result-subitem pure-g">
                                 {{>subItemType}}
                                 {{# widgetOptions.showSelectItem}}
                                     <span class="search-result-work-selector pure-u-2-24">
-                                        <input class="select-work-radio" type="radio" checked="{{isChecked}}"
+                                        <input id="sub-item-{{itemIndex}}-{{subItemIndex}}"
+                                               data-next-sub-item="sub-item-{{itemIndex}}-{{(subItemIndex + 1)}}"
+                                               data-prev-sub-item="sub-item-{{itemIndex}}-{{(subItemIndex - 1)}}"
+                                               class="select-work-radio" type="radio" checked="{{isChecked}}"
                                                on-click="selectSearchableItem:{{.}},{{origin}},{{items[itemIndex].name}},{subItem: true}"
                                                on-enter="selectSearchableItem:{{.}},{{origin}},{{items[itemIndex].name}},{subItem: true}"
+                                               on-downarrow="focusNextSubItem"
+                                               on-uparrow="focusPrevSubItem:{{itemIndex}},{{subItemIndex}}"
                                         />
                                     </span>
                                 {{/}}
