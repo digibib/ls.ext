@@ -50,6 +50,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"fictionNonfiction\": \"http://data.deichman.no/fictionNonfiction#fiction\",\n"
             + "    \"firstPublicationYear\": \"2004\",\n"
             + "    \"format\": \"E-bok\",\n"
+            + "    \"formatAdaptation\": \"Storskrift\",\n"
             + "    \"formats\": [\n"
             + "        \"http://data.deichman.no/format#E-Book\"\n"
             + "    ],\n"
@@ -174,6 +175,7 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:recordId \"3\" ;\n"
                 + "    ns2:hasImage \"http://static.deichman.no/1549895/bk/1_thumb.jpg\" ;\n"
                 + "    ns2:ageLimit \"42\" ;\n"
+                + "    ns2:hasFormatAdaptation  <http://data.deichman.no/formatAdaptation#largePrint> ;\n"
                 + "    ns2:fictionNonfiction \"http://data.deichman.no/fictionNonfiction#fiction\" ;\n"
                 + "    ns2:locationClassNumber\"ITA\" ;\n"
                 + "    ns4:locationSignature \"Rag\" ;\n"
@@ -267,7 +269,9 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/serial/s1> rdf:type ns2:Serial ;\n"
                 + "     ns2:mainTitle \"italiano norveigano\" .\n"
-                + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en ";
+                + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en .\n"
+                + "\n"
+                + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication").createIndexDocument(model, publicationXuri1);

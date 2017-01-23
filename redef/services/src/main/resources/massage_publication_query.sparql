@@ -33,6 +33,7 @@ CONSTRUCT {
                deich:recordId ?recordId ;
                deich:summary ?summary ;
                deich:formatNo ?formatNo ;
+               deich:formatAdaptation ?formatAdaptNo ;
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
                deich:dewey ?dewey ;
@@ -110,6 +111,10 @@ WHERE {
           ?serial deich:mainTitle ?seriesTitle . }
 
   UNION { <__PUBLICATIONURI__> deich:locationClassNumber ?locDewey }
+  UNION { <__PUBLICATIONURI__> deich:hasFormatAdaptation ?formatAdaptation .
+           ?formatAdaptation rdfs:label ?formatAtaptNoLang .
+           BIND(str(?formatAtaptNoLang) AS ?formatAdaptNo)
+           FILTER(lang(?formatAtaptNoLang) = "no") }
 
   # 2. Information from other publications:
   UNION {

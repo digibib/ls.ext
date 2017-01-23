@@ -151,6 +151,9 @@
       "type": "string",
       "analyzer": "format_analyzer"
     },
+    "formatAdaptation": {
+      "type": "string"
+    },
     "language": {
       "type": "string",
       "analyzer": "language_analyzer"
