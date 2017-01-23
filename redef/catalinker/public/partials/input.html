@@ -19,12 +19,14 @@
       intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
         {{#each values:inputValueIndex}}
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
-                <span class="field" class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                    {{>(readOnly ? "readonly-" : "") + type}}
-                    <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-                </span>
-                <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
-                    {{>"support-for-"+type}}
+                <span class="input">
+                    <span class="field" class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                        {{>(readOnly ? "readonly-" : "") + type}}
+                        <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+                    </span>
+                    <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+                        {{>"support-for-"+type}}
+                    </span>
                 </span>
             {{/if}}
         {{/each}}
@@ -41,7 +43,7 @@
     {{#if !./unFinished}}
     {{#each subInputs[0].input.values:inputValueIndex}}
         {{#if nonEditable && ../../../../../accordionHeader}}
-        <h3 class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
+        <h3 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}" class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
             {{#with ../../../../../accordionHeader}}
             {{>"accordion-header-for-"+. }}
             {{/with}}
@@ -91,10 +93,10 @@
                                 {{#with subInputs[0].input.values[inputValueIndex]}}
                                     {{#if (subjectTypes.length > 1)}}
                                     <span class="subject-type-select">
-                                        <input type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
+                                        <input tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
                                                {{# !targetUri[../../../../../../../subjectTypes[index]]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
                                                disabled='disabled' {{/}}/>
-                                        <label>{{subjectTypeLabel(subjectTypes[index])}}</label>
+                                        <label tabindex="-1">{{subjectTypeLabel(subjectTypes[index])}}</label>
                                     </span>
                                 {{/if}}
                                 {{/with}}
@@ -104,8 +106,9 @@
                         {{#if ./nonEditable || ./suggested}}
                                 {{subjectTypeLabelDet(subjectType)}}
                         {{else}}
-                        <button tabindex="0" class="pure-button pure-button-primary add-item-button"
-                          {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
+                        <button class="pure-button pure-button-primary add-item-button"
+                                tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                                {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
                           title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
                            on-click="saveObject:{{inputValueIndex}}" >Legg til</button>
                         <span class="save-placeholder"></span>
@@ -116,7 +119,10 @@
                 <div class="pure-u-1-1 suggestion-source-{{suggested.source}}">
                    <span class="pure-u-4-6"></span>
                     <span class="pure-u-2-6 use-suggestion-button">
-                        <button tabindex="0" on-click="useSuggestion" class="pure-button pure-button-primary">Bruk forslag</button>
+                        <button
+                                tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                                on-click="useSuggestion"
+                                class="pure-button pure-button-primary">Bruk forslag</button>
                     </span>
                 </div>
                 {{/if}}
@@ -128,7 +134,11 @@
     <span class="pure-u-1-1" style="order: 1000;">
         <div class="add-new-btn-row">
             <div class="pure-u-1-12"> </div>
-            <button tabindex="0" class="pure-button pure-button-primary" on-click="addValue" on-keyup="addValue">{{addAnotherLabel || 'Legg til ny'}}</button>
+            <button
+                    tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                    class="pure-button pure-button-primary"
+                    on-click="addValue"
+                    on-keyup="addValue">{{addAnotherLabel || 'Legg til ny'}}</button>
         </div>
     </span>
 {{/}}

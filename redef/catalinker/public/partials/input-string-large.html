@@ -1,4 +1,5 @@
 <textarea {{#disabled}} disabled="true" {{/}}
+tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 class="pure-u-22-24 {{#error}}invalid-input{{else}}valid{{/error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{../../dataAutomationId}}"

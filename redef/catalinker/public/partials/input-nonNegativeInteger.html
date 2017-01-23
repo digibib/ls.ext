@@ -2,6 +2,7 @@
 <span data-automation-id="{{../../dataAutomationId}}">{{./current.value}}</span>
 {{else}}
 <input {{#disabled}} disabled="true" {{/}}
+tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 type="number" min="0"
 class-invalid-input="{{error}}"
 class-valid="{{!error}}"

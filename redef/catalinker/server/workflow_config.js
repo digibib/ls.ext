@@ -1520,6 +1520,7 @@ module.exports = (app) => {
                   indexType: 'publication'
                 },
                 widgetOptions: {
+                  maintenance: true,
                   editWithTemplate: {
                     template: "workflow",
                     descriptionKey: 'maintPub'
@@ -1532,6 +1533,7 @@ module.exports = (app) => {
                   indexType: 'workUnstructured'
                 },
                 widgetOptions: {
+                  maintenance: true,
                   editWithTemplate: {
                     template: "workflow",
                     descriptionKey: 'maintWork'

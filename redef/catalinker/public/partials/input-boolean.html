@@ -2,6 +2,7 @@
 <span data-automation-id="{{../../dataAutomationId}}" class="boolean-value"><span class="{{./current.value === true ? 'ui-icon ui-icon-check' : ''}}"></span></span>
 {{else}}
 <input type="checkbox" {{#disabled}} disabled="true" {{/}}
+tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 class="pure-u-1-1"
 class-invalid-input="{{error}}"
 class-valid="{{!error}}"

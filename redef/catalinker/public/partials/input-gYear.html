@@ -2,6 +2,7 @@
 class="pure-u-1-2"
 class-invalid-input="{{error}}"
 class-valid="{{!error}}"
+tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}" />
