@@ -49,6 +49,7 @@ CONSTRUCT {
                deich:partNumber ?pubPartNumber ;
                deich:isbn ?isbn ;
                deich:ismn ?ismn ;
+               deich:ean ?ean ;
                deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
                deich:langTitles <http://ignore> ;
@@ -90,6 +91,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
   UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
   UNION { <__PUBLICATIONURI__> deich:ismn ?ismn }
+  UNION { <__PUBLICATIONURI__> deich:ean ?ean }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO .
           BIND(str(?languageO) AS ?language) .
           BIND(afn:substr(?language, 29) AS ?langCode) }

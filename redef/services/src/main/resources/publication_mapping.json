@@ -170,6 +170,10 @@
       "type": "string",
       "analyzer": "isbn_analyzer"
     },
+    "ean": {
+      "type": "string",
+      "analyzer": "isbn_analyzer"
+    },
     "series": {
       "type": "string"
     },
