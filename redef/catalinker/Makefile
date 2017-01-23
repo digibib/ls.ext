@@ -6,6 +6,7 @@ CMD=vagrant ssh $(SHIP)
 CLPATH=/vagrant/redef/catalinker
 endif
 
+GITREF=$(shell git rev-parse HEAD)
 IMAGE=digibib/redef-catalinker
 CONTAINER=catalinker
 MODULE_TEST_CONTAINER=catalinker_test
