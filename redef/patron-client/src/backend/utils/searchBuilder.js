@@ -63,6 +63,7 @@ function initSimpleQuery (query) {
     'recordId',
     'series',
     'subject',
+    'summary',
     'title',
     'workMainTitle'
   ]

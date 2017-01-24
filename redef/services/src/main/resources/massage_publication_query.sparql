@@ -59,7 +59,8 @@ CONSTRUCT {
                deich:writingSystem ?wsNo ;
                deich:inst ?inst ;
                deich:bio ?bio ;
-               deich:workMainTitle ?workMainTitle .
+               deich:workMainTitle ?workMainTitle ;
+               deich:summary ?summary .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -156,6 +157,8 @@ WHERE {
   # 3. Information from work:
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
              ?work a deich:Work ; deich:mainTitle ?workMainTitle. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:hasSummary ?summary. }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasCompositionType ?compType .
            ?compType deich:prefLabel ?compTypeLabel . }
