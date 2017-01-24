@@ -82,6 +82,7 @@ public final class EntityServiceImpl implements EntityService {
     private static final String CONTENTADAPTATION_TTL_FILE = "contentAdaptation.ttl";
     private static final String FORMATADAPTATION_TTL_FILE = "formatAdaptation.ttl";
     private static final String WRITINGSYSTEM_TTL_FILE = "writingSystem.ttl";
+    private static final String BIOGRAPHY_TTL_FILE = "biography.ttl";
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final Property mainTitleProperty;
@@ -220,6 +221,10 @@ public final class EntityServiceImpl implements EntityService {
         return getLinkedResource(input, "writingSystem", WRITINGSYSTEM_TTL_FILE);
     }
 
+    private Model getLinkedBiographySystemResource(Model input) {
+        return getLinkedResource(input, "biography", BIOGRAPHY_TTL_FILE);
+    }
+
     private Model getLinkedRoleResource(Model input) {
         return getLinkedResource(input, "role", ROLE_TTL_FILE);
     }
@@ -277,6 +282,7 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedWorkTypeResource(m);
         m = getLinkedRoleResource(m);
         m = getLinkedWritingSystemResource(m);
+        m = getLinkedBiographySystemResource(m);
         return m;
     }
 

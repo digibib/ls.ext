@@ -28,6 +28,7 @@ public class PublicationModelToIndexMapperTest {
             + "        \"Falcinella, Cristina\",\n"
             + "        \"Frankenstein, Casanova\"\n"
             + "    ],\n"
+            + "    \"bio\": \"Biografisk innhold\",\n"
             + "    \"contributors\": [\n"
             + "        {\n"
             + "            \"agent\": {\n"
@@ -245,7 +246,8 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:hasClassification [ a ns2:ClassificationEntry ;\n"
                 + "      ns2:hasClassificationNumber  \"929.209484213\" ;\n"
                 + "      ns2:hasClassificationSource  <http://data.deichman.no/classificationSource#ddk5> ] ;\n"
-                + "    ns2:subject <http://deichman.no/subject/e1200005> ;"
+                + "    ns2:subject <http://deichman.no/subject/e1200005> ;\n"
+                + "    ns2:biography <http://data.deichman.no/biography#biographicalContent> ;\n"
                 + "    ns2:hasInstrumentation [ ns2:hasInstrument <http://data.deichman.no/instrument/i1> ] .\n"
                 + "\n"
                 + "<http://data.deichman.no/corporation/c999> rdf:type ns2:Corporation ;\n"
@@ -288,7 +290,9 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en ."
                 + "\n"
-                + "<http://data.deichman.no/instrument/i1> ns2:prefLabel \"Tverrfløyte\" .";
+                + "<http://data.deichman.no/instrument/i1> ns2:prefLabel \"Tverrfløyte\" ."
+                + "\n"
+                + "<http://data.deichman.no/biography#biographicalContent> rdfs:label \"Biografisk innhold\"@no, \"Biographical content\"@en .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication").createIndexDocument(model, publicationXuri1);

@@ -64,6 +64,10 @@
         }
       }
     },
+    "bio": {
+      "type": "string",
+      "analyzer": "biography_analyzer"
+    },
     "dewey": {
       "type": "string"
     },

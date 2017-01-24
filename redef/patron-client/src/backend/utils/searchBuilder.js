@@ -44,6 +44,7 @@ function initSimpleQuery (query) {
   const defaultFields = [
     'agents',
     'author',
+    'bio',
     'compType',
     'desc',
     'ean',

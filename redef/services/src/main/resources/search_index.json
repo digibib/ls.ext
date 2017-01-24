@@ -231,6 +231,15 @@
             "armenian => armensk"
           ]
         },
+        "biography_synonym_filter": {
+          "type": "synonym",
+          "synonyms": [
+            "a, autobiography => selvbiografi",
+            "b, single biography => enkeltbiografi",
+            "c, collective biography => samlingsbiografi",
+            "d, biographical content => biografisk innhold"
+            ]
+        },
         "norwegian_folding": {
           "type": "icu_folding",
           "unicodeSetFilter": "[^æøåÆØÅ]"
@@ -296,6 +305,14 @@
           "filter": [
             "lowercase",
             "writing_system_synonym_filter"
+          ]
+        },
+        "biography_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "biography_synonym_filter"
           ]
         }
       }
