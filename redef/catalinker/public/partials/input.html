@@ -93,7 +93,7 @@
                                 {{#with subInputs[0].input.values[inputValueIndex]}}
                                     {{#if (subjectTypes.length > 1)}}
                                     <span class="subject-type-select">
-                                        <input tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
+                                        <input tabindex="{{tabSelected ? '0' : '-1'}}"type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
                                                {{# !targetUri[../../../../../../../subjectTypes[index]]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
                                                disabled='disabled' {{/}}/>
                                         <label tabindex="-1">{{subjectTypeLabel(subjectTypes[index])}}</label>
