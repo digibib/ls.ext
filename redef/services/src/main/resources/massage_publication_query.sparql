@@ -12,6 +12,7 @@ CONSTRUCT {
                deich:languages ?language ;
                deich:language ?langCode ;
                deich:format ?format ;
+               deich:desc ?desc ;
                deich:publicationYear ?pubPublicationYear ;
                deich:firstPublicationYear ?workPublicationYear ;
                deich:audience ?audience ;
@@ -121,10 +122,11 @@ WHERE {
            FILTER(lang(?formatAtaptNoLang) = "no") }
   UNION { <__PUBLICATIONURI__> deich:publishedBy ?publisher .
            ?publisher deich:name ?publishedBy . }
-   UNION { <__PUBLICATIONURI__> deich:writingSystem ?writingSystem.
+  UNION { <__PUBLICATIONURI__> deich:writingSystem ?writingSystem.
              ?writingSystem rdfs:label ?wsNoLang .
              BIND(str(?wsNoLang) AS ?wsNo)
              FILTER(lang(?wsNoLang) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 2. Information from other publications:
   UNION {

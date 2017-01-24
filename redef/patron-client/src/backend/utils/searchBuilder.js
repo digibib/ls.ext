@@ -45,6 +45,7 @@ function initSimpleQuery (query) {
     'agents',
     'author',
     'compType',
+    'desc',
     'ean',
     'format',
     'genre',

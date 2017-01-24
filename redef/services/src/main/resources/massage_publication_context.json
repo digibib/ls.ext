@@ -119,6 +119,7 @@
     "mt": "deichman:mt",
     "formatAdaptation": "deichman:formatAdaptation",
     "writingSystem": "deichman:writingSystem",
+    "desc": "deichman:desc",
     "http://lexvo.org/id/iso639-3/nob": { "@container": "@set" },
     "http://lexvo.org/id/iso639-3/nno": { "@container": "@set" },
     "http://lexvo.org/id/iso639-3/dan": { "@container": "@set" },
