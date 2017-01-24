@@ -54,7 +54,8 @@ CONSTRUCT {
                deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
                deich:langTitles <http://ignore> ;
-               deich:kd ?locDewey .
+               deich:kd ?locDewey ;
+               deich:writingSystem ?wsNo .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -120,6 +121,10 @@ WHERE {
            FILTER(lang(?formatAtaptNoLang) = "no") }
   UNION { <__PUBLICATIONURI__> deich:publishedBy ?publisher .
            ?publisher deich:name ?publishedBy . }
+   UNION { <__PUBLICATIONURI__> deich:writingSystem ?writingSystem.
+             ?writingSystem rdfs:label ?wsNoLang .
+             BIND(str(?wsNoLang) AS ?wsNo)
+             FILTER(lang(?wsNoLang) = "no") }
 
   # 2. Information from other publications:
   UNION {

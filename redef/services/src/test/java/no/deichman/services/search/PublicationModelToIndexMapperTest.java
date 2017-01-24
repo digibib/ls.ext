@@ -129,6 +129,7 @@ public class PublicationModelToIndexMapperTest {
             + "    ],\n"
             + "    \"adaptor\": \"Falcinella, Cristina\",\n"
             + "    \"uri\": \"http://data.deichman.no/publication/p594502562255\",\n"
+            + "    \"writingSystem\": \"Latinsk\",\n"
             + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
 
@@ -182,6 +183,7 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:hasFormatAdaptation  <http://data.deichman.no/formatAdaptation#largePrint> ;\n"
                 + "    ns2:fictionNonfiction \"http://data.deichman.no/fictionNonfiction#fiction\" ;\n"
                 + "    ns2:locationClassNumber\"ITA\" ;\n"
+                + "    ns2:writingSystem <http://data.deichman.no/writingSystem#latin> ;\n"
                 + "    ns4:locationSignature \"Rag\" ;\n"
                 + "    ns4:statementOfResponsibility \"Anne B. Ragde ; traduzione di Cristina Falcinella\" .\n"
                 + "\n"
@@ -277,6 +279,8 @@ public class PublicationModelToIndexMapperTest {
                 + "<http://data.deichman.no/serial/s1> rdf:type ns2:Serial ;\n"
                 + "     ns2:mainTitle \"italiano norveigano\" .\n"
                 + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no, \"Novel\"@en .\n"
+                + "\n"
+                + "<http://data.deichman.no/writingSystem#latin> rdfs:label \"Latinsk\"@no, \"Latin\"@en .\n"
                 + "\n"
                 + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en .";
 

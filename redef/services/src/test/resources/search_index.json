@@ -213,6 +213,22 @@
             "other => andre",
             "periodical, magazine => periodika"
           ]
+        },
+        "writing_system_synonym_filter": {
+          "type": "synonym",
+          "synonyms": [
+            "cyrillic => kyrillisk",
+            "japanese => japansk",
+            "chinese => kinesisk",
+            "arabic => arabisk",
+            "greek => gresk",
+            "hebrew => hebraisk",
+            "korean => koreansk",
+            "latin => latinsk",
+            "georgian => georgisk",
+            "burmese => burmesisk",
+            "armenian => armensk"
+          ]
         }
       },
       "analyzer": {
@@ -260,6 +276,14 @@
           "tokenizer": "keyword",
           "filter": [
             "isbn_clean_filter"
+          ]
+        },
+        "writing_system_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "writing_system_synonym_filter"
           ]
         }
       }
