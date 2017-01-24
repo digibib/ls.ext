@@ -9,6 +9,7 @@
         },
         "litform_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "r, novel => roman",
             "n, fortelling, short story => novelle/fortelling",
@@ -30,6 +31,7 @@
         },
         "language_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "bokmål, nob",
             "nynorsk, nno",
@@ -176,6 +178,7 @@
         },
         "format_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "blu, bluray => blu-ray",
             "3d => 3d-film",
@@ -201,6 +204,7 @@
         },
         "mediatype_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "book => bok",
             "e-book => e-bok",
@@ -216,6 +220,7 @@
         },
         "writing_system_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "cyrillic => kyrillisk",
             "japanese => japansk",
@@ -232,6 +237,7 @@
         },
         "biography_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "a, autobiography => selvbiografi",
             "b, single biography => enkeltbiografi",
