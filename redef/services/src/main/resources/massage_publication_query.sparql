@@ -58,7 +58,8 @@ CONSTRUCT {
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
                deich:inst ?inst ;
-               deich:bio ?bio .
+               deich:bio ?bio ;
+               deich:workMainTitle ?workMainTitle .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -153,6 +154,8 @@ WHERE {
       }
 
   # 3. Information from work:
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+             ?work a deich:Work ; deich:mainTitle ?workMainTitle. }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasCompositionType ?compType .
            ?compType deich:prefLabel ?compTypeLabel . }

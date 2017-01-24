@@ -286,6 +286,9 @@
     },
     "kd": {
       "type": "string"
+    },
+    "workMainTitle": {
+      "type": "string"
     }
   }
 }

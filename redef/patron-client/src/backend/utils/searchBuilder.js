@@ -63,7 +63,8 @@ function initSimpleQuery (query) {
     'recordId',
     'series',
     'subject',
-    'title'
+    'title',
+    'workMainTitle'
   ]
   return {
     filtered: {

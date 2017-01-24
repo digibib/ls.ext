@@ -133,6 +133,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"adaptor\": \"Falcinella, Cristina\",\n"
             + "    \"uri\": \"http://data.deichman.no/publication/p594502562255\",\n"
             + "    \"writingSystem\": \"Latinsk\",\n"
+            + "    \"workMainTitle\": \"Berlinerpoplene\",\n"
             + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
 
