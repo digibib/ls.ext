@@ -320,5 +320,6 @@ export default {
   'Work.labelSeries': 'Inngår i serien',
   'Work.noWork': 'Inget verk',
   'Work.workInformation': 'Verksinformasjon',
+  'WorkSerie.labelWorkSerie': 'Inngår i serien',
   'Year.labelOriginalReleaseDate': 'Utgitt første gang'
 }
