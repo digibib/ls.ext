@@ -57,7 +57,7 @@ public final class SPARQLQueryBuilder {
                 + "DESCRIBE <__WORKURI__> ?publication ?workContributor ?compType ?format ?mediaType ?subject\n"
                 + "         ?genre ?instrument ?publicationPart ?litform ?hasWorkType ?serial ?nation\n"
                 + "         ?pubContrib ?publicationContributor ?place ?publishedBy ?publicationPartValues\n"
-                + "         ?bio ?country ?contentAdaptation ?relatedWork\n"
+                + "         ?bio ?country ?contentAdaptation ?relatedWork ?workSeries\n"
                 + "WHERE {\n"
                 + "        { <__WORKURI__> a deichman:Work }\n"
                 + "  UNION { <__WORKURI__> deichman:isRelatedTo ?related . \n"
@@ -96,6 +96,11 @@ public final class SPARQLQueryBuilder {
                 + "  UNION { <__WORKURI__> deichman:biography ?bio }\n"
                 + "  UNION { <__WORKURI__> deichman:nationality ?country }\n"
                 + "  UNION { <__WORKURI__> deichman:contentAdaptation ?contentAdaptation }\n"
+                + "  UNION { <__WORKURI__> deichman:isPartOfWorkSeries ?workSeriesPart . \n"
+                + "          ?workSeriesPart a deichman:WorkSeriesPart ;\n"
+                + "                          deichman:workSeries ?workSeries .\n"
+                + "          ?workSeries a deichman:WorkSeries .\n"
+                + "  }"
                 + "}";
         queryString = queryString.replaceAll("__WORKURI__", xuri.getUri());
         return QueryFactory.create(queryString);
