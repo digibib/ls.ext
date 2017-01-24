@@ -56,7 +56,8 @@ CONSTRUCT {
                deich:fictionNonfiction ?fictionNonfiction ;
                deich:langTitles <http://ignore> ;
                deich:kd ?locDewey ;
-               deich:writingSystem ?wsNo .
+               deich:writingSystem ?wsNo ;
+               deich:inst ?inst .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -168,6 +169,10 @@ WHERE {
             ?l rdfs:label ?litLabel .
             BIND(str(?litLabel) AS ?litform)
             FILTER(lang(?litLabel) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:hasInstrumentation ?instrumentation.
+            ?instrumentation deich:hasInstrument ?instrument .
+            ?instrument deich:prefLabel ?inst }
 
   UNION {
     {

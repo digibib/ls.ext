@@ -60,6 +60,7 @@ public class PublicationModelToIndexMapperTest {
             + "        \"Krim (spesial)\"\n"
             + "    ],\n"
             + "    \"image\": \"http://static.deichman.no/1549895/bk/1_thumb.jpg\",\n"
+            + "    \"inst\": \"Tverrfløyte\",\n"
             + "    \"isbn\": \"978-88-545-0662-6\",\n"
             + "    \"ismn\": \"M 23000399-5\",\n"
             + "    \"kd\": \"ITA\",\n"
@@ -244,7 +245,8 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:hasClassification [ a ns2:ClassificationEntry ;\n"
                 + "      ns2:hasClassificationNumber  \"929.209484213\" ;\n"
                 + "      ns2:hasClassificationSource  <http://data.deichman.no/classificationSource#ddk5> ] ;\n"
-                + "    ns2:subject <http://deichman.no/subject/e1200005> .\n"
+                + "    ns2:subject <http://deichman.no/subject/e1200005> ;"
+                + "    ns2:hasInstrumentation [ ns2:hasInstrument <http://data.deichman.no/instrument/i1> ] .\n"
                 + "\n"
                 + "<http://data.deichman.no/corporation/c999> rdf:type ns2:Corporation ;\n"
                 + "    ns2:name \"Verdamt Verlag\" .\n"
@@ -284,7 +286,9 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/writingSystem#latin> rdfs:label \"Latinsk\"@no, \"Latin\"@en .\n"
                 + "\n"
-                + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en .";
+                + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en ."
+                + "\n"
+                + "<http://data.deichman.no/instrument/i1> ns2:prefLabel \"Tverrfløyte\" .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication").createIndexDocument(model, publicationXuri1);

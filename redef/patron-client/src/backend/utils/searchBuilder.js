@@ -49,6 +49,7 @@ function initSimpleQuery (query) {
     'ean',
     'format',
     'genre',
+    'inst',
     'isbn',
     'ismn',
     'language',
