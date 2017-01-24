@@ -113,6 +113,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"mediatype\": \"http://data.deichman.no/mediaType#Book\",\n"
             + "    \"mt\": \"bok\",\n"
             + "    \"nationality\": \"Norge\",\n"
+            + "    \"origLang\": \"nob\",\n"
             + "    \"partTitle\": \"abc\",\n"
             + "    \"publicationYear\": \"2013\",\n"
             + "    \"publishedBy\": \"Verdamt Verlag\",\n"

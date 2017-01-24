@@ -292,6 +292,10 @@
     },
     "country": {
       "type": "string"
+    },
+    "origLang": {
+      "type": "string",
+      "analyzer": "language_analyzer"
     }
   }
 }
