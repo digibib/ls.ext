@@ -46,6 +46,7 @@ function initSimpleQuery (query) {
     'author',
     'bio',
     'compType',
+    'country',
     'desc',
     'ean',
     'format',
