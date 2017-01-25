@@ -99,7 +99,6 @@ public final class SPARQLQueryBuilder {
                 + "  UNION { <__WORKURI__> deichman:isPartOfWorkSeries ?workSeriesPart . \n"
                 + "          ?workSeriesPart a deichman:WorkSeriesPart ;\n"
                 + "                          deichman:workSeries ?workSeries .\n"
-                + "          ?workSeries a deichman:WorkSeries .\n"
                 + "  }"
                 + "}";
         queryString = queryString.replaceAll("__WORKURI__", xuri.getUri());
