@@ -138,6 +138,8 @@ public class PublicationModelToIndexMapperTest {
             + "    \"uri\": \"http://data.deichman.no/publication/p594502562255\",\n"
             + "    \"writingSystem\": \"Latinsk\",\n"
             + "    \"workMainTitle\": \"Berlinerpoplene\",\n"
+            + "    \"workPartNumber\": \"1\","
+            + "    \"workPartTitle\": \"Den første og siste\",\n"
             + "    \"workSubtitle\": \"Et trønderdrama\",\n"
             + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\"\n"
             + "}";
@@ -247,6 +249,8 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
                 + "    ns2:literaryForm <http://data.deichman.no/literaryForm#novel> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
+                + "    ns2:partNumber \"1\" ;\n"
+                + "    ns2:partTitle \"Den første og siste\";\n"
                 + "    ns2:subtitle \"Et trønderdrama\" ;\n"
                 + "    ns2:nationality <http://data.deichman.no/nationality#n> ;\n"
                 + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"

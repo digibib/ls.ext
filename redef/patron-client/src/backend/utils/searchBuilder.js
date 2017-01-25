@@ -67,6 +67,8 @@ function initSimpleQuery (query) {
     'summary',
     'title',
     'workMainTitle',
+    'workPartNumber',
+    'workPartTitle',
     'workSubtitle'
   ]
   return {

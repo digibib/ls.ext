@@ -303,6 +303,12 @@
     },
     "workSubtitle": {
       "type": "string"
+    },
+    "workPartNumber": {
+      "type": "string"
+    },
+    "workPartTitle": {
+      "type": "string"
     }
   }
 }

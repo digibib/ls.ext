@@ -65,7 +65,9 @@ CONSTRUCT {
                deich:country ?country ;
                deich:origLang ?origLang ;
                deich:contentAdaptation ?contentAdaptationCode ;
-               deich:workSubtitle ?workSubtitle .
+               deich:workSubtitle ?workSubtitle ;
+               deich:workPartNumber ?workPartNumber ;
+               deich:workPartTitle ?workPartTitle .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -161,9 +163,13 @@ WHERE {
 
   # 3. Information from work:
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-             ?work a deich:Work ; deich:mainTitle ?workMainTitle. }
+            ?work a deich:Work ; deich:mainTitle ?workMainTitle. }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-               ?work a deich:Work ; deich:subtitle ?workSubtitle. }
+            ?work a deich:Work ; deich:subtitle ?workSubtitle. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:partNumber ?workPartNumber. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:partTitle ?workPartTitle. }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
             ?work a deich:Work ; deich:hasSummary ?summary. }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
