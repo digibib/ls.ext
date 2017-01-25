@@ -24,6 +24,9 @@ module.exports = (app) => {
       if ([ 'hutl', 'fbje', 'fbjo', 'fbol', 'ffur', 'fgry', 'fhol',
         'flam', 'fmaj', 'fnor', 'fnyd', 'fopp', 'frik', 'frmm', 'from', 'froa',
         'fsme', 'fsto', 'ftor', 'fgam' ].includes(library.branchcode)) { return true }
+
+      // allow test branch codes also
+      return (/^[a-f0-9]{8}$/.test(library.branchcode))
     })
   }
 }
