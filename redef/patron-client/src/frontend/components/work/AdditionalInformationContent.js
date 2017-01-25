@@ -12,6 +12,7 @@ import CompositionTypes from './fields/CompositionTypes'
 import FictionNonfiction from './fields/FictionNonfiction'
 import Key from './fields/Key'
 import ContentAdaptations from './fields/ContentAdaptations'
+import WorkRelations from './fields/WorkRelations'
 
 const AdditionalInformationContent = ({ work }) => (
   <NonIETransitionGroup
@@ -37,6 +38,7 @@ const AdditionalInformationContent = ({ work }) => (
       <Key key={work.key} />
       <Subjects subjects={work.subjects} />
       <Genres genres={work.genres} />
+        <WorkRelations workRelations={work.workRelations} />
   </NonIETransitionGroup>
 )
 

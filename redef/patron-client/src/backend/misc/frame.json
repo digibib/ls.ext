@@ -356,6 +356,9 @@
     "classifications": {
       "@id": "deichman:hasClassification",
       "@container": "@set"
+    },
+    "isPartOfWorkSeries": {
+      "@id": "deichman:isPartOfWorkSeries"
     }
   },
   "type": "Work",
@@ -444,8 +447,15 @@
       "@embed": "@never"
     }
   },
-  "isRelatedTo": {},
+  "isRelatedTo": {
+    "@embed": "@always"
+  },
   "contentAdaptations": {
     "@embed": "@never"
+  },
+  "isPartOfWorkSeries": {
+    "@embed": "@always"
   }
+
+
 }
