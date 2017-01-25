@@ -246,6 +246,14 @@
             "d, biographical content => biografisk innhold"
             ]
         },
+        "content_adaptation_synonym_filter": {
+          "type": "synonym",
+          "tokenizer": "keyword",
+          "synonyms": [
+            "easy to read, easy language, lettlest, enkelt språk, ta",
+            "easy to read, easy content, lettlest, enkelt innhold, tb"
+          ]
+        },
         "norwegian_folding": {
           "type": "icu_folding",
           "unicodeSetFilter": "[^æøåÆØÅ]"
@@ -319,6 +327,14 @@
           "filter": [
             "lowercase",
             "biography_synonym_filter"
+          ]
+        },
+        "content_adaptation_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "content_adaptation_synonym_filter"
           ]
         }
       }

@@ -2,6 +2,7 @@ PREFIX deich: <__ONTOLOGY__>
 PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
 PREFIX   afn: <http://jena.apache.org/ARQ/function#>
+PREFIX   duo: <http://data.deichman.no/utility#>
 
 CONSTRUCT {
         <__PUBLICATIONURI__> a deich:Publication ;
@@ -62,7 +63,8 @@ CONSTRUCT {
                deich:workMainTitle ?workMainTitle ;
                deich:summary ?summary ;
                deich:country ?country ;
-               deich:origLang ?origLang .
+               deich:origLang ?origLang ;
+               deich:contentAdaptation ?contentAdaptationCode .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -196,6 +198,9 @@ WHERE {
            ?work a deich:Work ; deich:language ?wLangO .
            BIND(str(?wLangO) AS ?wLang) .
            BIND(afn:substr(?wLang, 29) AS ?origLang) }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:hasContentAdaptation ?contentAdaptation .
+           ?contentAdaptation duo:code ?contentAdaptationCode . }
 
   UNION {
     {

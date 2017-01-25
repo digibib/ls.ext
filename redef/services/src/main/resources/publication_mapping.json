@@ -296,6 +296,10 @@
     "origLang": {
       "type": "string",
       "analyzer": "language_analyzer"
+    },
+    "contentAdaptation": {
+      "type": "string",
+      "analyzer": "content_adaptation_analyzer"
     }
   }
 }

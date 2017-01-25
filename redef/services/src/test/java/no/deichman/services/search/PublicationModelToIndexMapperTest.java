@@ -29,6 +29,7 @@ public class PublicationModelToIndexMapperTest {
             + "        \"Frankenstein, Casanova\"\n"
             + "    ],\n"
             + "    \"bio\": \"Biografisk innhold\",\n"
+            + "    \"contentAdaptation\": \"ta\",\n"
             + "    \"contributors\": [\n"
             + "        {\n"
             + "            \"agent\": {\n"
@@ -148,7 +149,7 @@ public class PublicationModelToIndexMapperTest {
         XURI publicationXuri2 = new XURI("http://data.deichman.no/publication/p735933031021");
         XURI subjectXuri = new XURI("http://deichman.no/subject/e1200005");
 
-        String inputGraph = "@prefix ns1: <http://data.deichman.no/duo#> .\n"
+        String inputGraph = "@prefix ns1: <http://data.deichman.no/utility#> .\n"
                 + "@prefix ns2: <http://data.deichman.no/ontology#> .\n"
                 + "@prefix ns4: <http://data.deichman.no/raw#> .\n"
                 + "@prefix ns5: <http://data.deichman.no/role#> .\n"
@@ -254,6 +255,7 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:subject <http://deichman.no/subject/e1200005> ;\n"
                 + "    ns2:biography <http://data.deichman.no/biography#biographicalContent> ;\n"
                 + "    ns2:hasSummary \"En bok...\" ;\n"
+                + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
                 + "    ns2:hasInstrumentation [ ns2:hasInstrument <http://data.deichman.no/instrument/i1> ] .\n"
                 + "\n"
                 + "<http://data.deichman.no/corporation/c999> rdf:type ns2:Corporation ;\n"
@@ -298,7 +300,9 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/instrument/i1> ns2:prefLabel \"Tverrfløyte\" ."
                 + "\n"
-                + "<http://data.deichman.no/biography#biographicalContent> rdfs:label \"Biografisk innhold\"@no, \"Biographical content\"@en .";
+                + "<http://data.deichman.no/biography#biographicalContent> rdfs:label \"Biografisk innhold\"@no, \"Biographical content\"@en ."
+                + "\n"
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> ns1:code \"ta\" .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication").createIndexDocument(model, publicationXuri1);
