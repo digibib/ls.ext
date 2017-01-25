@@ -300,6 +300,9 @@
     "contentAdaptation": {
       "type": "string",
       "analyzer": "content_adaptation_analyzer"
+    },
+    "workSubtitle": {
+      "type": "string"
     }
   }
 }

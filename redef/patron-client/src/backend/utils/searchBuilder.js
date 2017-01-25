@@ -66,7 +66,8 @@ function initSimpleQuery (query) {
     'subject',
     'summary',
     'title',
-    'workMainTitle'
+    'workMainTitle',
+    'workSubtitle'
   ]
   return {
     filtered: {

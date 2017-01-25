@@ -126,6 +126,7 @@
     "country": "deichman:country",
     "origLang": "deichman:origLang",
     "contentAdaptation": "deichman:contentAdaptation",
+    "workSubtitle": "deichman:workSubtitle",
     "http://lexvo.org/id/iso639-3/nob": { "@container": "@set" },
     "http://lexvo.org/id/iso639-3/nno": { "@container": "@set" },
     "http://lexvo.org/id/iso639-3/dan": { "@container": "@set" },
