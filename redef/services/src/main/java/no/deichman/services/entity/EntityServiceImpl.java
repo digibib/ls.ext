@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
@@ -703,7 +704,7 @@ public final class EntityServiceImpl implements EntityService {
             log.info("Creating local index for " + type);
             long start = System.currentTimeMillis();
             ResultSet resultSet = repository.retrieveAllNamesOfType(type);
-            nameIndexer = new NameIndexer(resultSet);
+            nameIndexer = (NameIndexer) MonProxyFactory.monitor(new NameIndexer(resultSet));
             if (!nameIndexer.isEmpty()) {
                 nameIndexers.put(type, nameIndexer);
             }
