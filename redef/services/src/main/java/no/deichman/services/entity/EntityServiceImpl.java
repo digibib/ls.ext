@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
@@ -8,6 +9,7 @@ import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
+import no.deichman.services.search.InMemoryNameIndexer;
 import no.deichman.services.search.NameEntry;
 import no.deichman.services.search.NameIndexer;
 import no.deichman.services.uridefaults.BaseURI;
@@ -703,7 +705,7 @@ public final class EntityServiceImpl implements EntityService {
             log.info("Creating local index for " + type);
             long start = System.currentTimeMillis();
             ResultSet resultSet = repository.retrieveAllNamesOfType(type);
-            nameIndexer = new NameIndexer(resultSet);
+            nameIndexer = (NameIndexer) MonProxyFactory.monitor(new InMemoryNameIndexer(resultSet));
             if (!nameIndexer.isEmpty()) {
                 nameIndexers.put(type, nameIndexer);
             }

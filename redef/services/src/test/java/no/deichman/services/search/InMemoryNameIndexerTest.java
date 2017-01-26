@@ -11,13 +11,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class NameIndexerTest {
+public class InMemoryNameIndexerTest {
     public static final String[] EXPECTED_TEST_DATA_1 = {
             "Abelsen, Heidi|http://data.deichman.no/uri/h13322200",
             "Eriksen, Kari|http://data.deichman.no/uri/h13322200",
             "Hansen, Johnny|http://data.deichman.no/uri/h13322200",
-            "Hansen, Åge|http://data.deichman.no/uri/h17607100",
             "Hansen, Aage|http://data.deichman.no/uri/h15343300",
+            "Hansen, Åge|http://data.deichman.no/uri/h17607100",
             "Hansen, Aage Daniel|http://data.deichman.no/uri/h24785100",
             "Hansen, Aase|http://data.deichman.no/uri/h13322200",
             "Karlsen, Johnny|http://data.deichman.no/uri/h13322200",
@@ -45,20 +45,20 @@ public class NameIndexerTest {
 
     @Test
     public void when_searching_for_name_returns_alphabetical_list_with_name_in_it() throws Exception {
-        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        InMemoryNameIndexer nameIndexer = new InMemoryNameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
         List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", LENGTH);
         assertThat(nameEntriesAsArray(nameEntries), equalTo(EXPECTED_TEST_DATA_1));
     }
 
     @Test
     public void when_searching_result_is_of_desired_size() throws Exception {
-        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        InMemoryNameIndexer nameIndexer = new InMemoryNameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
         assertThat(nameIndexer.neighbourhoodOf("Hansen, T.", SMALL_LENGTH).size(), equalTo(SMALL_LENGTH));
     }
 
     @Test
     public void when_searching_with_size_1_correct_entry_is_returned() throws Exception {
-        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        InMemoryNameIndexer nameIndexer = new InMemoryNameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
         //"Karlsen, Johnny", "Hansen, Aase",
         Arrays.stream(new String[]{
                 "Hansen, Aase",
@@ -74,7 +74,7 @@ public class NameIndexerTest {
 
     @Test
     public void when_new_items_are_added_to_empty_index_the_list_is_sorted_correctly() throws Exception {
-        NameIndexer nameIndexer = new NameIndexer();
+        InMemoryNameIndexer nameIndexer = new InMemoryNameIndexer();
         nameIndexer.addNamedItem("Frantzen, Aage Tarald", "http://data.deichman.no/person/p123456");
         nameIndexer.addNamedItem("Nilsen, Aage Tarald", "http://data.deichman.no/person/p123456");
         nameIndexer.addNamedItem("Hansen, Aage Tarald", "http://data.deichman.no/person/p123456");
@@ -90,7 +90,7 @@ public class NameIndexerTest {
 
     @Test
     public final void when_removing_a_name_the_list_is_shortened_accordingly() throws Exception {
-        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        InMemoryNameIndexer nameIndexer = new InMemoryNameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
         List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", LENGTH);
         int initialSize = nameEntries.size();
         assertThat(initialSize, greaterThan(SMALL_LENGTH));
@@ -100,7 +100,7 @@ public class NameIndexerTest {
 
     @Test
     public final void when_removing_a_name_with_wrong_uri_does_not_shorten_list() throws Exception {
-        NameIndexer nameIndexer = new NameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
+        InMemoryNameIndexer nameIndexer = new InMemoryNameIndexer(new InputStreamReader(getClass().getResourceAsStream("/somePersons.json")));
         List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("", LENGTH);
         int initialSize = nameEntries.size();
         assertThat(initialSize, greaterThan(SMALL_LENGTH));
