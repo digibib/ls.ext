@@ -53,8 +53,9 @@ public class InMemoryNameIndexer implements NameIndexer {
         jsonElement.getAsJsonObject().get("results").getAsJsonObject().getAsJsonArray("bindings").forEach(e -> {
             String uri = e.getAsJsonObject().getAsJsonObject("uri").get("value").getAsString();
             String name = e.getAsJsonObject().getAsJsonObject("name").get("value").getAsString();
-            addNamedItem(name, uri);
+            alphabeticalList.add(new NameEntry(uri, name));
         });
+        sort();
     }
 
     public InMemoryNameIndexer(ResultSet resultSet) {
@@ -63,11 +64,15 @@ public class InMemoryNameIndexer implements NameIndexer {
             Binding binding = resultSet.nextBinding();
             String uri = binding.get(Var.alloc("uri")).getURI();
             String name = binding.get(Var.alloc("name")).getLiteral().toString();
-            addNamedItem(name, uri);
+            alphabeticalList.add(new NameEntry(uri, name));
         }
+        sort();
     }
 
-    @Override
+    private void sort() {
+        alphabeticalList.sort((o1, o2) -> coll.compare(o1.getName(), o2.getName()));
+    }
+
     public final List<NameEntry> neighbourhoodOf(String name, int width) {
         List<NameEntry> retVal = newArrayList();
         boolean foundBestMatch = false;
