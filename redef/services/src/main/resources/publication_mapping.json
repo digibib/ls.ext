@@ -116,8 +116,7 @@
       "type": "string"
     },
     "firstPublicationYear": {
-      "type": "string",
-      "index": "no"
+      "type": "string"
     },
     "audiences": {
       "type": "string",
