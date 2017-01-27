@@ -1881,7 +1881,7 @@
               items: items,
               origin: event.keypath,
               searchTerm: searchString,
-              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : items.length / 2
+              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 : 0
             })
             positionSupportPanels()
           })
