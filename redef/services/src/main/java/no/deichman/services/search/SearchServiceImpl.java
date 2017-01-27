@@ -28,7 +28,9 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +78,7 @@ public class SearchServiceImpl implements SearchService {
             ontology("prefLabel"),
             ontology("mainTitle")
     };
+    public static final Resource MAIN_ENTRY = ResourceFactory.createResource(ontology("MainEntry"));
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -477,12 +480,20 @@ public class SearchServiceImpl implements SearchService {
         mon.stop();
         mon = MonitorFactory.start("doIndexWork2");
         if (!indexedPerson) {
-            for (Statement stmt : workModelWithLinkedResources.listStatements().toList()) {
-                if (stmt.getPredicate().equals(AGENT)) {
+            workModelWithLinkedResources.listStatements(new SimpleSelector() {
+                @Override
+                public boolean test(Statement s) {
+                    return (s.getPredicate().equals(AGENT)
+                            && workModelWithLinkedResources.contains(s.getSubject(), RDF.type, MAIN_ENTRY));
+                }
+            }).forEachRemaining(stmt -> {
+                try {
                     XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
                     doIndexWorkCreatorOnly(creatorXuri);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }
+            });
         }
         mon.stop();
         if (indexedPublication) {
