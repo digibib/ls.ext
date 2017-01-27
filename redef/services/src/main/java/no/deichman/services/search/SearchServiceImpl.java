@@ -2,6 +2,8 @@ package no.deichman.services.search;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
 import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.XURI;
@@ -538,7 +540,10 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndex(XURI xuri) throws Exception {
         Model indexModel = entityService.retrieveById(xuri);
-        indexDocument(xuri, new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri));
+        Monitor mon = MonitorFactory.start("createIndexDocument");
+        String indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri);
+        mon.stop();
+        indexDocument(xuri, indexDocument);
         cacheNameIndex(xuri, indexModel);
     }
 
@@ -563,8 +568,11 @@ public class SearchServiceImpl implements SearchService {
                     .build());
             httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
             httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
+            Monitor mon = MonitorFactory.start("indexDocument");
             try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
                 LOG.debug(putResponse.getStatusLine().toString());
+            } finally {
+                mon.stop();
             }
         } catch (Exception e) {
             LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
