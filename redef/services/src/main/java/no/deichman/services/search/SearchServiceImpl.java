@@ -471,10 +471,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void doIndexWork(XURI xuri, boolean indexedPerson, boolean indexedPublication) throws Exception {
-
+        Monitor mon = MonitorFactory.start("doIndexWork1");
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(xuri);
         indexDocument(xuri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, xuri));
-
+        mon.stop();
+        mon = MonitorFactory.start("doIndexWork2");
         if (!indexedPerson) {
             for (Statement stmt : workModelWithLinkedResources.listStatements().toList()) {
                 if (stmt.getPredicate().equals(AGENT)) {
@@ -483,12 +484,13 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         }
-
+        mon.stop();
         if (indexedPublication) {
             return;
         }
         // Index all publications belonging to work
         // TODO instead of iterating over all subjects, find only subjects of triples with publicationOf as predicate
+        mon = MonitorFactory.start("doIndexWork3");
         ResIterator subjectIterator = workModelWithLinkedResources.listSubjects();
         while (subjectIterator.hasNext()) {
             Resource subj = subjectIterator.next();
@@ -501,7 +503,7 @@ public class SearchServiceImpl implements SearchService {
 
             }
         }
-
+        mon.stop();
     }
 
     private void doIndexWorkCreator(XURI creatorUri, boolean indexedWork) throws Exception {
