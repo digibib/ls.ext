@@ -365,6 +365,9 @@
     },
     "WorkSeries": {
       "@id": "deichman:WorkSeries"
+    },
+    "workSeries": {
+      "@id": "deichman:workSeries"
     }
   },
   "type": "Work",
