@@ -26,6 +26,7 @@ const AdditionalInformationContent = ({ work }) => (
     className="additional-info">
       <TargetAudience audiences={work.audiences} />
       <WorkSerie workserie={work.workserie} />
+      <WorkRelations workRelations={work.workRelations} />
       <ContentAdaptations contentAdaptations={work.contentAdaptations} />
         {/* this.renderPartOfSeries(work) */}
         {/* this.renderRelations(work) */}
@@ -38,7 +39,6 @@ const AdditionalInformationContent = ({ work }) => (
       <Key key={work.key} />
       <Subjects subjects={work.subjects} />
       <Genres genres={work.genres} />
-        <WorkRelations workRelations={work.workRelations} />
   </NonIETransitionGroup>
 )
 

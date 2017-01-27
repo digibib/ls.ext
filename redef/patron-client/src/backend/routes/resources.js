@@ -250,7 +250,7 @@ function transformContributors (input) {
   }
 }
 
-function transformWorkRelations(input) {
+function transformWorkRelations (input) {
   try {
     const workRelations = {}
     input.forEach(inputWorkRelation => {
@@ -268,6 +268,15 @@ function transformWorkRelations(input) {
   }
 }
 
+function transformWorkSeries (input) {
+  try {
+    const workSeries = input.work
+    // console.log(workSeries)
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
+}
 
 function transformSerialIssues (input) {
   try {

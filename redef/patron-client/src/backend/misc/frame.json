@@ -359,6 +359,12 @@
     },
     "isPartOfWorkSeries": {
       "@id": "deichman:isPartOfWorkSeries"
+    },
+    "WorkSeriesPart": {
+      "@id": "deichman:WorkSeriesPart"
+    },
+    "WorkSeries": {
+      "@id": "deichman:WorkSeries"
     }
   },
   "type": "Work",
@@ -454,7 +460,12 @@
     "@embed": "@never"
   },
   "isPartOfWorkSeries": {
-    "@embed": "@always"
+    "@embed": "@always",
+    "type": "WorkSeriesPart",
+    "workSeries": {
+      "@embed": "@always",
+      "@type": "WorkSeries"
+    }
   }
 
 

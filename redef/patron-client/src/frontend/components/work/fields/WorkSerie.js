@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import MetaItem from '../../MetaItem'
 
-
 const WorkSerie = ({ workserie, intl }) => {
   if (workserie.length > 0) {
     return (
