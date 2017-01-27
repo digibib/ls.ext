@@ -3161,7 +3161,7 @@
                 }
                 let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                 let wait = ractive.get('waitHandler').newWaitable(originTarget)
-                if (!maintenance) {
+                if (useAfterCreation) {
                   setCreatedResourceValuesInMainInputs()
                 }
                 saveInputs((!maintenance && ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`)) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
