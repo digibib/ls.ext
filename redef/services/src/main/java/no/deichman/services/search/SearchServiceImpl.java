@@ -27,7 +27,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
@@ -64,6 +63,7 @@ import static no.deichman.services.uridefaults.BaseURI.ontology;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 /**
  * Responsibility: perform indexing and searching.
@@ -78,7 +78,7 @@ public class SearchServiceImpl implements SearchService {
             ontology("prefLabel"),
             ontology("mainTitle")
     };
-    public static final Resource MAIN_ENTRY = ResourceFactory.createResource(ontology("MainEntry"));
+    public static final Resource MAIN_ENTRY = createResource(ontology("MainEntry"));
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -464,9 +464,9 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
-        Property publicationOfProperty = ResourceFactory.createProperty(ontology("publicationOf"));
+        Property publicationOfProperty = createProperty(ontology("publicationOf"));
         if (pubModel.getProperty(null, publicationOfProperty) != null) {
-            String workUri = pubModel.getProperty(ResourceFactory.createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
+            String workUri = pubModel.getProperty(createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
             XURI workXURI = new XURI(workUri);
             pubModel = entityService.retrieveWorkWithLinkedResources(workXURI);
         }
@@ -480,20 +480,15 @@ public class SearchServiceImpl implements SearchService {
         mon.stop();
         mon = MonitorFactory.start("doIndexWork2");
         if (!indexedPerson) {
-            workModelWithLinkedResources.listStatements(new SimpleSelector() {
-                @Override
-                public boolean test(Statement s) {
-                    return (s.getPredicate().equals(AGENT)
-                            && workModelWithLinkedResources.contains(s.getSubject(), RDF.type, MAIN_ENTRY));
-                }
-            }).forEachRemaining(stmt -> {
-                try {
-                    XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
-                    doIndexWorkCreatorOnly(creatorXuri);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            workModelWithLinkedResources.listStatements(isMainContributorOfWork(xuri, workModelWithLinkedResources))
+                    .forEachRemaining(stmt -> {
+                        try {
+                            XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
+                            doIndexWorkCreatorOnly(creatorXuri);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
         }
         mon.stop();
         if (indexedPublication) {
@@ -515,6 +510,21 @@ public class SearchServiceImpl implements SearchService {
             }
         }
         mon.stop();
+    }
+
+    private SimpleSelector isMainContributorOfWork(final XURI xuri, final Model workModelWithLinkedResources) {
+        return new SimpleSelector() {
+            @Override
+            public boolean test(Statement s) {
+                return (s.getPredicate().equals(AGENT)
+                        && workModelWithLinkedResources.contains(s.getSubject(), RDF.type, MAIN_ENTRY)
+                        && workModelWithLinkedResources.contains(
+                        createResource(xuri.getUri()),
+                        createProperty(ontology("contributor")),
+                        s.getSubject())
+                );
+            }
+        };
     }
 
     private void doIndexWorkCreator(XURI creatorUri, boolean indexedWork) throws Exception {
