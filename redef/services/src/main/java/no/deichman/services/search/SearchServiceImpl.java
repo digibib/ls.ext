@@ -507,6 +507,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void doIndexWorkCreator(XURI creatorUri, boolean indexedWork) throws Exception {
+        Monitor mon = MonitorFactory.start("doIndexWorkCreator");
         Model works = entityService.retrieveWorksByCreator(creatorUri);
         if (!indexedWork) {
             ResIterator subjectIterator = works.listSubjects();
@@ -538,6 +539,7 @@ public class SearchServiceImpl implements SearchService {
                         creatorUri.getTypeAsEntityType(), EntityType.PERSON, EntityType.CORPORATION
                 ));
         }
+        mon.stop();
     }
 
     private void doIndex(XURI xuri) throws Exception {
