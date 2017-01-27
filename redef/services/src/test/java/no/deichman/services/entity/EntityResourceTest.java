@@ -443,14 +443,10 @@ public class EntityResourceTest {
     private String createTestRDF(String identifier, String type) throws Exception {
         String ontologyClass = WordUtils.capitalize(type);
         return "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
                 + "    \"@graph\": {\n"
                 + "        \"@id\": \"" + new XURI(BaseURI.root() + type + "/" + identifier) + "\",\n"
-                + "        \"@type\": \"deichman:" + ontologyClass + "\",\n"
-                + "        \"dcterms:identifier\": \"" + identifier + "\"\n"
+                + "        \"@type\": \"http://deichman.no/ontology#" + ontologyClass + "\",\n"
+                + "        \"http://purl.org/dc/terms/identifier\": \"" + identifier + "\"\n"
                 + "    }\n"
                 + "}";
     }
