@@ -33,17 +33,19 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-plus:before { content: '\e800'; } /* '' */
-.icon-check:before { content: '\e801'; } /* '' */
-.icon-right-open:before { content: '\e802'; } /* '' */
-.icon-down:before { content: '\e803'; } /* '' */
-.icon-left:before { content: '\e804'; } /* '' */
-.icon-right:before { content: '\e805'; } /* '' */
-.icon-up:before { content: '\e806'; } /* '' */
-.icon-cancel-1:before { content: '\e807'; } /* '' */
-.icon-angle-wide:before { content: '\e808'; } /* '' */
-.icon-attention:before { content: '\e809'; } /* '' */
-.icon-help:before { content: '\e80a'; } /* '' */
+.icon-play:before { content: '\e800'; } /* '' */
+.icon-pause:before { content: '\e801'; } /* '' */
+.icon-plus:before { content: '\e802'; } /* '' */
+.icon-check:before { content: '\e803'; } /* '' */
+.icon-right-open:before { content: '\e804'; } /* '' */
+.icon-down:before { content: '\e805'; } /* '' */
+.icon-left:before { content: '\e806'; } /* '' */
+.icon-right:before { content: '\e807'; } /* '' */
+.icon-up:before { content: '\e808'; } /* '' */
+.icon-cancel-1:before { content: '\e809'; } /* '' */
+.icon-angle-wide:before { content: '\e80a'; } /* '' */
+.icon-attention:before { content: '\e80b'; } /* '' */
+.icon-help:before { content: '\e80c'; } /* '' */
 .icon-btn-search-sorting:before { content: '\e80f'; } /* '' */
 .icon-btn-triangle-up:before { content: '\e810'; } /* '' */
 .icon-audiobook:before { content: '\e811'; } /* '' */
@@ -69,6 +71,7 @@
 .icon-angle-double-up:before { content: '\f102'; } /* '' */
 .icon-angle-double-down:before { content: '\f103'; } /* '' */
 .icon-ok-squared:before { content: '\f14a'; } /* '' */
+
 
 /*
   Hack to support slighlty wider icon
