@@ -124,7 +124,9 @@ WHERE {
 
   UNION { <__PUBLICATIONURI__> deich:inSerial ?serialBnode .
           ?serialBnode deich:serial ?serial .
-          ?serial deich:mainTitle ?seriesTitle . }
+          ?serial ?seriesPred ?seriesTitle .
+          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
+          }
 
   UNION { <__PUBLICATIONURI__> deich:locationClassNumber ?locDewey }
   UNION { <__PUBLICATIONURI__> deich:hasFormatAdaptation ?formatAdaptation .
