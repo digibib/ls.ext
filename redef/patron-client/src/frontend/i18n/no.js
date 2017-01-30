@@ -103,7 +103,7 @@ export default {
   'PublicationInfo.available': 'ledige',
   'PublicationInfo.branch': 'Filial',
   'PublicationInfo.items': 'Eksemplarer',
-  'PublicationInfo.note': 'Note:',
+  'PublicationInfo.notes': 'Noter:',
   'PublicationInfo.of': 'av',
   'PublicationInfo.onlyInhouse': 'Til bruk i biblioteket',
   'PublicationInfo.parts': 'Deler av utgivelsen',

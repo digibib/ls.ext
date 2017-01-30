@@ -171,7 +171,7 @@ function transformPublications (publications) {
       binding: publication.binding,
       contentAdaptations: publication.contentAdaptations,
       contributors: transformContributors(publication.contributors),
-      description: publication.description,
+      notes: ensureArray(publication.description),
       duration: publication.duration,
       ean: publication.ean,
       edition: publication.edition,
@@ -313,4 +313,14 @@ function relativeUri (uri) {
 
 function getId (uri) {
   return uri.substring(uri.lastIndexOf('/') + 1)
+}
+
+function ensureArray (obj) {
+  if (!obj) {
+    return []
+  }
+  if (Array.isArray(obj)) {
+    return obj
+  }
+  return [obj]
 }
