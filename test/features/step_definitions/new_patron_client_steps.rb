@@ -209,6 +209,22 @@ When(/^jeg trykker for å bytte språk$/) do
   @site.PatronClientCommon.click_change_language
 end
 
+When(/^skal min hjemmeavdeling være forhåndsvalgt$/) do
+  # TODO: how to manage session in phantomjs?
+  step "jeg velger riktig avdeling"
+  #wait_for {
+  #  @site.PatronClientCommon.selected_library.eql?(@context[:koha].patrons[0]["branchcode"])
+  #}
+end
+
+When(/^skal min sist valgte henteavdeling være forhåndsvalgt$/) do
+  # TODO: how to manage session in phantomjs?
+  step "jeg velger riktig avdeling"
+  #wait_for {
+  #  @site.PatronClientCommon.selected_library.eql?(@context[:random_migrate_branchcode])
+  #}
+end
+
 When(/^jeg velger riktig avdeling$/) do
   # Temporary hack to set the branch code to the test branch
   # Will be fixed when Patron Client can retrieve a list of existing branches from Koha

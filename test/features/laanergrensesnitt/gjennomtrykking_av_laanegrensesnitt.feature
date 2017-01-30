@@ -151,7 +151,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg se innloggingsvinduet
     Når jeg logger inn
     Så skal jeg se reservasjonsvinduet
-    Når jeg velger riktig avdeling
+    Og skal min hjemmeavdeling være forhåndsvalgt
     Og jeg trykker på bestill
     Så får låneren tilbakemelding om at boka er reservert
     Når jeg går til Lån og reservasjoner på Min Side
@@ -179,7 +179,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg se innloggingsvinduet
     Når jeg logger inn
     Så skal jeg se reservasjonsvinduet
-    Når jeg velger riktig avdeling
+    Og skal min hjemmeavdeling være forhåndsvalgt
     Og jeg trykker på bestill
     Så får låneren tilbakemelding om at boka er reservert
     Når jeg går til Lån og reservasjoner på Min Side
@@ -195,6 +195,11 @@ Egenskap: Gå gjennom lånegrensesnittet
     Når jeg trykker på avbestill reservasjon
     Og jeg bekrefter at jeg skal avbestille reservasjonen
     Så skal jeg ikke ha noen reservasjoner
+    Når jeg søker på "pubprefix0" (+ id på vilkårlig migrering)
+    Og jeg trykker på første treff
+    Og låneren trykker bestill på en utgivelse
+    Så skal jeg se reservasjonsvinduet
+    Og skal min sist valgte henteavdeling være forhåndsvalgt
 
   Scenario: Sortering på verkssiden
     Gitt at jeg er i søkegrensesnittet

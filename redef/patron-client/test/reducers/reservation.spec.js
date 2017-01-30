@@ -18,7 +18,9 @@ describe('reducers', () => {
         isRequestingCancelReservation: false,
         isRequestingChangeReservationSuspension: false,
         cancelReservationError: false,
-        isRequestingChangePickupLocation: false
+        isRequestingChangePickupLocation: false,
+        pickupLocation: null
+
       })
     })
 
@@ -36,11 +38,15 @@ describe('reducers', () => {
     it(`should handle ${types.RESERVE_PUBLICATION_SUCCESS}`, () => {
       expect(
         reservation({}, {
-          type: types.RESERVE_PUBLICATION_SUCCESS
+          type: types.RESERVE_PUBLICATION_SUCCESS,
+          payload: {
+            branchCode: 'pickupBranch'
+          }
         })
       ).toEqual({
         isRequestingReservation: false,
-        reservationError: false
+        reservationError: false,
+        pickupLocation: 'pickupBranch'
       })
     })
 
@@ -93,6 +99,22 @@ describe('reducers', () => {
       ).toEqual({
         isRequestingExtendLoan: false,
         extendLoanError: 'message'
+      })
+    })
+
+    it(`should handle ${types.CHANGE_PICKUP_LOCATION_SUCCESS}`, () => {
+      expect(
+        reservation({}, {
+          type: types.CHANGE_PICKUP_LOCATION_SUCCESS,
+          payload: {
+            branchCode: 'testBranch'
+          },
+          error: true
+        })
+      ).toEqual({
+        isRequestingChangePickupLocation: false,
+        changePickupLocationError: false,
+        pickupLocation: 'testBranch'
       })
     })
   })

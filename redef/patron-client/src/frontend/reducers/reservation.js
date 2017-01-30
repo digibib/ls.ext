@@ -13,7 +13,8 @@ import {
   CHANGE_PICKUP_LOCATION_FAILURE,
   REQUEST_CHANGE_RESERVATION_SUSPENSION,
   CHANGE_RESERVATION_SUSPENSION_SUCCESS,
-  CHANGE_RESERVATION_SUSPENSION_FAILURE
+  CHANGE_RESERVATION_SUSPENSION_FAILURE,
+  RECEIVE_PROFILE_INFO
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -26,7 +27,8 @@ const initialState = {
   isRequestingChangePickupLocation: false,
   changePickupLocationError: false,
   isRequestingChangeReservationSuspension: false,
-  changeReservationSuspensionError: false
+  changeReservationSuspensionError: false,
+  pickupLocation: null
 }
 
 export default function reservation (state = initialState, action) {
@@ -34,7 +36,7 @@ export default function reservation (state = initialState, action) {
     case REQUEST_RESERVE_PUBLICATION:
       return { ...state, isRequestingReservation: true, reservationError: false }
     case RESERVE_PUBLICATION_SUCCESS:
-      return { ...state, isRequestingReservation: false, reservationError: false }
+      return { ...state, isRequestingReservation: false, reservationError: false, pickupLocation: action.payload.branchCode }
     case RESERVE_PUBLICATION_FAILURE:
       return { ...state, isRequestingReservation: false, reservationError: action.payload.error }
     case REQUEST_EXTEND_LOAN:
@@ -52,7 +54,7 @@ export default function reservation (state = initialState, action) {
     case REQUEST_CHANGE_PICKUP_LOCATION:
       return { ...state, isRequestingChangePickupLocation: action.payload.reserveId, changePickupLocationError: false }
     case CHANGE_PICKUP_LOCATION_SUCCESS:
-      return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: false }
+      return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: false, pickupLocation: action.payload.branchCode }
     case CHANGE_PICKUP_LOCATION_FAILURE:
       return { ...state, isRequestingChangePickupLocation: false, changePickupLocationError: action.payload.error }
     case REQUEST_CHANGE_RESERVATION_SUSPENSION:
@@ -61,6 +63,8 @@ export default function reservation (state = initialState, action) {
       return { ...state, isRequestingChangeReservationSuspension: false, changeReservationSuspensionError: false }
     case CHANGE_RESERVATION_SUSPENSION_FAILURE:
       return { ...state, isRequestingChangeReservationSuspension: false, changeReservationSuspensionError: action.payload.error }
+    case RECEIVE_PROFILE_INFO:
+      return { ...state, pickupLocation: action.payload.info.homeBranch }
     default:
       return state
   }
