@@ -61,7 +61,7 @@ describe('components', () => {
 
       const link = node.querySelector("[data-automation-id='work_series_link']")
       expect(link.textContent).toBe('mainTitle')
-      expect(link.getAttribute('href')).toBe('/search?query=workSeries%3A"mainTitle"')
+      expect(link.getAttribute('href')).toBe('/search?query=series%3A"mainTitle"')
     })
   })
 })
