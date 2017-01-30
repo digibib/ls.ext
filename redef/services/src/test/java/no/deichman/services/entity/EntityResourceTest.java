@@ -16,7 +16,6 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -73,7 +72,7 @@ public class EntityResourceTest {
 
     @Before
     public void setUp() throws Exception {
-        RDFLanguages.init() ;
+        RDFLanguages.init();
         EntityServiceImpl service = new EntityServiceImpl(new InMemoryRepository(), mockKohaAdapter);
         entityResource = new EntityResource(service, mockSearchService, mockKohaAdapter);
     }
