@@ -202,7 +202,7 @@ class UserLoans extends React.Component {
                     disabled={this.props.isRequestingChangeReservationSuspension !== false}
                     data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
               {item.suspended
-                ? <FormattedMessage {...messages.resumeReservation} />
+                ? <span><i className="icon-play" aria-hidden="true"></i><FormattedMessage {...messages.resumeReservation} /></span>
                 : <FormattedMessage {...messages.suspendReservation} />}
             </button>
           </ClickableElement>
@@ -210,6 +210,10 @@ class UserLoans extends React.Component {
       </div>
     )
   }
+/*
+<i class="icon-play" aria-hidden="true"></i>
+<i class="icon-pause" aria-hidden="true"></i>
+*/
 
   renderWaitingPeriod (expected = 'unknown') {
     if (expected === 'unknown') {
