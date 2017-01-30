@@ -121,7 +121,9 @@ public class PublicationModelToIndexMapperTest {
             + "    \"recordId\": \"3\",\n"
             + "    \"series\": [\n"
             + "        \"italiano norveigano\","
-            + "        \"serialissimo\"\n"
+            + "        \"serialissimo\","
+            + "        \"workSeriesMainTitle\","
+            + "        \"workSeriesPartTitle\"\n"
             + "    ],\n"
             + "    \"subject\": [\n"
             + "        \"Trondheim\"\n"
@@ -263,7 +265,8 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:biography <http://data.deichman.no/biography#biographicalContent> ;\n"
                 + "    ns2:hasSummary \"En bok...\" ;\n"
                 + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
-                + "    ns2:hasInstrumentation [ ns2:hasInstrument <http://data.deichman.no/instrument/i1> ] .\n"
+                + "    ns2:hasInstrumentation [ ns2:hasInstrument <http://data.deichman.no/instrument/i1> ] ;\n"
+                + "    ns2:isPartOfWorkSeries [ a ns2:WorkSeriesPart ; ns2:workSeries <http://data.deichman.no/workSeries/s1> ] .\n"
                 + "\n"
                 + "<http://data.deichman.no/corporation/c999> rdf:type ns2:Corporation ;\n"
                 + "    ns2:name \"Verdamt Verlag\" .\n"
@@ -309,7 +312,10 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/biography#biographicalContent> rdfs:label \"Biografisk innhold\"@no, \"Biographical content\"@en ."
                 + "\n"
-                + "<http://data.deichman.no/contentAdaptation#easyLanguage> ns1:code \"ta\" .";
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> ns1:code \"ta\" ."
+                + "\n"
+                + "<http://data.deichman.no/workSeries/s1> a ns2:WorkSeries ; "
+                + "    ns2:mainTitle \"workSeriesMainTitle\" ; ns2:partTitle \"workSeriesPartTitle\" .";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("publication").createIndexDocument(model, publicationXuri1);

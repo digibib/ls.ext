@@ -212,7 +212,12 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasContentAdaptation ?contentAdaptation .
            ?contentAdaptation duo:code ?contentAdaptationCode . }
-
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+          ?work deich:isPartOfWorkSeries ?wsBnode .
+          ?wsBnode deich:workSeries ?workSeries .
+          ?workSeries ?seriesPred ?seriesTitle .
+          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
+          }
   UNION {
     {
       <__PUBLICATIONURI__> deich:publicationOf ?work .
