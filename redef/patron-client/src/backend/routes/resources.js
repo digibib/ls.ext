@@ -126,7 +126,7 @@ module.exports = (app) => {
 function transformWork (input) {
   try {
     const workRelations = transformWorkRelations(input.isRelatedTo)
-    // const workSeries = transformWorkSeries(input.isPartOfWorkSeries)
+    const workSeries = transformWorkSeries(input.isPartOfWorkSeries)
     const contributors = transformContributors(input.contributors)
     const work = {
       _original: process.env.NODE_ENV !== 'production' ? input : undefined,
@@ -138,6 +138,7 @@ function transformWork (input) {
       contentAdaptations: input.contentAdaptations,
       contributors: contributors,
       workRelations: workRelations,
+      workSeries: workSeries,
       deweyNumber: input.hasClassification ? input.hasClassification.hasClassificationNumber : undefined,
       fictionNonfiction: input.fictionNonfiction,
       genres: input.genres,
@@ -264,14 +265,20 @@ function transformWorkRelations (input) {
     return workRelations
   } catch (error) {
     console.log(error)
-    return {}
+    return []
   }
 }
 
 function transformWorkSeries (input) {
   try {
-    const workSeries = input.work
-    // console.log(workSeries)
+    if (input) {
+      const workSeries = input.workSeries
+      workSeries.uri = workSeries.id
+      workSeries.id = getId(workSeries.id)
+      workSeries.relativeUri = relativeUri(workSeries.uri)
+      return workSeries
+    }
+    return {}
   } catch (error) {
     console.log(error)
     return {}

@@ -1,25 +1,30 @@
 import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
+import { Link } from 'react-router'
 import MetaItem from '../../MetaItem'
+import isEmpty from '../../../utils/emptyObject'
 
-const WorkSerie = ({ workserie, intl }) => {
-  if (workserie.length > 0) {
+const WorkSerie = ({ workserie }) => {
+  if (!isEmpty(workserie)) {
     return (
       <MetaItem label={messages.labelWorkSerie} data-automation-id="work_work_serie">
-        {workserie.map(ws => intl.formatMessage({ id: ws })).join(', ')}
+        <Link
+          data-automation-id="work_series_link"
+          to={`/search?query=workSeries%3A"${workserie.mainTitle}"`}>
+          {workserie.mainTitle}
+        </Link>
       </MetaItem>
     )
-  } else {
-    return null
   }
+  return null
 }
 
 WorkSerie.defaultProps = {
-  workserie: []
+  workserie: {}
 }
 
 WorkSerie.propTypes = {
-  workserie: PropTypes.array.isRequired,
+  workserie: PropTypes.object.isRequired,
   intl: intlShape.isRequired
 }
 

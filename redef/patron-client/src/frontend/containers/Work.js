@@ -110,7 +110,6 @@ class Work extends React.Component {
       return this.renderEmpty()
     }
     const work = this.props.resources[ this.props.params.workId ]
-    console.log('WORK', work)
     if (!work) {
       return this.renderNoWork()
     }

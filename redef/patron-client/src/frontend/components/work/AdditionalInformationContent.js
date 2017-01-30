@@ -25,7 +25,7 @@ const AdditionalInformationContent = ({ work }) => (
     component="div"
     className="additional-info">
       <TargetAudience audiences={work.audiences} />
-      <WorkSerie workserie={work.workserie} />
+      <WorkSerie workserie={work.workSeries} />
       <WorkRelations workRelations={work.workRelations} />
       <ContentAdaptations contentAdaptations={work.contentAdaptations} />
         {/* this.renderPartOfSeries(work) */}

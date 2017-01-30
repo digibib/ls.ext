@@ -13,7 +13,8 @@ const WorkRelations = ({ workRelations, intl }) => {
               <span className="content" key={relation.relativeUri + relationType}>
                   <Link
                     data-automation-id="work_relation_link"
-                    to={`/search?query=title%3A"${relation.mainTitle}"`}>{relation.mainTitle}
+                    to={relation.relativeUri}>
+                    {relation.mainTitle}
                   </Link>
                 </span>
             )}

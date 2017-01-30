@@ -57,7 +57,7 @@ describe('components', () => {
 
       const link = node.querySelector("[data-automation-id='work_relation_link']")
       expect(link.textContent).toBe('mainTitle')
-      expect(link.getAttribute('href')).toBe('/search?query=title%3A"mainTitle"')
+      expect(link.getAttribute('href')).toBe('relativeUri')
     })
 
     it('should render multiple work relations', () => {
