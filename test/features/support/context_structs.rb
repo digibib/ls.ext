@@ -80,9 +80,9 @@ Item = Struct.new(:barcode, :itemnumber, :branch, :itemtype) do
 end unless defined?(Item)
 
 Branch = Struct.new(:code, :name) do
-  def initialize
-    self.code   = generateRandomString
-    self.name   = generateRandomString
+  def initialize(code=nil, name=nil)
+    self.code   = code ||= generateRandomString
+    self.name   = name ||= generateRandomString
   end
 end unless defined?(Branch)
 
@@ -112,9 +112,9 @@ Patron = Struct.new(:firstname, :surname, :borrowernumber, :cardnumber, :branch,
 end unless defined?(Patron)
 
 PatronCategory = Struct.new(:code, :name, :description) do
-  def initialize
-    self.code        = generateRandomString.upcase
-    self.name        = generateRandomString
-    self.description = generateRandomString
+  def initialize(code=nil, name=nil, description=nil)
+    self.code        = code ||= generateRandomString.upcase
+    self.name        = name ||= generateRandomString
+    self.description = description ||= generateRandomString
   end
 end unless defined?(PatronCategory)

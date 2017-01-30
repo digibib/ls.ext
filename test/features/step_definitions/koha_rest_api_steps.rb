@@ -41,11 +41,9 @@ Then(/^gir APIet tilbakemelding om at boka er reservert$/) do
 end
 
 Given(/^at jeg har mottatt opplysninger om en låner$/) do
-  step "at det finnes en avdeling"        unless @active[:branch]
-  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
   @active[:patron] = Patron.new
-  @active[:patron].branch = @active[:branch]
-  @active[:patron].category = @active[:patroncategory]
+  @active[:patron].branch = Branch.new("hutl")
+  @active[:patron].category = PatronCategory.new("V")
   @active[:patron].dateenrolled = (DateTime.now).strftime("%F").to_s
   @active[:patron].dateexpiry = (DateTime.now + 360).strftime("%F").to_s
 end
