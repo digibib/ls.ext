@@ -14,6 +14,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFLanguages;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -72,6 +73,7 @@ public class EntityResourceTest {
 
     @Before
     public void setUp() throws Exception {
+        RDFLanguages.init() ;
         EntityServiceImpl service = new EntityServiceImpl(new InMemoryRepository(), mockKohaAdapter);
         entityResource = new EntityResource(service, mockSearchService, mockKohaAdapter);
     }
@@ -177,7 +179,6 @@ public class EntityResourceTest {
     }
 
     @Test
-    @Ignore
     public void create_should_index_the_new_person() throws Exception {
         String person = createTestRDF(SOME_PERSON_IDENTIFIER, PERSON);
 
