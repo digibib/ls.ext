@@ -66,6 +66,10 @@
 
 }
 
+.search-no-hits {
+  padding-top: 1em;
+}
+
 @include breakpoint($small) {
 
   .logged-in-message {
