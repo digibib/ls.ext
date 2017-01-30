@@ -312,7 +312,7 @@ export default {
   'ValidationMessage.invalidSSN': 'Ugyldig ID-nummer',
   'ValidationMessage.invalidYear': 'Ugyldig år',
   'ValidationMessage.invalidZipcode': 'Ugyldig postnr, må være 4 siffer',
-  'ValidationMessage.pinsMustBeEqual': 'PIN-kcdodene må være like',
+  'ValidationMessage.pinsMustBeEqual': 'PIN-kodene må være like',
   'ValidationMessage.required': 'Feltet må fylles ut',
   'ValidationMessage.termsMustBeAccepted': 'Brukervilkårene må godkjennes',
   'Work.labelOriginalReleaseDate': 'Utgitt første gang',
