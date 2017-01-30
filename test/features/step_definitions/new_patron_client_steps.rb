@@ -176,6 +176,10 @@ When(/^jeg logger inn$/) do
   @site.PatronClientCommon.login(userid, password)
 end
 
+When(/^jeg logger inn med nytt passord$/) do
+  @site.PatronClientCommon.login( @context[:koha].patrons[0]["userid"], '8888')
+end
+
 When(/^skal jeg se informasjonen min$/) do
   cardnumber = @active[:patron] ?
     @active[:patron].cardnumber :
@@ -422,10 +426,9 @@ When(/^skal utgivelsene være inndelt etter medietype$/) do
 end
 
 When(/^jeg fyller inn gammel PIN og ny PIN riktig$/) do
-  @browser.element(data_automation_id: 'changePin_currentPin').to_subtype.set(@active[:patron].password)
+  @browser.element(data_automation_id: 'changePin_currentPin').to_subtype.set('1234')
   @browser.element(data_automation_id: 'changePin_newPin').to_subtype.set('8888')
   @browser.element(data_automation_id: 'changePin_repeatPin').to_subtype.set('8888')
-  @active[:patron].password = '8888'
 end
 
 When(/^trykker på endre PIN\-kode$/) do
@@ -453,13 +456,16 @@ Then(/^får jeg tilbakemelding i en egen dialogboks$/) do
 end
 
 When(/^skal jeg se personopplysningene mine$/) do
+  patron = @active[:patron] ?
+    @active[:patron] :
+    @context[:koha].patrons[0]
   wait_for {
     @browser.element(data_automation_id: 'change_profile_info_button').present?
   }
-  @browser.element(data_automation_id: 'UserInfo_address').text.should eq @active[:patron].address
-  @browser.element(data_automation_id: 'UserInfo_zipcode').text.should eq @active[:patron].zipcode
-  @browser.element(data_automation_id: 'UserInfo_mobile').text.should eq @active[:patron].mobile
-  @browser.element(data_automation_id: 'UserInfo_email').text.should eq @active[:patron].email
+  @browser.element(data_automation_id: 'UserInfo_address').text.should eq patron["address"]
+  @browser.element(data_automation_id: 'UserInfo_zipcode').text.should eq patron["zipcode"]
+  @browser.element(data_automation_id: 'UserInfo_mobile').text.should eq patron["mobile"]
+  @browser.element(data_automation_id: 'UserInfo_email').text.should eq patron["email"]
 end
 
 When(/^jeg trykker på endre personopplysninger$/) do
@@ -467,16 +473,19 @@ When(/^jeg trykker på endre personopplysninger$/) do
 end
 
 When(/^jeg fyller ut personopplysningene mine riktig$/) do
-  @active[:patron].email = "#{generateRandomString}@#{generateRandomString}.dot"
-  @browser.text_field(name: 'email').set @active[:patron].email
-  @active[:patron].mobile = '%08d' % rand(10**8)
-  @browser.text_field(name: 'mobile').set @active[:patron].mobile
-  @active[:patron].address = generateRandomString
-  @browser.text_field(name: 'address').set @active[:patron].address
-  @active[:patron].zipcode = '%04d' % rand(10000)
-  @browser.text_field(name: 'zipcode').set @active[:patron].zipcode
-  @active[:patron].city = (0...8).map { (65 + rand(26)).chr }.join
-  @browser.text_field(name: 'city').set @active[:patron].city
+  patron = @active[:patron] ?
+    @active[:patron] :
+    @context[:koha].patrons[0]
+  patron["email"] = "#{generateRandomString}@#{generateRandomString}.dot"
+  @browser.text_field(name: 'email').set patron["email"]
+  patron["mobile"] = '%08d' % rand(10**8)
+  @browser.text_field(name: 'mobile').set patron["mobile"]
+  patron["address"] = generateRandomString
+  @browser.text_field(name: 'address').set patron["address"]
+  patron["zipcode"] = '%04d' % rand(10000)
+  @browser.text_field(name: 'zipcode').set patron["zipcode"]
+  patron["city"] = (0...8).map { (65 + rand(26)).chr }.join
+  @browser.text_field(name: 'city').set patron["city"]
 end
 
 When(/^jeg trykker på lagre personopplysninger$/) do
@@ -539,7 +548,10 @@ When(/^skal jeg se at jeg er logget inn$/) do
 end
 
 When(/^jeg skriver inn riktig brukernavn men feil passord$/) do
-  @site.PatronClientCommon.login(@active[:patron].userid, 'WRONG', true)
+  userid = @active[:patron] ?
+    @active[:patron].userid :
+    @context[:koha].patrons[0]["userid"]
+  @site.PatronClientCommon.login(userid, 'WRONG', true)
 end
 
 When(/^skal jeg se en melding om feil brukernavn og\/eller passord$/) do
