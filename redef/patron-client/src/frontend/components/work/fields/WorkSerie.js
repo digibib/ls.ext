@@ -10,7 +10,7 @@ const WorkSerie = ({ workserie }) => {
       <MetaItem label={messages.labelWorkSerie} data-automation-id="work_work_serie">
         <Link
           data-automation-id="work_series_link"
-          to={`/search?query=series:%3A"${workserie.mainTitle}"`}>
+          to={`/search?query=series%3A"${workserie.mainTitle}"`}>
           {workserie.mainTitle}
         </Link>
       </MetaItem>
