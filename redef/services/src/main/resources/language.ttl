@@ -566,6 +566,34 @@ language:zul	a	lvont:Language ;
 	rdfs:label	"Zulu"@no ;
 	rdfs:label	"Zulu"@en .
 
+language:pli	a	lvont:Language ;
+	rdfs:label	"Pali"@no ;
+	rdfs:label	"Pali"@en .
+
+language:sux	a	lvont:Language ;
+	rdfs:label	"Sumerisk"@no ;
+	rdfs:label	"Sumerian"@en .
+
+language:kik	a	lvont:Language ;
+	rdfs:label	"Kikuyu"@no ;
+	rdfs:label	"Kikuyu"@en .
+
+language:ful	a	lvont:Language ;
+	rdfs:label	"Fulani"@no ;
+	rdfs:label	"Fula"@en .
+
+language:akk	a	lvont:Language ;
+	rdfs:label	"Akkadisk"@no ;
+	rdfs:label	"Akkadian"@en .
+
+language:gez	a	lvont:Language ;
+	rdfs:label	"Ge'ez"@no ;
+	rdfs:label	"Ge'ez"@en .
+
+language:arc	a	lvont:Language ;
+	rdfs:label	"Arameisk"@no ;
+	rdfs:label	"Aramaic"@en .
+
 language:ing	a	lvont:Language ;
 	rdfs:label	"Ingen"@no ;
 	rdfs:label	"None"@en .
