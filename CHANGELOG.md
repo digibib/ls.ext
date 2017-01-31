@@ -12,6 +12,33 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.8.3 (2017-31-01)
+
+KOHA: 9b3c401bb0451cca4bb004efd62ef02a778d16a8
+GITREF:
+
+- Koha:
+  - koha messaging-API må  bruke meldingskø DEICH-594
+  - RFID forbli pålogget DEICH-603
+  - RFID bedre pregings-flyt DEICH-604
+  - masseendring av eksemplarer må bruke riktig rammeverk DEICH-592
+  - Navn på grupper må vises i plukkliste DEICH-593
+  - Slå sammen etternavn og fornavn på institusjoner DEICH-399
+  - Migrert låners registreringsdato fra bibliofil DEICH-574
+- Catalinker:
+  - Fikse treighet som skyldes indeksering DEICH-598
+  - Oppslag på treffer feil tittel DEICH-599
+  - Feil sortering av autoriteter DEICH-570
+  - Fiks feil der informasjon fra utgivelsesdel smitter over på hovedverk DEICH-606
+Patron-client:
+  - Fjernet fuzzy søk DEICH-610
+  - Mange nye søkbare felter DEICH-586
+  - Verksserie vises og er søkbar DEICH-559
+  - Verksrelasjoner vises DEICH-595
+  - Støtte ved nulltreff DEICH-155
+  - Endret rekkefølge på filtere DIECH-612
+
+
 ## 0.8.2 (2017-01-10)
 
 KOHA: aa1ff583761d252e8e581fac4bd73fa6693d5a59
