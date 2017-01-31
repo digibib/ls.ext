@@ -265,7 +265,7 @@ function transformWorkRelations (input) {
     return workRelations
   } catch (error) {
     console.log(error)
-    return []
+    return {}
   }
 }
 
