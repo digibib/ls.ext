@@ -4,9 +4,9 @@ module.exports = {
   maxSearchResults: 100,
   maxSearchResultsPerPage: 10,
   filterableFields: {
-    fictionNonfiction: {
-      name: 'fictionNonfiction',
-      prefix: 'http://data.deichman.no/fictionNonfiction#'
+    language: {
+      name: 'languages',
+      prefix: 'http://lexvo.org/id/iso639-3/'
     },
     branch: {
       name: 'branches',
@@ -20,13 +20,13 @@ module.exports = {
       name: 'formats',
       prefix: 'http://data.deichman.no/format#'
     },
-    language: {
-      name: 'languages',
-      prefix: 'http://lexvo.org/id/iso639-3/'
-    },
     audience: {
       name: 'audiences',
       prefix: 'http://data.deichman.no/audience#'
+    },
+    fictionNonfiction: {
+      name: 'fictionNonfiction',
+      prefix: 'http://data.deichman.no/fictionNonfiction#'
     }
   },
   mediaTypeIcons: {
