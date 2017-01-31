@@ -80,19 +80,11 @@ function initSimpleQuery (query) {
       },
       query: {
         bool: {
-          should: [
+          filter: [
             {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: defaultFields
-              }
-            },
-            {
-              multi_match: {
-                query: query,
-                fuzziness: 'AUTO',
-                type: 'cross_fields',
                 fields: defaultFields
               }
             }
