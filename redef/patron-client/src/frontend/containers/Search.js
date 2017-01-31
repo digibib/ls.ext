@@ -101,9 +101,6 @@ class Search extends React.Component {
                                totalHitsPublications={this.props.totalHitsPublications}
                                locationQuery={this.props.locationQuery}
                                isSearching={this.props.isSearching} />
-            <div className="search-sorting-placeholder">
-              <p>Sortert på: <span>Relevans</span></p>
-            </div>
             {this.props.totalHitsPublications === 0
              ? <div className="search-no-hits">
                 <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
