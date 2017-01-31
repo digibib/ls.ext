@@ -1055,6 +1055,8 @@ module.exports = (app) => {
               },
               {
                 label: 'Verksserie',
+                multiple: true,
+                addAnotherLabel: 'Legg til ny verksserie',
                 reportFormat: {
                   list: true
                 },
