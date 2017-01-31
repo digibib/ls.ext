@@ -2615,6 +2615,9 @@
                   .replace(/[,:]$/, '')
                   .replace(': ', ' : ')
               },
+              getLinkfromUri: function (item, linkProps) {
+                return item.uri.replace(new RegExp(linkProps.regExp), linkProps.replacement)
+              },
               tabIdFromDocumentUrl: function () {
                 var uri = URI.parse(document.location.href)
                 var queryParameters = URI.parseQuery(uri.query)
