@@ -65,17 +65,16 @@ class Search extends React.Component {
               nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
               // breakLabel={<li className="break" aria-hidden="true"><span>...</span></li>}
               breakLabel={<span aria-hidden="true">...</span>}
-              forceSelected={this.props.location.query.page - 1 || 0}
+              forcePage={this.props.location.query.page - 1 || 0}
               marginPagesDisplayed={1}
               pageRangeDisplayed={5}
-              pageNum={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
+              pageCount={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
               // clickCallback={this.handlePageClick}
               onPageChange={this.handlePageClick}
               containerClassName={'pagination'}
               subContainerClassName={'pages pagination'}
               activeClassName={'active'}
               items={this.props.items}
-              pageLinkClassName={'test-class'}
             />
           </nav>
         </section>
@@ -91,18 +90,28 @@ class Search extends React.Component {
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
-        component="div"
+        component="main"
+        role="main"
         className="wrapper">
         {this.props.locationQuery.query
           ? (<div className="search-results-header">
+            <a href="#main-search-content" className="is-vishidden focusable">{this.props.intl.formatMessage(messages.jumpToMainContent)}</a>
           <div className="search-results-summary">
             <SearchResultsText totalHits={this.props.totalHits}
                                totalHitsPublications={this.props.totalHitsPublications}
                                locationQuery={this.props.locationQuery}
                                isSearching={this.props.isSearching} />
-            <div className="search-sorting-placeholder">
-              <p>Sortert på: <span>Relevans</span></p>
-            </div>
+            {this.props.totalHitsPublications === 0
+             ? <div className="search-no-hits">
+                <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
+                <p>{this.props.intl.formatMessage(messages.noHitsTry)}</p>
+                <ul>
+                  <li>{this.props.intl.formatMessage(messages.noHitsTryA)}</li>
+                  <li>{this.props.intl.formatMessage(messages.noHitsTryB)}</li>
+                  <li>{this.props.intl.formatMessage(messages.noHitsTryC)}</li>
+                </ul>
+              </div>
+              : null }
           </div>
           <SearchFilterBox query={this.props.locationQuery}
                            toggleFilter={this.props.searchFilterActions.toggleFilter} />
@@ -197,6 +206,11 @@ function mapDispatchToProps (dispatch) {
 }
 
 export const messages = defineMessages({
+  jumpToMainContent: {
+    id: 'Search.jumpToMainContent',
+    description: 'Jump to main content on search page',
+    defaultMessage: 'Jump to search results'
+  },
   paginationLabel: {
     id: 'Search.paginationLabel',
     description: 'The ARIA label for the pagination bar',
@@ -211,6 +225,31 @@ export const messages = defineMessages({
     id: 'Search.paginationPrevious',
     description: 'The ARIA label frot the "previous" link',
     defaultMessage: 'Previous'
+  },
+  noHitsHeading: {
+    id: 'Search.noHitsHeading',
+    description: 'The heading of text describing no hits',
+    defaultMessage: 'Your search returned no results.'
+  },
+  noHitsTry: {
+    id: 'Search.noHitsTry',
+    description: 'Message describing what to do when you get no hits',
+    defaultMessage: 'You can try one of the following:'
+  },
+  noHitsTryA: {
+    id: 'Search.noHitsTryA',
+    description: 'No hits? Try this part I',
+    defaultMessage: 'check your spelling'
+  },
+  noHitsTryB: {
+    id: 'Search.noHitsTryB',
+    description: 'No hits? Try this part II',
+    defaultMessage: 'use fewer terms'
+  },
+  noHitsTryC: {
+    id: 'Search.noHitsTryC',
+    description: 'No hits? Try this part III',
+    defaultMessage: 'try other keywords'
   }
 })
 

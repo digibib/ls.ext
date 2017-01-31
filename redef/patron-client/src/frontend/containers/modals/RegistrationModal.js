@@ -68,7 +68,8 @@ class RegistrationModal extends React.Component {
     return (
       <section className="register-modal">
         <button className="close-modal-button" onClick={this.props.modalActions.hideModal}>
-          <i className="icon-cancel-1" />
+          <span className="is-vishidden">Lukk registrerings-vinduet</span>
+          <i className="icon-cancel-1" aria-hidden="true" />
         </button>
         <div data-automation-id="registration_modal">
           <NameAndSsnForm />

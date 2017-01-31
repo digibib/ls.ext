@@ -22,12 +22,16 @@ $mintgreen: #DCFC9F;
   outline-offset: 2px;
 }
 
+.focus {
+  @include focus()
+}
+
 @mixin pencil {
   display: inline-block;
   background-image: url('/images/lower_right_pencil.svg');
   background-repeat: no-repeat;
   background-position: left top;
-  padding-left: 2em;
+  padding: 40%;
   cursor: pointer;
   height: 20px
 }
@@ -356,6 +360,9 @@ body {
               .ui-accordion-header-icon {
                 right: .5em;
                 left: auto;
+              }
+              &:focus {
+                @include focus();
               }
             }
             .ui-accordion-content {

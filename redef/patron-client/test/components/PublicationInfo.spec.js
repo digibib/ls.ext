@@ -18,7 +18,8 @@ function setup (propOverrides) {
       formatAdaptations: [],
       publishers: [],
       subtitles: [],
-      serialIssues: []
+      serialIssues: [],
+      notes: []
     },
     expandSubResource: expect.createSpy(),
     startReservation: () => {},

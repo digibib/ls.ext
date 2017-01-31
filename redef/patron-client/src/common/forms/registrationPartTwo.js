@@ -1,6 +1,6 @@
 module.exports = {
   email: {
-    required: false,
+    required: true,
     asyncValidation: true
   },
   mobile: {

@@ -25,9 +25,11 @@
             {{#each inputGroups:groupIndex}}
                 {{#if checkRequiredInputValueForShow(.)}}
                     <li class="grid-tab pure-u">
-                        <a class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link {{#tabEnabled(tabSelected,domain)}}{{else}}disabled{{/}}"
+                        <a {{#if tabEnabled(tabSelected,domain)}}tabindex="0"{{else}}tabindex="-1"{{/if}} class="{{tabSelected ? 'grid-tab-link-selected' : ''}} grid-tab-link {{#tabEnabled(tabSelected,domain)}}{{else}}disabled{{/}}"
                            id="{{tabId}}-tab"
-                           data-toggle="tab" role="tab" on-click="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}">{{tabLabel}}</a>
+                           data-toggle="tab" role="tab"
+                            on-click="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}"
+                        on-enter="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}">{{tabLabel}}</a>
                     </li>
                 {{/if}}
             {{/each}}
@@ -52,8 +54,11 @@
                                 {{#if checkRequiredInputValueForShow(.)}}
                                     <div class="pure-g">
                                         <div class="pure-u-1-2">
-                                            <button class="pure-button pure-button-primary next-step-button"
-                                                    {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled" title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="nextStep:{{.}}">{{buttonLabel}}
+                                            <button
+                                                    tabindex="{{tabSelected ? '0' : '-1'}}"
+                                                    class="pure-button pure-button-primary next-step-button"
+                                                    {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled"
+                                                    title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="nextStep:{{.}}">{{buttonLabel}}
                                             </button>
                                         </div>
                                     </div>
@@ -62,8 +67,11 @@
                             {{#deleteResource}}
                             <div class="pure-g">
                                 <div class="pure-u-1-2">
-                                    <button class="pure-button pure-button-primary next-step-button" tabindex="-1"
-                                            {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled" title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="deleteResource:{{.}}">{{buttonLabel}}
+                                    <button
+                                            tabindex="-1"
+                                            class="pure-button pure-button-primary next-step-button"
+                                            {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled"
+                                            title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="deleteResource:{{.}}">{{buttonLabel}}
                                     </button>
                                 </div>
                             </div>
@@ -71,8 +79,11 @@
                             {{#enableSpecialInput}}
                             <div class="pure-g">
                                 <div class="pure-u-1-2">
-                                    <button class="pure-button pure-button-primary next-step-button"
-                                            title="{{./buttonLabel}}" on-click="enableSpecialInput:{{./inputId}}">{{buttonLabel}}
+                                    <button
+                                            tabindex="-1"
+                                            class="pure-button pure-button-primary next-step-button"
+                                            title="{{./buttonLabel}}"
+                                            on-click="enableSpecialInput:{{./inputId}}">{{buttonLabel}}
                                     </button>
                                 </div>
                             </div>
@@ -85,22 +96,22 @@
             <div class="pure-g links">
                 {{#targetUri.Work}}
                 <div class="pure-u-1">
-                    <a data-automation-id="work_page_link" target="_blank"
+                    <a tabindex="0" data-automation-id="work_page_link" target="_blank"
                        href="{{'http://sok.deichman.no/work' + targetUri.Work.substring(targetUri.Work.lastIndexOf('/'))}}">Vis siden for verket</a>
                 </div>
                 <div class="pure-u-1">
-                    <a data-automation-id="show_work_rdf" on-click="showRdf:{{targetUri.Work}}">Vis lenkede data i TURTLE-format for verket</a>
+                    <a tabindex="0" data-automation-id="show_work_rdf" on-click="showRdf:{{targetUri.Work}}" on-enter="showRdf:{{targetUri.Work}}">Vis lenkede data i TURTLE-format for verket</a>
                 </div>
                 {{/}}
                 {{#targetUri.Publication}}
                 <div class="pure-u-1">
-                    <a data-automation-id="biblio_record_link" target="_blank"
+                    <a tabindex="0" data-automation-id="biblio_record_link" target="_blank"
                        href="https://intra.deichman.no/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
                        class="link">Vis utgivelsen i Koha</a>
                 </div>
                 <div class="pure-u-1">
                     <div class="pure-u-1">
-                        <a data-automation-id="show_work_rdf" on-click="showReport:{{targetUri.Publication}}">Vis katalogiserte data for utgivelsen</a>
+                        <a tabindex="0" data-automation-id="show_work_rdf" on-click="showReport:{{targetUri.Publication}}" on-enter="showReport:{{targetUri.Publication}}">Vis katalogiserte data for utgivelsen</a>
                     </div>
                 </div>
                 {{/}}

@@ -52,6 +52,7 @@ class SearchFilter extends React.Component {
         return (
           <SearchFilterItem key={filter.id}
                             filter={filter}
+                            toggleAllFilters={this.props.toggleAllFilters}
                             toggleFilter={this.props.toggleFilter}
                             scrollTargetNode={this.props.scrollTargetNode} />
         )
@@ -103,8 +104,8 @@ class SearchFilter extends React.Component {
           <button onClick={this.handleCollapse} className="single-filter-close" type="button"
                   aria-label={buttonAriaLabel} aria-expanded={!this.isCollapsed()}>
             {this.isCollapsed()
-              ? <i className="icon-plus" alt="" />
-              : <i className="icon-minus" alt="" />}
+              ? <i className="icon-plus" aria-hidden="true" />
+              : <i className="icon-minus" aria-hidden="true" />}
           </button>
         </header>
         {this.isCollapsed() ? null
@@ -122,6 +123,7 @@ SearchFilter.propTypes = {
   toggleFilter: PropTypes.func.isRequired,
   toggleFilterVisibility: PropTypes.func.isRequired,
   toggleCollapseFilter: PropTypes.func.isRequired,
+  toggleAllFilters: PropTypes.func,
   locationQuery: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   scrollTargetNode: PropTypes.object.isRequired

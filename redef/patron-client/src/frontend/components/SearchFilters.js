@@ -24,13 +24,6 @@ class SearchFilters extends React.Component {
     }
   }
 
-  componentDidUpdate () {
-    // If a search is being done, check the filter visibility
-    if (this.props.isSearching === true) {
-      this.toggleFilterVisibility()
-    }
-  }
-
   renderEmpty () {
     return <div data-automation-id="empty" />
   }
@@ -100,6 +93,7 @@ class SearchFilters extends React.Component {
                   locationQuery={this.props.locationQuery}
                   toggleFilter={this.props.toggleFilter}
                   toggleFilterVisibility={this.props.toggleFilterVisibility}
+                  toggleAllFilters={this.toggleFilterVisibility}
                   toggleCollapseFilter={this.props.toggleCollapseFilter}
                   scrollTargetNode={this.props.scrollTargetNode}
                 />

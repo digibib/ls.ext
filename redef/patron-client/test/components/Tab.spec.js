@@ -13,6 +13,8 @@ function setup (propOverrides) {
   const props = {
     tab: { label: 'test_label', path: 'test_path' },
     push: expect.createSpy(),
+    findPrevTab: () => { return { label: 'test_label', path: 'test_path' } },
+    findNextTab: () => { return { label: 'test_label', path: 'test_path' } },
     className: '',
     ariaSelected: 'false',
     ...propOverrides
@@ -52,6 +54,20 @@ describe('components', () => {
     it('should push path when clicked', () => {
       const { output, props } = setup()
       TestUtils.Simulate.click(TestUtils.findRenderedDOMComponentWithTag(output, 'li'))
+      expect(props.push).toHaveBeenCalled()
+      expect(props.push.calls[ 0 ].arguments[ 0 ]).toEqual({ pathname: props.tab.path })
+    })
+
+    it('should push path when keydown arrow left', () => {
+      const { output, props } = setup()
+      TestUtils.Simulate.keyDown(TestUtils.findRenderedDOMComponentWithTag(output, 'li'), {key: 'Arrow left', keyCode: 37, which: 37})
+      expect(props.push).toHaveBeenCalled()
+      expect(props.push.calls[ 0 ].arguments[ 0 ]).toEqual({ pathname: props.tab.path })
+    })
+
+    it('should push path when keydown arrow right', () => {
+      const { output, props } = setup()
+      TestUtils.Simulate.keyDown(TestUtils.findRenderedDOMComponentWithTag(output, 'li'), {key: 'Arrow right', keyCode: 39, which: 39})
       expect(props.push).toHaveBeenCalled()
       expect(props.push.calls[ 0 ].arguments[ 0 ]).toEqual({ pathname: props.tab.path })
     })

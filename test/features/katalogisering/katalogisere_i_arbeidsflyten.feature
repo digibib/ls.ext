@@ -49,6 +49,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så skriver jeg inn "12" som utgivelsens nummer i serien
     Så jeg venter litt
     Og at jeg skriver inn serie i feltet "Serie" og trykker enter
+    Så jeg venter litt
     Så velger jeg en serie fra treffliste fra serieregisteret
     Så jeg venter litt
     Og jeg trykker på "Legg til"-knappen

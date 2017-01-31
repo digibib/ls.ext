@@ -3,6 +3,7 @@ require 'socket'
 
 require_relative './site.rb'
 require_relative './services/svc/preference.rb'
+require_relative './services/test_setup/TestSetup.rb'
 
 class GlobalSetup
 
@@ -60,6 +61,7 @@ VALUES('fnr','Fødselsnummer',1,1,'fnr');
     SVC::Preference.new(@growser).set("pref_opaclanguages", "nb-NO")
 
     SVC::Preference.new(@growser).set("pref_noItemTypeImages", "1")
+
     @growser.close if @growser
   end
 end

@@ -14,8 +14,12 @@ module KohaRESTAPI
     end
 
     def list(borrowernumber)
+      cookie = @context[:koha_rest_api_cookie] ?
+        @context[:koha_rest_api_cookie] :
+        @context[:koha].headers["Cookie"]
+
       headers = {
-        'Cookie' => @context[:koha_rest_api_cookie],
+        'Cookie' => cookie,
         'Content-Type' => 'application/json'
       }
 

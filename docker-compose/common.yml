@@ -246,7 +246,7 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/sip2proxy:a387e6d35e38c488b0f4ec7bc0c7292e19dd61df"
+    image: "digibib/sip2proxy:e38b649a1084662c6d3b92f3582adce20618c676"
     networks:
       - backend
     ports:
@@ -256,9 +256,9 @@ services:
       - "-from=:9999"
       - "-to=xkoha:${SIP_PORT:-6001}"
       - "-log-messages=true"
-      - "-replace-10=true"
-      - "-log-metrics-every-s=300"
-      - "-ensure-branch=true"
+      #- "-replace-10=true"
+      - "-log-metrics-every-s=3000"
+      #- "-ensure-branch=true"
     logging:
       driver: "json-file"
       options:

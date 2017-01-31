@@ -52,7 +52,7 @@ public abstract class ResourceBase {
     protected final EntityService getEntityService() {
         if (entityService == null) {
             RDFRepository repository = getRdfRepository();
-            entityService = new EntityServiceImpl(repository, getKohaAdapter());
+            entityService = (EntityService) MonProxyFactory.monitor(new EntityServiceImpl(repository, getKohaAdapter()));
         }
         return entityService;
     }
@@ -91,6 +91,7 @@ public abstract class ResourceBase {
         }
         return jsonldCreator;
     }
+
     final void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }

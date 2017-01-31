@@ -1520,6 +1520,7 @@ module.exports = (app) => {
                   indexType: 'publication'
                 },
                 widgetOptions: {
+                  maintenance: true,
                   editWithTemplate: {
                     template: "workflow",
                     descriptionKey: 'maintPub'
@@ -1532,6 +1533,7 @@ module.exports = (app) => {
                   indexType: 'workUnstructured'
                 },
                 widgetOptions: {
+                  maintenance: true,
                   editWithTemplate: {
                     template: "workflow",
                     descriptionKey: 'maintWork'
@@ -1550,13 +1552,15 @@ module.exports = (app) => {
             resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
-            subItemsExpandTooltip: 'Vis/skjul verk'
+            subItemsExpandTooltip: 'Vis/skjul verk',
+            scrollToMiddleOfResultSet: true
           },
           subject: {
             type: 'subject',
             sortedListQueryForField: "prefLabel",
             selectIndexLabel: 'Generelt',
-            resultItemLabelProperties: [ 'prefLabel', '(specification)' ]
+            resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
+            scrollToMiddleOfResultSet: true
           },
           work: {
             type: 'work',
@@ -1590,7 +1594,8 @@ module.exports = (app) => {
             type: 'genre',
             selectIndexLabel: 'Sjanger',
             sortedListQueryForField: "prefLabel",
-            resultItemLabelProperties: [ 'prefLabel', '(specification)' ]
+            resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
+            scrollToMiddleOfResultSet: true
           },
           corporation: {
             type: 'corporation',
@@ -1598,13 +1603,15 @@ module.exports = (app) => {
             sortedListQueryForField: "name",
             resultItemLabelProperties: [ 'name.', 'subdivision', '(specification)', 'placePrefLabel' ],
 //          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
+            scrollToMiddleOfResultSet: true
           },
           place: {
             type: 'place',
             selectIndexLabel: 'Sted',
             sortedListQueryForField: "prefLabel",
             resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
-            resultItemDetailsLabelProperties: [ 'alternativeName' ]
+            resultItemDetailsLabelProperties: [ 'alternativeName' ],
+            scrollToMiddleOfResultSet: true
           },
           event: {
             type: 'event',
@@ -1612,13 +1619,15 @@ module.exports = (app) => {
             sortedListQueryForField: "prefLabel",
             resultItemLabelProperties: [ 'prefLabel', '(ordinal).', 'placePrefLabel,', 'date' ], //prefLabel (ordinal). place, date
 //          resultItemDetailsLabelProperties: [ 'placePrefLabel', 'inParens:placeAlternativeName', 'specification' ]
+            scrollToMiddleOfResultSet: true
           },
           serial: {
             type: 'serial',
             selectIndexLabel: 'Serie',
             sortedListQueryForField: "serialMainTitle",
             resultItemLabelProperties: [ 'serialMainTitle:', 'subtitle' ],
-            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ]
+            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ],
+            scrollToMiddleOfResultSet: true
           },
           publication: {
             type: 'publication',
@@ -1637,20 +1646,23 @@ module.exports = (app) => {
             type: 'instrument',
             selectIndexLabel: 'Instrument',
             sortedListQueryForField: 'prefLabel',
-            resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
+            resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
+            scrollToMiddleOfResultSet: true
           },
           compositiontype: {
             type: 'compositionType',
             selectIndexLabel: 'Komposisjonstype',
             sortedListQueryForField: 'prefLabel',
-            resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ]
+            resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
+            scrollToMiddleOfResultSet: true
           },
           workseries: {
             type: 'workSeries',
             selectIndexLabel: 'Verksserie',
             sortedListQueryForField: 'workSeriesMainTitle',
             resultItemLabelProperties: [ 'workSeriesMainTitle:', 'subtitle' ],
-            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ]
+            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ],
+            scrollToMiddleOfResultSet: true
           }
         },
         typeMap: {

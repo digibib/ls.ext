@@ -5,44 +5,56 @@
     <div class="grid-input">
         <ul class="grid-tabs">
             <li class="grid-tab pure-u">
-                <input on-click="updateBrowserLocationWithTab:0" type="radio" name="tabs" id="tab0" {{#if tabIdFromDocumentUrl() !== '1'}}checked{{/if}} />
-                <label  for="tab0" class="grid-tab-link">Nytt materiale</label>
+                <input tabindex="-1"
+                       type="radio"
+                       name="tabs"
+                       id="tab0"
+                       {{#if openTab !== '1'}}checked{{/if}} />
+                <label tabindex="1"
+                       on-click="updateBrowserLocationWithTab:0"
+                       on-enter="updateBrowserLocationWithTab:0"
+                       for="tab0"
+                       class="grid-tab-link">Nytt materiale</label>
                 <div id="tab-content0" class="tab-content grid-content">
                     <div class="inner-content">
                         <div class="grid-panel grid-panel-selected pure-g media-type-menu">
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Book&task=bookPub">Bok</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="3" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Book&task=bookPub">Bok</a>
+                            </div>                                                    
+                            <div class="pure-u-1-1">                                  
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="4" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=E-book&task=eBookPub">E-bok</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=E-book&task=eBookPub">E-bok</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="5" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Audiobook&task=aBookPub">Lydbok</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Audiobook&task=aBookPub">Lydbok</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="6" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=ComicBook&task=comicPub">Tegneserie</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=ComicBook&task=comicPub">Tegneserie</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="7" href="/cataloguing?template=workflow&hasWorkType=Film&hasMediaType=Film&task=filmPub">Film</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Film&hasMediaType=Film&task=filmPub">Film</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="8" href="/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=MusicRecording&task=musRecPub">Musikkopptak</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=MusicRecording&task=musRecPub">Musikkopptak</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="9" href="/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=SheetMusic&task=sheetMusPub">Musikknoter</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=SheetMusic&task=sheetMusPub">Musikknoter</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="10" href="/cataloguing?template=workflow&hasWorkType=Game&hasMediaType=Game&task=gamePub">Spill</a>
                             </div>
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Game&hasMediaType=Game&task=gamePub">Spill</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" href="/cataloguing?template=workflow&hasWorkType=Other&hasMediaType=LanguageCourse&task=langCourse">Språkkurs</a>
+                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="11" href="/cataloguing?template=workflow&hasWorkType=Other&hasMediaType=LanguageCourse&task=langCourse">Språkkurs</a>
                             </div>
                         </div>
                     </div>
             </li>
             <li class="grid-tab pure-u">
-                <input type="radio" name="tabs" id="tab1" {{#if tabIdFromDocumentUrl() === '1'}}checked{{/if}} />
-                <label on-click="updateBrowserLocationWithTab:1" for="tab1" class="grid-tab-link">Vedlikehold av autoriteter</label>
+                <input tabindex="-1" type="radio" name="tabs" id="tab1" {{#if openTab === '1'}}checked{{/if}} />
+                <label tabindex="2"
+                       on-click="updateBrowserLocationWithTab:1"
+                       on-enter="updateBrowserLocationWithTab:1"
+                       for="tab1"
+                       class="grid-tab-link">Vedlikehold av autoriteter</label>
                 <div id="tab-content1" class="tab-content grid-content maintenance-inputs">
                     <div class="pure-g" style="height: 0px;">
                         <div class="pure-u-1-2" id="left-dummy-panel"/>
@@ -50,7 +62,7 @@
                     </div>
                     <div class="inner-content">
                         <div class="grid-panel grid-panel-selected pure-g">
-                            {{#each applicationData.maintenanceInputs}}
+                            {{#each applicationData.maintenanceInputs:inputIndex}}
                             {{>input}}
                             {{/each}}
                         </div>

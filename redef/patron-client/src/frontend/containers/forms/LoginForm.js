@@ -45,7 +45,8 @@ class LoginForm extends React.Component {
       <div data-automation-id="login_modal">
 
         <button className="close-modal-button" onClick={this.props.modalActions.hideModal}>
-          <i className="icon-cancel-1" />
+          <span className="is-vishidden">Lukk logg-inn-vinduet</span>
+          <i className="icon-cancel-1" aria-hidden="true" />
         </button>
 
         <form onSubmit={this.handleLogin}>
@@ -68,7 +69,7 @@ class LoginForm extends React.Component {
           </p>
           <p>
             Er du ikke registrert? <br />
-            <a data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer
+            <a href="#" data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer
               deg</a>
           </p>
         </form>

@@ -194,10 +194,18 @@ class PublicationInfo extends React.Component {
           <Duration duration={publication.duration} />
           <Ean ean={publication.ean} />
         </div>
-        <div className="wide" >
-          <div className="meta-label" ><FormattedMessage {...messages.note} /></div>
-          <p className="note" >{publication.description}</p>
+        { publication.notes.length > 0
+         ? <div className="wide" >
+          <div className="meta-label" ><FormattedMessage {...messages.notes} /></div>
+
+          {publication.notes.map(desc => {
+            return (
+              <span key={desc} className="note" >{desc}<br /></span>
+            )
+          })}
         </div>
+        : null
+        }
         <div className="entry-items" >
           <Tabs label={this.props.intl.formatMessage({ ...messages.publicationInfoMenu })}
                 tabList={tabList}
@@ -262,10 +270,10 @@ export const messages = defineMessages({
     description: 'Heading for part\'s page number or range',
     defaultMessage: 'Page'
   },
-  note: {
-    id: 'PublicationInfo.note',
+  notes: {
+    id: 'PublicationInfo.notes',
     description: 'Header for the note column',
-    defaultMessage: 'Note:'
+    defaultMessage: 'Notes:'
   },
   of: {
     id: 'PublicationInfo.of',

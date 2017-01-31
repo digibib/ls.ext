@@ -2,10 +2,10 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import { Search } from '../../src/frontend/containers/Search'
+import {Search} from '../../src/frontend/containers/Search'
 import Constants from '../../src/frontend/constants/Constants'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
+import {IntlProvider} from 'react-intl'
 
 function setup (propOverrides) {
   const props = {

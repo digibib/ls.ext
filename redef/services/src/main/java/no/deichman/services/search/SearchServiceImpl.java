@@ -2,11 +2,13 @@ package no.deichman.services.search;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
 import no.deichman.services.entity.EntityService;
 import no.deichman.services.entity.EntityType;
-import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -17,7 +19,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -26,13 +27,13 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ServerErrorException;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -41,26 +42,43 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.google.common.collect.ImmutableMap.of;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static no.deichman.services.uridefaults.BaseURI.ontology;
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 /**
  * Responsibility: perform indexing and searching.
  */
 public class SearchServiceImpl implements SearchService {
-    public static final Property AGENT = createProperty(BaseURI.ontology("agent"));
+    public static final Property AGENT = createProperty(ontology("agent"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
+    public static final String[] LOCAL_INDEX_SEARCH_FIELDS = {
+            ontology("name"),
+            ontology("prefLabel"),
+            ontology("mainTitle")
+    };
+    public static final Resource MAIN_ENTRY = createResource(ontology("MainEntry"));
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -127,11 +145,13 @@ public class SearchServiceImpl implements SearchService {
     private void doIndexEvent(XURI xuri) {
         Model eventModelWithLinkedResources = entityService.retrieveEventWithLinkedResources(xuri);
         indexDocument(xuri, eventModelToIndexMapper.createIndexDocument(eventModelWithLinkedResources, xuri));
+        cacheNameIndex(xuri, eventModelWithLinkedResources);
     }
 
     private void doIndexSerial(XURI xuri) {
         Model serialModelWithLinkedResources = entityService.retrieveSerialWithLinkedResources(xuri);
         indexDocument(xuri, serialModelToIndexMapper.createIndexDocument(serialModelWithLinkedResources, xuri));
+        cacheNameIndex(xuri, serialModelWithLinkedResources);
     }
 
     @Override
@@ -182,7 +202,7 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
             HttpPut createIndexRequest = new HttpPut(uri);
-            createIndexRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/search_index.json"), ContentType.APPLICATION_JSON));
+            createIndexRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/search_index.json"), APPLICATION_JSON));
             try (CloseableHttpResponse create = httpclient.execute(createIndexRequest)) {
                 int statusCode = create.getStatusLine().getStatusCode();
                 LOG.info("Create index request returned status " + statusCode);
@@ -213,7 +233,7 @@ public class SearchServiceImpl implements SearchService {
     private void putIndexMapping(CloseableHttpClient httpclient, String type) throws URISyntaxException, IOException {
         URI workIndexUri = getIndexUriBuilder().setPath("/search/_mapping/" + type).build();
         HttpPut putWorkMappingRequest = new HttpPut(workIndexUri);
-        putWorkMappingRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/" + type + "_mapping.json"), ContentType.APPLICATION_JSON));
+        putWorkMappingRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/" + type + "_mapping.json"), APPLICATION_JSON));
         try (CloseableHttpResponse create = httpclient.execute(putWorkMappingRequest)) {
             int statusCode = create.getStatusLine().getStatusCode();
             LOG.info("Create mapping request for " + type + " returned status " + statusCode);
@@ -223,29 +243,48 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private Response searchWithJson(String body, URIBuilder searchUriBuilder) {
+    private Response searchWithJson(String body, URIBuilder searchUriBuilder, Function<String, String>... jsonTranformer) {
         try {
             HttpPost httpPost = new HttpPost(searchUriBuilder.build());
             httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
-            httpPost.setHeader("Content-type", "application/json");
-            return executeHttpRequest(httpPost);
+            httpPost.setHeader(CONTENT_TYPE, "application/json");
+            Pair<String, Header[]> searchResult = executeHttpRequest(httpPost);
+            if (jsonTranformer != null && jsonTranformer.length > 0) {
+                String transformed = jsonTranformer[0].apply(searchResult.getLeft());
+                Header[] headers = searchResult.getRight();
+                searchResult = Pair.of(transformed, removeHeader(headers, CONTENT_LENGTH));
+            }
+            return createResponse(searchResult);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
     }
 
-    private Response executeHttpRequest(HttpRequestBase httpRequestBase) throws IOException {
+    private Header[] removeHeader(Header[] headers, String headerName) {
+        return stream(headers)
+                .filter(header -> !header
+                        .getName()
+                        .toLowerCase()
+                        .equalsIgnoreCase(headerName))
+                .toArray(Header[]::new);
+    }
+
+    private Response createResponse(Pair<String, Header[]> searchResult) {
+        Response.ResponseBuilder responseBuilder = Response.ok(searchResult.getLeft());
+        for (Header header : searchResult.getRight()) {
+            responseBuilder = responseBuilder.header(header.getName(), header.getValue());
+        }
+        return responseBuilder.build();
+    }
+
+    private Pair<String, Header[]> executeHttpRequest(HttpRequestBase httpRequestBase) throws IOException {
         try (CloseableHttpClient httpclient = createDefault();
              CloseableHttpResponse response = httpclient.execute(httpRequestBase)) {
             HttpEntity responseEntity = response.getEntity();
             String jsonContent = IOUtils.toString(responseEntity.getContent());
-            Response.ResponseBuilder responseBuilder = Response.ok(jsonContent);
             Header[] headers = response.getAllHeaders();
-            for (Header header : headers) {
-                responseBuilder = responseBuilder.header(header.getName(), header.getValue());
-            }
-            return responseBuilder.build();
+            return Pair.<String, Header[]>of(jsonContent, headers);
         } catch (Exception e) {
             throw e;
         }
@@ -308,21 +347,94 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response sortedList(String type, String prefix, int minSize, String field) {
-        List<Map> musts = new ArrayList<>();
+        EntityType entityType = EntityType.get(type);
+        URIBuilder searchUriBuilder = getIndexUriBuilder().setPath("/search/" + type + "/_search").setParameter("size", Integer.toString(minSize));
+        switch (entityType) {
+            case PERSON:
+            case CORPORATION:
+            case PLACE:
+            case SUBJECT:
+            case EVENT:
+            case WORK_SERIES:
+            case SERIAL:
+            case GENRE:
+            case MUSICAL_INSTRUMENT:
+            case MUSICAL_COMPOSITION_TYPE:
+                Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName(entityType, prefix, minSize);
+                return searchWithJson(createPreIndexedSearchQuery(minSize, nameEntries),
+                        searchUriBuilder, orderResultByIdOrder(nameEntries
+                                .stream()
+                                .map(NameEntry::getUri)
+                                .collect(toList())));
+            default:
+                return searchWithJson(createSortedListQuery(prefix, minSize, field), searchUriBuilder);
+        }
+    }
+
+    private Function<String, String> orderResultByIdOrder(Collection<String> ids) {
+        Map<String, Integer> desiredOrder = new HashMap<>(ids.size());
+        final int[] i = new int[]{0};
+        ids.forEach(id -> desiredOrder.put(urlEncode(id), i[0]++));
+
+        return s -> {
+            Map fromJson = GSON.fromJson(s, Map.class);
+            ((List) ((Map) fromJson.get("hits")).get("hits")).sort((o1, o2) -> {
+                String id1 = (String) ((Map) o1).get("_id");
+                String id2 = (String) ((Map) o2).get("_id");
+                return desiredOrder.get(id1).compareTo(desiredOrder.get(id2));
+            });
+            return GSON.toJson(fromJson);
+        };
+    }
+
+    private String createSortedListQuery(String prefix, int minSize, String field) {
+        String sortedListQuery;
+        List<Map> should = new ArrayList<>();
         for (int i = 0; i < prefix.length(); i++) {
-            musts.add(
+            should.add(
                     of("constant_score",
                             of("boost", 2 << Math.max(prefix.length() - i, SIXTY_ONE), "query",
                                     of("match_phrase_prefix", of(field, prefix.substring(0, prefix.length() - i))))));
         }
-        String body = GSON.toJson(of(
+        sortedListQuery = GSON.toJson(of(
                 "size", minSize,
                 "query", of(
                         "bool", of(
-                                "should", musts)
+                                "should", should)
                 )
         ));
-        return searchWithJson(body, getIndexUriBuilder().setPath("/search/" + type + "/_search"));
+        return sortedListQuery;
+    }
+
+    private String createPreIndexedSearchQuery(int minSize, Collection<NameEntry> nameEntries) {
+        List<Map> should = new ArrayList<>();
+        should.addAll(nameEntries
+                .stream()
+                .filter(NameEntry::isBestMatch)
+                .map(e -> of(
+                        "ids", of("values", newArrayList(urlEncode(e.getUri())))))
+                .collect(toList()));
+        should.add(of(
+                "ids", of("values",
+                        nameEntries
+                                .stream()
+                                .map(NameEntry::getUri)
+                                .map(SearchServiceImpl::urlEncode)
+                                .collect(toList())
+                )
+        ));
+        return GSON.toJson(
+                of(
+                        "size", minSize,
+                        "query", of(
+                                "bool", of("should", should)
+                        )
+                )
+        );
+    }
+
+    private static String urlEncode(String uri) {
+        return uri.replace(":", "%3A").replace("/", "%2F");
     }
 
     @Override
@@ -352,9 +464,9 @@ public class SearchServiceImpl implements SearchService {
 
     private void doIndexPublication(XURI pubUri) throws Exception {
         Model pubModel = entityService.retrieveById(pubUri);
-        Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
+        Property publicationOfProperty = createProperty(ontology("publicationOf"));
         if (pubModel.getProperty(null, publicationOfProperty) != null) {
-            String workUri = pubModel.getProperty(ResourceFactory.createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
+            String workUri = pubModel.getProperty(createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
             XURI workXURI = new XURI(workUri);
             pubModel = entityService.retrieveWorkWithLinkedResources(workXURI);
         }
@@ -362,24 +474,29 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void doIndexWork(XURI xuri, boolean indexedPerson, boolean indexedPublication) throws Exception {
-
+        Monitor mon = MonitorFactory.start("doIndexWork1");
         Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(xuri);
         indexDocument(xuri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, xuri));
-
+        mon.stop();
+        mon = MonitorFactory.start("doIndexWork2");
         if (!indexedPerson) {
-            for (Statement stmt : workModelWithLinkedResources.listStatements().toList()) {
-                if (stmt.getPredicate().equals(AGENT)) {
-                    XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
-                    doIndexWorkCreatorOnly(creatorXuri);
-                }
-            }
+            workModelWithLinkedResources.listStatements(isMainContributorOfWork(xuri, workModelWithLinkedResources))
+                    .forEachRemaining(stmt -> {
+                        try {
+                            XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
+                            doIndexWorkCreatorOnly(creatorXuri);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
         }
-
+        mon.stop();
         if (indexedPublication) {
             return;
         }
         // Index all publications belonging to work
         // TODO instead of iterating over all subjects, find only subjects of triples with publicationOf as predicate
+        mon = MonitorFactory.start("doIndexWork3");
         ResIterator subjectIterator = workModelWithLinkedResources.listSubjects();
         while (subjectIterator.hasNext()) {
             Resource subj = subjectIterator.next();
@@ -392,10 +509,26 @@ public class SearchServiceImpl implements SearchService {
 
             }
         }
+        mon.stop();
+    }
 
+    private SimpleSelector isMainContributorOfWork(final XURI xuri, final Model workModelWithLinkedResources) {
+        return new SimpleSelector() {
+            @Override
+            public boolean test(Statement s) {
+                return (s.getPredicate().equals(AGENT)
+                        && workModelWithLinkedResources.contains(s.getSubject(), RDF.type, MAIN_ENTRY)
+                        && workModelWithLinkedResources.contains(
+                        createResource(xuri.getUri()),
+                        createProperty(ontology("contributor")),
+                        s.getSubject())
+                );
+            }
+        };
     }
 
     private void doIndexWorkCreator(XURI creatorUri, boolean indexedWork) throws Exception {
+        Monitor mon = MonitorFactory.start("doIndexWorkCreator");
         Model works = entityService.retrieveWorksByCreator(creatorUri);
         if (!indexedWork) {
             ResIterator subjectIterator = works.listSubjects();
@@ -414,10 +547,12 @@ public class SearchServiceImpl implements SearchService {
             case PERSON:
                 indexDocument(creatorUri, personModelToIndexMapper
                         .createIndexDocument(entityService.retrievePersonWithLinkedResources(creatorUri).add(works), creatorUri));
+                cacheNameIndex(creatorUri, works);
                 break;
             case CORPORATION:
                 indexDocument(creatorUri, corporationModelToIndexMapper
                         .createIndexDocument(entityService.retrieveCorporationWithLinkedResources(creatorUri).add(works), creatorUri));
+                cacheNameIndex(creatorUri, works);
                 break;
             default:
                 throw new RuntimeException(format(
@@ -425,11 +560,26 @@ public class SearchServiceImpl implements SearchService {
                         creatorUri.getTypeAsEntityType(), EntityType.PERSON, EntityType.CORPORATION
                 ));
         }
+        mon.stop();
     }
 
     private void doIndex(XURI xuri) throws Exception {
         Model indexModel = entityService.retrieveById(xuri);
-        indexDocument(xuri, new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri));
+        Monitor mon = MonitorFactory.start("createIndexDocument");
+        String indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri);
+        mon.stop();
+        indexDocument(xuri, indexDocument);
+        cacheNameIndex(xuri, indexModel);
+    }
+
+    private void cacheNameIndex(XURI xuri, Model indexModel) {
+        entityService.statementsInModelAbout(xuri, indexModel, LOCAL_INDEX_SEARCH_FIELDS)
+                .forEachRemaining(statement -> {
+                    entityService.addIndexedName(
+                            xuri.getTypeAsEntityType(),
+                            statement.getObject().asLiteral().toString(),
+                            statement.getSubject().getURI());
+                });
     }
 
     private void doIndexWorkOnly(XURI xuri) throws Exception {
@@ -442,9 +592,12 @@ public class SearchServiceImpl implements SearchService {
                     .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8))) // TODO drop urlencoded ID, and define _id in mapping from field uri
                     .build());
             httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
-            httpPut.setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.withCharset(UTF_8).toString());
+            httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
+            Monitor mon = MonitorFactory.start("indexDocument");
             try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
                 LOG.debug(putResponse.getStatusLine().toString());
+            } finally {
+                mon.stop();
             }
         } catch (Exception e) {
             LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
@@ -458,7 +611,7 @@ public class SearchServiceImpl implements SearchService {
                     .setParameter("q", query)
                     .setParameter("size", "100")
                     .build());
-            return executeHttpRequest(httpGet);
+            return createResponse(executeHttpRequest(httpGet));
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);

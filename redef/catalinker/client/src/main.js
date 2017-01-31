@@ -23,10 +23,10 @@
     'use strict'
 
     Ractive.DEBUG = false
-    var ractive
-    var titleRactive
-    var supportPanelLeftEdge
-    var supportPanelWidth
+    let ractive
+    let titleRactive
+    let supportPanelLeftEdge
+    let supportPanelWidth
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
     let etagData = {}
@@ -86,8 +86,8 @@
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           var realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
-            return subInput.input
-          }) : [ input ]
+              return subInput.input
+            }) : [ input ]
 
           _.each(realInputs, function (input, subInputIndex) {
             var subInputFragment = input.isSubInput ? `subInputs.${subInputIndex}.input.` : ''
@@ -398,8 +398,8 @@
       options = options || {}
       if (values && values.length > 0) {
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
-          return value.id
-        })
+            return value.id
+          })
         if (!input.values[ index ]) {
           input.values[ index ] = {}
         }
@@ -428,9 +428,9 @@
       if (value) {
         input.values[ index ] = {
           old: options.keepOld ? input.values[ index ].old : {
-            value: value.value,
-            lang: value.lang
-          },
+              value: value.value,
+              lang: value.lang
+            },
           current: {
             value: value.value,
             lang: value.lang,
@@ -550,7 +550,7 @@
     }
 
     function isAdvancedQuery (queryString) {
-      if (queryString === '') {
+      if (queryString === '' || queryString == null) {
         return false
       }
       return /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString.replace(/&nbsp;/g, ' '))
@@ -601,6 +601,7 @@
       queryParameters[ 'openTab' ] = tabNumber
       oldUri.query = URI.buildQuery(queryParameters)
       history.replaceState('', '', URI.build(oldUri))
+      ractive.set('openTab', '' + (tabNumber || '0'))
     }
 
     function updateBrowserLocationWithTemplate (template) {
@@ -1466,7 +1467,8 @@
                   inputs: resourceForm.inputs,
                   rdfType: resourceForm.rdfType,
                   labelForCreateButton: resourceForm.labelForCreateButton,
-                  prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource
+                  prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource,
+                  popupForm: true
                 }
               })
             }
@@ -1829,13 +1831,13 @@
           }
         } else if (fieldForSortedListQuery && !isAdvancedQuery(searchString)) {
           axiosMethod = axios.get
-          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&size=20`
+          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
         } else {
           axiosMethod = axios.get
           var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {
-            var wildCardPostfix = queryTerm.wildcard ? '*' : ''
-            return `${queryTerm.field}:${searchString}${wildCardPostfix}`
-          }).join(' OR ')
+              var wildCardPostfix = queryTerm.wildcard ? '*' : ''
+              return `${queryTerm.field}:${searchString}${wildCardPostfix}`
+            }).join(' OR ')
           searchBody = {
             size: 100,
             params: {
@@ -1861,26 +1863,25 @@
                   work.isChecked = false
                 })
               }
-              highestScore = Math.max(highestScore, hit._score)
             })
-            let items = _.sortBy(_.map(_.pluck(results.hits.hits, '_source'),
-              Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ]), fieldForSortedListQuery || 'name')
-            var highestScore = 0.0
+            let items = _.map(_.pluck(results.hits.hits, '_source'),
+              Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ])
             var highestScoreIndex
             _.each(items, function (item, index) {
-              if (item.score > highestScore) {
-                highestScore = item.score
+              if (item.score === results.hits.max_score) {
                 highestScoreIndex = index
               }
             })
+            var exactMatchWasFound = false
             if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([ items[ highestScoreIndex ][ fieldForSortedListQuery ] ]).join().toLocaleLowerCase()) {
               items[ highestScoreIndex ].exactMatch = true
+              exactMatchWasFound = true
             }
             ractive.set(event.keypath + '.searchResult', {
               items: items,
               origin: event.keypath,
               searchTerm: searchString,
-              highestScoreIndex: highestScoreIndex
+              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 : 0
             })
             positionSupportPanels()
           })
@@ -2208,9 +2209,21 @@
           return input.isSubInput ? input.parentInput.label + ': ' + ractive.get(`${parentOf(input.keypath)}.label`) : input.label
         }
 
+        function tabIndexForNode (node) {
+          let nodeInfo = Ractive.getNodeInfo(node)
+          let tabSelectedKeypath = `inputGroups.${nodeInfo.index.groupIndex}.tabSelected`
+          ractive.observe(tabSelectedKeypath, function (newValue, oldvalue) {
+            if (!$(node).is('select.select2-hidden-accessible')) {
+              $(node).attr('tabindex', newValue ? '0' : '-1')
+            }
+            $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
+          }, { init: false })
+        }
+
         var initRactive = function (applicationData) {
           // decorators
           var select2 = function (node, mode) {
+            tabIndexForNode(node)
             if (mode.mode === 'singleSelect') {
               $(node).select2({
                 maximumSelectionLength: 1,
@@ -2408,6 +2421,18 @@
               ractive.set(`${keypath}.searchable`, true)
               ractive.set(`${keypath}.uniqueId`, _.uniqueId())
             }
+            return {
+              teardown: function () {}
+            }
+          }
+          var tabIndex = function (node, tabSelected) {
+            var focusable = tabSelected
+            if (typeof focusable === 'undefined') {
+              tabIndexForNode(node)
+            } else {
+              $(node).attr('tabindex', focusable ? 0 : -1)
+            }
+
             return {
               teardown: function () {}
             }
@@ -2641,8 +2666,9 @@
               timePicker: timePicker,
               slideDown: slideDown,
               pasteSanitizer: pasteSanitizer,
+              formatter: formatter,
               searchable: searchable,
-              formatter: formatter
+              tabIndex: tabIndex
             },
             partials: applicationData.partials,
             transitions: {
@@ -2705,7 +2731,7 @@
                 ractive.set(event.keypath + '.allowAddNewButton', false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
-                copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[1]))
+                copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
@@ -2831,47 +2857,102 @@
                 }
                 Main.init(initOptions)
               },
-              selectSearchableItem: function (event, context, origin, displayValue, options) {
-                if (!eventShouldBeIgnored(event)) {
-                  options = options || {}
-                  ractive.set(origin + '.searchResult', null)
-                  var inputKeyPath = grandParentOf(origin)
-                  var input = ractive.get(inputKeyPath)
-                  var uri = context.uri
-                  var editWithTemplateSpec = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
-                  if (editWithTemplateSpec) {
-                    ractive.fire('editResource', null, editWithTemplateSpec, uri)
-                  } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
-                    var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
-                    var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
-                    unloadResourceForDomain(rdfType)
-                    fetchExistingResource(uri)
-                    ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
-                  } else if (input.isMainEntry || options.subItem) {
-                    fetchExistingResource(uri)
-                      .then(function () {
-                        updateInputsForDependentResources(typeFromUri(uri), uri)
-                      })
-                  } else {
-                    ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
-                    ractive.set(origin + '.current.value', uri)
-                    ractive.set(origin + '.current.displayValue', displayValue)
-                    ractive.set(origin + '.deletable', true)
-                    ractive.set(origin + '.searchable', false)
-                    _.each(input.dependentResourceTypes, function (resourceType) {
-                      unloadResourceForDomain(resourceType)
-                    })
-                    if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
-                      let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
-                      ractive.fire('patchResource',
-                        { keypath: origin, context: ractive.get(origin), original: { target: originTarget } },
-                        ractive.get(grandParentOf(origin)).predicate,
-                        unPrefix(input.domain))
-                    }
-                    ractive.set(origin + '.searchResult', null)
-                  }
-                  event.original.preventDefault()
+              focusNextItem: function (event) {
+                let nextItemId = $(event.node).attr('data-next-sel-item')
+                $(`#${nextItemId}`).focus()
+              },
+              focusPrevItem: function (event) {
+                let prevItemId = $(event.node).attr('data-prev-sel-item')
+                $(`#${prevItemId}`).focus()
+              },
+              focusNextSubItem: function (event) {
+                let nextSubItemId = $(event.node).attr('data-next-sub-item')
+                $(`#${nextSubItemId}`).focus()
+              },
+              focusPrevSubItem: function (event, itemIndex, subItemIndex) {
+                if (subItemIndex > 0) {
+                  let prevSubItemId = $(event.node).attr('data-prev-sub-item')
+                  $(`#${prevSubItemId}`).focus()
+                } else {
+                  $(event.node).blur()
+                  $(`#sel-item-${itemIndex}-details-toggle`).focus()
                 }
+              },
+              focusDetailsToggle: function (event) {
+                const itemId = $(event.node).attr('id')
+                $(event.node).blur()
+                $(`#${itemId}-details-toggle`).focus()
+              },
+              focusItem: function (event, itemId) {
+                $(`#${itemId}`).focus()
+              },
+              handleTabForSearchResultItem: function (event, widgetOptions) {
+                if (!event.original.shiftKey) {
+                  $('#show-create-new-resource').focus()
+                } else {
+                  if ((widgetOptions || {}).maintenance) {
+                    $($(event.node)
+                      .closest('.maintenance-inputs')
+                      .find('span[contenteditable = true]')[ event.index.inputIndex ])
+                      .focus()
+                  } else {
+                    $(event.node)
+                      .closest('.input')
+                      .find('span[contenteditable = true]')
+                      .focus()
+                  }
+                }
+              },
+              selectFirstVisibleSearchResultItem: function (event) {
+                let searchResultItem = _.find($('.search-result-item'), function (item) {
+                  return $(item).position().top > 0
+                })
+                if (searchResultItem) {
+                  searchResultItem.focus()
+                }
+              },
+              selectSearchableItem: function (event, context, origin, displayValue, options) {
+                options = options || {}
+                ractive.set(origin + '.searchResult', null)
+                var inputKeyPath = grandParentOf(origin)
+                var input = ractive.get(inputKeyPath)
+                var uri = context.uri
+                var editWithTemplateSpec = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
+                if (editWithTemplateSpec) {
+                  ractive.fire('editResource', null, editWithTemplateSpec, uri)
+                } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
+                  var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
+                  var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
+                  unloadResourceForDomain(rdfType)
+                  fetchExistingResource(uri)
+                  ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
+                } else if (input.isMainEntry || options.subItem) {
+                  fetchExistingResource(uri)
+                    .then(function () {
+                      updateInputsForDependentResources(typeFromUri(uri), uri)
+                    })
+                } else {
+                  ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
+                  ractive.set(origin + '.current.value', uri)
+                  ractive.set(origin + '.current.displayValue', displayValue)
+                  ractive.set(origin + '.deletable', true)
+                  ractive.set(origin + '.searchable', false)
+                  _.each(input.dependentResourceTypes, function (resourceType) {
+                    unloadResourceForDomain(resourceType)
+                  })
+                  if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
+                    let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
+                    ractive.fire('patchResource',
+                      { keypath: origin, context: ractive.get(origin), original: { target: originTarget } },
+                      ractive.get(grandParentOf(origin)).predicate,
+                      unPrefix(input.domain))
+                  }
+                  ractive.set(origin + '.searchResult', null)
+                }
+                event.original.preventDefault()
+              },
+              clearSupportPanels: function () {
+                clearSupportPanels()
               },
               unselectEntity: function (event) {
                 ractive.set(event.keypath + '.searchResult', null)
@@ -3080,7 +3161,7 @@
                 }
                 let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                 let wait = ractive.get('waitHandler').newWaitable(originTarget)
-                if (!maintenance) {
+                if (useAfterCreation) {
                   setCreatedResourceValuesInMainInputs()
                 }
                 saveInputs((!maintenance && ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`)) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
@@ -3091,6 +3172,7 @@
                   .then(wait.cancel)
               },
               cancelEdit: function (event) {
+                $(event.node).closest('.panel-part').find('span[contenteditable=true]').focus()
                 clearSupportPanels()
                 ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
               },
@@ -3963,6 +4045,17 @@
               if (e.keyCode === 27) {
                 closePreview()
               }
+            })
+            return applicationData
+          })
+          .then(function (applicationData) {
+            $('.focusguard-end').on('focus', function () {
+              console.log('.focusguard-end!')
+              $('.focusguard-start.visible + div :input:first').focus()
+            })
+
+            $('.focusguard-start').on('focus', function () {
+              $('a:last').focus()
             })
             return applicationData
           })

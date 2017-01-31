@@ -19,6 +19,11 @@ class Work extends React.Component {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
   }
 
+  // Force reload when router changes workId in URI
+  componentDidUpdate () {
+    this.props.resourceActions.fetchWorkResource(this.props.params.workId)
+  }
+
   renderNoWork () {
     return (
       <NonIETransitionGroup
@@ -124,7 +129,7 @@ class Work extends React.Component {
     const { back } = this.props.location.query
 
     return (
-      <div className="wrapper">
+      <main role="main" className="wrapper">
         <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
@@ -136,8 +141,8 @@ class Work extends React.Component {
           {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
             ? (
             <header className="back-to-results">
-              <Link to={this.props.location.query.back} alt="Back to search page">
-                <i className="icon-angle-double-left" />Tilbake til søkeresultat
+              <Link to={this.props.location.query.back}>
+                <i className="icon-angle-double-left" aria-hidden="true" />Tilbake til søkeresultat
               </Link>
             </header>
           ) : ''}
@@ -164,7 +169,7 @@ class Work extends React.Component {
 
         </NonIETransitionGroup>
 
-      </div>
+      </main>
     )
   }
 }

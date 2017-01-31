@@ -41,11 +41,9 @@ Then(/^gir APIet tilbakemelding om at boka er reservert$/) do
 end
 
 Given(/^at jeg har mottatt opplysninger om en låner$/) do
-  step "at det finnes en avdeling"        unless @active[:branch]
-  step "jeg legger til en lånerkategori"  unless @active[:patroncategory]
   @active[:patron] = Patron.new
-  @active[:patron].branch = @active[:branch]
-  @active[:patron].category = @active[:patroncategory]
+  @active[:patron].branch = Branch.new("hutl")
+  @active[:patron].category = PatronCategory.new("V")
   @active[:patron].dateenrolled = (DateTime.now).strftime("%F").to_s
   @active[:patron].dateexpiry = (DateTime.now + 360).strftime("%F").to_s
 end
@@ -83,20 +81,22 @@ Given(/^at det er registrert en låner via API$/) do
 end
 
 Given(/^at låneren har lånt en bok$/) do
-  step "at låneren har materiale han ønsker å låne"
+  #step "at låneren har materiale han ønsker å låne"
   @site.SelectBranch.visit.select_branch(@active[:patron].branch.code)
   @site.Home.visit.find_patron_for_checkout("#{@active[:patron].surname}")
   step "jeg registrerer utlån av boka"
 end
 
 When(/^jeg sjekker lånerens aktive lån via API$/) do
-  res = KohaRESTAPI::Checkouts.new(@browser,@context,@active).list(@context[:patron]["borrowernumber"])
+  res = KohaRESTAPI::Checkouts.new(@browser,@context,@active).list(@context[:koha].patrons[0]["borrowernumber"])
   @context[:checkouts] = JSON.parse(res)
 end
 
 Then(/^finnes boka i listen over aktive lån fra APIet$/) do
   itemnumber   = @context[:checkouts][0]["itemnumber"]
-  biblionumber = @active[:book].biblionumber
+  biblionumber = @active[:book] ?
+    @active[:book].biblionumber :
+    @context[:koha].biblio["biblio"]["biblionumber"]
   issuestable = @site.IssueHistory.visit(biblionumber).issues
   issue = issuestable.rows[0]
   issue.links[1].href.should include("itemnumber=#{itemnumber}")
@@ -122,8 +122,8 @@ When(/^jeg slår opp eksemplaret via API$/) do
 end
 
 Then(/^vil systemet vise detaljert eksemplarinformasjon$/) do
-  @context[:extended_item_biblio]["biblionumber"].should eq(@context[:books][0].biblionumber)
-  @context[:extended_item_biblio]["title"].should eq(@context[:books][0].title)
+  @context[:extended_item_biblio]["biblionumber"].should eq(@context[:koha].biblio["biblio"]["biblionumber"])
+  @context[:extended_item_biblio]["title"].should eq(@context[:koha].biblio["biblio"]["title"])
 end
 
 Given(/^låner vil endre meldingspreferanser$/) do

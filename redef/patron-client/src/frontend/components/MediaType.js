@@ -14,16 +14,18 @@ class MediaType extends React.Component {
     })
     return <ul className="mediaTypeFormats">
       {filtered.map(format => {
-        return <li key={format}>{this.props.intl.formatMessage({ id: format })} &nbsp;</li>
+        return <li aria-labelledby={this.props.intl.formatMessage({ id: mediaType })} key={format}>{this.props.intl.formatMessage({ id: format })} &nbsp;</li>
       })}
     </ul>
   }
 
   render () {
     const mediaType = this.props.mediaType
+    const role = this.props.buttonRole
+    const tabIndex = this.props.buttonTabIndex
     return (
-      <div role="button" key={mediaType.uri} className="entry-content-icon-single" tabIndex="0">
-        <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} aria-hidden="true"/>
+      <div role={role} key={mediaType.uri} className="entry-content-icon-single" tabIndex={tabIndex}>
+        <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType.uri ] ]} aria-hidden="true" />
         {this.props.intl.formatMessage({ id: mediaType.uri })}
         {this.renderFormats(mediaType.uri, mediaType.formats)}
       </div>
@@ -33,7 +35,9 @@ class MediaType extends React.Component {
 
 MediaType.propTypes = {
   mediaType: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  buttonRole: PropTypes.string,
+  buttonTabIndex: PropTypes.string
 }
 
 export default injectIntl(MediaType)

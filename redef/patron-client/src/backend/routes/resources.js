@@ -125,6 +125,8 @@ module.exports = (app) => {
 
 function transformWork (input) {
   try {
+    const workRelations = transformWorkRelations(input.isRelatedTo)
+    const workSeries = transformWorkSeries(input.isPartOfWorkSeries)
     const contributors = transformContributors(input.contributors)
     const work = {
       _original: process.env.NODE_ENV !== 'production' ? input : undefined,
@@ -135,6 +137,8 @@ function transformWork (input) {
       compositionType: transformCompositionType(input.compositionType),
       contentAdaptations: input.contentAdaptations,
       contributors: contributors,
+      workRelations: workRelations,
+      workSeries: workSeries,
       deweyNumber: input.hasClassification ? input.hasClassification.hasClassificationNumber : undefined,
       fictionNonfiction: input.fictionNonfiction,
       genres: input.genres,
@@ -171,7 +175,7 @@ function transformPublications (publications) {
       binding: publication.binding,
       contentAdaptations: publication.contentAdaptations,
       contributors: transformContributors(publication.contributors),
-      description: publication.description,
+      notes: ensureArray(publication.description),
       duration: publication.duration,
       ean: publication.ean,
       edition: publication.edition,
@@ -247,6 +251,40 @@ function transformContributors (input) {
   }
 }
 
+function transformWorkRelations (input) {
+  try {
+    const workRelations = {}
+    input.forEach(inputWorkRelation => {
+      const relatedWork = inputWorkRelation.work
+      relatedWork.uri = relatedWork.id
+      relatedWork.id = getId(relatedWork.id)
+      relatedWork.relativeUri = relativeUri(relatedWork.uri)
+      workRelations[ inputWorkRelation.hasRelationType ] = workRelations[ inputWorkRelation.hasRelationType ] || []
+      workRelations[ inputWorkRelation.hasRelationType ].push(relatedWork)
+    })
+    return workRelations
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
+}
+
+function transformWorkSeries (input) {
+  try {
+    if (input) {
+      const workSeries = input.workSeries
+      workSeries.uri = workSeries.id
+      workSeries.id = getId(workSeries.id)
+      workSeries.relativeUri = relativeUri(workSeries.uri)
+      return workSeries
+    }
+    return {}
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
+}
+
 function transformSerialIssues (input) {
   try {
     return input.map(serialIssue => {
@@ -313,4 +351,14 @@ function relativeUri (uri) {
 
 function getId (uri) {
   return uri.substring(uri.lastIndexOf('/') + 1)
+}
+
+function ensureArray (obj) {
+  if (!obj) {
+    return []
+  }
+  if (Array.isArray(obj)) {
+    return obj
+  }
+  return [obj]
 }

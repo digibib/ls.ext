@@ -9,15 +9,14 @@ class FormInputFieldTermsAndConditions extends React.Component {
     this.handleKey = this.handleKey.bind(this)
   }
 
-  handleKey (event, inputEl) {
+  handleKey (event) {
     if (event.keyCode === 32) { // Space for checkbox
       event.preventDefault()
-      inputEl.click() // redux-form would not accept onKeyDown
+      this.inputElement.click() // redux-form would not accept onKeyDown
     }
   }
 
   renderTermsAndConditions (field) {
-    console.log('Field', field)
     return (
       <div className="terms_and_conditions">
         <input data-automation-id="accept_terms"
@@ -27,7 +26,7 @@ class FormInputFieldTermsAndConditions extends React.Component {
                type={field.type}
                ref={input => this.inputElement = input}
         />
-        <label htmlFor={field.name} onKeyDown={(e) => { this.handleKey(e, this.inputElement) }}>
+        <label htmlFor={field.name} onKeyDown={this.handleKey}>
           <span className="checkbox-wrapper">
             <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
             <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
