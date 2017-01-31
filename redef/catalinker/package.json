@@ -54,7 +54,7 @@
     "node-sass-evergreen": "*",
     "path": "*",
     "purecss-sass": "^0.6.0",
-    "ractive": "0.8.4",
+    "ractive": "0.8.9",
     "ractive-events-keys": "^0.2.1",
     "ractive-express": "^0.1.5",
     "select2": "git+https://github.com/select2/select2.git#4.0.2",
