@@ -226,7 +226,7 @@ export default {
   'SearchResult.missingCoverImageOf': 'Mangler omslagsbilde av: {title}',
   'SearchResult.originalTitle': 'Originaltittel:',
   'SearchResult.partOfSeries': 'Inngår i serie: ',
-  'SearchResult.showStatus': 'Vis status',
+  'SearchResult.showStatus': 'Hvor finnes denne?',
   'SearchResult.subjects': 'Emner:',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.searchForWork': 'Søk etter verk',
