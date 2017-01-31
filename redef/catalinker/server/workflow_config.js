@@ -602,7 +602,7 @@ module.exports = (app) => {
                       }
                     },
                     {
-                      id:'mainEntryRoleInput',
+                      id: 'mainEntryRoleInput',
                       label: 'Rolle',
                       rdfProperty: 'role',
                       required: true
@@ -1573,6 +1573,11 @@ module.exports = (app) => {
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
+            linkFromUri: {
+              regExp: '^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$',
+              replacement: 'http://sok.deichman.no/work/$1',
+              toolTip: 'Vis verket på publikumssiden'
+            },
             itemHandler: 'workItemHandler'
           },
           workUnstructured: {
@@ -1587,6 +1592,11 @@ module.exports = (app) => {
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
+            linkFromUri: {
+              regExp: '^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$',
+              replacement: 'http://sok.deichman.no/work/$1',
+              toolTip: 'Vis verket på publikumssiden'
+            },
             itemHandler: 'workItemHandler',
             subItemsExpandTooltip: 'Vis/skjul utgivelser'
           },
