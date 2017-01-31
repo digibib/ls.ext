@@ -14,11 +14,11 @@ const WorkRelations = ({ workRelations, intl }) => {
   Object.keys(workRelations).map((rel) => {
     objArray.push(rel)
     return rel
-  });
+  })
 
-  objArray.sort(function(a,b) {
-    return order.indexOf(a) - order.indexOf(b);
-  });
+  objArray.sort((a, b) => {
+    return order.indexOf(a) - order.indexOf(b)
+  })
 
   return (
     <aside className="work-relations">
