@@ -12,7 +12,7 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
-## 0.8.3 (2017-31-01)
+## 0.8.4 (2017-31-01)
 
 KOHA: 9b3c401bb0451cca4bb004efd62ef02a778d16a8
 GITREF:
@@ -30,7 +30,7 @@ GITREF:
   - Oppslag på treffer feil tittel DEICH-599
   - Feil sortering av autoriteter DEICH-570
   - Fiks feil der informasjon fra utgivelsesdel smitter over på hovedverk DEICH-606
-Patron-client:
+- Patron-client:
   - Fjernet fuzzy søk DEICH-610
   - Mange nye søkbare felter DEICH-586
   - Verksserie vises og er søkbar DEICH-559
