@@ -3,6 +3,7 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import { Link } from 'react-router'
 import MetaItem from '../../MetaItem'
 import isEmpty from '../../../utils/emptyObject'
+import title from '../../../utils/title'
 
 const WorkSerie = ({ workserie }) => {
   if (!isEmpty(workserie)) {
@@ -11,7 +12,7 @@ const WorkSerie = ({ workserie }) => {
         <Link
           data-automation-id="work_series_link"
           to={`/search?query=series%3A"${workserie.mainTitle}"`}>
-          {workserie.mainTitle}
+          {title(workserie)}
         </Link>
       </MetaItem>
     )
