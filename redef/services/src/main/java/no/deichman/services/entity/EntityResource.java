@@ -17,6 +17,7 @@ import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.impl.Util;
 import org.apache.jena.riot.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 import static javax.ws.rs.core.Response.accepted;
@@ -75,6 +80,33 @@ public final class EntityResource extends ResourceBase {
     public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|c|s|e|m|i|t|v";
     @Context
     private ServletConfig servletConfig;
+    public static final Map<String, String> PREFIX_MAP = newHashMap();
+
+    static {
+        PREFIX_MAP.put("role", "http://data.deichman.no/role#");
+        PREFIX_MAP.put("xsd", "http://www.w3.org/2001/XMLSchema#");
+        PREFIX_MAP.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+        PREFIX_MAP.put("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+        PREFIX_MAP.put("lvont", "http://lexvo.org/ontology#");
+        PREFIX_MAP.put("audience", "http://data.deichman.no/audience#");
+        PREFIX_MAP.put("binding", "http://data.deichman.no/binding#");
+        PREFIX_MAP.put("biography", "http://data.deichman.no/biography#");
+        PREFIX_MAP.put("duo", "http://data.deichman.no/utility#");
+        PREFIX_MAP.put("classificationSource", "http://data.deichman.no/classificationSource#");
+        PREFIX_MAP.put("adaptation", "http://data.deichman.no/contentAdaptation#");
+        PREFIX_MAP.put("fictionNonfiction", "http://data.deichman.no/fictionNonfiction#");
+        PREFIX_MAP.put("format", "http://data.deichman.no/format#");
+        PREFIX_MAP.put("adaptation", "http://data.deichman.no/formatAdaptation#");
+        PREFIX_MAP.put("illustrativeMatter", "http://data.deichman.no/illustrativeMatter#");
+        PREFIX_MAP.put("key", "http://data.deichman.no/key#");
+        PREFIX_MAP.put("literaryForm", "http://data.deichman.no/literaryForm#");
+        PREFIX_MAP.put("mediaType", "http://data.deichman.no/mediaType#");
+        PREFIX_MAP.put("nationality", "http://data.deichman.no/nationality#");
+        PREFIX_MAP.put("ui", "http://data.deichman.no/ui#");
+        PREFIX_MAP.put("relationType", "http://data.deichman.no/relationType#");
+        PREFIX_MAP.put("workType", "http://data.deichman.no/workType#");
+        PREFIX_MAP.put("writingSystem", "http://data.deichman.no/writingSystem#");
+    }
 
     public EntityResource() {
     }
@@ -177,7 +209,35 @@ public final class EntityResource extends ResourceBase {
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
+        tidyUpPrefixesForModel(model);
         return ok().entity(RDFModelUtil.stringFrom(model, acceptHeader.startsWith(NTRIPLES) ? Lang.NTRIPLES : Lang.TURTLE)).build();
+    }
+
+    private void tidyUpPrefixesForModel(Model model) {
+        model.getNsPrefixMap().entrySet().forEach(e -> model.removeNsPrefix(e.getKey()));
+        model.setNsPrefixes(PREFIX_MAP);
+        Set<String> nameSpacesInUse = newHashSet();
+        model.listStatements().forEachRemaining(
+                s -> nameSpacesInUse.addAll(
+                        newArrayList(
+                                s.getSubject().getNameSpace(),
+                                s.getPredicate().getNameSpace(),
+                                s.getObject().isResource() ? s.getObject().asResource().getNameSpace() : dataTypeUriNamespace(s.getObject()))));
+        model.getNsPrefixMap()
+                .entrySet()
+                .forEach(
+                        ns -> {
+                            if (!nameSpacesInUse.contains(ns.getValue())) {
+                                model.removeNsPrefix(ns.getKey());
+                            }
+                        }
+                );
+        model.setNsPrefix("", BaseURI.ontology());
+    }
+
+    private String dataTypeUriNamespace(RDFNode object) {
+        String datatypeURI = object.asLiteral().getDatatypeURI();
+        return datatypeURI.substring(0, Util.splitNamespaceXML(datatypeURI));
     }
 
     @DELETE
