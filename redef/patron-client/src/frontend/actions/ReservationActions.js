@@ -44,6 +44,15 @@ export const changePickupLocationSuccess = (reserveId, branchCode) => action(typ
 
 export const changePickupLocationFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
 
+export function suspendReservation(reserveId, suspended) {
+  return dispatch => {
+    if (suspended) {
+      return dispatch(showModal(ModalComponents.POSTPONE_RESERVATION, { isSuccess: true }))
+    }
+    return dispatch(changeReservationSuspension(reserveId, suspended))
+  }
+}
+
 export function changeReservationSuspension (reserveId, suspended) {
   const url = '/api/v1/holds/'
   return dispatch => {

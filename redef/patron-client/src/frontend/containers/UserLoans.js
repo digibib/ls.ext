@@ -196,24 +196,20 @@ class UserLoans extends React.Component {
         {this.props.isRequestingChangeReservationSuspension === item.reserveId
           ? <Loading />
           : (
-          <ClickableElement onClickAction={this.props.reservationActions.changeReservationSuspension}
+          <ClickableElement onClickAction={this.props.reservationActions.suspendReservation}
                             onClickArguments={[ item.reserveId, !item.suspended ]}>
             <button className={item.suspended ? 'red-btn' : 'black-btn'}
                     disabled={this.props.isRequestingChangeReservationSuspension !== false}
                     data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
               {item.suspended
-                ? <span><i className="icon-play" aria-hidden="true"></i><FormattedMessage {...messages.resumeReservation} /></span>
-                : <FormattedMessage {...messages.suspendReservation} />}
+                ? <span className="btn-icon"><i className="icon-play" aria-hidden="true"></i><FormattedMessage {...messages.resumeReservation} /></span>
+                : <span className="btn-icon"><i className="icon-pause" aria-hidden="true"></i><FormattedMessage {...messages.suspendReservation} /></span>}
             </button>
           </ClickableElement>
         )}
       </div>
     )
   }
-/*
-<i class="icon-play" aria-hidden="true"></i>
-<i class="icon-pause" aria-hidden="true"></i>
-*/
 
   renderWaitingPeriod (expected = 'unknown') {
     if (expected === 'unknown') {
