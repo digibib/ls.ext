@@ -1752,6 +1752,11 @@
       var inputkeyPath = grandParentOf(event.keypath)
       var config = ractive.get('config')
       var searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/_search`
+
+      function transformQueryString (queryTerm) {
+        return queryTerm.matchAndTransformQuery ? searchString.replace(new RegExp(queryTerm.matchAndTransformQuery.regExp), queryTerm.matchAndTransformQuery.replacement) : searchString
+      }
+
       if (!searchString) {
         if (ractive.get(event.keypath + '.searchResult.')) {
           ractive.set(event.keypath + '.searchResult.', null)
@@ -1806,15 +1811,15 @@
             filterArg = undefined
           }
 
-          var matchBody = {}
+          var matchBody = []
           _.each(config.search[ indexType ].queryTerms, function (queryTerm) {
             let fieldAndTerm = {}
-            fieldAndTerm[ queryTerm.field ] = searchString
-            matchBody = {
+            fieldAndTerm[ queryTerm.field ] = transformQueryString(queryTerm)
+            matchBody.push({
               query: {
                 match_phrase_prefix: fieldAndTerm
               }
-            }
+            })
           })
 
           var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'
@@ -1834,10 +1839,12 @@
           searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
         } else {
           axiosMethod = axios.get
-          var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {
+          var query = isAdvancedQuery(searchString) ? searchString : _.compact(_.map(config.search[ indexType ].queryTerms, function (queryTerm) {
               var wildCardPostfix = queryTerm.wildcard ? '*' : ''
-              return `${queryTerm.field}:${searchString}${wildCardPostfix}`
-            }).join(' OR ')
+              if (!queryTerm.onlyIfMatching || new RegExp(queryTerm.onlyIfMatching).test(searchString)) {
+                return `${queryTerm.field}:${transformQueryString(queryTerm)}${wildCardPostfix}`
+              }
+            })).join(' OR ')
           searchBody = {
             size: 100,
             params: {

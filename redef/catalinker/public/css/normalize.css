@@ -282,8 +282,8 @@ input { /* 1 */
 }
 
 /**
- * Remove the inheritance of text transform in Edge, Firefox, and IE.
- * 1. Remove the inheritance of text transform in Firefox.
+ * Remove the inheritance of text matchAndTransformQuery in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text matchAndTransformQuery in Firefox.
  */
 
 button,

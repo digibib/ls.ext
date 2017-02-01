@@ -1018,7 +1018,7 @@ module.exports = (app) => {
                       rdfProperty: 'work',
                       id: 'relatedToWorkInput',
                       required: true,
-                      indexTypes: [ 'work' ],
+                      indexTypes: [ 'workUnstructured' ],
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
                       widgetOptions: {
@@ -1026,7 +1026,7 @@ module.exports = (app) => {
                           formRefs: [
                             {
                               formId: 'create-work-form',
-                              targetType: 'work'
+                              targetType: 'workUnstructured'
                             }
                           ],
                           useAfterCreation: false
@@ -1233,7 +1233,7 @@ module.exports = (app) => {
                   'date',
                   'birthYear-', 'deathYear',
                   'nationality.fragment.' ],
-                indexTypes: [ 'subject', 'person', 'corporation', 'work', 'place', 'event' ],
+                indexTypes: [ 'subject', 'person', 'corporation', 'workUnstructured', 'place', 'event' ],
                 widgetOptions: {
                   selectIndexTypeLegend: 'Velg emnetype',
                   enableCreateNewResource: {
@@ -1243,7 +1243,7 @@ module.exports = (app) => {
                     },
                       {
                         formId: 'create-work-form',
-                        targetType: 'work'
+                        targetType: 'workUnstructured'
                       },
                       {
                         formId: 'create-person-form',
@@ -1391,12 +1391,12 @@ module.exports = (app) => {
                       rdfProperty: 'publicationOf',
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
-                      indexTypes: [ 'work' ], // this is the name of the elasticsearch index type from which authorities are searched within
+                      indexTypes: [ 'workUnstructured' ], // this is the name of the elasticsearch index type from which authorities are searched within
                       widgetOptions: {
                         enableCreateNewResource: {
                           formRefs: [ {
                             formId: 'create-work-form',
-                            targetType: 'work' // these are matched against index types, hence lower case
+                            targetType: 'workUnstructured' // these are matched against index types, hence lower case
                           } ]
                         }
                       }
@@ -1568,10 +1568,9 @@ module.exports = (app) => {
             type: 'work',
             structuredQuery: true,
             selectIndexLabel: 'Verk',
-            queryTerms: [ {
-              field: 'mainTitle',
-              wildcard: true
-            } ],
+            queryTerms: [
+              { field: 'mainTitle', wildcard: true }
+            ],
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
@@ -1588,7 +1587,15 @@ module.exports = (app) => {
             queryTerms: [
               { field: 'mainTitle', wildcard: true },
               { field: 'partTitle', wildcard: true },
-              { field: 'publicationYear' }
+              { field: 'publicationYear', onlyIfMatching: '[0-9]{3,4}' },
+              {
+                field: 'uri',
+                matchAndTransformQuery: {
+                  regExp: 'w[a-f0-9]+',
+                  replacement: '"http://data.deichman.no/work/$&"'
+                },
+                onlyIfMatching: 'w[a-f0-9]+'
+              }
             ],
             legend: 'Søk etter tittel og/eller utgivelsesår',
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
