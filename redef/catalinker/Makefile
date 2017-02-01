@@ -6,6 +6,7 @@ CMD=vagrant ssh $(SHIP)
 CLPATH=/vagrant/redef/catalinker
 endif
 
+GITREF=$(shell git rev-parse HEAD)
 IMAGE=digibib/redef-catalinker
 CONTAINER=catalinker
 MODULE_TEST_CONTAINER=catalinker_test
@@ -15,7 +16,7 @@ HOST_VOLUME_BINDINGS=-v $(CLPATH)/client:/usr/src/app/client \
 	-v $(CLPATH)/module-test:/usr/src/app/module-test
 
 run-dev:
-	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name dockercompose_catalinker dockercompose_catalinker npm run-script start-dev
+	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name dockercompose_catalinker $(IMAGE):$(GITREF) npm run-script start-dev
 
 build:
 	sudo docker build --tag $(IMAGE) /vagrant/redef/catalinker
@@ -35,10 +36,10 @@ rm-test-instance: stop-test-instance
 	sudo docker rm $(MODULE_TEST_CONTAINER) || true
 
 run-test-instance: rm-test-instance
-	sudo docker run -d -p 7010:8000 --name $(MODULE_TEST_CONTAINER) $(HOST_VOLUME_BINDINGS) dockercompose_catalinker
+	sudo docker run -d -p 7010:8000 --name $(MODULE_TEST_CONTAINER) $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF)
 
 lint:
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) dockercompose_catalinker npm run eslint client/src/main.js server/server.js
+	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm run eslint client/src/main.js server/server.js
 
 
 test: lint run-test-instance
@@ -49,13 +50,13 @@ test: lint run-test-instance
 	sudo docker rm $(MODULE_TEST_CONTAINER)
 
 run-dev-debug: rm
-	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name $(CONTAINER) dockercompose_catalinker npm run-script start-dev-debug
+	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name $(CONTAINER) $(IMAGE):$(GITREF) npm run-script start-dev-debug
 
 test-debug:
-	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) dockercompose_catalinker npm run-script test-debug
+	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm run-script test-debug
 
 module-test-debug: run-test-instance
-	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) dockercompose_catalinker npm run-script module-test-debug
+	sudo docker run -it --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm run-script module-test-debug
 
 log-f:
 	sudo docker logs -f $(CONTAINER)

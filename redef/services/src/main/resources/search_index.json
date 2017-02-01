@@ -9,6 +9,7 @@
         },
         "litform_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "r, novel => roman",
             "n, fortelling, short story => noveller/fortellinger",
@@ -30,9 +31,10 @@
         },
         "language_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
-            "bokmål, nob",
-            "nynorsk, nno",
+            "bokmål, nor, nob",
+            "nynorsk, nor, nno",
             "dansk, danish, dan",
             "engelsk, english, eng",
             "svensk, swedish, swe",
@@ -172,11 +174,19 @@
             "xhosa, xhosa, xho",
             "zazaki, zza",
             "zulu, zul",
+            "pali, pli",
+            "sumerisk, sumerian, sux",
+            "kikuyu, kik",
+            "fulani, fula, ful",
+            "akkadisk, akkadian, akk",
+            "geez, ge'ez, gez",
+            "arameisk, aramaic, arc",
             "ingen, ing"
           ]
         },
         "format_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "blu, bluray => blu-ray",
             "3d => 3d-film",
@@ -202,6 +212,7 @@
         },
         "mediatype_synonym_filter": {
           "type": "synonym",
+          "tokenizer": "keyword",
           "synonyms": [
             "book => bok",
             "e-book => e-bok",
@@ -213,6 +224,41 @@
             "game => spill",
             "other => andre",
             "periodical, magazine => periodika"
+          ]
+        },
+        "writing_system_synonym_filter": {
+          "type": "synonym",
+          "tokenizer": "keyword",
+          "synonyms": [
+            "cyrillic => kyrillisk",
+            "japanese => japansk",
+            "chinese => kinesisk",
+            "arabic => arabisk",
+            "greek => gresk",
+            "hebrew => hebraisk",
+            "korean => koreansk",
+            "latin => latinsk",
+            "georgian => georgisk",
+            "burmese => burmesisk",
+            "armenian => armensk"
+          ]
+        },
+        "biography_synonym_filter": {
+          "type": "synonym",
+          "tokenizer": "keyword",
+          "synonyms": [
+            "a, autobiography => selvbiografi",
+            "b, single biography => enkeltbiografi",
+            "c, collective biography => samlingsbiografi",
+            "d, biographical content => biografisk innhold"
+            ]
+        },
+        "content_adaptation_synonym_filter": {
+          "type": "synonym",
+          "tokenizer": "keyword",
+          "synonyms": [
+            "easy to read, easy language, lettlest, enkelt språk, ta",
+            "easy to read, easy content, lettlest, enkelt innhold, tb"
           ]
         },
         "norwegian_folding": {
@@ -272,6 +318,30 @@
           "tokenizer": "keyword",
           "filter": [
             "isbn_clean_filter"
+          ]
+        },
+        "writing_system_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "writing_system_synonym_filter"
+          ]
+        },
+        "biography_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "biography_synonym_filter"
+          ]
+        },
+        "content_adaptation_analyzer": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": [
+            "lowercase",
+            "content_adaptation_synonym_filter"
           ]
         }
       }

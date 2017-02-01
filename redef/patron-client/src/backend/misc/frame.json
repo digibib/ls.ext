@@ -356,6 +356,18 @@
     "classifications": {
       "@id": "deichman:hasClassification",
       "@container": "@set"
+    },
+    "isPartOfWorkSeries": {
+      "@id": "deichman:isPartOfWorkSeries"
+    },
+    "WorkSeriesPart": {
+      "@id": "deichman:WorkSeriesPart"
+    },
+    "WorkSeries": {
+      "@id": "deichman:WorkSeries"
+    },
+    "workSeries": {
+      "@id": "deichman:workSeries"
     }
   },
   "type": "Work",
@@ -444,8 +456,20 @@
       "@embed": "@never"
     }
   },
-  "isRelatedTo": {},
+  "isRelatedTo": {
+    "@embed": "@always"
+  },
   "contentAdaptations": {
     "@embed": "@never"
+  },
+  "isPartOfWorkSeries": {
+    "@embed": "@always",
+    "type": "WorkSeriesPart",
+    "workSeries": {
+      "@embed": "@always",
+      "@type": "WorkSeries"
+    }
   }
+
+
 }

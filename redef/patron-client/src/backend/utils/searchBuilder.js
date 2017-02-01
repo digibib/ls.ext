@@ -41,6 +41,36 @@ function initCommonQuery () {
 }
 
 function initSimpleQuery (query) {
+  const defaultFields = [
+    'agents',
+    'author',
+    'bio',
+    'compType',
+    'country',
+    'desc',
+    'ean',
+    'format',
+    'genre',
+    'inst',
+    'isbn',
+    'ismn',
+    'language',
+    'litform',
+    'mainTitle^2',
+    'mt',
+    'partNumber',
+    'partTitle',
+    'publishedBy',
+    'recordId',
+    'series',
+    'subject',
+    'summary',
+    'title',
+    'workMainTitle',
+    'workPartNumber',
+    'workPartTitle',
+    'workSubtitle'
+  ]
   return {
     filtered: {
       filter: {
@@ -50,20 +80,12 @@ function initSimpleQuery (query) {
       },
       query: {
         bool: {
-          should: [
+          filter: [
             {
               simple_query_string: {
                 query: query,
                 default_operator: 'and',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt', 'title' ]
-              }
-            },
-            {
-              multi_match: {
-                query: query,
-                fuzziness: 'AUTO',
-                type: 'cross_fields',
-                fields: [ 'mainTitle^2', 'partTitle', 'subject', 'author', 'agents', 'genre', 'series', 'format', 'mt', 'title' ]
+                fields: defaultFields
               }
             }
           ],

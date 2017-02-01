@@ -64,6 +64,10 @@
         }
       }
     },
+    "bio": {
+      "type": "string",
+      "analyzer": "biography_analyzer"
+    },
     "dewey": {
       "type": "string"
     },
@@ -112,8 +116,7 @@
       "type": "string"
     },
     "firstPublicationYear": {
-      "type": "string",
-      "index": "no"
+      "type": "string"
     },
     "audiences": {
       "type": "string",
@@ -151,6 +154,15 @@
       "type": "string",
       "analyzer": "format_analyzer"
     },
+    "desc": {
+      "type": "string"
+    },
+    "inst": {
+      "type": "string"
+    },
+    "formatAdaptation": {
+      "type": "string"
+    },
     "language": {
       "type": "string",
       "analyzer": "language_analyzer"
@@ -159,11 +171,19 @@
       "type": "string",
       "index": "not_analyzed"
     },
+    "writingSystem": {
+      "type": "string",
+      "analyzer": "writing_system_analyzer"
+    },
     "isbn": {
       "type": "string",
       "analyzer": "isbn_analyzer"
     },
     "ismn": {
+      "type": "string",
+      "analyzer": "isbn_analyzer"
+    },
+    "ean": {
       "type": "string",
       "analyzer": "isbn_analyzer"
     },
@@ -244,6 +264,9 @@
     "compType": {
       "type": "string"
     },
+    "publishedBy": {
+      "type": "string"
+    },
     "langTitles": {
       "enabled": false
     },
@@ -261,6 +284,29 @@
       }
     },
     "kd": {
+      "type": "string"
+    },
+    "workMainTitle": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "origLang": {
+      "type": "string",
+      "analyzer": "language_analyzer"
+    },
+    "contentAdaptation": {
+      "type": "string",
+      "analyzer": "content_adaptation_analyzer"
+    },
+    "workSubtitle": {
+      "type": "string"
+    },
+    "workPartNumber": {
+      "type": "string"
+    },
+    "workPartTitle": {
       "type": "string"
     }
   }

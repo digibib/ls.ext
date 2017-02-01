@@ -101,9 +101,17 @@ class Search extends React.Component {
                                totalHitsPublications={this.props.totalHitsPublications}
                                locationQuery={this.props.locationQuery}
                                isSearching={this.props.isSearching} />
-            <div className="search-sorting-placeholder">
-              <p>Sortert på: <span>Relevans</span></p>
-            </div>
+            {this.props.totalHitsPublications === 0
+             ? <div className="search-no-hits">
+                <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
+                <p>{this.props.intl.formatMessage(messages.noHitsTry)}</p>
+                <ul>
+                  <li>{this.props.intl.formatMessage(messages.noHitsTryA)}</li>
+                  <li>{this.props.intl.formatMessage(messages.noHitsTryB)}</li>
+                  <li>{this.props.intl.formatMessage(messages.noHitsTryC)}</li>
+                </ul>
+              </div>
+              : null }
           </div>
           <SearchFilterBox query={this.props.locationQuery}
                            toggleFilter={this.props.searchFilterActions.toggleFilter} />
@@ -217,6 +225,31 @@ export const messages = defineMessages({
     id: 'Search.paginationPrevious',
     description: 'The ARIA label frot the "previous" link',
     defaultMessage: 'Previous'
+  },
+  noHitsHeading: {
+    id: 'Search.noHitsHeading',
+    description: 'The heading of text describing no hits',
+    defaultMessage: 'Your search returned no results.'
+  },
+  noHitsTry: {
+    id: 'Search.noHitsTry',
+    description: 'Message describing what to do when you get no hits',
+    defaultMessage: 'You can try one of the following:'
+  },
+  noHitsTryA: {
+    id: 'Search.noHitsTryA',
+    description: 'No hits? Try this part I',
+    defaultMessage: 'check your spelling'
+  },
+  noHitsTryB: {
+    id: 'Search.noHitsTryB',
+    description: 'No hits? Try this part II',
+    defaultMessage: 'use fewer terms'
+  },
+  noHitsTryC: {
+    id: 'Search.noHitsTryC',
+    description: 'No hits? Try this part III',
+    defaultMessage: 'try other keywords'
   }
 })
 

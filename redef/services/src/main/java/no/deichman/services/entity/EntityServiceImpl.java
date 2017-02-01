@@ -1,5 +1,6 @@
 package no.deichman.services.entity;
 
+import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
@@ -8,6 +9,7 @@ import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
+import no.deichman.services.search.InMemoryNameIndexer;
 import no.deichman.services.search.NameEntry;
 import no.deichman.services.search.NameIndexer;
 import no.deichman.services.uridefaults.BaseURI;
@@ -81,6 +83,8 @@ public final class EntityServiceImpl implements EntityService {
     private static final String LITERARYFORM_TTL_FILE = "literaryForm.ttl";
     private static final String CONTENTADAPTATION_TTL_FILE = "contentAdaptation.ttl";
     private static final String FORMATADAPTATION_TTL_FILE = "formatAdaptation.ttl";
+    private static final String WRITINGSYSTEM_TTL_FILE = "writingSystem.ttl";
+    private static final String BIOGRAPHY_TTL_FILE = "biography.ttl";
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final Property mainTitleProperty;
@@ -215,6 +219,14 @@ public final class EntityServiceImpl implements EntityService {
         return getLinkedResource(input, "workType", WORKTYPE_TTL_FILE);
     }
 
+    private Model getLinkedWritingSystemResource(Model input) {
+        return getLinkedResource(input, "writingSystem", WRITINGSYSTEM_TTL_FILE);
+    }
+
+    private Model getLinkedBiographySystemResource(Model input) {
+        return getLinkedResource(input, "biography", BIOGRAPHY_TTL_FILE);
+    }
+
     private Model getLinkedRoleResource(Model input) {
         return getLinkedResource(input, "role", ROLE_TTL_FILE);
     }
@@ -271,6 +283,8 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedFormatAdaptationResource(m);
         m = getLinkedWorkTypeResource(m);
         m = getLinkedRoleResource(m);
+        m = getLinkedWritingSystemResource(m);
+        m = getLinkedBiographySystemResource(m);
         return m;
     }
 
@@ -691,7 +705,7 @@ public final class EntityServiceImpl implements EntityService {
             log.info("Creating local index for " + type);
             long start = System.currentTimeMillis();
             ResultSet resultSet = repository.retrieveAllNamesOfType(type);
-            nameIndexer = new NameIndexer(resultSet);
+            nameIndexer = (NameIndexer) MonProxyFactory.monitor(new InMemoryNameIndexer(resultSet));
             if (!nameIndexer.isEmpty()) {
                 nameIndexers.put(type, nameIndexer);
             }

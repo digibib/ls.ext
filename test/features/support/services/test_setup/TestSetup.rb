@@ -26,7 +26,7 @@ module TestSetup
     end
 
     # make sure koha is populated with neccessary tables and api user and sip user in place
-    def setup_db(dbversion="16.1101000")
+    def setup_db(dbversion="16.1102000")
       apipassenc = BCrypt::Password.create(@apipass, cost: 8)
       sippassenc = BCrypt::Password.create(@sippass, cost: 8)
       STDOUT.puts "Dumping koha db..."

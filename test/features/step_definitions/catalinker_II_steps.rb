@@ -61,10 +61,10 @@ end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
   wait_for {
-    @browser.div(:class => 'exact-match').span(:class => "toggle-show-sub-items").present?
+    @browser.div(:class => 'exact-match').a(:class => "toggle-show-sub-items").present?
   }
   sleep 1
-  @browser.div(:class => 'exact-match').span(:class => "toggle-show-sub-items").click
+  @browser.div(:class => 'exact-match').a(:class => "toggle-show-sub-items").click
   @browser.inputs(:class => "select-work-radio").find(&:visible?).click
 end
 

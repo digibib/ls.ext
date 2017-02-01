@@ -52,6 +52,7 @@ class SearchFilter extends React.Component {
         return (
           <SearchFilterItem key={filter.id}
                             filter={filter}
+                            toggleAllFilters={this.props.toggleAllFilters}
                             toggleFilter={this.props.toggleFilter}
                             scrollTargetNode={this.props.scrollTargetNode} />
         )
@@ -122,6 +123,7 @@ SearchFilter.propTypes = {
   toggleFilter: PropTypes.func.isRequired,
   toggleFilterVisibility: PropTypes.func.isRequired,
   toggleCollapseFilter: PropTypes.func.isRequired,
+  toggleAllFilters: PropTypes.func,
   locationQuery: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   scrollTargetNode: PropTypes.object.isRequired

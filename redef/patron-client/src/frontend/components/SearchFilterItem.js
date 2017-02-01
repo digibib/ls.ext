@@ -1,7 +1,5 @@
-/* NB:
-  ScrollIntoView ødelegger flytten, bør deaktiveres?
- */
 import React, { PropTypes } from 'react'
+import ReactDOM from 'react-dom'
 import { injectIntl, intlShape } from 'react-intl'
 
 class SearchFilterItem extends React.Component {
@@ -15,7 +13,11 @@ class SearchFilterItem extends React.Component {
     event.preventDefault()
     const { filter: { id } } = this.props
     this.props.toggleFilter(id)
-    // ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView()
+    this.props.toggleAllFilters(event)
+
+    if (window.innerWidth < 668) {
+      ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView()
+    }
   }
 
   handleKey (event) {
@@ -61,7 +63,8 @@ SearchFilterItem.propTypes = {
   filter: PropTypes.object.isRequired,
   toggleFilter: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
-  scrollTargetNode: PropTypes.object.isRequired
+  scrollTargetNode: PropTypes.object.isRequired,
+  toggleAllFilters: PropTypes.func
 }
 
 export default injectIntl(SearchFilterItem)

@@ -19,6 +19,11 @@ class Work extends React.Component {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
   }
 
+  // Force reload when router changes workId in URI
+  componentDidUpdate () {
+    this.props.resourceActions.fetchWorkResource(this.props.params.workId)
+  }
+
   renderNoWork () {
     return (
       <NonIETransitionGroup

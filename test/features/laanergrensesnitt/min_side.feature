@@ -3,16 +3,19 @@
 
 @patron_client
 @redef
+@kohadb
 Egenskap: Min Side
   Som bruker
   Ønsker jeg å kunne se og endre personlige opplysninger og innstillinger
 
-  Scenario: Se og redigere personopplysninger
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
+  Bakgrunn:
+    Gitt at jeg er logget inn som superbruker
+    Og at Koha er populert med "1" lånere, "0" eksemplarer og "0" reserveringer
     Og at jeg er i søkegrensesnittet
     Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
+
+  Scenario: Se og redigere personopplysninger
     Når jeg logger inn
     Så skal jeg se at jeg er logget inn
     Når jeg trykker på personopplysninger
@@ -27,11 +30,6 @@ Egenskap: Min Side
     Så skal jeg se personopplysningene mine
 
   Scenario: Bytte PIN
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
-    Og at jeg er i søkegrensesnittet
-    Når jeg går til Min Side
-    Så skal jeg se innloggingsvinduet
     Når jeg logger inn
     Og jeg går til innstillinger
     Og jeg fyller inn gammel PIN og ny PIN riktig
@@ -40,14 +38,10 @@ Egenskap: Min Side
     Når jeg logger ut
     Når jeg trykker logg inn
     Så skal jeg se innloggingsvinduet
-    Og jeg logger inn
+    Og jeg logger inn med nytt passord
+    Så skal jeg se at jeg er logget inn
 
   Scenario: Låner endrer personlige innstillinger
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
-    Og at jeg er i søkegrensesnittet
-    Når jeg går til Min Side
-    Så skal jeg se innloggingsvinduet
     Når jeg logger inn
     Og jeg går til innstillinger
     Når slår på alle avkrysningsboksene inne på innstillinger
@@ -60,11 +54,6 @@ Egenskap: Min Side
     Så skal ingen av avkrysningsboksene være skrudd på inne på innstillinger
 
   Scenario: Låner skriver feil passord
-    Gitt at jeg er logget inn som adminbruker
-    Og at det finnes en låner med passord
-    Og at jeg er i søkegrensesnittet
-    Når jeg trykker logg inn
-    Så skal jeg se innloggingsvinduet
     Når jeg skriver inn riktig brukernavn men feil passord
     Så skal jeg se en melding om feil brukernavn og/eller passord
     Når jeg trykker oppfrisk i nettleseren

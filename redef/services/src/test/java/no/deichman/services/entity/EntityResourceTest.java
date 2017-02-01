@@ -14,6 +14,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFLanguages;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,6 +72,7 @@ public class EntityResourceTest {
 
     @Before
     public void setUp() throws Exception {
+        RDFLanguages.init();
         EntityServiceImpl service = new EntityServiceImpl(new InMemoryRepository(), mockKohaAdapter);
         entityResource = new EntityResource(service, mockSearchService, mockKohaAdapter);
     }
@@ -443,14 +445,10 @@ public class EntityResourceTest {
     private String createTestRDF(String identifier, String type) throws Exception {
         String ontologyClass = WordUtils.capitalize(type);
         return "{\n"
-                + "    \"@context\": {\n"
-                + "        \"dcterms\": \"http://purl.org/dc/terms/\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
                 + "    \"@graph\": {\n"
                 + "        \"@id\": \"" + new XURI(BaseURI.root() + type + "/" + identifier) + "\",\n"
-                + "        \"@type\": \"deichman:" + ontologyClass + "\",\n"
-                + "        \"dcterms:identifier\": \"" + identifier + "\"\n"
+                + "        \"@type\": \"http://deichman.no/ontology#" + ontologyClass + "\",\n"
+                + "        \"http://purl.org/dc/terms/identifier\": \"" + identifier + "\"\n"
                 + "    }\n"
                 + "}";
     }

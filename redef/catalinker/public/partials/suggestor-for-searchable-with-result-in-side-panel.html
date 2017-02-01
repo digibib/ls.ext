@@ -1,6 +1,6 @@
 <div class="suggested-value suggestion-source-{{source}} searchable">
     <span class="suggested-value pure-u-5-6">{{displayValue}}</span>
-    <span tabindex="0" class="pure-u-1-6 support-panel-expander"
+    <span tabindex="{{tabSelected ? '0' : '-1'}}" class="pure-u-1-6 support-panel-expander"
           on-click='searchResourceFromSuggestion:{{value}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
           on-keyup='searchResourceFromSuggestion:{{value}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
     ></span>

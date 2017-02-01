@@ -2,6 +2,7 @@ PREFIX deich: <__ONTOLOGY__>
 PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
 PREFIX   afn: <http://jena.apache.org/ARQ/function#>
+PREFIX   duo: <http://data.deichman.no/utility#>
 
 CONSTRUCT {
         <__PUBLICATIONURI__> a deich:Publication ;
@@ -12,6 +13,7 @@ CONSTRUCT {
                deich:languages ?language ;
                deich:language ?langCode ;
                deich:format ?format ;
+               deich:desc ?desc ;
                deich:publicationYear ?pubPublicationYear ;
                deich:firstPublicationYear ?workPublicationYear ;
                deich:audience ?audience ;
@@ -33,6 +35,7 @@ CONSTRUCT {
                deich:recordId ?recordId ;
                deich:summary ?summary ;
                deich:formatNo ?formatNo ;
+               deich:formatAdaptation ?formatAdaptNo ;
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
                deich:dewey ?dewey ;
@@ -48,10 +51,23 @@ CONSTRUCT {
                deich:partNumber ?pubPartNumber ;
                deich:isbn ?isbn ;
                deich:ismn ?ismn ;
+               deich:ean ?ean ;
+               deich:publishedBy ?publishedBy ;
                deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
                deich:langTitles <http://ignore> ;
-               deich:kd ?locDewey .
+               deich:kd ?locDewey ;
+               deich:writingSystem ?wsNo ;
+               deich:inst ?inst ;
+               deich:bio ?bio ;
+               deich:workMainTitle ?workMainTitle ;
+               deich:summary ?summary ;
+               deich:country ?country ;
+               deich:origLang ?origLang ;
+               deich:contentAdaptation ?contentAdaptationCode ;
+               deich:workSubtitle ?workSubtitle ;
+               deich:workPartNumber ?workPartNumber ;
+               deich:workPartTitle ?workPartTitle .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -74,7 +90,7 @@ WHERE {
   # 1. Information from publication:
 
         { <__PUBLICATIONURI__> deich:recordId ?recordId ;
-            deich:publicationOf ?work  .
+            deich:publicationOf ?work .
             BIND(str(?work) AS ?workUri ) }
   UNION { <__PUBLICATIONURI__> deich:fictionNonfiction ?ficturi .BIND(str(?ficturi) AS ?fictionNonfiction) }
   UNION { <__PUBLICATIONURI__> deich:hasMediaType ?mturi .
@@ -89,6 +105,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
   UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
   UNION { <__PUBLICATIONURI__> deich:ismn ?ismn }
+  UNION { <__PUBLICATIONURI__> deich:ean ?ean }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO .
           BIND(str(?languageO) AS ?language) .
           BIND(afn:substr(?language, 29) AS ?langCode) }
@@ -107,9 +124,22 @@ WHERE {
 
   UNION { <__PUBLICATIONURI__> deich:inSerial ?serialBnode .
           ?serialBnode deich:serial ?serial .
-          ?serial deich:mainTitle ?seriesTitle . }
+          ?serial ?seriesPred ?seriesTitle .
+          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
+          }
 
   UNION { <__PUBLICATIONURI__> deich:locationClassNumber ?locDewey }
+  UNION { <__PUBLICATIONURI__> deich:hasFormatAdaptation ?formatAdaptation .
+           ?formatAdaptation rdfs:label ?formatAtaptNoLang .
+           BIND(str(?formatAtaptNoLang) AS ?formatAdaptNo)
+           FILTER(lang(?formatAtaptNoLang) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:publishedBy ?publisher .
+           ?publisher deich:name ?publishedBy . }
+  UNION { <__PUBLICATIONURI__> deich:writingSystem ?writingSystem.
+             ?writingSystem rdfs:label ?wsNoLang .
+             BIND(str(?wsNoLang) AS ?wsNo)
+             FILTER(lang(?wsNoLang) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 2. Information from other publications:
   UNION {
@@ -135,6 +165,16 @@ WHERE {
 
   # 3. Information from work:
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:mainTitle ?workMainTitle. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:subtitle ?workSubtitle. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:partNumber ?workPartNumber. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:partTitle ?workPartTitle. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ; deich:hasSummary ?summary. }
+  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasCompositionType ?compType .
            ?compType deich:prefLabel ?compTypeLabel . }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
@@ -147,11 +187,37 @@ WHERE {
           ?work a deich:Work ; deich:hasClassification ?classEntry .
           ?classEntry deich:hasClassificationNumber ?dewey . }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:literaryForm ?l .
-            ?l rdfs:label ?litLabel .
-            BIND(str(?litLabel) AS ?litform)
-            FILTER(lang(?litLabel) = "no") }
-
+           ?work a deich:Work ; deich:literaryForm ?l .
+           ?l rdfs:label ?litLabel .
+           BIND(str(?litLabel) AS ?litform)
+           FILTER(lang(?litLabel) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:hasInstrumentation ?instrumentation.
+           ?instrumentation deich:hasInstrument ?instrument .
+           ?instrument deich:prefLabel ?inst }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:biography ?b .
+           ?b rdfs:label ?bioLabel .
+           BIND(str(?bioLabel) AS ?bio)
+           FILTER(lang(?bioLabel) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:nationality ?n .
+           ?n rdfs:label ?nLabel .
+           BIND(str(?nLabel) AS ?country)
+           FILTER(lang(?nLabel) = "no") }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:language ?wLangO .
+           BIND(str(?wLangO) AS ?wLang) .
+           BIND(afn:substr(?wLang, 29) AS ?origLang) }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work a deich:Work ; deich:hasContentAdaptation ?contentAdaptation .
+           ?contentAdaptation duo:code ?contentAdaptationCode . }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+          ?work deich:isPartOfWorkSeries ?wsBnode .
+          ?wsBnode deich:workSeries ?workSeries .
+          ?workSeries ?seriesPred ?seriesTitle .
+          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
+          }
   UNION {
     {
       <__PUBLICATIONURI__> deich:publicationOf ?work .

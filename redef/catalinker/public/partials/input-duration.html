@@ -2,7 +2,7 @@
 <span data-automation-id="{{../../dataAutomationId}}">{{./current.value}}</span>
 {{else}}
 <input {{#disabled}} disabled="true" {{/}}
-class="pure-u-1-4 duration"
+tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"class="pure-u-1-4 duration"
 class-invalid-input="{{error}}"
 class-valid="{{!error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}}'

@@ -5,7 +5,7 @@
     {{#if ../../indexTypes.length > 1 && !(current.accepted || suggested) && !deletable}}
         <div class="index-type-select pure-u-1-2">
             {{#if ./current.accepted.selectedIndexType}}
-            <select value="{{./current.accepted.selectedIndexType}}">
+            <select tabindex="{{tabSelected ? '0' : '-1'}}" value="{{./current.accepted.selectedIndexType}}">
                 {{#with widgetOptions.selectIndexTypeLegend}}
                     <option disabled selected>{{.}}</option>
                 {{/with}}
@@ -14,7 +14,7 @@
                 {{/each}}
             </select>
             {{else}}
-            <select value="{{../../selectedIndexType}}">
+            <select tabindex="{{tabSelected ? '0' : '-1'}}" value="{{../../selectedIndexType}}">
                 {{#with widgetOptions.selectIndexTypeLegend}}
                     <option disabled selected>{{.}}</option>
                 {{/with}}
@@ -58,6 +58,7 @@
                  class-searchable="{{./searchable}}"
             >
                 <span contenteditable="true" {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}}
+                    tabindex="{{tabSelected || ../../widgetOptions.maintenance ? '0' : '-1'}}"
                     on-click="{{#deletable}}unselectEntity{{/deletable}}"
                     class="search-term"
                     class-bracketed={{./bracketed === true}}
@@ -68,6 +69,10 @@
                     data-automation-id="{{dataAutomationId}}"
                     on-enter='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'
                     on-keyup='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}},{skipIfAdvancedQuery: true}'
+                    {{#if searchResult.items.length > 0}}
+                    on-tab="selectFirstVisibleSearchResultItem"
+                    {{/if}}
+                    on-escape="clearSupportPanels"
                     value="{{./current.displayValue}}"/>
                     {{#if ./previewProperties && primarySuggestionAccepted === true}}
                         <span class="preview-properties">
