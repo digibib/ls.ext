@@ -20,4 +20,15 @@
     text-decoration: none;
   }
 
+  .btn-icon {
+    position: relative;
+    margin-left: 17px;
+
+    i {
+      font-size: 1.8em;
+      position: absolute;
+      right: 65px;
+      top: -7px;
+    }
+  }
 }
