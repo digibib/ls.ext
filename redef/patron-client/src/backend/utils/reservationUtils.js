@@ -44,33 +44,31 @@ function getWaitPeriod (queuePlace, items) {
 }
 
 function getEstimatedPeriod (queuePlace, items) {
-  // Explanation:
-  // Generate starting point by finding the oldest loan, add that to the loan-length multiplied by the queue:items ratio
-  // divide by seconds in a week and finally divide by the number of items
 
   if (items) {
-    const secondsInDay = 1000 * 60 * 60 * 24
-    const secondsInAWeek = secondsInDay * 7
-    const oldestLoan = getOldestLoan(items)
-    const oldestDueDate = oldestLoan.onloan
-    const itemLoanLength = (getLoanPeriod(oldestLoan.itype) * secondsInDay) / secondsInAWeek
-    const offset = getOffsetInWeeks(oldestDueDate)
-    const multiplicator = Math.floor(getMultiplicator(queuePlace, items.length, offset))
-    const estimate = offset + Math.ceil((itemLoanLength * (queuePlace - 1)) * multiplicator)
+    const cutoff = items.length * 3
+
+    if (queuePlace > cutoff) {return 12}
+
+    if (items.length === 1 || queuePlace === 1) {
+      return estimateLinear(getOffsetInWeeks(items[0].onloan), queuePlace, getLoanPeriod(items[0].itype, null))
+    }
+
+    const distributedQueuePlace = (items.length >= queuePlace) ? queuePlace : Math.floor(queuePlace / items.length)
+    const derivedQueuePlace = (distributedQueuePlace === queuePlace) ? 1 : distributedQueuePlace
+    const relevantDueDate = (queuePlace <= items.length) ? items[queuePlace - 1].onloan : items[distributedQueuePlace - 1].onloan
+    const itemLoanLength = (getLoanPeriod(items[0].itype))
+    const offset = getOffsetInWeeks(relevantDueDate)
+    const estimate = offset + ((derivedQueuePlace - 1) * itemLoanLength)
+
     return isNaN(estimate) ? 'unknown' : estimate
   } else {
     return 'unknown'
   }
 }
 
-function getMultiplicator (queuePlace, items, offset) {
-  if (queuePlace > items && offset > 0) {
-    return queuePlace / items
-  } else if (queuePlace < items && offset > 0) {
-    return items / queuePlace
-  } else {
-    return 1
-  }
+function estimateLinear(offset, queuePlace, loanWeeks) {
+  return offset + (loanWeeks * (queuePlace - 1))
 }
 
 function getOffsetInWeeks (date) {
@@ -96,7 +94,7 @@ function getLoanPeriod (itemtype, borrowerCategory = 'V') {
     case 'KART' :
     case 'MUSIKK' :
     case 'PERIODIKA' :
-      return 14
+      return 14 / 7
     case 'BOK' :
     case 'LYDBOK' :
     case 'NOTER' :
@@ -104,14 +102,6 @@ function getLoanPeriod (itemtype, borrowerCategory = 'V') {
     case 'SPILL' :
     case 'SPRAAKKURS' :
     default :
-      return 28
+      return 28 / 7
   }
-}
-
-function getOldestLoan (items) {
-  const sorted = items.sort(
-    (a, b) => {
-      return a.onloan > b.onloan
-    })
-  return sorted[ 0 ]
 }

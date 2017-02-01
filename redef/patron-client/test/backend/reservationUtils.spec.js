@@ -44,7 +44,7 @@ describe('reservation utils', () => {
     })
 
     it('should know a reserve has a waiting time of 0-1 weeks', () => {
-      const date = new Date(dayToday - (oneWeekInSeconds * 4)).toISOString()
+      const date = new Date(dayToday).toISOString()
       const items = [{
         'onloan': date.substring(0, date.indexOf('T')),
         'itype': 'BOK',
@@ -89,7 +89,7 @@ describe('reservation utils', () => {
         'itype': 'BOK',
         'reservable': 1
       }]
-      const queuePlace = 2
+      const queuePlace = 3
       expect(
         estimateWaitingPeriod(queuePlace, items)
       ).toEqual('12')
@@ -154,5 +154,159 @@ describe('reservation utils', () => {
         ).toEqual('4–5')
       })
     })
+
+    it('should know that a reserve in a long queue for a book with many items is due in 4-5 weeks', () => {
+      const items = [ {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      } ]
+      const queuePlace = 4
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('4–5')
+    })
+
+    it('should know that a reserve in a long queue for a book with many items is due soon', () => {
+      const items = [ {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }, {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      } ]
+      const queuePlace = 7
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('0–1')
+    })
+
+
   })
 })
