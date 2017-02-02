@@ -46,11 +46,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newConcurrentHashSet;
 import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
@@ -79,6 +82,7 @@ public class SearchServiceImpl implements SearchService {
             ontology("mainTitle")
     };
     public static final Resource MAIN_ENTRY = createResource(ontology("MainEntry"));
+    public static final int TEN_SECONDS = 10000;
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -88,6 +92,9 @@ public class SearchServiceImpl implements SearchService {
     private ModelToIndexMapper corporationModelToIndexMapper = new ModelToIndexMapper("corporation");
     private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private int skipped;
+    private static Set<String> indexedUris;
+    private static long lastIndexedTime;
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -97,48 +104,64 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final void index(XURI xuri) throws Exception {
-        switch (xuri.getTypeAsEntityType()) {
-            case WORK:
-                doIndexWork(xuri, false, false);
-                break;
-            case PERSON:
-            case CORPORATION:
-                doIndexWorkCreator(xuri, false);
-                break;
-            case PUBLICATION:
-                doIndexPublication(xuri);
-                break;
-            case EVENT:
-                doIndexEvent(xuri);
-                break;
-            case SERIAL:
-                doIndexSerial(xuri);
-                break;
-            default:
-                doIndex(xuri);
+        if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
+            switch (xuri.getTypeAsEntityType()) {
+                case WORK:
+                    doIndexWork(xuri, false, false);
+                    break;
+                case PERSON:
+                case CORPORATION:
+                    doIndexWorkCreator(xuri, false);
+                    break;
+                case PUBLICATION:
+                    doIndexPublication(xuri);
+                    break;
+                case EVENT:
+                    doIndexEvent(xuri);
+                    break;
+                case SERIAL:
+                    doIndexSerial(xuri);
+                    break;
+                default:
+                    doIndex(xuri);
+            }
+        } else {
+            LOG.info("Skipping already indexed uri: " + xuri.getUri());
+            skipped++;
+        }
+        if (indexedUris != null) {
+            indexedUris.add(xuri.getUri());
         }
     }
 
     public final void indexOnly(XURI xuri) throws Exception {
-        switch (xuri.getTypeAsEntityType()) {
-            case WORK:
-                doIndexWork(xuri, true, true);
-                break;
-            case PERSON:
-            case CORPORATION:
-                doIndexWorkCreator(xuri, true);
-                break;
-            case PUBLICATION:
-                doIndexPublication(xuri);
-                break;
-            case EVENT:
-                doIndexEvent(xuri);
-                break;
-            case SERIAL:
-                doIndexSerial(xuri);
-                break;
-            default:
-                doIndex(xuri);
+        if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
+            switch (xuri.getTypeAsEntityType()) {
+                case WORK:
+                    doIndexWork(xuri, true, true);
+                    break;
+                case PERSON:
+                case CORPORATION:
+                    doIndexWorkCreator(xuri, true);
+                    break;
+                case PUBLICATION:
+                    doIndexPublication(xuri);
+                    break;
+                case EVENT:
+                    doIndexEvent(xuri);
+                    break;
+                case SERIAL:
+                    doIndexSerial(xuri);
+                    break;
+                default:
+                    doIndex(xuri);
+            }
+        } else {
+            LOG.info("Skipping already indexed uri: " + xuri.getUri());
+            skipped++;
+        }
+        if (indexedUris != null) {
+            indexedUris.add(xuri.getUri());
         }
     }
 
@@ -458,6 +481,18 @@ public class SearchServiceImpl implements SearchService {
         return doSearch(query, getWorkSeriesSearchUriBuilder());
     }
 
+    @Override
+    public final void indexUrisOnlyOnce(boolean indexOnce) {
+        if (indexOnce) {
+            LOG.info("Turning on only once uri indexing");
+            indexedUris = newConcurrentHashSet();
+            skipped = 0;
+        } else {
+            LOG.info("Turning off only once uri indexing after skipping " + skipped + " uris");
+            indexedUris = null;
+        }
+    }
+
     private URIBuilder getWorkSeriesSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/workSeries/_search");
     }
@@ -587,21 +622,34 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void indexDocument(XURI xuri, String document) {
-        try (CloseableHttpClient httpclient = createDefault()) {
-            HttpPut httpPut = new HttpPut(getIndexUriBuilder()
-                    .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8))) // TODO drop urlencoded ID, and define _id in mapping from field uri
-                    .build());
-            httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
-            httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
-            Monitor mon = MonitorFactory.start("indexDocument");
-            try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
-                LOG.debug(putResponse.getStatusLine().toString());
-            } finally {
-                mon.stop();
+        if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
+            try (CloseableHttpClient httpclient = createDefault()) {
+                HttpPut httpPut = new HttpPut(getIndexUriBuilder()
+                        .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8))) // TODO drop urlencoded ID, and define _id in mapping from field uri
+                        .build());
+                httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
+                httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
+                Monitor mon = MonitorFactory.start("indexDocument");
+                try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
+                    LOG.debug(putResponse.getStatusLine().toString());
+                } finally {
+                    mon.stop();
+                }
+                long now = currentTimeMillis();
+                if (now - lastIndexedTime > TEN_SECONDS) {
+                    indexUrisOnlyOnce(false);
+                }
+                lastIndexedTime = now;
+            } catch (Exception e) {
+                LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
+                throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
             }
-        } catch (Exception e) {
-            LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
-            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        } else {
+            LOG.info("Skipping already indexed uri: " + xuri.getUri());
+            skipped++;
+        }
+        if (indexedUris != null) {
+            indexedUris.add(xuri.getUri());
         }
     }
 
