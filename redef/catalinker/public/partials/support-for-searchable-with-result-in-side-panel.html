@@ -58,7 +58,16 @@ on-escape="cancelEdit">
                             {{/if}}
                         </div>
                         <div class="pure-u-5-6">
+                            {{#if config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri}}
+                            <a class="search-result-item-label"
+                               href="{{getLinkfromUri(., config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri)}}"
+                               target="_blank"
+                               title="{{config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri.toolTip}}">
+                                {{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}
+                            </a>
+                            {{else}}
                             <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}</p>
+                            {{/if}}
                             <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties2)}}</p>
                             <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemDetailsLabelProperties)}}</p>
                         </div>
