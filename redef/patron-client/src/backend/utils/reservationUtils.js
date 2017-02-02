@@ -44,20 +44,21 @@ function getWaitPeriod (queuePlace, items) {
 }
 
 function getEstimatedPeriod (queuePlace, items) {
-
   if (items) {
     const cutoff = items.length * 3
 
-    if (queuePlace > cutoff) {return 12}
+    if (queuePlace > cutoff) {
+      return 12
+    }
 
     if (items.length === 1 || queuePlace === 1) {
-      return estimateLinear(getOffsetInWeeks(items[0].onloan), queuePlace, getLoanPeriod(items[0].itype, null))
+      return estimateLinear(getOffsetInWeeks(items[ 0 ].onloan), queuePlace, getLoanPeriod(items[ 0 ].itype, null))
     }
 
     const distributedQueuePlace = (items.length >= queuePlace) ? queuePlace : Math.floor(queuePlace / items.length)
     const derivedQueuePlace = (distributedQueuePlace === queuePlace) ? 1 : distributedQueuePlace
-    const relevantDueDate = (queuePlace <= items.length) ? items[queuePlace - 1].onloan : items[distributedQueuePlace - 1].onloan
-    const itemLoanLength = (getLoanPeriod(items[0].itype))
+    const relevantDueDate = (queuePlace <= items.length) ? items[ queuePlace - 1 ].onloan : items[ distributedQueuePlace - 1 ].onloan
+    const itemLoanLength = (getLoanPeriod(items[ 0 ].itype))
     const offset = getOffsetInWeeks(relevantDueDate)
     const estimate = offset + ((derivedQueuePlace - 1) * itemLoanLength)
 
@@ -67,7 +68,7 @@ function getEstimatedPeriod (queuePlace, items) {
   }
 }
 
-function estimateLinear(offset, queuePlace, loanWeeks) {
+function estimateLinear (offset, queuePlace, loanWeeks) {
   return offset + (loanWeeks * (queuePlace - 1))
 }
 
