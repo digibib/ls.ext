@@ -636,7 +636,7 @@ public class SearchServiceImpl implements SearchService {
                     mon.stop();
                 }
                 long now = currentTimeMillis();
-                if (now - lastIndexedTime > TEN_SECONDS) {
+                if (lastIndexedTime > 0 && now - lastIndexedTime > TEN_SECONDS) {
                     indexUrisOnlyOnce(false);
                 }
                 lastIndexedTime = now;
