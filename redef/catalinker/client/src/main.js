@@ -1967,7 +1967,9 @@
     }
 
     let closePreview = function () {
-      $('#iframecontainer').hide()
+      $('#iframecontainer').hide().find('iframe').hide().attr('src', null)
+      $('#iframecontainer iframe').hide()
+      $('#rdf-content').hide().html(null)
       $('#block').fadeOut()
     }
 
@@ -1981,7 +1983,31 @@
       })
     }
 
-    function inputHasAcceptedSuggestions (targetInput, inputIndex) {
+  function showTurtle (uri) {
+    $('#block').click(closePreview).fadeIn()
+    $('#close-preview-button').click(closePreview)
+    $('#iframecontainer iframe').hide()
+    $('#iframecontainer').fadeIn(function () {
+      $.ajax({
+        type: 'get',
+        url: uri,
+        success: function (response) {
+          $('#rdf-content').html(response
+            .replace(/[<>]/g, function (match) {
+              return match === '<' ? '&lt;' : '&gt;'
+            })
+            .replace(/&lt;http:\/\/data\.deichman\.no\/(work|publication)\/(w|p)([a-f0-9]+)&gt;/g, function (all, type, shortType, resourceId) {
+              return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
+            }))
+          $('#loader').fadeOut(function () {
+            $('#rdf-content').fadeIn()
+          })
+        }
+      })
+    })
+  }
+
+  function inputHasAcceptedSuggestions (targetInput, inputIndex) {
       return (!targetInput.isSubInput || ((targetInput.parentInput.hasAcceptedSuggestions || [])[ inputIndex ]))
     }
 
@@ -3460,7 +3486,7 @@
                 enableSpecialInput(event.context)
               },
               showRdf: function (event, resourceUri) {
-                showOverlay(proxyToServices(resourceUri) + '?format=TURTLE')
+                showTurtle(proxyToServices(resourceUri) + '?format=TURTLE')
               },
               showReport: function (event, resourceUri) {
                 let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`
