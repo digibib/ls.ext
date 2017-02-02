@@ -83,7 +83,7 @@ class Publications extends React.Component {
         }
         const branchesFromPublication = []
         for (let i = 0; i < publication.items.length; i++) {
-          branchesFromPublication.push(publication.items[ i ].branch)
+          branchesFromPublication.push(this.props.intl.formatMessage({ id: publication.items[ i ].branchcode }))
         }
         ((formats ? this.isArraysIntersecting(formats, publication.formats) : true) && (languages ? this.isArraysIntersecting(languages, publication.languages) : true) && (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true) && (audiences ? this.isArraysIntersecting(audiences, this.props.audiences) : true))
           ? filteredPublications.push(publication) : filteredPublicationsRest.push(publication)
