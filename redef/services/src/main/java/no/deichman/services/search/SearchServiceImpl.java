@@ -82,7 +82,7 @@ public class SearchServiceImpl implements SearchService {
             ontology("mainTitle")
     };
     public static final Resource MAIN_ENTRY = createResource(ontology("MainEntry"));
-    public static final int TEN_SECONDS = 10000;
+    public static final int SILENT_PERIOD = 100000;
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -636,7 +636,7 @@ public class SearchServiceImpl implements SearchService {
                     mon.stop();
                 }
                 long now = currentTimeMillis();
-                if (indexedUris != null && lastIndexedTime > 0 && now - lastIndexedTime > TEN_SECONDS) {
+                if (indexedUris != null && lastIndexedTime > 0 && now - lastIndexedTime > SILENT_PERIOD) {
                     indexUrisOnlyOnce(false);
                 }
                 lastIndexedTime = now;
