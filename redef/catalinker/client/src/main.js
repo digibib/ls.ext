@@ -1997,7 +1997,7 @@
               return match === '<' ? '&lt;' : '&gt;'
             })
             .replace(/&lt;http:\/\/data\.deichman\.no\/(work|publication)\/(w|p)([a-f0-9]+)&gt;/g, function (all, type, shortType, resourceId) {
-              return `&lt;<a href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
+              return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
             }))
           $('#loader').fadeOut(function () {
             $('#rdf-content').fadeIn()
