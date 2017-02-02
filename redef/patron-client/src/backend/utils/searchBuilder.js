@@ -43,7 +43,7 @@ function initCommonQuery () {
 function initSimpleQuery (query) {
   const defaultFields = [
     'agents',
-    'author',
+    'author^50',
     'bio',
     'compType',
     'country',
@@ -56,16 +56,16 @@ function initSimpleQuery (query) {
     'ismn',
     'language',
     'litform',
-    'mainTitle^2',
+    'mainTitle^30',
     'mt',
     'partNumber',
     'partTitle',
     'publishedBy',
     'recordId',
-    'series',
-    'subject',
+    'series^10',
+    'subject^10',
     'summary',
-    'title',
+    'title^20',
     'workMainTitle',
     'workPartNumber',
     'workPartTitle',
@@ -79,17 +79,10 @@ function initSimpleQuery (query) {
         }
       },
       query: {
-        bool: {
-          filter: [
-            {
-              simple_query_string: {
-                query: query,
-                default_operator: 'and',
-                fields: defaultFields
-              }
-            }
-          ],
-          must: []
+        simple_query_string: {
+          query: query,
+          default_operator: 'and',
+          fields: defaultFields
         }
       }
     }
