@@ -40,6 +40,7 @@ end
 
 When(/^skal jeg se filtre på format, språk og målgruppe$/) do
   wait_retry { @browser.element(data_automation_id: 'filter_format').exists? }
+  @browser.element(data_automation_id: 'filter_format').button.click # Toggle format filter visibility
   wait_retry { @browser.element(data_automation_id: 'filter_language').exists? }
   wait_retry { @browser.element(data_automation_id: 'filter_audience').exists? }
 end

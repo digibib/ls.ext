@@ -36,8 +36,8 @@ class SearchFilter extends React.Component {
   }
 
   isCollapsed () {
-    const { aggregation, locationQuery: { collapse } } = this.props
-    return (collapse && collapse === aggregation || (Array.isArray(collapse) && collapse.includes(aggregation)))
+    const { aggregation, locationQuery: { showFilter } } = this.props
+    return !(showFilter && showFilter === aggregation || (Array.isArray(showFilter) && showFilter.includes(aggregation)))
   }
 
   renderFilters () {
