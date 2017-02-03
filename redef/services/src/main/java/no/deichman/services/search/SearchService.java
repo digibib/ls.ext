@@ -50,4 +50,6 @@ public interface SearchService {
     Response searchWorkWhereUriIsSubject(String subjectUri, int maxSize);
 
     Response searchWorkSeries(String query);
+
+    void indexUrisOnlyOnce(boolean indexOnce);
 }

@@ -110,7 +110,7 @@
     },
     "uri": {
       "type": "string",
-      "index": "no"
+      "index": "not_analyzed"
     },
     "publicationYear": {
       "type": "string"
@@ -275,7 +275,7 @@
       "properties": {
         "uri": {
           "type": "string",
-          "index": "no"
+          "index": "not_analyzed"
         },
         "formats": {
           "type": "string",

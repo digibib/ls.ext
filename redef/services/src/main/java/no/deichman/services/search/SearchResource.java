@@ -181,6 +181,19 @@ public class SearchResource extends ResourceBase {
         return Response.accepted().build();
     }
 
+    @POST
+    @Path("indexUrisOnlyOnce")
+    public final Response indexUrisOnlyOnce(){
+        getSearchService().indexUrisOnlyOnce(true);
+        return Response.accepted().build();
+    }
+
+    @POST
+    @Path("indexAllUris")
+    public final Response indexAllUris(){
+        getSearchService().indexUrisOnlyOnce(false);
+        return Response.accepted().build();
+    }
 
     @Override
     protected final ServletConfig getConfig() {
