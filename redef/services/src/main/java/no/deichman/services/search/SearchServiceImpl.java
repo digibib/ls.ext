@@ -490,6 +490,7 @@ public class SearchServiceImpl implements SearchService {
         } else {
             LOG.info("Turning off only once uri indexing after skipping " + skipped + " uris");
             indexedUris = null;
+            lastIndexedTime = 0;
         }
     }
 
@@ -622,6 +623,10 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void indexDocument(XURI xuri, String document) {
+        long now = currentTimeMillis();
+        if (indexedUris != null && lastIndexedTime > 0 && now - lastIndexedTime > SILENT_PERIOD) {
+            indexUrisOnlyOnce(false);
+        }
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
             try (CloseableHttpClient httpclient = createDefault()) {
                 HttpPut httpPut = new HttpPut(getIndexUriBuilder()
@@ -634,10 +639,6 @@ public class SearchServiceImpl implements SearchService {
                     LOG.debug(putResponse.getStatusLine().toString());
                 } finally {
                     mon.stop();
-                }
-                long now = currentTimeMillis();
-                if (indexedUris != null && lastIndexedTime > 0 && now - lastIndexedTime > SILENT_PERIOD) {
-                    indexUrisOnlyOnce(false);
                 }
                 lastIndexedTime = now;
             } catch (Exception e) {
