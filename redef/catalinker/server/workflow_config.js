@@ -968,7 +968,10 @@ module.exports = (app) => {
               { rdfProperty: 'subtitle' },
               { rdfProperty: 'partTitle' },
               { rdfProperty: 'partNumber' },
-              { rdfProperty: 'publicationYear' },
+              {
+                rdfProperty: 'publicationYear',
+                label: 'År'
+              },
               {
                 rdfProperty: 'nationality',
                 label: 'Opprinnelsesland',
