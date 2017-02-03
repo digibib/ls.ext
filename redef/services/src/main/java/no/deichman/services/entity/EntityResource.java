@@ -18,6 +18,8 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
@@ -66,6 +68,8 @@ import static no.deichman.services.restutils.MimeType.TURTLE;
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public final class EntityResource extends ResourceBase {
+    private final Logger log = LoggerFactory.getLogger(EntityResource.class);
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|c|s|e|m|i|t|v";
@@ -238,8 +242,7 @@ public final class EntityResource extends ResourceBase {
         try {
             getSearchService().index(xuri);
         } catch (RuntimeException e) {
-            // If the resource is new and empty, search indexing will fail, but we
-            // should not care about that here.
+            log.error("Failed to index uri " + xuri.getUri(), e);
         }
 
         return ok().entity(getJsonldCreator().asJSONLD(m)).build();
