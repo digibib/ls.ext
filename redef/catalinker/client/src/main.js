@@ -1811,15 +1811,22 @@
             filterArg = undefined
           }
 
-          var matchBody = []
+          var matchBody
           _.each(config.search[ indexType ].queryTerms, function (queryTerm) {
             let fieldAndTerm = {}
-            fieldAndTerm[ queryTerm.field ] = transformQueryString(queryTerm)
-            matchBody.push({
-              query: {
-                match_phrase_prefix: fieldAndTerm
+            if ((!queryTerm.onlyIfNotMatching || !(new RegExp(queryTerm.onlyIfNotMatching).test(searchString))) &&
+              (!queryTerm.onlyIfMatching || new RegExp(queryTerm.onlyIfMatching).test(searchString))) {
+              const transformedQuery = transformQueryString(queryTerm)
+              console.dir(transformedQuery)
+              fieldAndTerm[ queryTerm.field ] = transformedQuery
+              matchBody = {
+                query: queryTerm.wildcard ? {
+                    match_phrase_prefix: fieldAndTerm
+                  } : {
+                    match: fieldAndTerm
+                  }
               }
-            })
+            }
           })
 
           var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'

@@ -1569,7 +1569,19 @@ module.exports = (app) => {
             structuredQuery: true,
             selectIndexLabel: 'Verk',
             queryTerms: [
-              { field: 'mainTitle', wildcard: true }
+              {
+                field: 'mainTitle',
+                wildcard: true,
+                onlyIfNotMatching: '^w[a-f0-9]+$'
+              },
+              {
+                field: 'uri',
+                matchAndTransformQuery: {
+                  regExp: 'w[a-f0-9]+',
+                  replacement: 'http://data.deichman.no/work/$&'
+                },
+                onlyIfMatching: 'w[a-f0-9]+'
+              }
             ],
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
