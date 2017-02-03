@@ -86,7 +86,7 @@ class Publications extends React.Component {
           branchesFromPublication.push(this.props.intl.formatMessage({ id: publication.items[ i ].branchcode }))
         }
         ((formats ? this.isArraysIntersecting(formats, publication.formats) : true) &&
-          (mediatypes ? this.isArraysIntersecting(mediatypes, publication.mediaTypes) : true ) &&
+          (mediatypes ? this.isArraysIntersecting(mediatypes, publication.mediaTypes) : true) &&
           (languages ? this.isArraysIntersecting(languages, publication.languages) : true) &&
           (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true))
           ? filteredPublications.push(publication) : filteredPublicationsRest.push(publication)
