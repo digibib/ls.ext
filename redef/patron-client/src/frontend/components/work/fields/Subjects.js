@@ -12,7 +12,7 @@ class Subjects extends React.Component {
   }
 
   searchLink (subject) {
-    return `/search?query=subject%3A${subject}`
+    return `/search?query=subject%3A"${subject}"`
   }
 
   render () {

@@ -12,7 +12,7 @@ class Genres extends React.Component {
   }
 
   searchLink (genre) {
-    return `/search?query=genre%3A${genre}`
+    return `/search?query=genre%3A"${genre}"`
   }
 
   render () {
