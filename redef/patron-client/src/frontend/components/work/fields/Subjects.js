@@ -12,7 +12,8 @@ class Subjects extends React.Component {
   }
 
   searchLink (subject) {
-    return `/search?query=subject%3A"${subject}"`
+    const query = `subject:"${subject}"`
+    return `/search?query=${encodeURIComponent(query)}`
   }
 
   render () {
