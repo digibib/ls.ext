@@ -8,7 +8,12 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 const SearchFilterBox = ({ toggleFilter, query }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
     : <FormattedMessage {...messages.titleSearch} />
-  if (getFiltersFromQuery(query).length > 0) {
+  const filters = getFiltersFromQuery(query).filter(f => {
+    // We want to hide filters on work-level properties, since
+    // they by definition allways match all publications of the given work.
+    return !f.id.startsWith('fictionNonfiction') && !f.id.startsWith('audience')
+  })
+  if (filters.length > 0) {
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -20,7 +25,7 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
         className="active-filters">
         <div className="label">{filterText}</div>
         <ul>
-          {getFiltersFromQuery(query).filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
+          {filters.filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
             key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
         </ul>
       </NonIETransitionGroup>
