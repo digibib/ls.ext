@@ -13,8 +13,7 @@ module.exports = (app) => {
         if (res.status === 200) {
           return res.text()
         } else {
-          response.status(res.status).send(res.statusText)
-          throw Error()
+          return Promise.reject(`error fetching work ${request.params.workId}: ${res.statusText}`)
         }
       }).then(ntdata => jsonld.fromRDF(ntdata, { format: 'application/nquads' }, (error, ntdoc) => {
         if (error) {
@@ -43,8 +42,8 @@ module.exports = (app) => {
         })
       })
     ).catch(error => {
-      response.sendStatus(500)
       console.log(error)
+      response.sendStatus(500)
     })
   })
 
@@ -54,8 +53,7 @@ module.exports = (app) => {
         if (res.status === 200) {
           return res.json()
         } else {
-          response.status(res.status).send(res.statusText)
-          throw Error()
+          return Promise.reject(`error fetching items for work ${request.params.workId}: ${res.statusText}`)
         }
       }).then(json => Promise.all(json.recordIds.map(recordId => fetch(`http://xkoha:8081/api/v1/biblios/${recordId}/expanded`).then(res => {
         if (res.status === 200) {
@@ -117,8 +115,8 @@ module.exports = (app) => {
         response.sendStatus(500)
       })
     ).catch(error => {
-      response.sendStatus(500)
       console.log(error)
+      response.sendStatus(500)
     })
   })
 }
