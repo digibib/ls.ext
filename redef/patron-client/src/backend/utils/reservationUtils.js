@@ -38,9 +38,9 @@ function getWaitPeriod (queuePlace, items) {
 
   const floor = Math.floor(estimate)
   const ceiling = (floor === estimate) ? Math.ceil(estimate) + 1 : Math.ceil(estimate)
-  const returnVal = (floor < 12) ? `${floor}–${ceiling}` : '12'
+  const watingPeriod = (floor < 12) ? `${floor}–${ceiling}` : '12'
 
-  return returnVal
+  return watingPeriod
 }
 
 function getEstimatedPeriod (queuePlace, items) {
@@ -55,9 +55,9 @@ function getEstimatedPeriod (queuePlace, items) {
       return estimateLinear(getOffsetInWeeks(items[ 0 ].onloan), queuePlace, getLoanPeriod(items[ 0 ].itype, null))
     }
 
-    const distributedQueuePlace = (items.length >= queuePlace) ? queuePlace : Math.ceil(queuePlace / items.length)
-    const derivedQueuePlace = (distributedQueuePlace === queuePlace) ? 1 : distributedQueuePlace
-    const relevantDueDate = (queuePlace <= items.length) ? items[ queuePlace - 1 ].onloan : items[ distributedQueuePlace - 1 ].onloan
+    const maxtrixPosition = (items.length >= queuePlace) ? queuePlace : Math.ceil(queuePlace / items.length)
+    const derivedQueuePlace = (maxtrixPosition === queuePlace) ? 1 : maxtrixPosition
+    const relevantDueDate = (queuePlace <= items.length) ? items[ queuePlace - 1 ].onloan : items[ maxtrixPosition - 1 ].onloan
     const itemLoanLength = (getLoanPeriod(items[ 0 ].itype))
     const offset = getOffsetInWeeks(relevantDueDate)
     const estimate = offset + ((derivedQueuePlace - 1) * itemLoanLength)
