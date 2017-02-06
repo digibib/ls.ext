@@ -82,6 +82,8 @@
             {{#if nonEditable && !suggested}}
             <a class="delete" title="Slett oppføring"
                on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
+            <a class="edit" title="Rediger oppføring"
+               on-click="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
             {{/if}}
             <span class="input-wrapper">
                 <span class="inputs">
@@ -138,7 +140,14 @@
                                 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                                 {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
                           title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
-                           on-click="saveObject:{{inputValueIndex}}" >Legg til</button>
+                        {{#if edit}}
+                           on-click="replaceObject:{{inputValueIndex}}"
+                        {{else}}
+                           on-click="saveNewObject:{{inputValueIndex}}"
+                        {{/if}}
+                        >
+                        {{#if edit}}Lagre{{else}}Legg til{{/if}}
+                        </button>
                         <span class="save-placeholder"></span>
                         {{/if}}
                     </span>
