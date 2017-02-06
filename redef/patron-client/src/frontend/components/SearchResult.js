@@ -34,7 +34,7 @@ class SearchResult extends React.Component {
           <span key={contribution.agent.relativeUri}>
             {/* <strong>{this.props.intl.formatMessage({ id: contribution.role })}</strong> */}
             <strong>Av</strong>
-            <Link to={fieldQueryLink('agents', contribution.agent.name)}> {contribution.agent.name} </Link>
+            <Link to={fieldQueryLink('aktør', contribution.agent.name)}> {contribution.agent.name} </Link>
           </span>
         ))}
         </p>
@@ -73,7 +73,7 @@ class SearchResult extends React.Component {
           {result.subject.map((subject, i) => (
             <span key={subject}>
                 <Link
-                  to={fieldQueryLink('subject', subject)}
+                  to={fieldQueryLink('emne', subject)}
                   onClick={this.scrollToTop}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
                 </span>
           ))}
@@ -89,7 +89,7 @@ class SearchResult extends React.Component {
           <strong><FormattedMessage {...messages.genres} /></strong><br />
           {result.genre.map((genre, i) => (
             <span key={genre}>
-                <Link to={fieldQueryLink('genre', genre)}
+                <Link to={fieldQueryLink('sjanger', genre)}
                       onClick={this.scrollToTop}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
                 </span>
           ))}
