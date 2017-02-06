@@ -60,9 +60,6 @@
       "@id": "genre",
       "@container": "@set"
     },
-    "genreSubdivision": {
-      "@id": "deichman:genreSubdivision"
-    },
     "subjects": {
       "@id": "subject",
       "@container": "@set"
