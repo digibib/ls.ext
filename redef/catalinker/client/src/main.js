@@ -168,6 +168,7 @@
           let subjectType = input.values[ 0 ].subjectType
           input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
           input.values[ 0 ].subjectType = subjectType
+          input.values[ 0 ].oldSubjectType = subjectType
         } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
           var valuesToRemove = []
           _.each(input.values, function (value, index) {
@@ -1053,6 +1054,7 @@
                             input.values[ index ].searchable = true
                           }
                           input.values[ index ].subjectType = type
+                          input.values[ index ].oldSubjectType = type
                           ractive.update(`${input.keypath}.values.${index}`)
                         })
                       } else {
@@ -1100,6 +1102,7 @@
                           let valueIndex = input.isSubInput ? rootIndex : index
                           setSingleValue(value, input, (valueIndex) + (offset), options)
                           input.values[ valueIndex ].subjectType = type
+                          input.values[ valueIndex ].oldSubjectType = type
                           if (input.isSubInput && !options.source) {
                             input.values[ valueIndex ].nonEditable = true
                             ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
@@ -1542,6 +1545,7 @@
           }
           if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
             newSubInput.input.values[ 0 ].subjectType = currentInput.subjectTypes[ 0 ]
+            newSubInput.input.values[ 0 ].oldSubjectType = currentInput.subjectTypes[ 0 ]
           }
           currentInput.subInputs.push(newSubInput)
         })
@@ -2398,11 +2402,13 @@
           }
           var patch = []
           var actualSubjectType = _.first(input.subInputs).input.values[ index ].subjectType || input.subjectType || input.rdfType
+          var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
           var mainSubject = ractive.get('targetUri.' + actualSubjectType)
+          var deleteSubject = ractive.get('targetUri.' + deleteSubjectType)
           _.each(opSpec[ op ], function (spec, opIndex) {
             patch.push({
               op: spec.operation,
-              s: mainSubject,
+              s: spec.operation == 'del' ? deleteSubject : mainSubject,
               p: input.predicate,
               o: {
                 value: `_:b${opIndex}`,
@@ -2422,7 +2428,7 @@
             }
             _.each(input.subInputs, function (subInput) {
               if (!(subInput.input.visible === false)) {
-                var value = subInput.input.values[ index ] ? subInput.input.values[ index ][spec.useValue].value : undefined
+                var value = subInput.input.values[ index ] ? subInput.input.values[ index ][ spec.useValue ].value : undefined
                 if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
                   patch.push({
                     op: spec.operation,
@@ -2450,10 +2456,20 @@
           })
 
           ractive.set('save_status', 'arbeider...')
-          return axios.patch(proxyToServices(mainSubject), JSON.stringify(patch), {
+          return axios.patch(proxyToServices(mainSubject), JSON.stringify(patch, undefined, 2), {
             headers: {
               Accept: 'application/ld+json',
               'Content-Type': 'application/ldpatch+json'
+            }
+          }).then(function () {
+            // do an extra patch to invalidate cache of old subject
+            if (mainSubject !== deleteSubject) {
+              axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
+                headers: {
+                  Accept: 'application/ld+json',
+                  'Content-Type': 'application/ldpatch+json'
+                }
+              })
             }
           })
             .then(function (response) {
@@ -3065,6 +3081,7 @@
                     values.subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
                       ? mainInput.subjectTypes[ 0 ]
                       : null
+                    values.oldSubjectType = values.subjectType
                   }
                   try {
                     promises.push(ractive.push(`${input.keypath}.values`, values))
