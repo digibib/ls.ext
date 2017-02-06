@@ -1998,6 +1998,10 @@
     }
 
   function showTurtle (uri) {
+    const openTabTargets = {
+      publication: 1,
+      work: 2
+    }
     $('#block').click(closePreview).fadeIn()
     $('#close-preview-button').click(closePreview)
     $('#iframecontainer iframe').hide()
@@ -2011,7 +2015,7 @@
               return match === '<' ? '&lt;' : '&gt;'
             })
             .replace(/&lt;http:\/\/data\.deichman\.no\/(work|publication)\/(w|p)([a-f0-9]+)&gt;/g, function (all, type, shortType, resourceId) {
-              return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
+              return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}&openTab=${openTabTargets[type]}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
             }))
           $('#loader').fadeOut(function () {
             $('#rdf-content').fadeIn()
