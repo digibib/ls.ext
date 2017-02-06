@@ -13,7 +13,7 @@ const Contributors = ({ contributors, intl }) => {
             <span className="content" key={person.relativeUri + role}>
                 <Link
                   data-automation-id="work_contributor_link"
-                  to={fieldQueryLink('agents', person.name)}>{person.name}
+                  to={fieldQueryLink('aktør', person.name)}>{person.name}
                 </Link>
               </span>
           )}

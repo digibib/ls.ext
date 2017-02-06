@@ -19,7 +19,7 @@ class Genres extends React.Component {
         <aside className="work-genres">
           <h2><FormattedMessage {...messages.genre} /></h2>
           <ul data-automation-id="work_genres">
-            {genres.map(genre => <li key={genre}><Link to={fieldQueryLink('genre', genre)}>{genre}</Link></li>)}
+            {genres.map(genre => <li key={genre}><Link to={fieldQueryLink('sjanger', genre)}>{genre}</Link></li>)}
           </ul>
           <a className="patron-placeholder" href="#" alt="More genres">Se flere sjangre</a>
         </aside>
