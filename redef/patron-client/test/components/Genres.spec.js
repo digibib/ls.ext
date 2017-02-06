@@ -9,9 +9,9 @@ import Genres from '../../src/frontend/components/work/fields/Genres'
 function setup (propOverrides) {
   const props = {
     genres: [
-      { prefLabel: 'genre_1', genreSubdivision: 'x' },
-      { prefLabel: 'genre_2', genreSubdivision: 'y' },
-      { prefLabel: 'genre_3', genreSubdivision: 'z' }
+      { prefLabel: 'genre_1', specification: 'x' },
+      { prefLabel: 'genre_2', specification: 'y' },
+      { prefLabel: 'genre_3', specification: 'z' }
     ],
     ...propOverrides
   }
@@ -36,7 +36,7 @@ describe('components', () => {
       const text = node.querySelector("[data-automation-id='work_genres']").textContent
       props.genres.forEach(genre => {
         expect(text).toContain(genre.prefLabel)
-        expect(text).toContain(genre.genreSubdivision)
+        expect(text).toContain(genre.specification)
       })
     })
   })
