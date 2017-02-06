@@ -6,8 +6,8 @@ import fieldQueryLink from '../../../utils/link'
 class Genres extends React.Component {
   renderLabel (genre) {
     let label = genre.prefLabel
-    if (genre.genreSubdivision) {
-      label += ` (${genre.genreSubdivision})`
+    if (genre.specification) {
+      label += ` (${genre.specification})`
     }
     return label
   }
