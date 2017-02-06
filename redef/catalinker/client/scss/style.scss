@@ -1058,6 +1058,10 @@ body {
       }
     }
   }
+  .report-content {
+    padding: 16px;
+  }
+
   #iframecontainer {
     width: 1000px;
     height: 90%;
@@ -1088,6 +1092,18 @@ body {
       right: 7px;
       top: 7px;
     }
+    #rdf-content {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      max-height: 98%;
+      overflow: auto;
+      font-family: monospace;
+      margin: 16px;
+      a {
+        text-decoration: underline;
+        color: blue;
+      }
+    }
   }
   #block {
     background: #000;
@@ -1115,7 +1131,7 @@ body {
 
   #additional-suggestions-dialog {
     div.allow-partial-checkbox {
-      float:left
+      float: left
     }
     p.warn-when-partial-suggestions {
       padding-left: 20px;

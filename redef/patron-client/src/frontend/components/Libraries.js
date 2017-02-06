@@ -34,7 +34,8 @@ class Libraries extends React.Component {
       <select ref={e => this.select = e} {...selectProps}
               defaultValue={selectedBranchCode}
               onChange={onChangeAction ? this.handleSelectChange : undefined}
-              disabled={disabled}>
+              disabled={disabled}
+              data-automation-id="libraries">
         {this.renderOptions()}
       </select>
     )

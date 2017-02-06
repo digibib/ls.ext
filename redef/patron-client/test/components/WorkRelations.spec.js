@@ -92,5 +92,25 @@ describe('components', () => {
 
       expect(node.querySelectorAll("[data-automation-id='work_relations']").length).toBe(2)
     })
+
+    it('should render a work relation with a main contributor', () => {
+      const { node } = setup({
+        workRelations: {
+          'http://data.deichman.no/relationType#basedOn': [
+            {
+              mainTitle: 'mainTitle',
+              relativeUri: 'relativeUri',
+              contributors: [ {
+                type: [ 'Contribution', 'MainEntry' ],
+                agent: { name: 'mainContributor' }
+              } ]
+            }
+          ]
+        }
+      })
+
+      const link = node.querySelector("[data-automation-id='work_relation_link']")
+      expect(link.textContent).toBe('mainTitle / mainContributor')
+    })
   })
 })

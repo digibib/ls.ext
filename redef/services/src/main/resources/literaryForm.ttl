@@ -64,3 +64,6 @@ literaryForm:televisionSeries a duo:LiteraryForm ;
 literaryForm:shortFilm a duo:LiteraryForm ;
   rdfs:label "Kortfilm"@no ;
   rdfs:label "Short film"@en .
+literaryForm:exerciseBook a duo:LiteraryForm ;
+  rdfs:label "Oppgavebok"@no ;
+  rdfs:label "Exercise book"@en .

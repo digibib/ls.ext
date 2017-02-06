@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { injectIntl, intlShape } from 'react-intl'
+import fieldQueryLink from '../../../utils/link'
 
 const Contributors = ({ contributors, intl }) => {
   return (
@@ -12,7 +13,7 @@ const Contributors = ({ contributors, intl }) => {
             <span className="content" key={person.relativeUri + role}>
                 <Link
                   data-automation-id="work_contributor_link"
-                  to={`/search?query=agents%3A"${person.name}"`}>{person.name}
+                  to={fieldQueryLink('aktør', person.name)}>{person.name}
                 </Link>
               </span>
           )}

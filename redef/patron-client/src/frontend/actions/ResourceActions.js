@@ -127,6 +127,7 @@ export function updateUrlQueryValue (parameter, value, replacePath) {
     } else {
       locationQuery[ parameter ] = value
     }
+    locationQuery[ 'showFilter' ] = [ 'language' ]
     const locationDescriptor = {
       pathname: getState().routing.locationBeforeTransitions.pathname,
       query: locationQuery

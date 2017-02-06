@@ -39,7 +39,7 @@ def contains_class(class_name)
   "contains(concat(' ',normalize-space(@class),' '),' #{class_name} ')"
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds)indeksen$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted|verk) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verks)indeksen$/) do |art, type_1, type_2|
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT*5) {
     @browser.element(:xpath => "//a[#{contains_class('edit-resource')}]|//a[#{contains_class('select-result-item')}]").present?
   }
@@ -715,4 +715,10 @@ end
 When(/^lukker jeg dialogen$/) do
   @browser.element(:class => 'ui-dialog-titlebar-close').wait_until_present(timeout: BROWSER_WAIT_TIMEOUT*5)
   @browser.element(:class => 'ui-dialog-titlebar-close').click
+end
+
+When(/^legger inn siste del av verkts uri i feltet "([^"]*)"$/) do |label|
+  field = @site.WorkFlow.get_text_field_from_label(label)
+  field.click
+  field.send_keys @context[:work_identifier].split('/').last
 end

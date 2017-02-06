@@ -43,7 +43,7 @@ function initCommonQuery () {
 function initSimpleQuery (query) {
   const defaultFields = [
     'agents',
-    'author',
+    'author^50',
     'bio',
     'compType',
     'country',
@@ -56,16 +56,16 @@ function initSimpleQuery (query) {
     'ismn',
     'language',
     'litform',
-    'mainTitle^2',
+    'mainTitle^30',
     'mt',
     'partNumber',
     'partTitle',
     'publishedBy',
     'recordId',
-    'series',
-    'subject',
+    'series^10',
+    'subject^10',
     'summary',
-    'title',
+    'title^20',
     'workMainTitle',
     'workPartNumber',
     'workPartTitle',
@@ -79,17 +79,10 @@ function initSimpleQuery (query) {
         }
       },
       query: {
-        bool: {
-          filter: [
-            {
-              simple_query_string: {
-                query: query,
-                default_operator: 'and',
-                fields: defaultFields
-              }
-            }
-          ],
-          must: []
+        simple_query_string: {
+          query: query,
+          default_operator: 'and',
+          fields: defaultFields
         }
       }
     }
@@ -106,12 +99,43 @@ function initAdvancedQuery (query) {
       },
       query: {
         query_string: {
-          query: query,
+          query: translateFieldTerms(query, Constants.queryFieldTranslations),
           default_operator: 'and'
         }
       }
     }
   }
+}
+
+function translateFieldTerms (query, translations) {
+  const chars = [...query]
+  let result = ''
+  let inQuote = false
+  let startField = 0
+  let startValue = 0
+  for (let i = 0; i < chars.length; i++) {
+    const c = chars[i]
+    if (c === ' ') {
+      if (i + 1 === chars.length) {
+        break
+      }
+      startField = i + 1
+    }
+    if (c === '"') {
+      inQuote = !inQuote
+    }
+    if (!inQuote && c === ':') {
+      result += chars.slice(startValue, startField).join('')
+      let field = chars.slice(startField, i).join('')
+      if (translations[field]) {
+        field = translations[field]
+      }
+      result += field
+      result += ':'
+      startValue = i + 1
+    }
+  }
+  return result += chars.slice(startValue, chars.length).join('')
 }
 
 function isAdvancedQuery (queryString) {
@@ -213,3 +237,6 @@ module.exports.buildQuery = function (urlQueryString) {
 
   return elasticSearchQuery
 }
+
+// function exported only to be testable. TODO is there another way?
+module.exports.translateFieldTerms = translateFieldTerms

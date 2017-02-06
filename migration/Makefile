@@ -207,6 +207,7 @@ ifndef NOKOHA
 endif
 	@echo "-- Starting indexing resources in Elasticsearch..."
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/indexUrisOnlyOnce'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all?ignoreConnectedResources=true'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/person/reindex_all?ignoreConnectedResources=true'
@@ -304,6 +305,7 @@ verify:
 
 reindex:
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/clear_index'
+	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/indexUrisOnlyOnce'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/publication/reindex_all'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/work/reindex_all?ignoreConnectedResources=true'
 	@$(MIGRATION_RUN_CMD) 'curl -s -X POST services:8005/search/person/reindex_all?ignoreConnectedResources=true'

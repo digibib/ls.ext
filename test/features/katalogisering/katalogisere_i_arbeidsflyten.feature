@@ -494,3 +494,9 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
 
+  Scenario: søk etter verk med siste del av verkets uri
+    Gitt at jeg har en bok
+    Og at det finnes et verk med forfatter
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og legger inn siste del av verkts uri i feltet "Verk"
+    Så velger jeg et verk fra treffliste fra verksindeksen

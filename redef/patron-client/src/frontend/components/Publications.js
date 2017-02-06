@@ -70,12 +70,12 @@ class Publications extends React.Component {
     let filteredPublications = []
     const filteredPublicationsRest = []
     const filters = getCategorizedFilters(this.props.locationQuery)
-    if (filters.branch || filters.language || filters.format || filters.audience) {
+    if (filters.branch || filters.language || filters.format || filters.mediatype) {
       publicationsCopy.forEach(publication => {
         const formats = filters.format
         const languages = filters.language
-        const audiences = filters.audience
         const branches = []
+        const mediatypes = filters.mediatype
         if (filters.branch) {
           filters.branch.forEach((branch) => {
             branches.push(this.props.libraries[ branch ])
@@ -83,9 +83,12 @@ class Publications extends React.Component {
         }
         const branchesFromPublication = []
         for (let i = 0; i < publication.items.length; i++) {
-          branchesFromPublication.push(publication.items[ i ].branch)
+          branchesFromPublication.push(this.props.intl.formatMessage({ id: publication.items[ i ].branchcode }))
         }
-        ((formats ? this.isArraysIntersecting(formats, publication.formats) : true) && (languages ? this.isArraysIntersecting(languages, publication.languages) : true) && (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true) && (audiences ? this.isArraysIntersecting(audiences, this.props.audiences) : true))
+        ((formats ? this.isArraysIntersecting(formats, publication.formats) : true) &&
+          (mediatypes ? this.isArraysIntersecting(mediatypes, publication.mediaTypes) : true) &&
+          (languages ? this.isArraysIntersecting(languages, publication.languages) : true) &&
+          (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true))
           ? filteredPublications.push(publication) : filteredPublicationsRest.push(publication)
       })
     } else {
@@ -104,7 +107,6 @@ class Publications extends React.Component {
         {this.generatePublicationRows(publicationRows)}
         {(() => {
           if (publicationRestRows.length > 0) {
-            console.log('restrows', publicationRestRows[ 0 ])
             let mediaType
             let mediaTypeOutput
             if (publicationRestRows[ 0 ][ 0 ].mediaTypes[ 0 ]) {
