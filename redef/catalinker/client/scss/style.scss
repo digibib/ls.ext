@@ -822,6 +822,9 @@ body {
         .default-non-editable {
           min-height: 60px;
           padding: 8px;
+          div.edit {
+            float: right;
+          }
           .inputs {
             display: block;
             border: 1px solid lightgrey;
@@ -913,6 +916,9 @@ body {
         .additional-entries-non-editable {
           min-height: 60px;
           padding: 8px;
+          div.edit {
+            float: right;
+          }
           .input-wrapper {
             padding-left: 10px;
             display: block;
