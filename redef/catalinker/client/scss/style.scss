@@ -283,7 +283,7 @@ body {
         }
         .add-item-button {
           float: right;
-          margin-bottom: 9px;
+          margin-top: 6px;
         }
 
         .save-placeholder {
@@ -788,13 +788,20 @@ body {
           margin-top: 5px;
           display: inline-flex;
           label {
-            padding-right: 25px;
             padding-left: 5px;
             margin-top: 8px;
           }
         }
         a.delete {
           background-image: url('/images/delete_cross.svg');
+          background-repeat: no-repeat;
+          background-position: left top;
+          padding-left: 2em;
+          cursor: pointer;
+          min-width: 20px;
+        }
+        a.edit {
+          background-image: url('/images/lower_right_pencil.svg');
           background-repeat: no-repeat;
           background-position: left top;
           padding-left: 2em;
@@ -884,7 +891,7 @@ body {
           .subject-type-association {
             span:not(.pure-button) {
               background: $mintgreen;
-              padding: 0 12px;
+              padding: 0 12px 8px 8px;
               span.add-association-legend {
                 padding: 0 6px;
                 display: inline-block;
