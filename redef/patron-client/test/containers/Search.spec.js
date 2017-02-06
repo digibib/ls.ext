@@ -73,7 +73,7 @@ describe('containers', () => {
         totalHits: Constants.maxSearchResultsPerPage * 3
       })
       expect(node.querySelector("[data-automation-id='search-results-pagination']")
-        .getElementsByClassName('pagination')[ 0 ].children.length).toBe(10) // including next and prev
+        .getElementsByClassName('pagination')[ 0 ].children.length).toBe(5) // including next and prev
     })
   })
 })
