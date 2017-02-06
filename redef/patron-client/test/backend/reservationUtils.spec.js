@@ -306,5 +306,19 @@ describe('reservation utils', () => {
         estimateWaitingPeriod(queuePlace, items)
       ).toEqual('0–1')
     })
+
+    it('should know that a reserve in a long queue (54) for a book with many items is due soon', () => {
+
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(33).fill(item)
+      const queuePlace = 54
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('4–5')
+    })
   })
 })

@@ -55,7 +55,7 @@ function getEstimatedPeriod (queuePlace, items) {
       return estimateLinear(getOffsetInWeeks(items[ 0 ].onloan), queuePlace, getLoanPeriod(items[ 0 ].itype, null))
     }
 
-    const distributedQueuePlace = (items.length >= queuePlace) ? queuePlace : Math.floor(queuePlace / items.length)
+    const distributedQueuePlace = (items.length >= queuePlace) ? queuePlace : Math.ceil(queuePlace / items.length)
     const derivedQueuePlace = (distributedQueuePlace === queuePlace) ? 1 : distributedQueuePlace
     const relevantDueDate = (queuePlace <= items.length) ? items[ queuePlace - 1 ].onloan : items[ distributedQueuePlace - 1 ].onloan
     const itemLoanLength = (getLoanPeriod(items[ 0 ].itype))
