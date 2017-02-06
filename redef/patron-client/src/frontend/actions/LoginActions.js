@@ -5,6 +5,7 @@ import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
 import { action } from './GenericActions'
+import { fetchProfileInfo } from './ProfileActions'
 
 export const requestLogin = (username) => action(types.REQUEST_LOGIN, { username })
 
@@ -60,6 +61,9 @@ export function login (username, password, successActions = []) {
       })
       .then(json => {
         dispatch(loginSuccess(username, json.borrowerNumber, json.borrowerName))
+        return dispatch(fetchProfileInfo())
+      })
+      .then(() => {
         successActions.forEach(successAction => dispatch(successAction))
       })
       .catch(error => dispatch(loginFailure(username, error)))
