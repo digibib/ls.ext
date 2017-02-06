@@ -12,7 +12,7 @@ const WorkSerie = ({ workserie }) => {
       <MetaItem label={messages.labelWorkSerie} data-automation-id="work_work_serie">
         <Link
           data-automation-id="work_series_link"
-          to={fieldQueryLink('series', workserie.mainTitle)}>
+          to={fieldQueryLink('serie', workserie.mainTitle)}>
           {title(workserie)}
         </Link>
       </MetaItem>
