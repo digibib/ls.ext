@@ -293,8 +293,8 @@
           case 'deichman:ClassificationEntry':
           case 'deichman:WorkSeriesPart':
             break;
-          default:
-            throw "Doesn't know which input-type to assign to range: " + input.range;
+          //default:
+          //  throw "Doesn't know which input-type to assign to range: " + input.range;
         }
       }
       inputs.push(input);
