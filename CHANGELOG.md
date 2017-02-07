@@ -12,10 +12,44 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
-## 0.8.4 (2017-31-01)
+## 0.8.5 (2017-02-07)
+
+KOHA: a37d4297001cdfb21202ef2d9d04d63ff6f235f4
+GITREF:
+
+- Koha:
+  - Koha upgraded to use 16.11.03 (security release)
+  - Add Koha::Util::PureFunctions DEICH-428
+    - a Cached Index for stable, idempotent Getter functions that will greatly improve the speed of Koha
+  - koha installer stability fixes
+  - Koha languages now configurable on startup (INSTALL_LANGUAGES, DEFAULT_LANGUAGE)
+  - Disable Norwegian Patron sync by default (NLENABLE)
+  - /api/v1/biblios/extended: Added some non-reservable itemtypes (e.g. SETT, )
+  - /api/v1/biblios/extended: remove reservability on branchcode hsko
+- Patron-client:
+  - DEICH-620: fix filtering by branch on work page
+  - DEICH-620: audience filter should not hide publications
+  - DEICH-621: filter publication by mediatype on work page
+  - DEICH-623: hide work-level filters on work page
+  - DEICH-526: update generated subject/genre search links
+  - DEICH-615: extra info on related works
+  - DEICH-605: pre-selected branch on reservations
+  - DEICH-222: add query field translations
+  - DEICH-631: fix genre.subDivision = genre.specification
+  - use norwegian terms for generated query links
+  - use Norwegian term for series in query link
+  - fix eternal loop on fetch resource errors
+- Catalinker:
+  - DEICH-101: split works - tidy up use of prefixes in TURTLE response
+  - DEICH-566: add workId as searchable field for work
+  - search work by workId also on main resource work search
+- Services:
+  - Add new literary form, exercise book. Add synonyms
+
+## 0.8.4 (2017-01-31)
 
 KOHA: 9b3c401bb0451cca4bb004efd62ef02a778d16a8
-GITREF:
+GITREF: 676a5f431ad682c968aa7176e2f83f6d2375e8a1
 
 - Koha:
   - koha messaging-API må  bruke meldingskø DEICH-594
@@ -42,7 +76,7 @@ GITREF:
 ## 0.8.2 (2017-01-10)
 
 KOHA: aa1ff583761d252e8e581fac4bd73fa6693d5a59
-GITREF:
+GITREF: 05cc85d2324e755793e4c597235dcc4a99e48070
 
 - Koha:
   - Oppgradert til mainstream koha release 16.11.01
