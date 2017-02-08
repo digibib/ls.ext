@@ -6,14 +6,12 @@ import Login from './modals/LoginModal'
 import Modal from 'react-modal'
 import * as ModalActions from '../actions/ModalActions'
 import CancelReservation from './modals/CancelReservationModal'
-import ExtendLoan from './modals/ExtendLoanModal'
 import Registration from './modals/RegistrationModal'
 import PostponeReservation from './modals/PostponeReservationModal'
 
 const MODAL_COMPONENTS = {
   'POSTPONE_RESERVATION': PostponeReservation,
   'CANCEL_RESERVATION': CancelReservation,
-  'EXTEND_LOAN': ExtendLoan,
   'LOGIN': Login,
   'REGISTRATION': Registration,
   'RESERVATION': Reservation
