@@ -8,7 +8,8 @@ module.exports = (app) => {
     return isofetch(url, opts)
       .then(res => {
         if (res.status === 403 || res.status === 401) {
-          return res.json().then(json => {
+          const dup = res.clone() // duplicate body for logging
+          return dup.json().then(json => {
             if (res.status >= 400) {
               console.log(`Call to ${url} with options ${JSON.stringify(opts)}:`)
               console.log(`${res.status}: ${JSON.stringify(json)}`)
