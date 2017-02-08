@@ -34,8 +34,8 @@
           "type": "synonym",
           "tokenizer": "keyword",
           "synonyms": [
-            "bokmål, nor, nob",
-            "nynorsk, nor, nno",
+            "bokmål, nob",
+            "nynorsk, nno",
             "dansk, danish, dan",
             "engelsk, english, eng",
             "svensk, swedish, swe",
