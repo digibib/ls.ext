@@ -172,143 +172,19 @@ describe('reservation utils', () => {
     })
 
     it('should know that a reserve in a long queue for a book with many items is due soon', () => {
-      const items = [ {
+      const item = {
         'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
         'itype': 'BOK',
         'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      }, {
-        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
-        'itype': 'BOK',
-        'reservable': 1
-      } ]
+      }
+      const items = Array(56).fill(item)
       const queuePlace = 7
       expect(
         estimateWaitingPeriod(queuePlace, items)
       ).toEqual('0–1')
     })
 
-    it('should know that a reserve in a long queue (54) for a book with many items is due soon', () => {
-
+    it('should know that a reserve in a long queue (54) for a book with many items is due in 4-5 weeks', () => {
       const item = {
         'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
         'itype': 'BOK',
@@ -319,6 +195,149 @@ describe('reservation utils', () => {
       expect(
         estimateWaitingPeriod(queuePlace, items)
       ).toEqual('4–5')
+    })
+
+    it('should know that a reserve in a long queue (49/19ex.) for a book with many items is due in 8-9 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(19).fill(item)
+      const queuePlace = 49
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('8–9')
+    })
+
+    it('should know that a reserve in a long queue (41/33ex.) for a book with many items is due in 4-5 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(33).fill(item)
+      const queuePlace = 41
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('4–5')
+    })
+
+    it('should know that a reserve in a long queue (70/30ex.) for a book with many items is due in 8-9 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(30).fill(item)
+      const queuePlace = 70
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('8–9')
+    })
+
+    it('should know that a reserve in a long queue (80/30ex.) for a book with many items is due in 8-9 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(30).fill(item)
+      const queuePlace = 80
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('8–9')
+    })
+
+    it('should know that a reserve in a long queue (88/30ex.) for a book with many items is due in 8-9 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(30).fill(item)
+      const queuePlace = 88
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('8–9')
+    })
+
+    it('should know that a reserve in a long queue (58/19ex.) for a book with many items is due in more than 12 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday + (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(19).fill(item)
+      const queuePlace = 58
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('12')
+    })
+
+    it('should know that a reserve in a long queue (50/19ex.) for a film with many items is due in 6-7 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'FILM',
+        'reservable': 1
+      }
+      const items = Array(19).fill(item)
+      const queuePlace = 58
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('6–7')
+    })
+
+    it('should know that a reserve in a long queue (50/19ex.) with an extra week wait for a film with many items is due in 7-8 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday + (oneWeekInSeconds)).toISOString(),
+        'itype': 'FILM',
+        'reservable': 1
+      }
+      const items = Array(19).fill(item)
+      const queuePlace = 58
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('7–8')
+    })
+
+    it('should know a book with two items and a que of six with an offset of one week will be available in 9-10 weeks', () => {
+      const item = {
+        'onloan': new Date(dayToday + (oneWeekInSeconds)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(2).fill(item)
+      const queuePlace = 6
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('9–10')
+    })
+
+    it('should know a book which is soon to be returned should be available after the next borrower', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(1).fill(item)
+      const queuePlace = 2
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('4–5')
+    })
+
+    it('should know that a soon-to-be-available book should be available in two loans (8-9 weeks)', () => {
+      const item = {
+        'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
+        'itype': 'BOK',
+        'reservable': 1
+      }
+      const items = Array(3).fill(item)
+      const queuePlace = 7
+      expect(
+        estimateWaitingPeriod(queuePlace, items)
+      ).toEqual('8–9')
     })
   })
 })
