@@ -29,11 +29,6 @@ class UserLoans extends React.Component {
               <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
               <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
             </div>
-            <div className="loan-pickup-location">
-              <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
-              <p
-                data-automation-id="UserLoans_pickup_branch">{this.props.intl.formatMessage({ id: item.branchCode })}</p>
-            </div>
             <div className="loan-expire">
               <h2><FormattedMessage {...messages.expiry} />:</h2>
               <p data-automation-id="UserLoans_pickup_expiry">{formatDate(item.expiry)}</p>
@@ -41,6 +36,11 @@ class UserLoans extends React.Component {
             <div className="loan-pickup-number">
               <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
               <p data-automation-id="UserLoans_pickup_pickupNumber">{item.pickupNumber}</p>
+            </div>
+            <div className="loan-pickup-location">
+              <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
+              <p
+                data-automation-id="UserLoans_pickup_branch">{this.props.intl.formatMessage({ id: item.branchCode })}</p>
             </div>
           </article>
         ))}
@@ -77,7 +77,7 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
                 <td data-automation-id="UserLoans_reservation_orderedDate">
                   {formatDate(item.orderedDate)}
-                  { item.suspendUntil
+                  {item.suspendUntil
                     ? <span className="feedback">&nbsp;&nbsp;<FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
                     : ''
                   }
@@ -227,14 +227,12 @@ class UserLoans extends React.Component {
 
   renderLoans () {
     return (
-      <section className="registered">
+      <section className="loan">
         <h1>
+          {this.renderRenewAllButton()}
           <FormattedMessage {...messages.name} values={{ name: this.props.borrowerName }} />
           {this.renderCurrentDateTime()}
         </h1>
-        <button className="black-btn patron-placeholder">
-          <FormattedMessage {...messages.renewAllLoans} />
-        </button>
         {[ ...this.props.loansAndReservations.loans ].sort((a, b) => a.dueDate > b.dueDate).map(item => (
           <article key={item.checkoutId}
                    className="single-entry"
@@ -245,11 +243,12 @@ class UserLoans extends React.Component {
               <h2 data-automation-id="UserLoans_loan_author" className="contributors">{item.author}</h2>
               <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
             </div>
-            {this.renderDueDate(item.dueDate)}
-            <div className="prolong">
+            <h2>{this.renderDueDate(item.dueDate)}</h2>
+            {this.renderExtendLoanMessage(item)}
+            <div className="renew-button">
               <ClickableElement onClickAction={this.props.loanActions.startExtendLoan}
                                 onClickArguments={item.checkoutId}>
-                <button className="black-btn">
+                <button className="black-btn" disabled={item.renewalStatus}>
                   <FormattedMessage {...messages.extendLoan} />
                 </button>
               </ClickableElement>
@@ -258,6 +257,31 @@ class UserLoans extends React.Component {
         ))}
       </section>
     )
+  }
+
+  renderRenewAllButton () {
+    if ([ ...this.props.loansAndReservations.loans ].length > 0) {
+      return (
+        <ClickableElement onClickAction={this.props.loanActions.startExtendAllLoans}
+                          onClickArguments={[this.props.loansAndReservations.loans]}>
+          <button className="renew-all-button black-btn"
+                  disabled={this.props.hasRequestedRenewAll}
+                  data-automation-id="UserLoans_extend_all_loans_button">
+              <FormattedMessage {...messages.renewAllLoans} />
+          </button>
+        </ClickableElement>
+      )
+    }
+  }
+
+  renderExtendLoanMessage (item) {
+    if (item.renewalStatus) {
+      return (
+        item.renewalStatus === 'genericExtendLoanSuccess'
+          ? <div className="renew-message success"><p><FormattedMessage {...messages[ item.renewalStatus ]} /></p></div>
+          : <div className="renew-message"><p><FormattedMessage {...messages[ item.renewalStatus ]} /></p></div>
+      )
+    }
   }
 
   renderCurrentDateTime () {
@@ -343,7 +367,10 @@ UserLoans.propTypes = {
   borrowerName: PropTypes.string.isRequired,
   loansAndReservationError: PropTypes.object,
   mediaQueryValues: PropTypes.object,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  isRequestingExtendLoan: PropTypes.bool.isRequired,
+  isRequestingExtendAllLoans: PropTypes.bool.isRequired,
+  hasRequestedRenewAll: PropTypes.bool.isRequired
 }
 
 export const messages = defineMessages({
@@ -471,6 +498,41 @@ export const messages = defineMessages({
     id: 'UserLoans.putOnHold',
     description: 'Message that the reservation is put on hold',
     defaultMessage: 'Put on hold until'
+  },
+  genericExtendLoanSuccess: {
+    id: 'UserLoans.genericExtendLoanSuccess',
+    description: 'A generic message for successful renewal.',
+    defaultMessage: 'Loan extended'
+  },
+  genericExtendLoanError: {
+    id: 'UserLoans.genericExtendLoanError',
+    description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
+    defaultMessage: 'Not able to extend - Please contact library for details'
+  },
+  tooSoonToRenew: {
+    id: 'UserLoans.tooSoonToRenew',
+    description: 'Message when it is too early for renewing loan.',
+    defaultMessage: 'Too early to extend'
+  },
+  tooManyRenewals: {
+    id: 'UserLoans.tooManyRenewals',
+    description: 'Message when material has reached maximum number of renewals.',
+    defaultMessage: 'Can not be extended anymore'
+  },
+  materialIsReserved: {
+    id: 'UserLoans.materialIsReserved',
+    description: 'Message when material is reserved and cannot be reserved.',
+    defaultMessage: 'Reserved - cannot extend'
+  },
+  patronHasRestriction: {
+    id: 'UserLoans.patronHasRestriction',
+    description: 'Message when restricted patron is trying to renew material.',
+    defaultMessage: 'Not able to extend - Please contact library for details'
+  },
+  patronHasOverdue: {
+    id: 'UserLoans.patronHasOverdue',
+    description: 'Message when patron with overdues is trying to renew material.',
+    defaultMessage: 'Overdue material - cannot renew.'
   }
 })
 
@@ -482,7 +544,10 @@ function mapStateToProps (state) {
     libraries: state.application.libraries,
     isRequestingChangePickupLocation: state.reservation.isRequestingChangePickupLocation,
     isRequestingChangeReservationSuspension: state.reservation.isRequestingChangeReservationSuspension,
-    borrowerName: state.profile.borrowerName
+    borrowerName: state.profile.borrowerName,
+    isRequestingExtendLoan: state.loan.isRequestingExtendLoan,
+    isRequestingExtendAllLoans: state.loan.isRequestingExtendAllLoans,
+    hasRequestedRenewAll: state.loan.hasRequestedRenewAll
   }
 }
 

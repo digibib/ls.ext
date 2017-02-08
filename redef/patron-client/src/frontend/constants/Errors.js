@@ -12,10 +12,11 @@ export default {
   },
   loan: {
     GENERIC_EXTEND_LOAN_ERROR: 'genericExtendLoanError',
-    TOO_SOON_TO_RENEW: 'tooSoonToRenewError',
-    TOO_MANY_RENEWALS: 'tooManyRenewalsError',
-    MATERIAL_IS_RESERVED: 'cannotRenewReservedMaterialError',
-    MATERIAL_IS_RESTRICTED: 'cannotRenewRestrictedMaterialError'
+    TOO_SOON_TO_RENEW: 'tooSoonToRenew',
+    TOO_MANY_RENEWALS: 'tooManyRenewals',
+    MATERIAL_IS_RESERVED: 'materialIsReserved',
+    PATRON_HAS_RESTRICTION: 'patronHasRestriction',
+    PATRON_HAS_OVERDUE: 'patronHasOverdue'
   },
   profile: {
     CURRENT_PIN_NOT_CORRRECT: 'currentPinNotCorrect',
