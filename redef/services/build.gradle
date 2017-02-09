@@ -103,7 +103,7 @@ task oneJar(type: OneJar) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '3.3'
 }
 
 check.dependsOn test
