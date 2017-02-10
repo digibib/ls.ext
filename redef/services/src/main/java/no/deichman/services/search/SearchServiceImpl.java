@@ -360,7 +360,7 @@ public class SearchServiceImpl implements SearchService {
                     .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8)))
                     .build());
             try (CloseableHttpResponse putResponse = httpclient.execute(httpDelete)) {
-                LOG.debug(putResponse.getStatusLine().toString());
+                //LOG.debug(putResponse.getStatusLine().toString());
             }
         } catch (Exception e) {
             LOG.error(format("Failed to delete %s in elasticsearch", xuri.getUri()), e);
@@ -636,7 +636,7 @@ public class SearchServiceImpl implements SearchService {
                 httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
                 Monitor mon = MonitorFactory.start("indexDocument");
                 try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
-                    LOG.debug(putResponse.getStatusLine().toString());
+                    //LOG.debug(putResponse.getStatusLine().toString());
                 } finally {
                     mon.stop();
                 }
