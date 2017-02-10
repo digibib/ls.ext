@@ -1,5 +1,6 @@
 package no.deichman.services.search;
 
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.uridefaults.XURI;
 import org.slf4j.Logger;
@@ -22,7 +23,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static no.deichman.services.entity.EntityType.ALL_TYPES_PATTERN;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -34,9 +39,17 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Singleton
 @Path("search")
 public class SearchResource extends ResourceBase {
-    private static final int NUMTHREADS = 3;
+    private static final int NUMTHREADS = 1;
+    private static final long SIXTY = 60;
+    private static final int COREPOOLSIZE = 4;
+    private static final int MAXPOOLSIZE = 8;
     private static final ForkJoinPool THREADPOOL = new ForkJoinPool(NUMTHREADS);
+    private static final ExecutorService EXECUTOR_SERVICE = new ThreadPoolExecutor(
+            COREPOOLSIZE, MAXPOOLSIZE,
+            SIXTY, TimeUnit.SECONDS,
+            new LinkedBlockingQueue());
     private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
+
     @Context
     private ServletConfig servletConfig;
 
@@ -130,6 +143,30 @@ public class SearchResource extends ResourceBase {
     @Path("clear_index")
     public final Response clearIndex() {
         return getSearchService().clearIndex();
+    }
+
+
+    @POST
+    @Path("reindex_all")
+    public final Response reIndexAll() throws Exception {
+        LOG.info("Starting to reindex all types");
+
+        THREADPOOL.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (EntityType type : EntityType.values()) {
+                    getEntityService().retrieveAllWorkUris(type.getPath(), uri -> EXECUTOR_SERVICE.execute(() -> {
+                        try {
+                            getSearchService().indexOnly(new XURI(uri));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }));
+                }
+            }
+        });
+
+        return Response.accepted().build();
     }
 
     @POST
