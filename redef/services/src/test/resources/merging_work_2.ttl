@@ -1,0 +1,10 @@
+@prefix : <http://data.deichman.no/ontology#> .
+@prefix role: <http://data.deichman.no/role#> .
+
+<http://data.deichman.no/work/w2> a :Work ;
+  :mainTitle "Merge work 2" ;
+  :contributor [
+    a :Contribution, :MainEntry ;
+    :agent <__REPLACE__> ;
+    :role role:author
+  ] .
