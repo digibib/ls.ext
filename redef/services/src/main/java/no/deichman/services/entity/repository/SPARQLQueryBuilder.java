@@ -604,4 +604,21 @@ public final class SPARQLQueryBuilder {
                 + "order by ?name\n", BaseURI.ontology(), type.getRdfType(), type.getSearchIndexField());
         return QueryFactory.create(queryString);
     }
+
+    public String mergeNodes(XURI xuri, String replaceeURI) {
+        String queryString = format("INSERT {\n"
+                + "  ?subj ?prop <%2$s> .\n"
+                + "} WHERE {\n"
+                + "  ?subj ?prop <%1$s> .\n"
+                + "} ;\n"
+                + "DELETE {\n"
+                + "    <%1$s> ?a ?b .\n"
+                + "    ?c ?d <%1$s> .\n"
+                + "} WHERE {\n"
+                + "    <%1$s> ?a ?b .\n"
+                + "    ?c ?d <%1$s> .\n"
+                + "}\n"
+                + "\n", replaceeURI, xuri.getUri());
+        return queryString;
+    }
 }

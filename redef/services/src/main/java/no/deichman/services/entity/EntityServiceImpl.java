@@ -689,6 +689,11 @@ public final class EntityServiceImpl implements EntityService {
         });
     }
 
+    @Override
+    public void mergeResource(XURI xuri, String replaceeUri) {
+        repository.mergeResource(xuri, replaceeUri);
+    }
+
     private boolean isAboutRelevantType(Statement s, Model model, XURI xuri) {
         return model.contains(s.getSubject(), RDF.type, ResourceFactory.createResource(ontology(xuri.getTypeAsEntityType().getRdfType())));
     }

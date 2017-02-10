@@ -88,4 +88,7 @@ public interface RDFRepository {
     Model retrieveSerialAndLinkedResourcesByURI(XURI serialUri);
 
     ResultSet retrieveAllNamesOfType(EntityType type);
+
+    void mergeResource(XURI xuri, String replaceeUri);
+
 }
