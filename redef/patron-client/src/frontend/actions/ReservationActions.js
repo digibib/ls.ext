@@ -60,9 +60,9 @@ export function changeReservationSuspension (reserveId, suspended, date) {
 
   if (date) {
     suspendUntil = moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
-  } /* else { // NB: wait for Koha upgrade
+  } else {
     suspendUntil = null
-  } */
+  }
 
   const url = '/api/v1/holds/'
   return dispatch => {
