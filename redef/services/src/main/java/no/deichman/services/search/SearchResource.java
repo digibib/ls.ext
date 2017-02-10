@@ -142,7 +142,7 @@ public class SearchResource extends ResourceBase {
             @Override
             public void run() {
                 LOG.info("Starting to reindex " + type);
-                long start = System.currentTimeMillis();
+                //long start = System.currentTimeMillis();
                 getEntityService().retrieveAllWorkUris(type, uri -> CompletableFuture.runAsync(() -> {
                     try {
                         if (ignoreConnectedResources) {
@@ -154,7 +154,8 @@ public class SearchResource extends ResourceBase {
                         e.printStackTrace();
                     }
                 }));
-                LOG.info("Done reindexing " + type + " in " + (System.currentTimeMillis() - start) + " seconds");
+                // FIXME this log line returns as soon as all URIs are queued up, it does not wait for completion
+                // LOG.info("Done reindexing " + type + " in " + (System.currentTimeMillis() - start) + " seconds");
             }
         });
         return Response.accepted().build();
