@@ -4,9 +4,12 @@ import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.ontology.OntologyService;
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
+import no.deichman.services.utils.ResourceReader;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -36,6 +39,7 @@ import static javax.ws.rs.core.Response.Status.OK;
 import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
 import static no.deichman.services.entity.EntityType.SUBJECT;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
+import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFromString;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -493,4 +497,78 @@ public class EntityResourceTest {
                 + "}", result.getEntity());
     }
 
+    @Test
+    public void should_replace_one_node_with_another() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        String work1 = new ResourceReader().readFile("merging_work_1.ttl");
+        String work2 = new ResourceReader().readFile("merging_work_2.ttl");
+        String work3 = new ResourceReader().readFile("merging_work_3_autobiography.ttl");
+        String person1 = new ResourceReader().readFile("merging_persons_replacee_person.ttl");
+        String person2 = new ResourceReader().readFile("merging_persons_replacement_person.ttl");
+        Model testData = RDFModelUtil.modelFrom(
+                work1.replace("__REPLACE__", replacee), Lang.TURTLE).add(
+                        RDFModelUtil.modelFrom(work2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(work3.replace("__REPLACE__", replacee), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(person1.replace("__REPLACE__", replacee), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(person2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        );
+
+
+
+        final InMemoryRepository repo = new InMemoryRepository();
+        repo.addData(testData);
+        Model testModel = RDFModelUtil.modelFrom(
+                work1.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE).add(
+                RDFModelUtil.modelFrom(work2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(work3.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(person2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        );
+
+        entityResource = new EntityResource(new EntityServiceImpl(repo, null), null, null);
+
+        String body = "{\"replacee\": \"" + replacee + "\"}";
+
+        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+        assertEquals(204, result.getStatus());
+        assertTrue(repo.getModel().isIsomorphicWith(testModel));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void should_throw_bad_request_due_to_wrong_uri() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        entityResource = new EntityResource(new EntityServiceImpl(new InMemoryRepository(), null), null, null);
+        String body = "{\"replacee\": \"" + replacee + "\"}";
+        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+        assertEquals(404, result.getStatus());
+    }
+
+    @Test
+    public void should_throw_bad_request_due_to_badly_formatted_request_body() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        String turtleData = new ResourceReader().readFile("merging_persons_replacement_person.ttl").replace("__REPLACE__", replacement.getUri());
+
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), null, null);
+        String body = "{\"replacea\": \"" + replacee + "\"}";
+        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+        assertEquals(400, result.getStatus());
+    }
+
+    @Test
+    public void should_throw_bad_request_due_to_badly_formatted_uri_in_request_body() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        String turtleData = new ResourceReader().readFile("merging_persons_replacee_person.ttl").replace("__REPLACE__", replacement.getUri());
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), null, null);
+        String body = "{\"replacee\": \"\"}";
+        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+        assertEquals(400, result.getStatus());
+    }
 }

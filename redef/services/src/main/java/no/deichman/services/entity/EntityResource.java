@@ -40,6 +40,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -415,5 +416,53 @@ public final class EntityResource extends ResourceBase {
         Map<String, String> queryParamsSingleValue = queryParameters.entrySet().stream().collect(toMap(Map.Entry::getKey, v -> v.getValue().get(0)));
         Model model = getEntityService().retrieveResourceByQuery(EntityType.get(type), queryParamsSingleValue, projections);
         return ok().entity(getJsonldCreator().asJSONLD(model)).build();
+    }
+
+    @PUT
+    @Consumes(JSON)
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/merge")
+    public Response mergeNodes(@PathParam("type") String type, @PathParam("id") String id, String jsonReplacee) throws Exception {
+        Response.Status responseStatus = Response.Status.NO_CONTENT;
+        String replacee = null;
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+        if (!getEntityService().resourceExists(xuri)) {
+            throw new NotFoundException();
+        }
+
+        try {
+            Replacee replaceeData = new Gson().fromJson(jsonReplacee, Replacee.class);
+            replacee = replaceeData.getReplacee();
+        } catch (Exception exception) {
+            responseStatus = Response.Status.BAD_REQUEST;
+        }
+
+        if (!validateURI(replacee)) {
+            responseStatus = Response.Status.BAD_REQUEST;
+        }
+
+        if (responseStatus == Response.Status.NO_CONTENT) {
+            try {
+                getEntityService().mergeResource(xuri, replacee);
+            } catch (Exception exception) {
+                responseStatus = Response.Status.BAD_REQUEST;
+            }
+        }
+        Response.ResponseBuilder response = Response.status(responseStatus);
+        return response.build();
+    }
+
+    private boolean validateURI(String httpUri) {
+        boolean returnValue;
+
+        try {
+            if (new URI(httpUri).getScheme().equals("http")) {
+                returnValue = true;
+            } else {
+                returnValue = false;
+            }
+        } catch (Exception exception) {
+            returnValue = false;
+        }
+        return returnValue;
     }
 }
