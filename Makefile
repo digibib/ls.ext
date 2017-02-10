@@ -228,3 +228,7 @@ create_dev_stack_image:
 		-t digibib/docker-compose-dot:$(DOCKER_COMPOSE_DOT_IMAGE) \
 		./app /tmp/docker-compose-template-dev.yml | \
 		dot -Tpng > $(LSEXTPATH)/docker-compose/dev-stack.png"
+
+INDEXES=publication work place genre subject serial compositionType event instrument workSeries corporation person
+indexcounts:
+	@for index in $(INDEXES); do $(CMD) -c "sudo docker exec elasticsearch curl -s 'localhost:9200/search/$$index/_count'" | grep -oP "(?<=count\":)(\d+)" | xargs echo "$$index: " ; done
