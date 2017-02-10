@@ -113,6 +113,7 @@
 .reserve {
   .red-btn, .black-btn {
     min-width: rhythm(16);
+    margin-bottom: rhythm(0.75);
   }
 
   .select-branch {
@@ -173,15 +174,19 @@
   }
 
   .single-entry {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
     margin-bottom: rhythm(2);
 
     .entry-details {
-      @include span(12);
+      /*@include span(3);*/
     }
 
     h1 {
       font-size: rhythm(3);
-      margin-top: rhythm(1);
+      /* margin-top: rhythm(1); */
+      margin-top: 0;
       margin-bottom: 0;
     }
 
@@ -194,7 +199,7 @@
   }
 
   .due-date {
-    @include span(12);
+    /*@include span(3);*/
 
     h2 {
       text-transform: uppercase;
@@ -209,9 +214,17 @@
 
   }
 
-  .prolong {
-    @include span(12);
-    margin-top: rhythm(2);
+  .renew-message {
+    /*@include span(3);*/
+    /*margin-top: rhythm(2);*/
+    margin-top: 0;
+    max-width: 15em;
+  }
+
+  .renew-button {
+    /*@include span(3);*/
+    /*margin-top: rhythm(2);*/
+    margin-top: 0;
 
     button {
       width: 100%;
@@ -243,14 +256,14 @@
 
   }
 
-  .registered {
+  /* .loan {
 
     .single-entry {
       padding-top: rhythm(2);
       padding-bottom: rhythm(2);
 
       .entry-details {
-        @include span(6);
+        @include span(3);
       }
 
     }
@@ -263,6 +276,6 @@
       @include span(3 last);
     }
 
-  }
+  } */
 
 }
