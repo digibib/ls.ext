@@ -119,6 +119,7 @@ export default function profile (state = initialState, action) {
           reservations: state.loansAndReservations.reservations.map(reservation => {
             if (reservation.reserveId === action.payload.reserveId) {
               reservation.suspended = action.payload.suspended
+              reservation.suspendUntil = action.payload.suspendUntil
             }
             return reservation
           })

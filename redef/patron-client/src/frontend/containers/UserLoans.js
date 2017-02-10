@@ -75,7 +75,13 @@ class UserLoans extends React.Component {
               <tr key={item.reserveId} data-automation-id="UserLoans_reservation" data-recordid={item.recordId}>
                 <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
                 <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
-                <td data-automation-id="UserLoans_reservation_orderedDate">{formatDate(item.orderedDate)}</td>
+                <td data-automation-id="UserLoans_reservation_orderedDate">
+                  {formatDate(item.orderedDate)}
+                  { item.suspendUntil
+                    ? <span>,&nbsp;<FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
+                    : ''
+                  }
+                  </td>
                 <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
                 <td>
                   <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
@@ -202,8 +208,8 @@ class UserLoans extends React.Component {
                     disabled={this.props.isRequestingChangeReservationSuspension !== false}
                     data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
               {item.suspended
-                ? <span className="btn-icon"><i className="icon-play" aria-hidden="true"></i><FormattedMessage {...messages.resumeReservation} /></span>
-                : <span className="btn-icon"><i className="icon-pause" aria-hidden="true"></i><FormattedMessage {...messages.suspendReservation} /></span>}
+                ? <span className="btn-icon"><i className="icon-play" aria-hidden="true" /><FormattedMessage {...messages.resumeReservation} /></span>
+                : <span className="btn-icon"><i className="icon-pause" aria-hidden="true" /><FormattedMessage {...messages.suspendReservation} /></span>}
             </button>
           </ClickableElement>
         )}
@@ -460,6 +466,11 @@ export const messages = defineMessages({
     id: 'UserLoans.resumeReservation',
     description: 'Text when button resumes the reservation',
     defaultMessage: 'Resume'
+  },
+  putOnHold: {
+    id: 'UserLoans.putOnHold',
+    description: 'Message that the reservation is put on hold',
+    defaultMessage: 'put on hold until'
   }
 })
 

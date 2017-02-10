@@ -4,6 +4,10 @@
 // ==========================================================================
 @import "../../node_modules/breakpoint-sass/stylesheets/breakpoint";
 
+// Import Datepicker styles
+// ==========================================================================
+@import "../../public/lib-css/react-datepicker";
+
 // Import Susy (local files in project) - Responsive grid system for Compass
 // ==========================================================================
 @import "../../node_modules/susy/sass/susy";
@@ -18,6 +22,7 @@
 // Import Helpers
 // ==========================================================================
 @import "helpers/helpers";
+
 
 // Import styles
 // ==========================================================================
