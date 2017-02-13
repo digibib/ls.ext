@@ -36,7 +36,7 @@ export const messages = defineMessages({
   labelWorkSerie: {
     id: 'WorkSerie.labelWorkSerie',
     description: 'Label for work serie',
-    defaultMessage: 'A part of serie'
+    defaultMessage: 'A part of series'
   }
 })
 
