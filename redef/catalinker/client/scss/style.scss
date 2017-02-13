@@ -342,7 +342,7 @@ body {
             //            width: 100%;
             background: lightgrey;
             content: "";
-            margin: 0px 12px 0px 12px;
+            margin: 0 12px 2px 12px;
             order: 1000;
           }
           &.last-one:not(first) {
@@ -385,6 +385,11 @@ body {
             padding: 0 15px;
             position: absolute;
             width: 340px;
+            &.fixed {
+              .support-panel-content:before {
+                display: none !important;
+              }
+            }
             .prop-search-result {
               height: 300px;
             }
@@ -407,6 +412,7 @@ body {
                 max-height: 450px;
                 overflow-y: auto;
                 border: 6px solid white;
+                margin-top: 8px;
               }
               .add-new-btn-row {
                 padding: 19px 0px 8px 8px;
@@ -418,6 +424,7 @@ body {
             }
           }
           .field {
+            min-height: 37px;
             .index-type-select {
               margin-bottom: 6px;
             }
@@ -982,6 +989,46 @@ body {
     }
     .grid-tabs {
       padding: 1em 0 0;
+    }
+    .close-comparant {
+      position: relative;
+      left: 98%;
+      min-height: 22px;
+      & + .inner-content {
+        margin-top: -22px;
+      }
+    }
+    .relations {
+      div.type {
+        background: $lightergray;
+        padding: 0 0 0 5px;
+      }
+      ul {
+        margin: 0px;
+        padding: 0;
+        list-style-type: none;
+        li {
+          ul {
+            li {
+              padding: 0 5px 0 10px;
+              &:nth-child(even) {
+                background: $lightestgray;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  #merge-authorities {
+    padding: 13px;
+    border: 2px solid lightgray;
+    margin-top: 10px;
+    background: cornsilk;
+    border-radius: 3px;
+    button {
+      margin-top: 20px;
+      float: right;
     }
   }
   .links {

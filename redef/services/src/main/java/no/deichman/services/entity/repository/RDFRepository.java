@@ -89,6 +89,8 @@ public interface RDFRepository {
 
     ResultSet retrieveAllNamesOfType(EntityType type);
 
+    ResultSet retriveResourceRelationships(XURI xuri);
+
     void mergeResource(XURI xuri, String replaceeUri);
 
 }

@@ -280,6 +280,7 @@
           case 'deichman:Instrument':
           case 'deichman:ClassificationSource':
           case 'deichman:WorkSeries' :
+          case 'deichman:Event' :
             // TODO infer from ontology that this is an URI
             // (because deichman:Work a rdfs:Class)
             input.datatype = "http://www.w3.org/2001/XMLSchema#anyURI";

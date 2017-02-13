@@ -418,6 +418,14 @@ public final class EntityResource extends ResourceBase {
         return ok().entity(getJsonldCreator().asJSONLD(model)).build();
     }
 
+    @GET
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/relations")
+    @Produces(JSON)
+    public Response retriveResourceParticipations(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+        return ok().entity(GSON.toJson(getEntityService().retrieveResourceRelationships(xuri))).build();
+    }
+
     @PUT
     @Consumes(JSON)
     @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/merge")

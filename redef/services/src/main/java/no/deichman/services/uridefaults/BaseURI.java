@@ -22,6 +22,10 @@ public final class BaseURI {
         return BASE_URI_ROOT + "ontology#";
     }
 
+    public static String role() {
+        return BASE_URI_ROOT + "role#";
+    }
+
     public static String ontology(String thing) {
         return BASE_URI_ROOT + "ontology#" + thing;
     }

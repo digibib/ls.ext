@@ -1,0 +1,57 @@
+<div class="content"
+     data-automation-id="targetresources-uris"
+     data-work-uri="{{targetUri.Work}}"
+     data-publication-uri="{{targetUri.Publication}}"
+     data-person-uri="{{targetUri.Person}}"
+     as-clickOutsideSupportPanelDetector
+     as-unload >
+    <h2 data-automation-id="page-heading" >{{currentTaskDescription}}</h2 >
+    <div class="grid-input" >
+        <div class="pure-g" style="height: 0px;" >
+            <div class="pure-u-1-2" id="left-dummy-panel" />
+            <div class="pure-u-1-2" id="right-dummy-panel" />
+        </div >
+        <div class="grid-content tab-content">
+            {{#if compare}}
+            <a class="close-comparant" title="Lukk" on-click="closeCompare:{{rdfType}}">×</a>
+            {{/if}}
+            <div class="inner-content" >
+                {{#each applicationData.inputsForDomainType[rdfType]:inputIndex}}
+                {{>input {editAuthorityMode:inputIndex==0}}}{{#if compare}}{{>input {compareMode:true}}}{{/if}}
+                {{#if (type === 'input-boolean') && !(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) &&
+                (checkShouldInclude(.))}}
+                <span class="prop-input boolean-separator pure-u-1-2 {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}" >
+                    <span class="panel-part boolean-separator pure-u-1-1" > </span >
+                 </span >
+                {{/if}}
+                {{/each}}
+            </div >
+        </div >
+        {{#compare}}
+        <div class="pure-u-1">
+            <div class="pure-g" id="merge-authorities">
+                <div class="pure-u-1-24"><span class="ui-icon ui-icon-alert "></span></div>
+                    <div class="pure-u-23-24">
+                    Hvis du velger å slå sammen disse to autoritetene til én, flyttes alle relasjonene som autoriteten til <b>høyre</b> inngår i
+                    over til den <b>venstre</b> autoriteten. Informasjonen i feltene til den <b>venstre</b> autoriteten beholdes,
+                    mens informasjonen i feltene til <b>høyre</b> slettes. Pass derfor på at all ønskelig informasjon fra den til <b>høyre</b>
+                    er overført til den til <b>venstre</b> før du slår dem sammen.
+                    <button
+                            tabindex="-1"
+                            class="pure-button pure-button-primary next-step-button"
+                            title="Slå sammen disse to autoritetene"
+                            on-click="mergeResources:{{targetUri[rdfType]}},{{targetUri['compare_with_' + rdfType]}}">Slå sammen disse to autoritetene
+                    </button>
+                    </div>
+                </div>
+        </div>
+        {{/}}
+    </div >
+</div >
+<div class="footer" >
+    <div id="errors" >{{#errors}}<p >{{.}}</p >{{/errors}}</div >
+    <div id="save-stat" >{{save_status}}</div >
+</div >
+<span style="display: none">
+ {{>merge-resources-dialog}}
+</span>

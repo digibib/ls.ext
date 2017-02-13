@@ -1,0 +1,41 @@
+<div class="relations pure-u-1" as-relations="./uri">
+{{#if ./relations}}
+    <ul >
+        {{#each ./relations}}
+        <div class="type">
+            <span class="type-label pure-u-11-12">{{applicationData.predefVals[relationshipType]}}</span>
+            <a class="toggle-show-sub-items"
+               on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
+               on-enter="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
+            >{{#toggleSubItem}}&#x25B2;{{else}}&#x25BC;{{/toggleSubItem}}</a>
+        </div>
+        {{#toggleSubItem}}
+        <li >
+            <ul >
+                {{#each relationships}}
+                <li >
+                    {{#if config.search[config.rdfTypeToIndexType[targetType]].linkFromUri}}
+                    <a class="pure-u-1-1"
+                       href="{{getLinkfromUri({uri: .targetUri}, config.search[config.rdfTypeToIndexType[targetType]].linkFromUri)}}"
+                       target="_blank"
+                       title="{{config.search[targetType].linkFromUri.toolTip}}">
+                        {{getSearchResultItemLabel(., config.relationTargetLabels[targetType])}}
+                        {{#targetType}}<span class="work-type" >({{config.translations[targetType].indet}})</span >{{/}}
+                    </a >
+                    {{else}}
+                    <span class="pure-u-1-1" >
+                        {{getSearchResultItemLabel(., config.relationTargetLabels[targetType])}}
+                        {{#targetType}}<span class="work-type" >({{config.translations[targetType].indet}})</span >{{/}}
+                    </span >
+                    {{/if}}
+                </li >
+                {{/each}}
+            </ul >
+        </li >
+        {{/toggleSubItem}}
+        {{/each}}
+    </ul >
+{{else}}
+    <div>Ingen relasjoner</div>
+{{/if}}
+</div >

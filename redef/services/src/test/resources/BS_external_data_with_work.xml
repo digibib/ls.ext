@@ -209,7 +209,7 @@
             <subfield code="t">En julefortelling</subfield>
             <subfield code="u">julefortelling</subfield>
         </datafield>
-        <!-- should result in a basedOn relation -->
+        <!-- should result in a basedOn relationshipType -->
         <datafield tag="700" ind1=" " ind2=" ">
             <subfield code="a">Tom Clancford</subfield>
             <subfield code="d">1808-1899</subfield>
@@ -263,11 +263,11 @@
         <datafield tag="740" ind1=" " ind2="2">
             <subfield code="a">Part title</subfield>
         </datafield>
-        <!-- should result in relationship to a work that follows this-->
+        <!-- should result in relationshipType to a work that follows this-->
         <datafield tag="780" ind1=" " ind2="2">
             <subfield code="t">Next</subfield>
         </datafield>
-        <!-- should result in relationship to a work that precedes this-->
+        <!-- should result in relationshipType to a work that precedes this-->
         <datafield tag="785" ind1=" " ind2="2">
             <subfield code="t">Previous</subfield>
         </datafield>

@@ -82,7 +82,7 @@ public class SearchServiceImpl implements SearchService {
             ontology("mainTitle")
     };
     public static final Resource MAIN_ENTRY = createResource(ontology("MainEntry"));
-    public static final int SILENT_PERIOD = 100000;
+    public static final int SILENT_PERIOD = 1000000;
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
