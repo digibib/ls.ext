@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import MetaItem from '../../MetaItem'
 
-const Key = ({ key, intl }) => {
-  if (key) {
+const Key = ({ keys, intl }) => {
+  if (keys.length > 0) {
     return (
       <MetaItem label={messages.labelKey} data-automation-id="work_key">
-        {intl.formatMessage({ id: key })}
+        {keys.map(key => intl.formatMessage({ id: key })).join(', ')}
       </MetaItem>
     )
   } else {

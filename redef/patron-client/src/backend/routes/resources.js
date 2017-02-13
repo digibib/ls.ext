@@ -170,7 +170,8 @@ function transformWork (input) {
       subtitle: input.subtitle,
       subjects: input.subjects,
       uri: input.id,
-      countryOfOrigin: input.nationality ? input.nationality.id : undefined
+      countryOfOrigin: input.nationality ? input.nationality.id : undefined,
+      keys: input.key
     }
     const publicationWithImage = work.publications.find(publication => publication.image)
     if (publicationWithImage) {
