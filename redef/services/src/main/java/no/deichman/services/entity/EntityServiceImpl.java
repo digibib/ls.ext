@@ -722,8 +722,13 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public void mergeResource(XURI xuri, String replaceeUri) {
+    public void mergeResource(XURI xuri, XURI replaceeUri) {
         repository.mergeResource(xuri, replaceeUri);
+    }
+
+    @Override
+    public void removeFromLocalIndex(XURI xuri) {
+        getNameIndexer(xuri.getTypeAsEntityType()).removeUri(xuri.getUri());
     }
 
     private boolean isAboutRelevantType(Statement s, Model model, XURI xuri) {

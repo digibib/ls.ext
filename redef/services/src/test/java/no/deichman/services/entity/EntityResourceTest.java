@@ -530,7 +530,7 @@ public class EntityResourceTest {
                 RDFModelUtil.modelFrom(person2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
         );
 
-        entityResource = new EntityResource(new EntityServiceImpl(repo, null), null, null);
+        entityResource = new EntityResource(new EntityServiceImpl(repo, null), mockSearchService, null);
 
         String body = "{\"replacee\": \"" + replacee + "\"}";
 
@@ -543,32 +543,30 @@ public class EntityResourceTest {
     public void should_throw_bad_request_due_to_wrong_uri() throws Exception {
         String replacee = "http://data.deichman.no/person/h1";
         XURI replacement = new XURI("http://data.deichman.no/person/h2");
-        entityResource = new EntityResource(new EntityServiceImpl(new InMemoryRepository(), null), null, null);
+        entityResource = new EntityResource(new EntityServiceImpl(new InMemoryRepository(), null), mockSearchService, null);
         String body = "{\"replacee\": \"" + replacee + "\"}";
         Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
         assertEquals(404, result.getStatus());
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void should_throw_bad_request_due_to_badly_formatted_request_body() throws Exception {
         String replacee = "http://data.deichman.no/person/h1";
         XURI replacement = new XURI("http://data.deichman.no/person/h2");
         String turtleData = new ResourceReader().readFile("merging_persons_replacement_person.ttl").replace("__REPLACE__", replacement.getUri());
 
-        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), null, null);
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), mockSearchService, null);
         String body = "{\"replacea\": \"" + replacee + "\"}";
-        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
-        assertEquals(400, result.getStatus());
+        entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void should_throw_bad_request_due_to_badly_formatted_uri_in_request_body() throws Exception {
         String replacee = "http://data.deichman.no/person/h1";
         XURI replacement = new XURI("http://data.deichman.no/person/h2");
         String turtleData = new ResourceReader().readFile("merging_persons_replacee_person.ttl").replace("__REPLACE__", replacement.getUri());
-        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), null, null);
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), mockSearchService, null);
         String body = "{\"replacee\": \"\"}";
-        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
-        assertEquals(400, result.getStatus());
+        entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
     }
 }

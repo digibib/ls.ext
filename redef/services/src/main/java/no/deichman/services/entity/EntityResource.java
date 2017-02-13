@@ -30,6 +30,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -430,47 +431,29 @@ public final class EntityResource extends ResourceBase {
     @Consumes(JSON)
     @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/merge")
     public Response mergeNodes(@PathParam("type") String type, @PathParam("id") String id, String jsonReplacee) throws Exception {
-        Response.Status responseStatus = Response.Status.NO_CONTENT;
-        String replacee = null;
-        XURI xuri = new XURI(BaseURI.root(), type, id);
-        if (!getEntityService().resourceExists(xuri)) {
+        XURI outgoing;
+        XURI staying = new XURI(BaseURI.root(), type, id);
+        if (!getEntityService().resourceExists(staying)) {
             throw new NotFoundException();
         }
 
         try {
-            Replacee replaceeData = new Gson().fromJson(jsonReplacee, Replacee.class);
-            replacee = replaceeData.getReplacee();
+            Replacee replaceeData = GSON.fromJson(jsonReplacee, Replacee.class);
+            outgoing = replaceeData.getReplacee();
         } catch (Exception exception) {
-            responseStatus = Response.Status.BAD_REQUEST;
+            throw new BadRequestException();
         }
 
-        if (!validateURI(replacee)) {
-            responseStatus = Response.Status.BAD_REQUEST;
-        }
-
-        if (responseStatus == Response.Status.NO_CONTENT) {
+        if (!staying.equals(outgoing)) {
             try {
-                getEntityService().mergeResource(xuri, replacee);
-            } catch (Exception exception) {
-                responseStatus = Response.Status.BAD_REQUEST;
+                getEntityService().mergeResource(staying, outgoing);
+                getEntityService().removeFromLocalIndex(outgoing);
+                getSearchService().delete(outgoing);
+            } catch (Exception e) {
+                throw new InternalServerErrorException(e);
             }
         }
-        Response.ResponseBuilder response = Response.status(responseStatus);
-        return response.build();
-    }
 
-    private boolean validateURI(String httpUri) {
-        boolean returnValue;
-
-        try {
-            if (new URI(httpUri).getScheme().equals("http")) {
-                returnValue = true;
-            } else {
-                returnValue = false;
-            }
-        } catch (Exception exception) {
-            returnValue = false;
-        }
-        return returnValue;
+        return Response.noContent().build();
     }
 }

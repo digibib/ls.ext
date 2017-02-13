@@ -676,7 +676,7 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-    public String mergeNodes(XURI xuri, String replaceeURI) {
+    public String mergeNodes(XURI xuri, XURI replaceeURI) {
         String queryString = format("INSERT {\n"
                 + "  ?subj ?prop <%2$s> .\n"
                 + "} WHERE {\n"

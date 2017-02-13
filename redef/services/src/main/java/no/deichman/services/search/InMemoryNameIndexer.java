@@ -14,15 +14,21 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
+import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Collections.emptySet;
 
 /**
  * Responsibility: holds an alphabetical list of things with names.
  */
 public class InMemoryNameIndexer implements NameIndexer {
     private LinkedList<NameEntry> alphabeticalList;
+    private Map<String, Set<String>> uriToNameList;
     private Collator coll;
     private static final String SORTING_RULES = ""
             + ", '.' < a, á, à, ã, ä, A, Á, À, Ã, Ä < b, B < c, C < ð, Ð < d, D < e, é, è, ê, ë, E, É, È, Ê, Ë < f, F "
@@ -44,6 +50,7 @@ public class InMemoryNameIndexer implements NameIndexer {
         }
         coll.setStrength(Collator.PRIMARY);
         alphabeticalList = newLinkedList();
+        uriToNameList = newHashMap();
     }
 
     public InMemoryNameIndexer(Reader reader) {
@@ -54,6 +61,7 @@ public class InMemoryNameIndexer implements NameIndexer {
             String uri = e.getAsJsonObject().getAsJsonObject("uri").get("value").getAsString();
             String name = e.getAsJsonObject().getAsJsonObject("name").get("value").getAsString();
             alphabeticalList.add(new NameEntry(uri, name));
+            rememberUriToName(uri, name);
         });
         sort();
     }
@@ -65,6 +73,7 @@ public class InMemoryNameIndexer implements NameIndexer {
             String uri = binding.get(Var.alloc("uri")).getURI();
             String name = binding.get(Var.alloc("name")).getLiteral().toString();
             alphabeticalList.add(new NameEntry(uri, name));
+            rememberUriToName(uri, name);
         }
         sort();
     }
@@ -166,6 +175,7 @@ public class InMemoryNameIndexer implements NameIndexer {
         } else {
             found.add(nameEntry);
         }
+        rememberUriToName(uri, name);
     }
 
     @Override
@@ -174,6 +184,7 @@ public class InMemoryNameIndexer implements NameIndexer {
         ListIterator<NameEntry> found = findNamed(name);
         while (found.hasNext() && found.next().equals(nameEntry)) {
             found.remove();
+            uriToNameList.get(uri).remove(name);
         }
     }
 
@@ -195,5 +206,20 @@ public class InMemoryNameIndexer implements NameIndexer {
     @Override
     public final int size() {
         return alphabeticalList.size();
+    }
+
+    @Override
+    public final void removeUri(String uri) {
+        uriToNameList.getOrDefault(uri, emptySet()).forEach(name -> removeNamedItem(name, uri));
+    }
+
+    private void rememberUriToName(String uri, String name) {
+        Set<String> namesForUri = uriToNameList.get(uri);
+        if (namesForUri == null) {
+            namesForUri = newHashSet(name);
+            uriToNameList.put(uri, namesForUri);
+        } else {
+            namesForUri.add(name);
+        }
     }
 }
