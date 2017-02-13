@@ -295,7 +295,8 @@
     },
     "hasCompositionType": {
       "@id": "deichman:hasCompositionType",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
     "hasClassificationNumber": {
       "@id": "deichman:hasClassificationNumber"

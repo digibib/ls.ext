@@ -147,7 +147,7 @@ function transformWork (input) {
       biographies: input.biographies,
       by: transformBy(contributors),
       classifications: transformClassifications(input.classifications),
-      compositionType: transformCompositionType(input.compositionType),
+      compositionTypes: transformCompositionType(input.hasCompositionType),
       contentAdaptations: input.contentAdaptations,
       contributors: contributors,
       workRelations: workRelations,
