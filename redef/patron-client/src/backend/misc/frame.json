@@ -70,7 +70,12 @@
     },
     "hasNumberOfPerformers": {
       "@id": "deichman:hasNumberOfPerformers",
-      "@type": "xsd:nonNegativeInteger"
+      "@type": "xsd:integer"
+    },
+    "hasInstrumentation": {
+      "@id": "deichman:hasInstrumentation",
+      "@type": "@id",
+      "@container": "@set"
     },
     "hasInstrument": {
       "@id": "deichman:hasInstrument",

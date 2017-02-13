@@ -157,7 +157,7 @@ function transformWork (input) {
       genres: input.genres,
       hasSummary: input.hasSummary,
       id: getId(input.id),
-      instruments: transformInstruments(input.hasInstrument),
+      instrumentations: transformInstrumentation(input.hasInstrumentation),
       items: [],
       languages: input.languages,
       literaryForms: input.literaryForms,
@@ -341,9 +341,14 @@ function transformCompositionType (hasCompositionType = []) {
   }
 }
 
-function transformInstruments (hasInstrument = []) {
+function transformInstrumentation (instrumentation = []) {
   try {
-    return hasInstrument.map(instrument => instrument.hasInstrument.prefLabel)
+    return instrumentation.map(i => {
+      return {
+        instrument: i.hasInstrument.prefLabel,
+        number: i.hasNumberOfPerformers
+      }
+    })
   } catch (error) {
     console.log(error)
     return []
