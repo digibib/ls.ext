@@ -282,7 +282,7 @@ export default {
   'UserLoans.pending': '(Kommer snart)',
   'UserLoans.pickupLocation': 'Hentested',
   'UserLoans.pickupNumber': 'Hentenummer',
-  'UserLoans.placeInQueue': 'Køplass',
+  'UserLoans.placeInQueue': 'Køplass/Antatt ventetid',
   'UserLoans.postponeReservation': 'Utsett reservering',
   'UserLoans.postponeReservationOK': 'OK',
   'UserLoans.publicationYear': 'Utgivelsesår',

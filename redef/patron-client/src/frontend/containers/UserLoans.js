@@ -89,7 +89,7 @@ class UserLoans extends React.Component {
                     : <FormattedMessage {...messages.enRoute} />}</span>
                   <span>&nbsp;</span>
                    <span
-                   data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
+                   data-automation-id="UserLoans_reservation_waitingPeriod">{item.queuePlace > 0 ? this.renderWaitingPeriod(item.expected) : ''}</span>
                 </td>
                 <td>
                   {this.renderResumeSuspendReservationButton(item)}
@@ -149,7 +149,7 @@ class UserLoans extends React.Component {
                       : <FormattedMessage {...messages.enRoute} />}</span>
                      <span>&nbsp;</span>
                      <span
-                     data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span>
+                     data-automation-id="UserLoans_reservation_waitingPeriod">{item.queuePlace > 0 ? this.renderWaitingPeriod(item.expected) : ''}</span>
                   </div>
                 </div>
                 <div className="meta-item">
@@ -432,7 +432,7 @@ export const messages = defineMessages({
   placeInQueue: {
     id: 'UserLoans.placeInQueue',
     description: 'The header over a reservations\' place in holds queue',
-    defaultMessage: 'Place in queue'
+    defaultMessage: 'Place in queue/Estimated wait'
   },
   unknown: {
     id: 'UserLoans.unknown',
