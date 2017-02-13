@@ -28,6 +28,7 @@ export default {
   'Classifications.labelClassifications': 'Klassifikasjon',
   'CompositionTypes.labelCompositionTypes': 'Komposisjonstype',
   'ContentAdaptations.labelContentAdaptations': 'Tilrettelagt innhold',
+  'CountryOfOrigin.labelCountryOfOrigin': 'Opprinnelsesland',
   'DeweyNumber.labelDeweyNumber': 'Deweynr.',
   'Duration.duration': 'Spilletid',
   'Ean.ean': 'EAN',

@@ -169,7 +169,8 @@ function transformWork (input) {
       serials: transformSerials(input),
       subtitle: input.subtitle,
       subjects: input.subjects,
-      uri: input.id
+      uri: input.id,
+      countryOfOrigin: input.nationality ? input.nationality.id : undefined
     }
     const publicationWithImage = work.publications.find(publication => publication.image)
     if (publicationWithImage) {
