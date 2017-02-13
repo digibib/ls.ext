@@ -308,8 +308,11 @@
             text: 'Fortsett',
             click: function () {
               console.log('Merging ' + sourceUri + ' into ' + targetUri)
-              closeCompare(typeFromUri(targetUri))
-              $(this).dialog('close')
+              const dlg = $(this);
+              axios.put(`${proxyToServices(targetUri)}/merge`, { replacee: sourceUri }).then(function () {
+                closeCompare(typeFromUri(targetUri))
+                dlg.dialog('close')
+              })
             }
           },
           {
@@ -1352,7 +1355,7 @@
       var inputMap = {}
       var inputsForDomainType = {}
       applicationData.predefinedValues = {}
-      applicationData.predefVals = {}
+      applicationData.allLabels = {}
       applicationData.propertyLabels = {}
       var predefinedValues = []
       for (var i = 0; i < props.length; i++) {
@@ -1689,9 +1692,12 @@
           if (predefinedValue) {
             applicationData.predefinedValues [ unPrefix(predefinedValue.property) ] = predefinedValue.values
             _.each(predefinedValue.values, function (predefVal) {
-              applicationData.predefVals[predefVal['@id']] = i18nLabelValue(predefVal.label)
+              applicationData.allLabels[ predefVal[ '@id' ] ] = i18nLabelValue(predefVal.label)
             })
           }
+        })
+        _.each(_.pairs(applicationData.propertyLabels), function (pair) {
+          applicationData.allLabels[ `http://data.deichman.no/ontology#${pair[0]}` ] = pair[1]
         })
         return applicationData
       })

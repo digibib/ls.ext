@@ -3,7 +3,7 @@
     <ul >
         {{#each ./relations}}
         <div class="type">
-            <span class="type-label pure-u-11-12">{{applicationData.predefVals[relationshipType]}}</span>
+            <span class="type-label pure-u-11-12">{{applicationData.allLabels[relationshipType]}}</span>
             <a class="toggle-show-sub-items"
                on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
                on-enter="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
