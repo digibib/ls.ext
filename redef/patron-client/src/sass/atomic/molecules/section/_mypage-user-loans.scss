@@ -12,10 +12,12 @@
   input {
     margin-top: rhythm(1);
     margin-bottom: rhythm(1);
+    max-width: 13em;
+    max-height: 3em;
   }
 
   .postpone-aside {
-    width: 55%;
+    width: 50%;
     /*position: relative;
     top: rhythm(1.5);*/
   }
@@ -146,6 +148,10 @@
   .meta-content {
     @include span(12);
     margin-bottom: rhythm(2);
+  }
+
+  .feedback {
+    color: $redColor;
   }
 
 }
