@@ -37,8 +37,8 @@ function getWaitPeriod (queuePlace, items) {
   }
 
   const floor = Math.floor(estimate)
-  const ceiling = (floor === estimate) ? Math.ceil(estimate) + 1 : Math.ceil(estimate)
-  const watingPeriod = (floor < 12) ? `${floor}–${ceiling}` : '12'
+  const ceiling = (floor === estimate) ? Math.ceil(estimate) + 2 : Math.ceil(estimate)
+  const watingPeriod = (floor < 11) ? `${floor}–${ceiling}` : '10'
 
   return watingPeriod
 }
@@ -91,7 +91,7 @@ function getEstimatedPeriod (queuePlace, items) {
 }
 
 function estimateLinear (offset, queuePlace, loanWeeks) {
-  const queue = (offset < loanWeeks) ? queuePlace - 1 : queuePlace
+  const queue = (offset <= loanWeeks) ? (queuePlace - 1) : queuePlace
   return offset + (loanWeeks * (queue))
 }
 
