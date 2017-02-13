@@ -142,7 +142,8 @@ module.exports = (app) => {
         waitingPeriod: waitingPeriod,
         pickupNumber: hold.pickupnumber,
         queuePlace: hold.priority,
-        suspended: hold.suspend === '1'
+        suspended: hold.suspend === '1',
+        suspendUntil: hold.suspend_until
       }
     })
   }

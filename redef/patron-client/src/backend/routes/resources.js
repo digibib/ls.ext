@@ -289,6 +289,7 @@ function transformWorkSeries (input) {
       workSeries.uri = workSeries.id
       workSeries.id = getId(workSeries.id)
       workSeries.relativeUri = relativeUri(workSeries.uri)
+      workSeries.numberInSeries = input.partNumber
       return workSeries
     }
     return {}

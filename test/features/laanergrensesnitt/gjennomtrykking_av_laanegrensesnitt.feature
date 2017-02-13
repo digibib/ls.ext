@@ -158,7 +158,7 @@ Egenskap: Gå gjennom lånegrensesnittet
     Så skal jeg se reservasjonen
     Og det skal ikke være bøker klare til avhenting eller i historikk
     Når jeg finner strekkoden for et ledig eksemplar
-    Og jeg er på den opprettede filialen
+    Og jeg er på lånerens hjemmefilial
     Og jeg leverer inn eksemplaret
     Når jeg går til Min Side
     Så skal jeg se at boka er klar til å hentes

@@ -96,6 +96,7 @@
     "contributor": "http://data.deichman.no/role#contributor",
     "coreographer": "http://data.deichman.no/role#coreographer",
     "publisher": "http://data.deichman.no/role#publisher",
+    "producer": "http://data.deichman.no/role#producer",
     "recordId": "deichman:recordId",
     "agents": "deichman:agents",
     "summary": "deichman:summary",

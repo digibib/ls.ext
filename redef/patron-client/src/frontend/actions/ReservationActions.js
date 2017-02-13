@@ -1,4 +1,6 @@
 import fetch from 'isomorphic-fetch'
+import moment from 'moment'
+
 import * as types from '../constants/ActionTypes'
 import { requireLoginBeforeAction } from './LoginActions'
 import { showModal } from './ModalActions'
@@ -44,22 +46,39 @@ export const changePickupLocationSuccess = (reserveId, branchCode) => action(typ
 
 export const changePickupLocationFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
 
-export function changeReservationSuspension (reserveId, suspended) {
+export function suspendReservation (reserveId, suspended) {
+  return dispatch => {
+    if (suspended) {
+      return dispatch(showModal(ModalComponents.POSTPONE_RESERVATION, { isSuccess: true, reserveId: reserveId, suspended: suspended }))
+    }
+    return dispatch(changeReservationSuspension(reserveId, suspended))
+  }
+}
+
+export function changeReservationSuspension (reserveId, suspended, date) {
+  let suspendUntil
+
+  if (date) {
+    suspendUntil = moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD')
+  } else {
+    suspendUntil = null
+  }
+
   const url = '/api/v1/holds/'
   return dispatch => {
-    dispatch(requestChangeReservationSuspension(reserveId, suspended))
+    dispatch(requestChangeReservationSuspension(reserveId, suspended, suspendUntil))
     return fetch(url, {
       method: 'PATCH',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ reserveId, suspended })
+      body: JSON.stringify({ reserveId, suspended, suspendUntil })
     })
       .then(response => {
         if (response.status === 200) {
           setTimeout(() => {
-            dispatch(changeReservationSuspensionSuccess(reserveId, suspended))
+            dispatch(changeReservationSuspensionSuccess(reserveId, suspended, suspendUntil))
           }, 500)
         } else {
           throw Error(Errors.reservation.GENERIC_CHANGE_RESERVATION_SUSPENSION_ERROR)
@@ -69,14 +88,16 @@ export function changeReservationSuspension (reserveId, suspended) {
   }
 }
 
-export const requestChangeReservationSuspension = (reserveId, suspended) => action(types.REQUEST_CHANGE_RESERVATION_SUSPENSION, {
+export const requestChangeReservationSuspension = (reserveId, suspended, suspendUntil) => action(types.REQUEST_CHANGE_RESERVATION_SUSPENSION, {
   reserveId,
-  suspended
+  suspended,
+  suspendUntil
 })
 
-export const changeReservationSuspensionSuccess = (reserveId, suspended) => action(types.CHANGE_RESERVATION_SUSPENSION_SUCCESS, {
+export const changeReservationSuspensionSuccess = (reserveId, suspended, suspendUntil) => action(types.CHANGE_RESERVATION_SUSPENSION_SUCCESS, {
   reserveId,
-  suspended
+  suspended,
+  suspendUntil
 })
 
 export const changeReservationSuspensionFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
@@ -179,7 +200,6 @@ export function cancelReservationSuccess (reserveId) {
 }
 
 export function cancelReservationFailure (error, reserveId) {
-  console.log(error)
   return dispatch => {
     dispatch(showModal(ModalComponents.CANCEL_RESERVATION, {
       isError: true,

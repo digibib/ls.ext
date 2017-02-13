@@ -254,6 +254,9 @@
     "coreographer": {
       "type": "string"
     },
+    "producer": {
+      "type": "string"
+    },
     "mainEntryName": {
       "type": "string"
     },

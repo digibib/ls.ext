@@ -1,3 +1,39 @@
+.postpone-reserve {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: rhythm(2);
+
+  label {
+    display: block;
+  }
+
+  input {
+    margin-top: rhythm(1);
+    margin-bottom: rhythm(1);
+  }
+
+  .postpone-aside {
+    width: 55%;
+    /*position: relative;
+    top: rhythm(1.5);*/
+  }
+
+  .date-picker-button {
+    position: absolute;
+    font-size: 2em;
+    top: -2.1em;
+    right: -6em;
+  }
+
+  .feedback {
+    position: absolute;
+    font-size: 0.7em;
+    color: red;
+  }
+}
+
 .pickup, .reserve, .registered {
   @include span(12);
   @include container;

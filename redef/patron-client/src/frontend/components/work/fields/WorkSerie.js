@@ -13,7 +13,9 @@ const WorkSerie = ({ workserie }) => {
         <Link
           data-automation-id="work_series_link"
           to={fieldQueryLink('serie', workserie.mainTitle)}>
-          {title(workserie)}
+          { workserie.numberInSeries
+            ? `${title(workserie)} (${workserie.numberInSeries})`
+            : title(workserie)}
         </Link>
       </MetaItem>
     )
@@ -34,7 +36,7 @@ export const messages = defineMessages({
   labelWorkSerie: {
     id: 'WorkSerie.labelWorkSerie',
     description: 'Label for work serie',
-    defaultMessage: 'A part of serie'
+    defaultMessage: 'A part of series'
   }
 })
 
