@@ -78,7 +78,7 @@ class UserLoans extends React.Component {
                 <td data-automation-id="UserLoans_reservation_orderedDate">
                   {formatDate(item.orderedDate)}
                   { item.suspendUntil
-                    ? <span>,&nbsp;<FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
+                    ? <span className="feedback">&nbsp;&nbsp;<FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
                     : ''
                   }
                   </td>
@@ -204,12 +204,12 @@ class UserLoans extends React.Component {
           : (
           <ClickableElement onClickAction={this.props.reservationActions.suspendReservation}
                             onClickArguments={[ item.reserveId, !item.suspended ]}>
-            <button className={item.suspended ? 'red-btn' : 'black-btn'}
+            <button className={item.suspended ? 'black-btn' : 'black-btn'}
                     disabled={this.props.isRequestingChangeReservationSuspension !== false}
                     data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
               {item.suspended
-                ? <span className="btn-icon"><i className="icon-play" aria-hidden="true" /><FormattedMessage {...messages.resumeReservation} /></span>
-                : <span className="btn-icon"><i className="icon-pause" aria-hidden="true" /><FormattedMessage {...messages.suspendReservation} /></span>}
+                ? <span><span className="btn-icon"><i className="icon-play" aria-hidden="true" /></span><FormattedMessage {...messages.resumeReservation} /></span>
+                : <span><span className="btn-icon"><i className="icon-pause" aria-hidden="true" /></span><FormattedMessage {...messages.suspendReservation} /></span>}
             </button>
           </ClickableElement>
         )}
@@ -470,7 +470,7 @@ export const messages = defineMessages({
   putOnHold: {
     id: 'UserLoans.putOnHold',
     description: 'Message that the reservation is put on hold',
-    defaultMessage: 'put on hold until'
+    defaultMessage: 'Put on hold until'
   }
 })
 
