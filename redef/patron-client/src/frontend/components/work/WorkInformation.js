@@ -9,6 +9,7 @@ import Contributors from './fields/Contributors'
 import OriginalLanguage from './fields/OriginalLanguage'
 import OriginalTitle from './fields/OriginalTitle'
 import LiteraryForms from './fields/LiteraryForms'
+import CountryOfOrigin from './fields/CountryOfOrigin'
 import Title from './fields/Title'
 import title from '../../utils/title'
 
@@ -27,6 +28,7 @@ const WorkInformation = ({ work, publicationId, showAdditionalInformation, toggl
       <OriginalTitle mainTitle={work.mainTitle} subtitle={work.subtitle} partNumber={work.partNumber}
                      partTitle={work.partTitle} />
       <OriginalLanguage languages={work.languages} />
+      <CountryOfOrigin country={work.countryOfOrigin} />
       <Year year={work.publicationYear} />
       <LiteraryForms literaryForms={work.literaryForms} />
       <Contributors contributors={work.contributors} />
