@@ -14,6 +14,7 @@ module.exports = (app) => {
       if (['PUT', 'PATCH', 'DELETE'].indexOf(rsp.req.method) !== -1) {
         apicache.clear(req.originalUrl)
         apicache.clear(req.originalUrl + '/references')
+        apicache.clear(req.originalUrl + '/relations')
         console.log(`clearing ${req.originalUrl}`)
       }
       callback(null, data)

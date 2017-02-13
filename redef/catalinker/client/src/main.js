@@ -297,6 +297,31 @@
       })
     }
 
+    var mergeResources = function (mergeResourcesSpec, targetUri, sourceUri) {
+      $('#merge-resources-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        title: 'Slå sammen autoriteter',
+        buttons: [
+          {
+            text: 'Fortsett',
+            click: function () {
+              console.log('Merging ' + sourceUri + ' into ' + targetUri)
+              closeCompare(typeFromUri(targetUri))
+              $(this).dialog('close')
+            }
+          },
+          {
+            text: 'Avbryt',
+            click: function () {
+              $(this).dialog('close')
+            }
+          }
+        ]
+      })
+    }
+
     var alertAboutExistingResource = function (spec, existingResources, proceed) {
       ractive.set('existingResourcesDialog.existingResources', existingResources)
       ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural.replace('${numberOfResources}', existingResources.length) : spec.legendSingular)
@@ -400,22 +425,26 @@
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
             return value.id
           })
-        if (!input.values[ index ]) {
-          input.values[ index ] = {}
+        if (options.compareValues) {
+          input.compareValues = input.compareValues || emptyValues()
         }
-        input.values[ index ].old = {
+        let valuesKey = options.compareValues ? 'compareValues' : 'values'
+        if (!input[ valuesKey ][ index ]) {
+          input[ valuesKey ][ index ] = {}
+        }
+        input[ valuesKey ][ index ].old = {
           value: valuesAsArray
         }
-        input.values[ index ].current = {
+        input[ valuesKey ][ index ].current = {
           value: valuesAsArray,
           uniqueId: _.uniqueId()
         }
-        input.values[ index ].uniqueId = _.uniqueId()
+        input[ valuesKey ][ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
-          input.values[ index ].suggested = { source: options.source }
+          input[ valuesKey ][ index ].suggested = { source: options.source }
           input.suggestedValues = valuesAsArray
         } else if (options.source) {
-          input.values[ index ].current.accepted = { source: options.source }
+          input[ valuesKey ][ index ].current.accepted = { source: options.source }
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
         ractive.update(`${input.keypath}.values.${index}`)
@@ -425,8 +454,11 @@
 
     function setSingleValue (value, input, index, options) {
       options = options || {}
+      if (options.compareValues) {
+        input.compareValues = input.compareValues || emptyValues()
+      }
       if (value) {
-        input.values[ index ] = {
+        input[ options.compareValues ? 'compareValues' : 'values' ][ index ] = {
           old: options.keepOld ? input.values[ index ].old : {
               value: value.value,
               lang: value.lang
@@ -963,7 +995,7 @@
                       }
                     } else if (input.type === 'select-predefined-value') {
                       if (!options.onlyValueSuggestions) {
-                        setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                        setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                         if (input.isSubInput && !options.source) {
                           input.values[ rootIndex + (offset) ].nonEditable = true
                           ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
@@ -992,7 +1024,7 @@
                         setIdValue(value.id, input, 0)
                       })
                     } else {
-                      _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { value: '' } ]), function (value, index) {
+                      _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
                         if (!options.onlyValueSuggestions) {
                           let valueIndex = input.isSubInput ? rootIndex : index
                           setSingleValue(value, input, (valueIndex) + (offset), options)
@@ -1027,9 +1059,11 @@
           ractive.update()
         }
         if (!(options.keepDocumentUrl)) {
-          ractive.set(`targetUri.${type}`, resourceUri)
           ractive.set('save_status', 'åpnet eksisterende ressurs')
-          updateBrowserLocationWithUri(type, resourceUri)
+          if (!(options || {}).compareValues) {
+            ractive.set(`targetUri.${type}`, resourceUri)
+          }
+          updateBrowserLocationWithUri((options.compareValues ? 'compare_with_' : '') + type, resourceUri)
         }
       })
     }
@@ -1044,7 +1078,7 @@
       )
         .then(function (response) {
             updateInputsForResource(response, resourceUri, options)
-            ractive.set(`targetUri.${typeFromUri(resourceUri)}`, resourceUri)
+            ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
           }
         )
         .catch(function (err) {
@@ -1316,7 +1350,9 @@
       var props = Ontology.allProps(applicationData.ontology)
       var inputs = []
       var inputMap = {}
+      var inputsForDomainType = {}
       applicationData.predefinedValues = {}
+      applicationData.predefVals = {}
       applicationData.propertyLabels = {}
       var predefinedValues = []
       for (var i = 0; i < props.length; i++) {
@@ -1354,7 +1390,8 @@
             domain: domain,
             allowAddNewButton: false,
             values: emptyValues(predefined),
-            dataAutomationId: unPrefix(domain) + '_' + predicate + '_0'
+            dataAutomationId: unPrefix(domain) + '_' + predicate + '_0',
+            visible: true
           }
 
           if (input.predefined) {
@@ -1365,6 +1402,8 @@
           }
           inputs.push(input)
           inputMap[ unPrefix(domain) + '.' + input.predicate ] = input
+          inputsForDomainType[ unPrefix(domain) ] = inputsForDomainType[ unPrefix(domain) ] || []
+          inputsForDomainType[ unPrefix(domain) ].push(input)
         })
       }
       var inputGroups = []
@@ -1610,12 +1649,48 @@
       applicationData.inputGroups = inputGroups
       applicationData.inputs = inputs
       applicationData.inputMap = inputMap
+
+      _.each(_.values(inputsForDomainType), function (inputs) {
+        markFirstAndLastInputsInGroup({ inputs: inputs })
+      })
+      applicationData.inputsForDomainType = inputsForDomainType
       applicationData.maintenanceInputs = createInputsForGroup(applicationData.config.authorityMaintenance[ 0 ])
       markFirstAndLastInputsInGroup({ inputs: applicationData.maintenanceInputs })
+
+      var searchIndexForType = {}
+      var maintenanceForms = _.chain(applicationData.maintenanceInputs)
+        .pluck('widgetOptions').pluck('enableEditResource').compact().pluck('forms').value()
+
+      _.each(maintenanceForms, function (form) {
+        var formContent = _.chain(form).pairs().first().value()
+        var inputOrderMap = {}
+        var readonlyness = {}
+        _.each(formContent[ 1 ].inputs, function (input, index) {
+          inputOrderMap[ input.predicate ] = index
+          if (input.readOnly) {
+            readonlyness[ input.predicate ] = true
+          }
+        })
+        var type = formContent[ 1 ].rdfType
+        inputsForDomainType[ type ] = inputsForDomainType[ type ].sort(function (a, b) {
+          return (inputOrderMap[ a.predicate ]) - (inputOrderMap[ b.predicate ])
+        })
+        _.each(inputsForDomainType [ type ], function (input) {
+          if (readonlyness[ input.predicate ]) {
+            input.readOnly = true
+          }
+        })
+        searchIndexForType[ formContent[ 1 ].rdfType ] = formContent[ 0 ]
+        applicationData.searchIndexForType = searchIndexForType
+      })
+
       return axios.all(predefinedValues).then(function (values) {
         _.each(values, function (predefinedValue) {
           if (predefinedValue) {
-            applicationData.predefinedValues[ unPrefix(predefinedValue.property) ] = predefinedValue.values
+            applicationData.predefinedValues [ unPrefix(predefinedValue.property) ] = predefinedValue.values
+            _.each(predefinedValue.values, function (predefVal) {
+              applicationData.predefVals[predefVal['@id']] = i18nLabelValue(predefVal.label)
+            })
           }
         })
         return applicationData
@@ -1643,9 +1718,14 @@
         $('span.support-panel').each(function (index, panel) {
           var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
           var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
+          var offset = 15
+          if (supportPanelBase.length == 0) {
+            supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}]`)
+            offset = 0
+          }
           if (supportPanelBase.length > 0) {
             $(panel).css({
-              top: _.last(_.flatten([ supportPanelBase ])).position().top - 15,
+              top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,
               left: supportPanelLeftEdge,
               width: supportPanelWidth
             })
@@ -2000,6 +2080,10 @@
     }
 
     function showTurtle (uri) {
+      const openTabTargets = {
+        publication: 1,
+        work: 2
+      }
       $('#block').click(closePreview).fadeIn()
       $('#close-preview-button').click(closePreview)
       $('#iframecontainer iframe').hide()
@@ -2013,7 +2097,7 @@
                 return match === '<' ? '&lt;' : '&gt;'
               })
               .replace(/&lt;http:\/\/data\.deichman\.no\/(work|publication)\/(w|p)([a-f0-9]+)&gt;/g, function (all, type, shortType, resourceId) {
-                return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
+                return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}&openTab=${openTabTargets[ type ]}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
               }))
             $('#loader').fadeOut(function () {
               $('#rdf-content').fadeIn()
@@ -2021,6 +2105,19 @@
           }
         })
       })
+    }
+
+    function closeCompare (type) {
+      ractive.set('compare', null)
+      ractive.set('duplicateSearchTerm', undefined)
+      const currentSearchResultKeypath = ractive.get('currentSearchResultKeypath')
+      if (currentSearchResultKeypath) {
+        ractive.set(currentSearchResultKeypath, undefined)
+      }
+      setTaskDescription(`edit${type}`)
+      updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
+      $('.inner-content').addClass('dummy_' + _.uniqueId())
+      positionSupportPanels()
     }
 
     function inputHasAcceptedSuggestions (targetInput, inputIndex) {
@@ -2086,7 +2183,7 @@
       init: function (options) {
         options = options || {}
         let query = URI.parseQuery(URI.parse(document.location.href).query)
-        let template = '/templates/' + (query.template || options.template || 'menu') + '.html'
+        let template = '/templates/' + (options.template || query.template || 'menu') + '.html'
         var partials = [
           'input',
           'input-string',
@@ -2099,6 +2196,7 @@
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
+          'support-for-edit-authority',
           'searchable-authority-dropdown',
           'searchable-for-value-suggestions',
           'suggested-values',
@@ -2110,6 +2208,7 @@
           'suggestor-for-input-literal',
           'select-predefined-value',
           'work',
+          'relations',
           'publication',
           'delete-publication-dialog',
           'delete-work-dialog',
@@ -2117,6 +2216,7 @@
           'confirm-enable-special-input-dialog',
           'alert-existing-resource-dialog',
           'additional-suggestions-dialog',
+          'merge-resources-dialog',
           'accordion-header-for-collection',
           'readonly-input',
           'readonly-input-string',
@@ -2430,6 +2530,7 @@
           }
           var repositionSupportPanel = function (node) {
             Main.repositionSupportPanelsHorizontally()
+            positionSupportPanels()
             return {
               teardown: function () {}
             }
@@ -2531,6 +2632,12 @@
               teardown: function () {}
             }
           }
+          var disabled = function (node) {
+            $(node).find('input,select').prop('disabled', true)
+            return {
+              teardown: function () {}
+            }
+          }
           var formatter = function (node, formatter) {
             if (formatter === 'isbn') {
               $(node).on('input', function () {
@@ -2548,6 +2655,19 @@
                 }
               })
             }
+            return {
+              teardown: function () {}
+            }
+          }
+          var relations = function (node, uri) {
+            const keypath = Ractive.getNodeInfo(node).keypath
+            ractive.set(`${keypath}.relations`, null)
+            let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
+            uri = uri || ractive.get(`targetUri.${type}`)
+            axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
+              ractive.set(`${keypath}.relations`, response.data)
+            })
+
             return {
               teardown: function () {}
             }
@@ -2575,8 +2695,9 @@
             template: applicationData.template,
             computed: {
               firstAndLastVisibleInputs: function () {
-                var result = []
-                forAllGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+                let result = []
+
+                const handleInput = function (input, groupIndex, inputIndex, subInputIndex) {
                   result[ groupIndex ] = result[ groupIndex ] || { first: 100, last: 0 }
                   let showIt = (input.visible && checkShouldInclude(input) && !(typeof ractive.get('targetUri.' + input.showOnlyWhenEmpty) !== 'undefined'))
                   if (showIt && inputIndex < result[ groupIndex ].first) {
@@ -2586,7 +2707,15 @@
                     result[ groupIndex ].last = inputIndex
                   }
                   return false
-                }, { handleInputGroups: true })
+                }
+
+                _.each(_.values(ractive.get('applicationData.inputsForDomainType')), function (inputs, groupIndex) {
+                  _.each(inputs, function (input, inputIndex) {
+                    handleInput(input, groupIndex + 100, inputIndex)
+                    ractive.set(`applicationData.domainInputGroupIndex.${unPrefix(input.domain)}`, groupIndex + 100)
+                  })
+                })
+                forAllGroupInputs(handleInput, { handleInputGroups: true })
                 return result
               }
             },
@@ -2600,6 +2729,11 @@
               config: applicationData.config,
               save_status: 'ny ressurs',
               authorityLabels: {},
+              compare: false,
+              compareValues: {},
+              values: function (node) {
+                debugger
+              },
               headlinePart: function (headlinePart) {
                 return {
                   value: headlinePart.predefinedValue
@@ -2765,7 +2899,9 @@
               pasteSanitizer: pasteSanitizer,
               formatter: formatter,
               searchable: searchable,
-              tabIndex: tabIndex
+              tabIndex: tabIndex,
+              disabled: disabled,
+              relations: relations,
             },
             partials: applicationData.partials,
             transitions: {
@@ -2924,8 +3060,12 @@
                 if (preAction) {
                   preAction()
                 }
-                let initOptions = { presetValues: {}, task: editWith.descriptionKey }
-                updateBrowserLocationWithTemplate(editWith.template)
+                uri = uri || ractive.get(`targetUri.${event.context.rdfType}`)
+                let initOptions = {
+                  presetValues: {},
+                  task: editWith.descriptionKey || `edit${event.context.rdfType}`,
+                  template: editWith.template
+                }
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
                   if (input.type === 'hidden-url-query-value' &&
@@ -2940,6 +3080,7 @@
                   updateBrowserLocationWithTab(1)
                 }
                 Main.init(initOptions)
+//                updateBrowserLocationWithTemplate(editWith.template)
               },
               focusNextItem: function (event) {
                 let nextItemId = $(event.node).attr('data-next-sel-item')
@@ -2988,15 +3129,25 @@
                 }
               },
               selectFirstVisibleSearchResultItem: function (event) {
+                let searchResultBoxPosition = $("#search-result").position()
                 let searchResultItem = _.find($('.search-result-item'), function (item) {
-                  return $(item).position().top > 0
+                  return $(item).position().top > searchResultBoxPosition.top
                 })
                 if (searchResultItem) {
                   searchResultItem.focus()
                 }
               },
               selectSearchableItem: function (event, context, origin, displayValue, options) {
+                ractive.set('currentSearchResultKeypath', grandParentOf(event.keypath))
                 options = options || {}
+                if (options.loadResourceForCompare) {
+                  var queryArg = {}
+                  const type = typeFromUri(context.uri)
+                  queryArg[ `compare_with_${type}` ] = context.uri
+                  loadOtherResource(queryArg)
+                  setTaskDescription(`compare${type}`)
+                  return
+                }
                 ractive.set(origin + '.searchResult', null)
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
@@ -3553,6 +3704,12 @@
                   targetUrl += `&hasWorkType=${query.hasWorkType}`
                 }
                 showOverlay(targetUrl)
+              },
+              closeCompare: function (event, type) {
+                closeCompare(type)
+              },
+              mergeResources: function (event, targetUri, sourceUri) {
+                mergeResources(event.context, targetUri, sourceUri)
               }
             }
           )
@@ -3848,6 +4005,58 @@
           return applicationData
         }
 
+        function loadWork (query, tab) {
+          fetchExistingResource(query.Work)
+            .then(function () {
+              ractive.set('targetUri.Work', query.Work)
+              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '2') })
+            })
+        }
+
+        function loadPublication (query, tab) {
+          fetchExistingResource(query.Publication)
+            .then(loadWorkOfPublication)
+            .then(function () {
+              ractive.set('targetUri.Publication', query.Publication)
+              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
+            })
+        }
+
+        function loadOtherResource (query, tab) {
+          _.each([
+            {
+              qualifier: '',
+              main: true
+            },
+            {
+              qualifier: 'compare_with_',
+              main: false,
+              compare: true
+            }
+          ], function (qualifierSpec) {
+            const desiredType = _.find(_.pluck(ractive.get('config.inputForms'), 'rdfType'), function (type) {return query[ qualifierSpec.qualifier + type ] && !ractive.get(`targetUri.${query[ qualifierSpec.qualifier + type ]}`)})
+            if (desiredType) {
+              fetchExistingResource(query[ qualifierSpec.qualifier + desiredType ], {
+                inputs: ractive.get(`applicationData.inputsForDomainType.${desiredType}`),
+                overrideMainEntry: true,
+                compareValues: qualifierSpec.compare
+              })
+                .then(function () {
+                  if (qualifierSpec.main) {
+                    ractive.set(`targetUri.${desiredType}`, query[ desiredType ])
+                    ractive.set('rdfType', desiredType)
+                    ractive.set('groupIndex', ractive.get(`applicationData.domainInputGroupIndex.${desiredType}`))
+                  }
+                  if (qualifierSpec.compare) {
+                    ractive.set('compare', true)
+                  }
+                })
+            } else {
+              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '0') })
+            }
+          })
+        }
+
         var loadResourceOfQuery = function (applicationData) {
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           var tab = query.openTab
@@ -3888,20 +4097,11 @@
             }
           }
           if (query.Publication && !ractive.get(`targetUri.${query.Publication}`)) {
-            fetchExistingResource(query.Publication)
-              .then(loadWorkOfPublication)
-              .then(function () {
-                ractive.set('targetUri.Publication', query.Publication)
-                ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
-              })
+            loadPublication(query, tab)
           } else if (query.Work && !ractive.get(`targetUri.${query.Work}`)) {
-            fetchExistingResource(query.Work)
-              .then(function () {
-                ractive.set('targetUri.Work', query.Work)
-                ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '2') })
-              })
+            loadWork(query, tab)
           } else {
-            ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '0') })
+            loadOtherResource(query, tab)
           }
           return applicationData
         }
@@ -4125,6 +4325,9 @@
           .then(setDisplayMode)
           .then(function (applicationData) {
             setTaskDescription(options.task)
+            if (options.template) {
+              updateBrowserLocationWithTemplate(options.template)
+            }
             $(document).keyup(function (e) {
               if (e.keyCode === 27) {
                 closePreview()

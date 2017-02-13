@@ -57,7 +57,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.stream;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
 import static no.deichman.services.search.SearchServiceImpl.LOCAL_INDEX_SEARCH_FIELDS;
 import static no.deichman.services.uridefaults.BaseURI.ontology;
@@ -687,6 +689,36 @@ public final class EntityServiceImpl implements EntityService {
                         && isAboutRelevantType(s, indexModel, xuri));
             }
         });
+    }
+
+    @Override
+    public List<RelationshipGroup> retrieveResourceRelationships(final XURI uri) {
+        List<RelationshipGroup> relationships = newArrayList();
+        ResultSet resultSet = repository.retriveResourceRelationships(uri);
+        final String[] currentRelationshipLabel = {null};
+        final RelationshipGroup[] currentGroup = new RelationshipGroup[1];
+        resultSet.forEachRemaining(querySolution -> {
+            Relationship relationship = new Relationship();
+            relationship.setRelationshipType(querySolution.getResource("relation"));
+            relationship.setMainTitle(querySolution.getLiteral("mainTitle").getString());
+            ofNullable(querySolution.getLiteral("subtitle")).ifPresent(relationship::setSubtitle);
+            ofNullable(querySolution.getLiteral("partTitle")).ifPresent(relationship::setPartTitle);
+            ofNullable(querySolution.getLiteral("partNumber")).ifPresent(relationship::setPartNumber);
+            ofNullable(querySolution.getLiteral("publicationYear")).ifPresent(relationship::setPublicationYear);
+            ofNullable(querySolution.getLiteral("prefLabel")).ifPresent(relationship::setPrefLabel);
+            ofNullable(querySolution.getLiteral("alternativeName")).ifPresent(relationship::setAlternativeName);
+            ofNullable(querySolution.getResource("type")).ifPresent(relationship::setTargetType);
+            ofNullable(querySolution.getResource("targetUri")).ifPresent(relationship::setTargetUri);
+
+            if (currentGroup[0] == null || currentRelationshipLabel[0] == null || !currentRelationshipLabel[0].equals(relationship.getRelationshipType())) {
+                currentRelationshipLabel[0] = relationship.getRelationshipType();
+                currentGroup[0] = new RelationshipGroup(relationship.getRelationshipType(), relationship);
+                relationships.add(currentGroup[0]);
+            } else {
+                currentGroup[0].add(relationship);
+            }
+        });
+        return relationships;
     }
 
     @Override

@@ -419,6 +419,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final ResultSet retriveResourceRelationships(XURI xuri) {
+        log.debug("retrieving all participations for uri: " + xuri.getUri());
+        try (QueryExecution qexec = getQueryExecution(sqb.retriveResourcerelationships(xuri))) {
+            disableCompression(qexec);
+            return ResultSetFactory.copyResults(qexec.execSelect());
+        }
+    }
+
+    @Override
     public final void mergeResource(XURI xuri, String replaceeURI) {
         log.debug("Replacing instances of <" + replaceeURI + "> with <" + xuri + ">");
         UpdateRequest updateRequest = UpdateFactory.create(sqb.mergeNodes(xuri, replaceeURI));
