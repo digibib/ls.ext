@@ -1423,6 +1423,7 @@
       var inputMap = {}
       var inputsForDomainType = {}
       applicationData.predefinedValues = {}
+      applicationData.predefVals = {}
       applicationData.allLabels = {}
       applicationData.propertyLabels = {}
       var predefinedValues = []
@@ -2744,6 +2745,19 @@
             axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
               ractive.set(`${keypath}.relations`, response.data)
             })
+
+            return {
+              teardown: function () {}
+            }
+          }
+          var relations = function (node, uri) {
+            const keypath = Ractive.getNodeInfo(node).keypath
+            ractive.set(`${keypath}.relations`, null)
+            let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
+            uri = uri || ractive.get(`targetUri.${type}`)
+            axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
+              ractive.set(`${keypath}.relations`, response.data)
+            })
             return {
               teardown: function () {}
             }
@@ -3249,6 +3263,7 @@
                 }
               },
               selectSearchableItem: function (event, context, origin, displayValue, options) {
+                ractive.set('currentSearchResultKeypath', grandParentOf(event.keypath))
                 options = options || {}
                 if (options.loadResourceForCompare) {
                   var queryArg = {}
