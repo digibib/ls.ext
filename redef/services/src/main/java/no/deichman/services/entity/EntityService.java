@@ -61,5 +61,7 @@ public interface EntityService {
 
     StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates);
 
-    void mergeResource(XURI xuri, String replaceeUri);
+    void mergeResource(XURI xuri, XURI replaceeUri);
+
+    void removeFromLocalIndex(XURI xuri);
 }

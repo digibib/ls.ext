@@ -1,5 +1,7 @@
 package no.deichman.services.entity;
 
+import no.deichman.services.uridefaults.XURI;
+
 /**
  * Responsibility: hold replacement data.
  */
@@ -8,7 +10,7 @@ public class Replacee {
 
     public Replacee() {}
 
-    public String getReplacee() {
-        return replacee;
+    public XURI getReplacee() throws Exception {
+        return new XURI(replacee);
     }
 }

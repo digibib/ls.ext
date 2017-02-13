@@ -18,4 +18,6 @@ public interface NameIndexer {
     boolean isEmpty();
 
     int size();
+
+    void removeUri(String uri);
 }

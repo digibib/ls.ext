@@ -2116,13 +2116,14 @@
     function closeCompare (type) {
       ractive.set('compare', null)
       ractive.set('duplicateSearchTerm', undefined)
+      setTaskDescription(`edit${type}`)
+      updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
+      // hack to make things not look uncool
+      $('.inner-content').addClass('dummy_' + _.uniqueId())
       const currentSearchResultKeypath = ractive.get('currentSearchResultKeypath')
       if (currentSearchResultKeypath) {
         ractive.set(currentSearchResultKeypath, undefined)
       }
-      setTaskDescription(`edit${type}`)
-      updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
-      $('.inner-content').addClass('dummy_' + _.uniqueId())
       positionSupportPanels()
     }
 
@@ -2671,7 +2672,9 @@
             let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
             uri = uri || ractive.get(`targetUri.${type}`)
             axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
-              ractive.set(`${keypath}.relations`, response.data)
+              setTimeout(function () {
+                ractive.set(`${keypath}.relations`, response.data)
+              })
             })
 
             return {

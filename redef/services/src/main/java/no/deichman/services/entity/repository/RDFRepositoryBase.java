@@ -428,7 +428,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final void mergeResource(XURI xuri, String replaceeURI) {
+    public final void mergeResource(XURI xuri, XURI replaceeURI) {
         log.debug("Replacing instances of <" + replaceeURI + "> with <" + xuri + ">");
         UpdateRequest updateRequest = UpdateFactory.create(sqb.mergeNodes(xuri, replaceeURI));
         executeUpdate(updateRequest);

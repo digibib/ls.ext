@@ -91,6 +91,6 @@ public interface RDFRepository {
 
     ResultSet retriveResourceRelationships(XURI xuri);
 
-    void mergeResource(XURI xuri, String replaceeUri);
+    void mergeResource(XURI xuri, XURI replaceeUri);
 
 }
