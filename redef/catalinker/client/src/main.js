@@ -1697,7 +1697,7 @@
           }
         })
         _.each(_.pairs(applicationData.propertyLabels), function (pair) {
-          applicationData.allLabels[ `http://data.deichman.no/ontology#${pair[0]}` ] = pair[1]
+          applicationData.allLabels[ `http://data.deichman.no/ontology#${pair[ 0 ]}` ] = pair[ 1 ]
         })
         return applicationData
       })
@@ -2120,10 +2120,6 @@
       updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
       // hack to make things not look uncool
       $('.inner-content').addClass('dummy_' + _.uniqueId())
-      const currentSearchResultKeypath = ractive.get('currentSearchResultKeypath')
-      if (currentSearchResultKeypath) {
-        ractive.set(currentSearchResultKeypath, undefined)
-      }
       positionSupportPanels()
     }
 
@@ -2620,11 +2616,8 @@
             let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
             uri = uri || ractive.get(`targetUri.${type}`)
             axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
-              setTimeout(function () {
-                ractive.set(`${keypath}.relations`, response.data)
-              })
+              ractive.set(`${keypath}.relations`, response.data)
             })
-
             return {
               teardown: function () {}
             }
@@ -3108,7 +3101,6 @@
                 }
               },
               selectSearchableItem: function (event, context, origin, displayValue, options) {
-                ractive.set('currentSearchResultKeypath', grandParentOf(event.keypath))
                 options = options || {}
                 if (options.loadResourceForCompare) {
                   var queryArg = {}
@@ -3116,6 +3108,7 @@
                   queryArg[ `compare_with_${type}` ] = context.uri
                   loadOtherResource(queryArg)
                   setTaskDescription(`compare${type}`)
+                  ractive.set(grandParentOf(event.keypath), undefined)
                   return
                 }
                 ractive.set(origin + '.searchResult', null)
