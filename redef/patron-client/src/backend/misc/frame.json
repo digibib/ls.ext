@@ -311,7 +311,8 @@
     },
     "key": {
       "@id": "deichman:inKey",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
     "place": {
       "@id": "deichman:place",
