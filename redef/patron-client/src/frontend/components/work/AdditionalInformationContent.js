@@ -6,7 +6,7 @@ import DeweyNumber from './fields/DeweyNumber'
 import Subjects from './fields/Subjects'
 import Genres from './fields/Genres'
 import Classifications from './fields/Classifications'
-import Instruments from './fields/Instruments'
+import Instrumentations from './fields/Instrumentations'
 import Biographies from './fields/Biographies'
 import CountryOfOrigin from './fields/CountryOfOrigin'
 import CompositionTypes from './fields/CompositionTypes'
@@ -36,7 +36,7 @@ const AdditionalInformationContent = ({ work }) => (
       <Keys keys={work.keys} />
       <DeweyNumber deweyNumber={work.deweyNumber} />
       <Classifications classifications={work.classifications} />
-      <Instruments instruments={work.instruments} />
+      <Instrumentations instrumentations={work.instrumentations} />
       <Biographies biographies={work.biographies} />
       <FictionNonfiction fictionNonfiction={work.fictionNonfiction} />
       <Subjects subjects={work.subjects} />

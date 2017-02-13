@@ -15,7 +15,7 @@ const Key = ({ keys, intl }) => {
 }
 
 Key.propTypes = {
-  key: PropTypes.string,
+  keys: PropTypes.string,
   intl: intlShape.isRequired
 }
 

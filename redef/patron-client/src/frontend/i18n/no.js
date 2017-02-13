@@ -45,7 +45,7 @@ export default {
   'FormatAdaptations.labelFormatAdaptations': 'Tilpasning',
   'Formats.labelFormats': 'Formater',
   'Genres.genre': 'Sjanger:',
-  'Instruments.labelInstruments': 'Instrumenter',
+  'Instrumentations.labelInstrumentations': 'Besetning',
   'Isbn.isbn': 'ISBN',
   'Items.barcode': 'strekkode',
   'Items.count': 'antall',
