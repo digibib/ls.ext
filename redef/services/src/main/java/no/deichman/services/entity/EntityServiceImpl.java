@@ -67,9 +67,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  * Responsibility: TODO.
  */
 public final class EntityServiceImpl implements EntityService {
-    public static final int LENGTH = 100;
     private final Logger log = LoggerFactory.getLogger(EntityServiceImpl.class);
-
 
     public static final Integer THREE = 3;
 

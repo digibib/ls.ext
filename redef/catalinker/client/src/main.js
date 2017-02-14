@@ -1752,6 +1752,11 @@
       var inputkeyPath = grandParentOf(event.keypath)
       var config = ractive.get('config')
       var searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/_search`
+
+      function transformQueryString (queryTerm) {
+        return queryTerm.matchAndTransformQuery ? searchString.replace(new RegExp(queryTerm.matchAndTransformQuery.regExp), queryTerm.matchAndTransformQuery.replacement) : searchString
+      }
+
       if (!searchString) {
         if (ractive.get(event.keypath + '.searchResult.')) {
           ractive.set(event.keypath + '.searchResult.', null)
@@ -1806,13 +1811,20 @@
             filterArg = undefined
           }
 
-          var matchBody = {}
+          var matchBody
           _.each(config.search[ indexType ].queryTerms, function (queryTerm) {
             let fieldAndTerm = {}
-            fieldAndTerm[ queryTerm.field ] = searchString
-            matchBody = {
-              query: {
-                match_phrase_prefix: fieldAndTerm
+            if ((!queryTerm.onlyIfNotMatching || !(new RegExp(queryTerm.onlyIfNotMatching).test(searchString))) &&
+              (!queryTerm.onlyIfMatching || new RegExp(queryTerm.onlyIfMatching).test(searchString))) {
+              const transformedQuery = transformQueryString(queryTerm)
+              console.dir(transformedQuery)
+              fieldAndTerm[ queryTerm.field ] = transformedQuery
+              matchBody = {
+                query: queryTerm.wildcard ? {
+                    match_phrase_prefix: fieldAndTerm
+                  } : {
+                    match: fieldAndTerm
+                  }
               }
             }
           })
@@ -1834,10 +1846,12 @@
           searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
         } else {
           axiosMethod = axios.get
-          var query = isAdvancedQuery(searchString) ? searchString : _.map(config.search[ indexType ].queryTerms, function (queryTerm) {
+          var query = isAdvancedQuery(searchString) ? searchString : _.compact(_.map(config.search[ indexType ].queryTerms, function (queryTerm) {
               var wildCardPostfix = queryTerm.wildcard ? '*' : ''
-              return `${queryTerm.field}:${searchString}${wildCardPostfix}`
-            }).join(' OR ')
+              if (!queryTerm.onlyIfMatching || new RegExp(queryTerm.onlyIfMatching).test(searchString)) {
+                return `${queryTerm.field}:${transformQueryString(queryTerm)}${wildCardPostfix}`
+              }
+            })).join(' OR ')
           searchBody = {
             size: 100,
             params: {
@@ -1967,7 +1981,9 @@
     }
 
     let closePreview = function () {
-      $('#iframecontainer').hide()
+      $('#iframecontainer').hide().find('iframe').hide().attr('src', null)
+      $('#iframecontainer iframe').hide()
+      $('#rdf-content').hide().html(null)
       $('#block').fadeOut()
     }
 
@@ -1981,7 +1997,35 @@
       })
     }
 
-    function inputHasAcceptedSuggestions (targetInput, inputIndex) {
+  function showTurtle (uri) {
+    const openTabTargets = {
+      publication: 1,
+      work: 2
+    }
+    $('#block').click(closePreview).fadeIn()
+    $('#close-preview-button').click(closePreview)
+    $('#iframecontainer iframe').hide()
+    $('#iframecontainer').fadeIn(function () {
+      $.ajax({
+        type: 'get',
+        url: uri,
+        success: function (response) {
+          $('#rdf-content').html(response
+            .replace(/[<>]/g, function (match) {
+              return match === '<' ? '&lt;' : '&gt;'
+            })
+            .replace(/&lt;http:\/\/data\.deichman\.no\/(work|publication)\/(w|p)([a-f0-9]+)&gt;/g, function (all, type, shortType, resourceId) {
+              return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}&openTab=${openTabTargets[type]}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
+            }))
+          $('#loader').fadeOut(function () {
+            $('#rdf-content').fadeIn()
+          })
+        }
+      })
+    })
+  }
+
+  function inputHasAcceptedSuggestions (targetInput, inputIndex) {
       return (!targetInput.isSubInput || ((targetInput.parentInput.hasAcceptedSuggestions || [])[ inputIndex ]))
     }
 
@@ -3460,7 +3504,7 @@
                 enableSpecialInput(event.context)
               },
               showRdf: function (event, resourceUri) {
-                showOverlay(proxyToServices(resourceUri) + '?format=TURTLE')
+                showTurtle(proxyToServices(resourceUri) + '?format=TURTLE')
               },
               showReport: function (event, resourceUri) {
                 let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`

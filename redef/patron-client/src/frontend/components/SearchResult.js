@@ -7,6 +7,7 @@ import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
 import {groupByBranch} from '../utils/sorting'
+import fieldQueryLink from '../utils/link'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -33,7 +34,7 @@ class SearchResult extends React.Component {
           <span key={contribution.agent.relativeUri}>
             {/* <strong>{this.props.intl.formatMessage({ id: contribution.role })}</strong> */}
             <strong>Av</strong>
-            <Link to={this.agentSearchLink(contribution.agent.name)}> {contribution.agent.name} </Link>
+            <Link to={fieldQueryLink('aktør', contribution.agent.name)}> {contribution.agent.name} </Link>
           </span>
         ))}
         </p>
@@ -64,22 +65,6 @@ class SearchResult extends React.Component {
     }
   }
 
-  subjectSearchLink (subject) {
-    return `/search?query=subject%3A${subject}`
-  }
-
-  genreSearchLink (genre) {
-    return `/search?query=genre%3A${genre}`
-  }
-
-  seriesSearchLink (series) {
-    return `/search?query=series%3A${series}`
-  }
-
-  agentSearchLink (agent) {
-    return `/search?query=agents%3A"${agent}"`
-  }
-
   renderSubjects (result) {
     if (result.subject) {
       return (
@@ -88,7 +73,7 @@ class SearchResult extends React.Component {
           {result.subject.map((subject, i) => (
             <span key={subject}>
                 <Link
-                  to={this.subjectSearchLink(subject)}
+                  to={fieldQueryLink('emne', subject)}
                   onClick={this.scrollToTop}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
                 </span>
           ))}
@@ -104,7 +89,7 @@ class SearchResult extends React.Component {
           <strong><FormattedMessage {...messages.genres} /></strong><br />
           {result.genre.map((genre, i) => (
             <span key={genre}>
-                <Link to={this.genreSearchLink(genre)}
+                <Link to={fieldQueryLink('sjanger', genre)}
                       onClick={this.scrollToTop}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
                 </span>
           ))}

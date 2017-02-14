@@ -298,7 +298,7 @@ duo:Biography a rdfs:Class ;
   rdfs:label "Subject"@en ;
   rdfs:label "Emne"@no ;
   rdfs:domain :Work ;
-  rdfs:range :Subject, :Person, :Work .
+  rdfs:range :Subject, :Person, :Place, :Work, :Corporation, :Event .
 
 # Todo: Endres til :hasYear
 :publicationYear a rdfs:Property ;

@@ -19,7 +19,7 @@
     },
     "uri": {
       "type": "string",
-      "index": "no"
+      "index": "not_analyzed"
     },
     "work": {
       "enabled": false

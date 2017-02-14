@@ -8,14 +8,16 @@ import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
-    aggregation: 'aggregation',
+    aggregation: 'language',
     filters: [
       { id: 'language_nob', bucket: 'http://lexvo.org/id/iso639-3/nob', count: '10', active: true },
       { id: 'language_eng', bucket: 'http://lexvo.org/id/iso639-3/eng', count: '40', active: false },
       { id: 'language_fin', bucket: 'http://lexvo.org/id/iso639-3/fin', count: '30', active: false },
       { id: 'language_swe', bucket: 'http://lexvo.org/id/iso639-3/swe', count: '20', active: true }
     ],
-    locationQuery: {},
+    locationQuery: {
+      'showFilter': ['language']
+    },
     toggleFilter: () => {},
     toggleFilterVisibility: () => {},
     toggleCollapseFilter: () => {},
@@ -51,7 +53,6 @@ describe('components', () => {
 
     it('should render filters', () => {
       const { node, props } = setup()
-      // TODO Uncomment count checks when the count received from elastic search is correct
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 0 ].id}']`).innerHTML).toContain('Norwegian')
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 1 ].id}']`).innerHTML).toContain('English')
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 2 ].id}']`).innerHTML).toContain('Finnish')

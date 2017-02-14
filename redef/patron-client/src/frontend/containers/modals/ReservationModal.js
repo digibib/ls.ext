@@ -66,7 +66,7 @@ class ReservationModal extends React.Component {
           <p>
             <FormattedMessage {...messages.choosePickupLocation} />
           </p>
-          <Libraries ref={e => this.librarySelect = e} libraries={this.props.libraries} />
+          <Libraries ref={e => this.librarySelect = e} libraries={this.props.libraries} selectedBranchCode={this.props.pickupLocation} />
           <br />
           <br />
           <button className="black-btn" data-automation-id="reserve_button"
@@ -92,7 +92,8 @@ ReservationModal.propTypes = {
   recordId: PropTypes.string.isRequired,
   isSuccess: PropTypes.bool,
   isError: PropTypes.bool,
-  message: PropTypes.string
+  message: PropTypes.string,
+  pickupLocation: PropTypes.string
 }
 
 export const messages = defineMessages({
@@ -147,7 +148,8 @@ function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
     isRequestingReservation: state.reservation.isRequestingReservation,
-    libraries: state.application.libraries
+    libraries: state.application.libraries,
+    pickupLocation: state.reservation.pickupLocation
   }
 }
 

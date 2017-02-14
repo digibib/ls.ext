@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import MetaItem from '../../MetaItem'
 import isEmpty from '../../../utils/emptyObject'
 import title from '../../../utils/title'
+import fieldQueryLink from '../../../utils/link'
 
 const WorkSerie = ({ workserie }) => {
   if (!isEmpty(workserie)) {
@@ -11,7 +12,7 @@ const WorkSerie = ({ workserie }) => {
       <MetaItem label={messages.labelWorkSerie} data-automation-id="work_work_serie">
         <Link
           data-automation-id="work_series_link"
-          to={`/search?query=series%3A"${workserie.mainTitle}"`}>
+          to={fieldQueryLink('serie', workserie.mainTitle)}>
           {title(workserie)}
         </Link>
       </MetaItem>

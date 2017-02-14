@@ -1,4 +1,4 @@
-import { replace } from 'react-router-redux'
+import { push, replace } from 'react-router-redux'
 
 export function toggleParameter (queryParamName, inputLocationQuery) {
   return (dispatch, getState) => {
@@ -10,7 +10,7 @@ export function toggleParameter (queryParamName, inputLocationQuery) {
     } else {
       locationQuery[ queryParamName ] = null // null enables the parameter
     }
-    return dispatch(replace({ pathname: pathname, query: locationQuery }))
+    return dispatch(push({ pathname: pathname, query: locationQuery }))
   }
 }
 
@@ -36,6 +36,24 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
         locationQuery[ queryParamName ] = queryParam
       }
     }
+    return dispatch(push({ pathname: pathname, query: locationQuery }))
+  }
+}
+
+export function ensureLanguageFilterOpen (inputLocationQuery) {
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    let queryParam = locationQuery[ 'showFilter' ] || []
+    if (!Array.isArray(queryParam)) {
+      queryParam = [ queryParam ]
+    }
+    if (queryParam.length > 0) {
+      // There are allready toggled filters, which means this is not an "initial query",
+      // but a refinement of existing query.
+      return
+    }
+    locationQuery[ 'showFilter' ] = ['language']
     return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
 }

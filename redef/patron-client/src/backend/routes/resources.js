@@ -13,39 +13,16 @@ module.exports = (app) => {
         if (res.status === 200) {
           return res.text()
         } else {
-          response.status(res.status).send(res.statusText)
-          throw Error()
+          return Promise.reject(`error fetching work ${request.params.workId}: ${res.statusText}`)
         }
-      }).then(ntdata => jsonld.fromRDF(ntdata, { format: 'application/nquads' }, (error, ntdoc) => {
-        if (error) {
-          response.status(500).send(error)
-        }
-
-        // Remove type -> Work relations on all works, except the work in focus, to avoid
-        // problems when work has subjects which themselves are works.
-        // TODO revise this hack - it might make it difficult to present the work relations on work page.
-        ntdoc = ntdoc.map(el => {
-          if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] !== `http://data.deichman.no/work/${request.params.workId}`) {
-            delete el[ '@type' ]
-          }
-          return el
-        })
-
-        jsonld.frame(ntdoc, frame, (error, framed) => {
-          if (error) {
-            response.status(500).send(error)
-          }
-          try {
-            response.status(200).send(transformWork(framed[ '@graph' ][ 0 ]))
-          } catch (error) {
-            response.status(500).send(error)
-          }
-        })
       })
-    ).catch(error => {
-      response.sendStatus(500)
-      console.log(error)
-    })
+      .then(ntdata => parseRDFtoJsonLD(ntdata, request.params.workId))
+      .then(ntdoc => frameJsonLD(ntdoc))
+      .then(work => response.status(200).send(work))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
   })
 
   app.get('/api/v1/resources/work/:workId/items', jsonParser, (request, response) => {
@@ -54,8 +31,7 @@ module.exports = (app) => {
         if (res.status === 200) {
           return res.json()
         } else {
-          response.status(res.status).send(res.statusText)
-          throw Error()
+          return Promise.reject(`error fetching items for work ${request.params.workId}: ${res.statusText}`)
         }
       }).then(json => Promise.all(json.recordIds.map(recordId => fetch(`http://xkoha:8081/api/v1/biblios/${recordId}/expanded`).then(res => {
         if (res.status === 200) {
@@ -117,8 +93,45 @@ module.exports = (app) => {
         response.sendStatus(500)
       })
     ).catch(error => {
-      response.sendStatus(500)
       console.log(error)
+      response.sendStatus(500)
+    })
+  })
+}
+
+function parseRDFtoJsonLD (ntdata, workId) {
+  return new Promise((resolve, reject) => {
+    jsonld.fromRDF(ntdata, { format: 'application/nquads' }, (error, ntdoc) => {
+      if (error) {
+        reject(error)
+      }
+      // Remove type -> Work relations on all works, except the work in focus, to avoid
+      // problems when work has subjects which themselves are works.
+      // TODO revise this hack - it might make it difficult to present the work relations on work page.
+      ntdoc = ntdoc.map(el => {
+        if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] !== `http://data.deichman.no/work/${workId}`) {
+          delete el[ '@type' ]
+        }
+        return el
+      })
+      resolve(ntdoc)
+    })
+  })
+}
+
+function frameJsonLD (ntdoc) {
+  return new Promise((resolve, reject) => {
+    jsonld.frame(ntdoc, frame, (error, framedJson) => {
+      if (error) {
+        reject(error)
+      }
+      try {
+        // error in transformWork will end up in Promise.catch and return 500
+        const work = transformWork(framedJson[ '@graph' ][ 0 ])
+        resolve(work)
+      } catch (error) {
+        reject(error)
+      }
     })
   })
 }
@@ -164,7 +177,7 @@ function transformWork (input) {
     }
     return work
   } catch (error) {
-    console.log(error)
+    throw new Error(error)
   }
 }
 

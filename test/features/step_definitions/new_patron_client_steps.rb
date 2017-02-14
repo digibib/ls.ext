@@ -40,6 +40,7 @@ end
 
 When(/^skal jeg se filtre på format, språk og målgruppe$/) do
   wait_retry { @browser.element(data_automation_id: 'filter_format').exists? }
+  @browser.element(data_automation_id: 'filter_format').button.click # Toggle format filter visibility
   wait_retry { @browser.element(data_automation_id: 'filter_language').exists? }
   wait_retry { @browser.element(data_automation_id: 'filter_audience').exists? }
 end
@@ -206,6 +207,22 @@ end
 
 When(/^jeg trykker for å bytte språk$/) do
   @site.PatronClientCommon.click_change_language
+end
+
+When(/^skal min hjemmeavdeling være forhåndsvalgt$/) do
+  # TODO: how to manage session in phantomjs?
+  step "jeg velger riktig avdeling"
+  #wait_for {
+  #  @site.PatronClientCommon.selected_library.eql?(@context[:koha].patrons[0]["branchcode"])
+  #}
+end
+
+When(/^skal min sist valgte henteavdeling være forhåndsvalgt$/) do
+  # TODO: how to manage session in phantomjs?
+  step "jeg velger riktig avdeling"
+  #wait_for {
+  #  @site.PatronClientCommon.selected_library.eql?(@context[:random_migrate_branchcode])
+  #}
 end
 
 When(/^jeg velger riktig avdeling$/) do

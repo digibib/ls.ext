@@ -330,6 +330,7 @@ module.exports = (app) => {
     return {
       borrowerNumber: patron.borrowernumber || '',
       cardNumber: patron.cardnumber || '',
+      homeBranch: patron.branchcode || '',
       name: `${patron.firstname} ${patron.surname}`,
       address: patron.address || '',
       zipcode: patron.zipcode || '',

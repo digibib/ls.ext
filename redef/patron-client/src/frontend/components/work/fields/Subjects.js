@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import { Link } from 'react-router'
+import fieldQueryLink from '../../../utils/link'
 
 class Subjects extends React.Component {
   renderLabel (subject) {
@@ -11,10 +12,6 @@ class Subjects extends React.Component {
     return label
   }
 
-  searchLink (subject) {
-    return `/search?query=subject%3A${subject}`
-  }
-
   render () {
     if (this.props.subjects.length > 0) {
       const subjects = this.props.subjects.map(subject => this.renderLabel(subject))
@@ -22,7 +19,7 @@ class Subjects extends React.Component {
         <aside className="work-subjects">
           <h2><FormattedMessage {...messages.subjects} /></h2>
           <ul data-automation-id="work_subjects">
-            {subjects.map(subject => <li key={subject}><Link to={this.searchLink(subject)}>{subject}</Link></li>)}
+            {subjects.map(subject => <li key={subject}><Link to={fieldQueryLink('emne', subject)}>{subject}</Link></li>)}
           </ul>
         </aside>
       )

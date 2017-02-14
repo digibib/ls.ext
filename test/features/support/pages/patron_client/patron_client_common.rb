@@ -67,4 +67,8 @@ class PatronClientCommon < PageRoot
   def registration_success_modal_visible?
     @browser.element(data_automation_id: 'registration_success_modal').exists?
   end
+
+  def selected_library
+    @browser.select_list(data_automation_id: 'libraries').value
+  end
 end

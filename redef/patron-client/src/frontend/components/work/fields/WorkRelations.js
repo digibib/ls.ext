@@ -1,6 +1,16 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import { injectIntl, intlShape } from 'react-intl'
+import title from '../../../utils/title'
+import mainContributorName from '../../../utils/mainContributorName'
+
+function relationLink (title, mainContributor) {
+  let link = title
+  if (mainContributor !== '') {
+    link += ` / ${mainContributor}`
+  }
+  return link
+}
 
 const WorkRelations = ({ workRelations, intl }) => {
   const order = [
@@ -31,7 +41,7 @@ const WorkRelations = ({ workRelations, intl }) => {
                 <Link
                   data-automation-id="work_relation_link"
                   to={relation.relativeUri}>
-                  {relation.mainTitle}
+                  {relationLink(title(relation), mainContributorName(relation.contributors))}
                 </Link>
               </span>
             )}

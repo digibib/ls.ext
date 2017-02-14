@@ -31,5 +31,5 @@ export function toggleAllFiltersVisibility () {
 }
 
 export function toggleCollapseFilter (aggregation) {
-  return toggleParameterValue('collapse', aggregation)
+  return toggleParameterValue('showFilter', aggregation)
 }
