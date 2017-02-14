@@ -15,7 +15,7 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 ## 0.8.5 (2017-02-07)
 
 KOHA: a37d4297001cdfb21202ef2d9d04d63ff6f235f4
-GITREF:
+GITREF: ef176cca95e6703344f0df9b826229a1ccf1c6be
 
 - Koha:
   - Koha upgraded to use 16.11.03 (security release)
