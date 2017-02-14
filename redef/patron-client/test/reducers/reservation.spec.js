@@ -12,8 +12,6 @@ describe('reducers', () => {
         isRequestingReservation: false,
         reservationError: false,
         changePickupLocationError: false,
-        isRequestingExtendLoan: false,
-        extendLoanError: false,
         changeReservationSuspensionError: false,
         isRequestingCancelReservation: false,
         isRequestingChangeReservationSuspension: false,
@@ -62,43 +60,6 @@ describe('reducers', () => {
       ).toEqual({
         isRequestingReservation: false,
         reservationError: 'message'
-      })
-    })
-
-    it(`should handle ${types.REQUEST_EXTEND_LOAN}`, () => {
-      expect(
-        reservation({}, {
-          type: types.REQUEST_EXTEND_LOAN
-        })
-      ).toEqual({
-        isRequestingExtendLoan: true,
-        extendLoanError: false
-      })
-    })
-
-    it(`should handle ${types.EXTEND_LOAN_SUCCESS}`, () => {
-      expect(
-        reservation({}, {
-          type: types.EXTEND_LOAN_SUCCESS
-        })
-      ).toEqual({
-        isRequestingExtendLoan: false,
-        extendLoanError: false
-      })
-    })
-
-    it(`should handle ${types.EXTEND_LOAN_FAILURE}`, () => {
-      expect(
-        reservation({}, {
-          type: types.EXTEND_LOAN_FAILURE,
-          payload: {
-            error: 'message'
-          },
-          error: true
-        })
-      ).toEqual({
-        isRequestingExtendLoan: false,
-        extendLoanError: 'message'
       })
     })
 

@@ -36,7 +36,7 @@
   }
 }
 
-.pickup, .reserve, .registered {
+.pickup, .reserve, .loan {
   @include span(12);
   @include container;
 
@@ -104,6 +104,10 @@
 
   }
 
+  .loan-expire p, .loan-pickup-number p {
+    font-size: rhythm(4);
+  }
+
   .loan-pickup-number {
     @include span(6 last);
   }
@@ -113,6 +117,7 @@
 .reserve {
   .red-btn, .black-btn {
     min-width: rhythm(16);
+    margin-bottom: rhythm(0.75);
   }
 
   .select-branch {
@@ -156,7 +161,7 @@
 
 }
 
-.registered {
+.loan {
 
   > h1 {
 
@@ -176,12 +181,13 @@
     margin-bottom: rhythm(2);
 
     .entry-details {
-      @include span(12);
+      /*@include span(3);*/
     }
 
     h1 {
       font-size: rhythm(3);
-      margin-top: rhythm(1);
+      /* margin-top: rhythm(1); */
+      margin-top: 0;
       margin-bottom: 0;
     }
 
@@ -194,7 +200,7 @@
   }
 
   .due-date {
-    @include span(12);
+    /*@include span(3);*/
 
     h2 {
       text-transform: uppercase;
@@ -209,14 +215,38 @@
 
   }
 
-  .prolong {
-    @include span(12);
-    margin-top: rhythm(2);
+  .renew-message {
+    /*@include span(3);*/
+    /*margin-top: rhythm(2);*/
+    margin-top: 0;
+    max-width: 15em;
+
+  }
+
+  .success {
+    color: green;
+  }
+
+  .renew-button {
+    margin-top: 0;
 
     button {
       width: 100%;
     }
 
+  }
+
+  .renew-all-button {
+    background-color: green;
+    margin-top: 0;
+
+    button {
+      width: 100%;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+    }
   }
 
 }
@@ -228,41 +258,57 @@
     .single-entry {
 
       .entry-details {
-        @include span(6);
+        @include span(4);
       }
 
     }
 
     .loan-expire {
-      @include span(3);
+      @include span(2);
     }
 
     .loan-pickup-number {
-      @include span(3 last);
+      @include span(3);
+    }
+
+    .loan-pickup-location {
+      @include span(2 last);
     }
 
   }
 
-  .registered {
+  .loan {
 
     .single-entry {
       padding-top: rhythm(2);
       padding-bottom: rhythm(2);
 
       .entry-details {
-        @include span(6);
+        @include span(4);
       }
 
     }
 
     .due-date {
+      @include span(2);
+    }
+
+    .renew-message {
       @include span(3);
     }
 
-    .prolong {
-      @include span(3 last);
+    .renew-button {
+      @include span(2 last);
     }
 
+    .renew-all-button {
+      @include span(2 last);
+      background-color: green;
+
+      &:disabled {
+        opacity: 0.4;
+      }
+    }
   }
 
 }
