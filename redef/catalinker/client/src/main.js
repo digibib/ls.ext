@@ -2515,6 +2515,8 @@
           var clickOutsideSupportPanelDetector = function (node) {
             $(document).click(function (event) {
               if (!event.isDefaultPrevented()) {
+
+                var supportPanelLeftEdge = $('#right-dummy-panel').offset().left
                 var outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
                 var targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
                 var targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
@@ -4316,9 +4318,10 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        supportPanelLeftEdge = $('#right-dummy-panel').offset().left
+        supportPanelLeftEdge = $('#right-dummy-panel').position().left
         supportPanelWidth = $('#right-dummy-panel').width()
 
+        console.log("Repositioning to left: " + supportPanelLeftEdge)
         $('.support-panel').each(function (index, panel) {
           $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
         })
