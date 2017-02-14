@@ -8,7 +8,6 @@ import Genres from './fields/Genres'
 import Classifications from './fields/Classifications'
 import Instrumentations from './fields/Instrumentations'
 import Biographies from './fields/Biographies'
-import CountryOfOrigin from './fields/CountryOfOrigin'
 import CompositionTypes from './fields/CompositionTypes'
 import Keys from './fields/Keys'
 import FictionNonfiction from './fields/FictionNonfiction'
@@ -31,7 +30,6 @@ const AdditionalInformationContent = ({ work }) => (
       <ContentAdaptations contentAdaptations={work.contentAdaptations} />
         {/* this.renderPartOfSeries(work) */}
         {/* this.renderRelations(work) */}
-      <CountryOfOrigin country={work.countryOfOrigin} />
       <CompositionTypes compositionTypes={work.compositionTypes} />
       <Keys keys={work.keys} />
       <DeweyNumber deweyNumber={work.deweyNumber} />
