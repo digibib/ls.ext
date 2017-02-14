@@ -9,9 +9,9 @@ import Subjects from '../../src/frontend/components/work/fields/Subjects'
 function setup (propOverrides) {
   const props = {
     subjects: [
-      { prefLabel: 'subject_1', specification: 'x' },
-      { prefLabel: 'subject_2', specification: 'y' },
-      { prefLabel: 'subject_3', specification: 'z' }
+      { prefLabel: 'subject_1', specification: 'x', id: '1' },
+      { prefLabel: 'subject_2', specification: 'y', id: '2' },
+      { prefLabel: 'subject_3', specification: 'z', id: '3' }
     ],
     ...propOverrides
   }
