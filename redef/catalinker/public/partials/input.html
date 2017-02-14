@@ -9,7 +9,8 @@
       data-support-panel-base-id="support_panel_base_fixed">
 <span class-for-one-liner="{{type === 'input-boolean' || oneLiner}}"
       class-panel-part="{{type === 'input-boolean' || oneLiner}}"
-      class-pure-u-1-2="{{type === 'input-boolean' || oneLiner}}"
+      class-pure-u-1-2="{{(type === 'input-boolean' || oneLiner) && !compare}}"
+      class-pure-u-1-1="{{(type === 'input-boolean' || oneLiner) && compare}}"
       class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
       class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
 <span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{./accordionHeader || compare ? '1' : '2'}}{{/if}} label"
