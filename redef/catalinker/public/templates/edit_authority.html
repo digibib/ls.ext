@@ -7,11 +7,11 @@
      as-unload >
     <h2 data-automation-id="page-heading" >{{currentTaskDescription}}</h2 >
     <div class="grid-input" >
+        <div class="grid-content tab-content">
         <div class="pure-g" style="height: 0px;" >
             <div class="pure-u-1-2" id="left-dummy-panel" />
             <div class="pure-u-1-2" id="right-dummy-panel" />
         </div >
-        <div class="grid-content tab-content">
             {{#if compare}}
             <a class="close-comparant" title="Lukk" on-click="closeCompare:{{rdfType}}">×</a>
             {{/if}}
