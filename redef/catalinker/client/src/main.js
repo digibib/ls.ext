@@ -4355,7 +4355,7 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        supportPanelLeftEdge = $('#right-dummy-panel').position().left
+        supportPanelLeftEdge = $('#right-dummy-panel').offsetParent().left
         supportPanelWidth = $('#right-dummy-panel').width()
 
         $('.support-panel').each(function (index, panel) {
