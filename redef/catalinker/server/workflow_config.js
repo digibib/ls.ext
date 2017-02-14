@@ -1384,12 +1384,12 @@ module.exports = (app) => {
                       }
                     },
                     {
-                      label: 'Tittel på delverk',
+                      label: 'Tittel på del',
                       rdfProperty: 'mainTitle',
                       required: true,
                     },
                     {
-                      label: 'Originaltittel',
+                      label: 'Verk',
                       id: 'publicationPartWorkInput',
                       rdfProperty: 'publicationOf',
                       type: 'searchable-with-result-in-side-panel',
@@ -1433,7 +1433,7 @@ module.exports = (app) => {
                     }
                   ]
                 },
-                addAnotherLabel: 'Legg til et delverk til',
+                addAnotherLabel: 'Legg til en del til',
                 subjects: [ 'Publication' ]
               }
             ],
