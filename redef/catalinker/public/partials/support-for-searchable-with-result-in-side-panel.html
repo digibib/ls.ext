@@ -13,9 +13,7 @@ on-escape="cancelEdit">
                     function tryScroll () {
                         var target = document.getElementById('highest-score-item')
                         if (target) {
-                            var resultList = document.getElementById('search-result')
-                            var topPos = resultList.offsetTop;
-                            document.main.$(resultList).animate({scrollTop: target.offsetTop - 30})
+                          document.main.$('.search-result-box').scrollTo(target, 500, {offset: -10})
                         } else {
                             if (maxAttempts-- > 0) {
                                 setTimeout(tryScroll, 500)
