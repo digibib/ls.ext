@@ -194,7 +194,7 @@ function transformPublications (publications) {
       duration: publication.duration,
       ean: publication.ean,
       edition: publication.edition,
-      extent: publication.extent,
+      extents: publication.extents || [],
       formatAdaptations: publication.formatAdaptations,
       formats: publication.formats,
       genres: publication.genres,
