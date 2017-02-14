@@ -25,7 +25,7 @@
                     function tryScroll () {
                         var target = document.getElementById('highest-score-item')
                         if (target) {
-                            document.main.$('.search-result-box').animate({scrollTop: document.main.$(target).offset().top - 270})
+                          document.main.$('.search-result-box').scrollTo(target, 500, {offset: -10})
                         } else {
                             if (maxAttempts-- > 0) {
                                 setTimeout(tryScroll, 500)

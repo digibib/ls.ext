@@ -48,6 +48,7 @@
     "jade": "~1.11.0",
     "jquery": "^2.1.4",
     "jquery-ui": "1.10.5",
+    "jquery.scrollto": "^2.1.2",
     "ld-graph": "git+https://github.com/digibib/ld-graph.git#c4809dc1d0a491db4b417ffea9552a9e6df5167d",
     "morgan": "~1.6.1",
     "node-sass": "^3.4.2",

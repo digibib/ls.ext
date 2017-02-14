@@ -29,6 +29,7 @@
     let supportPanelWidth
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
+    require('jquery.scrollto')
     let etagData = {}
     require('isbn2')
     ISBN = ISBN || window.ISBN
@@ -1983,7 +1984,7 @@
               items: items,
               origin: event.keypath,
               searchTerm: searchString,
-              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 : 0
+              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 - 1 : 0
             })
             positionSupportPanels()
           })
@@ -4354,7 +4355,7 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        supportPanelLeftEdge = $('#right-dummy-panel').offsetParent().left
+        supportPanelLeftEdge = $('#right-dummy-panel').position().left
         supportPanelWidth = $('#right-dummy-panel').width()
 
         $('.support-panel').each(function (index, panel) {
