@@ -37,8 +37,8 @@ const AdditionalInformationContent = ({ work }) => (
       <Instrumentations instrumentations={work.instrumentations} />
       <Biographies biographies={work.biographies} />
       <FictionNonfiction fictionNonfiction={work.fictionNonfiction} />
-      <Subjects subjects={work.subjects} />
       <Genres genres={work.genres} />
+      <Subjects subjects={work.subjects} />
   </NonIETransitionGroup>
 )
 
