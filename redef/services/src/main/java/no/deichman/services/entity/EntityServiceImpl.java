@@ -694,7 +694,7 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public List<RelationshipGroup> retrieveResourceRelationships(final XURI uri) {
         List<RelationshipGroup> relationships = newArrayList();
-        ResultSet resultSet = repository.retriveResourceRelationships(uri);
+        ResultSet resultSet = repository.retrieveResourceRelationships(uri);
         final String[] currentRelationshipLabel = {null};
         final RelationshipGroup[] currentGroup = new RelationshipGroup[1];
         resultSet.forEachRemaining(querySolution -> {

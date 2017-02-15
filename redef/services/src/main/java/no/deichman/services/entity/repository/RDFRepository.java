@@ -89,7 +89,7 @@ public interface RDFRepository {
 
     ResultSet retrieveAllNamesOfType(EntityType type);
 
-    ResultSet retriveResourceRelationships(XURI xuri);
+    ResultSet retrieveResourceRelationships(XURI xuri);
 
     void mergeResource(XURI xuri, XURI replaceeUri);
 
