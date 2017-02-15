@@ -90,9 +90,9 @@ class UserLoans extends React.Component {
                     <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
                       ? item.queuePlace
                       : <FormattedMessage {...messages.enRoute} />}</span>
-                    {/* <span>&nbsp;</span>
+                     <span>&nbsp;</span>
                      <span
-                     data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span> */}
+                     data-automation-id="UserLoans_reservation_waitingPeriod">{item.queuePlace > 0 ? this.renderWaitingPeriod(item.expected) : ''}</span>
                   </td>
                   <td>
                     {this.renderResumeSuspendReservationButton(item)}
@@ -150,9 +150,9 @@ class UserLoans extends React.Component {
                         data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
                         ? item.queuePlace
                         : <FormattedMessage {...messages.enRoute} />}</span>
-                      {/* <span>&nbsp;</span>
+                       <span>&nbsp;</span>
                        <span
-                       data-automation-id="UserLoans_reservation_waitingPeriod">{this.renderWaitingPeriod(item.expected)}</span> */}
+                       data-automation-id="UserLoans_reservation_waitingPeriod">{item.queuePlace > 0 ? this.renderWaitingPeriod(item.expected) : ''}</span>
                     </div>
                   </div>
                   <div className="meta-item">
