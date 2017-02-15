@@ -9,11 +9,11 @@ const Contributors = ({ contributors, intl }) => {
       {Object.keys(contributors).map(role => (
         <li key={role}>
           <span className="label">{intl.formatMessage({ id: role })}</span>:&nbsp;
-          {contributors[ role ].map(person =>
-            <span className="content" key={person.relativeUri + role}>
+          {contributors[ role ].map(agent =>
+            <span className="content" key={agent.relativeUri + role}>
                 <Link
                   data-automation-id="work_contributor_link"
-                  to={fieldQueryLink('aktør', person.name)}>{person.name}
+                  to={fieldQueryLink('aktør', agent.name)}>{agent.subdivision ? `${agent.name} (${agent.subdivision})` : agent.name}
                 </Link>
               </span>
           )}

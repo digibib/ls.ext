@@ -8,6 +8,7 @@ import Contributors from './work/fields/Contributors'
 import Duration from './work/fields/publication/Duration'
 import Ean from './work/fields/publication/Ean'
 import Edition from './work/fields/publication/Edition'
+import Extent from './work/fields/publication/Extent'
 import FormatAdaptations from './work/fields/publication/FormatAdaptations'
 import Formats from './work/fields/publication/Formats'
 import Isbn from './work/fields/publication/Isbn'
@@ -177,6 +178,7 @@ class PublicationInfo extends React.Component {
         <div className="left" >
           <AgeLimit ageLimit={publication.ageLimit} />
           <Contributors contributors={publication.contributors} />
+          <Extent extents={publication.extents} />
           <NumberOfPages numberOfPages={publication.numberOfPages} />
           <Edition edition={publication.edition} />
           <Publishers publishers={publication.publishers} />

@@ -70,7 +70,12 @@
     },
     "hasNumberOfPerformers": {
       "@id": "deichman:hasNumberOfPerformers",
-      "@type": "xsd:nonNegativeInteger"
+      "@type": "xsd:integer"
+    },
+    "hasInstrumentation": {
+      "@id": "deichman:hasInstrumentation",
+      "@type": "@id",
+      "@container": "@set"
     },
     "hasInstrument": {
       "@id": "deichman:hasInstrument",
@@ -188,8 +193,9 @@
     "edition": {
       "@id": "deichman:edition"
     },
-    "extent": {
-      "@id": "deichman:hasExtent"
+    "extents": {
+      "@id": "deichman:hasExtent",
+      "@container": "@set"
     },
     "numberOfPages": {
       "@id": "deichman:numberOfPages"
@@ -295,7 +301,8 @@
     },
     "hasCompositionType": {
       "@id": "deichman:hasCompositionType",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
     "hasClassificationNumber": {
       "@id": "deichman:hasClassificationNumber"
@@ -310,7 +317,8 @@
     },
     "key": {
       "@id": "deichman:inKey",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
     "place": {
       "@id": "deichman:place",

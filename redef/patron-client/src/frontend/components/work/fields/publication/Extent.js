@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react'
 import { defineMessages } from 'react-intl'
 import MetaItem from '../../../MetaItem'
 
-const Extent = ({ extent }) => {
-  if (extent) {
+const Extent = ({ extents }) => {
+  if (extents.length > 0) {
     return (
-      <MetaItem label={messages.extent} data-automation-id="publication_extent">{extent}</MetaItem>
+      <MetaItem label={messages.extent} data-automation-id="publication_extent">{extents.join(', ')}</MetaItem>
     )
   } else {
     return null
@@ -13,7 +13,7 @@ const Extent = ({ extent }) => {
 }
 
 Extent.propTypes = {
-  extent: PropTypes.string
+  extents: PropTypes.array
 }
 
 export const messages = defineMessages({

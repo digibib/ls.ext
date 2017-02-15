@@ -147,7 +147,7 @@ function transformWork (input) {
       biographies: input.biographies,
       by: transformBy(contributors),
       classifications: transformClassifications(input.classifications),
-      compositionType: transformCompositionType(input.compositionType),
+      compositionTypes: transformCompositionType(input.hasCompositionType),
       contentAdaptations: input.contentAdaptations,
       contributors: contributors,
       workRelations: workRelations,
@@ -157,7 +157,7 @@ function transformWork (input) {
       genres: input.genres,
       hasSummary: input.hasSummary,
       id: getId(input.id),
-      instruments: transformInstruments(input.hasInstrument),
+      instrumentations: transformInstrumentation(input.hasInstrumentation),
       items: [],
       languages: input.languages,
       literaryForms: input.literaryForms,
@@ -169,7 +169,9 @@ function transformWork (input) {
       serials: transformSerials(input),
       subtitle: input.subtitle,
       subjects: input.subjects,
-      uri: input.id
+      uri: input.id,
+      countryOfOrigin: input.nationality ? input.nationality.id : undefined,
+      keys: input.key || []
     }
     const publicationWithImage = work.publications.find(publication => publication.image)
     if (publicationWithImage) {
@@ -192,7 +194,7 @@ function transformPublications (publications) {
       duration: publication.duration,
       ean: publication.ean,
       edition: publication.edition,
-      extent: publication.extent,
+      extents: publication.extents || [],
       formatAdaptations: publication.formatAdaptations,
       formats: publication.formats,
       genres: publication.genres,
@@ -269,6 +271,7 @@ function transformWorkRelations (input) {
     const workRelations = {}
     input.forEach(inputWorkRelation => {
       const relatedWork = inputWorkRelation.work
+      relatedWork.numberInRelation = inputWorkRelation.partNumber
       relatedWork.uri = relatedWork.id
       relatedWork.id = getId(relatedWork.id)
       relatedWork.relativeUri = relativeUri(relatedWork.uri)
@@ -339,9 +342,14 @@ function transformCompositionType (hasCompositionType = []) {
   }
 }
 
-function transformInstruments (hasInstrument = []) {
+function transformInstrumentation (instrumentation = []) {
   try {
-    return hasInstrument.map(instrument => instrument.hasInstrument.prefLabel)
+    return instrumentation.map(i => {
+      return {
+        instrument: i.hasInstrument.prefLabel,
+        number: i.hasNumberOfPerformers
+      }
+    })
   } catch (error) {
     console.log(error)
     return []

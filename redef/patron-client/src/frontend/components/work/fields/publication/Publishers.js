@@ -6,7 +6,7 @@ const Publishers = ({ publishers }) => {
   if (publishers.length > 0) {
     return (
       <MetaItem label={messages.publishers} data-automation-id="publication_publishers">
-        {publishers.map(publisher => publisher.name).join(', ')}
+        {publishers.map(publisher => publisher.subdivision ? `${publisher.name} (${publisher.subdivision})` : publisher.name).join(', ')}
       </MetaItem>
     )
   } else {

@@ -17,7 +17,9 @@ import {
   LOGOUT_SUCCESS,
   RECEIVE_LOGIN_STATUS,
   CHANGE_PICKUP_LOCATION_SUCCESS,
-  CHANGE_RESERVATION_SUSPENSION_SUCCESS
+  CHANGE_RESERVATION_SUSPENSION_SUCCESS,
+  EXTEND_LOAN_SUCCESS,
+  EXTEND_LOAN_FAILURE
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -125,7 +127,33 @@ export default function profile (state = initialState, action) {
           })
         }
       }
-
+    case EXTEND_LOAN_SUCCESS:
+      return {
+        ...state,
+        loansAndReservations: {
+          ...state.loansAndReservations,
+          loans: state.loansAndReservations.loans.map(loan => {
+            if (loan.checkoutId === action.payload.checkoutId) {
+              loan.renewalStatus = action.payload.message
+              loan.dueDate = action.payload.newDueDate
+            }
+            return loan
+          })
+        }
+      }
+    case EXTEND_LOAN_FAILURE:
+      return {
+        ...state,
+        loansAndReservations: {
+          ...state.loansAndReservations,
+          loans: state.loansAndReservations.loans.map(loan => {
+            if (loan.checkoutId === action.payload.checkoutId) {
+              loan.renewalStatus = action.payload.message
+            }
+            return loan
+          })
+        }
+      }
     case RECEIVE_LOGIN_STATUS:
       return { ...state, borrowerName: action.payload.borrowerName }
     default:
