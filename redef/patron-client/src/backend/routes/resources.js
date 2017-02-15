@@ -271,6 +271,7 @@ function transformWorkRelations (input) {
     const workRelations = {}
     input.forEach(inputWorkRelation => {
       const relatedWork = inputWorkRelation.work
+      relatedWork.numberInRelation = inputWorkRelation.partNumber
       relatedWork.uri = relatedWork.id
       relatedWork.id = getId(relatedWork.id)
       relatedWork.relativeUri = relativeUri(relatedWork.uri)
