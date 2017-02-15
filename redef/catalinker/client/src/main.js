@@ -326,6 +326,36 @@
       })
     }
 
+    var warnEditResourceName = function (editResourcesSpec) {
+      ractive.set('editResourceWarning', editResourcesSpec)
+      $('#edit-resource-warning-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        title: `Endre ${editResourcesSpec.fieldLabel}?`,
+        buttons: [
+          {
+            text: 'Fortsett',
+            click: function () {
+              $(this).dialog('close')
+              editResourcesSpec.proceed()
+            }
+          },
+          {
+            text: 'Avbryt',
+            class: 'default',
+            click: function () {
+              editResourcesSpec.revert()
+              $(this).dialog('close')
+            }
+          }
+        ],
+        open: function () {
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        }
+      })
+    }
+
     var alertAboutExistingResource = function (spec, existingResources, proceed) {
       ractive.set('existingResourcesDialog.existingResources', existingResources)
       ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural.replace('${numberOfResources}', existingResources.length) : spec.legendSingular)
@@ -2221,6 +2251,7 @@
           'alert-existing-resource-dialog',
           'additional-suggestions-dialog',
           'merge-resources-dialog',
+          'edit-resource-warning-dialog',
           'accordion-header-for-collection',
           'readonly-input',
           'readonly-input-string',
@@ -2973,27 +3004,34 @@
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
-              patchResource: function (event, predicate, rdfType, clearProperty) {
-                var input = ractive.get(grandParentOf(event.keypath))
-                if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
-                  var inputValue = event.context
-                  if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
-                    return
+              patchResource: function (event, predicate, rdfType, editAuthorityMode) {
+                const proceed = function () {
+                  var input = ractive.get(grandParentOf(event.keypath))
+                  if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
+                    var inputValue = event.context
+                    if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
+                      return
+                    }
+                    var datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
+                    var subject = ractive.get('targetUri.' + rdfType)
+                    if (subject) {
+                      let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
+                      Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
+                      event.context.domain = rdfType
+                      input.allowAddNewButton = true
+                      waiter.cancel()
+                    }
                   }
-                  var datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
-                  var subject = ractive.get('targetUri.' + rdfType)
-                  if (subject) {
-                    let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
-                    Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
-                    event.context.domain = rdfType
-                    input.allowAddNewButton = true
-                    waiter.cancel()
-                  }
-                  if (clearProperty) {
-                    ractive.set(grandParentOf(event.keypath) + '.' + clearProperty, null)
-                  }
+                  ractive.update()
                 }
-                ractive.update()
+                const revert = function () {
+                  ractive.set(`${event.keypath}.current.value`, event.context.old.value)
+                }
+                if (editAuthorityMode && /^.*(name|prefLabel|mainTitle)$/.test(predicate)) {
+                  warnEditResourceName({fieldLabel: ractive.get(grandParentOf(event.keypath)).label.toLowerCase(), rdfType, proceed, revert})
+                } else {
+                  proceed()
+                }
               },
               saveNewObject: function (event, index) {
                 if (!eventShouldBeIgnored(event)) {
