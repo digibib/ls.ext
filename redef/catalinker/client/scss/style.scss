@@ -1015,9 +1015,11 @@ body {
         padding: 0;
         list-style-type: none;
         li {
+          max-height: 350px;
+          overflow: scroll;
           ul {
             li {
-              padding: 0 5px 0 10px;
+              padding: 0 5px 0 15px;
               &:nth-child(even) {
                 background: $lightestgray;
               }
