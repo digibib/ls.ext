@@ -1,131 +1,132 @@
 module.exports.estimateWaitingPeriod = (queuePlace, items) => {
-  if (items.length < 1) {
-    return 'unknown'
-  }
-  if (queuePlace === 0) {
-    return 'inTransit'
+  function isInTransit (queuePlace) {
+    return (queuePlace === 0)
   }
 
-  const reservableItems = items.filter(isReservable)
+  function getReservableItems (items) {
+    return items.filter((item) => { return item.reservable === 1 })
+  }
+
+  function isPotentiallyPrecededByZeroBorrower (dateLastSeen) {
+    // Here I make an assumption that if the last seen date isn't null or within the last three days,
+    // someone has priority '0', which means that the current user's  priority is bumped, but not about to be
+    // effectuated. This fixes an error where we assume that a user is first in the queue and the item.onloan property
+    // is null indicating that it is available, when in fact it is simply not allocated to borrower with priority '0'.
+    return dateLastSeen === null ? false : (Date.now() - Date.parse(dateLastSeen)) < (1000 * 60 * 60 * 24 * 3)
+  }
+
+  function getAvailable (items) {
+    return getReservableItems(items).filter((item) => { return item.onloan === null })
+  }
+
+  const reservableItems = getReservableItems(items)
 
   if (reservableItems.length < 1) {
     return 'unknown'
   }
 
-  const availableItems = reservableItems.filter(isAvailable)
-  if (queuePlace <= availableItems.length) {
+  if (isInTransit(queuePlace)) {
+    return 'inTransit'
+  }
+
+  const availableItems = getAvailable(items)
+
+  if (queuePlace <= availableItems.length && !isPotentiallyPrecededByZeroBorrower(availableItems[ 0 ].datelastseen)) {
     return 'pending'
   } else {
-    return getWaitPeriod(queuePlace, reservableItems)
-  }
-}
-
-function isReservable (item) {
-  return item.reservable === 1
-}
-
-function isAvailable (item) {
-  return item.onloan === null
-}
-
-function getWaitPeriod (queuePlace, items) {
-  const queued = queuePlace || 1
-  const estimate = getEstimatedPeriod(queued, items)
-
-  if (estimate === 'unknown') {
-    return estimate
+    return getEstimateString(queuePlace, reservableItems)
   }
 
-  const floor = Math.floor(estimate)
-  const ceiling = (floor === estimate) ? Math.ceil(estimate) + 2 : Math.ceil(estimate)
-  const watingPeriod = (floor < 11) ? `${floor}–${ceiling}` : '10'
+  function getEstimateString (queuePlace, items) {
+    const queued = queuePlace || 1
+    const estimate = getEstimate(queued, items)
 
-  return watingPeriod
-}
-
-function getQP (queuePlace, items) {
-  const pointValues = Array.apply(null, { length: queuePlace }).map(Number.call, Number)
-  let matrix = []
-  let i = 0
-  while (pointValues.length) {
-    matrix = pointValues.splice(0, items)
-    i++
-  }
-  return getMatrixObject(matrix.length, i)
-}
-
-function getMatrixPosition (items, queuePlace) {
-  if (items >= queuePlace) {
-    return getMatrixObject(queuePlace)
-  } else {
-    return getQP(queuePlace, items)
-  }
-}
-
-function getMatrixObject (xAxis, yAxis = 1) {
-  return {x: xAxis, y: yAxis}
-}
-
-function getEstimatedPeriod (queuePlace, items) {
-  if (items) {
-    const itemLoanLength = (getLoanPeriod(items[ 0 ].itype))
-    const cuttoffMultiplier = 12 / itemLoanLength
-    const cutoff = items.length * cuttoffMultiplier
-
-    if (queuePlace > cutoff) {
-      return 12
+    if (estimate === 'unknown') {
+      return estimate
     }
 
-    if (items.length === 1 || queuePlace === 1) {
-      return estimateLinear(getOffsetInWeeks(items[ 0 ].onloan), queuePlace, getLoanPeriod(items[ 0 ].itype, null))
+    const floor = Math.floor(estimate)
+    return (floor < 11) ? `${floor}–${floor + 2}` : '10'
+  }
+
+  function generateMatrix (queuePlace, items) {
+    const pointValues = Array.apply(null, { length: queuePlace }).map(Number.call, Number)
+    const matrix = []
+    let i = 0
+    while (pointValues.length) {
+      matrix[ i ] = pointValues.splice(0, items)
+      i++
+    }
+    return { x: matrix.length, y: matrix[ 0 ].length }
+  }
+
+  function getEstimate (queuePlace, items) {
+    if (items) {
+      const itemLoanLength = getLoanPeriod(items[ 0 ].itype)
+
+      if (queuePlace > (items.length * (12 / itemLoanLength))) {
+        return 12
+      }
+
+      if (items.length === 1 || queuePlace === 1) {
+        return getLinearEstimate(
+          getOffsetInWeeks(items[ 0 ].onloan),
+          queuePlace,
+          getLoanPeriod(items[ 0 ].itype, null),
+          items[ 0 ].datelastseen)
+      }
+
+      const matrixPosition = generateMatrix(queuePlace, items.length)
+      const targetItem = matrixPosition.y - 1
+      const estimate = getLinearEstimate(
+        getOffsetInWeeks(items[ targetItem ].onloan),
+        matrixPosition.x,
+        itemLoanLength,
+        items[ targetItem ].datelastseen)
+
+      return isNaN(estimate) ? 'unknown' : estimate
+    } else {
+      return 'unknown'
+    }
+  }
+
+  function getLinearEstimate (offset, queuePlace, loanWeeks, dateLastSeen) {
+    const queue = (offset <= loanWeeks && !isPotentiallyPrecededByZeroBorrower(dateLastSeen)) ? (queuePlace - 1) : queuePlace
+    return offset + (loanWeeks * (queue))
+  }
+
+  function getOffsetInWeeks (date) {
+    const currentDate = Date.now()
+    const parsedDate = Date.parse(date)
+    if (isNaN(parsedDate)) {
+      return 0
+    }
+    if (parsedDate <= currentDate) {
+      return 0
+    } else {
+      return Math.ceil((parsedDate - currentDate) / (1000 * 60 * 60 * 24 * 7))
+    }
+  }
+
+  function getLoanPeriod (itemtype, borrowerCategory = 'V') {
+    if (borrowerCategory) {
+      // TODO decide if we want to fix this.
     }
 
-    const maxtrixPosition = getMatrixPosition(items.length, queuePlace)
-    const relevantDueDate = items[ maxtrixPosition.x - 1 ].onloan
-    const offset = getOffsetInWeeks(relevantDueDate)
-    const estimate = estimateLinear(offset, maxtrixPosition.y, itemLoanLength)
-    return isNaN(estimate) ? 'unknown' : estimate
-  } else {
-    return 'unknown'
-  }
-}
-
-function estimateLinear (offset, queuePlace, loanWeeks) {
-  const queue = (offset <= loanWeeks) ? (queuePlace - 1) : queuePlace
-  return offset + (loanWeeks * (queue))
-}
-
-function getOffsetInWeeks (date) {
-  const currentDate = Date.now()
-  const parsedDate = Date.parse(date)
-  if (isNaN(parsedDate)) {
-    return 0
-  }
-  if (parsedDate <= currentDate) {
-    return 0
-  } else {
-    return Math.ceil((parsedDate - currentDate) / (1000 * 60 * 60 * 24 * 7))
-  }
-}
-
-function getLoanPeriod (itemtype, borrowerCategory = 'V') {
-  if (borrowerCategory) {
-    // TODO decide if we want to fix this.
-  }
-
-  switch (itemtype) {
-    case 'FILM' :
-    case 'KART' :
-    case 'MUSIKK' :
-    case 'PERIODIKA' :
-      return 14 / 7
-    case 'BOK' :
-    case 'LYDBOK' :
-    case 'NOTER' :
-    case 'REALIA' :
-    case 'SPILL' :
-    case 'SPRAAKKURS' :
-    default :
-      return 28 / 7
+    switch (itemtype) {
+      case 'FILM' :
+      case 'KART' :
+      case 'MUSIKK' :
+      case 'PERIODIKA' :
+        return 14 / 7
+      case 'BOK' :
+      case 'LYDBOK' :
+      case 'NOTER' :
+      case 'REALIA' :
+      case 'SPILL' :
+      case 'SPRAAKKURS' :
+      default :
+        return 28 / 7
+    }
   }
 }

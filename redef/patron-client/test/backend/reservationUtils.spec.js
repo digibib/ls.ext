@@ -16,7 +16,11 @@ describe('reservation utils', () => {
     })
 
     it('should know that the item is in transit', () => {
-      const items = [ {} ]
+      const items = [ {
+        'onloan': null,
+        'itype': 'BOK',
+        'reservable': 1
+      } ]
       const queuePlace = 0
       expect(
         estimateWaitingPeriod(queuePlace, items)
@@ -159,11 +163,13 @@ describe('reservation utils', () => {
       const items = [ {
         'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
         'itype': 'BOK',
-        'reservable': 1
+        'reservable': 1,
+        'datelastseen': new Date(dayToday - (oneWeekInSeconds * 8)).toISOString()
       }, {
         'onloan': new Date(dayToday - (oneWeekInSeconds * 4)).toISOString(),
         'itype': 'BOK',
-        'reservable': 1
+        'reservable': 1,
+        'datelastseen': new Date(dayToday - (oneWeekInSeconds * 8)).toISOString()
       } ]
       const queuePlace = 4
       expect(
@@ -368,5 +374,18 @@ describe('reservation utils', () => {
     expect(
       estimateWaitingPeriod(queueplace[ 1 ], itemQueue2)
     ).toEqual('8–10')
+  })
+
+  it('should not jump around in a queue version 2', () => {
+    const queuePlace = [ 0, 1, 2, 3 ]
+    const items = [ {
+      'onloan': null,
+      'itype': 'BOK',
+      'reservable': 1,
+      'datelastseen': new Date(dayToday).toISOString()
+    } ]
+    expect(
+      estimateWaitingPeriod(queuePlace[ 1 ], items)
+    ).toEqual('4–6')
   })
 })
