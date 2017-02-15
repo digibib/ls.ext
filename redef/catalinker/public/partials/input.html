@@ -30,7 +30,7 @@
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
                 <span class="input" as-disabled>
                     <span class="field" class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                        {{>(readOnly ? "readonly-" : "") + type}}
+                        {{>(readOnly ? "readonly-" : "") + type }}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
                     <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
