@@ -2534,14 +2534,14 @@
           var formatter = function (node, formatter) {
             if (formatter === 'isbn') {
               $(node).on('input', function () {
-                let value = $(this).val().trim()
+                let value = $(node).val().replace(/[^\dXx]*/g, '') // ISBN.parse not 100% with hyphens
                 let parsedIsbn = ISBN.parse(value)
                 if (parsedIsbn) {
                   if (parsedIsbn.isIsbn10()) {
-                    $(this).val(parsedIsbn.asIsbn10(true))
+                    $(node).val(parsedIsbn.asIsbn10(true))
                   } else {
                     if (parsedIsbn.isIsbn13()) {
-                      $(this).val(parsedIsbn.asIsbn13(true))
+                      $(node).val(parsedIsbn.asIsbn13(true))
                     }
                   }
                   ractive.updateModel()
