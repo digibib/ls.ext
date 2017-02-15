@@ -2953,22 +2953,22 @@
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, editAuthorityMode) {
+                var input = ractive.get(grandParentOf(event.keypath))
+                if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
+                  var inputValue = event.context
+                  if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '') || inputValue.current.value === inputValue.old.value) {
+                    return
+                  }
+                }
                 const proceed = function () {
-                  var input = ractive.get(grandParentOf(event.keypath))
-                  if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
-                    var inputValue = event.context
-                    if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
-                      return
-                    }
-                    var datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
-                    var subject = ractive.get('targetUri.' + rdfType)
-                    if (subject) {
-                      let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
-                      Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
-                      event.context.domain = rdfType
-                      input.allowAddNewButton = true
-                      waiter.cancel()
-                    }
+                  var datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
+                  var subject = ractive.get('targetUri.' + rdfType)
+                  if (subject) {
+                    let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
+                    Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
+                    event.context.domain = rdfType
+                    input.allowAddNewButton = true
+                    waiter.cancel()
                   }
                   ractive.update()
                 }
@@ -2976,7 +2976,12 @@
                   ractive.set(`${event.keypath}.current.value`, event.context.old.value)
                 }
                 if (editAuthorityMode && /^.*(name|prefLabel|mainTitle)$/.test(predicate)) {
-                  warnEditResourceName({fieldLabel: ractive.get(grandParentOf(event.keypath)).label.toLowerCase(), rdfType, proceed, revert})
+                  warnEditResourceName({
+                    fieldLabel: ractive.get(grandParentOf(event.keypath)).label.toLowerCase(),
+                    rdfType,
+                    proceed,
+                    revert
+                  })
                 } else {
                   proceed()
                 }
