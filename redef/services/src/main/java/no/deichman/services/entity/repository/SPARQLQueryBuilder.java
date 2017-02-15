@@ -15,6 +15,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -35,6 +37,8 @@ import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
  * Responsibility: TODO.
  */
 public final class SPARQLQueryBuilder {
+    private final Logger log = LoggerFactory.getLogger(SPARQLQueryBuilder.class);
+
     public static final String INSERT = "INSERT";
     public static final String DELETE = "DELETE";
     public static final String NEWLINE = "\n";
@@ -605,7 +609,7 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(queryString);
     }
 
-    public Query retriveResourcerelationships(XURI uri) {
+    public Query retriveResourceRelationships(XURI uri) {
         String queryString = format(""
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "prefix deich: <%1$s>\n"
@@ -690,6 +694,7 @@ public final class SPARQLQueryBuilder {
                 + "    ?c ?d <%1$s> .\n"
                 + "}\n"
                 + "\n", replaceeURI, xuri.getUri());
+        log.info(queryString);
         return queryString;
     }
 }

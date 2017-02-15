@@ -421,7 +421,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final ResultSet retriveResourceRelationships(XURI xuri) {
         log.debug("retrieving all participations for uri: " + xuri.getUri());
-        try (QueryExecution qexec = getQueryExecution(sqb.retriveResourcerelationships(xuri))) {
+        try (QueryExecution qexec = getQueryExecution(sqb.retriveResourceRelationships(xuri))) {
             disableCompression(qexec);
             return ResultSetFactory.copyResults(qexec.execSelect());
         }
