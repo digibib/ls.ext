@@ -672,6 +672,7 @@ public final class SPARQLQueryBuilder {
                 + "                     bind(iri(deich:hasPlaceOfPublication) as ?relation) .\n"
                 + "                     bind(?publWithPlace      as ?targetUri) . \n"
                 + "  }\n"
+                + "  FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
                 + "} order by ?relation", BaseURI.ontology(), BaseURI.role(), uri.getUri());
         return QueryFactory.create(queryString);
     }
