@@ -78,7 +78,7 @@ class Publications extends React.Component {
         const mediatypes = filters.mediatype
         if (filters.branch) {
           filters.branch.forEach((branch) => {
-            branches.push(this.props.libraries[ branch ])
+            branches.push(this.props.intl.formatMessage({ id: branch }))
           })
         }
         const branchesFromPublication = []
