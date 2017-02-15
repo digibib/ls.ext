@@ -705,6 +705,10 @@ body {
           &.exact-match {
             border: 2px dashed red;
           }
+          &.same-as-target div {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
           &:not(.exact-match) {
             border: 2px white;
           }
