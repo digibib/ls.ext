@@ -171,7 +171,7 @@ function transformWork (input) {
       subjects: input.subjects,
       uri: input.id,
       countryOfOrigin: input.nationality ? input.nationality.id : undefined,
-      keys: input.key
+      keys: input.key || []
     }
     const publicationWithImage = work.publications.find(publication => publication.image)
     if (publicationWithImage) {
