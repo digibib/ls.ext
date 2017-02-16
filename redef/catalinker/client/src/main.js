@@ -2592,10 +2592,11 @@
             }
           }
           var clickOutsideSupportPanelDetector = function (node) {
+            const  rightDummyPanel = $('#right-dummy-panel')
             $(document).click(function (event) {
               if (!event.isDefaultPrevented()) {
-
-                var supportPanelLeftEdge = $('#right-dummy-panel').offset().left
+                var supportPanelLeftEdge = rightDummyPanel.offset().left
+                var supportPanelWidth = rightDummyPanel.width()
                 var outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
                 var targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
                 var targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
@@ -2700,6 +2701,12 @@
             axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
               ractive.set(`${keypath}.relations`, response.data)
             })
+            return {
+              teardown: function () {}
+            }
+          }
+          var repositionSupportPanels = function (node) {
+            Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
             }
@@ -2934,6 +2941,7 @@
               tabIndex: tabIndex,
               disabled: disabled,
               relations: relations,
+              repositionSupportPanels: repositionSupportPanels
             },
             partials: applicationData.partials,
             transitions: {
@@ -4406,10 +4414,11 @@
         supportPanelLeftEdge = $('#right-dummy-panel').position().left
         supportPanelWidth = $('#right-dummy-panel').width()
 
-        console.log("Repositioning to left: " + supportPanelLeftEdge)
-        $('.support-panel').each(function (index, panel) {
-          $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
-        })
+        if (supportPanelLeftEdge > 0) {
+          $('.support-panel').each(function (index, panel) {
+            $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
+          })
+        }
       },
       getRactive: function () {
         return ractive
