@@ -298,7 +298,7 @@
       })
     }
 
-    var mergeResources = function (mergeResourcesSpec, targetUri, sourceUri) {
+    var mergeResources = function (mergeResourcesSpec, targetUri, sourceUri, proceed) {
       $('#merge-resources-dialog').dialog({
         resizable: false,
         modal: true,
@@ -308,12 +308,8 @@
           {
             text: 'Fortsett',
             click: function () {
-              console.log('Merging ' + sourceUri + ' into ' + targetUri)
-              const dlg = $(this);
-              axios.put(`${proxyToServices(targetUri)}/merge`, { replacee: sourceUri }).then(function () {
-                closeCompare(typeFromUri(targetUri))
-                dlg.dialog('close')
-              })
+              $(this).dialog('close')
+              proceed()
             }
           },
           {
@@ -3757,7 +3753,13 @@
                 closeCompare(type)
               },
               mergeResources: function (event, targetUri, sourceUri) {
-                mergeResources(event.context, targetUri, sourceUri)
+                mergeResources(event.context, targetUri, sourceUri, function () {
+                  showGrowler()
+                  axios.put(`${proxyToServices(targetUri)}/merge`, { replacee: sourceUri }).then(function () {
+                    hideGrowler()
+                    closeCompare(typeFromUri(targetUri))
+                  }).catch(hideGrowler)
+                })
               }
             }
           )
@@ -3979,6 +3981,7 @@
         }
 
         function showGrowler (applicationData) {
+          applicationData = applicationData || {}
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           if (!query.noStartGrowl) {
             $('#growler').show()
