@@ -462,7 +462,14 @@
     }
   },
   "isRelatedTo": {
-    "@embed": "@always"
+    "@embed": "@always",
+    "work": {
+      "contributors": {
+        "deichman:agent": {
+          "@embed": "@always"
+        }
+      }
+    }
   },
   "contentAdaptations": {
     "@embed": "@never"
