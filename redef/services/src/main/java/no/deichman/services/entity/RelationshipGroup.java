@@ -1,6 +1,7 @@
 package no.deichman.services.entity;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -11,16 +12,12 @@ public final class RelationshipGroup {
     private String relationshipType;
     private List<Relationship> relationships = newArrayList();
 
-    public RelationshipGroup(String relationshipType) {
-        this.relationshipType = relationshipType;
+    public RelationshipGroup(Map.Entry<String, List<Relationship>> relationships) {
+        this.relationshipType = relationships.getKey();
+        this.relationships = relationships.getValue();
     }
 
     public RelationshipGroup() {
-    }
-
-    public RelationshipGroup(String relationshipLabel, Relationship firstRelationship) {
-        this(relationshipLabel);
-        relationships = newArrayList(firstRelationship);
     }
 
     public String getRelationshipType() {

@@ -1,0 +1,45 @@
+@prefix : <http://data.deichman.no/ontology#> .
+@prefix role: <http://data.deichman.no/role#> .
+
+<http://data.deichman.no/work/w1> a :Work ;
+  :mainTitle "Much ado about nothing" ;
+  :contributor [
+    a :Contribution, :MainEntry ;
+    :agent <http://data.deichman.no/person/p1> ;
+    :role role:author
+  ] .
+
+<http://data.deichman.no/work/w2> a :Work ;
+  :mainTitle "Much ado about nothing" ;
+  :contributor [
+    a :Contribution, :MainEntry ;
+    :agent <http://data.deichman.no/person/p2> ;
+    :role role:author
+  ] ;
+  :subject <http://data.deichman.no/person/p1> .
+
+<http://data.deichman.no/publication/p80001> a :Publication;
+  :publicationOf <http://data.deichman.no/work/w1> ;
+  :recordId "80001" .
+
+<http://data.deichman.no/publication/p80002> a :Publication;
+  :publicationOf <http://data.deichman.no/work/w1> ;
+  :numberOfPages "359" ;
+  :mainTitle "Much ado about nothing" ;
+  :subtitle "Hey nonny nonny" ;
+  :isbn "978-82-02-48040-0" ;
+  :recordId "80002" ;
+  :contributor [
+    a :Contribution ;
+    :agent <http://data.deichman.no/person/p1> ;
+    :role role:illustrator
+  ] .
+
+<http://data.deichman.no/person/p1> a :Person ;
+  :name "Hans Ågetorp" .
+
+<http://data.deichman.no/person/p2> a :Person ;
+  :name "Olle Bertilsson" .
+
+
+

@@ -569,4 +569,47 @@ public class EntityResourceTest {
         String body = "{\"replacee\": \"\"}";
         entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
     }
+
+    @Test
+    public void should_return_relations() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("person_with_relations.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://deichman.no/person/p1");
+        Response result = entityResource.retriveResourceParticipations(xuri.getType(), xuri.getId());
+        assertEquals("[\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "        \"mainTitle\": \"Much ado about nothing\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w2\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/role#illustrator\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/role#illustrator\",\n"
+                + "        \"mainTitle\": \"Much ado about nothing\",\n"
+                + "        \"subtitle\": \"Hey nonny nonny\",\n"
+                + "        \"targetType\": \"Publication\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/publication/p80002\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/role#author\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/role#author\",\n"
+                + "        \"mainTitle\": \"Much ado about nothing\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w1\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  }\n"
+                + "]", result.getEntity());
+    }
 }
