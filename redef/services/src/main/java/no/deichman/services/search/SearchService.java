@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
  * Responsibility: perform indexing and searching.
  */
 public interface SearchService {
-    void index(XURI xuri) throws Exception;
+    void index(XURI xuri);
 
     void indexOnly(XURI xuri) throws Exception;
 

@@ -446,9 +446,12 @@ public final class EntityResource extends ResourceBase {
 
         if (!staying.equals(outgoing)) {
             try {
+                List<XURI> relatedUris = getEntityService().retrieveResourceRelationshipsUris(outgoing);
                 getEntityService().mergeResource(staying, outgoing);
                 getEntityService().removeFromLocalIndex(outgoing);
-                getSearchService().delete(outgoing);
+                final SearchService searchService = getSearchService();
+                searchService.delete(outgoing);
+                relatedUris.forEach(searchService::index);
             } catch (Exception e) {
                 throw new InternalServerErrorException(e);
             }
