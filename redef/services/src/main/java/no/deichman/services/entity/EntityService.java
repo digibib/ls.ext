@@ -64,4 +64,6 @@ public interface EntityService {
     void mergeResource(XURI xuri, XURI replaceeUri);
 
     void removeFromLocalIndex(XURI xuri);
+
+    List<XURI> retrieveResourceRelationshipsUris(XURI uri);
 }

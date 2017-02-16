@@ -61,6 +61,7 @@ import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static no.deichman.services.search.SearchServiceImpl.LOCAL_INDEX_SEARCH_FIELDS;
 import static no.deichman.services.uridefaults.BaseURI.ontology;
@@ -700,6 +701,13 @@ public final class EntityServiceImpl implements EntityService {
                 .entrySet().stream().map(RelationshipGroup::new).collect(toList());
     }
 
+    @Override
+    public List<XURI> retrieveResourceRelationshipsUris(XURI uri) {
+        return stream(spliteratorUnknownSize(repository.retrieveResourceRelationships(uri), ORDERED), false)
+                .filter(s -> s.contains("targetUri"))
+                .map(this::targetUri).collect(toSet()).stream().sorted().collect(toList());
+    }
+
     private Relationship getRelationship(QuerySolution querySolution) {
         Relationship relationship = new Relationship();
         relationship.setRelationshipType(querySolution.getResource("relation"));
@@ -713,6 +721,14 @@ public final class EntityServiceImpl implements EntityService {
         ofNullable(querySolution.getResource("type")).ifPresent(relationship::setTargetType);
         ofNullable(querySolution.getResource("targetUri")).ifPresent(relationship::setTargetUri);
         return relationship;
+    }
+
+    private XURI targetUri(QuerySolution querySolution)  {
+        try {
+            return new XURI(querySolution.getResource("targetUri").getURI());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

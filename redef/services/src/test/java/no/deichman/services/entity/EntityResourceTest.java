@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.BadRequestException;
@@ -537,6 +538,9 @@ public class EntityResourceTest {
         Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
         assertEquals(204, result.getStatus());
         assertTrue(repo.getModel().isIsomorphicWith(testModel));
+        Mockito.verify(mockSearchService).delete(new XURI(replacee));
+        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w1"));
+        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w3"));
     }
 
     @Test(expected = NotFoundException.class)
