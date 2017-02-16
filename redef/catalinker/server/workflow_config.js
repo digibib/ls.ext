@@ -1,4 +1,3 @@
-var _ = require('underscore')
 function maintenanceInputs (label, type) {
   return {
     // this is an input type used to search for a main resource, e.g. Work. The rendered input field
@@ -234,7 +233,7 @@ module.exports = (app) => {
               {
                 label: 'Hovedtittel',
                 rdfProperty: 'mainTitle',
-                type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
                 preFillFromSearchField: true, // value of this field should be copied from the search field above
                 displayValueSource: true // after creation, send actual value in this field back to where the search started
               },
@@ -266,7 +265,7 @@ module.exports = (app) => {
               {
                 label: 'Serietittel',
                 rdfProperty: 'mainTitle',
-                type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
                 preFillFromSearchField: true, // value of this field should be copied from the search field above
                 displayValueSource: true // after creation, send actual value in this field back to where the search started
               },
@@ -365,7 +364,7 @@ module.exports = (app) => {
               {
                 label: 'Serietittel',
                 rdfProperty: 'mainTitle',
-                type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
                 preFillFromSearchField: true, // value of this field should be copied from the search field above
                 displayValueSource: true // after creation, send actual value in this field back to where the search started
               },
@@ -467,7 +466,7 @@ module.exports = (app) => {
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
                   label: 'ISBN',
-                  pattern: '^[ 0-9\-]+[xX]?\s*$',
+                  pattern: '^[ 0-9\\-]+[xX]?\\s*$',
                   formatter: 'isbn',
                   patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
                   parameterName: 'isbn',
@@ -482,17 +481,16 @@ module.exports = (app) => {
                     url: 'services/publication',
                     queryParameter: 'isbn',
                     showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear' ],
-                    type: "Publication",
+                    type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme ISBN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     editWithTemplate: {
-                      template: "workflow",
+                      template: 'workflow',
                       descriptionKey: 'maintPub'
                     }
                   }
                 }
-              }
-              ,
+              },
               {
                 includeOnlyWhen: {
                   hasMediaType: [ 'Film', 'MusicRecording', 'Game' ]
@@ -501,7 +499,7 @@ module.exports = (app) => {
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
                   label: 'EAN',
-                  pattern: '^ *([0-9]{13})?\s*$',
+                  pattern: '^ *([0-9]{13})?\\s*$',
                   patternMismatchMessage: 'Dette ser ikke ut som et gyldig EAN-nummer',
                   parameterName: 'ean',
                   automationId: 'searchEanValueSuggestions',
@@ -515,21 +513,20 @@ module.exports = (app) => {
                     url: 'services/publication',
                     queryParameter: 'hasEan',
                     showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear' ],
-                    type: "Publication",
+                    type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     editWithTemplate: {
-                      template: "workflow",
+                      template: 'workflow',
                       descriptionKey: 'maintPub'
                     }
                   }
                 }
-              }
-              ,
+              },
               {
                 label: 'Verket har ikke hovedansvarlig',
                 id: 'missingMainEntry',
-                rdfProperty: 'missingMainEntry',
+                rdfProperty: 'missingMainEntry'
               },
               {
                 label: 'Hovedansvarlig',
@@ -616,8 +613,8 @@ module.exports = (app) => {
                 // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
               },
               {
-                label: "Skal ikke inngå i verksliste",
-                rdfProperty: 'improperWork',
+                label: 'Skal ikke inngå i verksliste',
+                rdfProperty: 'improperWork'
               },
               {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
@@ -750,11 +747,10 @@ module.exports = (app) => {
               },
               {
                 includeOnlyWhen: {
-                  hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'LanguageCourse', 'ComicBook', ]
+                  hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'LanguageCourse', 'ComicBook' ]
                 },
                 rdfProperty: 'binding'
-              }
-              ,
+              },
               {
                 rdfProperty: 'language',
                 multiple: true
@@ -781,8 +777,7 @@ module.exports = (app) => {
                 },
                 rdfProperty: 'duration',
                 type: 'input-duration'
-              }
-              ,
+              },
               {
                 includeOnlyWhen: {
                   hasMediaType: [ 'Other', 'Film', 'Game' ]
@@ -839,7 +834,7 @@ module.exports = (app) => {
                   }
                 },
                 headlinePart: {
-                  order: 50,
+                  order: 50
                 }
               },
               {
@@ -948,7 +943,7 @@ module.exports = (app) => {
             enableSpecialInput: {
               inputId: 'publicationOfInput',
               buttonLabel: 'Endre verk for utgivelse',
-              confirmLabel: 'Er du sikker på at du vil endre verksknytningen for denne utgivelsen?',
+              confirmLabel: 'Er du sikker på at du vil endre verksknytningen for denne utgivelsen?'
             }
           },
           {
@@ -996,7 +991,7 @@ module.exports = (app) => {
               },
               {
                 includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
-                rdfProperty: 'fictionNonfiction',
+                rdfProperty: 'fictionNonfiction'
               },
               { rdfProperty: 'audience', multiple: true },
               {
@@ -1050,11 +1045,11 @@ module.exports = (app) => {
                         inputId: 'relationTypeInput',
                         valueAsStringMatches: '^.*partOf$',
                         initial: 'hide'
-                      },
+                      }
                     }
                   ]
                 },
-                subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+                subjects: [ 'Work' ] // blank node can be attached to the the loaded resource of one of these types
               },
               {
                 label: 'Verksserie',
@@ -1094,7 +1089,7 @@ module.exports = (app) => {
                     }
                   ]
                 },
-                subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+                subjects: [ 'Work' ] // blank node can be attached to the the loaded resource of one of these types
               },
               {
                 rdfProperty: 'hasSummary',
@@ -1189,7 +1184,7 @@ module.exports = (app) => {
                     }
                   ]
                 },
-                subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+                subjects: [ 'Work' ] // blank node can be attached to the the loaded resource of one of these types
               },
               {
                 rdfProperty: 'subject',
@@ -1386,7 +1381,7 @@ module.exports = (app) => {
                     {
                       label: 'Tittel på del',
                       rdfProperty: 'mainTitle',
-                      required: true,
+                      required: true
                     },
                     {
                       label: 'Verk',
@@ -1527,7 +1522,7 @@ module.exports = (app) => {
                 widgetOptions: {
                   maintenance: true,
                   editWithTemplate: {
-                    template: "workflow",
+                    template: 'workflow',
                     descriptionKey: 'maintPub'
                   }
                 }
@@ -1540,10 +1535,10 @@ module.exports = (app) => {
                 widgetOptions: {
                   maintenance: true,
                   editWithTemplate: {
-                    template: "workflow",
+                    template: 'workflow',
                     descriptionKey: 'maintWork'
                   },
-                  editSubItemWithTemplate: "workflow"
+                  editSubItemWithTemplate: 'workflow'
                 }
               }
             ]
@@ -1552,7 +1547,7 @@ module.exports = (app) => {
         search: {
           person: {
             type: 'person',
-            sortedListQueryForField: "name",
+            sortedListQueryForField: 'name',
             selectIndexLabel: 'Person',
             resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
@@ -1562,7 +1557,7 @@ module.exports = (app) => {
           },
           subject: {
             type: 'subject',
-            sortedListQueryForField: "prefLabel",
+            sortedListQueryForField: 'prefLabel',
             selectIndexLabel: 'Generelt',
             resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
             scrollToMiddleOfResultSet: true
@@ -1627,14 +1622,14 @@ module.exports = (app) => {
           genre: {
             type: 'genre',
             selectIndexLabel: 'Sjanger',
-            sortedListQueryForField: "prefLabel",
+            sortedListQueryForField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
             scrollToMiddleOfResultSet: true
           },
           corporation: {
             type: 'corporation',
             selectIndexLabel: 'Organisasjon',
-            sortedListQueryForField: "name",
+            sortedListQueryForField: 'name',
             resultItemLabelProperties: [ 'name.', 'subdivision', '(specification)', 'placePrefLabel' ],
 //          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
             scrollToMiddleOfResultSet: true
@@ -1642,7 +1637,7 @@ module.exports = (app) => {
           place: {
             type: 'place',
             selectIndexLabel: 'Sted',
-            sortedListQueryForField: "prefLabel",
+            sortedListQueryForField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
             resultItemDetailsLabelProperties: [ 'alternativeName' ],
             scrollToMiddleOfResultSet: true
@@ -1650,15 +1645,15 @@ module.exports = (app) => {
           event: {
             type: 'event',
             selectIndexLabel: 'Hendelse',
-            sortedListQueryForField: "prefLabel",
-            resultItemLabelProperties: [ 'prefLabel', '(ordinal).', 'placePrefLabel,', 'date' ], //prefLabel (ordinal). place, date
+            sortedListQueryForField: 'prefLabel',
+            resultItemLabelProperties: [ 'prefLabel', '(ordinal).', 'placePrefLabel,', 'date' ], // prefLabel (ordinal). place, date
 //          resultItemDetailsLabelProperties: [ 'placePrefLabel', 'inParens:placeAlternativeName', 'specification' ]
             scrollToMiddleOfResultSet: true
           },
           serial: {
             type: 'serial',
             selectIndexLabel: 'Serie',
-            sortedListQueryForField: "serialMainTitle",
+            sortedListQueryForField: 'serialMainTitle',
             resultItemLabelProperties: [ 'serialMainTitle:', 'subtitle' ],
             resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ],
             scrollToMiddleOfResultSet: true
@@ -1713,7 +1708,7 @@ module.exports = (app) => {
           corporation: 'Corporation',
           instrument: 'Instrument',
           compositionType: 'CompositionType',
-          workSeries: 'WorkSeries',
+          workSeries: 'WorkSeries'
         },
         resourceTypeAliases: {
           'compositiontype': 'compositionType',
@@ -1794,4 +1789,3 @@ module.exports = (app) => {
     response.json(config)
   })
 }
-
