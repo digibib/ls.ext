@@ -140,7 +140,8 @@ module.exports = (app) => {
         pickupNumber: hold.pickupnumber,
         queuePlace: hold.priority,
         suspended: hold.suspend === '1',
-        suspendUntil: hold.suspend_until
+        suspendUntil: hold.suspend_until,
+        itype: items[0].itype
       }
     })
   }
@@ -177,7 +178,8 @@ module.exports = (app) => {
           title: json.title,
           author: json.author,
           publicationYear: json.publicationyear,
-          checkoutId: loan.issue_id
+          checkoutId: loan.issue_id,
+          itype: json.itype
         }
       })
   }
