@@ -14,6 +14,7 @@ import ClickableElement from '../components/ClickableElement'
 import { formatDate } from '../utils/dateFormatter'
 import Libraries from '../components/Libraries'
 import Loading from '../components/Loading'
+import MediaType from '../components/MediaType'
 
 class UserLoans extends React.Component {
   renderPickups () {
@@ -21,30 +22,33 @@ class UserLoans extends React.Component {
       return (
         <section className="pickup">
           <h1><FormattedMessage {...messages.canBePickedUp} /></h1>
-          {this.props.loansAndReservations.pickups.map(item => (
-            <article key={item.pickupNumber}
-                     className="single-entry"
-                     data-automation-id="UserLoans_pickup"
-                     data-recordid={item.recordId}>
-              <div className="entry-details">
-                <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
-                <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
-              </div>
-              <div className="loan-expire">
-                <h2><FormattedMessage {...messages.expiry} />:</h2>
-                <p data-automation-id="UserLoans_pickup_expiry">{formatDate(item.expiry)}</p>
-              </div>
-              <div className="loan-pickup-number">
-                <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
-                <p data-automation-id="UserLoans_pickup_pickupNumber">{item.pickupNumber}</p>
-              </div>
-              <div className="loan-pickup-location">
-                <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
-                <p
-                  data-automation-id="UserLoans_pickup_branch">{this.props.intl.formatMessage({ id: item.branchCode })}</p>
-              </div>
-            </article>
-          ))}
+            {this.props.loansAndReservations.pickups.map(item => (
+              <article key={item.reserveId}
+                       className="single-entry"
+                       data-automation-id="UserLoans_pickup"
+                       data-recordid={item.recordId}>
+                <div className="flex-col media-type">
+                  <span>{item.itype}</span>
+                </div>
+                <div className="flex-col entry-details">
+                  <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
+                  <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
+                </div>
+                <div className="flex-col loan-expire">
+                  <h2><FormattedMessage {...messages.expiry} />:</h2>
+                  <p data-automation-id="UserLoans_pickup_expiry">{formatDate(item.expiry)}</p>
+                </div>
+                <div className="flex-col loan-pickup-number">
+                  <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
+                  <p data-automation-id="UserLoans_pickup_pickupNumber">{item.pickupNumber}</p>
+                </div>
+                <div className="flex-col loan-pickup-location">
+                  <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
+                  <p
+                    data-automation-id="UserLoans_pickup_branch">{this.props.intl.formatMessage({ id: item.branchCode })}</p>
+                </div>
+              </article>
+            ))}
         </section>
       )
     }

@@ -37,26 +37,37 @@
 }
 
 .pickup, .reserve, .loan {
-  @include span(12);
-  @include container;
+  width: span(12);
+  /* @include span(12);
+  @include container;*/
 
   > h1 {
-    @include span(12);
+    /* @include span(12);*/
+    width: span(12);
     margin-top: rhythm(4);
-    font-size: rhythm(3);
+    font-size: rhythm(4);
     font-weight: normal;
     border-bottom: 4px solid $blackColor;
     padding-bottom: rhythm(1);
   }
 
   .single-entry {
-    @include span(12);
-    @include container;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: span(12);
+    float: none;
+    /*@include span(12);
+    @include container;*/
 
     &:last-child {
       border-bottom: none;
     }
 
+  }
+
+  .flex-col {
+    margin-bottom: gutter();
   }
 
 }
@@ -67,7 +78,8 @@
     margin-bottom: rhythm(2);
 
     .entry-details {
-      @include span(12);
+      /* @include span(12);*/
+      width: span(12);
     }
 
     h1 {
@@ -83,13 +95,19 @@
     }
 
     p {
-      @include span(12);
+      /* @include span(12);*/
+      width: span(12);
     }
 
   }
 
+  .media-type {
+    width: span(12);
+  }
+
   .loan-expire, .loan-pickup-number, .loan-pickup-location {
-    @include span(6);
+    /* @include span(6);*/
+    width: span(6);
 
     h2 {
       text-transform: uppercase;
@@ -109,7 +127,8 @@
   }
 
   .loan-pickup-number {
-    @include span(6 last);
+    /*@include span(6 last);*/
+    width: span(6);
   }
 
 }
@@ -129,8 +148,9 @@
   }
 
   .reserved-entry-content {
-    @include span(12);
-    @include container;
+    width: span(12);
+    /*@include span(12);
+    @include container;*/
     padding: rhythm(3) rhythm(1);
 
     &:nth-child(even) {
@@ -140,18 +160,21 @@
   }
 
   .meta-item {
-    @include span(12);
-    @include container;
+    width: span(12);
+    /*@include span(12);
+    @include container;*/
     font-size: rhythm(2.5);
   }
 
   .meta-label {
-    @include span(12);
+    /*@include span(12);*/
+    width: span(12);
     font-weight: bold;
   }
 
   .meta-content {
-    @include span(12);
+    /*@include span(12);*/
+    width: span(12);
     margin-bottom: rhythm(2);
   }
 
@@ -181,6 +204,7 @@
     margin-bottom: rhythm(2);
 
     .entry-details {
+      width: span(3);
       /*@include span(3);*/
     }
 
@@ -200,6 +224,7 @@
   }
 
   .due-date {
+    width: span(3);
     /*@include span(3);*/
 
     h2 {
@@ -216,6 +241,7 @@
   }
 
   .renew-message {
+    width: span(3);
     /*@include span(3);*/
     /*margin-top: rhythm(2);*/
     margin-top: 0;
@@ -258,21 +284,29 @@
     .single-entry {
 
       .entry-details {
-        @include span(4);
+        /* @include span(4); */
+        width: span(4);
       }
 
     }
 
+    .media-type {
+      width: span(1);
+    }
+
     .loan-expire {
-      @include span(2);
+      /* @include span(2); */
+      width: span(2);
     }
 
     .loan-pickup-number {
-      @include span(3);
+      /*@include span(3);*/
+      width: span(3);
     }
 
     .loan-pickup-location {
-      @include span(2 last);
+      /*@include span(2 last);*/
+      width: span(2);
     }
 
   }
@@ -284,25 +318,30 @@
       padding-bottom: rhythm(2);
 
       .entry-details {
-        @include span(4);
+        /* @include span(4);*/
+        width: span(4);
       }
 
     }
 
     .due-date {
-      @include span(2);
+      /* @include span(2); */
+      width: span(2);
     }
 
     .renew-message {
-      @include span(3);
+      /* @include span(3); */
+      width: span(3);
     }
 
     .renew-button {
-      @include span(2 last);
+      /* @include span(2 last); */
+      width: span(2);
     }
 
     .renew-all-button {
-      @include span(2 last);
+      /* @include span(2 last);*/
+      width: span(2);
       background-color: green;
 
       &:disabled {
