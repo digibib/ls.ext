@@ -1845,11 +1845,13 @@
           axiosMethod = axios.get
           searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
         } else {
+          // basic search
           axiosMethod = axios.get
           var query = isAdvancedQuery(searchString) ? searchString : _.compact(_.map(config.search[ indexType ].queryTerms, function (queryTerm) {
               var wildCardPostfix = queryTerm.wildcard ? '*' : ''
+              var boost = queryTerm.boost ? '^' + queryTerm.boost : ''
               if (!queryTerm.onlyIfMatching || new RegExp(queryTerm.onlyIfMatching).test(searchString)) {
-                return `${queryTerm.field}:${transformQueryString(queryTerm)}${wildCardPostfix}`
+                return `${queryTerm.field}:(${transformQueryString(queryTerm)})${wildCardPostfix}${boost}`
               }
             })).join(' OR ')
           searchBody = {
