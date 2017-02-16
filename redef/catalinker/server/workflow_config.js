@@ -1667,10 +1667,10 @@ module.exports = (app) => {
             type: 'publication',
             selectIndexLabel: 'Utgivelse',
             queryTerms: [
-              { field: 'recordId' },
-              { field: 'mainTitle', wildcard: true },
+              { field: 'recordId', onlyIfMatching: '^\\d{1,11}$' },
+              { field: 'mainTitle', boost: 20, wildcard: true },
               { field: 'subtitle', wildcard: true },
-              { field: 'mainEntryName', wildcard: true }
+              { field: 'mainEntryName', boost: 30, wildcard: true }
             ],
             legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
             resultItemLabelProperties: [ 'creator', 'mainTitle', 'subtitle', 'publicationYear', 'recordIdPrefixed' ],
