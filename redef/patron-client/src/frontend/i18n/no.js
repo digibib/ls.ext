@@ -171,6 +171,7 @@ export default {
   'RegistrationModal.messageSuccessJuvenile': 'Du er nå registrert som barnelåner hos oss. Nedenfor er en midlertidig brukerid som du kan bruke til å logge inn for å reservere. Du kan bestille bøker her, men må ta kontakt med biblioteket ditt for å få lånekort og hente det du har bestilt.',
   'RegistrationModal.patronCategoryAdult': 'Lånerkategori: voksen',
   'RegistrationModal.patronCategoryJuvenile': 'Lånerkategori: barn',
+  'ReservationModal.ageRestriction': 'Du er dessverre ikke gammel nok til å låne denne.',
   'ReservationModal.button': 'OK',
   'ReservationModal.cancel': 'Avbryt',
   'ReservationModal.choosePickupLocation': 'Velg hentested:',
