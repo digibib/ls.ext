@@ -304,8 +304,9 @@
           linksThatWillBeMoved: _
             .chain(response.data)
             .values()
-            .reduce(function (memo, num) {return memo + num}, 0)
-            .value()})
+            .reduce(function (memo, num) { return memo + num }, 0)
+            .value()
+        })
         $('#merge-resources-dialog').dialog({
           resizable: false,
           modal: true,
@@ -1717,7 +1718,7 @@
         inputsForDomainType[ type ] = inputsForDomainType[ type ].sort(function (a, b) {
           return (inputOrderMap[ a.predicate ]) - (inputOrderMap[ b.predicate ])
         })
-        _.each(inputsForDomainType [ type ], function (input) {
+        _.each(inputsForDomainType[ type ], function (input) {
           if (readonlyness[ input.predicate ]) {
             input.readOnly = true
           }
@@ -1729,7 +1730,7 @@
       return axios.all(predefinedValues).then(function (values) {
         _.each(values, function (predefinedValue) {
           if (predefinedValue) {
-            applicationData.predefinedValues [ unPrefix(predefinedValue.property) ] = predefinedValue.values
+            applicationData.predefinedValues[ unPrefix(predefinedValue.property) ] = predefinedValue.values
             _.each(predefinedValue.values, function (predefVal) {
               applicationData.allLabels[ predefVal[ '@id' ] ] = i18nLabelValue(predefVal.label)
             })
@@ -1764,7 +1765,7 @@
           var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
           var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
           var offset = 15
-          if (supportPanelBase.length == 0) {
+          if (supportPanelBase.length === 0) {
             supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}]`)
             offset = 0
           }
@@ -2730,9 +2731,6 @@
               authorityLabels: {},
               compare: false,
               compareValues: {},
-              values: function (node) {
-                debugger
-              },
               headlinePart: function (headlinePart) {
                 return {
                   value: headlinePart.predefinedValue
@@ -2969,11 +2967,11 @@
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, editAuthorityMode) {
-                const inputValue = event.context;
-                const input = ractive.get(grandParentOf(event.keypath));
+                const inputValue = event.context
+                const input = ractive.get(grandParentOf(event.keypath))
                 const proceed = function () {
-                  const datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0';
-                  const subject = ractive.get('targetUri.' + rdfType);
+                  const datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
+                  const subject = ractive.get('targetUri.' + rdfType)
                   if (subject) {
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
@@ -3155,7 +3153,7 @@
                 }
               },
               selectFirstVisibleSearchResultItem: function (event) {
-                let searchResultBoxPosition = $("#search-result").position()
+                let searchResultBoxPosition = $('#search-result').position()
                 let searchResultItem = _.find($('.search-result-item'), function (item) {
                   return $(item).position().top > searchResultBoxPosition.top
                 })
@@ -4067,7 +4065,9 @@
               compare: true
             }
           ], function (qualifierSpec) {
-            const desiredType = _.find(_.pluck(ractive.get('config.inputForms'), 'rdfType'), function (type) {return query[ qualifierSpec.qualifier + type ] && !ractive.get(`targetUri.${query[ qualifierSpec.qualifier + type ]}`)})
+            const desiredType = _.find(_.pluck(ractive.get('config.inputForms'), 'rdfType'), function (type) {
+              return query[ qualifierSpec.qualifier + type ] && !ractive.get(`targetUri.${query[ qualifierSpec.qualifier + type ]}`)
+            })
             if (desiredType) {
               fetchExistingResource(query[ qualifierSpec.qualifier + desiredType ], {
                 inputs: ractive.get(`applicationData.inputsForDomainType.${desiredType}`),
