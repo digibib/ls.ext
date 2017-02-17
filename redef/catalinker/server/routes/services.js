@@ -36,6 +36,6 @@ module.exports = (app) => {
   }))
 
   function cacheableRequestsFilter (req, res) {
-    return (req.method === 'GET' || req.method === 'HEAD') && !/^\/search\/.*$/.test(req.url) && !(URI.parseQuery(URI.parse(req.url).query).format === 'TURTLE')
+    return (req.method === 'GET' || req.method === 'HEAD') && !/^\/search\/.*$/.test(req.url) && !/^.*\/relations$/.test(req.url) && !(URI.parseQuery(URI.parse(req.url).query).format === 'TURTLE')
   }
 }
