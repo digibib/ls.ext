@@ -135,7 +135,7 @@ When(/^den skal inneholde (i riktig rekkefølge |)(eksemplarinformasjonen|utgive
       row['Filial'] = @context[:random_migrate_branchcode]
     end
     if row['Hovedansvarlig'].eql? 'random_migrate_person_name'
-      row['Hovedansvarlig'] = @context[:random_migrate_person_names][@context[:prefix] + @context[:random_migrate_id]]
+      row['Hovedansvarlig'] = @context[:random_migrate_part_creator_names][@context[:prefix] + @context[:random_migrate_id]]
     end
   end
   wait_retry { @browser.element(data_automation_id: /^publication_info_/).present? }
@@ -585,6 +585,6 @@ When(/^trykker jeg på sorteringsknappen etter "([^"]*)"$/) do |column_name|
 end
 
 When(/^jeg søker etter forfatter av del med tittel "([^"]*)"$/) do |title|
-  @site.SearchPatronClient.search_with_text "author:#{@context[:random_migrate_person_names]['prefix0' + @context[:random_migrate_id]]} title:#{title}"
+  @site.SearchPatronClient.search_with_text "author:#{@context[:random_migrate_part_creator_names]['prefix0' + @context[:random_migrate_id]]} title:#{title}"
   @context[:prefix] = 'prefix0'
 end

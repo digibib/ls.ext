@@ -13,7 +13,7 @@
         <li >
             <ul >
                 {{#each relationships}}
-                <li >
+                <li class="rel-entry">
                     {{#if config.search[config.rdfTypeToIndexType[targetType]].linkFromUri}}
                     <a class="pure-u-1-1"
                        href="{{getLinkfromUri({uri: .targetUri}, config.search[config.rdfTypeToIndexType[targetType]].linkFromUri)}}"
