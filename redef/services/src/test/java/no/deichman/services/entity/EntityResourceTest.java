@@ -9,7 +9,6 @@ import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import no.deichman.services.utils.ResourceReader;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -35,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
@@ -536,7 +536,7 @@ public class EntityResourceTest {
         String body = "{\"replacee\": \"" + replacee + "\"}";
 
         Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
-        assertEquals(204, result.getStatus());
+        assertEquals(NO_CONTENT.getStatusCode(), result.getStatus());
         assertTrue(repo.getModel().isIsomorphicWith(testModel));
         Mockito.verify(mockSearchService).delete(new XURI(replacee));
         Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w1"));
@@ -550,7 +550,7 @@ public class EntityResourceTest {
         entityResource = new EntityResource(new EntityServiceImpl(new InMemoryRepository(), null), mockSearchService, null);
         String body = "{\"replacee\": \"" + replacee + "\"}";
         Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
-        assertEquals(404, result.getStatus());
+        assertEquals(NOT_FOUND.getStatusCode(), result.getStatus());
     }
 
     @Test(expected = BadRequestException.class)

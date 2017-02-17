@@ -56,7 +56,10 @@ import java.util.List;
 import static com.google.common.collect.ImmutableMap.of;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.json.Json.createObjectBuilder;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static junit.framework.TestCase.fail;
 import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
@@ -1379,8 +1382,8 @@ public class AppTest {
 
         HttpResponse<String> result = buildReplaceRequest(replaceeXuri, replacementXuri);
 
-        assertEquals(204, result.getStatus());
-        assertEquals(404, Unirest.get(appURI + replaceeXuri.getType() + "/" + replaceeXuri.getId()).asString().getStatus());
+        assertEquals(NO_CONTENT.getStatusCode(), result.getStatus());
+        assertEquals(NOT_FOUND.getStatusCode(), Unirest.get(appURI + replaceeXuri.getType() + "/" + replaceeXuri.getId()).asString().getStatus());
         workXuris.forEach(s -> {
             try {
                 String body = Unirest.get(appURI + s.getType() + "/" + s.getId()).asString().getBody();
@@ -1397,7 +1400,7 @@ public class AppTest {
         XURI replaceeXuri = new XURI("http://data.deichman.no/person/w1");
         XURI replacementXuri = new XURI("http://data.deichman.no/person/w2");
         HttpResponse<String> result = buildReplaceRequest(replaceeXuri, replacementXuri);
-        assertEquals(404, result.getStatus());
+        assertEquals(NOT_FOUND.getStatusCode(), result.getStatus());
     }
 
     @Test
@@ -1419,7 +1422,7 @@ public class AppTest {
                 .body("{\"replacce\": \"" + getLocation(response2) + "\"}")
                 .asString();
 
-        assertEquals(400, mergeResponse.getStatus());
+        assertEquals(BAD_REQUEST.getStatusCode(), mergeResponse.getStatus());
     }
 
     private Boolean resourceIsIndexed(String uri) throws Exception {

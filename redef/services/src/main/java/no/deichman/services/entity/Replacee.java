@@ -10,7 +10,7 @@ public class Replacee {
 
     public Replacee() {}
 
-    public XURI getReplacee() throws Exception {
+    public final XURI getReplacee() throws Exception {
         return new XURI(replacee);
     }
 }
