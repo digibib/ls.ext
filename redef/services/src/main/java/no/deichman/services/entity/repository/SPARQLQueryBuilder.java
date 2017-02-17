@@ -529,6 +529,7 @@ public final class SPARQLQueryBuilder {
                 + "WHERE {\n"
                 + "  ?a ?b <%s> ;\n"
                 + "     a ?type .\n"
+                + "  FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
                 + "}\n"
                 + "GROUP BY ?type ", xuri.getUri());
         return QueryFactory.create(queryString);
