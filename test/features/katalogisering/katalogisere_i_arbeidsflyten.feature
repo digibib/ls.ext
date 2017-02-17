@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@random_migrate
 @redef @arbeidsflyt
 Egenskap: Katalogisere i arbeidsflyt
   Som katalogisator
@@ -500,3 +501,18 @@ Egenskap: Katalogisere i arbeidsflyt
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
     Og legger inn siste del av verkts uri i feltet "Verk"
     Så velger jeg et verk fra treffliste fra verksindeksen
+
+  Scenario: Slå sammen to personer i katalogisering
+    Gitt at jeg vil slå sammen to personer
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn person nr 1 i feltet "Personer" og trykker enter
+    Og jeg venter litt
+    Så velger jeg en person fra treffliste fra personregisteret
+    Så klikker jeg på linken for utvidet redigering
+    Og jeg venter litt
+    Så sjekker jeg at antall relasjoner er 1
+    Og at jeg skriver inn person nr 2 i feltet "Søk etter duplikater" og trykker enter
+    Så velger jeg en person fra treffliste fra personregisteret
+    Så trykker jeg på knappen for å slå sammen to autoriteter
+    Så trykker jeg på "Fortsett"-knappen i dialogen
+    Så sjekker jeg at antall relasjoner er 2
