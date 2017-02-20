@@ -375,10 +375,24 @@
       "@id": "deichman:workSeries"
     }
   },
-  "type": "Work",
+  "type": "deichman:WorkInFocus",
   "subjects": {
-      "@embed": "@always"
-   },
+    "@type": [
+      "Work",
+      "Subject",
+      "Event",
+      "Place",
+      "Person",
+      "Corporation"
+    ],
+    "contributors": {
+      "@embed": "@always",
+      "type": "deichman:Contribution",
+      "agent": {
+        "@embed": "@always"
+      }
+    }
+  },
   "publications": {
     "type": "deichman:Publication",
     "@embed": "@always",
