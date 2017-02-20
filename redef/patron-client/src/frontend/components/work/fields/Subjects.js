@@ -20,6 +20,12 @@ class Subjects extends React.Component {
         label += `, ${subject.date}`
       }
     }
+    if (subject.type === 'Work' && subject.contributors) {
+      const contribs = subject.contributors.filter(contrib => contrib.type.includes('MainEntry'))
+      if (contribs.length >= 1) {
+        label += ` / ${contribs[0].agent.name}`
+      }
+    }
     return label
   }
 

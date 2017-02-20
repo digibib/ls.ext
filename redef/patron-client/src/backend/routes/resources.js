@@ -105,15 +105,17 @@ function parseRDFtoJsonLD (ntdata, workId) {
       if (error) {
         reject(error)
       }
-      // Remove type -> Work relations on all works, except the work in focus, to avoid
-      // problems when work has subjects which themselves are works.
-      // TODO revise this hack - it might make it difficult to present the work relations on work page.
+
+      // We need to add a class to the work 'in focus', in case there are other works
+      // in the graph (for example work as subject of work), and use this class
+      // for framing.
       ntdoc = ntdoc.map(el => {
-        if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] !== `http://data.deichman.no/work/${workId}`) {
-          delete el[ '@type' ]
+        if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] === `http://data.deichman.no/work/${workId}`) {
+          el[ '@type' ].push('http://data.deichman.no/ontology#WorkInFocus')
         }
         return el
       })
+
       resolve(ntdoc)
     })
   })
