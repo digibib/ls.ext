@@ -14,6 +14,7 @@ module.exports = (app) => {
       if (['PUT', 'PATCH', 'DELETE'].indexOf(rsp.req.method) !== -1) {
         apicache.clear(req.originalUrl)
         apicache.clear(req.originalUrl + '/references')
+        apicache.clear(req.originalUrl + '/relations')
         console.log(`clearing ${req.originalUrl}`)
       }
       callback(null, data)
@@ -35,6 +36,6 @@ module.exports = (app) => {
   }))
 
   function cacheableRequestsFilter (req, res) {
-    return (req.method === 'GET' || req.method === 'HEAD') && !/^\/search\/.*$/.test(req.url) && !(URI.parseQuery(URI.parse(req.url).query).format === 'TURTLE')
+    return (req.method === 'GET' || req.method === 'HEAD') && !/^\/search\/.*$/.test(req.url) && !/^.*\/relations$/.test(req.url) && !(URI.parseQuery(URI.parse(req.url).query).format === 'TURTLE')
   }
 }

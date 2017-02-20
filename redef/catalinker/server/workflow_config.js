@@ -1,3 +1,4 @@
+var _ = require('underscore')
 function maintenanceInputs (label, type) {
   return {
     // this is an input type used to search for a main resource, e.g. Work. The rendered input field
@@ -47,6 +48,22 @@ module.exports = (app) => {
   app.get('/config', function (request, response) {
     response.setHeader('Cache-Control', 'public, max-age=3600')
     response.setHeader('Expires', new Date(Date.now() + 3600000).toUTCString())
+    const typeMap = {
+      // this map contains a map of all known independent resource types (i.e. not blank node types) as they appear in
+      // resource urls and their canonical names
+      work: 'Work',
+      person: 'Person',
+      publication: 'Publication',
+      genre: 'Genre',
+      subject: 'Subject',
+      place: 'Place',
+      event: 'Event',
+      serial: 'Serial',
+      corporation: 'Corporation',
+      instrument: 'Instrument',
+      compositionType: 'CompositionType',
+      workSeries: 'WorkSeries',
+    }
     var config =
       {
         kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
@@ -1694,6 +1711,11 @@ module.exports = (app) => {
             scrollToMiddleOfResultSet: true
           }
         },
+        relationTargetLabels: {
+          Work: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,'],
+          Publication: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,'],
+          PublicationPart: [ 'mainTitle']
+        },
         typeMap: {
           // this map contains a map of all known independent resource types (i.e. not blank node types) as they appear in
           // resource urls and their canonical names
@@ -1709,6 +1731,9 @@ module.exports = (app) => {
           instrument: 'Instrument',
           compositionType: 'CompositionType',
           workSeries: 'WorkSeries'
+        },
+        rdfTypeToIndexType: {
+          'Work': 'work'
         },
         resourceTypeAliases: {
           'compositiontype': 'compositionType',
@@ -1783,7 +1808,69 @@ module.exports = (app) => {
           sheetMusPub: 'Katalogisering av musikknoter',
           musRecPub: 'Katalogisering av musikkopptak',
           maintWork: 'Vedlikeholde verk',
-          maintPub: 'Vedlikeholde utgivelse'
+          maintPub: 'Vedlikeholde utgivelse',
+          editPerson: 'Utvidet redigering av personautoritet',
+          editCorporation: 'Utvidet redigering av organisasjonsautoritet',
+          editSubject: 'Utvidet redigering av emneautoritet',
+          editPlace: 'Utvidet redigering av stedsautoritet',
+          editSerial: 'Utvidet redigering av forlagsserie',
+          editWorkSeries: 'Utvidet redigering av verksserie',
+          editInstrument: 'Utvidet redigering av instrumentautoritet',
+          editCompositionType: 'Utvidet redigering av komposjonstype',
+          comparePerson: 'Sammenlikne og slå sammen personautoritet',
+          compareCorporation: 'Sammenlikne og slå sammen organisasjonsautoritet',
+          compareSubject: 'Sammenlikne og slå sammen emneautoritet',
+          comparePlace: 'Sammenlikne og slå sammen stedsautoritet',
+          compareSerial: 'Sammenlikne og slå sammen forlagsserie',
+          compareWorkSeries: 'Sammenlikne og slå sammen verksserie',
+          compareInstrument: 'Sammenlikne og slå sammen instrumentautoritet',
+          compareCompositionType: 'Sammenlikne og slå sammen komposjonstype',
+        },
+        translations: {
+          Work: {
+            indet: 'verk',
+            det: 'verket',
+          },
+          Publication: {
+            indet: 'utgivelse',
+            det: 'utgivelsen'
+          },
+          PublicationPart: {
+            indet: 'utgivelsesdel',
+            det: 'utgivelsendelen'
+          },
+          Person: {
+            indet: 'person',
+            det: 'personen'
+          },
+          Corporation: {
+            indet: 'korporasjon',
+            det: 'korporasjonen'
+          },
+          Subject: {
+            indet: 'emne',
+            det: 'emnet'
+          },
+          Place: {
+            indet: 'sted',
+            det: 'stedet'
+          },
+          Serial: {
+            indet: 'forlagsserie',
+            det: 'forlagsserien'
+          },
+          WorkSeries: {
+            indet: 'verksserie',
+            det: 'verksserien'
+          },
+          Genre: {
+            indet: 'sjanger',
+            det: 'sjangeren'
+          },
+          Event: {
+            indet: 'hendelse',
+            det: 'hendelsen'
+          }
         }
       }
     response.json(config)

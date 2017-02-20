@@ -29,6 +29,7 @@
     let supportPanelWidth
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
+    require('jquery.scrollto')
     let etagData = {}
     require('isbn2')
     ISBN = ISBN || window.ISBN
@@ -297,6 +298,73 @@
       })
     }
 
+    var mergeResources = function (mergeResourcesSpec, targetUri, sourceUri, proceed) {
+      axios.get(proxyToServices(`${sourceUri}/references`)).then(function (response) {
+        ractive.set('mergeResourcesWarning', {
+          linksThatWillBeMoved: _
+            .chain(response.data)
+            .values()
+            .reduce(function (memo, num) { return memo + num }, 0)
+            .value()
+        })
+        $('#merge-resources-dialog').dialog({
+          resizable: false,
+          modal: true,
+          width: 450,
+          title: 'Slå sammen autoriteter',
+          buttons: [
+            {
+              text: 'Fortsett',
+              click: function () {
+                $(this).dialog('close')
+                proceed()
+              }
+            },
+            {
+              text: 'Avbryt',
+              class: 'default',
+              click: function () {
+                $(this).dialog('close')
+              }
+            }
+          ],
+          open: function () {
+            $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+          }
+        })
+      })
+    }
+
+    var warnEditResourceName = function (editResourcesSpec) {
+      ractive.set('editResourceWarning', editResourcesSpec)
+      $('#edit-resource-warning-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        title: `Endre ${editResourcesSpec.fieldLabel}?`,
+        buttons: [
+          {
+            text: 'Fortsett',
+            click: function () {
+              $(this).dialog('close')
+              editResourcesSpec.proceed()
+            }
+          },
+          {
+            text: 'Avbryt',
+            class: 'default',
+            click: function () {
+              editResourcesSpec.revert()
+              $(this).dialog('close')
+            }
+          }
+        ],
+        open: function () {
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        }
+      })
+    }
+
     var alertAboutExistingResource = function (spec, existingResources, proceed) {
       ractive.set('existingResourcesDialog.existingResources', existingResources)
       ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural.replace('${numberOfResources}', existingResources.length) : spec.legendSingular)
@@ -400,22 +468,26 @@
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
             return value.id
           })
-        if (!input.values[ index ]) {
-          input.values[ index ] = {}
+        if (options.compareValues) {
+          input.compareValues = input.compareValues || emptyValues()
         }
-        input.values[ index ].old = {
+        let valuesKey = options.compareValues ? 'compareValues' : 'values'
+        if (!input[ valuesKey ][ index ]) {
+          input[ valuesKey ][ index ] = {}
+        }
+        input[ valuesKey ][ index ].old = {
           value: valuesAsArray
         }
-        input.values[ index ].current = {
+        input[ valuesKey ][ index ].current = {
           value: valuesAsArray,
           uniqueId: _.uniqueId()
         }
-        input.values[ index ].uniqueId = _.uniqueId()
+        input[ valuesKey ][ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
-          input.values[ index ].suggested = { source: options.source }
+          input[ valuesKey ][ index ].suggested = { source: options.source }
           input.suggestedValues = valuesAsArray
         } else if (options.source) {
-          input.values[ index ].current.accepted = { source: options.source }
+          input[ valuesKey ][ index ].current.accepted = { source: options.source }
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
         ractive.update(`${input.keypath}.values.${index}`)
@@ -425,8 +497,11 @@
 
     function setSingleValue (value, input, index, options) {
       options = options || {}
+      if (options.compareValues) {
+        input.compareValues = input.compareValues || emptyValues()
+      }
       if (value) {
-        input.values[ index ] = {
+        input[ options.compareValues ? 'compareValues' : 'values' ][ index ] = {
           old: options.keepOld ? input.values[ index ].old : {
               value: value.value,
               lang: value.lang
@@ -963,7 +1038,7 @@
                       }
                     } else if (input.type === 'select-predefined-value') {
                       if (!options.onlyValueSuggestions) {
-                        setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                        setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                         if (input.isSubInput && !options.source) {
                           input.values[ rootIndex + (offset) ].nonEditable = true
                           ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
@@ -992,7 +1067,7 @@
                         setIdValue(value.id, input, 0)
                       })
                     } else {
-                      _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { value: '' } ]), function (value, index) {
+                      _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
                         if (!options.onlyValueSuggestions) {
                           let valueIndex = input.isSubInput ? rootIndex : index
                           setSingleValue(value, input, (valueIndex) + (offset), options)
@@ -1027,9 +1102,11 @@
           ractive.update()
         }
         if (!(options.keepDocumentUrl)) {
-          ractive.set(`targetUri.${type}`, resourceUri)
           ractive.set('save_status', 'åpnet eksisterende ressurs')
-          updateBrowserLocationWithUri(type, resourceUri)
+          if (!(options || {}).compareValues) {
+            ractive.set(`targetUri.${type}`, resourceUri)
+          }
+          updateBrowserLocationWithUri((options.compareValues ? 'compare_with_' : '') + type, resourceUri)
         }
       })
     }
@@ -1044,7 +1121,7 @@
       )
         .then(function (response) {
             updateInputsForResource(response, resourceUri, options)
-            ractive.set(`targetUri.${typeFromUri(resourceUri)}`, resourceUri)
+            ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
           }
         )
         .catch(function (err) {
@@ -1316,7 +1393,9 @@
       var props = Ontology.allProps(applicationData.ontology)
       var inputs = []
       var inputMap = {}
+      var inputsForDomainType = {}
       applicationData.predefinedValues = {}
+      applicationData.allLabels = {}
       applicationData.propertyLabels = {}
       var predefinedValues = []
       for (var i = 0; i < props.length; i++) {
@@ -1354,7 +1433,8 @@
             domain: domain,
             allowAddNewButton: false,
             values: emptyValues(predefined),
-            dataAutomationId: unPrefix(domain) + '_' + predicate + '_0'
+            dataAutomationId: unPrefix(domain) + '_' + predicate + '_0',
+            visible: true
           }
 
           if (input.predefined) {
@@ -1365,6 +1445,8 @@
           }
           inputs.push(input)
           inputMap[ unPrefix(domain) + '.' + input.predicate ] = input
+          inputsForDomainType[ unPrefix(domain) ] = inputsForDomainType[ unPrefix(domain) ] || []
+          inputsForDomainType[ unPrefix(domain) ].push(input)
         })
       }
       var inputGroups = []
@@ -1610,13 +1692,52 @@
       applicationData.inputGroups = inputGroups
       applicationData.inputs = inputs
       applicationData.inputMap = inputMap
+
+      _.each(_.values(inputsForDomainType), function (inputs) {
+        markFirstAndLastInputsInGroup({ inputs: inputs })
+      })
+      applicationData.inputsForDomainType = inputsForDomainType
       applicationData.maintenanceInputs = createInputsForGroup(applicationData.config.authorityMaintenance[ 0 ])
       markFirstAndLastInputsInGroup({ inputs: applicationData.maintenanceInputs })
+
+      var searchIndexForType = {}
+      var maintenanceForms = _.chain(applicationData.maintenanceInputs)
+        .pluck('widgetOptions').pluck('enableEditResource').compact().pluck('forms').value()
+
+      _.each(maintenanceForms, function (form) {
+        var formContent = _.chain(form).pairs().first().value()
+        var inputOrderMap = {}
+        var readonlyness = {}
+        _.each(formContent[ 1 ].inputs, function (input, index) {
+          inputOrderMap[ input.predicate ] = index
+          if (input.readOnly) {
+            readonlyness[ input.predicate ] = true
+          }
+        })
+        var type = formContent[ 1 ].rdfType
+        inputsForDomainType[ type ] = inputsForDomainType[ type ].sort(function (a, b) {
+          return (inputOrderMap[ a.predicate ]) - (inputOrderMap[ b.predicate ])
+        })
+        _.each(inputsForDomainType[ type ], function (input) {
+          if (readonlyness[ input.predicate ]) {
+            input.readOnly = true
+          }
+        })
+        searchIndexForType[ formContent[ 1 ].rdfType ] = formContent[ 0 ]
+        applicationData.searchIndexForType = searchIndexForType
+      })
+
       return axios.all(predefinedValues).then(function (values) {
         _.each(values, function (predefinedValue) {
           if (predefinedValue) {
             applicationData.predefinedValues[ unPrefix(predefinedValue.property) ] = predefinedValue.values
+            _.each(predefinedValue.values, function (predefVal) {
+              applicationData.allLabels[ predefVal[ '@id' ] ] = i18nLabelValue(predefVal.label)
+            })
           }
+        })
+        _.each(_.pairs(applicationData.propertyLabels), function (pair) {
+          applicationData.allLabels[ `http://data.deichman.no/ontology#${pair[ 0 ]}` ] = pair[ 1 ]
         })
         return applicationData
       })
@@ -1643,9 +1764,14 @@
         $('span.support-panel').each(function (index, panel) {
           var supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
           var supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
+          var offset = 15
+          if (supportPanelBase.length === 0) {
+            supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}]`)
+            offset = 0
+          }
           if (supportPanelBase.length > 0) {
             $(panel).css({
-              top: _.last(_.flatten([ supportPanelBase ])).position().top - 15,
+              top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,
               left: supportPanelLeftEdge,
               width: supportPanelWidth
             })
@@ -1897,7 +2023,7 @@
               items: items,
               origin: event.keypath,
               searchTerm: searchString,
-              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 : 0
+              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 - 1 : 0
             })
             positionSupportPanels()
           })
@@ -1999,35 +2125,45 @@
       })
     }
 
-  function showTurtle (uri) {
-    const openTabTargets = {
-      publication: 1,
-      work: 2
-    }
-    $('#block').click(closePreview).fadeIn()
-    $('#close-preview-button').click(closePreview)
-    $('#iframecontainer iframe').hide()
-    $('#iframecontainer').fadeIn(function () {
-      $.ajax({
-        type: 'get',
-        url: uri,
-        success: function (response) {
-          $('#rdf-content').html(response
-            .replace(/[<>]/g, function (match) {
-              return match === '<' ? '&lt;' : '&gt;'
+    function showTurtle (uri) {
+      const openTabTargets = {
+        publication: 1,
+        work: 2
+      }
+      $('#block').click(closePreview).fadeIn()
+      $('#close-preview-button').click(closePreview)
+      $('#iframecontainer iframe').hide()
+      $('#iframecontainer').fadeIn(function () {
+        $.ajax({
+          type: 'get',
+          url: uri,
+          success: function (response) {
+            $('#rdf-content').html(response
+              .replace(/[<>]/g, function (match) {
+                return match === '<' ? '&lt;' : '&gt;'
+              })
+              .replace(/&lt;http:\/\/data\.deichman\.no\/(work|publication)\/(w|p)([a-f0-9]+)&gt;/g, function (all, type, shortType, resourceId) {
+                return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}&openTab=${openTabTargets[ type ]}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
+              }))
+            $('#loader').fadeOut(function () {
+              $('#rdf-content').fadeIn()
             })
-            .replace(/&lt;http:\/\/data\.deichman\.no\/(work|publication)\/(w|p)([a-f0-9]+)&gt;/g, function (all, type, shortType, resourceId) {
-              return `&lt;<a target="_blank" href="/cataloguing/?template=workflow&${type.charAt(0).toUpperCase()}${type.slice(1)}=http%3A%2F%2Fdata.deichman.no%2F${type}%2F${shortType}${resourceId}&openTab=${openTabTargets[type]}">http://data.deichman.no/${type}/${shortType}${resourceId}</a>&gt;`
-            }))
-          $('#loader').fadeOut(function () {
-            $('#rdf-content').fadeIn()
-          })
-        }
+          }
+        })
       })
-    })
-  }
+    }
 
-  function inputHasAcceptedSuggestions (targetInput, inputIndex) {
+    function closeCompare (type) {
+      ractive.set('compare', null)
+      ractive.set('duplicateSearchTerm', undefined)
+      setTaskDescription(`edit${type}`)
+      updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
+      // hack to make things not look uncool
+      $('.inner-content').addClass('dummy_' + _.uniqueId())
+      positionSupportPanels()
+    }
+
+    function inputHasAcceptedSuggestions (targetInput, inputIndex) {
       return (!targetInput.isSubInput || ((targetInput.parentInput.hasAcceptedSuggestions || [])[ inputIndex ]))
     }
 
@@ -2090,7 +2226,7 @@
       init: function (options) {
         options = options || {}
         let query = URI.parseQuery(URI.parse(document.location.href).query)
-        let template = '/templates/' + (query.template || options.template || 'menu') + '.html'
+        let template = '/templates/' + (options.template || query.template || 'menu') + '.html'
         var partials = [
           'input',
           'input-string',
@@ -2103,6 +2239,7 @@
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
+          'support-for-edit-authority',
           'searchable-authority-dropdown',
           'searchable-for-value-suggestions',
           'suggested-values',
@@ -2114,6 +2251,7 @@
           'suggestor-for-input-literal',
           'select-predefined-value',
           'work',
+          'relations',
           'publication',
           'delete-publication-dialog',
           'delete-work-dialog',
@@ -2121,6 +2259,8 @@
           'confirm-enable-special-input-dialog',
           'alert-existing-resource-dialog',
           'additional-suggestions-dialog',
+          'merge-resources-dialog',
+          'edit-resource-warning-dialog',
           'accordion-header-for-collection',
           'readonly-input',
           'readonly-input-string',
@@ -2382,6 +2522,7 @@
           }
           var repositionSupportPanel = function (node) {
             Main.repositionSupportPanelsHorizontally()
+            positionSupportPanels()
             return {
               teardown: function () {}
             }
@@ -2412,8 +2553,11 @@
             }
           }
           var clickOutsideSupportPanelDetector = function (node) {
+            const rightDummyPanel = $('#right-dummy-panel')
             $(document).click(function (event) {
               if (!event.isDefaultPrevented()) {
+                var supportPanelLeftEdge = rightDummyPanel.offset().left
+                var supportPanelWidth = rightDummyPanel.width()
                 var outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
                 var targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
                 var targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
@@ -2483,6 +2627,12 @@
               teardown: function () {}
             }
           }
+          var disabled = function (node) {
+            $(node).find('input,select').prop('disabled', true)
+            return {
+              teardown: function () {}
+            }
+          }
           var formatter = function (node, formatter) {
             if (formatter === 'isbn') {
               $(node).on('input', function () {
@@ -2500,6 +2650,24 @@
                 }
               })
             }
+            return {
+              teardown: function () {}
+            }
+          }
+          var relations = function (node, uri) {
+            const keypath = Ractive.getNodeInfo(node).keypath
+            ractive.set(`${keypath}.relations`, null)
+            let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
+            uri = uri || ractive.get(`targetUri.${type}`)
+            axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
+              ractive.set(`${keypath}.relations`, response.data)
+            })
+            return {
+              teardown: function () {}
+            }
+          }
+          var repositionSupportPanels = function (node) {
+            Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
             }
@@ -2527,8 +2695,9 @@
             template: applicationData.template,
             computed: {
               firstAndLastVisibleInputs: function () {
-                var result = []
-                forAllGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
+                let result = []
+
+                const handleInput = function (input, groupIndex, inputIndex, subInputIndex) {
                   result[ groupIndex ] = result[ groupIndex ] || { first: 100, last: 0 }
                   let showIt = (input.visible && checkShouldInclude(input) && !(typeof ractive.get('targetUri.' + input.showOnlyWhenEmpty) !== 'undefined'))
                   if (showIt && inputIndex < result[ groupIndex ].first) {
@@ -2538,7 +2707,15 @@
                     result[ groupIndex ].last = inputIndex
                   }
                   return false
-                }, { handleInputGroups: true })
+                }
+
+                _.each(_.values(ractive.get('applicationData.inputsForDomainType')), function (inputs, groupIndex) {
+                  _.each(inputs, function (input, inputIndex) {
+                    handleInput(input, groupIndex + 100, inputIndex)
+                    ractive.set(`applicationData.domainInputGroupIndex.${unPrefix(input.domain)}`, groupIndex + 100)
+                  })
+                })
+                forAllGroupInputs(handleInput, { handleInputGroups: true })
                 return result
               }
             },
@@ -2552,6 +2729,8 @@
               config: applicationData.config,
               save_status: 'ny ressurs',
               authorityLabels: {},
+              compare: false,
+              compareValues: {},
               headlinePart: function (headlinePart) {
                 return {
                   value: headlinePart.predefinedValue
@@ -2717,7 +2896,10 @@
               pasteSanitizer: pasteSanitizer,
               formatter: formatter,
               searchable: searchable,
-              tabIndex: tabIndex
+              tabIndex: tabIndex,
+              disabled: disabled,
+              relations: relations,
+              repositionSupportPanels: repositionSupportPanels
             },
             partials: applicationData.partials,
             transitions: {
@@ -2784,15 +2966,12 @@
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
-              patchResource: function (event, predicate, rdfType, clearProperty) {
-                var input = ractive.get(grandParentOf(event.keypath))
-                if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
-                  var inputValue = event.context
-                  if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '')) {
-                    return
-                  }
-                  var datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
-                  var subject = ractive.get('targetUri.' + rdfType)
+              patchResource: function (event, predicate, rdfType, editAuthorityMode) {
+                const inputValue = event.context
+                const input = ractive.get(grandParentOf(event.keypath))
+                const proceed = function () {
+                  const datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
+                  const subject = ractive.get('targetUri.' + rdfType)
                   if (subject) {
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
@@ -2800,11 +2979,27 @@
                     input.allowAddNewButton = true
                     waiter.cancel()
                   }
-                  if (clearProperty) {
-                    ractive.set(grandParentOf(event.keypath) + '.' + clearProperty, null)
+                  ractive.update()
+                }
+                const revert = function () {
+                  ractive.set(`${event.keypath}.current.value`, event.context.old.value)
+                }
+
+                if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
+                  if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '') || inputValue.current.value === inputValue.old.value) {
+                    return
+                  }
+                  if (editAuthorityMode && /^.*(name|prefLabel|mainTitle)$/.test(predicate)) {
+                    warnEditResourceName({
+                      fieldLabel: ractive.get(grandParentOf(event.keypath)).label.toLowerCase(),
+                      rdfType,
+                      proceed,
+                      revert
+                    })
+                  } else {
+                    proceed()
                   }
                 }
-                ractive.update()
               },
               saveObject: function (event, index) {
                 if (eventShouldBeIgnored(event)) return
@@ -2889,8 +3084,12 @@
                 if (preAction) {
                   preAction()
                 }
-                let initOptions = { presetValues: {}, task: editWith.descriptionKey }
-                updateBrowserLocationWithTemplate(editWith.template)
+                uri = uri || ractive.get(`targetUri.${event.context.rdfType}`)
+                let initOptions = {
+                  presetValues: {},
+                  task: editWith.descriptionKey || `edit${event.context.rdfType}`,
+                  template: editWith.template
+                }
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
                   if (input.type === 'hidden-url-query-value' &&
@@ -2905,6 +3104,7 @@
                   updateBrowserLocationWithTab(1)
                 }
                 Main.init(initOptions)
+//                updateBrowserLocationWithTemplate(editWith.template)
               },
               focusNextItem: function (event) {
                 let nextItemId = $(event.node).attr('data-next-sel-item')
@@ -2953,8 +3153,9 @@
                 }
               },
               selectFirstVisibleSearchResultItem: function (event) {
+                let searchResultBoxPosition = $('#search-result').position()
                 let searchResultItem = _.find($('.search-result-item'), function (item) {
-                  return $(item).position().top > 0
+                  return $(item).position().top > searchResultBoxPosition.top
                 })
                 if (searchResultItem) {
                   searchResultItem.focus()
@@ -2962,6 +3163,15 @@
               },
               selectSearchableItem: function (event, context, origin, displayValue, options) {
                 options = options || {}
+                if (options.loadResourceForCompare) {
+                  var queryArg = {}
+                  const type = typeFromUri(context.uri)
+                  queryArg[ `compare_with_${type}` ] = context.uri
+                  loadOtherResource(queryArg)
+                  setTaskDescription(`compare${type}`)
+                  ractive.set(grandParentOf(event.keypath), undefined)
+                  return
+                }
                 ractive.set(origin + '.searchResult', null)
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
@@ -3518,6 +3728,18 @@
                   targetUrl += `&hasWorkType=${query.hasWorkType}`
                 }
                 showOverlay(targetUrl)
+              },
+              closeCompare: function (event, type) {
+                closeCompare(type)
+              },
+              mergeResources: function (event, targetUri, sourceUri) {
+                mergeResources(event.context, targetUri, sourceUri, function () {
+                  showGrowler()
+                  axios.put(`${proxyToServices(targetUri)}/merge`, { replacee: sourceUri }).then(function () {
+                    hideGrowler()
+                    closeCompare(typeFromUri(targetUri))
+                  }).catch(hideGrowler)
+                })
               }
             }
           )
@@ -3739,6 +3961,7 @@
         }
 
         function showGrowler (applicationData) {
+          applicationData = applicationData || {}
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           if (!query.noStartGrowl) {
             $('#growler').show()
@@ -3813,6 +4036,60 @@
           return applicationData
         }
 
+        function loadWork (query, tab) {
+          fetchExistingResource(query.Work)
+            .then(function () {
+              ractive.set('targetUri.Work', query.Work)
+              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '2') })
+            })
+        }
+
+        function loadPublication (query, tab) {
+          fetchExistingResource(query.Publication)
+            .then(loadWorkOfPublication)
+            .then(function () {
+              ractive.set('targetUri.Publication', query.Publication)
+              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
+            })
+        }
+
+        function loadOtherResource (query, tab) {
+          _.each([
+            {
+              qualifier: '',
+              main: true
+            },
+            {
+              qualifier: 'compare_with_',
+              main: false,
+              compare: true
+            }
+          ], function (qualifierSpec) {
+            const desiredType = _.find(_.pluck(ractive.get('config.inputForms'), 'rdfType'), function (type) {
+              return query[ qualifierSpec.qualifier + type ] && !ractive.get(`targetUri.${query[ qualifierSpec.qualifier + type ]}`)
+            })
+            if (desiredType) {
+              fetchExistingResource(query[ qualifierSpec.qualifier + desiredType ], {
+                inputs: ractive.get(`applicationData.inputsForDomainType.${desiredType}`),
+                overrideMainEntry: true,
+                compareValues: qualifierSpec.compare
+              })
+                .then(function () {
+                  if (qualifierSpec.main) {
+                    ractive.set(`targetUri.${desiredType}`, query[ desiredType ])
+                    ractive.set('rdfType', desiredType)
+                    ractive.set('groupIndex', ractive.get(`applicationData.domainInputGroupIndex.${desiredType}`))
+                  }
+                  if (qualifierSpec.compare) {
+                    ractive.set('compare', true)
+                  }
+                })
+            } else {
+              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '0') })
+            }
+          })
+        }
+
         var loadResourceOfQuery = function (applicationData) {
           var query = URI.parseQuery(URI.parse(document.location.href).query)
           var tab = query.openTab
@@ -3853,20 +4130,11 @@
             }
           }
           if (query.Publication && !ractive.get(`targetUri.${query.Publication}`)) {
-            fetchExistingResource(query.Publication)
-              .then(loadWorkOfPublication)
-              .then(function () {
-                ractive.set('targetUri.Publication', query.Publication)
-                ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
-              })
+            loadPublication(query, tab)
           } else if (query.Work && !ractive.get(`targetUri.${query.Work}`)) {
-            fetchExistingResource(query.Work)
-              .then(function () {
-                ractive.set('targetUri.Work', query.Work)
-                ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '2') })
-              })
+            loadWork(query, tab)
           } else {
-            ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '0') })
+            loadOtherResource(query, tab)
           }
           return applicationData
         }
@@ -4090,6 +4358,9 @@
           .then(setDisplayMode)
           .then(function (applicationData) {
             setTaskDescription(options.task)
+            if (options.template) {
+              updateBrowserLocationWithTemplate(options.template)
+            }
             $(document).keyup(function (e) {
               if (e.keyCode === 27) {
                 closePreview()
@@ -4114,12 +4385,14 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        supportPanelLeftEdge = $('#right-dummy-panel').offsetParent().left
+        supportPanelLeftEdge = $('#right-dummy-panel').position().left
         supportPanelWidth = $('#right-dummy-panel').width()
 
-        $('.support-panel').each(function (index, panel) {
-          $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
-        })
+        if (supportPanelLeftEdge > 0) {
+          $('.support-panel').each(function (index, panel) {
+            $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
+          })
+        }
       },
       getRactive: function () {
         return ractive

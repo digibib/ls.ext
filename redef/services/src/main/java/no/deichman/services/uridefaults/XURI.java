@@ -1,6 +1,8 @@
 package no.deichman.services.uridefaults;
 
 import no.deichman.services.entity.EntityType;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
@@ -10,8 +12,8 @@ import java.net.URISyntaxException;
 /**
  * Responsibility: Provide a way of working with URIs.
  */
-public class XURI {
-
+@SuppressWarnings("MagicNumber")
+public class XURI implements Comparable {
     private String uri;
     private String type;
     private String id;
@@ -77,5 +79,38 @@ public class XURI {
     @Override
     public final String toString() {
         return uri;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof XURI)) {
+            return false;
+        }
+
+        XURI xuri = (XURI) o;
+
+        return new EqualsBuilder()
+                .append(uri, xuri.uri)
+                .append(type, xuri.type)
+                .append(id, xuri.id)
+                .isEquals();
+    }
+
+    @Override
+    public final int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(uri)
+                .append(type)
+                .append(id)
+                .toHashCode();
+    }
+
+    @Override
+    public final int compareTo(Object o) {
+        return toString().compareTo(o.toString());
     }
 }

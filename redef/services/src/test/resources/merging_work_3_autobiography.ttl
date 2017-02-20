@@ -1,0 +1,11 @@
+@prefix : <http://data.deichman.no/ontology#> .
+@prefix role: <http://data.deichman.no/role#> .
+
+<http://data.deichman.no/work/w3> a :Work ;
+  :mainTitle "Autobiography" ;
+  :contributor [
+    a :Contribution, :MainEntry ;
+    :agent <__REPLACE__> ;
+    :role role:author
+  ] ;
+  :subject <__REPLACE__> .

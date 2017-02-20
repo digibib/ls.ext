@@ -4,9 +4,11 @@ import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.ontology.OntologyService;
+import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.search.SearchService;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
+import no.deichman.services.utils.ResourceReader;
 import org.apache.commons.lang.WordUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -19,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.BadRequestException;
@@ -31,11 +34,13 @@ import java.nio.charset.StandardCharsets;
 import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
 import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
 import static no.deichman.services.entity.EntityType.SUBJECT;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
+import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFromString;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -493,4 +498,122 @@ public class EntityResourceTest {
                 + "}", result.getEntity());
     }
 
+    @Test
+    public void should_replace_one_node_with_another() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        String work1 = new ResourceReader().readFile("merging_work_1.ttl");
+        String work2 = new ResourceReader().readFile("merging_work_2.ttl");
+        String work3 = new ResourceReader().readFile("merging_work_3_autobiography.ttl");
+        String person1 = new ResourceReader().readFile("merging_persons_replacee_person.ttl");
+        String person2 = new ResourceReader().readFile("merging_persons_replacement_person.ttl");
+        Model testData = RDFModelUtil.modelFrom(
+                work1.replace("__REPLACE__", replacee), Lang.TURTLE).add(
+                        RDFModelUtil.modelFrom(work2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(work3.replace("__REPLACE__", replacee), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(person1.replace("__REPLACE__", replacee), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(person2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        );
+
+
+
+        final InMemoryRepository repo = new InMemoryRepository();
+        repo.addData(testData);
+        Model testModel = RDFModelUtil.modelFrom(
+                work1.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE).add(
+                RDFModelUtil.modelFrom(work2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(work3.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        ).add(
+                RDFModelUtil.modelFrom(person2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+        );
+
+        entityResource = new EntityResource(new EntityServiceImpl(repo, null), mockSearchService, null);
+
+        String body = "{\"replacee\": \"" + replacee + "\"}";
+
+        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+        assertEquals(NO_CONTENT.getStatusCode(), result.getStatus());
+        assertTrue(repo.getModel().isIsomorphicWith(testModel));
+        Mockito.verify(mockSearchService).delete(new XURI(replacee));
+        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w1"));
+        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w3"));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void should_throw_bad_request_due_to_wrong_uri() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        entityResource = new EntityResource(new EntityServiceImpl(new InMemoryRepository(), null), mockSearchService, null);
+        String body = "{\"replacee\": \"" + replacee + "\"}";
+        Response result = entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+        assertEquals(NOT_FOUND.getStatusCode(), result.getStatus());
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void should_throw_bad_request_due_to_badly_formatted_request_body() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        String turtleData = new ResourceReader().readFile("merging_persons_replacement_person.ttl").replace("__REPLACE__", replacement.getUri());
+
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), mockSearchService, null);
+        String body = "{\"replacea\": \"" + replacee + "\"}";
+        entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void should_throw_bad_request_due_to_badly_formatted_uri_in_request_body() throws Exception {
+        String replacee = "http://data.deichman.no/person/h1";
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+        String turtleData = new ResourceReader().readFile("merging_persons_replacee_person.ttl").replace("__REPLACE__", replacement.getUri());
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFromString(turtleData, Lang.TURTLE), null), mockSearchService, null);
+        String body = "{\"replacee\": \"\"}";
+        entityResource.mergeNodes(replacement.getType(), replacement.getId(), body);
+    }
+
+    @Test
+    public void should_return_relations() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("person_with_relations.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://deichman.no/person/p1");
+        Response result = entityResource.retriveResourceParticipations(xuri.getType(), xuri.getId());
+        assertEquals("[\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "        \"mainTitle\": \"Much ado about nothing\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w2\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/role#illustrator\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/role#illustrator\",\n"
+                + "        \"mainTitle\": \"Much ado about nothing\",\n"
+                + "        \"subtitle\": \"Hey nonny nonny\",\n"
+                + "        \"targetType\": \"Publication\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/publication/p80002\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/role#author\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/role#author\",\n"
+                + "        \"mainTitle\": \"Much ado about nothing\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w1\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  }\n"
+                + "]", result.getEntity());
+    }
 }

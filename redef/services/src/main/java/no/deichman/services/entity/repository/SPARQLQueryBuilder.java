@@ -35,6 +35,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
  * Responsibility: TODO.
  */
 public final class SPARQLQueryBuilder {
+
     public static final String INSERT = "INSERT";
     public static final String DELETE = "DELETE";
     public static final String NEWLINE = "\n";
@@ -528,6 +529,7 @@ public final class SPARQLQueryBuilder {
                 + "WHERE {\n"
                 + "  ?a ?b <%s> ;\n"
                 + "     a ?type .\n"
+                + "  FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
                 + "}\n"
                 + "GROUP BY ?type ", xuri.getUri());
         return QueryFactory.create(queryString);
@@ -603,5 +605,93 @@ public final class SPARQLQueryBuilder {
                 + "}\n"
                 + "order by ?name\n", BaseURI.ontology(), type.getRdfType(), type.getSearchIndexField());
         return QueryFactory.create(queryString);
+    }
+
+    public Query retriveResourceRelationships(XURI uri) {
+        String queryString = format(""
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "prefix deich: <%1$s>\n"
+                + "prefix role: <%2$s>\n"
+                + "select distinct ?relation ?targetUri ?mainTitle ?subtitle ?partTitle ?partNumber ?publicationYear ?type "
+                + "where {\n"
+                + "  {\n"
+                + "    ?contribution    deich:agent              <%3$s> ;\n"
+                + "                     deich:role               ?relation .\n"
+                + "    ?withContributor deich:contributor        ?contribution ;\n"
+                + "                     a                        ?type ;\n"
+                + "                     deich:mainTitle          ?mainTitle .\n"
+                + "    optional {"
+                + "    ?withContributor deich:subtitle           ?subtitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?withContributor deich:partTitle          ?partTitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?withContributor deich:partNumber         ?partNumber . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?withContributor deich:publicationYear    ?publicationYear . \n"
+                + "    } \n"
+                + "                     bind(?withContributor as ?targetUri) . \n"
+                + "  } union {\n"
+                + "    ?pubPart         deich:agent              <%3$s> ;\n"
+                + "                     deich:role               ?relation .\n"
+                + "    ?withPubPart     deich:hasPublicationPart ?pubPart .\n"
+                + "    ?pubPart         a                        ?type ;\n"
+                + "                     deich:mainTitle          ?mainTitle ; \n"
+                + "  } union {\n"
+                + "    ?workWithSubj    deich:subject            <%3$s> ;\n"
+                + "                     a                        ?type ;\n"
+                + "                     deich:mainTitle          ?mainTitle .\n"
+                + "    optional {"
+                + "    ?workWithSubj    deich:subtitle           ?subtitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?workWithSubj    deich:partTitle          ?partTitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?workWithSubj    deich:partNumber         ?partNumber . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?workWithSubj    deich:publicationYear    ?publicationYear . \n"
+                + "    } \n"
+                + "                     bind(iri(deich:subject) as ?relation) .\n"
+                + "                     bind(?workWithSubj      as ?targetUri) . \n"
+                + "  } union {\n"
+                + "    ?publWithPlace   deich:hasPlaceOfPublication <%3$s> ;\n"
+                + "                     a                        ?type ;\n"
+                + "                     deich:mainTitle          ?mainTitle .\n"
+                + "    optional {"
+                + "    ?publWithPlace    deich:subtitle           ?subtitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?publWithPlace    deich:partTitle          ?partTitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?publWithPlace    deich:partNumber         ?partNumber . \n"
+                + "    } \n"
+                + "                     bind(iri(deich:hasPlaceOfPublication) as ?relation) .\n"
+                + "                     bind(?publWithPlace      as ?targetUri) . \n"
+                + "  }\n"
+                + "  FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
+                + "} order by ?relation", BaseURI.ontology(), BaseURI.role(), uri.getUri());
+        return QueryFactory.create(queryString);
+    }
+
+    public String mergeNodes(XURI xuri, XURI replaceeURI) {
+        String queryString = format("INSERT {\n"
+                + "  ?subj ?prop <%2$s> .\n"
+                + "} WHERE {\n"
+                + "  ?subj ?prop <%1$s> .\n"
+                + "} ;\n"
+                + "DELETE {\n"
+                + "    <%1$s> ?a ?b .\n"
+                + "    ?c ?d <%1$s> .\n"
+                + "} WHERE {\n"
+                + "    <%1$s> ?a ?b .\n"
+                + "    ?c ?d <%1$s> .\n"
+                + "}\n"
+                + "\n", replaceeURI, xuri.getUri());
+        return queryString;
     }
 }

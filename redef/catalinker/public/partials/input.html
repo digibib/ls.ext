@@ -1,27 +1,36 @@
 {{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
-<span class="input-panel pure-u-1-1 prop-input" intro='slideIn' outro='slideOut'>
+<span class="input-panel prop-input"
+      class-pure-u-1-1="{{!compare}}"
+      class-pure-u-1-2="{{compare}}"
+      {{#if !compare}}
+      intro='slideIn'
+      outro='slideOut'
+      {{/if}}
+      data-support-panel-base-id="support_panel_base_fixed">
 <span class-for-one-liner="{{type === 'input-boolean' || oneLiner}}"
       class-panel-part="{{type === 'input-boolean' || oneLiner}}"
-      class-pure-u-1-2="{{type === 'input-boolean' || oneLiner}}"
+      class-pure-u-1-2="{{(type === 'input-boolean' || oneLiner) && !compare}}"
+      class-pure-u-1-1="{{(type === 'input-boolean' || oneLiner) && compare}}"
       class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
       class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
-<span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{./accordionHeader ? '1' : '2'}}{{/if}} label"
+<span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{./accordionHeader || compare ? '1' : '2'}}{{/if}} label"
       class-for-one-liner="{{oneLiner == true || type == 'input-boolean'}}"
       class-panel-part="{{type !== 'input-boolean' && !oneLiner}}"
       class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
         data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
 </span>
 <span class-panel-part="{{type != 'input-boolean' && !oneLiner}}"
-      class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner && ./accordionHeader}}"
-      class-pure-u-1-2="{{type != 'input-boolean' && !oneLiner && !./accordionHeader}}"
+      class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner && (./accordionHeader || compare)}}"
+      class-pure-u-1-2="{{type != 'input-boolean' && !oneLiner && (!./accordionHeader || !compare)}}"
       class-one-liner="{{type === 'input-boolean' || oneLiner}}"
       class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}"
       intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
-        {{#each values:inputValueIndex}}
+      {{#if compareMode }}
+        {{#each compareValues:inputValueIndex}}
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
-                <span class="input">
+                <span class="input" as-disabled>
                     <span class="field" class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                        {{>(readOnly ? "readonly-" : "") + type}}
+                        {{>(readOnly ? "readonly-" : "") + type }}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
                     <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
@@ -30,6 +39,25 @@
                 </span>
             {{/if}}
         {{/each}}
+      {{else}}
+        {{#each values:inputValueIndex}}
+            {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
+                <span class="input">
+                    <span class="field" class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                        {{>(readOnly ? "readonly-" : "") + type}}
+                        <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+                    </span>
+                    <span class="support-panel" class-fixed={{editAuthorityMode}} data-support-panel-base-ref="support_panel_base_{{!editAuthorityMode ? uniqueId : 'fixed'}}">
+                        {{#if editAuthorityMode}}
+                            {{>support-for-edit-authority}}
+                        {{else}}
+                            {{>"support-for-"+type}}
+                        {{/if}}
+                    </span>
+                </span>
+            {{/if}}
+        {{/each}}
+    {{/if}}
         {{#with values[0]}}
             {{>suggested-values}}
         {{/with}}

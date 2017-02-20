@@ -53,12 +53,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static java.util.Arrays.stream;
+import static java.util.Optional.ofNullable;
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.StreamSupport.stream;
 import static no.deichman.services.search.SearchServiceImpl.LOCAL_INDEX_SEARCH_FIELDS;
 import static no.deichman.services.uridefaults.BaseURI.ontology;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -166,7 +170,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private static <T> Stream<T> streamFrom(Iterator<T> sourceIterator) {
         Iterable<T> iterable = () -> sourceIterator;
-        return StreamSupport.stream(iterable.spliterator(), false);
+        return stream(iterable.spliterator(), false);
     }
 
     private Model getLinkedLexvoResource(Model input) {
@@ -176,7 +180,7 @@ public final class EntityServiceImpl implements EntityService {
             Set<RDFNode> objectResources = objects.toSet();
             objectResources.stream()
                     .filter(node -> node.toString()
-                            .contains("http://lexvo.org/id/iso639-3/")).collect(Collectors.toList())
+                            .contains("http://lexvo.org/id/iso639-3/")).collect(toList())
                     .forEach(lv -> {
                         input.add(extractNamedResourceFromModel(lv.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE));
                     });
@@ -235,7 +239,7 @@ public final class EntityServiceImpl implements EntityService {
             Set<RDFNode> objectResources = objects.toSet();
             objectResources.stream()
                     .filter(node -> node.toString()
-                            .contains("http://data.deichman.no/" + path + "#")).collect(Collectors.toList())
+                            .contains("http://data.deichman.no/" + path + "#")).collect(toList())
                     .forEach(result -> {
                         input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(filename), Lang.TURTLE)
                         );
@@ -687,6 +691,54 @@ public final class EntityServiceImpl implements EntityService {
                         && isAboutRelevantType(s, indexModel, xuri));
             }
         });
+    }
+
+    @Override
+    public List<RelationshipGroup> retrieveResourceRelationships(final XURI uri) {
+        return stream(spliteratorUnknownSize(repository.retrieveResourceRelationships(uri), ORDERED), false)
+                .map(this::getRelationship)
+                .collect(groupingBy(Relationship::getRelationshipType))
+                .entrySet().stream().map(RelationshipGroup::new).collect(toList());
+    }
+
+    @Override
+    public List<XURI> retrieveResourceRelationshipsUris(XURI uri) {
+        return stream(spliteratorUnknownSize(repository.retrieveResourceRelationships(uri), ORDERED), false)
+                .filter(s -> s.contains("targetUri"))
+                .map(this::targetUri).collect(toSet()).stream().sorted().collect(toList());
+    }
+
+    private Relationship getRelationship(QuerySolution querySolution) {
+        Relationship relationship = new Relationship();
+        relationship.setRelationshipType(querySolution.getResource("relation"));
+        relationship.setMainTitle(querySolution.getLiteral("mainTitle").getString());
+        ofNullable(querySolution.getLiteral("subtitle")).ifPresent(relationship::setSubtitle);
+        ofNullable(querySolution.getLiteral("partTitle")).ifPresent(relationship::setPartTitle);
+        ofNullable(querySolution.getLiteral("partNumber")).ifPresent(relationship::setPartNumber);
+        ofNullable(querySolution.getLiteral("publicationYear")).ifPresent(relationship::setPublicationYear);
+        ofNullable(querySolution.getLiteral("prefLabel")).ifPresent(relationship::setPrefLabel);
+        ofNullable(querySolution.getLiteral("alternativeName")).ifPresent(relationship::setAlternativeName);
+        ofNullable(querySolution.getResource("type")).ifPresent(relationship::setTargetType);
+        ofNullable(querySolution.getResource("targetUri")).ifPresent(relationship::setTargetUri);
+        return relationship;
+    }
+
+    private XURI targetUri(QuerySolution querySolution)  {
+        try {
+            return new XURI(querySolution.getResource("targetUri").getURI());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void mergeResource(XURI xuri, XURI replaceeUri) {
+        repository.mergeResource(xuri, replaceeUri);
+    }
+
+    @Override
+    public void removeFromLocalIndex(XURI xuri) {
+        getNameIndexer(xuri.getTypeAsEntityType()).removeUri(xuri.getUri());
     }
 
     private boolean isAboutRelevantType(Statement s, Model model, XURI xuri) {

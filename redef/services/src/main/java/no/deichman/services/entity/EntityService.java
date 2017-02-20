@@ -55,7 +55,15 @@ public interface EntityService {
 
     Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width);
 
+    List<RelationshipGroup> retrieveResourceRelationships(XURI uri);
+
     void addIndexedName(EntityType type, String name, String uri);
 
     StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates);
+
+    void mergeResource(XURI xuri, XURI replaceeUri);
+
+    void removeFromLocalIndex(XURI xuri);
+
+    List<XURI> retrieveResourceRelationshipsUris(XURI uri);
 }

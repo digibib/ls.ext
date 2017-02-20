@@ -1,0 +1,111 @@
+{{#if !compare}}
+<div class="support-panel-content" as-repositionSupportPanel >
+    <div class="search-result pure-u-1">
+    <h4>Verk og utgivelser knyttet til {{config.translations[rdfType].det}}:</h4>
+    {{>relations}}
+    <h4 data-uri-escaped-label="S%C3%B8k%20etter%20duplikater">Søk etter duplikater</h4>
+        <div>
+            <span class="field">
+                <input class="pure-u-1"
+                       value={{~/duplicateSearchTerm}}
+                       on-keyup='searchResource:{{~/duplicateSearchTerm}},{{applicationData.searchIndexForType[rdfType]}},{{applicationData.searchIndexForType[rdfType]}}'
+                       {{#if searchResult.items.length > 0}}
+                        on-tab="selectFirstVisibleSearchResultItem"
+                       {{/if}}>
+            </span>
+        </div>
+        {{#if searchResult.items}}
+        <div class="search-result-box" id="search-result">
+            <div class="search-result-inner" >
+            {{#each searchResult.items:itemIndex}}
+            <div class="search-result pure-g" class-exact-match="{{exactMatch}}" class-same-as-target="{{uri === targetUri[rdfType]}}" data-automation-id="{{uri}}" {{#if itemIndex === searchResult.highestScoreIndex}}id="highest-score-item"{{/if}}>
+                {{#if itemIndex === searchResult.highestScoreIndex}}
+                <script>
+                    var maxAttempts = 20
+                    function tryScroll () {
+                        var target = document.getElementById('highest-score-item')
+                        if (target) {
+                          document.main.$('.search-result-box').scrollTo(target, 500, {offset: -10})
+                        } else {
+                            if (maxAttempts-- > 0) {
+                                setTimeout(tryScroll, 500)
+                            }
+                        }
+                    }
+                    tryScroll()
+                </script>
+                {{/if}}
+                <div class="pure-u-1">
+                    <div class="pure-g">
+                        <div class="pure-u-1-12">
+                                <a id="{{'sel-item-' + itemIndex}}"
+                                   data-prev-sel-item="{{'sel-item-' + (itemIndex - 1)}}"
+                                   data-next-sel-item="{{'sel-item-' + (itemIndex + 1)}}"
+                                   tabindex="0"
+                                   class="search-result-item select-result-item" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
+                                    {{#if !(uri===targetUri[rdfType])}}
+                                           on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
+                                           on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
+                                           title="Velg"
+                                    {{else}}
+                                           title="Du kan ikke slå sammen med samme {{config.translations[rdfType].det}} som du redigerer."
+                                    {{/if}}
+                                   on-downarrow="focusNextItem"
+                                   on-uparrow="focusPrevItem"
+                                   on-rightarrow="focusDetailsToggle"
+                                   on-tab="handleTabForSearchResultItem:{{widgetOptions}}"><span/></a>
+                        </div>
+                        <div class="pure-u-5-6">
+                            {{#if config.search[applicationData.searchIndexForType[rdfType]].linkFromUri}}
+                            <a class="search-result-item-label"
+                               href="{{getLinkfromUri(., config.search[applicationData.searchIndexForType[rdfType]].linkFromUri)}}"
+                               target="_blank"
+                               title="{{config.search[applicationData.searchIndexForType[rdfType]].linkFromUri.toolTip}}">
+                                {{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}}
+                            </a>
+                            {{else}}
+                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}}</p>
+                            {{/if}}
+                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties2)}}</p>
+                            <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemDetailsLabelProperties)}}</p>
+                        </div>
+
+                        {{#if !(uri===targetUri[rdfType])}}
+                            <div class="pure-u-1-12">
+                                <a id="{{'sel-item-' + itemIndex + '-details-toggle'}}" tabindex="0"
+                                   class="toggle-show-sub-items"
+                                   data-next-sub-item="sub-item-{{itemIndex}}-0"
+                                   {{#config.search[selectedIndexType].subItemsExpandTooltip}}title="{{config.search[selectedIndexType].subItemsExpandTooltip}}"{{/}}
+                                   on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
+                                   on-enter="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
+                                   {{#toggleSubItem}}
+                                        on-downarrow="focusNextSubItem"
+                                   {{else}}
+                                        on-downarrow="toggleSubItem"
+                                   {{/toggleSubItem}}
+                                   on-leftarrow="focusItem:{{'sel-item-' + itemIndex}}"
+                                   on-uparrow="toggleSubItem"
+                                >
+                                {{#toggleSubItem}}&#x25B2;{{else}}&#x25BC;{{/toggleSubItem}}</a>
+                            </div>
+                        {{/if}}
+                        {{>"additional-search-result-item-info-for-"+selectedIndexType}}
+                        {{#toggleSubItem}}
+                        {{>relations}}
+                        {{/toggleSubItem}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+            </div>
+
+         {{else}}
+            <div class="search-result pure-g">
+                <div class="pure-u-1">
+                    Ingen treff
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</div>
+{{/if}}
