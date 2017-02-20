@@ -36,15 +36,181 @@
   }
 }
 
+/* Prototype */
 .pickup, .reserve, .loan {
   width: span(12);
-  /* @include span(12);
-  @include container;*/
+
+  /* Section title */
+  > h1 {
+    width: span(12);
+    font-size: rhythm(4);
+    font-weight: normal;
+    border-bottom: 4px solid $blackColor;
+    padding-bottom: rhythm(1);
+    margin-top: rhythm(2);
+  }
+
+  /* Line item */
+  .single-entry {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    float: none;
+
+    h1 {
+      font-size: rhythm(3);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    h2 {
+      font-size: rhythm(2.5);
+      margin-top: rhythm(1);
+      margin-bottom: rhythm(1);
+    }
+
+    .entry-details {
+      width: span(12);
+    }
+
+    p {
+      width: span(12);
+      font-size: rhythm(2.5);
+      font-weight: bold;
+      margin: 0;
+    }
+
+    button {
+      font-size: rhythm(2);
+    }
+
+    /* Column item */
+    .flex-col {
+      margin-bottom: 2em;
+    }
+
+    /* Show cancel button and other buttons in one row */
+    .cancel-button, .resume-suspend-button, .renew-button {
+      width: span(12);
+      text-align: right;
+      align-self: center;
+
+      &:disabled {
+        opacity: 0.4;
+      }
+    }
+
+    .media-type {
+      text-transform: uppercase;
+      width: span(12);
+    }
+
+    .feedback {
+      color: $redColor;
+    }
+
+  }
+
+}
+
+.pickup {
+
+  .loan-expire, .loan-pickup-number, .loan-pickup-location {
+    width: span(6);
+
+    h2 {
+      text-transform: uppercase;
+    }
+
+  }
+
+  .loan-pickup-number {
+    width: span(6);
+  }
+
+}
+
+.reserve {
+
+  .place-in-queue, .pickup-location {
+    width: span(6);
+
+    h2 {
+      text-transform: uppercase;
+    }
+
+  }
+
+  .pickup-location {
+
+    select {
+      font-size: rhythm(2.5);
+      font-weight: bold;
+    }
+
+  }
+
+  .place-in-queue {
+
+    p {
+      font-weight: normal;
+    }
+
+  }
+
+  .resume-suspend-button {
+    button {
+      position: relative;
+      left: 0;
+    }
+
+  }
+
+}
+
+.loan {
+
+  margin-top: -1em;
+
+  .loan-header {
+    display: flex;
+    justify-content: space-between;
+    width: span(12);
+    border-bottom: 4px solid $blackColor;
+    margin-bottom: 1.5em;
+    height: auto;
+
+    h1 {
+      font-size: rhythm(4);
+      font-weight: normal;
+    }
+
+    .renew-all-button {
+      font-size: rhythm(2);
+      min-height: 2.7em;
+      align-self: center;
+      background-color: green;
+
+      &:disabled {
+        opacity: 0.4;
+      }
+    }
+  }
+
+  .due-date {
+
+    h2 {
+      text-transform: uppercase;
+    }
+  }
+}
+
+/*.loan {
+
+  width: span(12);
 
   > h1 {
-    /* @include span(12);*/
     width: span(12);
-    margin-top: rhythm(4);
     font-size: rhythm(4);
     font-weight: normal;
     border-bottom: 4px solid $blackColor;
@@ -57,8 +223,6 @@
     flex-wrap: wrap;
     width: span(12);
     float: none;
-    /*@include span(12);
-    @include container;*/
 
     &:last-child {
       border-bottom: none;
@@ -70,70 +234,11 @@
     margin-bottom: gutter();
   }
 
-}
+}*/
 
-.pickup {
-
-  .single-entry {
-    margin-bottom: rhythm(2);
-
-    .entry-details {
-      /* @include span(12);*/
-      width: span(12);
-    }
-
-    h1 {
-      font-size: rhythm(3);
-      margin-top: rhythm(1);
-      margin-bottom: 0;
-    }
-
-    h2 {
-      font-size: rhythm(2.5);
-      margin-top: rhythm(1);
-      margin-bottom: rhythm(1);
-    }
-
-    p {
-      /* @include span(12);*/
-      width: span(12);
-    }
-
-  }
-
-  .media-type {
-    width: span(12);
-  }
-
-  .loan-expire, .loan-pickup-number, .loan-pickup-location {
-    /* @include span(6);*/
-    width: span(6);
-
-    h2 {
-      text-transform: uppercase;
-      margin: 0;
-    }
-
-    p {
-      font-size: rhythm(3);
-      font-weight: bold;
-      margin: 0;
-    }
-
-  }
-
-  .loan-expire p, .loan-pickup-number p {
-    font-size: rhythm(4);
-  }
-
-  .loan-pickup-number {
-    /*@include span(6 last);*/
-    width: span(6);
-  }
-
-}
-
+/*
 .reserve {
+
   .red-btn, .black-btn {
     min-width: rhythm(16);
     margin-bottom: rhythm(0.75);
@@ -149,8 +254,6 @@
 
   .reserved-entry-content {
     width: span(12);
-    /*@include span(12);
-    @include container;*/
     padding: rhythm(3) rhythm(1);
 
     &:nth-child(even) {
@@ -161,19 +264,15 @@
 
   .meta-item {
     width: span(12);
-    /*@include span(12);
-    @include container;*/
     font-size: rhythm(2.5);
   }
 
   .meta-label {
-    /*@include span(12);*/
     width: span(12);
     font-weight: bold;
   }
 
   .meta-content {
-    /*@include span(12);*/
     width: span(12);
     margin-bottom: rhythm(2);
   }
@@ -183,8 +282,9 @@
   }
 
 }
+*/
 
-.loan {
+/*.loan {
 
   > h1 {
 
@@ -205,12 +305,10 @@
 
     .entry-details {
       width: span(3);
-      /*@include span(3);*/
     }
 
     h1 {
       font-size: rhythm(3);
-      /* margin-top: rhythm(1); */
       margin-top: 0;
       margin-bottom: 0;
     }
@@ -225,7 +323,6 @@
 
   .due-date {
     width: span(3);
-    /*@include span(3);*/
 
     h2 {
       text-transform: uppercase;
@@ -242,8 +339,6 @@
 
   .renew-message {
     width: span(3);
-    /*@include span(3);*/
-    /*margin-top: rhythm(2);*/
     margin-top: 0;
     max-width: 15em;
 
@@ -273,74 +368,142 @@
     &:disabled {
       opacity: 0.4;
     }
+
   }
 
-}
+}*/
 
 @include breakpoint($small) {
+
+  .pickup, .reserve, .loan {
+
+    .single-entry {
+
+      .media-type {
+        width: span(1);
+      }
+
+      .entry-details {
+        width: span(3);
+      }
+
+      .cancel-button {
+        width: span(1);
+      }
+
+    }
+
+  }
 
   .pickup {
 
     .single-entry {
 
-      .entry-details {
-        /* @include span(4); */
-        width: span(4);
+      .loan-expire {
+        width: span(2);
+      }
+
+      .loan-pickup-number {
+        width: span(2);
+      }
+
+      .placeholder-column {
+        width: span(1);
+      }
+
+      .loan-pickup-location {
+        width: span(2);
       }
 
     }
 
-    .media-type {
-      width: span(1);
-    }
+  }
 
-    .loan-expire {
-      /* @include span(2); */
-      width: span(2);
-    }
+  .reserve {
 
-    .loan-pickup-number {
-      /*@include span(3);*/
-      width: span(3);
-    }
+    .single-entry {
 
-    .loan-pickup-location {
-      /*@include span(2 last);*/
-      width: span(2);
+      .place-in-queue {
+        width: span(2);
+      }
+
+      .pickup-location {
+        width: span(2);
+      }
+
+      .placeholder-column {
+        width: span(1);
+      }
+
+      .resume-suspend-button {
+        width: span(2);
+
+        button {
+          position: relative;
+          left: 1.6em;
+        }
+      }
+
     }
 
   }
 
   .loan {
 
+    .renew-all-button {
+      position: relative;
+      right: 1.2em;
+    }
+
+    .single-entry {
+
+      .due-date {
+        width: span(2);
+      }
+
+      .extend-msg {
+        width: span(2);
+      }
+
+      .placeholder-column {
+        width: span(2);
+      }
+
+      .renew-button {
+        width: span(2);
+      }
+    }
+
+    .loan-header {
+      max-height: 4em;
+    }
+  }
+
+  /*.loan {
+
     .single-entry {
       padding-top: rhythm(2);
       padding-bottom: rhythm(2);
 
       .entry-details {
-        /* @include span(4);*/
         width: span(4);
       }
 
     }
 
     .due-date {
-      /* @include span(2); */
       width: span(2);
     }
 
     .renew-message {
-      /* @include span(3); */
       width: span(3);
     }
 
     .renew-button {
-      /* @include span(2 last); */
       width: span(2);
     }
 
     .renew-all-button {
-      /* @include span(2 last);*/
       width: span(2);
       background-color: green;
 
@@ -348,6 +511,6 @@
         opacity: 0.4;
       }
     }
-  }
+  }*/
 
 }
