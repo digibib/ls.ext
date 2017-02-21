@@ -19,6 +19,7 @@ export default {
   'ChangePinForm.currentPinNotCorrect': 'Oppgitt nåværende PIN-kode er ikke korrekt',
   'ChangePinForm.currentPinRequired': 'Nåværende PIN-kode må fylles ut',
   'ChangePinForm.genericChangePasswordError': 'Noe gikk galt ved endring av PIN-kode',
+  'ChangePinForm.invalidPin': 'PIN-koden må være et 4-sifret tall',
   'ChangePinForm.newPin': 'Ny PIN-kode',
   'ChangePinForm.newPinRequired': 'Ny PIN-kode må fylles ut',
   'ChangePinForm.pinInfo': 'Nye passord må oppgis i form av en 4-sifret PIN-kode. Bruk ikke PIN-koder som du har brukt andre steder. Velg en PIN-kode som ingen kan gjette seg til. Unngå f.eks 1111 og 1234.',

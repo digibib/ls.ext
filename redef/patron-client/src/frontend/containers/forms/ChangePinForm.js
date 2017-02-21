@@ -140,6 +140,11 @@ export const messages = defineMessages({
     description: 'The error message when a new PIN is not provided',
     defaultMessage: 'A new PIN must be provided'
   },
+  invalidPin: {
+    id: 'ChangePinForm.invalidPin',
+    description: 'The error message when a PIN code is not a 4-digit number',
+    defaultMessage: 'The PIN code must be a 4-digit number'
+  },
   pinsMustBeEqual: {
     id: 'ChangePinForm.pinsMustBeEqual',
     description: 'The error message when the two PIN fields do not match',
@@ -194,11 +199,11 @@ const validate = (values, props) => {
   if (!values.currentPin) {
     errors.currentPin = messages.currentPinRequired
   }
-  if (props.changePasswordError) {
-
-  }
   if (!values.newPin) {
     errors.newPin = messages.newPinRequired
+  }
+  if (!/^\d{4}$/.test(values.newPin)) {
+    errors.newPin = messages.invalidPin
   }
   if (values.newPin !== values.repeatPin) {
     errors.repeatPin = messages.pinsMustBeEqual
