@@ -277,6 +277,7 @@ export default {
   'UserLoans.materialIsReserved': 'Reservert - kan ikke forlenges',
   'UserLoans.moreThan': 'mer enn',
   'UserLoans.name': 'Lån registrert på {name}',
+  'UserLoans.yourLoans': 'Dine lån',
   'UserLoans.orderedDate': 'Reservasjonsdato',
   'UserLoans.patronHasOverdue': 'Forfalt materiale - kan ikke forlenge',
   'UserLoans.patronHasRestriction': 'Kan ikke forlenge - kontakt biblioteket',

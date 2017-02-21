@@ -31,6 +31,7 @@ function setup (propOverrides) {
   const loansAndReservations = {
     pickups: [
       {
+        itype: 'FILM',
         recordId: 'recordId_1',
         title: 'title_1',
         author: 'author_1',
@@ -40,6 +41,7 @@ function setup (propOverrides) {
         branchCode: 'branchCode_1'
       },
       {
+        itype: 'FILM',
         recordId: 'recordId_2',
         title: 'title_2',
         author: 'author_2',
@@ -51,6 +53,7 @@ function setup (propOverrides) {
     ],
     reservations: [
       {
+        itype: 'FILM',
         reserveId: 'reserveId_1',
         recordId: 'recordId_1',
         title: 'title_1',
@@ -62,6 +65,7 @@ function setup (propOverrides) {
         branchCode: 'branchCode_1'
       },
       {
+        itype: 'FILM',
         reserveId: 'reserveId_2',
         recordId: 'recordId_2',
         title: 'title_2',
@@ -73,6 +77,7 @@ function setup (propOverrides) {
         branchCode: 'branchCode_2'
       },
       {
+        itype: 'FILM',
         reserveId: 'reserveId_3',
         recordId: 'recordId_3',
         title: 'title_3',
@@ -86,6 +91,7 @@ function setup (propOverrides) {
     ],
     loans: [
       {
+        itype: 'FILM',
         recordId: 'recordId_1',
         title: 'title_1',
         author: 'author_1',
@@ -94,6 +100,7 @@ function setup (propOverrides) {
         checkoutId: 'checkoutId_1'
       },
       {
+        itype: 'FILM',
         recordId: 'recordId_2',
         title: 'title_2',
         author: 'author_2',
@@ -106,6 +113,7 @@ function setup (propOverrides) {
   store.dispatch(ProfileActions.receiveProfileLoans(loansAndReservations))
 
   const messages = {
+    'http://data.deichman.no/mediaType#Film': 'Film',
     'branchCode_1': 'Branch 1',
     'branchCode_2': 'Branch 2',
     'UserLoans.unknown': '(Unknown waiting period)'
@@ -136,6 +144,7 @@ describe('containers', () => {
       const pickups = node.querySelectorAll("[data-automation-id='UserLoans_pickup']")
       expect(pickups.length).toEqual(2)
       Array.prototype.forEach.call(pickups, (pickup, index) => {
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_type']").textContent).toEqual(loansAndReservations.pickups[ index ].itype)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_title']").textContent).toEqual(loansAndReservations.pickups[ index ].title)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].author)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(formatDate(loansAndReservations.pickups[ index ].expiry))
