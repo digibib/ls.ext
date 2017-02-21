@@ -224,7 +224,9 @@ class UserLoans extends React.Component {
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col due-date">
-                {this.renderDueColoredDate(item)}
+                {item.renewalStatus === 'genericExtendLoanSuccess'
+                  ? <span className="success">{this.renderDueDate(item)}</span>
+                  : <span>{this.renderDueDate(item)}</span>}
               </div>
               <div className="flex-col extend-msg">
                 {this.renderExtendLoanMessage(item)}
@@ -256,16 +258,6 @@ class UserLoans extends React.Component {
               <FormattedMessage {...messages.renewAllLoans} />
           </button>
         </ClickableElement>
-      )
-    }
-  }
-
-  renderDueColoredDate (item) {
-    if (item.renewalStatus) {
-      return (
-        item.renewalStatus === 'genericExtendLoanSuccess'
-          ? <span className="success">{this.renderDueDate(item)}</span>
-          : <span>{this.renderDueDate(item)}</span>
       )
     }
   }
