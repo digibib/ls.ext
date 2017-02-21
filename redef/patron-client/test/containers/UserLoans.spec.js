@@ -58,7 +58,6 @@ function setup (propOverrides) {
         recordId: 'recordId_1',
         title: 'title_1',
         author: 'author_1',
-        orderedDate: '03/10/2016',
         queuePlace: '1',
         expected: '1–2',
         expectedTestData: '(approx. 1–2 weeks)',
@@ -70,7 +69,6 @@ function setup (propOverrides) {
         recordId: 'recordId_2',
         title: 'title_2',
         author: 'author_2',
-        orderedDate: '04/10/2016',
         queuePlace: '6',
         expected: '12',
         expectedTestData: '(more than 12 weeks)',
@@ -82,7 +80,6 @@ function setup (propOverrides) {
         recordId: 'recordId_3',
         title: 'title_3',
         author: 'author_3',
-        orderedDate: '05/10/2016',
         queuePlace: '3',
         expected: 'unknown',
         expectedTestData: '(Unknown waiting period)',
@@ -113,7 +110,7 @@ function setup (propOverrides) {
   store.dispatch(ProfileActions.receiveProfileLoans(loansAndReservations))
 
   const messages = {
-    'http://data.deichman.no/mediaType#Film': 'Film',
+    'http://data.deichman.no/mediaType#Film': 'FILM',
     'branchCode_1': 'Branch 1',
     'branchCode_2': 'Branch 2',
     'UserLoans.unknown': '(Unknown waiting period)'
@@ -166,10 +163,11 @@ describe('containers', () => {
         2: 1
       }
       Array.prototype.forEach.call(reservations, (reservation, index) => {
+        const queuePlace = (reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).trim()
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(loansAndReservations.reservations[ index ].itype)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ indexMap[ index ] ].orderedDate))
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
+        expect(queuePlace).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
         // TODO: Uncomment below line when enabling estimates again
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
@@ -190,10 +188,12 @@ describe('containers', () => {
         2: 1
       }
       Array.prototype.forEach.call(reservations, (reservation, index) => {
+        const queuePlace = (reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).trim()
+
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(loansAndReservations.reservations[ index ].itype)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_orderedDate']").textContent).toEqual(formatDate(loansAndReservations.reservations[ indexMap[ index ] ].orderedDate))
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
+        expect(queuePlace).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
         // TODO: Uncomment below line when enabling estimates again
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
