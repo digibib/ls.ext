@@ -190,7 +190,6 @@
 
     .renew-all-button {
       font-size: rhythm(2);
-      min-height: 2.7em;
       align-self: center;
       background-color: green;
 
@@ -268,7 +267,7 @@
       }
 
       .placeholder-column {
-        width: span(1);
+        width: span(2);
       }
 
       .loan-pickup-location {
@@ -296,8 +295,8 @@
       }
 
       .resume-suspend-button {
-        width: span(1);
-        min-width: 10em;
+        width: span(2);
+        /*min-width: 10em;*/
       }
 
       .reserve-cancel-button {
@@ -310,11 +309,6 @@
 
   .loan {
 
-    .renew-all-button {
-      position: relative;
-      right: 1.2em;
-    }
-
     .single-entry {
 
       .due-date {
@@ -326,7 +320,7 @@
       }
 
       .placeholder-column {
-        width: span(2);
+        width: span(3);
       }
 
       .renew-button {
@@ -336,7 +330,16 @@
 
     .loan-header {
       max-height: 4em;
+
+      h1 {
+        width: span(10);
+      }
+
+      .renew-all-button {
+        width: span(2);
+      }
     }
+
   }
 
 }
