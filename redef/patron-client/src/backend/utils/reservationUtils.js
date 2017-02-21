@@ -12,7 +12,10 @@ module.exports.estimateWaitingPeriod = (queuePlace, items) => {
     // someone has priority '0', which means that the current user's  priority is bumped, but not about to be
     // effectuated. This fixes an error where we assume that a user is first in the queue and the item.onloan property
     // is null indicating that it is available, when in fact it is simply not allocated to borrower with priority '0'.
-    return dateLastSeen === null ? false : (Date.now() - Date.parse(dateLastSeen)) < (1000 * 60 * 60 * 24 * 3)
+    // The remainder operator here figures out if we need to adjust for a weekend
+    const day = new Date(Date.now()).getDay()
+    const waitDays = (day === 0 || day === 6) ? 5 : 3
+    return dateLastSeen === null ? false : (Date.now() - Date.parse(dateLastSeen)) < (1000 * 60 * 60 * 24 * waitDays)
   }
 
   function getAvailable (items) {
