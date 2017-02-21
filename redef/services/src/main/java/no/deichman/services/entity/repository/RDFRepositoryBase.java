@@ -11,6 +11,7 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.Model;
@@ -39,9 +40,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -406,6 +409,20 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         try (QueryExecution qexec = getQueryExecution(sqb.describeSerialAndLinkedResources(serialUri))) {
             disableCompression(qexec);
             return qexec.execDescribe();
+        }
+    }
+
+    @Override
+    public final Set<String> retrievedResourcesConnectedTo(XURI xuri) {
+        try (QueryExecution qexec = getQueryExecution(sqb.relatedResourcesFor(xuri))) {
+            disableCompression(qexec);
+            ResultSet results = qexec.execSelect();
+            Set<String> res = new HashSet<String>();
+            while (results.hasNext()) {
+                QuerySolution binding = results.nextSolution();
+                res.add(binding.get("resource").toString());
+            }
+            return res;
         }
     }
 

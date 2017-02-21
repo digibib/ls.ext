@@ -25,11 +25,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResIterator;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.SimpleSelector;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +42,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static com.google.common.collect.ImmutableMap.of;
@@ -72,7 +72,6 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  * Responsibility: perform indexing and searching.
  */
 public class SearchServiceImpl implements SearchService {
-    public static final Property AGENT = createProperty(ontology("agent"));
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
@@ -81,20 +80,22 @@ public class SearchServiceImpl implements SearchService {
             ontology("prefLabel"),
             ontology("mainTitle")
     };
-    public static final Resource MAIN_ENTRY = createResource(ontology("MainEntry"));
     public static final int SILENT_PERIOD = 1000000;
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
-    private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
-    private ModelToIndexMapper eventModelToIndexMapper = new ModelToIndexMapper("event");
-    private ModelToIndexMapper serialModelToIndexMapper = new ModelToIndexMapper("serial");
-    private ModelToIndexMapper personModelToIndexMapper = new ModelToIndexMapper("person");
-    private ModelToIndexMapper corporationModelToIndexMapper = new ModelToIndexMapper("corporation");
-    private ModelToIndexMapper publicationModelToIndexMapper = new ModelToIndexMapper("publication");
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private int skipped;
     private static Set<String> indexedUris;
     private static long lastIndexedTime;
+    private static final int NUMTHREADS = 1;
+    private static final long SIXTY = 60;
+    private static final int COREPOOLSIZE = 4;
+    private static final int MAXPOOLSIZE = 16;
+    private static final ForkJoinPool THREADPOOL = new ForkJoinPool(NUMTHREADS);
+    private static final ExecutorService EXECUTOR_SERVICE = new ThreadPoolExecutor(
+            COREPOOLSIZE, MAXPOOLSIZE,
+            SIXTY, TimeUnit.SECONDS,
+            new LinkedBlockingQueue());
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
@@ -107,26 +108,13 @@ public class SearchServiceImpl implements SearchService {
         try {
             if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
                 LOG.info("Indexing " + xuri.getUri());
-                switch (xuri.getTypeAsEntityType()) {
-                    case WORK:
-                        doIndexWork(xuri, false, false);
-                        break;
-                    case PERSON:
-                    case CORPORATION:
-                        doIndexWorkCreator(xuri, false);
-                        break;
-                    case PUBLICATION:
-                        doIndexPublication(xuri);
-                        break;
-                    case EVENT:
-                        doIndexEvent(xuri);
-                        break;
-                    case SERIAL:
-                        doIndexSerial(xuri);
-                        break;
-                    default:
-                        doIndex(xuri);
-                }
+
+                // Index the requested resource
+                doIndex(xuri);
+
+                // Fetch a list of all connected resources which needs to be indexed as well
+                Set<String> connectedResources = entityService.retrieveResourcesConnectedTo(xuri);
+                enqueueIndexing(connectedResources, xuri);
             } else {
                 LOG.info("Skipping already indexed uri: " + xuri.getUri());
                 skipped++;
@@ -141,26 +129,8 @@ public class SearchServiceImpl implements SearchService {
 
     public final void indexOnly(XURI xuri) throws Exception {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
-            switch (xuri.getTypeAsEntityType()) {
-                case WORK:
-                    doIndexWork(xuri, true, true);
-                    break;
-                case PERSON:
-                case CORPORATION:
-                    doIndexWorkCreator(xuri, true);
-                    break;
-                case PUBLICATION:
-                    doIndexPublication(xuri);
-                    break;
-                case EVENT:
-                    doIndexEvent(xuri);
-                    break;
-                case SERIAL:
-                    doIndexSerial(xuri);
-                    break;
-                default:
-                    doIndex(xuri);
-            }
+             LOG.info("Indexing " + xuri.getUri());
+                doIndex(xuri);
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
             skipped++;
@@ -170,17 +140,6 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private void doIndexEvent(XURI xuri) {
-        Model eventModelWithLinkedResources = entityService.retrieveEventWithLinkedResources(xuri);
-        indexDocument(xuri, eventModelToIndexMapper.createIndexDocument(eventModelWithLinkedResources, xuri));
-        cacheNameIndex(xuri, eventModelWithLinkedResources);
-    }
-
-    private void doIndexSerial(XURI xuri) {
-        Model serialModelWithLinkedResources = entityService.retrieveSerialWithLinkedResources(xuri);
-        indexDocument(xuri, serialModelToIndexMapper.createIndexDocument(serialModelWithLinkedResources, xuri));
-        cacheNameIndex(xuri, serialModelWithLinkedResources);
-    }
 
     @Override
     public final Response searchPersonWithJson(String json) {
@@ -503,109 +462,95 @@ public class SearchServiceImpl implements SearchService {
         return getIndexUriBuilder().setPath("/search/workSeries/_search");
     }
 
-    private void doIndexPublication(XURI pubUri) throws Exception {
-        Model pubModel = entityService.retrieveById(pubUri);
-        Property publicationOfProperty = createProperty(ontology("publicationOf"));
-        if (pubModel.getProperty(null, publicationOfProperty) != null) {
-            String workUri = pubModel.getProperty(createResource(pubUri.toString()), publicationOfProperty).getObject().toString();
-            XURI workXURI = new XURI(workUri);
-            pubModel = entityService.retrieveWorkWithLinkedResources(workXURI);
-        }
-        indexDocument(pubUri, publicationModelToIndexMapper.createIndexDocument(pubModel, pubUri));
-    }
-
-    private void doIndexWork(XURI xuri, boolean indexedPerson, boolean indexedPublication) throws Exception {
-        Monitor mon = MonitorFactory.start("doIndexWork1");
-        Model workModelWithLinkedResources = entityService.retrieveWorkWithLinkedResources(xuri);
-        indexDocument(xuri, workModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, xuri));
-        mon.stop();
-        mon = MonitorFactory.start("doIndexWork2");
-        if (!indexedPerson) {
-            workModelWithLinkedResources.listStatements(isMainContributorOfWork(xuri, workModelWithLinkedResources))
-                    .forEachRemaining(stmt -> {
+    @Override
+    public final void enqueueIndexingAllResources() {
+         THREADPOOL.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (EntityType type : EntityType.values()) {
+                    entityService.retrieveAllWorkUris(type.getPath(), uri -> EXECUTOR_SERVICE.execute(() -> {
                         try {
-                            XURI creatorXuri = new XURI(stmt.getObject().asNode().getURI());
-                            doIndexWorkCreatorOnly(creatorXuri);
+                            indexOnly(new XURI(uri));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    });
-        }
-        mon.stop();
-        if (indexedPublication) {
-            return;
-        }
-        // Index all publications belonging to work
-        // TODO instead of iterating over all subjects, find only subjects of triples with publicationOf as predicate
-        mon = MonitorFactory.start("doIndexWork3");
-        ResIterator subjectIterator = workModelWithLinkedResources.listSubjects();
-        while (subjectIterator.hasNext()) {
-            Resource subj = subjectIterator.next();
-            if (subj.isAnon()) {
-                continue;
+                    }));
+                }
             }
-            if (subj.toString().contains("publication")) {
-                XURI pubUri = new XURI(subj.toString());
-                indexDocument(pubUri, publicationModelToIndexMapper.createIndexDocument(workModelWithLinkedResources, pubUri));
-
-            }
-        }
-        mon.stop();
+        });
     }
 
-    private SimpleSelector isMainContributorOfWork(final XURI xuri, final Model workModelWithLinkedResources) {
-        return new SimpleSelector() {
+    @Override
+    public final void enqueueIndexingAllOfType(String type, Boolean ignoreConnectedResources) {
+        THREADPOOL.execute(new Runnable() {
             @Override
-            public boolean test(Statement s) {
-                return (s.getPredicate().equals(AGENT)
-                        && workModelWithLinkedResources.contains(s.getSubject(), RDF.type, MAIN_ENTRY)
-                        && workModelWithLinkedResources.contains(
-                        createResource(xuri.getUri()),
-                        createProperty(ontology("contributor")),
-                        s.getSubject())
-                );
+            public void run() {
+                LOG.info("Starting to reindex all resources of type " + type);
+
+                entityService.retrieveAllWorkUris(type, uri -> EXECUTOR_SERVICE.execute(() -> {
+                    try {
+                        if (ignoreConnectedResources) {
+                            indexOnly(new XURI(uri));
+                        } else {
+                            index(new XURI(uri));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
             }
-        };
+        });
     }
 
-    private void doIndexWorkCreator(XURI creatorUri, boolean indexedWork) throws Exception {
-        Monitor mon = MonitorFactory.start("doIndexWorkCreator");
-        Model works = entityService.retrieveWorksByCreator(creatorUri);
-        if (!indexedWork) {
-            ResIterator subjectIterator = works.listSubjects();
-            while (subjectIterator.hasNext()) {
-                Resource subj = subjectIterator.next();
-                if (subj.isAnon() || subj.toString().indexOf('#') != -1) {
-                    continue;
-                }
-                XURI workUri = new XURI(subj.toString());
-                if (!workUri.getUri().equals(creatorUri.getUri())) {
-                    doIndexWorkOnly(workUri);
-                }
+    @Override
+    public final void enqueueIndexing(Set<String> uris, XURI triggeredBy) {
+        LOG.info("Enqueuing indexing of " + uris.size() + " resources triggered by changes in <" + triggeredBy.getUri() + ">");
+        THREADPOOL.execute(new Runnable() {
+            @Override
+            public void run() {
+                uris.forEach(uri -> EXECUTOR_SERVICE.execute(() -> {
+                    try {
+                        LOG.info("Indexing <" + uri + "> triggered by changes in <" + triggeredBy.getUri() + ">");
+                        doIndex(new XURI(uri));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
             }
-        }
-        switch (creatorUri.getTypeAsEntityType()) {
-            case PERSON:
-                indexDocument(creatorUri, personModelToIndexMapper
-                        .createIndexDocument(entityService.retrievePersonWithLinkedResources(creatorUri).add(works), creatorUri));
-                cacheNameIndex(creatorUri, works);
-                break;
-            case CORPORATION:
-                indexDocument(creatorUri, corporationModelToIndexMapper
-                        .createIndexDocument(entityService.retrieveCorporationWithLinkedResources(creatorUri).add(works), creatorUri));
-                cacheNameIndex(creatorUri, works);
-                break;
-            default:
-                throw new RuntimeException(format(
-                        "Tried to index work creator of type %1$s. Should be %2$s or %3$s",
-                        creatorUri.getTypeAsEntityType(), EntityType.PERSON, EntityType.CORPORATION
-                ));
-        }
-        mon.stop();
+        });
     }
 
     private void doIndex(XURI xuri) throws Exception {
-        Model indexModel = entityService.retrieveById(xuri);
+
+        Model indexModel;
+        switch (xuri.getTypeAsEntityType()) {
+            case WORK:
+                indexModel = entityService.retrieveWorkWithLinkedResources(xuri);
+                break;
+            case PUBLICATION:
+                indexModel = entityService.retrieveById(xuri);
+                Property publicationOfProperty = createProperty(ontology("publicationOf"));
+                if (indexModel.getProperty(null, publicationOfProperty) != null) {
+                    String workUri = indexModel.getProperty(createResource(xuri.toString()), publicationOfProperty).getObject().toString();
+                    XURI workXURI = new XURI(workUri);
+                    indexModel = entityService.retrieveWorkWithLinkedResources(workXURI);
+                }
+                break;
+            case EVENT:
+                indexModel = entityService.retrieveEventWithLinkedResources(xuri);
+                break;
+            case PERSON:
+                indexModel = entityService.retrievePersonWithLinkedResources(xuri);
+                break;
+            case CORPORATION:
+                indexModel = entityService.retrieveCorporationWithLinkedResources(xuri);
+                break;
+            case SERIAL:
+                indexModel = entityService.retrieveSerialWithLinkedResources(xuri);
+            default:
+                indexModel = entityService.retrieveById(xuri);
+                break;
+        }
         Monitor mon = MonitorFactory.start("createIndexDocument");
         String indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri);
         mon.stop();
@@ -623,9 +568,6 @@ public class SearchServiceImpl implements SearchService {
                 });
     }
 
-    private void doIndexWorkOnly(XURI xuri) throws Exception {
-        doIndexWork(xuri, true, false);
-    }
 
     private void indexDocument(XURI xuri, String document) {
         long now = currentTimeMillis();
@@ -672,9 +614,6 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private void doIndexWorkCreatorOnly(XURI xuri) throws Exception {
-        doIndexWorkCreator(xuri, true);
-    }
 
     private URIBuilder getIndexUriBuilder() {
         try {

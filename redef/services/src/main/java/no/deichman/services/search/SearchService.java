@@ -4,6 +4,7 @@ import no.deichman.services.uridefaults.XURI;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 /**
  * Responsibility: perform indexing and searching.
@@ -52,4 +53,10 @@ public interface SearchService {
     Response searchWorkSeries(String query);
 
     void indexUrisOnlyOnce(boolean indexOnce);
+
+    void enqueueIndexingAllResources();
+
+    void enqueueIndexingAllOfType(String type, Boolean ignoreConnectedResources);
+
+    void enqueueIndexing(Set<String> uris, XURI triggeredBy);
 }
