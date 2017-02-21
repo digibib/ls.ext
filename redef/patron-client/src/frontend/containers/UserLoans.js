@@ -51,7 +51,7 @@ class UserLoans extends React.Component {
         <section className="pickup">
           <h1><FormattedMessage {...messages.canBePickedUp} /></h1>
             {this.props.loansAndReservations.pickups.map(item => (
-              <article key={item.reserveId}
+              <article key={item.recordId}
                        className="single-entry"
                        data-automation-id="UserLoans_pickup"
                        data-recordid={item.recordId}>
@@ -111,7 +111,7 @@ class UserLoans extends React.Component {
 
               <div className="flex-col media-type">
                 <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ this.renderType(item.itype) ] ]} aria-hidden="true" />
-                {this.props.intl.formatMessage({ id: this.renderType(item.itype) })}
+                <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: this.renderType(item.itype) })}</span>
               </div>
               <div className="flex-col entry-details">
                 <h1 data-automation-id="UserLoans_reservation_title">{item.title}</h1>
@@ -158,7 +158,7 @@ class UserLoans extends React.Component {
         {this.props.isRequestingChangePickupLocation === item.reserveId
           ? <Loading />
           : (
-          <div className="select-container">
+          <div className="select-container" data-automation-id="UserLoans_reservation_library">
             <Libraries libraries={this.props.libraries}
                        selectedBranchCode={item.branchCode}
                        disabled={this.props.isRequestingChangePickupLocation !== false}
