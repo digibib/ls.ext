@@ -12,6 +12,24 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.8.6 (2017-02-14)
+
+KOHA: 3ca5d3907a0331caed3df53e0fdd1e21b1498786
+GITREF:
+
+- Koha:
+  - Add patch 009a-bug17941-canBookBeRenewed (Speed improvements to Koha intra)
+  - DEICH-587: NL-sync lastsync timestamp fix
+  - DEICH-642: fix automatic branch transfer from automats
+- Patron-client:
+  - DEICH-446: My Page improvements - renew all loans and user feedback
+  - DEICH-595: My Page improvements - reserves suspend can be given an expiry date
+  - DEICH-629: display number in work series
+  - DEICH-635: Producer should be indexed
+- Catalinker:
+  - DEICH-622: empty work series
+  - DEICH-628: alternative term must be repeatable
+
 ## 0.8.5 (2017-02-07)
 
 KOHA: a37d4297001cdfb21202ef2d9d04d63ff6f235f4

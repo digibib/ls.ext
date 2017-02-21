@@ -48,6 +48,11 @@ module.exports = (app) => {
     if (request.body.suspended !== undefined) {
       reserveModifications.suspend = request.body.suspended ? 1 : 0
     }
+
+    if (request.body.suspendUntil !== undefined) {
+      reserveModifications.suspend_until = request.body.suspendUntil
+    }
+
     fetch(`http://xkoha:8081/api/v1/holds/${request.body.reserveId}`, {
       method: 'PATCH',
       body: JSON.stringify(reserveModifications)
@@ -56,7 +61,7 @@ module.exports = (app) => {
         response.sendStatus(200)
       } else {
         response.sendStatus(500)
-        throw Error('Could not change pickup location')
+        throw Error('Could not perform holds api operation')
       }
     }).catch(error => {
       console.log(error)

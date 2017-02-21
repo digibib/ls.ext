@@ -32,8 +32,11 @@ services:
       KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
       KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
       KOHA_DBHOST: koha_mysql
-      DEFAULT_LANGUAGE: nb-NO
+      INSTALL_LANGUAGES: "${INSTALL_LANGUAGES}"
+      DEFAULT_LANGUAGE: "${DEFAULT_LANGUAGE}"
       EMAIL_ENABLED: "True"
+      ENABLE_MYSQL_TRIGGERS: "${ENABLE_MYSQL_TRIGGERS}"
+      ENABLE_MYSQL_SCHEMA: "${ENABLE_MYSQL_SCHEMA}"
       SMTP_SERVER_HOST: mailrelay # access through network 'backend'
       SMTP_SERVER_PORT: 2525
       MESSAGE_QUEUE_FREQUENCY: "${MESSAGE_QUEUE_FREQUENCY:-5}"
@@ -42,6 +45,7 @@ services:
       SMS_USER: "${SMS_USER:-smsuser}"
       SMS_PASS: "${SMS_PASS:-smspass}"
       API_PASSPHRASE: "${API_PASSPHRASE:-ChangeMe}"
+      NLENABLE: "${NLENABLE:-0}"
       NLBASEUSER: "${NLBASEUSER:-nlbaseuser}"
       NLBASEPASS: "${NLBASEPASS:-nlbasepass}"
       NLVENDORURL: "${NLVENDORURL:-http://nlsink:9999}"

@@ -626,8 +626,8 @@ When(/^jeg finner strekkoden for et ledig eksemplar$/) do
   @context[:first_available_exemplar_barcode] = @site.BiblioDetail.visit(@context[:reserve_record_id]).find_first_available_exemplar
 end
 
-When(/^jeg er på den opprettede filialen$/) do
-  @site.SelectBranch.visit.select_branch(@context[:random_migrate_branchcode])
+When(/^jeg er på lånerens hjemmefilial$/) do
+  @site.SelectBranch.visit.select_branch("hutl")
 end
 
 When(/^jeg leverer inn eksemplaret$/) do
