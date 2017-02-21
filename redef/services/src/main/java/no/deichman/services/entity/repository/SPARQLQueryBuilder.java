@@ -116,7 +116,7 @@ public final class SPARQLQueryBuilder {
         String queryString = format("#\n"
                 + "PREFIX deichman: <%1$s>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-                + "DESCRIBE <%2$s> ?name ?birth ?death ?personTitle ?nationality ?nationalityLabel \n"
+                + "DESCRIBE <%2$s> ?name ?birth ?death ?personTitle ?nationality ?nationalityLabel ?work\n"
                 + "WHERE {\n"
                 + "    <%2$s> a deichman:Person .\n"
                 + "    optional { <%2$s> deichman:name ?name . }\n"
@@ -125,7 +125,8 @@ public final class SPARQLQueryBuilder {
                 + "    optional { <%2$s> deichman:personTitle ?personTitle . }\n"
                 + "    optional { <%2$s> deichman:nationality ?nationality . \n"
                 + "                 ?nationality rdfs:label ?nationalityLabel .\n"
-                + "             }\n"
+                + "             }"
+                + "  optional { ?work a deichman:Work ; deichman:contributor [ a deichman:Contribution ; deichman:agent <%2$s> ] }\n"
                 + "}", BaseURI.ontology(), personId);
         return QueryFactory.create(queryString);
     }
@@ -147,6 +148,7 @@ public final class SPARQLQueryBuilder {
                 + "      ?place a deichman:Place .\n"
                 + "      <%2$s> deichman:place ?place . \n"
                 + "  }\n"
+                + "  UNION { ?work a deichman:Work ; deichman:contributor [ a deichman:Contribution ; deichman:agent <%2$s> ] }\n"
                 + "}", BaseURI.ontology(), corporationId);
         return QueryFactory.create(queryString);
     }
@@ -693,5 +695,70 @@ public final class SPARQLQueryBuilder {
                 + "}\n"
                 + "\n", replaceeURI, xuri.getUri());
         return queryString;
+    }
+
+    public Query relatedResourcesFor(XURI xuri) {
+        String queryString = "PREFIX : <http://data.deichman.no/ontology#>\n"
+                + "SELECT DISTINCT ?resource WHERE {\n";
+
+        switch (xuri.getTypeAsEntityType()) {
+            case PERSON:
+            case CORPORATION:
+                queryString += ""
+                        + "      { ?resource :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
+                        + "UNION { ?publication :publicationOf ?resource . ?publication :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
+                        + "UNION { ?resource :publicationOf ?work . ?work :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
+                        + "UNION { ?resource :subject <__URI__> }\n";
+                break;
+            case EVENT:
+            case SUBJECT:
+                queryString +=""
+                        + "      { ?resource :subject <__URI__> }\n"
+                        + "UNION { ?resource :publicationOf ?work . ?work :subject <__URI__> }\n";
+                break;
+            case GENRE:
+                queryString +=""
+                        + "      { ?resource :publicationOf ?work . ?work :genre <__URI__> }\n";
+                break;
+            case PLACE:
+                queryString += ""
+                        + "      { ?resource :hasPublicationPlace <__URI__> . }\n"
+                        + "UNION { ?resource :subject <__URI__> . }\n"
+                        + "UNION { ?resource :publicationOf ?work . ?work :subject <__URI__> }"
+                        + "UNION { ?resource :place <__URI__> . }\n";
+                break;
+            case WORK_SERIES:
+                queryString += ""
+                        + "      { ?resource :publicationOf ?work .\n"
+                        + "        ?work :isPartOfWorkSeries [ a :WorkSeriesPart ; :workSeries <__URI__> ] }\n";
+                break;
+            case SERIAL:
+                queryString += "      ?resource :inSerial [ a :SerialIssue ; :serial <__URI__> ]\n";
+                break;
+            case PUBLICATION:
+                queryString += "      ?work :publicationOf <__URI__> .\n";
+                break;
+            case WORK:
+                queryString += ""
+                        + "      { ?resource :publicationOf <__URI__> }\n"
+                        + "UNION { ?resource :subject <__URI__> }\n"
+                        + "UNION { ?resource :publicationOf ?work . ?work :subject <__URI__> }\n"
+                        + "UNION { <__URI__> :contributor [ a :Contribution; :agent ?resource ] }\n";
+                break;
+            case MUSICAL_INSTRUMENT:
+                queryString += ""
+                        + "     ?resource :publicationOf ?work .\n"
+                        + "     ?work :hasInstrumentation [ a :Instrumentation ; :hasInstrument <__URI__> ] .\n";
+                break;
+            case MUSICAL_COMPOSITION_TYPE:
+                queryString += "    ?resource :publicationOf ?work . ?work :compositionType <__URI__> .\n";
+                break;
+            default:
+                break;
+            }
+
+        queryString += "\nFILTER(isIRI(?resource)) }\n";
+
+        return QueryFactory.create(queryString.replaceAll("__URI__", xuri.getUri()));
     }
 }

@@ -1,6 +1,5 @@
 package no.deichman.services.search;
 
-import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.uridefaults.XURI;
 import org.slf4j.Logger;
@@ -22,12 +21,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import static no.deichman.services.entity.EntityType.ALL_TYPES_PATTERN;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -39,15 +32,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Singleton
 @Path("search")
 public class SearchResource extends ResourceBase {
-    private static final int NUMTHREADS = 1;
-    private static final long SIXTY = 60;
-    private static final int COREPOOLSIZE = 4;
-    private static final int MAXPOOLSIZE = 8;
-    private static final ForkJoinPool THREADPOOL = new ForkJoinPool(NUMTHREADS);
-    private static final ExecutorService EXECUTOR_SERVICE = new ThreadPoolExecutor(
-            COREPOOLSIZE, MAXPOOLSIZE,
-            SIXTY, TimeUnit.SECONDS,
-            new LinkedBlockingQueue());
     private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
 
     @Context
@@ -151,20 +135,7 @@ public class SearchResource extends ResourceBase {
     public final Response reIndexAll() throws Exception {
         LOG.info("Starting to reindex all types");
 
-        THREADPOOL.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (EntityType type : EntityType.values()) {
-                    getEntityService().retrieveAllWorkUris(type.getPath(), uri -> EXECUTOR_SERVICE.execute(() -> {
-                        try {
-                            getSearchService().indexOnly(new XURI(uri));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }));
-                }
-            }
-        });
+        getSearchService().enqueueIndexingAllResources();
 
         return Response.accepted().build();
     }
@@ -175,26 +146,8 @@ public class SearchResource extends ResourceBase {
             @PathParam("type") final String type,
             @QueryParam("ignoreConnectedResources") boolean ignoreConnectedResources) {
 
-        THREADPOOL.execute(new Runnable() {
-            @Override
-            public void run() {
-                LOG.info("Starting to reindex " + type);
-                //long start = System.currentTimeMillis();
-                getEntityService().retrieveAllWorkUris(type, uri -> CompletableFuture.runAsync(() -> {
-                    try {
-                        if (ignoreConnectedResources) {
-                            getSearchService().indexOnly(new XURI(uri));
-                        } else {
-                            getSearchService().index(new XURI(uri));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }));
-                // FIXME this log line returns as soon as all URIs are queued up, it does not wait for completion
-                // LOG.info("Done reindexing " + type + " in " + (System.currentTimeMillis() - start) + " seconds");
-            }
-        });
+        getSearchService().enqueueIndexingAllOfType(type, ignoreConnectedResources);
+
         return Response.accepted().build();
     }
 

@@ -1255,6 +1255,7 @@ public class AppTest {
         String persUri1 = "http://data.deichman.no/person/h10834700";
         String persUri2 = "http://data.deichman.no/person/h11234";
         String subjUri = "http://data.deichman.no/subject/e1200005";
+        String workSeriesUri = "http://data.deichman.no/workSeries/v279125243466";
 
         // 1 ) Verify that resources exist in triplestore:
 
@@ -1264,6 +1265,7 @@ public class AppTest {
         assertTrue(repo.askIfResourceExists(new XURI(persUri1)));
         assertTrue(repo.askIfResourceExists(new XURI(persUri2)));
         assertTrue(repo.askIfResourceExists(new XURI(subjUri)));
+        assertTrue(repo.askIfResourceExists(new XURI(workSeriesUri)));
 
         // 2) Verify that none of the resources are indexed:
 
@@ -1274,7 +1276,7 @@ public class AppTest {
         assertFalse(resourceIsIndexed(persUri2));
         assertFalse(resourceIsIndexed(subjUri));
 
-        // 3) Patch work, and verify that work and its publications gets indexed within 2 seconds:
+        // 3) Patch work, and verify that work, its mainentry agent and its publications gets indexed within 2 seconds:
 
         buildPatchRequest(
                 resolveLocally(workUri),
@@ -1284,6 +1286,7 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithinNumSeconds(workUri, 2));
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 2));
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 2));
+        assertTrue(resourceIsIndexedWithinNumSeconds(persUri1, 2));
 
         // 4) Patch person, and verify that work and publications gets reindexed within few seconds
         buildPatchRequest(
@@ -1296,7 +1299,27 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Zappa, Frank", 2));
 
-        // TODO also reindex by changes in subject resource
+
+        // 5) Patch subject, and verify that publications get reindexed
+        buildPatchRequest(
+                resolveLocally(subjUri),
+                buildLDPatch(
+                        buildPatchStatement("del", subjUri, BaseURI.ontology("prefLabel"), "Trondheim"),
+                        buildPatchStatement("add", subjUri, BaseURI.ontology("prefLabel"), "Drontheim"))).asString();
+
+        //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Drontheim", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Drontheim", 2));
+
+        // 6) Patch work series, and verify that publications get reindexed
+        buildPatchRequest(
+                resolveLocally(workSeriesUri),
+                buildLDPatch(
+                        buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
+                        buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
+
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Cosmicomics", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Cosmicomics", 2));
     }
 
     @Test

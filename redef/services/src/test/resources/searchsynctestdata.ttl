@@ -56,7 +56,15 @@
     ns2:literaryForm <http://data.deichman.no/literaryForm#fiction>,
         <http://data.deichman.no/literaryForm#novel> ;
     ns2:mainTitle "Berlinerpoplene" ;
-    ns2:subject <http://data.deichman.no/subject/e1200005> .
+    ns2:subject <http://data.deichman.no/subject/e1200005> ;
+    ns2:isPartOfWorkSeries  [ a  ns2:WorkSeriesPart ;
+             ns2:partNumber  "6" ;
+             ns2:workSeries  <http://data.deichman.no/workSeries/v279125243466>
+    ] .
+
+<http://data.deichman.no/workSeries/v279125243466>
+        a              ns2:WorkSeries ;
+        ns2:mainTitle  "Harry Potter" .
 
 <http://data.deichman.no/person/h10834700> rdf:type ns2:Person ;
     ns2:birthYear "1957" ;

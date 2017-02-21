@@ -679,6 +679,11 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
+    public Set<String> retrieveResourcesConnectedTo(XURI xuri) {
+        return repository.retrievedResourcesConnectedTo(xuri);
+    }
+
+    @Override
     public Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width) {
         return getNameIndexer(type).neighbourhoodOf(name, width);
     }
