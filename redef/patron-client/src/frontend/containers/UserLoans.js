@@ -21,7 +21,7 @@ class UserLoans extends React.Component {
     if (itype === 'FILM') {
       return 'http://data.deichman.no/mediaType#Film'
     } else if (itype === 'BOK') {
-      return  'http://data.deichman.no/mediaType#Book'
+      return 'http://data.deichman.no/mediaType#Book'
     } else if (itype === 'LYDBOK') {
       return 'http://data.deichman.no/mediaType#Audiobook'
     } else if (itype === 'SPRAAKKURS') {
@@ -46,10 +46,6 @@ class UserLoans extends React.Component {
   }
 
   renderPickups () {
-    /* TMP settings */
-    const mediaTypeUri = 'http://data.deichman.no/mediaType#Film'
-    const author = 'Ragde, Anne B.'
-
     if (this.props.loansAndReservations.pickups.length > 0) {
       return (
         <section className="pickup">
@@ -61,7 +57,7 @@ class UserLoans extends React.Component {
                        data-recordid={item.recordId}>
                 <div className="flex-col media-type">
                   <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ this.renderType(item.itype) ] ]} aria-hidden="true" />
-                  {this.props.intl.formatMessage({ id: this.renderType(item.itype) })}
+                  <span data-automation-id="UserLoans_pickup_type">{this.props.intl.formatMessage({ id: this.renderType(item.itype) })}</span>
                 </div>
                 <div className="flex-col entry-details">
                   <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
@@ -121,6 +117,11 @@ class UserLoans extends React.Component {
                 <h1 data-automation-id="UserLoans_reservation_title">{item.title}</h1>
                 <h2 data-automation-id="UserLoans_reservation_author" className="contributors">{item.author}</h2>
               </div>
+              <div className="flex-col pickup-location">
+                <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
+                {this.renderLibrarySelect(item)}
+              </div>
+              <div className="flex-col placeholder-column" />
               <div className="flex-col place-in-queue">
                 <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
                 <p data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
@@ -132,15 +133,11 @@ class UserLoans extends React.Component {
                   }
                 </p>
               </div>
-              <div className="flex-col pickup-location">
-                <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
-                {this.renderLibrarySelect(item)}
-              </div>
-              <div className="flex-col placeholder-column" />
+
               <div className="flex-col resume-suspend-button">
                 {this.renderResumeSuspendReservationButton(item)}
               </div>
-              <div className="flex-col cancel-button">
+              <div className="flex-col reserve-cancel-button">
                 <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.reserveId}>
                   <button className="black-btn" data-automation-id="cancel_reservation_button">
@@ -154,135 +151,6 @@ class UserLoans extends React.Component {
       )
     }
   }
-
-  /* renderReservations () {
-    if ([ ...this.props.loansAndReservations.reservations ].length > 0) {
-      return (
-        <NonIETransitionGroup
-          transitionName="fade-in"
-          transitionAppear
-          transitionAppearTimeout={500}
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={500}
-          component="section"
-          className="reserve">
-          <h1><FormattedMessage {...messages.reservations} /></h1>
-
-          <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
-            <table>
-              <thead>
-              <tr>
-                <th><FormattedMessage {...messages.title} /></th>
-                <th><FormattedMessage {...messages.author} /></th>
-                <th><FormattedMessage {...messages.orderedDate} /></th>
-                <th><FormattedMessage {...messages.pickupLocation} /></th>
-                <th><FormattedMessage {...messages.placeInQueue} /></th>
-              </tr>
-              </thead>
-              <tbody>{[ ...this.props.loansAndReservations.reservations ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
-                <tr key={item.reserveId} data-automation-id="UserLoans_reservation" data-recordid={item.recordId}>
-                  <td data-automation-id="UserLoans_reservation_title">{item.title}</td>
-                  <td data-automation-id="UserLoans_reservation_author">{item.author}</td>
-                  <td data-automation-id="UserLoans_reservation_orderedDate">
-                    {formatDate(item.orderedDate)}
-                    {item.suspendUntil
-                      ? <span className="feedback">&nbsp;&nbsp;<FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                      : ''
-                    }
-                    </td>
-                  <td data-automation-id="UserLoans_reservation_library">{this.renderLibrarySelect(item)}</td>
-                  <td>
-                    <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                      ? item.queuePlace
-                      : <FormattedMessage {...messages.enRoute} />}</span>
-                                   </td>
-                  <td>
-                    {this.renderResumeSuspendReservationButton(item)}
-                  </td>
-                  <td>
-                    <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
-                                      onClickArguments={item.reserveId}>
-                      <button className="black-btn" data-automation-id="cancel_reservation_button">
-                        <FormattedMessage {...messages.cancelReservation} />
-                      </button>
-                    </ClickableElement>
-                  </td>
-                </tr>
-              ))}</tbody>
-            </table>
-          </MediaQuery>
-
-          <MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
-            <div>
-              {[ ...this.props.loansAndReservations.reservations ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
-                <div className="reserved-entry-content"
-                     key={item.reserveId}
-                     data-automation-id="UserLoans_reservation"
-                     data-recordid={item.recordId}>
-                  <div className="meta-item">
-                    <div className="meta-label">
-                      <FormattedMessage {...messages.title} />
-                    </div>
-                    <div className="meta-content" data-automation-id="UserLoans_reservation_title">
-                      {item.title}
-                    </div>
-                  </div>
-                  <div className="meta-item">
-                    <div className="meta-label">
-                      <FormattedMessage {...messages.orderedDate} />
-                    </div>
-                    <div className="meta-content" data-automation-id="UserLoans_reservation_orderedDate">
-                      {formatDate(item.orderedDate)}
-                    </div>
-                  </div>
-                  <div className="meta-item">
-                    <div className="meta-label">
-                      <FormattedMessage {...messages.author} />
-                    </div>
-                    <div className="meta-content" data-automation-id="UserLoans_reservation_author">
-                      {item.author}
-                    </div>
-                  </div>
-                  <div className="meta-item">
-                    <div className="meta-label">
-                      <FormattedMessage {...messages.placeInQueue} />
-                    </div>
-                    <div className="meta-content">
-                      <span
-                        data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                        ? item.queuePlace
-                        : <FormattedMessage {...messages.enRoute} />}</span>
-
-                    </div>
-                  </div>
-                  <div className="meta-item">
-                    <div className="meta-label">
-                      <FormattedMessage {...messages.pickupLocation} />
-                    </div>
-                    <div className="meta-content" data-automation-id="UserLoans_reservation_library">
-                      {this.renderLibrarySelect(item)}
-                    </div>
-                  </div>
-                  <div className="meta-item">
-                    {this.renderResumeSuspendReservationButton(item)}
-                  </div>
-                  <div className="meta-item">
-                    <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
-                                      onClickArguments={item.reserveId}>
-                      <button className="black-btn" data-automation-id="cancel_reservation_button">
-                        <FormattedMessage {...messages.cancelReservation} />
-                      </button>
-                    </ClickableElement>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </MediaQuery>
-        </NonIETransitionGroup>
-      )
-    }
-  }
-  */
 
   renderLibrarySelect (item) {
     return (
@@ -329,15 +197,15 @@ class UserLoans extends React.Component {
       return <span>({this.renderExpectedEstimationPrefix(expected)} {expected} <FormattedMessage {...messages.weeks} />)</span>
     }
   }
-
+  // <FormattedMessage {...messages.name} values={{ name: this.props.borrowerName }} />
+  // &nbsp;-&nbsp;{this.renderCurrentDateTime()}
   renderLoans () {
     if ([ ...this.props.loansAndReservations.loans ].length > 0) {
       return (
         <section className="loan">
           <div className="loan-header">
             <h1>
-              <FormattedMessage {...messages.name} values={{ name: this.props.borrowerName }} />
-              &nbsp;-&nbsp;{this.renderCurrentDateTime()}
+              <FormattedMessage {...messages.yourLoans} />
             </h1>
             {this.renderRenewAllButton()}
           </div>
@@ -356,7 +224,7 @@ class UserLoans extends React.Component {
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col due-date">
-                {this.renderDueDate(item.dueDate)}
+                {this.renderDueColoredDate(item)}
               </div>
               <div className="flex-col extend-msg">
                 {this.renderExtendLoanMessage(item)}
@@ -392,12 +260,22 @@ class UserLoans extends React.Component {
     }
   }
 
+  renderDueColoredDate (item) {
+    if (item.renewalStatus) {
+      return (
+        item.renewalStatus === 'genericExtendLoanSuccess'
+          ? <span className="success">{this.renderDueDate(item)}</span>
+          : <span>{this.renderDueDate(item)}</span>
+      )
+    }
+  }
+
   renderExtendLoanMessage (item) {
     if (item.renewalStatus) {
       return (
         item.renewalStatus === 'genericExtendLoanSuccess'
           ? <div className="renew-message success"><p><FormattedMessage {...messages[ item.renewalStatus ]} /></p></div>
-          : <div className="renew-message"><p><FormattedMessage {...messages[ item.renewalStatus ]} /></p></div>
+          : <div className="renew-message fail"><p><FormattedMessage {...messages[ item.renewalStatus ]} /></p></div>
       )
     }
   }
@@ -416,12 +294,17 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderDueDate (dueDate) {
-    if (dueDate) {
+  renderDueDate (item) {
+    if (item.dueDate) {
       return (
-        <div>
+      item.renewalStatus !== 'overdue'
+        ? <div>
           <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p data-automation-id="UserLoans_loan_dueDate">{formatDate(dueDate)}</p>
+          <p data-automation-id="UserLoans_loan_dueDate">{formatDate(item.dueDate)}</p>
+        </div>
+        : <div>
+          <h2><FormattedMessage {...messages.dueDate} />:</h2>
+          <p className="fail" data-automation-id="UserLoans_loan_dueDate">{formatDate(item.dueDate)}</p>
         </div>
       )
     }
@@ -551,6 +434,11 @@ export const messages = defineMessages({
     id: 'UserLoans.cancelReservation',
     description: 'The label on the button to cancel a reservation',
     defaultMessage: 'Cancel'
+  },
+  yourLoans: {
+    id: 'UserLoans.yourLoans',
+    description: 'The header over the current loans',
+    defaultMessage: 'Your loans'
   },
   name: {
     id: 'UserLoans.name',
