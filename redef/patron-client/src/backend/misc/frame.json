@@ -385,6 +385,7 @@
       "Person",
       "Corporation"
     ],
+    "@embed": "@always",
     "contributors": {
       "@embed": "@always",
       "type": "deichman:Contribution",
