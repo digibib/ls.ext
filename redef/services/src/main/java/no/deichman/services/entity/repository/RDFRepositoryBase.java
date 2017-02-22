@@ -434,6 +434,14 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         executeUpdate(updateRequest);
     }
 
+    @Override
+    public final Model retrieveInverseRelations(XURI xuri, String predicate) {
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetInverselyRelatedResourceByPredicate(xuri.getUri(), predicate))) {
+            disableCompression(qexec);
+            return qexec.execDescribe().query(WITH_MIGRATION_FILTER);
+        }
+    }
+
     private void disableCompression(QueryExecution qexec) {
         if (qexec instanceof QueryEngineHTTP) {
             ((QueryEngineHTTP) qexec).setAllowGZip(false);
