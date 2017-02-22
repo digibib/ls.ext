@@ -39,6 +39,7 @@
 /* Prototype */
 .pickup, .reserve, .loan {
   width: span(12);
+  margin-top: 2.5em;
 
   /* Section title */
   > h1 {
@@ -56,9 +57,11 @@
     justify-content: space-between;
     flex-wrap: wrap;
     float: none;
+    border-bottom: 1px solid $blackColor;
+    margin-bottom: 0.7em;
 
     h1 {
-      font-size: rhythm(3);
+      font-size: rhythm(2.7);
       margin-top: 0;
       margin-bottom: 0;
     }
@@ -66,7 +69,7 @@
     h2 {
       font-size: rhythm(2.5);
       margin-top: rhythm(1);
-      margin-bottom: rhythm(1);
+      margin-bottom: rhythm(0.2);
     }
 
     .entry-details {
@@ -86,7 +89,7 @@
 
     /* Column item */
     .flex-col {
-      margin-bottom: gutter();
+      margin-bottom: 0.4em;
     }
 
     .cancel-button, .renew-button, .reserve-cancel-button, .resume-suspend-button {
@@ -104,14 +107,20 @@
     }
 
     .resume-suspend-button {
-      width: span(9)
+      width: span(9);
+
+      button {
+        background-color: $redColor;
+      }
+
     }
 
     .reserve-cancel-button {
-      width: span(3)
+      width: span(3);
     }
 
     .media-type {
+      font-size: 0.8em;
       text-transform: uppercase;
       width: span(12);
     }
@@ -161,19 +170,11 @@
 
   }
 
-  .place-in-queue {
-
-    p {
-      font-weight: normal;
-    }
-
-  }
-
 }
 
 .loan {
 
-  margin-top: -1em;
+  margin-top: 1.5em;
 
   .loan-header {
     display: flex;
@@ -235,7 +236,7 @@
 
     .single-entry {
       .flex-col {
-        margin-bottom: 2em;
+        margin-bottom: 0.4em;
       }
 
       .media-type {
