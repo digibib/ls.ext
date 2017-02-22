@@ -1,5 +1,6 @@
 package no.deichman.services.entity.repository;
 
+import com.google.common.collect.ImmutableSet;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
@@ -15,6 +16,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -42,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -67,6 +70,10 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             }
         }
     };
+    private static final Set<Property> PROVENANCE_PROPERTIES = ImmutableSet.of(
+            ResourceFactory.createProperty(BaseURI.ontology("created")),
+            ResourceFactory.createProperty(BaseURI.ontology("modified"))
+    );
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
     private final SPARQLQueryBuilder sqb;
@@ -165,6 +172,13 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     private String createResource(Model inputModel, String type, Pair<String, String>... additionalProperties) throws Exception {
+        List<Statement> removeStatements = newArrayList();
+        inputModel.listStatements().forEachRemaining(s -> {
+            if (PROVENANCE_PROPERTIES.contains(s.getPredicate())) {
+                removeStatements.add(s);
+            }
+        });
+        inputModel.remove(removeStatements);
         Model createModel = inputModel.add(tempTypeStatement(type)).add(createdStatement(PLACEHOLDER_RESOURCE));
         if (additionalProperties != null) {
             stream(additionalProperties).forEach(pair -> createModel.add(simpleStatement(pair.getKey(), pair.getValue())));
