@@ -1025,6 +1025,39 @@ body {
         }
       }
     }
+    .inverse-relations-title {
+      margin-top: 20px;
+      font-weight: bold;
+      margin-left: 5px;
+      .close {
+        float: right;
+        margin-right: 8px;
+      }
+    }
+    .inverse-relations {
+      border: 1px solid lightgrey;
+      background: white;
+      .head, .row {
+        padding: 6px;
+        height: 37px;
+      }
+      .head {
+        border-bottom: 1px solid $lightergray;
+        font-style: italic;
+      }
+      .table-body {
+        min-height: 450px;
+        max-height: 450px;
+        overflow: scroll;
+        .row:nth-child(even) {
+          background: $lightergray;
+        }
+        .empty-relations {
+          margin: auto;
+          text-align: center;
+        }
+      }
+    }
   }
   #merge-authorities {
     padding: 13px;

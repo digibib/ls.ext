@@ -1,0 +1,74 @@
+{{#if targetUri[domain]}}
+{{#if toolMode}}
+<div class="pure-u-1 inverse-relations-title" ><span>{{showRelatedTitle}}</span><a class="close" title="Lukk" on-click="unloadInverseRelated">×</a></div>
+<div class="pure-u-1-1 inverse-relations" >
+    <div class="pure-g head">
+        <div class="pure-u-1-24">
+            <span class="pure-u-1-4"></span>
+            <span class="pure-u-1-4"><input type="checkbox" on-change="toggleAllEnableRelation" checked="{{selectAll}}" title="Velg alle"/></span>
+        </div>
+        {{#each showFieldsOfRelated}}
+        <div class="pure-u-{{width}}">{{applicationData.propertyLabels[field]}}</div>
+        {{/each}}
+    </div>
+    <div class="pure-g table-body">
+        {{#each relations:index}}
+        <div class="row pure-u-1">
+            <div class="pure-u-1-24">
+                <span class="pure-u-1-4">{{index + 1}}</span>
+                <span class="pure-u-1-4" ><input type="checkbox" checked="{{enable}}" /></span>
+            </div>
+        {{#each showFieldsOfRelated}}
+            <span class="pure-u-{{width}}">{{projections[field]}}</span>
+        {{/each}}
+        </div>
+        {{/each}}
+        {{#if relations.length === 0}}
+        <span class="empty-relations pure-u-1">{{noInverseRelationsText}}</span>
+        {{/if}}
+    </div>
+</div>
+<div class="pure-u-1">
+    <div class="pure-g" id="merge-authorities">
+        <div class="pure-u-1-24"><span class="ui-icon ui-icon-alert "></span></div>
+        <div class="pure-u-23-24">
+            {{{cloneParentButtonExplanation}}}
+            <button
+                    data-automation-id="merge_authorities"
+                    tabindex="-1"
+                    class="pure-button pure-button-primary next-step-button"
+                    title="{{cloneParentButtonTooltip}}"
+                    on-click="cloneParentForEachChild:{{targetUri[domain]}}"
+                    disabled="{{relations.length === 0 || !oneOrMoreEnabled(relations)}}"
+            >{{cloneParentButtonLabel}}
+            </button>
+        </div>
+    </div>
+</div>
+
+{{else}}
+<div class="pure-u-1-1">
+    <div class="pure-g">
+        <div class="pure-u-1-2">
+            <button
+                    tabindex="-1"
+                    class="pure-button pure-button-primary next-step-button"
+                    title="{{showRelatedButtonLabel}}"
+                    on-click="loadInverseRelated:{{targetUri[domain]}}">{{showRelatedButtonLabel}}
+            </button>
+        </div>
+    </div>
+</div>
+{{/if}}
+{{/if}}
+<span style="display: none;">
+    <div id="clone-parent-dialog" class="pure-g">
+        <p class="pure-u-1">{{cloneParentDialogLegend}}</p>
+        {{#each showFieldsOfRelated}}
+        <div class="pure-u-1">
+            <div class="pure-u-1-4">{{applicationData.propertyLabels[field]}}</div>
+            <div class="pure-u-1-4"><input type="checkbox" checked="{{../../transferFieldsToParent[field]}}"></div>
+        </div>
+        {{/each}}
+    </div>
+</span>
