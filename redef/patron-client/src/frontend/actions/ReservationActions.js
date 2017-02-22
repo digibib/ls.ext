@@ -168,11 +168,15 @@ export function reservePublication (recordId, branchCode) {
           throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
         }
       })
-      .then(json => {
-        if (json.error.includes('ageRestricted')) {
+      .then(maybeError => {
+        if (!maybeError) {
+          // reservation was succesfull
+          return
+        }
+        if (maybeError.error && maybeError.error.includes('ageRestricted')) {
           throw Error(Errors.reservation.AGE_RESTRICTION)
         } else {
-          console.log(`unmatched hold error reason: ${json.error}`)
+          console.log(`unmatched hold error reason: ${maybeError.error}`)
           throw Error(Errors.reservation.TOO_MANY_RESERVES)
         }
       })
