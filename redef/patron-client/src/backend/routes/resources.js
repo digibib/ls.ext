@@ -109,10 +109,19 @@ function parseRDFtoJsonLD (ntdata, workId) {
       // We need to add a class to the work 'in focus', in case there are other works
       // in the graph (for example work as subject of work), and use this class
       // for framing.
+      //
+      // We also delete the class migration:Work, as it trips up the framing.
       ntdoc = ntdoc.map(el => {
         if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] === `http://data.deichman.no/work/${workId}`) {
           el[ '@type' ].push('http://data.deichman.no/ontology#WorkInFocus')
         }
+        if (el[ '@type' ]) {
+          const i = el[ '@type' ].indexOf('http://migration.deichman.no/Work')
+          if (i !== -1) {
+            el[ '@type' ].splice(i, 1)
+          }
+        }
+
         return el
       })
 
