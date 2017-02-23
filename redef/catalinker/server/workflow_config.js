@@ -1124,7 +1124,7 @@ module.exports = (app) => {
                 cloneParentDialogTitle: 'Splitte verk',
                 cloneParentButtonTooltip: 'Lag en kopi av verket for hver utgivelse og knytt utgivelsene til de nye verkene.',
                 noInverseRelationsText: 'Verket har ingen utgivelser.',
-                showRelatedTitle: 'Utgivelser av verket:',
+                showRelatedTitle: 'Verket har <%=relations.length%> utgivelse<%=relations.length != 1 ? "r" : ""%>:',
                 showFieldsOfRelated: [
                   { field: 'mainTitle', width: '7-24' }, // there are 23/24th left for field layouts
                   { field: 'subtitle', width: '7-24' },

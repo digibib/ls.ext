@@ -1,6 +1,6 @@
 {{#if targetUri[domain]}}
 {{#if toolMode}}
-<div class="pure-u-1 inverse-relations-title" ><span>{{showRelatedTitle}}</span><a class="close" title="Lukk" on-click="unloadInverseRelated">×</a></div>
+<div class="pure-u-1 inverse-relations-title" ><span>{{format(., 'showRelatedTitle')}}</span><a class="close" title="Lukk" on-click="unloadInverseRelated">×</a></div>
 <div class="pure-u-1-1 inverse-relations" >
     <div class="pure-g head">
         <div class="pure-u-1-24">

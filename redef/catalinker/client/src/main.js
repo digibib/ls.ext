@@ -2812,6 +2812,14 @@
                   }
                 }
               },
+              format: function (context, templateKey) {
+                const compiled = _.template(context[templateKey])
+                try {
+                  return compiled(context)
+                } catch (e) {
+                  // nop
+                }
+              },
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {
                 var publicationIdInput = _.find(ractive.get('inputs'), function (input) {
