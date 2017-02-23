@@ -2813,7 +2813,7 @@
                 }
               },
               format: function (context, templateKey) {
-                const compiled = _.template(context[templateKey])
+                const compiled = _.template(context[ templateKey ])
                 try {
                   return compiled(context)
                 } catch (e) {
@@ -3829,7 +3829,7 @@
                 }
 
                 cloneParents(event.context, parentUri, function () {
-                  const promises = [];
+                  const promises = []
                   showGrowler()
                   _.each(event.context.relations, function (relation, index) {
                     if (relation.enable) {
@@ -3840,7 +3840,7 @@
                           })
                         }).then(function (response) {
                           const promises = []
-                          _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) {return pair[ 1 ] === true}).map(function (pair) {return pair[ 0 ]}).value(), function (property) {
+                          _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) { return pair[ 1 ] === true }).map(function (pair) { return pair[ 0 ] }).value(), function (property) {
                             const input = ractive.get('applicationData.inputMap')[ `${typeFromUri(parentUri)}.http://data.deichman.no/ontology#${property}` ]
                             const newValue = relation.projections[ property ]
                             promises.push(patchValue(response.headers.location, property, typesFromRange(input.ranges[ 0 ]).rdfType, input.values[ 0 ].current.value || '', newValue || ''))
@@ -3849,7 +3849,7 @@
                         }))
                     }
                   })
-                  Promise.all(promises).then(function(){
+                  Promise.all(promises).then(function () {
                     loadInverseRelated(event, parentUri)
                     ractive.set(`${event.keypath}.transferFieldsToParent.*`, false)
                   }).then(hideGrowler)
