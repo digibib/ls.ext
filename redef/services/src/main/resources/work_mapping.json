@@ -61,7 +61,7 @@
       "index": "not_analyzed"
     },
     "publicationYear": {
-      "type": "string"
+      "type": "short"
     },
     "workType": {
       "type": "nested",
