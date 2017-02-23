@@ -83,16 +83,36 @@
         "type": "text"
       },
       "mainTitle": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "partTitle": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "subtitle": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "partNumber": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "subtitles": {
         "type": "text",
@@ -248,7 +268,12 @@
         "type": "text"
       },
       "mainEntryName": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "summary": {
         "type": "text",

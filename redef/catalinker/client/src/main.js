@@ -13,13 +13,14 @@
     var $ = require('jquery')
     var ldGraph = require('ld-graph')
     var URI = require('urijs')
+    var esquery = require('./esquery')
     require('isbn2')
-    module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, window.ISBN)
+    module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, window.ISBN, esquery)
   } else {
     // Browser globals (root is window)
-    root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI, root.ISBN)
+    root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI, root.ISBN, root.esquery)
   }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, dialog, ISBN) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, ISBN, esquery) {
     'use strict'
 
     Ractive.DEBUG = false
@@ -32,7 +33,7 @@
     require('jquery.scrollto')
     let etagData = {}
     require('isbn2')
-    ISBN = ISBN || window.ISBN
+    ISBN = ISBN || window.ISBN // I think this was needed because of extra parameter 'dialog' in init above
     var Spinner = require('spin')
 
     var deepClone = function (object) {
@@ -651,13 +652,6 @@
           fromRoot(root)
         })
       }
-    }
-
-    function isAdvancedQuery (queryString) {
-      if (queryString === '' || queryString == null) {
-        return false
-      }
-      return /[:\+\^()´"*]| -[:w]*| AND | OR | NOT /.test(queryString.replace(/&nbsp;/g, ' '))
     }
 
     function checkShouldInclude (input) {
@@ -1900,167 +1894,112 @@
       return (event.original && event.original.type === 'keyup' && event.original.keyCode !== 13)
     }
 
-    function decodeHtml (html) {
+    function stripHtml (html) {
+      // trick to strip unwanted tags, attributes and stuff we get from
+      // contenteditable inputs
       var txt = document.createElement('textarea')
       txt.innerHTML = html
       return txt.value
     }
 
     function doSearch (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem) {
-      searchString = decodeHtml(searchString).trim()
-      let indexType = preferredIndexType || secondaryIndexType
-      var inputkeyPath = grandParentOf(event.keypath)
-      var config = ractive.get('config')
-      var searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/_search`
 
-      function transformQueryString (queryTerm) {
-        return queryTerm.matchAndTransformQuery ? searchString.replace(new RegExp(queryTerm.matchAndTransformQuery.regExp), queryTerm.matchAndTransformQuery.replacement) : searchString
-      }
+      searchString = stripHtml(searchString).trim()
 
       if (!searchString) {
         if (ractive.get(event.keypath + '.searchResult.')) {
           ractive.set(event.keypath + '.searchResult.', null)
         }
-      } else {
-        var searchBody
-        var axiosMethod
-        let fieldForSortedListQuery = config.search[ indexType ].sortedListQueryForField
-        if (config.search[ indexType ].structuredQuery && !isAdvancedQuery(searchString)) {
-          axiosMethod = axios.post
-          var filters = {
-            personAsMainEntryFilter: function (filterArg) {
-              return {
-                nested: {
-                  path: 'contributors',
-                  query: {
-                    bool: {
-                      must: [
-                        {
-                          term: {
-                            'contributors.mainEntry': true
-                          }
-                        },
-                        {
-                          nested: {
-                            path: 'contributors.agent',
-                            query: {
-                              term: {
-                                'contributors.agent.uri': filterArg
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            },
-            default: function () {
-              return {}
-            }
-          }
-          var filterArg = null
-          var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
-          if (filterArgInputRef) {
-            filterArg = _.find(allInputs(), function (input) {
-              return filterArgInputRef === input.id
-            }).values[ 0 ].current.value
-          }
-          if (isBlankNodeUri(filterArg)) {
-            filterArg = undefined
-          }
-
-          var matchBody
-          _.each(config.search[ indexType ].queryTerms, function (queryTerm) {
-            let fieldAndTerm = {}
-            if ((!queryTerm.onlyIfNotMatching || !(new RegExp(queryTerm.onlyIfNotMatching).test(searchString))) &&
-              (!queryTerm.onlyIfMatching || new RegExp(queryTerm.onlyIfMatching).test(searchString))) {
-              const transformedQuery = transformQueryString(queryTerm)
-              console.dir(transformedQuery)
-              fieldAndTerm[ queryTerm.field ] = transformedQuery
-              matchBody = queryTerm.wildcard
-                ? { match_phrase_prefix: fieldAndTerm }
-                : { match: fieldAndTerm }
-            }
-          })
-
-          var filterName = filterArg ? ractive.get(inputkeyPath + '.widgetOptions.filter.name') || 'default' : 'default'
-          searchBody = {
-            size: 100,
-            query: {
-              bool: {
-                must: [
-                  matchBody,
-                  filters[ filterName ](filterArg)
-                ]
-              }
-            }
-          }
-        } else if (fieldForSortedListQuery && !isAdvancedQuery(searchString)) {
-          axiosMethod = axios.get
-          searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
-        } else {
-          // basic search
-          axiosMethod = axios.get
-          var query = isAdvancedQuery(searchString) ? searchString : _.compact(_.map(config.search[ indexType ].queryTerms, function (queryTerm) {
-              var wildCardPostfix = queryTerm.wildcard ? '*' : ''
-              var boost = queryTerm.boost ? '^' + queryTerm.boost : ''
-              if (!queryTerm.onlyIfMatching || new RegExp(queryTerm.onlyIfMatching).test(searchString)) {
-                return `${queryTerm.field}:(${transformQueryString(queryTerm)})${wildCardPostfix}${boost}`
-              }
-            })).join(' OR ')
-          searchBody = {
-            size: 100,
-            params: {
-              q: query
-            }
-          }
-        }
-        axiosMethod(searchURI, searchBody)
-          .then(function (response) {
-            var results = ensureJSON(response.data)
-            results.hits.hits.forEach(function (hit) {
-              var item = hit._source
-              item.isChecked = false
-              item.score = hit._score
-              if (loadWorksAsSubjectOfItem) {
-                item.work = null
-              }
-              if (item.work) {
-                if (!_.isArray(item.work)) {
-                  item.work = [ item.work ]
-                }
-                _.each(item.work, function (work) {
-                  work.isChecked = false
-                })
-              }
-            })
-            let items = _.map(_.pluck(results.hits.hits, '_source'),
-              Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ])
-            var highestScoreIndex
-            _.each(items, function (item, index) {
-              if (item.score === results.hits.max_score) {
-                highestScoreIndex = index
-              }
-            })
-            var exactMatchWasFound = false
-            if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([ items[ highestScoreIndex ][ fieldForSortedListQuery ] ]).join().toLocaleLowerCase()) {
-              items[ highestScoreIndex ].exactMatch = true
-              exactMatchWasFound = true
-            }
-            ractive.set(event.keypath + '.searchResult', {
-              items: items,
-              origin: event.keypath,
-              searchTerm: searchString,
-              highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 - 1 : 0
-            })
-            positionSupportPanels()
-          })
-        //    .catch(function (err) {
-        //    console.log(err)
-        // })
+        return
       }
+
+      // secondaryIndexType is used when searching for subject as suggestion from external source
+      var indexType = preferredIndexType || secondaryIndexType
+
+      var config = ractive.get('config')
+
+      // We have two kinds of searches:
+      //   A) Searching in a sorted list of authority labels
+      //   B) Searching in Elasticsearch with a structured search query
+      //
+      // The following variables will be populated depending on which kind of search we do:
+      var searchURI
+      var searchBody
+      var axiosMethod
+
+      var fieldForSortedListQuery = config.search[ indexType ].sortedListQueryForField
+      if (fieldForSortedListQuery) {
+        // A) Searching in sorted list
+        axiosMethod = axios.get
+        searchURI = searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
+      } else {
+        // B) Searching in Elasticsearch
+        var indexType = config.search[ indexType ].type
+        searchURI = `/search/${indexType}/_search`
+        axiosMethod = axios.post
+
+        // Determine if we are doing a mainEntry constrained search
+        var inputkeyPath = grandParentOf(event.keypath)
+        var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
+        var mainEntry
+        if (filterArgInputRef) {
+          mainEntry = _.find(allInputs(), function (input) {
+            return filterArgInputRef === input.id
+          }).values[ 0 ].current.value
+        }
+
+        if (mainEntry && !isBlankNodeUri(mainEntry)) {
+          // Search in work index with mainEntry constraint in structured query
+          searchBody = esquery.worksByMainEntry(searchString, mainEntry)
+        } else {
+          // Search in publication/work index, using structured query tailored for specific type
+          searchBody = esquery.basic(indexType, searchString)
+        }
+      }
+
+      axiosMethod(searchURI, searchBody)
+        .then(function (response) {
+          var results = ensureJSON(response.data)
+          results.hits.hits.forEach(function (hit) {
+            var item = hit._source
+            item.isChecked = false
+            item.score = hit._score
+            if (loadWorksAsSubjectOfItem) {
+              item.work = null
+            }
+            if (item.work) {
+              if (!_.isArray(item.work)) {
+                item.work = [ item.work ]
+              }
+              _.each(item.work, function (work) {
+                work.isChecked = false
+              })
+            }
+          })
+          let items = _.map(_.pluck(results.hits.hits, '_source'),
+            Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ])
+          var highestScoreIndex
+          _.each(items, function (item, index) {
+            if (item.score === results.hits.max_score) {
+              highestScoreIndex = index
+            }
+          })
+          var exactMatchWasFound = false
+          if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([ items[ highestScoreIndex ][ fieldForSortedListQuery ] ]).join().toLocaleLowerCase()) {
+            items[ highestScoreIndex ].exactMatch = true
+            exactMatchWasFound = true
+          }
+          ractive.set(event.keypath + '.searchResult', {
+            items: items,
+            origin: event.keypath,
+            searchTerm: searchString,
+            highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 - 1 : 0
+          })
+          positionSupportPanels()
+        })
+      //    .catch(function (err) {
+      //    console.log(err)
+      // })
     }
 
     let debouncedSearch = _.debounce(doSearch, 500)
@@ -2992,7 +2931,7 @@
                   return value.suggested && value.suggested !== null
                 })
               },
-              isAdvancedQuery: isAdvancedQuery,
+              isAdvancedQuery: esquery.isAdvancedQuery,
               advancedSearchCharacters: advancedSearchCharacters,
               valueOfInputById: valueOfInputById,
               checkRequiredInputValueForShow: function (showOnlyWhenInputHasValueSpec) {
@@ -3204,7 +3143,7 @@
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
                 options = options || {}
-                if (options.skipIfAdvancedQuery && isAdvancedQuery(searchString)) {
+                if (options.skipIfAdvancedQuery && esquery.isAdvancedQuery(searchString)) {
                   return
                 }
                 debouncedSearch(event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options)

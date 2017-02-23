@@ -6,6 +6,17 @@ const services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/
 const URI = require('urijs')
 
 module.exports = (app) => {
+  app.use('/search', cache('2 minutes', cacheableRequestsFilter), requestProxy(services, {
+    forwardPath: (req, res) => {
+      return '/search' + url.parse(req.url).pathname
+    },
+    decorateRequest: (proxyReq, req) => {
+      proxyReq.headers['Content-Type'] = 'application/json'
+      proxyReq.headers['Accept'] = 'application/json'
+      return proxyReq
+    }
+  }))
+
   app.use('/services', cache('1 hour', cacheableRequestsFilter), requestProxy(services, {
     forwardPath: (req, res) => {
       return url.parse(req.url).path
