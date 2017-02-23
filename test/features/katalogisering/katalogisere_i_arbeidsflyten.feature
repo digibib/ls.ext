@@ -516,3 +516,37 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på knappen for å slå sammen to autoriteter
     Så trykker jeg på "Fortsett"-knappen i dialogen
     Så sjekker jeg at antall relasjoner er 2
+
+  Scenario: Splitte verk
+    Gitt at jeg vil splitte et verk med flere utgivelser
+    Og at det finnes et verk med forfatter
+    Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
+    Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
+    Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Så trykker jeg på "Vis utgivelser/splitte verk"-knappen
+    Og jeg venter litt
+    Så sjekker jeg at teksten "Verket har 2 utgivelser:" finnes på siden
+    Så krysser jeg av i avkrysningboksen for "1"
+    Så krysser jeg av i avkrysningboksen for "2"
+    Så trykker jeg på "Splitt verket"-knappen
+    Så krysser jeg av i avkrysningboksen for "Hovedtittel"
+    Så krysser jeg av i avkrysningboksen for "Undertittel"
+    Så krysser jeg av i avkrysningboksen for "Del nummer"
+    Så krysser jeg av i avkrysningboksen for "Deltittel"
+    Så trykker jeg på "Fortsett"-knappen i dialogen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Så sjekker jeg at teksten "Verket har 0 utgivelser:" finnes på siden
+    Så debugger jeg

@@ -116,8 +116,8 @@ def workflow_batch_add_props(domain, data)
       @context[symbol] = value
       @context[label_symbol] = textualValue
       @site.WorkFlow.method(method).call(domain, predicate, textualValue, 0, true)
-    # rescue
-    #   fail "Error adding #{fragment} for #{domain}"
+      # rescue
+      #   fail "Error adding #{fragment} for #{domain}"
     end
   end
 end
@@ -145,10 +145,12 @@ end
 
 def save_value_for_later(input, parameter_label, value)
   input_id = input.attribute_value('data-automation-id')
-  predicate = input_id.sub(/^([a-zA-Z]*)_/, '').sub(/_[0-9]+$/, '')
-  domain = input_id.match(/^([a-zA-Z]*)_.*/).captures[0]
-  @context[parameter_label] = value
-  return domain, predicate
+  if (input_id)
+    predicate = input_id.sub(/^([a-zA-Z]*)_/, '').sub(/_[0-9]+$/, '')
+    domain = input_id.match(/^([a-zA-Z]*)_.*/).captures[0]
+    @context[parameter_label] = value
+    return domain, predicate
+  end
 end
 
 When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label|
@@ -167,7 +169,7 @@ end
 
 def do_select_value(selectable_parameter_label, value)
   select = @browser.selects(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']//select")[0]
-  wait_for{select.present?}
+  wait_for { select.present? }
   select_id = select.attribute_value('data-automation-id')
   predicate = predicate_from_automation_id(select_id)
   domain = domain_of_automation_id(select_id)
@@ -443,7 +445,6 @@ When(/^jeg legger inn et nytt navn$/) do
 end
 
 
-
 When(/^trykker jeg på knappen for å legge til ny$/) do
   @browser.a(:text => /Legg til ny/).click
 end
@@ -463,7 +464,7 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled?}.first.click
+  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled? }.first.click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
@@ -747,4 +748,12 @@ end
 When(/^sjekker jeg at antall relasjoner er ([0-9]*)$/) do |number_of_relations|
   @browser.a(:class => 'toggle-show-sub-items').click
   @browser.lis(:class => 'rel-entry').length.should equal? (number_of_relations.to_i)
+end
+
+When(/^at jeg vil splitte et verk med flere utgivelser$/) do
+  #
+end
+
+When(/^sjekker jeg at teksten "([^"]*)" finnes på siden$/) do |text|
+  @browser.element(:text => text).should exist
 end
