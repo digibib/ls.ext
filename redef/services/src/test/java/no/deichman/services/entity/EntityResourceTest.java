@@ -31,6 +31,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.CREATED;
@@ -42,9 +43,11 @@ import static no.deichman.services.entity.EntityType.SUBJECT;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFromString;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -615,5 +618,43 @@ public class EntityResourceTest {
                 + "    ]\n"
                 + "  }\n"
                 + "]", result.getEntity());
+    }
+
+    @Test
+    public void should_return_publication_as_inversely_related() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w87654.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://deichman.no/work/w87654");
+        Response result = entityResource.retrieveInverseRelationsBy(xuri.getType(), xuri.getId(), "publicationOf", newArrayList("mainTitle", "subtitle"));
+        assertEquals("[\n"
+                + "  {\n"
+                + "    \"uri\": \"http://data.deichman.no/publication/p80002\",\n"
+                + "    \"projections\": {\n"
+                + "      \"mainTitle\": \"Much ado about nothing\",\n"
+                + "      \"subtitle\": \"Hey nonny nonny\"\n"
+                + "    }\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"uri\": \"http://data.deichman.no/publication/p80001\",\n"
+                + "    \"projections\": {}\n"
+                + "  }\n"
+                + "]", result.getEntity());
+    }
+
+    @Test
+    public void should_return_cloned_resource() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w67783.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://deichman.no/work/w67783");
+        Model originalModel = RDFModelUtil.modelFrom(entityResource.get(xuri.getType(), xuri.getId()).getEntity().toString(), Lang.JSONLD);
+        Response result = entityResource.cloneResource(xuri.getType(), xuri.getId());
+        String cloneId = new XURI(result.getHeaderString(LOCATION)).getId();
+
+        final Response clonedResponse = entityResource.get(xuri.getType(), cloneId);
+
+        String cloneContent = clonedResponse.getEntity().toString();
+        Model cloneModel = RDFModelUtil.modelFrom(cloneContent.replace(cloneId, xuri.getId()), Lang.JSONLD);
+        long numberOfStatementsInCloneModelBefore = cloneModel.size();
+        cloneModel.removeAll(null, ResourceFactory.createProperty(BaseURI.ontology("created")), null);
+        assertTrue(originalModel.isIsomorphicWith(cloneModel));
+        assertThat(cloneModel.size(), is(numberOfStatementsInCloneModelBefore - 1));
     }
 }

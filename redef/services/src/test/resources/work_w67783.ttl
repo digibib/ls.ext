@@ -1,0 +1,5 @@
+@prefix deichman: <http://data.deichman.no/ontology#> .
+
+<http://data.deichman.no/work/w67783> a deichman:Work ;
+  deichman:mainTitle "Captain Amazing" ;
+  deichman:subtitle "Meets Casanova Frankenstein" .

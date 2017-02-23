@@ -1,6 +1,4 @@
 @prefix deichman: <http://data.deichman.no/ontology#> .
-@prefix migration: <http://migration.deichman.no/> .
-@prefix raw: <http://data.deichman.no/raw#> .
 
 <http://data.deichman.no/work/w87654> a deichman:Work .
 
