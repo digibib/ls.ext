@@ -16,6 +16,7 @@ import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
 import SearchResultsText from '../components/SearchResultsText'
 import SearchFilterBox from '../components/SearchFilterBox'
+import SearchFiltersContainer from './SearchFiltersContainer'
 
 class Search extends React.Component {
   constructor (props) {
@@ -130,7 +131,7 @@ class Search extends React.Component {
         </div>)
           : null}
         {this.props.totalHits > 0
-          ? [ <SearchFilters key="searchFilters"
+          ? [ <SearchFiltersContainer key="searchFilters"
                              filters={this.props.filters}
                              locationQuery={this.props.location.query}
                              toggleFilter={this.props.searchFilterActions.toggleFilter}
