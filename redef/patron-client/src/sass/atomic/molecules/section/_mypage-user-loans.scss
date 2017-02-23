@@ -9,24 +9,28 @@
     display: block;
   }
 
-  input {
-    margin-top: rhythm(1);
-    margin-bottom: rhythm(1);
-    max-width: 13em;
-    max-height: 3em;
+  .form-item {
+    display: inline-block;
+    input {
+      margin-top: rhythm(1);
+      margin-bottom: rhythm(1);
+      max-width: 13em;
+      max-height: 3em;
+    }
   }
 
   .postpone-aside {
     width: 50%;
-    /*position: relative;
-    top: rhythm(1.5);*/
   }
 
-  .date-picker-button {
-    position: absolute;
-    font-size: 2em;
-    top: -2.1em;
-    right: -6em;
+  .react-datepicker__input-container {
+    display: inline-block;
+    .date-picker-button {
+      padding: 0;
+      font-size: 2em;
+      position: relative;
+      top: 0.2em;
+    }
   }
 
   .feedback {
@@ -192,7 +196,7 @@
     .renew-all-button {
       font-size: rhythm(2);
       align-self: center;
-      background-color: green;
+      background-color: $green;
 
       &:disabled {
         opacity: 0.4;
@@ -223,7 +227,7 @@
 
     p {
       font-weight: normal;
-      color: green;
+      color: $green;
     }
 
   }
