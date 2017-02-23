@@ -549,4 +549,3 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Så sjekker jeg at teksten "Verket har 0 utgivelser:" finnes på siden
-    Så debugger jeg
