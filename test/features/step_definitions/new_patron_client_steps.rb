@@ -519,6 +519,18 @@ When(/^jeg trykker på utsett reservasjon$/) do
   @site.PatronClientLoansAndReservationsPage.reservations.first.button(data_automation_id: 'suspend_reservation_button').click
 end
 
+When(/^velger å utsette reservasjonen til gitt dato$/) do
+  wait_for { @browser.element(data_automation_id: 'reserve_postpone_modal').present? }
+  @browser.element(data_automation_id: 'postpone_reserve_button').click
+end
+
+When(/^at reservasjonen får tilbakemelding om utsettelse$/) do
+  binding.pry
+  wait_for {
+    @site.PatronClientLoansAndReservationsPage.queue_places.first.span.class_name.eql? "feedback"
+  }
+end
+
 When(/^skal jeg se at reservasjonen kan aktiveres$/) do
   wait_for { @browser.element(data_automation_id: 'resume_reservation_button').present? }
 end
