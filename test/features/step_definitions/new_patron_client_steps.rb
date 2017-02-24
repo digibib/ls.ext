@@ -525,7 +525,6 @@ When(/^velger å utsette reservasjonen til gitt dato$/) do
 end
 
 When(/^at reservasjonen får tilbakemelding om utsettelse$/) do
-  binding.pry
   wait_for {
     @site.PatronClientLoansAndReservationsPage.queue_places.first.span.class_name.eql? "feedback"
   }
