@@ -131,7 +131,8 @@ class Search extends React.Component {
         </div>)
           : null}
         {this.props.totalHits > 0
-          ? [ <SearchFiltersContainer key="searchFilters"
+          ? [ <div className="filter-search-wrapper" key="filters-wrapper">
+            <SearchFiltersContainer
                              filters={this.props.filters}
                              locationQuery={this.props.location.query}
                              toggleFilter={this.props.searchFilterActions.toggleFilter}
@@ -141,7 +142,8 @@ class Search extends React.Component {
                              scrollTargetNode={this}
                              isSearching={this.props.isSearching}
                              windowWidth={this.props.windowWidth}
-        />, <SearchResults key="searchResults"
+            />
+            <SearchResults
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
                            searchResults={this.props.searchResults}
@@ -151,7 +153,7 @@ class Search extends React.Component {
                            resources={this.props.resources}
                            page={this.props.location.query.page}
                            items={this.props.items}
-        /> ]
+          /></div> ]
           : null}
         {this.renderPagination()}
       </NonIETransitionGroup>
