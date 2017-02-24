@@ -21,4 +21,9 @@ RUN gradle dependencies
 COPY ./src /services/src
 COPY ./config /services/config
 
+# elasticsearch, used in tests, won't run as root
+RUN adduser elasticsearch
+RUN chown -R elasticsearch:elasticsearch /services
+USER elasticsearch
+
 CMD gradle --no-daemon build oneJar

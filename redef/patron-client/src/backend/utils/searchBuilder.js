@@ -73,37 +73,31 @@ function initSimpleQuery (query) {
     'workSubtitle'
   ]
   return {
-    filtered: {
-      filter: {
-        bool: {
-          must: []
+    bool: {
+      must: [
+        {
+          simple_query_string: {
+            query: query,
+            default_operator: 'and',
+            fields: defaultFields
+          }
         }
-      },
-      query: {
-        simple_query_string: {
-          query: query,
-          default_operator: 'and',
-          fields: defaultFields
-        }
-      }
+      ]
     }
   }
 }
 
 function initAdvancedQuery (query) {
   return {
-    filtered: {
-      filter: {
-        bool: {
-          must: []
+    bool: {
+      must: [
+        {
+          query_string: {
+            query: translateFieldTerms(query, Constants.queryFieldTranslations),
+            default_operator: 'and'
+          }
         }
-      },
-      query: {
-        query_string: {
-          query: translateFieldTerms(query, Constants.queryFieldTranslations),
-          default_operator: 'and'
-        }
-      }
+      ]
     }
   }
 }
@@ -206,7 +200,7 @@ module.exports.buildQuery = function (urlQueryString) {
   })
 
   Object.keys(musts).forEach(aggregation => {
-    elasticSearchQuery.query.filtered.filter.bool.must.push(musts[ aggregation ])
+    elasticSearchQuery.query.bool.must.push(musts[ aggregation ])
   })
 
   let yearRangeFilter
@@ -223,7 +217,7 @@ module.exports.buildQuery = function (urlQueryString) {
     }
   }
   if (yearRangeFilter) {
-    elasticSearchQuery.query.filtered.filter.bool.must.push(yearRangeFilter)
+    elasticSearchQuery.query.bool.must.push(yearRangeFilter)
   }
 
   Object.keys(Constants.filterableFields).forEach(key => {
@@ -231,19 +225,22 @@ module.exports.buildQuery = function (urlQueryString) {
     const fieldName = field.name
     elasticSearchQuery.aggs.facets.aggs[ fieldName ] = {
       filter: {
-        bool: Object.assign({}, elasticSearchQuery.query.filtered.query.bool || { filter: [ elasticSearchQuery.query.filtered.query ] })
+        bool: Object.assign({}, elasticSearchQuery.query.bool)
       },
       aggs: {
         [fieldName]: {
           terms: {
             field: fieldName,
-            size: 0
+            size: 1000
           }
         }
       }
     }
 
-    const aggregationMusts = yearRangeFilter ? [yearRangeFilter] : []
+    const aggregationMusts = [elasticSearchQuery.query.bool.must[0]]
+    if (yearRangeFilter) {
+      aggregationMusts.push(yearRangeFilter)
+    }
     Object.keys(musts).forEach(aggregation => {
       const must = musts[ aggregation ]
       if (aggregation !== fieldName) {

@@ -1,24 +1,24 @@
 {
-  "properties":
-  {
-    "name": {
-      "type": "string",
-      "index": "analyzed",
-      "analyzer": "name_analyzer"
-    },
-    "subdivision": {
-      "type": "string",
-      "index": "analyzed",
-      "analyzer": "name_analyzer"
-    },
-    "alternativeName": {
-      "type": "string"
-    },
-    "placePrefLabel": {
-      "type": "string"
-    },
-    "placeAlternativeName": {
-      "type": "string"
+  "corporation": {
+    "properties":
+    {
+      "name": {
+        "type": "text",
+        "analyzer": "name_analyzer"
+      },
+      "subdivision": {
+        "type": "text",
+        "analyzer": "name_analyzer"
+      },
+      "alternativeName": {
+        "type": "text"
+      },
+      "placePrefLabel": {
+        "type": "text"
+      },
+      "placeAlternativeName": {
+        "type": "text"
+      }
     }
   }
 }

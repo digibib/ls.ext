@@ -1,16 +1,17 @@
 {
-  "properties":
-  {
-    "prefLabel": {
-      "type": "string",
-      "index": "analyzed",
-      "analyzer": "name_analyzer"
-    },
-    "specification": {
-      "type": "String"
-    },
-    "alternativeName": {
-      "type": "string"
+  "compositionType": {
+    "properties":
+    {
+      "prefLabel": {
+        "type": "text",
+        "analyzer": "name_analyzer"
+      },
+      "specification": {
+        "type": "text"
+      },
+      "alternativeName": {
+        "type": "text"
+      }
     }
   }
 }

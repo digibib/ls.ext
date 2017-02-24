@@ -1,28 +1,29 @@
 {
-  "properties":
-  {
-    "prefLabel": {
-      "type": "string",
-      "index": "analyzed",
-      "analyzer": "name_analyzer"
-    },
-    "specification": {
-      "type": "String"
-    },
-    "ordinal": {
-      "type": "String"
-    },
-    "date": {
-      "type": "String"
-    },
-    "alternativeName": {
-      "type": "string"
-    },
-    "placePrefLabel": {
-      "type": "string"
-    },
-    "placeAlternativeName": {
-      "type": "string"
+  "event": {
+    "properties":
+    {
+      "prefLabel": {
+        "type": "text",
+         "analyzer": "name_analyzer"
+      },
+      "specification": {
+        "type": "text"
+      },
+      "ordinal": {
+        "type": "text"
+      },
+      "date": {
+        "type": "text"
+      },
+      "alternativeName": {
+        "type": "text"
+      },
+      "placePrefLabel": {
+        "type": "text"
+      },
+      "placeAlternativeName": {
+        "type": "text"
+      }
     }
   }
 }

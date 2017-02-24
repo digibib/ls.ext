@@ -43,7 +43,7 @@ public class SearchTest {
     }
 
     private static void setupElasticSearch() throws Exception {
-        embeddedElasticsearchServer = EmbeddedElasticsearchServer.getInstance();
+        embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
     }
 
     private static String generateWorkJson(String title, String creator) {
@@ -61,10 +61,12 @@ public class SearchTest {
     }
 
     private static void indexDocument(String type, String jsonData) {
+        /*
         embeddedElasticsearchServer.getClient().prepareIndex("search", type)
                 .setSource(jsonData)
                 .execute()
                 .actionGet();
+                */
     }
 
     private static void populateSearchIndex() throws InterruptedException {

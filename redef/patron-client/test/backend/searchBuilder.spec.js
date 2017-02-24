@@ -2,6 +2,38 @@
 import expect from 'expect'
 import { buildQuery, translateFieldTerms } from '../../src/backend/utils/searchBuilder'
 
+const defaultFields = [
+  'agents',
+  'author^50',
+  'bio',
+  'compType',
+  'country',
+  'desc',
+  'ean',
+  'format',
+  'genre',
+  'inst',
+  'isbn',
+  'ismn',
+  'language',
+  'litform',
+  'mainTitle^30',
+  'mt',
+  'partNumber',
+  'partTitle',
+  // 'publicationYear',
+  'publishedBy',
+  'recordId',
+  'series^10',
+  'subject^10',
+  'summary',
+  'title^20',
+  'workMainTitle',
+  'workPartNumber',
+  'workPartTitle',
+  'workSubtitle'
+]
+
 describe('searchBuilder', () => {
   describe('building query', () => {
     it('translates field qualificators', () => {
@@ -62,18 +94,15 @@ describe('searchBuilder', () => {
       const queryWant = 'author: Hamsun'
       expect(buildQuery(queryString).query).toEqual(
         {
-          filtered: {
-            filter: {
-              bool: {
-                must: []
+          bool: {
+            must: [
+              {
+                query_string: {
+                  query: queryWant,
+                  default_operator: 'and'
+                }
               }
-            },
-            query: {
-              query_string: {
-                query: queryWant,
-                default_operator: 'and'
-              }
-            }
+            ]
           }
         })
     })
@@ -82,8 +111,16 @@ describe('searchBuilder', () => {
   describe('filters', () => {
     it('should parse filters and use in query', () => {
       const urlQueryString = 'filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske'
-      expect(buildQuery(urlQueryString).query.filtered.filter.bool.must).toEqual(
+      expect(buildQuery(urlQueryString).query.bool.must).toEqual(
         [
+
+          {
+            'simple_query_string': {
+              'default_operator': 'and',
+              'fields': defaultFields,
+              'query': 'fiske'
+            }
+          },
           {
             'terms': {
               'audiences': [ 'http://data.deichman.no/audience#juvenile' ]
@@ -107,6 +144,13 @@ describe('searchBuilder', () => {
       expect(query.aggs.facets.aggs[ 'audiences' ].filter.bool.must).toEqual(
         [
           {
+            'simple_query_string': {
+              'default_operator': 'and',
+              'fields': defaultFields,
+              'query': 'fiske'
+            }
+          },
+          {
             'range': {
               'publicationYear': {
                 'gte': 1980,
@@ -127,6 +171,13 @@ describe('searchBuilder', () => {
       expect(query.aggs.facets.aggs[ 'branches' ].filter.bool.must).toEqual(
         [
           {
+            'simple_query_string': {
+              'default_operator': 'and',
+              'fields': defaultFields,
+              'query': 'fiske'
+            }
+          },
+          {
             'range': {
               'publicationYear': {
                 'gte': 1980,
@@ -144,7 +195,7 @@ describe('searchBuilder', () => {
     })
 
     it('should include publicationYear range filter', () => {
-      expect(query.query.filtered.filter.bool.must).toInclude(
+      expect(query.query.bool.must).toInclude(
         {
           'range': {
             'publicationYear': {
