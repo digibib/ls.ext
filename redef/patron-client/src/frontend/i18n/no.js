@@ -209,6 +209,7 @@ export default {
   'SearchFilter.yearFrom': 'Fra',
   'SearchFilter.yearTo': 'Til',
   'SearchFilter.limitYearButton': 'Avgrens',
+  'SearchFilter.yearPlaceholder': 'ÅÅÅÅ',
   'SearchHeader.contactUs': 'Kontakt oss',
   'SearchHeader.logoAlt': 'Sort logo med tekst',
   'SearchHeader.more': 'Mer',

@@ -12,6 +12,14 @@ import ValidationMessage from '../components/ValidationMessage'
 const formName = 'publicationYearSelect'
 
 class DateRangeFilter extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleYearRange = this.handleYearRange.bind(this)
+  }
+
+  handleYearRange () {
+    console.log('Handling year range...')
+  }
 
   getValidator (field) {
     if (field.meta.touched && field.meta.error) {
@@ -20,34 +28,46 @@ class DateRangeFilter extends React.Component {
   }
 
   render () {
+    const {
+      submitting,
+      handleSubmit
+    } = this.props
     return (
       <div className="dateRangeFilters">
-        <h2>
-          <FormattedMessage {...messages.selectPublicationYear} />
-        </h2>
-        <FormInputField name="yearFrom"
-                        message={messages.yearFrom}
-                        formName={formName}
-                        getValidator={this.getValidator}
-                        headerType=""
-                        placeholder={messages.yearFrom}
-                        type="text"
-        />
-        <FormInputField name="yearTo"
-                        message={messages.yearTo}
-                        formName={formName}
-                        getValidator={this.getValidator}
-                        headerType=""
-                        placeholder={messages.yearTo}
-                        type="text"
-        />
-        <button
-          className="black-btn"
-          data-automation-id="submit_year_range_button"
-          type="button"
-        >
-          <FormattedMessage {...messages.limitYear} />
-        </button>
+        <section className="filter-wrapper">
+            <div className="filter-group">
+              <header className="filterTitle">
+                <h1>
+                  <FormattedMessage {...messages.selectPublicationYear} />
+                </h1>
+              </header>
+              <FormInputField name="yearFrom"
+                              message={messages.yearFrom}
+                              formName={formName}
+                              getValidator={this.getValidator}
+                              headerType=""
+                              placeholder={messages.yearPlaceholder}
+                              type="text"
+              />
+              <FormInputField name="yearTo"
+                              message={messages.yearTo}
+                              formName={formName}
+                              getValidator={this.getValidator}
+                              headerType=""
+                              placeholder={messages.yearPlaceholder}
+                              type="text"
+              />
+              <button
+                className="black-btn"
+                data-automation-id="submit_year_range_button"
+                type="button"
+                disabled={submitting}
+                onClick={handleSubmit(this.handleYearRange)}
+              >
+                <FormattedMessage {...messages.limitYear} />
+              </button>
+            </div>
+        </section>
       </div>
     )
   }
@@ -73,6 +93,11 @@ export const messages = defineMessages({
     id: 'SearchFilter.limitYearButton',
     description: 'Button to submit publication year filter',
     defaultMessage: 'Limit'
+  },
+  yearPlaceholder: {
+    id:'SearchFilter.yearPlaceholder',
+    description: 'Placeholder for year in input fields',
+    defaultMessage: 'YYYY'
   }
 
 })
