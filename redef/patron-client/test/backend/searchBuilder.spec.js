@@ -100,12 +100,20 @@ describe('searchBuilder', () => {
   })
 
   describe('aggregations', () => {
-    const urlQueryString = 'filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske'
+    const urlQueryString = 'filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske&yearFrom=1980&yearTo=1990'
     const query = buildQuery(urlQueryString)
 
     it('should include activated filters in aggregations, excluding filters of the given aggregation', () => {
       expect(query.aggs.facets.aggs[ 'audiences' ].filter.bool.must).toEqual(
         [
+          {
+            'range': {
+              'publicationYear': {
+                'gte': 1980,
+                'lte': 1990
+              }
+            }
+          },
           {
             'terms': {
               'branches': [ 'flam', 'fmaj', 'ftor' ]
@@ -119,11 +127,32 @@ describe('searchBuilder', () => {
       expect(query.aggs.facets.aggs[ 'branches' ].filter.bool.must).toEqual(
         [
           {
+            'range': {
+              'publicationYear': {
+                'gte': 1980,
+                'lte': 1990
+              }
+            }
+          },
+          {
             'terms': {
               'audiences': [ 'http://data.deichman.no/audience#juvenile' ]
             }
           }
         ]
+      )
+    })
+
+    it('should include publicationYear range filter', () => {
+      expect(query.query.filtered.filter.bool.must).toInclude(
+        {
+            'range': {
+              'publicationYear': {
+                'gte': 1980,
+                'lte': 1990
+              }
+            }
+          }
       )
     })
   })
