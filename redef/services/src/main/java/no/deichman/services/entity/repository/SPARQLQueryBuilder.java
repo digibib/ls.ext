@@ -697,6 +697,13 @@ public final class SPARQLQueryBuilder {
         return queryString;
     }
 
+    public Query getGetInverselyRelatedResourceByPredicate(String id, String predicate) {
+        String queryString = format("prefix deich: <http://data.deichman.no/ontology#>\n"
+                + "describe ?related \n"
+                + "where {?related deich:%1$s <%2$s> }", predicate, id);
+        return QueryFactory.create(queryString);
+    }
+
     public Query relatedResourcesFor(XURI xuri) {
         String queryString = "PREFIX : <http://data.deichman.no/ontology#>\n"
                 + "SELECT DISTINCT ?resource WHERE {\n";

@@ -96,4 +96,5 @@ public interface RDFRepository {
 
     void mergeResource(XURI xuri, XURI replaceeUri);
 
+    Model retrieveInverseRelations(XURI xuri, String predicate);
 }

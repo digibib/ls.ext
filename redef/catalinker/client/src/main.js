@@ -335,6 +335,34 @@
       })
     }
 
+    var cloneParents = function (cloneParentSpec, parentUri, proceed) {
+      $('#clone-parent-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        title: cloneParentSpec.cloneParentDialogTitle,
+        buttons: [
+          {
+            text: 'Fortsett',
+            click: function () {
+              $(this).dialog('close')
+              proceed()
+            }
+          },
+          {
+            text: 'Avbryt',
+            class: 'default',
+            click: function () {
+              $(this).dialog('close')
+            }
+          }
+        ],
+        open: function () {
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        }
+      })
+    }
+
     var warnEditResourceName = function (editResourcesSpec) {
       ractive.set('editResourceWarning', editResourcesSpec)
       $('#edit-resource-warning-dialog').dialog({
@@ -1671,6 +1699,7 @@
         group.tabSelected = false
         group.domain = inputGroup.rdfType
         group.showOnlyWhenInputHasValue = inputGroup.showOnlyWhenInputHasValue
+        group.tools = inputGroup.tools
 
         if (inputGroup.nextStep) {
           group.nextStep = inputGroup.nextStep
@@ -2250,6 +2279,7 @@
           'suggestor-for-input-nonNegativeInteger',
           'suggestor-for-input-literal',
           'select-predefined-value',
+          'inverse-one-to-many-relationship',
           'work',
           'relations',
           'publication',
@@ -2782,6 +2812,14 @@
                   }
                 }
               },
+              format: function (context, templateKey) {
+                const compiled = _.template(context[ templateKey ])
+                try {
+                  return compiled(context)
+                } catch (e) {
+                  // nop
+                }
+              },
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {
                 var publicationIdInput = _.find(ractive.get('inputs'), function (input) {
@@ -2882,6 +2920,9 @@
                   return valueIndex + 1
                 }
               },
+              oneOrMoreEnabled: function (items) {
+                return _.some(items, function (item) { return item.enable })
+              },
               checkShouldInclude: checkShouldInclude
             },
             decorators: {
@@ -2931,6 +2972,13 @@
               }
             }
           })
+          function loadInverseRelated (event, parentUri) {
+            return axios.get(proxyToServices(`${parentUri}/inverseRelationsBy/${event.context.inverseRdfProperty}?projection=${_.pluck(event.context.showFieldsOfRelated, 'field').join('&projection=')}`))
+              .then(function (response) {
+                ractive.set(`${event.keypath}.relations`, response.data)
+              })
+          }
+
           ractive.on({
               toggle: function (event) {
                 if (eventShouldBeIgnored(event)) return
@@ -3740,6 +3788,75 @@
                     closeCompare(typeFromUri(targetUri))
                   }).catch(hideGrowler)
                 })
+              },
+              loadInverseRelated: function (event, parentUri) {
+                ractive.set(`${grandParentOf(event.keypath)}.toolMode`, true)
+                loadInverseRelated(event, parentUri)
+              },
+              unloadInverseRelated: function (event) {
+                ractive.set(`${event.keypath}.relations`, null)
+                ractive.set(`${grandParentOf(event.keypath)}.toolMode`, null)
+              },
+              cloneParentForEachChild: function (event, parentUri) {
+                function patchValue (patchSubject, property, type, oldValue, newValue) {
+                  return axios.patch(proxyToServices(patchSubject), [
+                      {
+                        op: 'del',
+                        s: patchSubject,
+                        p: `http://data.deichman.no/ontology#${property}`,
+                        o: {
+                          value: oldValue,
+                          type: type
+                        }
+                      },
+                      {
+                        op: 'add',
+                        s: patchSubject,
+                        p: `http://data.deichman.no/ontology#${property}`,
+                        o: {
+                          value: newValue,
+                          type: type
+                        }
+                      }
+                    ],
+                    {
+                      headers: {
+                        Accept: 'application/ld+json',
+                        'Content-Type': 'application/ldpatch+json'
+                      }
+                    }
+                  )
+                }
+
+                cloneParents(event.context, parentUri, function () {
+                  const promises = []
+                  showGrowler()
+                  _.each(event.context.relations, function (relation, index) {
+                    if (relation.enable) {
+                      promises.push(axios.post(`${proxyToServices(parentUri)}/clone`)
+                        .then(function (response) {
+                          return patchValue(relation.uri, event.context.inverseRdfProperty, 'http://www.w3.org/2001/XMLSchema#anyURI', parentUri, response.headers.location).then(function () {
+                            return response
+                          })
+                        }).then(function (response) {
+                          const promises = []
+                          _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) { return pair[ 1 ] === true }).map(function (pair) { return pair[ 0 ] }).value(), function (property) {
+                            const input = ractive.get('applicationData.inputMap')[ `${typeFromUri(parentUri)}.http://data.deichman.no/ontology#${property}` ]
+                            const newValue = relation.projections[ property ]
+                            promises.push(patchValue(response.headers.location, property, typesFromRange(input.ranges[ 0 ]).rdfType, input.values[ 0 ].current.value || '', newValue || ''))
+                          })
+                          return Promise.all(promises)
+                        }))
+                    }
+                  })
+                  Promise.all(promises).then(function () {
+                    loadInverseRelated(event, parentUri)
+                    ractive.set(`${event.keypath}.transferFieldsToParent.*`, false)
+                  }).then(hideGrowler)
+                })
+              },
+              toggleAllEnableRelation: function (event) {
+                ractive.set(`${event.keypath}.relations.*.enable`, event.context.selectAll)
               }
             }
           )

@@ -69,4 +69,6 @@ public interface EntityService {
     void removeFromLocalIndex(XURI xuri);
 
     List<XURI> retrieveResourceRelationshipsUris(XURI uri);
+
+    List<ResourceSummary> retrieveInverseRelations(XURI xuri, String predicate, List<String> projections);
 }

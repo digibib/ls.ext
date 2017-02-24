@@ -12,9 +12,9 @@ import no.deichman.services.entity.repository.SPARQLQueryBuilder;
 import no.deichman.services.search.InMemoryNameIndexer;
 import no.deichman.services.search.NameEntry;
 import no.deichman.services.search.NameIndexer;
-import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryException;
 import org.apache.jena.query.QueryExecution;
@@ -27,6 +27,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.SimpleSelector;
@@ -55,16 +56,19 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
 import static no.deichman.services.search.SearchServiceImpl.LOCAL_INDEX_SEARCH_FIELDS;
 import static no.deichman.services.uridefaults.BaseURI.ontology;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 /**
@@ -124,33 +128,33 @@ public final class EntityServiceImpl implements EntityService {
     public EntityServiceImpl(RDFRepository repository, KohaAdapter kohaAdapter) {
         this.repository = repository;
         this.kohaAdapter = kohaAdapter;
-        mainTitleProperty = ResourceFactory.createProperty(BaseURI.ontology("mainTitle"));
-        publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
-        recordIdProperty = ResourceFactory.createProperty(BaseURI.ontology("recordId"));
-        partTitleProperty = ResourceFactory.createProperty(BaseURI.ontology("partTitle"));
-        partNumberProperty = ResourceFactory.createProperty(BaseURI.ontology("partNumber"));
-        isbnProperty = ResourceFactory.createProperty(BaseURI.ontology("isbn"));
-        publicationYearProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationYear"));
-        subtitleProperty = ResourceFactory.createProperty(BaseURI.ontology("subtitle"));
-        ageLimitProperty = ResourceFactory.createProperty(BaseURI.ontology("ageLimit"));
-        subjectProperty = ResourceFactory.createProperty(BaseURI.ontology("subject"));
-        genreProperty = ResourceFactory.createProperty(BaseURI.ontology("genre"));
-        mainEntryPersonProperty = ResourceFactory.createProperty(BaseURI.ontology("mainEntryPerson"));
-        mainEntryCorporationProperty = ResourceFactory.createProperty(BaseURI.ontology("mainEntryCorporation"));
-        publicationPlaceProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationPlace"));
-        literaryFormProperty = ResourceFactory.createProperty(BaseURI.ontology("literaryForm"));
-        literaryFormLabelProperty = ResourceFactory.createProperty(BaseURI.ontology("literaryFormLabel"));
-        languageProperty = ResourceFactory.createProperty(BaseURI.ontology("language"));
-        workTypeProperty = ResourceFactory.createProperty(BaseURI.ontology("workType"));
-        mediaTypeProperty = ResourceFactory.createProperty(BaseURI.ontology("mediaType"));
-        formatLabelProperty = ResourceFactory.createProperty(BaseURI.ontology("formatLabel"));
-        adaptaionProperty = ResourceFactory.createProperty(BaseURI.ontology("adaptationLabel"));
-        fictionNonFictionProperty = ResourceFactory.createProperty(BaseURI.ontology("fictionNonfiction"));
-        summaryProperty = ResourceFactory.createProperty(BaseURI.ontology("summary"));
-        audienceProperty = ResourceFactory.createProperty(BaseURI.ontology("audience"));
-        locationFormatProperty = ResourceFactory.createProperty(BaseURI.ontology("locationFormat"));
-        locationDeweyProperty = ResourceFactory.createProperty(BaseURI.ontology("locationDewey"));
-        locationSignatureProperty = ResourceFactory.createProperty(BaseURI.ontology("locationSignature"));
+        mainTitleProperty = createProperty(ontology("mainTitle"));
+        publicationOfProperty = createProperty(ontology("publicationOf"));
+        recordIdProperty = createProperty(ontology("recordId"));
+        partTitleProperty = createProperty(ontology("partTitle"));
+        partNumberProperty = createProperty(ontology("partNumber"));
+        isbnProperty = createProperty(ontology("isbn"));
+        publicationYearProperty = createProperty(ontology("publicationYear"));
+        subtitleProperty = createProperty(ontology("subtitle"));
+        ageLimitProperty = createProperty(ontology("ageLimit"));
+        subjectProperty = createProperty(ontology("subject"));
+        genreProperty = createProperty(ontology("genre"));
+        mainEntryPersonProperty = createProperty(ontology("mainEntryPerson"));
+        mainEntryCorporationProperty = createProperty(ontology("mainEntryCorporation"));
+        publicationPlaceProperty = createProperty(ontology("publicationPlace"));
+        literaryFormProperty = createProperty(ontology("literaryForm"));
+        literaryFormLabelProperty = createProperty(ontology("literaryFormLabel"));
+        languageProperty = createProperty(ontology("language"));
+        workTypeProperty = createProperty(ontology("workType"));
+        mediaTypeProperty = createProperty(ontology("mediaType"));
+        formatLabelProperty = createProperty(ontology("formatLabel"));
+        adaptaionProperty = createProperty(ontology("adaptationLabel"));
+        fictionNonFictionProperty = createProperty(ontology("fictionNonfiction"));
+        summaryProperty = createProperty(ontology("summary"));
+        audienceProperty = createProperty(ontology("audience"));
+        locationFormatProperty = createProperty(ontology("locationFormat"));
+        locationDeweyProperty = createProperty(ontology("locationDewey"));
+        locationSignatureProperty = createProperty(ontology("locationSignature"));
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -260,7 +264,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private Predicate<Statement> typeStatement(String type) {
         return s ->
-                s.getPredicate().equals(RDF.type) && s.getObject().equals(createResource(BaseURI.ontology() + type));
+                s.getPredicate().equals(RDF.type) && s.getObject().equals(createResource(ontology() + type));
     }
 
     @Override
@@ -339,7 +343,7 @@ public final class EntityServiceImpl implements EntityService {
 
         Model workModel = repository.retrieveWorkAndLinkedResourcesByURI(xuri);
         QueryExecution queryExecution = QueryExecutionFactory.create(QueryFactory.create(
-                "PREFIX  deichman: <" + BaseURI.ontology() + "> "
+                "PREFIX  deichman: <" + ontology() + "> "
                         + "SELECT  * "
                         + "WHERE { ?publicationUri deichman:recordId ?biblioId }"), workModel);
         ResultSet publicationSet = queryExecution.execSelect();
@@ -711,6 +715,24 @@ public final class EntityServiceImpl implements EntityService {
         return stream(spliteratorUnknownSize(repository.retrieveResourceRelationships(uri), ORDERED), false)
                 .filter(s -> s.contains("targetUri"))
                 .map(this::targetUri).collect(toSet()).stream().sorted().collect(toList());
+    }
+
+    @Override
+    public List<ResourceSummary> retrieveInverseRelations(XURI xuri, String predicate, List<String> projections) {
+        Model related = repository.retrieveInverseRelations(xuri, predicate);
+        final ResIterator subjects = related.listSubjects();
+        List<ResourceSummary> retVal = newArrayList();
+        subjects.forEachRemaining(s -> {
+            if (!s.isAnon()) {
+                retVal.add(new ResourceSummary(s.getURI(), projections
+                        .stream()
+                        .map(p -> Pair.of(p, related.getProperty(s, createProperty(ontology(), p))))
+                        .filter(p -> p.getValue() != null)
+                        .map(p -> Pair.of(p.getKey(), p.getValue().getObject().asLiteral().getString()))
+                        .collect(toMap(Pair::getKey, Pair::getValue))));
+            }
+        });
+        return retVal;
     }
 
     private Relationship getRelationship(QuerySolution querySolution) {

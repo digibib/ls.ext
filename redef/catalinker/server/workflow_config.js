@@ -1115,6 +1115,29 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
+            tools: [
+              {
+                template: 'inverse-one-to-many-relationship',
+                inverseRdfProperty: 'publicationOf',
+                showRelatedButtonLabel: 'Vis utgivelser/splitte verk',
+                cloneParentButtonLabel: 'Splitt verket',
+                cloneParentDialogTitle: 'Splitte verk',
+                cloneParentButtonTooltip: 'Lag en kopi av verket for hver utgivelse og knytt utgivelsene til de nye verkene.',
+                noInverseRelationsText: 'Verket har ingen utgivelser.',
+                showRelatedTitle: 'Verket har <%=relations.length%> utgivelse<%=relations.length != 1 ? "r" : ""%>:',
+                showFieldsOfRelated: [
+                  { field: 'mainTitle', width: '7-24' }, // there are 23/24th left for field layouts
+                  { field: 'subtitle', width: '7-24' },
+                  { field: 'partNumber', width: '3-24' },
+                  { field: 'partTitle', width: '6-24' }
+                ],
+                cloneParentButtonExplanation: `
+                  Hvis du velger å splitte verket, opprettes det en ny kopi av det for hver utgivelse som er valgt over. Hver utgivelse knyttes
+                  deretter til sitt nye verk som utgivelse av det verket. Før verket splittes blir du bedt om å angi hvilke verdier 
+                  fra utgivelsene som skal overføres til tilsvarende felt på de nye verkene.`,
+                cloneParentDialogLegend: 'Velg hvilke verdier som skal kopieres fra de eksisterende utgivelsene til de nye verkene som skal opprettes:'
+              }
+            ],
             nextStep: {
               buttonLabel: 'Neste steg: Emneopplysninger',
               showOnlyWhenInputHasValue: 'mediaTypeInput'
@@ -1712,9 +1735,9 @@ module.exports = (app) => {
           }
         },
         relationTargetLabels: {
-          Work: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,'],
-          Publication: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,'],
-          PublicationPart: [ 'mainTitle']
+          Work: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,' ],
+          Publication: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,' ],
+          PublicationPart: [ 'mainTitle' ]
         },
         typeMap: {
           // this map contains a map of all known independent resource types (i.e. not blank node types) as they appear in
