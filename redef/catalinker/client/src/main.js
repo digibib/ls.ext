@@ -588,7 +588,7 @@
         function getValues (onlyFirstField) {
           return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
             .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,\.]$/, '')
+            .join(' ').replace(/[,\.]$/, '').replace(/– /, '–')
         }
 
         var values = getValues(options.onlyFirstField)
@@ -2472,6 +2472,17 @@
               })
             }
           })
+            .then(function () {
+              _.each(input.subInputs, function (subInput, index) {
+                if (index === 0 ) {
+                  ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
+                }
+                if (!(subInput.input.visible === false)) {
+                  var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
+                  ractive.set(`${subInput.input.keypath}.values.${index}.old.value`,  value)
+                }
+              })
+            })
             .then(function (response) {
               // successfully patched resource
               return ractive.set('save_status', 'alle endringer er lagret')

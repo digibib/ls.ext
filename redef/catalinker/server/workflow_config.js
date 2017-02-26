@@ -1589,7 +1589,7 @@ module.exports = (app) => {
             type: 'person',
             sortedListQueryForField: 'name',
             selectIndexLabel: 'Person',
-            resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear' ],
+            resultItemLabelProperties: [ 'name', '#ordinal,', 'specification', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
             subItemsExpandTooltip: 'Vis/skjul verk',
