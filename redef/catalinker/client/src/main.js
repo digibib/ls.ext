@@ -2205,16 +2205,16 @@
       return targetInput.widgetOptions && targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom
     }
 
-  var Main = {
-    searchResultItemHandlers: {
-      defaultItemHandler: function (item) {
-        return item
-      },
-      personItemHandler: function (personItem) {
-        _.each(personItem.work, function (work) {
-          work.role = _.flatten([ work.role || [] ])
-        })
-        personItem.subItems = personItem.work
+    var Main = {
+      searchResultItemHandlers: {
+        defaultItemHandler: function (item) {
+          return item
+        },
+        personItemHandler: function (personItem) {
+          _.each(personItem.work, function (work) {
+            work.role = _.flatten([ work.role || [] ])
+          })
+          personItem.subItems = personItem.work
           personItem.subItemType = 'work'
           personItem.lifeSpan = ''
           if (personItem.birthYear) {
@@ -2408,7 +2408,7 @@
           _.each(opSpec[ op ], function (spec, opIndex) {
             patch.push({
               op: spec.operation,
-              s: spec.operation == 'del' ? deleteSubject : mainSubject,
+              s: spec.operation === 'del' ? deleteSubject : mainSubject,
               p: input.predicate,
               o: {
                 value: `_:b${opIndex}`,
@@ -2474,12 +2474,12 @@
           })
             .then(function () {
               _.each(input.subInputs, function (subInput, index) {
-                if (index === 0 ) {
+                if (index === 0) {
                   ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
                 }
                 if (!(subInput.input.visible === false)) {
                   var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-                  ractive.set(`${subInput.input.keypath}.values.${index}.old.value`,  value)
+                  ractive.set(`${subInput.input.keypath}.values.${index}.old.value`, value)
                 }
               })
             })
@@ -2772,19 +2772,6 @@
             axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
               ractive.set(`${keypath}.relations`, response.data)
             })
-
-            return {
-              teardown: function () {}
-            }
-          }
-          var relations = function (node, uri) {
-            const keypath = Ractive.getNodeInfo(node).keypath
-            ractive.set(`${keypath}.relations`, null)
-            let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
-            uri = uri || ractive.get(`targetUri.${type}`)
-            axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
-              ractive.set(`${keypath}.relations`, response.data)
-            })
             return {
               teardown: function () {}
             }
@@ -2817,28 +2804,28 @@
             lang: 'no',
             template: applicationData.template,
             events: {
-              backspace: function ( node, fire ) {
-                function keydownHandler ( event ) {
-                  var which = event.which || event.keyCode;
+              backspace: function (node, fire) {
+                function keydownHandler (event) {
+                  var which = event.which || event.keyCode
 
                   if (which !== 9) {
-                    event.preventDefault();
+                    event.preventDefault()
                   }
-                  if ( which === 8 ) {
+                  if (which === 8) {
                     fire({
                       node,
                       original: event
-                    });
+                    })
                   }
                 }
 
-                node.addEventListener( 'keydown', keydownHandler, false );
+                node.addEventListener('keydown', keydownHandler, false)
 
                 return {
                   teardown () {
-                    node.removeEventListener( 'keydown', keydownHandler, false );
+                    node.removeEventListener('keydown', keydownHandler, false)
                   }
-                };
+                }
               }
             },
             computed: {
@@ -3042,8 +3029,8 @@
                 return _.some(items, function (item) { return item.enable })
               },
               checkShouldInclude: checkShouldInclude,
-              abbreviate(label) {
-                return applicationData.config.abbreviations[label] || label
+              abbreviate: function (label) {
+                return applicationData.config.abbreviations[ label ] || label
               }
             },
             decorators: {
