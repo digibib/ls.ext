@@ -60,7 +60,7 @@ function initSimpleQuery (query) {
     'mt',
     'partNumber',
     'partTitle',
-    'publicationYear',
+    // 'publicationYear',
     'publishedBy',
     'recordId',
     'series^10',
