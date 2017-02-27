@@ -77,7 +77,7 @@
             {{/with}}
         </h3>
         {{/if}}
-        <div style="order: {{nonEditable ? valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1 : 100}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
+        <div style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
               {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
             {{#if nonEditable && !suggested}}
             <div class="pure-u-1" >

@@ -3000,7 +3000,7 @@
                   let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
                   let values = ractive.get(`${keyPath}.values`)
                   let index = _.findIndex(_.sortBy(_.filter(values, function (value) {
-                    return value.current.value !== null && value.current.value !== ''
+                    return value.current.value !== null && value.current.value !== '' && value.current.value !== undefined
                   }), function (val) { return val.current.value }), function (v) {
                     return v.current.value === value
                   })
