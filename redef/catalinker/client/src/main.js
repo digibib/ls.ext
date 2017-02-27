@@ -2513,7 +2513,7 @@
               $(node).attr('tabindex', newValue ? '0' : '-1')
             }
             $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
-          }, { init: false })
+          }, { init: true })
         }
 
         var initRactive = function (applicationData) {
@@ -2816,6 +2816,31 @@
             el: 'container',
             lang: 'no',
             template: applicationData.template,
+            events: {
+              backspace: function ( node, fire ) {
+                function keydownHandler ( event ) {
+                  var which = event.which || event.keyCode;
+
+                  if (which !== 9) {
+                    event.preventDefault();
+                  }
+                  if ( which === 8 ) {
+                    fire({
+                      node,
+                      original: event
+                    });
+                  }
+                }
+
+                node.addEventListener( 'keydown', keydownHandler, false );
+
+                return {
+                  teardown () {
+                    node.removeEventListener( 'keydown', keydownHandler, false );
+                  }
+                };
+              }
+            },
             computed: {
               firstAndLastVisibleInputs: function () {
                 let result = []
@@ -3347,6 +3372,7 @@
                 clearSupportPanels()
               },
               unselectEntity: function (event) {
+                const closest = $(event.node).closest('span[data-support-panel-base-id^=support_panel_base_]')
                 ractive.set(event.keypath + '.searchResult', null)
                 ractive.set(event.keypath + '.current.value', '')
                 ractive.set(event.keypath + '.current.displayValue', '')
@@ -3364,6 +3390,7 @@
                     unloadResourceForDomain('Person')
                   }
                 }
+                closest.find('[contenteditable=true]').first().focus()
               },
               activateTab: function (event) {
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {

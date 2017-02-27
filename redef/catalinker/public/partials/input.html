@@ -86,8 +86,12 @@
                        on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" ></a >
                 </div>
                 <div class="pure-u-1-24 edit" >
-                    <a class="edit" title="Rediger oppføring"
-                        on-click="editObject:{{../../../input.parentInput}},{{inputValueIndex}}" ></a >
+                    <a class="edit"
+                       tabindex="{{tabSelected ? '0' : '-1'}}"
+                       title="Rediger oppføring"
+                       on-click="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
+                       on-enter="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
+                    ></a >
                 </div>
             </div >
             {{/if}}

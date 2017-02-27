@@ -40,6 +40,16 @@
                                 <span class="value">{{current.displayValue}}{{#widgetOptions.explanations}}<span class="explanation">{{getExplanation(., current.value)}}</span>{{/}}</span>
                             {{/if}}
                         </li>
+                        <li class="select2-search select2-search--inline" >
+                            <input class="select2-search__field"
+                                   type="search" tabindex="«{{tabSelected ? '0' : '-1'}}"
+                                   autocomplete="off" autocorrect="off"
+                                   autocapitalize="off"
+                                   spellcheck="false" role="textbox"
+                                   aria-autocomplete="list"
+                                   placeholder=""
+                                   style="width: 0.75em;"
+                                   on-backspace="unselectEntity"></li >
                     </ul>
                 </span>
             </span>
