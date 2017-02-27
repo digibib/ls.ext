@@ -1062,12 +1062,23 @@ body {
         min-height: 450px;
         max-height: 450px;
         overflow: scroll;
-        .row:nth-child(even) {
+        :nth-child(even) .row {
           background: $lightergray;
         }
         .empty-relations {
           margin: auto;
           text-align: center;
+        }
+      }
+      .select-all {
+        height: 37px;
+        padding-top: 9px;
+        input[type=checkbox] {
+          float: right;
+          margin-top: 5px;
+        }
+        .label {
+          margin-left: 7px;
         }
       }
     }
