@@ -1052,7 +1052,7 @@ body {
       background: white;
       .head, .row {
         padding: 6px;
-        height: 37px;
+        min-height: 37px;
       }
       .head {
         border-bottom: 1px solid $lightergray;

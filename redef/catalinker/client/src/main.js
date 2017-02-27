@@ -3016,7 +3016,10 @@
               oneOrMoreEnabled: function (items) {
                 return _.some(items, function (item) { return item.enable })
               },
-              checkShouldInclude: checkShouldInclude
+              checkShouldInclude: checkShouldInclude,
+              abbreviate(label) {
+                return applicationData.config.abbreviations[label] || label
+              }
             },
             decorators: {
               repositionSupportPanel: repositionSupportPanel,

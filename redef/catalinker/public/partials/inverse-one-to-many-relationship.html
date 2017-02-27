@@ -8,12 +8,12 @@
             <span class="pure-u-1-4"><input type="checkbox" on-change="toggleAllEnableRelation" checked="{{selectAll}}" title="Velg alle"/></span>
         </div>
         {{#each showFieldsOfRelated}}
-        <div class="pure-u-{{width}}">{{applicationData.propertyLabels[field]}}</div>
+        <div class="pure-u-{{width}}">{{abbreviate(applicationData.propertyLabels[field])}}</div>
         {{/each}}
     </div>
     <div class="pure-g table-body">
         {{#each relations:index}}
-        <div class="row pure-u-1">
+        <div class="row pure-g">
             <div class="pure-u-1-24">
                 <span class="pure-u-1-4 label" data-uri-escaped-label="{{index + 1}}">{{index + 1}}</span>
                 <span class="pure-u-1-4" ><input type="checkbox" checked="{{enable}}" /></span>

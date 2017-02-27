@@ -1128,8 +1128,8 @@ module.exports = (app) => {
                 showFieldsOfRelated: [
                   { field: 'mainTitle', width: '7-24' }, // there are 23/24th left for field layouts
                   { field: 'subtitle', width: '7-24' },
-                  { field: 'partNumber', width: '3-24' },
-                  { field: 'partTitle', width: '6-24' }
+                  { field: 'partNumber', width: '2-24' },
+                  { field: 'partTitle', width: '7-24' }
                 ],
                 cloneParentButtonExplanation: `
                   Hvis du velger å splitte verket, opprettes det en ny kopi av det for hver utgivelse som er valgt over. Hver utgivelse knyttes
@@ -1894,6 +1894,9 @@ module.exports = (app) => {
             indet: 'hendelse',
             det: 'hendelsen'
           }
+        },
+        abbreviations: {
+          'Del nummer': 'Delnr.'
         }
       }
     response.json(config)
