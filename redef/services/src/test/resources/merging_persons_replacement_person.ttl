@@ -1,0 +1,7 @@
+@prefix : <http://data.deichman.no/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<__REPLACE__> a :Person ;
+  :name "Should remain" ;
+  :birthYear "1970"^^xsd:gYear ;
+  :nationality <http://data.deichman.no/nationality#n> .

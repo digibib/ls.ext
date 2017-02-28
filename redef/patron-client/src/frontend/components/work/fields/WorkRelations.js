@@ -4,8 +4,11 @@ import { injectIntl, intlShape } from 'react-intl'
 import title from '../../../utils/title'
 import mainContributorName from '../../../utils/mainContributorName'
 
-function relationLink (title, mainContributor) {
+function relationLink (title, mainContributor, number) {
   let link = title
+  if (number) {
+    link += ` (${number})`
+  }
   if (mainContributor !== '') {
     link += ` / ${mainContributor}`
   }
@@ -41,7 +44,7 @@ const WorkRelations = ({ workRelations, intl }) => {
                 <Link
                   data-automation-id="work_relation_link"
                   to={relation.relativeUri}>
-                  {relationLink(title(relation), mainContributorName(relation.contributors))}
+                  {relationLink(title(relation), mainContributorName(relation.contributors), relation.numberInRelation)}
                 </Link>
               </span>
             )}

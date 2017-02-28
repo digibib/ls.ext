@@ -131,7 +131,6 @@ export function reservePublicationSuccess (recordId, branchCode) {
 }
 
 export function reservePublicationFailure (error, recordId, branchCode) {
-  console.log(error)
   return dispatch => {
     dispatch(showModal(ModalComponents.RESERVATION, {
       isError: true,
@@ -164,9 +163,21 @@ export function reservePublication (recordId, branchCode) {
         if (response.status === 201) {
           dispatch(reservePublicationSuccess(recordId, branchCode))
         } else if (response.status === 403) {
-          throw Error(Errors.reservation.TOO_MANY_RESERVES)
+          return response.json()
         } else {
           throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
+        }
+      })
+      .then(maybeError => {
+        if (!maybeError) {
+          // reservation was succesfull
+          return
+        }
+        if (maybeError.error && maybeError.error.includes('ageRestricted')) {
+          throw Error(Errors.reservation.AGE_RESTRICTION)
+        } else {
+          console.log(`unmatched hold error reason: ${maybeError.error}`)
+          throw Error(Errors.reservation.TOO_MANY_RESERVES)
         }
       })
       .catch(error => dispatch(reservePublicationFailure(error, recordId, branchCode)))

@@ -212,7 +212,7 @@ When(/^at jeg skriver inn sted i feltet for utgivelsessted og trykker enter$/) d
   publication_place_field.send_keys :enter
 end
 
-When(/^at jeg skriver inn (tilfeldig |)(.*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
+When(/^at jeg skriver inn (tilfeldig |)([a-z]*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
   if (is_random == 'tilfeldig ')
@@ -221,6 +221,13 @@ When(/^at jeg skriver inn (tilfeldig |)(.*) i feltet "([^"]*)" og trykker enter$
   else
     field.send_keys (@context[("#{@site.translate(concept)}_name").to_sym])
   end
+  field.send_keys :enter
+end
+
+When(/^at jeg skriver inn (.*) nr ([0-9]) i feltet "([^"]*)" og trykker enter$/) do |concept, index, label|
+  field = @site.WorkFlow.get_text_field_from_label(label)
+  field.click
+  field.send_keys (@context[:random_migrate_person_names][index.to_i])
   field.send_keys :enter
 end
 
@@ -487,6 +494,16 @@ When(/^at jeg vil opprette (en|et) (.*)$/) do |article, concept|
   #
 end
 
+When(/^at jeg vil slå sammen to (.*)$/) do |concept|
+  #
+end
+
+When(/^trykker jeg på knappen for å slå sammen to autoriteter$/) do
+  @browser.button(:data_automation_id => 'merge_authorities').wait_until_present(timeout: BROWSER_WAIT_TIMEOUT*5)
+  @browser.button(:data_automation_id => 'merge_authorities').click
+  sleep 1
+end
+
 When(/^åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter$/) do
   sleep 4
   @site.WorkFlow.visit_landing_page_auth_maintenance
@@ -721,4 +738,13 @@ When(/^legger inn siste del av verkts uri i feltet "([^"]*)"$/) do |label|
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
   field.send_keys @context[:work_identifier].split('/').last
+end
+
+When(/^klikker jeg på linken for utvidet redigering$/) do
+  @browser.a(:text => 'Utvidet redigering').click
+end
+
+When(/^sjekker jeg at antall relasjoner er ([0-9]*)$/) do |number_of_relations|
+  @browser.a(:class => 'toggle-show-sub-items').click
+  @browser.lis(:class => 'rel-entry').length.should equal? (number_of_relations.to_i)
 end

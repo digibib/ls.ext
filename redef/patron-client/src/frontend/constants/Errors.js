@@ -5,6 +5,7 @@ export default {
   },
   reservation: {
     TOO_MANY_RESERVES: 'tooManyReserves',
+    AGE_RESTRICTION: 'ageRestriction',
     GENERIC_RESERVATION_ERROR: 'genericReservationError',
     GENERIC_CANCEL_RESERVATION_ERROR: 'genericCancelReservationError',
     GENERIC_CHANGE_PICKUP_LOCATION_ERROR: 'genericChangePickupLocationError',

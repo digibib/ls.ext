@@ -48,13 +48,20 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.json.Json.createObjectBuilder;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static junit.framework.TestCase.fail;
+import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
@@ -184,6 +191,14 @@ public class AppTest {
                 .body(new JsonNode(patch.toString()));
     }
 
+    private static HttpResponse<String> buildReplaceRequest(XURI replacee, XURI replacement) throws UnsupportedEncodingException, UnirestException {
+        return  Unirest
+                .put(appURI + replacement.getType() + "/" + replacement.getId() + "/merge")
+                .header("Content-type", "application/json")
+                .body("{\"replacee\": \"" + replacee.getUri() + "\"}")
+                .asString();
+    }
+
     private static void assertIsUri(String uri) {
         assertTrue("Not a URI: " + uri, uri.matches("(?:http|https)(?::/{2}[\\w]+)(?:[/|\\.]?)(?:[^\\s]*)"));
     }
@@ -310,7 +325,7 @@ public class AppTest {
         final JsonNode workWith2Publications = getWorkWithTwoPublications.getBody();
         assertThat(workWith2Publications, notNullValue());
 
-        final Model workWith2PublicationsModel = RDFModelUtil.modelFrom(workWith2Publications.toString(), Lang.JSONLD);
+        final Model workWith2PublicationsModel = modelFrom(workWith2Publications.toString(), Lang.JSONLD);
 
         final QueryExecution workWith2PublicationsCount = QueryExecutionFactory.create(
                 QueryFactory.create(
@@ -369,10 +384,10 @@ public class AppTest {
                 + "<__BASEURI__externalPerson/p1234> <__BASEURI__ontology#birthYear> \"1988\"^^<http://www.w3.org/2001/XMLSchema#gYear> .\n";
         duplicateInput = duplicateInput.replace("__BASEURI__", appURI);
 
-        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        Model testModel = modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
 
-        Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
+        Model testModel2 = modelFrom(duplicateInput, Lang.NTRIPLES);
         String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
 
         HttpResponse<String> result1 = buildCreateRequest(appURI + "person", body).asString();
@@ -399,10 +414,10 @@ public class AppTest {
                 + "<__BASEURI__externalPlace/g1234> <__BASEURI__ontology#specification> \"Norge\"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#plainLiteral> .\n";
         duplicateInput = duplicateInput.replace("__BASEURI__", appURI);
 
-        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        Model testModel = modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
 
-        Model testModel2 = RDFModelUtil.modelFrom(duplicateInput, Lang.NTRIPLES);
+        Model testModel2 = modelFrom(duplicateInput, Lang.NTRIPLES);
         String body2 = RDFModelUtil.stringFrom(testModel2, Lang.JSONLD);
 
         HttpResponse<String> result1 = buildCreateRequest(appURI + "place", body).asString();
@@ -693,7 +708,7 @@ public class AppTest {
         String input = "<http://data.deichman.no/serial/s1234> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Serial> .\n"
                 + "<http://data.deichman.no/serial/s1234> <http://data.deichman.no/ontology#name> \"Serial name\" .\n";
 
-        Model testModel = RDFModelUtil.modelFrom(input, Lang.NTRIPLES);
+        Model testModel = modelFrom(input, Lang.NTRIPLES);
         String body = RDFModelUtil.stringFrom(testModel, Lang.JSONLD);
 
         HttpResponse<String> result = buildCreateRequest(appURI + "serial", body).asString();
@@ -731,7 +746,7 @@ public class AppTest {
             HttpResponse<?> authorizedValueResponse = authorizedValueRequest.asString();
             System.out.println("Testing authorized value: " + authorizedValue.getPath());
             assertResponse(Status.OK, authorizedValueResponse);
-            Model test = RDFModelUtil.modelFrom(authorizedValueResponse.getBody().toString(), Lang.JSONLD);
+            Model test = modelFrom(authorizedValueResponse.getBody().toString(), Lang.JSONLD);
             assertTrue(authorizedValue.getPath() + " response didn't contain expected data", test.containsAll(getAuthorizedValueTestData(authorizedValue)));
 
         }
@@ -799,7 +814,7 @@ public class AppTest {
             default:
                 throw new Exception("Couldn't find test data for authorized value: " + authorizedValue.getPath());
         }
-        return RDFModelUtil.modelFrom(testData, Lang.NTRIPLES);
+        return modelFrom(testData, Lang.NTRIPLES);
     }
 
     @Test
@@ -810,7 +825,7 @@ public class AppTest {
         HttpResponse<?> response = request.asString();
         assertResponse(Status.OK, response);
 
-        Model ontology = RDFModelUtil.modelFrom(response.getBody().toString(), Lang.JSONLD);
+        Model ontology = modelFrom(response.getBody().toString(), Lang.JSONLD);
         Statement workStatement = createStatement(
                 createResource(BaseURI.ontology("Work")),
                 RDFS.label,
@@ -1150,7 +1165,7 @@ public class AppTest {
 
         final HttpResponse<JsonNode> getPublication = buildGetRequest(resolveLocally(location)).asJson();
 
-        Model model = RDFModelUtil.modelFrom(getPublication.getBody().toString(), Lang.JSONLD);
+        Model model = modelFrom(getPublication.getBody().toString(), Lang.JSONLD);
         final String[] recordId = new String[1];
         model.listObjectsOfProperty(createProperty(BaseURI.ontology("recordId"))).forEachRemaining(s -> recordId[0] = s.asLiteral().toString());
 
@@ -1232,7 +1247,7 @@ public class AppTest {
 
         InMemoryRepository repo = ResourceBase.getInMemoryRepository();
         String data = new ResourceReader().readFile("searchsynctestdata.ttl").replaceAll("__PORT__", String.valueOf(appPort));
-        repo.createResource(RDFModelUtil.modelFrom(data, Lang.TTL));
+        repo.createResource(modelFrom(data, Lang.TTL));
 
         String workUri = "http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20";
         String pubUri1 = "http://data.deichman.no/publication/p594502562255";
@@ -1335,6 +1350,79 @@ public class AppTest {
                 + "  \"recordIds\": []\n"
                 + "}", result.getBody());
 
+    }
+
+    @Test
+    public void test_merges_resources() throws Exception {
+
+        XURI replacee = new XURI("http://data.deichman.no/person/h1");
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+
+        ResourceReader resourceReader = new ResourceReader();
+        Model person1 = RDFModelUtil.modelFrom(resourceReader.readFile("merging_persons_replacee_person.ttl").replace("__REPLACE__", "#"), Lang.TURTLE);
+        Model person2 = RDFModelUtil.modelFrom(resourceReader.readFile("merging_persons_replacement_person.ttl").replace("__REPLACE__", "#"), Lang.TURTLE);
+
+        HttpResponse<String> response1 = Unirest.post(appURI + replacee.getType()).header("Content-type", "application/n-triples").body(RDFModelUtil.stringFrom(person1, Lang.NTRIPLES)).asString();
+        HttpResponse<String> response2 = Unirest.post(appURI + replacement.getType()).header("Content-type", "application/n-triples").body(RDFModelUtil.stringFrom(person2, Lang.NTRIPLES)).asString();
+
+        XURI replaceeXuri = new XURI(getLocation(response1));
+        XURI replacementXuri = new XURI(getLocation(response2));
+
+        Model work1 = RDFModelUtil.modelFrom(resourceReader.readFile("merging_work_1.ttl").replace("__REPLACE__", replaceeXuri.getUri()), Lang.TURTLE);
+        Model work2 = RDFModelUtil.modelFrom(resourceReader.readFile("merging_work_2.ttl").replace("__REPLACE__", replacementXuri.getUri()), Lang.TURTLE);
+        Model work3 = RDFModelUtil.modelFrom(resourceReader.readFile("merging_work_3_autobiography.ttl").replace("__REPLACE__", replaceeXuri.getUri()), Lang.TURTLE);
+
+        HttpResponse<String> responseWork1 = Unirest.post(appURI + "work").header("Content-type", "application/n-triples").body(RDFModelUtil.stringFrom(work1, Lang.NTRIPLES)).asString();
+        HttpResponse<String> responseWork2 = Unirest.post(appURI + "work").header("Content-type", "application/n-triples").body(RDFModelUtil.stringFrom(work2, Lang.NTRIPLES)).asString();
+        HttpResponse<String> responseWork3 = Unirest.post(appURI + "work").header("Content-type", "application/n-triples").body(RDFModelUtil.stringFrom(work3, Lang.NTRIPLES)).asString();
+        List<XURI> workXuris = new ArrayList<>();
+        workXuris.add(new XURI(getLocation(responseWork1)));
+        workXuris.add(new XURI(getLocation(responseWork2)));
+        workXuris.add(new XURI(getLocation(responseWork3)));
+
+        HttpResponse<String> result = buildReplaceRequest(replaceeXuri, replacementXuri);
+
+        assertEquals(NO_CONTENT.getStatusCode(), result.getStatus());
+        assertEquals(NOT_FOUND.getStatusCode(), Unirest.get(appURI + replaceeXuri.getType() + "/" + replaceeXuri.getId()).asString().getStatus());
+        workXuris.forEach(s -> {
+            try {
+                String body = Unirest.get(appURI + s.getType() + "/" + s.getId()).asString().getBody();
+                assertFalse(body.contains(replaceeXuri.getUri()));
+                assertTrue(body.contains(replacementXuri.getUri()));
+            } catch (UnirestException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Test
+    public void test_nonexistent_subject_resource_in_local_namespace_replacement_is_rejected() throws Exception {
+        XURI replaceeXuri = new XURI("http://data.deichman.no/person/w1");
+        XURI replacementXuri = new XURI("http://data.deichman.no/person/w2");
+        HttpResponse<String> result = buildReplaceRequest(replaceeXuri, replacementXuri);
+        assertEquals(NOT_FOUND.getStatusCode(), result.getStatus());
+    }
+
+    @Test
+    public void test_badly_formed_request_is_rejected() throws Exception {
+
+        XURI replacee = new XURI("http://data.deichman.no/person/h1");
+        XURI replacement = new XURI("http://data.deichman.no/person/h2");
+
+        ResourceReader resourceReader = new ResourceReader();
+        Model person1 = RDFModelUtil.modelFrom(resourceReader.readFile("merging_persons_replacee_person.ttl").replace("__REPLACE__", "#"), Lang.TURTLE);
+        Model person2 = RDFModelUtil.modelFrom(resourceReader.readFile("merging_persons_replacement_person.ttl").replace("__REPLACE__", "#"), Lang.TURTLE);
+
+        HttpResponse<String> response1 = Unirest.post(appURI + replacee.getType()).header("Content-type", "application/n-triples").body(RDFModelUtil.stringFrom(person1, Lang.NTRIPLES)).asString();
+        HttpResponse<String> response2 = Unirest.post(appURI + replacement.getType()).header("Content-type", "application/n-triples").body(RDFModelUtil.stringFrom(person2, Lang.NTRIPLES)).asString();
+        XURI mergeResponseXuri = new XURI(getLocation(response1));
+        HttpResponse<String> mergeResponse = Unirest
+                .put(appURI + mergeResponseXuri.getType() + "/" + mergeResponseXuri.getId() + "/merge")
+                .header("Content-type", "application/json")
+                .body("{\"replacce\": \"" + getLocation(response2) + "\"}")
+                .asString();
+
+        assertEquals(BAD_REQUEST.getStatusCode(), mergeResponse.getStatus());
     }
 
     private Boolean resourceIsIndexed(String uri) throws Exception {

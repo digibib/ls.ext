@@ -5,6 +5,7 @@ import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -14,6 +15,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -198,5 +200,12 @@ public class InMemoryRepositoryTest {
         return repository;
     }
 
+    public static InMemoryRepository repositoryWithDataFromString(String string, Lang lang) {
+        final InMemoryRepository repository = new InMemoryRepository();
+        Model testDataModel = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(testDataModel, IOUtils.toInputStream(string), lang);
+        repository.addData(testDataModel);
+        return repository;
+    }
 
 }

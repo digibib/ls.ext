@@ -137,6 +137,11 @@ export const messages = defineMessages({
     description: 'The error message when the user has too many reserves',
     defaultMessage: 'Too many reserves already placed.'
   },
+  ageRestriction: {
+    id: 'ReservationModal.ageRestriction',
+    description: 'The error message when the user is to young',
+    defaultMessage: 'You are not old enough to borrow this item.'
+  },
   button: {
     id: 'ReservationModal.button',
     description: 'The button to exit the modal dialog',

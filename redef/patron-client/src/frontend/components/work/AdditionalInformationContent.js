@@ -6,11 +6,11 @@ import DeweyNumber from './fields/DeweyNumber'
 import Subjects from './fields/Subjects'
 import Genres from './fields/Genres'
 import Classifications from './fields/Classifications'
-import Instruments from './fields/Instruments'
+import Instrumentations from './fields/Instrumentations'
 import Biographies from './fields/Biographies'
 import CompositionTypes from './fields/CompositionTypes'
+import Keys from './fields/Keys'
 import FictionNonfiction from './fields/FictionNonfiction'
-import Key from './fields/Key'
 import ContentAdaptations from './fields/ContentAdaptations'
 import WorkRelations from './fields/WorkRelations'
 
@@ -30,15 +30,15 @@ const AdditionalInformationContent = ({ work }) => (
       <ContentAdaptations contentAdaptations={work.contentAdaptations} />
         {/* this.renderPartOfSeries(work) */}
         {/* this.renderRelations(work) */}
+      <CompositionTypes compositionTypes={work.compositionTypes} />
+      <Keys keys={work.keys} />
       <DeweyNumber deweyNumber={work.deweyNumber} />
       <Classifications classifications={work.classifications} />
-      <Instruments instruments={work.instruments} />
+      <Instrumentations instrumentations={work.instrumentations} />
       <Biographies biographies={work.biographies} />
-      <CompositionTypes compositionTypes={work.compositionTypes} />
       <FictionNonfiction fictionNonfiction={work.fictionNonfiction} />
-      <Key key={work.key} />
-      <Subjects subjects={work.subjects} />
       <Genres genres={work.genres} />
+      <Subjects subjects={work.subjects} />
   </NonIETransitionGroup>
 )
 

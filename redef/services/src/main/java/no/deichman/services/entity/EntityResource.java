@@ -30,6 +30,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -415,5 +416,46 @@ public final class EntityResource extends ResourceBase {
         Map<String, String> queryParamsSingleValue = queryParameters.entrySet().stream().collect(toMap(Map.Entry::getKey, v -> v.getValue().get(0)));
         Model model = getEntityService().retrieveResourceByQuery(EntityType.get(type), queryParamsSingleValue, projections);
         return ok().entity(getJsonldCreator().asJSONLD(model)).build();
+    }
+
+    @GET
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/relations")
+    @Produces(JSON)
+    public Response retriveResourceParticipations(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
+        XURI xuri = new XURI(BaseURI.root(), type, id);
+        return ok().entity(GSON.toJson(getEntityService().retrieveResourceRelationships(xuri))).build();
+    }
+
+    @PUT
+    @Consumes(JSON)
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/merge")
+    public Response mergeNodes(@PathParam("type") String type, @PathParam("id") String id, String jsonReplacee) throws Exception {
+        XURI outgoing;
+        XURI staying = new XURI(BaseURI.root(), type, id);
+        if (!getEntityService().resourceExists(staying)) {
+            throw new NotFoundException();
+        }
+
+        try {
+            Replacee replaceeData = GSON.fromJson(jsonReplacee, Replacee.class);
+            outgoing = replaceeData.getReplacee();
+        } catch (Exception exception) {
+            throw new BadRequestException();
+        }
+
+        if (!staying.equals(outgoing)) {
+            try {
+                List<XURI> relatedUris = getEntityService().retrieveResourceRelationshipsUris(outgoing);
+                getEntityService().mergeResource(staying, outgoing);
+                getEntityService().removeFromLocalIndex(outgoing);
+                final SearchService searchService = getSearchService();
+                searchService.delete(outgoing);
+                relatedUris.forEach(searchService::index);
+            } catch (Exception e) {
+                throw new InternalServerErrorException(e);
+            }
+        }
+
+        return Response.noContent().build();
     }
 }

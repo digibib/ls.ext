@@ -82,7 +82,7 @@ public class SearchServiceImpl implements SearchService {
             ontology("mainTitle")
     };
     public static final Resource MAIN_ENTRY = createResource(ontology("MainEntry"));
-    public static final int SILENT_PERIOD = 100000;
+    public static final int SILENT_PERIOD = 1000000;
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     private ModelToIndexMapper workModelToIndexMapper = new ModelToIndexMapper("work");
@@ -103,34 +103,39 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void index(XURI xuri) throws Exception {
-        if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
-            switch (xuri.getTypeAsEntityType()) {
-                case WORK:
-                    doIndexWork(xuri, false, false);
-                    break;
-                case PERSON:
-                case CORPORATION:
-                    doIndexWorkCreator(xuri, false);
-                    break;
-                case PUBLICATION:
-                    doIndexPublication(xuri);
-                    break;
-                case EVENT:
-                    doIndexEvent(xuri);
-                    break;
-                case SERIAL:
-                    doIndexSerial(xuri);
-                    break;
-                default:
-                    doIndex(xuri);
+    public final void index(XURI xuri) {
+        try {
+            if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
+                LOG.info("Indexing " + xuri.getUri());
+                switch (xuri.getTypeAsEntityType()) {
+                    case WORK:
+                        doIndexWork(xuri, false, false);
+                        break;
+                    case PERSON:
+                    case CORPORATION:
+                        doIndexWorkCreator(xuri, false);
+                        break;
+                    case PUBLICATION:
+                        doIndexPublication(xuri);
+                        break;
+                    case EVENT:
+                        doIndexEvent(xuri);
+                        break;
+                    case SERIAL:
+                        doIndexSerial(xuri);
+                        break;
+                    default:
+                        doIndex(xuri);
+                }
+            } else {
+                LOG.info("Skipping already indexed uri: " + xuri.getUri());
+                skipped++;
             }
-        } else {
-            LOG.info("Skipping already indexed uri: " + xuri.getUri());
-            skipped++;
-        }
-        if (indexedUris != null) {
-            indexedUris.add(xuri.getUri());
+            if (indexedUris != null) {
+                indexedUris.add(xuri.getUri());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

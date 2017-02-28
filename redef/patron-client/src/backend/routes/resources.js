@@ -105,15 +105,26 @@ function parseRDFtoJsonLD (ntdata, workId) {
       if (error) {
         reject(error)
       }
-      // Remove type -> Work relations on all works, except the work in focus, to avoid
-      // problems when work has subjects which themselves are works.
-      // TODO revise this hack - it might make it difficult to present the work relations on work page.
+
+      // We need to add a class to the work 'in focus', in case there are other works
+      // in the graph (for example work as subject of work), and use this class
+      // for framing.
+      //
+      // We also delete the class migration:Work, as it trips up the framing.
       ntdoc = ntdoc.map(el => {
-        if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] !== `http://data.deichman.no/work/${workId}`) {
-          delete el[ '@type' ]
+        if (el[ '@type' ] && el[ '@type' ].includes('http://data.deichman.no/ontology#Work') && el[ '@id' ] === `http://data.deichman.no/work/${workId}`) {
+          el[ '@type' ].push('http://data.deichman.no/ontology#WorkInFocus')
         }
+        if (el[ '@type' ]) {
+          const i = el[ '@type' ].indexOf('http://migration.deichman.no/Work')
+          if (i !== -1) {
+            el[ '@type' ].splice(i, 1)
+          }
+        }
+
         return el
       })
+
       resolve(ntdoc)
     })
   })
@@ -147,7 +158,7 @@ function transformWork (input) {
       biographies: input.biographies,
       by: transformBy(contributors),
       classifications: transformClassifications(input.classifications),
-      compositionType: transformCompositionType(input.compositionType),
+      compositionTypes: transformCompositionType(input.hasCompositionType),
       contentAdaptations: input.contentAdaptations,
       contributors: contributors,
       workRelations: workRelations,
@@ -157,7 +168,7 @@ function transformWork (input) {
       genres: input.genres,
       hasSummary: input.hasSummary,
       id: getId(input.id),
-      instruments: transformInstruments(input.hasInstrument),
+      instrumentations: transformInstrumentation(input.hasInstrumentation),
       items: [],
       languages: input.languages,
       literaryForms: input.literaryForms,
@@ -169,7 +180,9 @@ function transformWork (input) {
       serials: transformSerials(input),
       subtitle: input.subtitle,
       subjects: input.subjects,
-      uri: input.id
+      uri: input.id,
+      countryOfOrigin: input.nationality ? input.nationality.id : undefined,
+      keys: input.key || []
     }
     const publicationWithImage = work.publications.find(publication => publication.image)
     if (publicationWithImage) {
@@ -192,7 +205,7 @@ function transformPublications (publications) {
       duration: publication.duration,
       ean: publication.ean,
       edition: publication.edition,
-      extent: publication.extent,
+      extents: publication.extents || [],
       formatAdaptations: publication.formatAdaptations,
       formats: publication.formats,
       genres: publication.genres,
@@ -269,6 +282,7 @@ function transformWorkRelations (input) {
     const workRelations = {}
     input.forEach(inputWorkRelation => {
       const relatedWork = inputWorkRelation.work
+      relatedWork.numberInRelation = inputWorkRelation.partNumber
       relatedWork.uri = relatedWork.id
       relatedWork.id = getId(relatedWork.id)
       relatedWork.relativeUri = relativeUri(relatedWork.uri)
@@ -339,9 +353,14 @@ function transformCompositionType (hasCompositionType = []) {
   }
 }
 
-function transformInstruments (hasInstrument = []) {
+function transformInstrumentation (instrumentation = []) {
   try {
-    return hasInstrument.map(instrument => instrument.hasInstrument.prefLabel)
+    return instrumentation.map(i => {
+      return {
+        instrument: i.hasInstrument.prefLabel,
+        number: i.hasNumberOfPerformers
+      }
+    })
   } catch (error) {
     console.log(error)
     return []

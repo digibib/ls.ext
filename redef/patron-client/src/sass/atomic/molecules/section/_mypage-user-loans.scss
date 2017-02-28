@@ -36,157 +36,29 @@
   }
 }
 
+/* Prototype */
 .pickup, .reserve, .loan {
-  @include span(12);
-  @include container;
+  width: span(12);
 
+  /* Section title */
   > h1 {
-    @include span(12);
-    margin-top: rhythm(4);
-    font-size: rhythm(3);
+    width: span(12);
+    font-size: rhythm(4);
     font-weight: normal;
     border-bottom: 4px solid $blackColor;
     padding-bottom: rhythm(1);
+    margin-top: rhythm(2);
   }
 
+  /* Line item */
   .single-entry {
-    @include span(12);
-    @include container;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-  }
-
-}
-
-.pickup {
-
-  .single-entry {
-    margin-bottom: rhythm(2);
-
-    .entry-details {
-      @include span(12);
-    }
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    float: none;
 
     h1 {
       font-size: rhythm(3);
-      margin-top: rhythm(1);
-      margin-bottom: 0;
-    }
-
-    h2 {
-      font-size: rhythm(2.5);
-      margin-top: rhythm(1);
-      margin-bottom: rhythm(1);
-    }
-
-    p {
-      @include span(12);
-    }
-
-  }
-
-  .loan-expire, .loan-pickup-number, .loan-pickup-location {
-    @include span(6);
-
-    h2 {
-      text-transform: uppercase;
-      margin: 0;
-    }
-
-    p {
-      font-size: rhythm(3);
-      font-weight: bold;
-      margin: 0;
-    }
-
-  }
-
-  .loan-expire p, .loan-pickup-number p {
-    font-size: rhythm(4);
-  }
-
-  .loan-pickup-number {
-    @include span(6 last);
-  }
-
-}
-
-.reserve {
-  .red-btn, .black-btn {
-    min-width: rhythm(16);
-    margin-bottom: rhythm(0.75);
-  }
-
-  .select-branch {
-    min-width: rhythm(32);
-  }
-
-  td, th, select {
-    font-size: rhythm(2);
-  }
-
-  .reserved-entry-content {
-    @include span(12);
-    @include container;
-    padding: rhythm(3) rhythm(1);
-
-    &:nth-child(even) {
-      background: $greyColor;
-    }
-
-  }
-
-  .meta-item {
-    @include span(12);
-    @include container;
-    font-size: rhythm(2.5);
-  }
-
-  .meta-label {
-    @include span(12);
-    font-weight: bold;
-  }
-
-  .meta-content {
-    @include span(12);
-    margin-bottom: rhythm(2);
-  }
-
-  .feedback {
-    color: $redColor;
-  }
-
-}
-
-.loan {
-
-  > h1 {
-
-    span {
-      width: 100%;
-      display: block;
-    }
-
-    .date {
-      font-size: rhythm(2);
-      margin-top: rhythm(1);
-    }
-
-  }
-
-  .single-entry {
-    margin-bottom: rhythm(2);
-
-    .entry-details {
-      /*@include span(3);*/
-    }
-
-    h1 {
-      font-size: rhythm(3);
-      /* margin-top: rhythm(1); */
       margin-top: 0;
       margin-bottom: 0;
     }
@@ -197,82 +69,240 @@
       margin-bottom: rhythm(1);
     }
 
-  }
-
-  .due-date {
-    /*@include span(3);*/
-
-    h2 {
-      text-transform: uppercase;
-      margin: 0;
+    .entry-details {
+      width: span(12);
     }
 
     p {
-      font-size: rhythm(4);
+      width: span(12);
+      font-size: rhythm(2.5);
       font-weight: bold;
       margin: 0;
     }
 
+    button {
+      font-size: rhythm(2);
+    }
+
+    /* Column item */
+    .flex-col {
+      margin-bottom: gutter();
+    }
+
+    .cancel-button, .renew-button, .reserve-cancel-button, .resume-suspend-button {
+      text-align: right;
+      align-self: center;
+
+      &:disabled {
+        opacity: 0.4;
+      }
+    }
+
+    /* Show cancel button and other buttons in one row */
+    .cancel-button, .renew-button {
+      width: span(12);
+    }
+
+    .resume-suspend-button {
+      width: span(9)
+    }
+
+    .reserve-cancel-button {
+      width: span(3)
+    }
+
+    .media-type {
+      text-transform: uppercase;
+      width: span(12);
+    }
+
+    .feedback {
+      color: $redColor;
+    }
+
   }
 
-  .renew-message {
-    /*@include span(3);*/
-    /*margin-top: rhythm(2);*/
-    margin-top: 0;
-    max-width: 15em;
+}
 
+.pickup {
+
+  .loan-expire, .loan-pickup-number, .loan-pickup-location {
+    width: span(6);
+
+    h2 {
+      text-transform: uppercase;
+    }
+
+  }
+
+  .loan-pickup-number {
+    width: span(6);
+  }
+
+}
+
+.reserve {
+
+  .place-in-queue, .pickup-location {
+    width: span(12);
+
+    h2 {
+      text-transform: uppercase;
+    }
+
+  }
+
+  .pickup-location {
+
+    select {
+      font-size: rhythm(2.5);
+      font-weight: bold;
+    }
+
+  }
+
+  .place-in-queue {
+
+    p {
+      font-weight: normal;
+    }
+
+  }
+
+}
+
+.loan {
+
+  margin-top: -1em;
+
+  .loan-header {
+    display: flex;
+    justify-content: space-between;
+    width: span(12);
+    border-bottom: 4px solid $blackColor;
+    margin-bottom: 1.5em;
+    height: auto;
+
+    h1 {
+      font-size: rhythm(4);
+      font-weight: normal;
+    }
+
+    .renew-all-button {
+      font-size: rhythm(2);
+      align-self: center;
+      background-color: green;
+
+      &:disabled {
+        opacity: 0.4;
+      }
+    }
+  }
+
+  .due-date {
+
+    h2 {
+      text-transform: uppercase;
+    }
+  }
+
+  .fail {
+
+    p {
+      font-weight: normal;
+      color: $redColor;
+    }
+  }
+
+  p.fail {
+    color: $redColor;
   }
 
   .success {
-    color: green;
-  }
 
-  .renew-button {
-    margin-top: 0;
-
-    button {
-      width: 100%;
+    p {
+      font-weight: normal;
+      color: green;
     }
 
-  }
-
-  .renew-all-button {
-    background-color: green;
-    margin-top: 0;
-
-    button {
-      width: 100%;
-    }
-
-    &:disabled {
-      opacity: 0.4;
-    }
   }
 
 }
 
 @include breakpoint($small) {
 
-  .pickup {
+  .pickup, .reserve, .loan {
 
     .single-entry {
+      .flex-col {
+        margin-bottom: 2em;
+      }
+
+      .media-type {
+        width: span(1);
+      }
 
       .entry-details {
-        @include span(4);
+        width: span(3);
+      }
+
+      .cancel-button, .reserve-cancel-button {
+        width: span(1);
       }
 
     }
 
-    .loan-expire {
-      @include span(2);
+  }
+
+  .pickup {
+
+    .single-entry {
+
+      .loan-expire {
+        width: span(2);
+      }
+
+      .loan-pickup-number {
+        width: span(2);
+      }
+
+      .placeholder-column {
+        width: span(2);
+      }
+
+      .loan-pickup-location {
+        width: span(2);
+      }
+
     }
 
-    .loan-pickup-number {
-      @include span(3);
-    }
+  }
 
-    .loan-pickup-location {
-      @include span(2 last);
+  .reserve {
+
+    .single-entry {
+
+      .place-in-queue {
+        width: span(2);
+      }
+
+      .pickup-location {
+        width: span(2);
+      }
+
+      .placeholder-column {
+        width: span(2);
+      }
+
+      .resume-suspend-button {
+        width: span(2);
+        /*min-width: 10em;*/
+      }
+
+      .reserve-cancel-button {
+        width: span(1);
+      }
+
     }
 
   }
@@ -280,35 +310,36 @@
   .loan {
 
     .single-entry {
-      padding-top: rhythm(2);
-      padding-bottom: rhythm(2);
 
-      .entry-details {
-        @include span(4);
+      .due-date {
+        width: span(2);
       }
 
-    }
+      .extend-msg {
+        width: span(2);
+      }
 
-    .due-date {
-      @include span(2);
-    }
+      .placeholder-column {
+        width: span(3);
+      }
 
-    .renew-message {
-      @include span(3);
-    }
-
-    .renew-button {
-      @include span(2 last);
-    }
-
-    .renew-all-button {
-      @include span(2 last);
-      background-color: green;
-
-      &:disabled {
-        opacity: 0.4;
+      .renew-button {
+        width: span(2);
       }
     }
+
+    .loan-header {
+      max-height: 4em;
+
+      h1 {
+        width: span(10);
+      }
+
+      .renew-all-button {
+        width: span(2);
+      }
+    }
+
   }
 
 }

@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@random_migrate
 @redef @arbeidsflyt
 Egenskap: Katalogisere i arbeidsflyt
   Som katalogisator
@@ -77,17 +78,17 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett ny organisasjon"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
-    Og at jeg skriver inn tilfeldig verksnavn i feltet "Originaltittel" og trykker enter
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Verk" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
-    Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
+    Så jeg skriver verdien "Deltittel" for "Tittel på del"
     Så jeg venter litt
     Så jeg venter litt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Og jeg venter litt
-    Og jeg trykker på "Legg til et delverk til"-knappen
+    Og jeg trykker på "Legg til en del til"-knappen
     Og jeg fjerner valgt verdi for "Aktør"
     Og jeg fjerner valgt verdi for "Rolle"
     Så velger jeg aktørtype "Person"
@@ -97,11 +98,11 @@ Egenskap: Katalogisere i arbeidsflyt
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
-    Og at jeg skriver inn tilfeldig verksnavn i feltet "Originaltittel" og trykker enter
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Verk" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
-    Så jeg skriver verdien "Deltittel" for "Tittel på delverk"
+    Så jeg skriver verdien "Deltittel" for "Tittel på del"
     Og jeg skriver verdien "1" for "Del"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke inngå i verksliste"
@@ -500,3 +501,18 @@ Egenskap: Katalogisere i arbeidsflyt
     Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
     Og legger inn siste del av verkts uri i feltet "Verk"
     Så velger jeg et verk fra treffliste fra verksindeksen
+
+  Scenario: Slå sammen to personer i katalogisering
+    Gitt at jeg vil slå sammen to personer
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn person nr 1 i feltet "Personer" og trykker enter
+    Og jeg venter litt
+    Så velger jeg en person fra treffliste fra personregisteret
+    Så klikker jeg på linken for utvidet redigering
+    Og jeg venter litt
+    Så sjekker jeg at antall relasjoner er 1
+    Og at jeg skriver inn person nr 2 i feltet "Søk etter duplikater" og trykker enter
+    Så velger jeg en person fra treffliste fra personregisteret
+    Så trykker jeg på knappen for å slå sammen to autoriteter
+    Så trykker jeg på "Fortsett"-knappen i dialogen
+    Så sjekker jeg at antall relasjoner er 2

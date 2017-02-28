@@ -41,6 +41,7 @@ class MyPage extends React.Component {
               currentPath={this.props.location.pathname}
               push={this.props.routerActions.push} />
         <hr />
+        <div className="clearfix" />
         {this.props.children}
       </main>
     )

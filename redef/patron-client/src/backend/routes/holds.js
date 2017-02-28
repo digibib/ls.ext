@@ -15,10 +15,13 @@ module.exports = (app) => {
       if (res.status === 201) {
         response.sendStatus(201)
       } else if (res.status === 403) {
-        response.sendStatus(403)
+        return res.json()
       } else {
         throw Error(`Could not reserve publication ${res.status}`)
       }
+    }).then(err => {
+      response.status(403)
+      response.send(err) // pass along Koha's error reason message to client side
     }).catch(error => {
       console.log(error)
       response.sendStatus(500)

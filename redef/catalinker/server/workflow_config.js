@@ -48,6 +48,22 @@ module.exports = (app) => {
   app.get('/config', function (request, response) {
     response.setHeader('Cache-Control', 'public, max-age=3600')
     response.setHeader('Expires', new Date(Date.now() + 3600000).toUTCString())
+    const typeMap = {
+      // this map contains a map of all known independent resource types (i.e. not blank node types) as they appear in
+      // resource urls and their canonical names
+      work: 'Work',
+      person: 'Person',
+      publication: 'Publication',
+      genre: 'Genre',
+      subject: 'Subject',
+      place: 'Place',
+      event: 'Event',
+      serial: 'Serial',
+      corporation: 'Corporation',
+      instrument: 'Instrument',
+      compositionType: 'CompositionType',
+      workSeries: 'WorkSeries',
+    }
     var config =
       {
         kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
@@ -234,7 +250,7 @@ module.exports = (app) => {
               {
                 label: 'Hovedtittel',
                 rdfProperty: 'mainTitle',
-                type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
                 preFillFromSearchField: true, // value of this field should be copied from the search field above
                 displayValueSource: true // after creation, send actual value in this field back to where the search started
               },
@@ -266,7 +282,7 @@ module.exports = (app) => {
               {
                 label: 'Serietittel',
                 rdfProperty: 'mainTitle',
-                type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
                 preFillFromSearchField: true, // value of this field should be copied from the search field above
                 displayValueSource: true // after creation, send actual value in this field back to where the search started
               },
@@ -365,7 +381,7 @@ module.exports = (app) => {
               {
                 label: 'Serietittel',
                 rdfProperty: 'mainTitle',
-                type: 'input-string',// input type must be defined explicitly, otherwise it will inherit from the search field above
+                type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
                 preFillFromSearchField: true, // value of this field should be copied from the search field above
                 displayValueSource: true // after creation, send actual value in this field back to where the search started
               },
@@ -467,7 +483,7 @@ module.exports = (app) => {
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
                   label: 'ISBN',
-                  pattern: '^[ 0-9\-]+[xX]?\s*$',
+                  pattern: '^[ 0-9\\-]+[xX]?\\s*$',
                   formatter: 'isbn',
                   patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
                   parameterName: 'isbn',
@@ -482,17 +498,16 @@ module.exports = (app) => {
                     url: 'services/publication',
                     queryParameter: 'isbn',
                     showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear' ],
-                    type: "Publication",
+                    type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme ISBN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     editWithTemplate: {
-                      template: "workflow",
+                      template: 'workflow',
                       descriptionKey: 'maintPub'
                     }
                   }
                 }
-              }
-              ,
+              },
               {
                 includeOnlyWhen: {
                   hasMediaType: [ 'Film', 'MusicRecording', 'Game' ]
@@ -501,7 +516,7 @@ module.exports = (app) => {
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
                   label: 'EAN',
-                  pattern: '^ *([0-9]{13})?\s*$',
+                  pattern: '^ *([0-9]{13})?\\s*$',
                   patternMismatchMessage: 'Dette ser ikke ut som et gyldig EAN-nummer',
                   parameterName: 'ean',
                   automationId: 'searchEanValueSuggestions',
@@ -515,21 +530,20 @@ module.exports = (app) => {
                     url: 'services/publication',
                     queryParameter: 'hasEan',
                     showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear' ],
-                    type: "Publication",
+                    type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     editWithTemplate: {
-                      template: "workflow",
+                      template: 'workflow',
                       descriptionKey: 'maintPub'
                     }
                   }
                 }
-              }
-              ,
+              },
               {
                 label: 'Verket har ikke hovedansvarlig',
                 id: 'missingMainEntry',
-                rdfProperty: 'missingMainEntry',
+                rdfProperty: 'missingMainEntry'
               },
               {
                 label: 'Hovedansvarlig',
@@ -616,8 +630,8 @@ module.exports = (app) => {
                 // actual names are <prefix>-non-editable and <prefix>-editable to enable alternative presentation when not editable
               },
               {
-                label: "Skal ikke inngå i verksliste",
-                rdfProperty: 'improperWork',
+                label: 'Skal ikke inngå i verksliste',
+                rdfProperty: 'improperWork'
               },
               {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
@@ -750,11 +764,10 @@ module.exports = (app) => {
               },
               {
                 includeOnlyWhen: {
-                  hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'LanguageCourse', 'ComicBook', ]
+                  hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'LanguageCourse', 'ComicBook' ]
                 },
                 rdfProperty: 'binding'
-              }
-              ,
+              },
               {
                 rdfProperty: 'language',
                 multiple: true
@@ -781,8 +794,7 @@ module.exports = (app) => {
                 },
                 rdfProperty: 'duration',
                 type: 'input-duration'
-              }
-              ,
+              },
               {
                 includeOnlyWhen: {
                   hasMediaType: [ 'Other', 'Film', 'Game' ]
@@ -839,7 +851,7 @@ module.exports = (app) => {
                   }
                 },
                 headlinePart: {
-                  order: 50,
+                  order: 50
                 }
               },
               {
@@ -948,7 +960,7 @@ module.exports = (app) => {
             enableSpecialInput: {
               inputId: 'publicationOfInput',
               buttonLabel: 'Endre verk for utgivelse',
-              confirmLabel: 'Er du sikker på at du vil endre verksknytningen for denne utgivelsen?',
+              confirmLabel: 'Er du sikker på at du vil endre verksknytningen for denne utgivelsen?'
             }
           },
           {
@@ -996,7 +1008,7 @@ module.exports = (app) => {
               },
               {
                 includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
-                rdfProperty: 'fictionNonfiction',
+                rdfProperty: 'fictionNonfiction'
               },
               { rdfProperty: 'audience', multiple: true },
               {
@@ -1050,11 +1062,11 @@ module.exports = (app) => {
                         inputId: 'relationTypeInput',
                         valueAsStringMatches: '^.*partOf$',
                         initial: 'hide'
-                      },
+                      }
                     }
                   ]
                 },
-                subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+                subjects: [ 'Work' ] // blank node can be attached to the the loaded resource of one of these types
               },
               {
                 label: 'Verksserie',
@@ -1094,7 +1106,7 @@ module.exports = (app) => {
                     }
                   ]
                 },
-                subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+                subjects: [ 'Work' ] // blank node can be attached to the the loaded resource of one of these types
               },
               {
                 rdfProperty: 'hasSummary',
@@ -1189,7 +1201,7 @@ module.exports = (app) => {
                     }
                   ]
                 },
-                subjects: [ 'Work' ], // blank node can be attached to the the loaded resource of one of these types
+                subjects: [ 'Work' ] // blank node can be attached to the the loaded resource of one of these types
               },
               {
                 rdfProperty: 'subject',
@@ -1384,12 +1396,12 @@ module.exports = (app) => {
                       }
                     },
                     {
-                      label: 'Tittel på delverk',
+                      label: 'Tittel på del',
                       rdfProperty: 'mainTitle',
-                      required: true,
+                      required: true
                     },
                     {
-                      label: 'Originaltittel',
+                      label: 'Verk',
                       id: 'publicationPartWorkInput',
                       rdfProperty: 'publicationOf',
                       type: 'searchable-with-result-in-side-panel',
@@ -1433,7 +1445,7 @@ module.exports = (app) => {
                     }
                   ]
                 },
-                addAnotherLabel: 'Legg til et delverk til',
+                addAnotherLabel: 'Legg til en del til',
                 subjects: [ 'Publication' ]
               }
             ],
@@ -1527,7 +1539,7 @@ module.exports = (app) => {
                 widgetOptions: {
                   maintenance: true,
                   editWithTemplate: {
-                    template: "workflow",
+                    template: 'workflow',
                     descriptionKey: 'maintPub'
                   }
                 }
@@ -1540,10 +1552,10 @@ module.exports = (app) => {
                 widgetOptions: {
                   maintenance: true,
                   editWithTemplate: {
-                    template: "workflow",
+                    template: 'workflow',
                     descriptionKey: 'maintWork'
                   },
-                  editSubItemWithTemplate: "workflow"
+                  editSubItemWithTemplate: 'workflow'
                 }
               }
             ]
@@ -1552,7 +1564,7 @@ module.exports = (app) => {
         search: {
           person: {
             type: 'person',
-            sortedListQueryForField: "name",
+            sortedListQueryForField: 'name',
             selectIndexLabel: 'Person',
             resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
@@ -1562,7 +1574,7 @@ module.exports = (app) => {
           },
           subject: {
             type: 'subject',
-            sortedListQueryForField: "prefLabel",
+            sortedListQueryForField: 'prefLabel',
             selectIndexLabel: 'Generelt',
             resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
             scrollToMiddleOfResultSet: true
@@ -1627,14 +1639,14 @@ module.exports = (app) => {
           genre: {
             type: 'genre',
             selectIndexLabel: 'Sjanger',
-            sortedListQueryForField: "prefLabel",
+            sortedListQueryForField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
             scrollToMiddleOfResultSet: true
           },
           corporation: {
             type: 'corporation',
             selectIndexLabel: 'Organisasjon',
-            sortedListQueryForField: "name",
+            sortedListQueryForField: 'name',
             resultItemLabelProperties: [ 'name.', 'subdivision', '(specification)', 'placePrefLabel' ],
 //          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
             scrollToMiddleOfResultSet: true
@@ -1642,7 +1654,7 @@ module.exports = (app) => {
           place: {
             type: 'place',
             selectIndexLabel: 'Sted',
-            sortedListQueryForField: "prefLabel",
+            sortedListQueryForField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
             resultItemDetailsLabelProperties: [ 'alternativeName' ],
             scrollToMiddleOfResultSet: true
@@ -1650,15 +1662,15 @@ module.exports = (app) => {
           event: {
             type: 'event',
             selectIndexLabel: 'Hendelse',
-            sortedListQueryForField: "prefLabel",
-            resultItemLabelProperties: [ 'prefLabel', '(ordinal).', 'placePrefLabel,', 'date' ], //prefLabel (ordinal). place, date
+            sortedListQueryForField: 'prefLabel',
+            resultItemLabelProperties: [ 'prefLabel', '(ordinal).', 'placePrefLabel,', 'date' ], // prefLabel (ordinal). place, date
 //          resultItemDetailsLabelProperties: [ 'placePrefLabel', 'inParens:placeAlternativeName', 'specification' ]
             scrollToMiddleOfResultSet: true
           },
           serial: {
             type: 'serial',
             selectIndexLabel: 'Serie',
-            sortedListQueryForField: "serialMainTitle",
+            sortedListQueryForField: 'serialMainTitle',
             resultItemLabelProperties: [ 'serialMainTitle:', 'subtitle' ],
             resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ],
             scrollToMiddleOfResultSet: true
@@ -1667,10 +1679,10 @@ module.exports = (app) => {
             type: 'publication',
             selectIndexLabel: 'Utgivelse',
             queryTerms: [
-              { field: 'recordId' },
-              { field: 'mainTitle', wildcard: true },
+              { field: 'recordId', onlyIfMatching: '^\\d{1,11}$' },
+              { field: 'mainTitle', boost: 20, wildcard: true },
               { field: 'subtitle', wildcard: true },
-              { field: 'mainEntryName', wildcard: true }
+              { field: 'mainEntryName', boost: 30, wildcard: true }
             ],
             legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
             resultItemLabelProperties: [ 'creator', 'mainTitle', 'subtitle', 'publicationYear', 'recordIdPrefixed' ],
@@ -1699,6 +1711,11 @@ module.exports = (app) => {
             scrollToMiddleOfResultSet: true
           }
         },
+        relationTargetLabels: {
+          Work: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,'],
+          Publication: [ 'mainTitle', ':subtitle', 'partNumber.', 'partTitle', 'publicationYear,'],
+          PublicationPart: [ 'mainTitle']
+        },
         typeMap: {
           // this map contains a map of all known independent resource types (i.e. not blank node types) as they appear in
           // resource urls and their canonical names
@@ -1713,7 +1730,10 @@ module.exports = (app) => {
           corporation: 'Corporation',
           instrument: 'Instrument',
           compositionType: 'CompositionType',
-          workSeries: 'WorkSeries',
+          workSeries: 'WorkSeries'
+        },
+        rdfTypeToIndexType: {
+          'Work': 'work'
         },
         resourceTypeAliases: {
           'compositiontype': 'compositionType',
@@ -1788,10 +1808,71 @@ module.exports = (app) => {
           sheetMusPub: 'Katalogisering av musikknoter',
           musRecPub: 'Katalogisering av musikkopptak',
           maintWork: 'Vedlikeholde verk',
-          maintPub: 'Vedlikeholde utgivelse'
+          maintPub: 'Vedlikeholde utgivelse',
+          editPerson: 'Utvidet redigering av personautoritet',
+          editCorporation: 'Utvidet redigering av organisasjonsautoritet',
+          editSubject: 'Utvidet redigering av emneautoritet',
+          editPlace: 'Utvidet redigering av stedsautoritet',
+          editSerial: 'Utvidet redigering av forlagsserie',
+          editWorkSeries: 'Utvidet redigering av verksserie',
+          editInstrument: 'Utvidet redigering av instrumentautoritet',
+          editCompositionType: 'Utvidet redigering av komposjonstype',
+          comparePerson: 'Sammenlikne og slå sammen personautoritet',
+          compareCorporation: 'Sammenlikne og slå sammen organisasjonsautoritet',
+          compareSubject: 'Sammenlikne og slå sammen emneautoritet',
+          comparePlace: 'Sammenlikne og slå sammen stedsautoritet',
+          compareSerial: 'Sammenlikne og slå sammen forlagsserie',
+          compareWorkSeries: 'Sammenlikne og slå sammen verksserie',
+          compareInstrument: 'Sammenlikne og slå sammen instrumentautoritet',
+          compareCompositionType: 'Sammenlikne og slå sammen komposjonstype',
+        },
+        translations: {
+          Work: {
+            indet: 'verk',
+            det: 'verket',
+          },
+          Publication: {
+            indet: 'utgivelse',
+            det: 'utgivelsen'
+          },
+          PublicationPart: {
+            indet: 'utgivelsesdel',
+            det: 'utgivelsendelen'
+          },
+          Person: {
+            indet: 'person',
+            det: 'personen'
+          },
+          Corporation: {
+            indet: 'korporasjon',
+            det: 'korporasjonen'
+          },
+          Subject: {
+            indet: 'emne',
+            det: 'emnet'
+          },
+          Place: {
+            indet: 'sted',
+            det: 'stedet'
+          },
+          Serial: {
+            indet: 'forlagsserie',
+            det: 'forlagsserien'
+          },
+          WorkSeries: {
+            indet: 'verksserie',
+            det: 'verksserien'
+          },
+          Genre: {
+            indet: 'sjanger',
+            det: 'sjangeren'
+          },
+          Event: {
+            indet: 'hendelse',
+            det: 'hendelsen'
+          }
         }
       }
     response.json(config)
   })
 }
-

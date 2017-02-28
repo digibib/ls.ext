@@ -51,6 +51,7 @@ module RandomMigrate
       @audiences = %w(juvenile ages11To12 ages13To15 ages13To15)
       @publication_uris = []
       @part_creator_person_name = Hash.new
+      @person_names = []
     end
 
     def generate_random_string()
@@ -143,7 +144,9 @@ module RandomMigrate
       @part_creator_person_name[prefix] = part_creator_person[0]
       part_creator_person_uri = post_ntriples 'person', part_creator_person[1]
       number_of_persons.times do
-        person_uri = post_ntriples 'person', generate_person[1]
+        generated_person = generate_person
+        person_uri = post_ntriples 'person', generated_person[1]
+        @person_names << generated_person[0]
         number_of_works_per_person.times do
           work_uri = post_ntriples('work', generate_work(person_uri, prefix)[1])
           number_of_publications_per_work.times do
@@ -303,6 +306,10 @@ module RandomMigrate
 
     def get_part_creator_person_names
       @part_creator_person_name
+    end
+
+    def get_person_names
+      @person_names
     end
   end
 end
