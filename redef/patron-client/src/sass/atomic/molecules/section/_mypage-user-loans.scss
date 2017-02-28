@@ -36,7 +36,7 @@
   .feedback {
     position: absolute;
     font-size: 0.7em;
-    color: red;
+    color: $redColor;
   }
 }
 
@@ -113,8 +113,9 @@
     .resume-suspend-button {
       width: span(9);
 
-      button {
+      button.btn-red {
         background-color: $redColor;
+        width: 8.7em;
       }
 
     }
@@ -131,6 +132,7 @@
 
     .feedback {
       color: $redColor;
+      font-weight: normal;
     }
 
   }
@@ -244,7 +246,7 @@
       }
 
       .media-type {
-        width: span(1);
+        width: span(1.5);
       }
 
       .entry-details {
@@ -253,6 +255,16 @@
 
       .cancel-button, .reserve-cancel-button {
         width: span(1);
+      }
+
+      h1 {
+        margin-bottom: rhythm(0.2);
+      }
+
+      h2 {
+        font-size: 0.8em;
+        margin-top: 0;
+        margin-bottom: rhythm(0.2);
       }
 
     }
@@ -272,7 +284,7 @@
       }
 
       .placeholder-column {
-        width: span(2);
+        width: span(1);
       }
 
       .loan-pickup-location {
@@ -289,6 +301,13 @@
 
       .place-in-queue {
         width: span(2);
+        position: relative;
+
+        .feedback {
+          position: absolute;
+          width: 200%;
+          top: 1.185em;
+        }
       }
 
       .pickup-location {
@@ -296,7 +315,7 @@
       }
 
       .placeholder-column {
-        width: span(2);
+        width: span(1);
       }
 
       .resume-suspend-button {
@@ -325,7 +344,7 @@
       }
 
       .placeholder-column {
-        width: span(3);
+        width: span(2);
       }
 
       .renew-button {

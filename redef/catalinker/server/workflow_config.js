@@ -1617,7 +1617,7 @@ module.exports = (app) => {
                   regExp: 'w[a-f0-9]+',
                   replacement: 'http://data.deichman.no/work/$&'
                 },
-                onlyIfMatching: 'w[a-f0-9]+'
+                onlyIfMatching: '^w[a-f0-9]+$'
               }
             ],
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
@@ -1636,7 +1636,7 @@ module.exports = (app) => {
             queryTerms: [
               { field: 'mainTitle', wildcard: true },
               { field: 'partTitle', wildcard: true },
-              { field: 'publicationYear', onlyIfMatching: '[0-9]{3,4}' },
+              { field: 'publicationYear', onlyIfMatching: '^[0-9]{3,4}$' },
               {
                 field: 'uri',
                 matchAndTransformQuery: {
