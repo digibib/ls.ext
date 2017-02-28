@@ -297,7 +297,7 @@ end
 When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisasjonen) jeg valgte har rollen "([^"]*)" knyttet til "([^"]*)"$/) do |type, agent_type, role_name, association|
   data_automation_id_agent = "Contribution_http://data.deichman.no/ontology#agent_0"
   if agent_type == 'personen'
-    name_line = "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]})"
+    name_line = "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}"
   else
     name_line = "#{@context[:person_name]}"
   end
@@ -513,8 +513,7 @@ end
 
 
 When(/^sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid$/) do
-  @browser.element(:text => "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]}) #{@context[:person_nationality]}.").should exist
-  puts "#{@context[:person_name]} (#{@context[:person_birthyear]}–#{@context[:person_deathyear]}) #{@context[:person_nationality]}."
+  @browser.element(:text => "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}, #{@context[:person_nationality]}.").should exist
 end
 
 When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do

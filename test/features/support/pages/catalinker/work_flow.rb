@@ -76,7 +76,7 @@ class WorkFlow < CatalinkerPage
   end
 
   def get_text_field_from_label(label)
-    @browser.elements(:xpath => "//*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//input|//*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//span[@contenteditable]").select(&:visible?).first
+    @browser.elements(:xpath => "//*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//input[not(@class='select2-search__field')]|//*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//span[@contenteditable]").select(&:visible?).first
   end
 
   def get_deletable_from_label(label)

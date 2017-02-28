@@ -588,7 +588,7 @@
         function getValues (onlyFirstField) {
           return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
             .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,\.]$/, '').replace(/– /, '–')
+            .join(' ').replace(/[,]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
         }
 
         var values = getValues(options.onlyFirstField)
@@ -927,7 +927,7 @@
           var propNameCore = propName.split(/\.fragment|[#\.,:\(\)-]/).join('')
           var propVal = valueFromPropertyFunc(propNameCore)
 
-          if (propVal) {
+          if (propVal && propVal !== '') {
             displayProperties = displayProperties || []
             let property = { prop: propNameCore }
             var ornamented
@@ -938,7 +938,7 @@
             }
             if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
               let previousPropVal = _.last(displayProperties).val
-              _.last(displayProperties).val = previousPropVal.substr(0, previousPropVal.length)
+              _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
             }
             property.val = ornamented
             displayProperties.push(property)
