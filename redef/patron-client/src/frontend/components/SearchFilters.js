@@ -5,6 +5,8 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchFilter from './SearchFilter'
 import Constants from '../constants/Constants'
 
+import DataRangeFilter from '../components/DateRangeFilter'
+
 class SearchFilters extends React.Component {
   constructor (props) {
     super(props)
@@ -61,7 +63,14 @@ class SearchFilters extends React.Component {
       })
 
       return (
-        <div className="filters-generic">
+        <NonIETransitionGroup
+          transitionName="fade-in"
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+          component="aside"
+          className="filters">
           <div className="limit-filters">
             <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
               {this.props.locationQuery.hideFilters === Constants.enabledParameter
@@ -77,23 +86,29 @@ class SearchFilters extends React.Component {
           <section className="filter-wrapper"
                    data-automation-id="search_filters">
             {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {
-              const filtersByAggregation = groupedFilters[ aggregation ]
-              return (
-                <SearchFilter
-                  key={aggregation}
-                  aggregation={aggregation}
-                  filters={filtersByAggregation}
-                  locationQuery={this.props.locationQuery}
-                  toggleFilter={this.props.toggleFilter}
-                  toggleFilterVisibility={this.props.toggleFilterVisibility}
-                  toggleAllFilters={this.toggleFilterVisibility}
-                  toggleCollapseFilter={this.props.toggleCollapseFilter}
-                  scrollTargetNode={this.props.scrollTargetNode}
+                const filtersByAggregation = groupedFilters[ aggregation ]
+                return (
+                  <SearchFilter
+                    key={aggregation}
+                    aggregation={aggregation}
+                    filters={filtersByAggregation}
+                    locationQuery={this.props.locationQuery}
+                    toggleFilter={this.props.toggleFilter}
+                    toggleFilterVisibility={this.props.toggleFilterVisibility}
+                    toggleAllFilters={this.toggleFilterVisibility}
+                    toggleCollapseFilter={this.props.toggleCollapseFilter}
+                    scrollTargetNode={this.props.scrollTargetNode}
+                  />
+                )
+              })}
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <DataRangeFilter
+                  togglePeriod={this.props.togglePeriod}
                 />
-              )
-            })}
+            }
           </section>
-        </div>
+        </NonIETransitionGroup>
       )
     } else {
       return this.renderEmpty()
@@ -124,46 +139,3 @@ export const messages = defineMessages({
 })
 
 export default SearchFilters
-
-/*
-<NonIETransitionGroup
-transitionName="fade-in"
-transitionAppear
-transitionAppearTimeout={500}
-transitionEnterTimeout={500}
-transitionLeaveTimeout={500}
-component="aside"
-className="filters">
-  <div className="limit-filters">
-  <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
-{this.props.locationQuery.hideFilters === Constants.enabledParameter
-  ? (<span>Vis filter</span>)
-  : (<span>Skjul filter</span>)}
-</Link>
-</div>
-
-<header className="limit-filters-header">
-  <FormattedMessage {...messages.limit} />
-</header>
-
-<section className="filter-wrapper"
-         data-automation-id="search_filters">
-  {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {
-      const filtersByAggregation = groupedFilters[ aggregation ]
-      return (
-        <SearchFilter
-          key={aggregation}
-          aggregation={aggregation}
-          filters={filtersByAggregation}
-          locationQuery={this.props.locationQuery}
-          toggleFilter={this.props.toggleFilter}
-          toggleFilterVisibility={this.props.toggleFilterVisibility}
-          toggleAllFilters={this.toggleFilterVisibility}
-          toggleCollapseFilter={this.props.toggleCollapseFilter}
-          scrollTargetNode={this.props.scrollTargetNode}
-        />
-      )
-    })}
-</section>
-</NonIETransitionGroup>
-*/

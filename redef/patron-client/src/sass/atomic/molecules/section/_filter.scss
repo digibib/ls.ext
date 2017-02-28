@@ -117,7 +117,19 @@
 
   button {
     font-size: 0.9em;
-    padding: 0.4em;
+    padding: 0.5em;
+  }
+
+  .error {
+    position: relative;
+
+    .feedback {
+      position: absolute;
+      font-size: 0.8em;
+      top: 3em;
+      color: $redColor;
+    }
+
   }
 
 }

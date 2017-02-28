@@ -57,3 +57,30 @@ export function ensureLanguageFilterOpen (inputLocationQuery) {
     return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
 }
+
+export function togglePeriodParamValues (yearFrom, yearTo, years, inputLocationQuery) {
+  console.log('toggling...')
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    let queryParam = []
+
+    queryParam[ 0 ] = years.yearFrom
+    queryParam[ 1 ] = years.yearTo
+
+    if (queryParam[ 0 ] === '' || queryParam[ 0 ] === undefined) {
+      delete locationQuery[ yearFrom ]
+    } else {
+      locationQuery[ yearFrom ] = queryParam[0]
+    }
+
+    if (queryParam[ 1 ] === '' || queryParam[ 1 ] === undefined) {
+      delete locationQuery[ yearTo ]
+    } else {
+      locationQuery[ yearTo ] = queryParam[1]
+    }
+
+    return dispatch(push({ pathname: pathname, query: locationQuery }))
+
+  }
+}

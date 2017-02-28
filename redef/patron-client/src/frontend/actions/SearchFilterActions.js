@@ -1,4 +1,4 @@
-import { toggleParameter, toggleParameterValue } from './ParameterActions'
+import { toggleParameter, toggleParameterValue, togglePeriodParamValues } from './ParameterActions'
 
 export function toggleFilter (filterId) {
   return (dispatch, getState) => {
@@ -33,3 +33,19 @@ export function toggleAllFiltersVisibility () {
 export function toggleCollapseFilter (aggregation) {
   return toggleParameterValue('showFilter', aggregation)
 }
+
+export function togglePeriod (years) {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+
+    // Toggling a filter implies a new search, so we discard any pagination parameter
+    delete locationQuery.page
+
+    dispatch(togglePeriodParamValues('yearFrom', 'yearTo', years, locationQuery))
+  }
+}
+
+export function removePeriod (years) {
+  console.log(locationQuery)
+}
+

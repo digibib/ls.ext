@@ -16,7 +16,6 @@ import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
 import SearchResultsText from '../components/SearchResultsText'
 import SearchFilterBox from '../components/SearchFilterBox'
-import SearchFiltersContainer from './SearchFiltersContainer'
 
 class Search extends React.Component {
   constructor (props) {
@@ -36,7 +35,7 @@ class Search extends React.Component {
 
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => [ 'query', 'filter' ].includes(key)).forEach(key => {
+    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'yearFrom', 'yearTo' ].includes(key)).forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
@@ -115,7 +114,8 @@ class Search extends React.Component {
               : null }
           </div>
           <SearchFilterBox query={this.props.locationQuery}
-                           toggleFilter={this.props.searchFilterActions.toggleFilter} />
+                           toggleFilter={this.props.searchFilterActions.toggleFilter}
+                           togglePeriod={this.props.searchFilterActions.togglePeriod} />
           {this.props.totalHits > 0
             ? (<div className="search-sorting patron-placeholder">
             <p>Sorter treff på</p>
@@ -131,19 +131,19 @@ class Search extends React.Component {
         </div>)
           : null}
         {this.props.totalHits > 0
-          ? [ <div className="filter-search-wrapper" key="filters-wrapper">
-            <SearchFiltersContainer
+          ? [ <SearchFilters key="search_filters"
                              filters={this.props.filters}
                              locationQuery={this.props.location.query}
                              toggleFilter={this.props.searchFilterActions.toggleFilter}
                              toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
                              toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
                              toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                             togglePeriod={this.props.searchFilterActions.togglePeriod}
                              scrollTargetNode={this}
                              isSearching={this.props.isSearching}
                              windowWidth={this.props.windowWidth}
-            />
-            <SearchResults
+            />,
+            <SearchResults key="search_results"
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
                            searchResults={this.props.searchResults}
@@ -153,7 +153,7 @@ class Search extends React.Component {
                            resources={this.props.resources}
                            page={this.props.location.query.page}
                            items={this.props.items}
-          /></div> ]
+          />]
           : null}
         {this.renderPagination()}
       </NonIETransitionGroup>
