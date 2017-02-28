@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-import { reduxForm } from 'redux-form'
+import { reduxForm, SubmissionError } from 'redux-form'
 import { connect } from 'react-redux'
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 
 import FormInputField from '../components/FormInputField'
 import asyncValidate from '../utils/asyncValidate'
 import validator from '../../common/validation/validator'
-import fields from '../../common/forms/postponeReservationForm'
+import fields from '../../common/forms/dateRangeForm'
 import ValidationMessage from '../components/ValidationMessage'
 
 const formName = 'publicationYearSelect'
@@ -17,8 +17,12 @@ class DateRangeFilter extends React.Component {
     this.handleYearRange = this.handleYearRange.bind(this)
   }
 
-  handleYearRange () {
-    console.log('Handling year range...')
+  handleYearRange (fields) {
+    if (parseInt(fields.yearTo) < parseInt(fields.yearFrom)) {
+      throw new SubmissionError({ _error: 'Failed YEAR!' })
+    } else {
+      this.props.togglePeriod({ yearFrom: fields.yearFrom || '', yearTo: fields.yearTo || '' })
+    }
   }
 
   getValidator (field) {
@@ -29,45 +33,42 @@ class DateRangeFilter extends React.Component {
 
   render () {
     const {
-      submitting,
+      error, submitting,
       handleSubmit
     } = this.props
     return (
-      <div className="dateRangeFilters">
-        <section className="filter-wrapper">
-            <div className="filter-group">
-              <header className="filterTitle">
-                <h1>
-                  <FormattedMessage {...messages.selectPublicationYear} />
-                </h1>
-              </header>
-              <FormInputField name="yearFrom"
-                              message={messages.yearFrom}
-                              formName={formName}
-                              getValidator={this.getValidator}
-                              headerType=""
-                              placeholder={messages.yearPlaceholder}
-                              type="text"
-              />
-              <FormInputField name="yearTo"
-                              message={messages.yearTo}
-                              formName={formName}
-                              getValidator={this.getValidator}
-                              headerType=""
-                              placeholder={messages.yearPlaceholder}
-                              type="text"
-              />
-              <button
-                className="black-btn"
-                data-automation-id="submit_year_range_button"
-                type="button"
-                disabled={submitting}
-                onClick={handleSubmit(this.handleYearRange)}
-              >
-                <FormattedMessage {...messages.limitYear} />
-              </button>
-            </div>
-        </section>
+      <div className="filter-group dateRangeFilters" data-automation-id="filter_dateRange">
+        <header className="filterTitle">
+          <h1>
+            <FormattedMessage {...messages.selectPublicationYear} />
+          </h1>
+        </header>
+        <FormInputField name="yearFrom"
+                        message={messages.yearFrom}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.yearPlaceholder}
+                        type="text"
+        />
+        <FormInputField name="yearTo"
+                        message={messages.yearTo}
+                        formName={formName}
+                        getValidator={this.getValidator}
+                        headerType=""
+                        placeholder={messages.yearPlaceholder}
+                        type="text"
+        />
+        {error && <strong>{error}</strong>}
+        <button
+          className="black-btn"
+          data-automation-id="submit_year_range_button"
+          type="button"
+          disabled={submitting}
+          onClick={handleSubmit(this.handleYearRange)}
+        >
+          <FormattedMessage {...messages.limitYear} />
+        </button>
       </div>
     )
   }
@@ -102,12 +103,18 @@ export const messages = defineMessages({
 
 })
 
+function mapDispatchToProps (dispatch) {
+  return {
+    dispatch: dispatch
+  }
+}
+
 const intlDateRangeFilter = injectIntl(DateRangeFilter)
 export { intlDateRangeFilter as DateRangeFilter }
 
 export default connect(
   // mapStateToProps,
-  // mapDispatchToProps
+  mapDispatchToProps
 )(reduxForm({
   form: formName,
   enableReinitialize: true,
@@ -115,8 +122,3 @@ export default connect(
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
   validate: validator(fields)
 })(intlDateRangeFilter))
-
-/*
- disabled={submitting}
-onClick={handleSubmit(this.handlePostponeReservation)}
-*/

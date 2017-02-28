@@ -25,9 +25,13 @@ module.exports = {
     }
   },
   year: year => {
-    if (!/^\d{4}$/.test(year) || year < 1900 || year >= new Date().getFullYear()) {
-      return 'invalidYear'
-    }
+    return validateYear(year)
+  },
+  yearFrom: year => {
+    return validateAllYears(year)
+  },
+  yearTo: year => {
+    return validateAllYears(year)
   },
   month: month => {
     if (!/^\d{1,2}$/.test(month) || month < 1 || month > 12) {
@@ -59,6 +63,18 @@ module.exports = {
     if (!/(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/.test(date)) {
       return 'invalidNoDate'
     }
+  }
+}
+
+function validateYear (year) {
+  if (!/^\d{4}$/.test(year) || year < 1900 || year >= new Date().getFullYear()) {
+    return 'invalidYear'
+  }
+}
+
+function validateAllYears (year) {
+  if (!/^\d{4}$/.test(year) || year >= new Date().getFullYear()) {
+    return 'invalidYear'
   }
 }
 
