@@ -129,6 +129,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så fjerner jeg den første biinførselen
     Så sjekker jeg at det er "1" biinnførsler totalt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
+    Og jeg venter litt
     Så trykker jeg på knappen for å avslutte
     Og jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
     Så jeg verifiserer opplysningene om utgivelsen
@@ -549,3 +550,39 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Så sjekker jeg at teksten "Verket har 0 utgivelser:" finnes på siden
+
+  Scenario: Redigere biinførsel
+    Gitt at det finnes et verk med forfatter
+    Når jeg legger inn forfatternavnet på startsida
+    Og jeg venter litt
+    Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Og bekrefter for å gå videre til "Emneopplysninger"
+    Og bekrefter for å gå videre til "Beskriv deler"
+    Og bekrefter for å gå videre til "Biinnførsler"
+    Og jeg legger inn navn på en person som skal knyttes til biinnførsel
+    Og jeg venter litt
+    Så velger jeg en person fra treffliste fra personregisteret
+    Og jeg velger rollen "Forfatter"
+    Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"
+    Så trykker jeg på knappen for legge til biinnførselen
+    Og jeg venter litt
+    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
+    Så klikker jeg på linken med blyantikon
+    Og jeg fjerner valgt verdi for "Rolle"
+    Og jeg velger rollen "Fotograf"
+    Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
+    Så trykker jeg på "Lagre"-knappen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
+    Så sjekker jeg at det er "1" biinnførsler totalt
+    Så frisker jeg opp nettleseren
+    Og jeg venter litt
+    Og jeg venter litt
+    Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
+    Så sjekker jeg at det er "1" biinnførsler totalt
+

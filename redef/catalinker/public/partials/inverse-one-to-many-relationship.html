@@ -3,29 +3,31 @@
 <div class="pure-u-1 inverse-relations-title" ><span>{{format(., 'showRelatedTitle')}}</span><a class="close" title="Lukk" on-click="unloadInverseRelated">×</a></div>
 <div class="pure-u-1-1 inverse-relations" >
     <div class="pure-g head">
-        <div class="pure-u-1-24">
-            <span class="pure-u-1-4"></span>
-            <span class="pure-u-1-4"><input type="checkbox" on-change="toggleAllEnableRelation" checked="{{selectAll}}" title="Velg alle"/></span>
-        </div>
+        <div class="pure-u-1-24"></div>
         {{#each showFieldsOfRelated}}
-        <div class="pure-u-{{width}}">{{applicationData.propertyLabels[field]}}</div>
+        <div class="pure-u-{{width}}">{{abbreviate(applicationData.propertyLabels[field])}}</div>
         {{/each}}
     </div>
     <div class="pure-g table-body">
         {{#each relations:index}}
-        <div class="row pure-u-1">
+        <div class="pure-u-1">
+        <div class="row pure-g">
             <div class="pure-u-1-24">
-                <span class="pure-u-1-4 label" data-uri-escaped-label="{{index + 1}}">{{index + 1}}</span>
-                <span class="pure-u-1-4" ><input type="checkbox" checked="{{enable}}" /></span>
+                <span class="label" data-uri-escaped-label="{{index + 1}}">{{index + 1}}</span>
+                <span><input type="checkbox" checked="{{enable}}" /></span>
             </div>
         {{#each showFieldsOfRelated}}
             <span class="pure-u-{{width}}">{{projections[field]}}</span>
         {{/each}}
         </div>
+        </div>
         {{/each}}
         {{#if relations.length === 0}}
         <span class="empty-relations pure-u-1">{{noInverseRelationsText}}</span>
         {{/if}}
+    </div>
+    <div class="pure-g select-all">
+        <span class="pure-u-1-24"><input type="checkbox" on-change="toggleAllEnableRelation" checked="{{selectAll}}" title="Velg alle"/></span><span class="pure-u-22-24 label">Velg alle</span>
     </div>
 </div>
 <div class="pure-u-1">

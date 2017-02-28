@@ -64,6 +64,21 @@ module.exports = (app) => {
       compositionType: 'CompositionType',
       workSeries: 'WorkSeries',
     }
+    const personCorpNameProperties = [
+      'prefLabel',
+      'name,',
+      {
+        person: '#ordinal,',
+        event: '(ordinal).'
+      },
+      'subdivision',
+      {
+        'corporation|subject|work|place|genre|compositiontype|instrument': '(specification)',
+        person: 'specification,'
+      },
+      'birthYear-', 'deathYear,',
+      'nationality.fragment.'
+    ]
     var config =
       {
         kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
@@ -565,24 +580,7 @@ module.exports = (app) => {
                       indexTypes: [ 'person', 'corporation' ],
                       type: 'searchable-with-result-in-side-panel',
                       required: true,
-                      nameProperties: [
-                        {
-                          person: 'name,',
-                          corporation: 'name.'
-                        },
-                        {
-                          person: '#ordinal,',
-                          event: '(ordinal).'
-                        },
-                        'subdivision',
-                        {
-                          corporation: '(specification)',
-                          person: 'specification,'
-                        },
-                        'placePrefLabel,',
-                        'birthYear-',
-                        'deathYear'
-                      ],
+                      nameProperties: personCorpNameProperties,
                       previewProperties: [ {
                         person: '#ordinal,',
                         event: '(ordinal).'
@@ -1128,8 +1126,8 @@ module.exports = (app) => {
                 showFieldsOfRelated: [
                   { field: 'mainTitle', width: '7-24' }, // there are 23/24th left for field layouts
                   { field: 'subtitle', width: '7-24' },
-                  { field: 'partNumber', width: '3-24' },
-                  { field: 'partTitle', width: '6-24' }
+                  { field: 'partNumber', width: '2-24' },
+                  { field: 'partTitle', width: '7-24' }
                 ],
                 cloneParentButtonExplanation: `
                   Hvis du velger å splitte verket, opprettes det en ny kopi av det for hver utgivelse som er valgt over. Hver utgivelse knyttes
@@ -1253,7 +1251,7 @@ module.exports = (app) => {
                   },
                   'placePrefLabel,',
                   'date',
-                  'birthYear-', 'deathYear',
+                  'birthYear-', 'deathYear,',
                   'nationality.fragment.'
                 ],
                 previewProperties: [
@@ -1383,7 +1381,8 @@ module.exports = (app) => {
                       label: 'Aktør',
                       rdfProperty: 'agent',
                       indexTypes: [ 'person', 'corporation' ],
-                      previewProperties: [ '(birthYear-', 'deathYear)', 'place', 'subdivision', 'nationality.fragment.' ],
+                      nameProperties: personCorpNameProperties,
+                      previewProperties: [ 'birthYear-', 'deathYear', 'place', 'subdivision', 'nationality.fragment.' ],
                       type: 'searchable-with-result-in-side-panel',
                       id: 'publicationPartActorInput',
                       widgetOptions: {
@@ -1500,8 +1499,8 @@ module.exports = (app) => {
                       rdfProperty: 'agent',
                       id: 'contributionAgentInput',
                       indexTypes: [ 'person', 'corporation' ],
-                      nameProperties: [ 'prefLabel', 'name', 'ordinal', 'subdivision', '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
-                      previewProperties: [ '(specification)', '(birthYear-', 'deathYear)', 'nationality.fragment.' ],
+                      nameProperties: personCorpNameProperties,
+                      previewProperties: [ 'specification', 'birthYear-', 'deathYear', 'nationality.fragment.' ],
                       type: 'searchable-with-result-in-side-panel',
                       widgetOptions: {
                         showSelectItem: false, // show and enable select work radio button
@@ -1589,7 +1588,7 @@ module.exports = (app) => {
             type: 'person',
             sortedListQueryForField: 'name',
             selectIndexLabel: 'Person',
-            resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear' ],
+            resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear,', 'nationality.fragment.' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
             subItemsExpandTooltip: 'Vis/skjul verk',
@@ -1894,6 +1893,9 @@ module.exports = (app) => {
             indet: 'hendelse',
             det: 'hendelsen'
           }
+        },
+        abbreviations: {
+          'Del nummer': 'Delnr.'
         }
       }
     response.json(config)

@@ -301,7 +301,7 @@ When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisa
   else
     name_line = "#{@context[:person_name]}"
   end
-  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{name_line}']")
+  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][starts-with(normalize-space(), '#{name_line}')]")
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     name.exists?
   }
@@ -513,7 +513,7 @@ end
 
 
 When(/^sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid$/) do
-  @browser.element(:text => "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}").should exist
+  @browser.element(:text => "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}, #{@context[:person_nationality]}.").should exist
 end
 
 When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do
@@ -749,6 +749,11 @@ When(/^sjekker jeg at antall relasjoner er ([0-9]*)$/) do |number_of_relations|
   @browser.a(:class => 'toggle-show-sub-items').click
   @browser.lis(:class => 'rel-entry').length.should equal? (number_of_relations.to_i)
 end
+
+When(/^klikker jeg på linken med blyantikon$/) do
+  @browser.as(:class => 'edit').find(&:visible?).click
+end
+
 
 When(/^at jeg vil splitte et verk med flere utgivelser$/) do
   #

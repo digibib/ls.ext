@@ -77,11 +77,23 @@
             {{/with}}
         </h3>
         {{/if}}
-        <div style="order: {{nonEditable ? valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1 : 100}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
+        <div style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
               {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
             {{#if nonEditable && !suggested}}
-            <a class="delete" title="Slett oppføring"
-               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}"></a>
+            <div class="pure-u-1" >
+                <div class="pure-u-23-24 delete" >
+                    <a class="delete" title="Slett oppføring"
+                       on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" ></a >
+                </div>
+                <div class="pure-u-1-24 edit" >
+                    <a class="edit"
+                       tabindex="{{tabSelected ? '0' : '-1'}}"
+                       title="Rediger oppføring"
+                       on-click="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
+                       on-enter="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
+                    ></a >
+                </div>
+            </div >
             {{/if}}
             <span class="input-wrapper">
                 <span class="inputs">
@@ -138,7 +150,14 @@
                                 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                                 {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
                           title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
-                           on-click="saveObject:{{inputValueIndex}}" >Legg til</button>
+                        {{#if edit}}
+                           on-click="replaceObject:{{inputValueIndex}}"
+                        {{else}}
+                           on-click="saveNewObject:{{inputValueIndex}}"
+                        {{/if}}
+                        >
+                        {{#if edit}}Lagre{{else}}Legg til{{/if}}
+                        </button>
                         <span class="save-placeholder"></span>
                         {{/if}}
                     </span>
