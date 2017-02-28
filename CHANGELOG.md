@@ -12,6 +12,26 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.8.7 (2017-0)
+
+- Koha:
+  - DEICH-662 Hentenummer på automat er tilbake (igjen!)
+  - DEICH-649 Feil feilmeldinger på aldersgrense i søk og på automat
+  - DEICH-634 Feil i PIN - koder sendt til NL (for mange tegn i kryptert kode)
+- Patron-client:
+  - DEICH-395 Manglende informasjon om utgivelser i søket
+  - DEICH-658 Utgivelsesår er nå fritekstssøkbart
+  - DEICH-645 Feil avdelingskoder på utgivelse
+  - DEICH-646 Utgivelser vises ikke etter filtrering på avdeling Skoletjenesten
+  - DEICH-648 Relatert verk. Navn på hovedansvarlig vises som "undefined"
+  - DEICH-663 Hovedansvarlig vises nå for verk som er emne emne
+  - DEICH-665 PIN-kode validering i patron-client for å sikre at kun fire siffer benyttes
+- Catalinker:
+  - DEICH-102 Koble duplikate autoriteter i Catalinker
+  - DEICH-535 Manglende varsel om duplikat katalogisering ved feilformatterte ISBN-nummer Katalogisering
+- Other:
+  - DEICH-657 Forbedret logging av RFID på skrankemaskiner
+
 ## 0.8.6 (2017-02-14)
 
 KOHA: 3ca5d3907a0331caed3df53e0fdd1e21b1498786
