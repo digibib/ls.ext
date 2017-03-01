@@ -92,7 +92,6 @@ WHERE {
         { <__PUBLICATIONURI__> deich:recordId ?recordId ;
             deich:publicationOf ?work .
             BIND(str(?work) AS ?workUri ) }
-  UNION { <__PUBLICATIONURI__> deich:fictionNonfiction ?ficturi .BIND(str(?ficturi) AS ?fictionNonfiction) }
   UNION { <__PUBLICATIONURI__> deich:hasMediaType ?mturi .
           ?mturi rdfs:label ?mtNoLang .
           BIND(str(?mtNoLang) AS ?mtNo)
@@ -177,6 +176,8 @@ WHERE {
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasCompositionType ?compType .
            ?compType deich:prefLabel ?compTypeLabel . }
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+           ?work deich:fictionNonfiction ?ficturi .BIND(str(?ficturi) AS ?fictionNonfiction) }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:audience ?audienceO .
            BIND(str(?audienceO) AS ?audience) }
