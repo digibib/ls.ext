@@ -2473,8 +2473,8 @@
             }
           })
             .then(function () {
-              _.each(input.subInputs, function (subInput, index) {
-                if (index === 0) {
+              _.each(input.subInputs, function (subInput, subInputIndex) {
+                if (subInputIndex === 0) {
                   ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
                 }
                 if (!(subInput.input.visible === false)) {
