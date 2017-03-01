@@ -15,13 +15,21 @@ class DateRangeFilter extends React.Component {
   constructor (props) {
     super(props)
     this.handleYearRange = this.handleYearRange.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
   handleYearRange (fields) {
     if (parseInt(fields.yearTo) < parseInt(fields.yearFrom)) {
       throw new SubmissionError({ _error: 'Failed YEAR!' })
     } else {
+      this.props.reset()
       this.props.togglePeriod({ yearFrom: fields.yearFrom || '', yearTo: fields.yearTo || '' })
+    }
+  }
+
+  handleKeyDown (e) {
+    if (e.key === 'Enter' && e.shiftKey === false) {
+      this.props.handleSubmit(this.handleYearRange)
     }
   }
 
@@ -37,7 +45,9 @@ class DateRangeFilter extends React.Component {
       handleSubmit
     } = this.props
     return (
-      <div className="filter-group dateRangeFilters" data-automation-id="filter_dateRange">
+      <form className="filter-group dateRangeFilters" data-automation-id="filter_dateRange"
+            onSubmit={handleSubmit(this.handleYearRange)}
+            onKeyDown={this.handleKeyDown}>
         <header className="filterTitle">
           <h1>
             <FormattedMessage {...messages.selectPublicationYear} />
@@ -64,13 +74,12 @@ class DateRangeFilter extends React.Component {
         <button
           className="black-btn"
           data-automation-id="submit_year_range_button"
-          type="button"
+          type="submit"
           disabled={submitting}
-          onClick={handleSubmit(this.handleYearRange)}
         >
           <FormattedMessage {...messages.limitYear} />
         </button>
-      </div>
+      </form>
     )
   }
 }
@@ -107,7 +116,8 @@ export const messages = defineMessages({
 DateRangeFilter.propTypes = {
   togglePeriod: PropTypes.func.isRequired,
   submitting: PropTypes.bool.isRequired,
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  reset: PropTypes.func
 }
 
 function mapDispatchToProps (dispatch) {

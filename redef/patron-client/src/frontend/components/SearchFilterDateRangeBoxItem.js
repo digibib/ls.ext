@@ -7,15 +7,28 @@ const SearchFilterBoxItemDateRange = ({ dateRange, removePeriod }) => {
 
   const dateEl = dateRange.map((el, i) => {
     if (el.hasOwnProperty('yearFrom')) {
-      return <span key={i}> <FormattedMessage {...messages.from} />: {el.yearFrom} </span>
+      return <span key="yearFrom">{el.yearFrom}</span>
     }
 
     if (el.hasOwnProperty('yearTo')) {
-      return <span key={i}> <FormattedMessage {...messages.to} />: {el.yearTo}</span>
+      return <span key="yearTo">{el.yearTo}</span>
     }
 
     return el
   })
+
+  if (dateEl.length === 2) {
+    dateEl.splice(1, 0, ' - ')
+  }
+
+  if (dateEl.length === 1 && dateEl[0].key === 'yearFrom') {
+    dateEl.splice(1, 0, ' - ')
+  }
+
+  if (dateEl.length === 1 && dateEl[0].key === 'yearTo') {
+    dateEl.splice(0, 0, ' - ')
+  }
+
   const mergedDates = Object.assign(...dateRange)
   return (
     <ClickableElement onClickAction={removePeriod} onClickArguments={mergedDates}>

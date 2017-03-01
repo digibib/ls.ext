@@ -73,7 +73,7 @@ function validateYear (year) {
 }
 
 function validateAllYears (year) {
-  if (!/^\d{4}$/.test(year) || year >= new Date().getFullYear()) {
+  if (!/^\d{4}$/.test(year)) {
     return 'invalidYear'
   }
 }
