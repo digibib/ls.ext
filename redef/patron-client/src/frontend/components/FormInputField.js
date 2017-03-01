@@ -28,6 +28,7 @@ class FormInputField extends React.Component {
                name={field.name}
                id={field.name}
                className=""
+               maxLength={this.props.maxLength}
         />
         {!this.props.excludeLabel && this.props.isLabelUnderInput
           ? <label htmlFor={field.name}><FormattedMessage {...this.props.message} /></label> : null}
@@ -47,7 +48,9 @@ FormInputField.propTypes = {
   excludeLabel: PropTypes.bool,
   headerType: PropTypes.string,
   formName: PropTypes.string.isRequired,
-  placeholder: PropTypes.object
+  placeholder: PropTypes.object,
+  maxLength: PropTypes.string
+
 }
 
 export default injectIntl(FormInputField)

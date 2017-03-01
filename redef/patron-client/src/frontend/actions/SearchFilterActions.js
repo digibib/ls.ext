@@ -1,4 +1,4 @@
-import { toggleParameter, toggleParameterValue, togglePeriodParamValues } from './ParameterActions'
+import { toggleParameter, toggleParameterValue, togglePeriodParamValues, deletePeriodParamValues } from './ParameterActions'
 
 export function toggleFilter (filterId) {
   return (dispatch, getState) => {
@@ -46,6 +46,16 @@ export function togglePeriod (years) {
 }
 
 export function removePeriod (years) {
-  console.log(locationQuery)
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    dispatch(deletePeriodParamValues('yearFrom', 'yearTo', years, locationQuery))
+  }
+}
+
+export function removePeriodInBackUrl (years) {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    dispatch(deletePeriodParamValues('yearFrom', 'yearTo', years, locationQuery, true, 'back'))
+  }
 }
 

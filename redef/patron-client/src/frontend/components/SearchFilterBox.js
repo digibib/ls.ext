@@ -6,7 +6,7 @@ import SearchFilterDateRangeBoxItem from '../components/SearchFilterDateRangeBox
 import { getFiltersFromQuery, getDateRange } from '../utils/filterParser'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-const SearchFilterBox = ({ toggleFilter, togglePeriod, query }) => {
+const SearchFilterBox = ({ toggleFilter, removePeriod, query }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
     : <FormattedMessage {...messages.titleSearch} />
   const filters = getFiltersFromQuery(query).filter(f => {
@@ -22,20 +22,8 @@ const SearchFilterBox = ({ toggleFilter, togglePeriod, query }) => {
   }
 
   if (getDateRange(query, 'yearTo') !== null) {
-    dateRange.push({ yearTo: getDateRange(query, 'yearTo')})
+    dateRange.push({ yearTo: getDateRange(query, 'yearTo') })
   }
-
-
-  /*if (dateFilterFrom !== null && dateFilterTo !== null) {
-    dateRangeEl = <li role="button" className="active-filter" tabindex="0">
-      <span className="filter-label">fom {dateFilterFrom}</span>&nbsp;-&nbsp;
-      <span className="filter-label">tom {dateFilterTo}</span>
-      <span className="remove">
-        <i className="icon-cancel-1"></i>
-      </span>
-    </li>
-
-  }*/
 
   if (filters.length > 0 || dateRange.length > 0) {
     return (
@@ -52,7 +40,7 @@ const SearchFilterBox = ({ toggleFilter, togglePeriod, query }) => {
           {filters.filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
             key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
           { dateRange.length > 0
-            ? <SearchFilterDateRangeBoxItem dateRange={dateRange} togglePeriod={togglePeriod} />
+            ? <SearchFilterDateRangeBoxItem dateRange={dateRange} removePeriod={removePeriod} />
             : null
           }
         </ul>
@@ -78,7 +66,8 @@ export const messages = defineMessages({
 
 SearchFilterBox.propTypes = {
   toggleFilter: PropTypes.func.isRequired,
-  query: PropTypes.object.isRequired
+  query: PropTypes.object.isRequired,
+  removePeriod: PropTypes.func.isRequired
 }
 
 export default SearchFilterBox

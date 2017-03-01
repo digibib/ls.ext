@@ -29,9 +29,7 @@ export function getDateRange (query, filter) {
   if (paramsToUse[ filter ]) {
     return paramsToUse[ filter ]
   }
-
   return null
-
 }
 
 export function getFiltersFromQuery (query) {

@@ -85,28 +85,28 @@ class SearchFilters extends React.Component {
 
           <section className="filter-wrapper"
                    data-automation-id="search_filters">
-            {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {
-                const filtersByAggregation = groupedFilters[ aggregation ]
-                return (
-                  <SearchFilter
-                    key={aggregation}
-                    aggregation={aggregation}
-                    filters={filtersByAggregation}
-                    locationQuery={this.props.locationQuery}
-                    toggleFilter={this.props.toggleFilter}
-                    toggleFilterVisibility={this.props.toggleFilterVisibility}
-                    toggleAllFilters={this.toggleFilterVisibility}
-                    toggleCollapseFilter={this.props.toggleCollapseFilter}
-                    scrollTargetNode={this.props.scrollTargetNode}
-                  />
-                )
-              })}
             {this.props.locationQuery.hideFilters === Constants.enabledParameter
               ? null
               : <DataRangeFilter
-                  togglePeriod={this.props.togglePeriod}
-                />
+                togglePeriod={this.props.togglePeriod}
+              />
             }
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {
+              const filtersByAggregation = groupedFilters[ aggregation ]
+              return (
+                <SearchFilter
+                  key={aggregation}
+                  aggregation={aggregation}
+                  filters={filtersByAggregation}
+                  locationQuery={this.props.locationQuery}
+                  toggleFilter={this.props.toggleFilter}
+                  toggleFilterVisibility={this.props.toggleFilterVisibility}
+                  toggleAllFilters={this.toggleFilterVisibility}
+                  toggleCollapseFilter={this.props.toggleCollapseFilter}
+                  scrollTargetNode={this.props.scrollTargetNode}
+                />
+              )
+            })}
           </section>
         </NonIETransitionGroup>
       )
@@ -125,7 +125,8 @@ SearchFilters.propTypes = {
   toggleCollapseFilter: PropTypes.func.isRequired,
   scrollTargetNode: PropTypes.object.isRequired,
   isSearching: PropTypes.bool,
-  windowWidth: PropTypes.number.isRequired
+  windowWidth: PropTypes.number.isRequired,
+  togglePeriod: PropTypes.func.isRequired
 }
 
 SearchFilters.defaultProps = { filters: [] }

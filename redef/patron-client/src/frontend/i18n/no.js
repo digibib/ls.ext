@@ -204,6 +204,8 @@ export default {
   'SearchFilterBox.title.search': 'Avgrenset til:',
   'SearchFilterBox.title.work': 'Utgivelser som passer din avgrensning:',
   'SearchFilterBoxItem.title.filter': 'Filtrert på',
+  'SearchFilterBoxItem.from': 'fom',
+  'SearchFilterBoxItem.to': 'tom',
   'SearchFilters.limit': 'Avgrens søket ditt',
   'SearchFilter.selectPublicationYear': 'Utgivelsesår',
   'SearchFilter.yearFrom': 'Fra',

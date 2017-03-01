@@ -59,11 +59,10 @@ export function ensureLanguageFilterOpen (inputLocationQuery) {
 }
 
 export function togglePeriodParamValues (yearFrom, yearTo, years, inputLocationQuery) {
-  console.log('toggling...')
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
-    let queryParam = []
+    const queryParam = []
 
     queryParam[ 0 ] = years.yearFrom
     queryParam[ 1 ] = years.yearTo
@@ -81,6 +80,30 @@ export function togglePeriodParamValues (yearFrom, yearTo, years, inputLocationQ
     }
 
     return dispatch(push({ pathname: pathname, query: locationQuery }))
+  }
+}
 
+export function deletePeriodParamValues (yearFrom, yearTo, years, inputLocationQuery, shouldRemoveInBackString = false, queryParamName) {
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+
+    const queryParam = locationQuery[ queryParamName ] || []
+
+    if (shouldRemoveInBackString) {
+      let replacedParams
+      replacedParams = queryParam.replace(`${yearFrom}=${years.yearFrom}&`, '')
+      replacedParams = replacedParams.replace(`${yearTo}=${years.yearTo}`, '')
+      locationQuery[ queryParamName ] = replacedParams
+    } else {
+      if (years.yearFrom) {
+        delete locationQuery[ yearFrom ]
+      }
+      if (years.yearTo) {
+        delete locationQuery[ yearTo ]
+      }
+    }
+
+    return dispatch(push({ pathname: pathname, query: locationQuery }))
   }
 }

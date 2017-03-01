@@ -146,13 +146,13 @@ describe('searchBuilder', () => {
     it('should include publicationYear range filter', () => {
       expect(query.query.filtered.filter.bool.must).toInclude(
         {
-            'range': {
-              'publicationYear': {
-                'gte': 1980,
-                'lte': 1990
-              }
+          'range': {
+            'publicationYear': {
+              'gte': 1980,
+              'lte': 1990
             }
           }
+        }
       )
     })
   })

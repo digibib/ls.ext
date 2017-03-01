@@ -33,7 +33,7 @@ class DateRangeFilter extends React.Component {
 
   render () {
     const {
-      error, submitting,
+      submitting,
       handleSubmit
     } = this.props
     return (
@@ -50,6 +50,7 @@ class DateRangeFilter extends React.Component {
                         headerType=""
                         placeholder={messages.yearPlaceholder}
                         type="text"
+                        maxLength="4"
         />
         <FormInputField name="yearTo"
                         message={messages.yearTo}
@@ -58,8 +59,8 @@ class DateRangeFilter extends React.Component {
                         headerType=""
                         placeholder={messages.yearPlaceholder}
                         type="text"
+                        maxLength="4"
         />
-        {error && <strong>{error}</strong>}
         <button
           className="black-btn"
           data-automation-id="submit_year_range_button"
@@ -96,12 +97,18 @@ export const messages = defineMessages({
     defaultMessage: 'Limit'
   },
   yearPlaceholder: {
-    id:'SearchFilter.yearPlaceholder',
+    id: 'SearchFilter.yearPlaceholder',
     description: 'Placeholder for year in input fields',
     defaultMessage: 'YYYY'
   }
 
 })
+
+DateRangeFilter.propTypes = {
+  togglePeriod: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired
+}
 
 function mapDispatchToProps (dispatch) {
   return {
@@ -109,11 +116,18 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+function mapStateToProps (state) {
+  return {
+    initialValues: {},
+    fields: state.form.publicationYearSelect ? state.form.publicationYearSelect : {}
+  }
+}
+
 const intlDateRangeFilter = injectIntl(DateRangeFilter)
 export { intlDateRangeFilter as DateRangeFilter }
 
 export default connect(
-  // mapStateToProps,
+  mapStateToProps,
   mapDispatchToProps
 )(reduxForm({
   form: formName,
@@ -122,3 +136,13 @@ export default connect(
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
   validate: validator(fields)
 })(intlDateRangeFilter))
+
+/*
+export default reduxForm({
+  form: formName,
+  enableReinitialize: true,
+  asyncValidate,
+  asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
+  validate: validator(fields)
+})(DateRangeFilter)
+*/

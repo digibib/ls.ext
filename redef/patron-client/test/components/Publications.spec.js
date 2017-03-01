@@ -12,8 +12,10 @@ function setup (propOverrides) {
     startReservation: () => {},
     toggleFilter: () => {},
     toggleParameterValue: () => {},
+    removePeriod: () => {},
     locationQuery: {},
     audiences: [],
+
     publications: [
       {
         uri: '/publication_id1',
@@ -52,7 +54,10 @@ function setup (propOverrides) {
       }
     ],
     searchFilterActions: {
-      removeFilterInBackUrl: () => {}
+      removePeriod: () => {},
+      removeFilterInBackUrl: () => {},
+      removePeriodInBackUrl: () => {}
+
     },
     query: {},
     workLanguage: '',
