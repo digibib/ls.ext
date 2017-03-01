@@ -97,6 +97,45 @@
 
 }
 
+.dateRangeFilters {
+  header {
+    margin-bottom: 1em;
+  }
+
+  .form-item {
+    display: inline-block;
+  }
+
+  input {
+    max-width: 4em;
+    margin-right: 1em;
+    font-size: 0.8em;
+    padding: 0.7em 0 0.5em 0.6em;
+  }
+
+  label {
+    margin-right: 0.4em;
+  }
+
+  button {
+    font-size: 0.9em;
+    padding: 0.5em;
+  }
+
+  .error {
+    position: relative;
+
+    .feedback {
+      position: absolute;
+      font-size: 0.8em;
+      top: 3em;
+      color: $redColor;
+    }
+
+  }
+
+}
+
 @include breakpoint($small) {
 
   .filterTitle {

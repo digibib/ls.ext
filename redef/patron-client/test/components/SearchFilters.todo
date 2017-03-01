@@ -19,6 +19,7 @@ function setup (propOverrides) {
     toggleFilterVisibility: () => {},
     toggleAllFiltersVisibility: () => {},
     toggleCollapseFilter: () => {},
+    togglePeriod: () => {},
     scrollTargetNode: {},
     windowWidth: 1000,
     ...propOverrides
@@ -76,3 +77,4 @@ describe('components', () => {
     })
   })
 })
+

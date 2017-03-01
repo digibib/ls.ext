@@ -10,6 +10,7 @@ function setup (propOverrides) {
   const props = {
     query: { back: 'search?filter=language_nob&filter=language_eng&filter=language_fin&filter=language_swe&query=donald&showMore=branch' },
     toggleFilter: () => {},
+    removePeriod: () => {},
     titleText: 'dummyTitle',
     ...propOverrides
   }

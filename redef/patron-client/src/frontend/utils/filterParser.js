@@ -16,6 +16,22 @@ export function getCategorizedFilters (query) {
   return categorizedFilters
 }
 
+export function getDateRange (query, filter) {
+  let paramsToUse
+  if (query.back) {
+    const back = query.back
+    const backQuery = back.split('?')[ 1 ]
+    paramsToUse = QueryString.parse(backQuery)
+  } else {
+    paramsToUse = query
+  }
+
+  if (paramsToUse[ filter ]) {
+    return paramsToUse[ filter ]
+  }
+  return null
+}
+
 export function getFiltersFromQuery (query) {
   let paramsToUse
   if (query.back) {

@@ -23,7 +23,9 @@ function setup (propOverrides) {
       toggleFilter: () => {},
       toggleFilterVisibility: () => {},
       toggleAllFiltersVisibility: () => {},
-      toggleCollapseFilter: () => {}
+      toggleCollapseFilter: () => {},
+      removePeriod: () => {},
+      togglePeriod: () => {}
     },
     resourceActions: {
       fetchWorkResource: () => {}
