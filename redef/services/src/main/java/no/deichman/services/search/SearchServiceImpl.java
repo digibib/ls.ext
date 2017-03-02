@@ -89,8 +89,8 @@ public class SearchServiceImpl implements SearchService {
     private static long lastIndexedTime;
     private static final int NUMTHREADS = 1;
     private static final long SIXTY = 60;
-    private static final int COREPOOLSIZE = 4;
-    private static final int MAXPOOLSIZE = 16;
+    private static final int COREPOOLSIZE = 16;
+    private static final int MAXPOOLSIZE = 32;
     private static final ForkJoinPool THREADPOOL = new ForkJoinPool(NUMTHREADS);
     private static final ExecutorService EXECUTOR_SERVICE = new ThreadPoolExecutor(
             COREPOOLSIZE, MAXPOOLSIZE,
