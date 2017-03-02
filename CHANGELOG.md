@@ -12,6 +12,29 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.8.8 (2017-03-02)
+
+KOHA: 53e98d75963bb5287d02660b7450b064428a4427
+GITREF: 88d453b0cfb19276279cc2288d740d9c1075eae2
+
+- Koha:
+  - DEICH-650 fjerne begrensninger på barn når alle medier er levert
+  - DEICH-639 vise begrensninger automatisk
+  - DEICH-676 fiks NL bug
+- Patron-client:
+  - DEICH-668 visuelle forbedringer
+  - DEICH-677 noen lånere får ikke opp min side
+  - DEICH-674 filter fag/fiksjon fungerer ikke
+  - DEICH-577 verksside viser IKKE LEDIG når det er ledige eksemplarer
+  - DEICH-653 filter på utgivelsesår
+- Catalinker
+  - DEICH-632 splitte verk del II
+  - DEICH-459 redigering av blank-node opplysninger
+  - DEICH-607 fikse tab-navigering
+- Services:
+  - DEICH-652 redigering av autoriteter må trigge reindeksering
+
+
 ## 0.8.7 (2017-0)
 
 - Koha:
