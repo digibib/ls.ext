@@ -531,7 +531,7 @@
         input.compareValues = input.compareValues || emptyValues()
       }
       if (value) {
-        input[ options.compareValues ? 'compareValues' : 'values' ][ index ] = {
+        ractive.set(`${input.keypath}.${options.compareValues ? 'compareValues' : 'values'}.${index}`, {
           old: options.keepOld ? input.values[ index ].old : {
               value: value.value,
               lang: value.lang
@@ -542,11 +542,11 @@
             accepted: options.source ? { source: options.source } : undefined
           },
           uniqueId: _.uniqueId()
-        }
+        })
         if (input.values[ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
+          ractive.update(`${input.keypath}.values.${index}`)
         }
-        ractive.update(`${input.keypath}.values.${index}`)
       }
     }
 
@@ -986,16 +986,29 @@
       }
     }
 
+    function sortNodes (roots, sortOrder, type) {
+      return _.sortBy(roots, function (node) {
+        return _.chain(sortOrder).map(function (sortSpec) {
+          const value = (node.getAll(sortSpec.predicate)[ 0 ] || {}).value
+          return sortSpec.isNumber ? (`000${value}`).slice(-4) : value || ''
+        }).value().join('|')
+      })
+    }
+
     function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
       var graphData = ensureJSON(response.data)
       var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
       type = type || typeFromUri(resourceUri)
       root = root || ldGraph.parse(graphData).byId(resourceUri)
+      if (!ractive.get('lastRoots')) {
+        ractive.set('lastRoots', {})
+      }
 
       let inputs = options.inputs || allInputs()
       var promises = []
       var skipRest = false
+      var parentInputRootsCache = {}
       _.each([ true, false ], function (onlyDoSuggestionForCreateNewResource) {
         _.each(inputs, function (input, index) {
           if (!skipRest &&
@@ -1013,122 +1026,160 @@
               skipRest = true
             } else {
               if (!onlyDoSuggestionForCreateNewResource) {
-                input.offset = input.offset || {}
-                var offset = 0
-                if (input.offset[ offsetCrossTypes[ type ] ]) {
-                  offset = input.offset[ offsetCrossTypes[ type ] ]
-                }
-                var predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
-                var actualRoots = input.isSubInput ? root.outAll(fragmentPartOf(input.parentInput.predicate)) : [ root ]
-                var rootIndex = 0
-                _.each(actualRoots, function (root) {
-                  var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
-                  var mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
-                  if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
-                    if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
-                      var index = 0
-                      let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
-                      promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
-                    } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
-                      if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
-                        _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
-                          index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                          setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
-                          if (options.source && node.id !== '') {
-                            setPreviewValues(input, node, index)
-                          }
-                          if (!options.onlyValueSuggestions) {
-                            if (options.source) {
-                              input.values[ index ].searchable = true
-                            } else {
-                              input.values[ index ].searchable = false
-                            }
-                            if (node.id !== '') {
-                              promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
-                              if (!isBlankNodeUri(node.id)) {
-                                ractive.set(`${input.keypath}.values.${index}.deletable`, true)
-                                if (input.isSubInput && !options.source) {
-                                  input.values[ index ].nonEditable = true
-                                  ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
-                                  input.parentInput.allowAddNewButton = true
-                                }
-                              }
-                            }
-                            setAllowNewButtonForInput(input)
-                          } else {
-                            setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
-                            input.values[ index ].searchable = true
-                          }
-                          input.values[ index ].subjectType = type
-                          input.values[ index ].oldSubjectType = type
-                          ractive.update(`${input.keypath}.values.${index}`)
-                        })
+                const rangeStart = (options.range || {}).start || 0
+                const rangeLength = (options.range || {}).rangeLength || ((input.parentInput || {}).pagination || 10000)
+                const loadForRangeOfInputs = function (startIndex, rangeLength) {
+                  return function (_root) {
+                    _root = _root || root
+                    input.offset = input.offset || {}
+                    let offset = 0
+                    if (input.offset[ offsetCrossTypes[ type ] ]) {
+                      offset = input.offset[ offsetCrossTypes[ type ] ]
+                    }
+                    const predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
+
+                    let actualRoots
+                    if (input.isSubInput) {
+                      const cachedRoot = (parentInputRootsCache[ resourceUri ] || {})[ fragmentPartOf(input.parentInput.predicate) ]
+                      if (cachedRoot) {
+                        actualRoots = cachedRoot.outAll(fragmentPartOf(input.parentInput.predicate))
                       } else {
-                        _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
-                          input.suggestedValues = input.suggestedValues || []
-                          input.suggestedValues.push({
-                            value: node.value,
-                            source: options.source
-                          })
-                        })
+                        actualRoots = (ractive.get('lastRoots')[ resourceUri ] || {})[ fragmentPartOf(input.parentInput.predicate) ] || _root.outAll(fragmentPartOf(input.parentInput.predicate))
+                        parentInputRootsCache[ resourceUri ] = parentInputRootsCache[ resourceUri ] || {}
+                        parentInputRootsCache[ resourceUri ][ input.parentInput.predicate ] = actualRoots
                       }
-                    } else if (input.type === 'select-predefined-value') {
-                      if (!options.onlyValueSuggestions) {
-                        setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                        if (input.isSubInput && !options.source) {
-                          input.values[ rootIndex + (offset) ].nonEditable = true
-                          ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
-                          ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
-                        }
-                      } else {
-                        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-                        _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                          if (input.isSubInput && multiple) {
-                            setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                            input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                    } else {
+                      actualRoots = [ _root ]
+                    }
+                    let rootIndex = 0
+                    _.each(_.filter(input.parentInput && input.parentInput.objectSortOrder ? sortNodes(actualRoots, input.parentInput.objectSortOrder) : actualRoots, function (root, index) {
+                      return index >= startIndex && index < (startIndex + (rangeLength))
+                    }), function (root) {
+                      let index
+                      const mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
+                      const mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
+                      if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
+                        if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
+                          index = 0
+                          let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
+                          promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
+                        } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
+                          if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
+                            _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
+                              index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
+                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
+                              if (options.source && node.id !== '') {
+                                setPreviewValues(input, node, index)
+                              }
+                              if (!options.onlyValueSuggestions) {
+                                if (options.source) {
+                                  input.values[ index ].searchable = true
+                                } else {
+                                  input.values[ index ].searchable = false
+                                }
+                                if (node.id !== '') {
+                                  promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
+                                  if (!isBlankNodeUri(node.id)) {
+                                    ractive.set(`${input.keypath}.values.${index}.deletable`, true)
+                                    if (input.isSubInput && !options.source) {
+                                      input.values[ index ].nonEditable = true
+                                      ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                                      input.parentInput.allowAddNewButton = true
+                                    }
+                                  }
+                                }
+                                setAllowNewButtonForInput(input)
+                              } else {
+                                setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
+                                input.values[ index ].searchable = true
+                              }
+                              input.values[ index ].subjectType = type
+                              input.values[ index ].oldSubjectType = type
+                              ractive.update(`${input.keypath}.values.${index}`)
+                            })
                           } else {
-                            input.suggestedValues = input.suggestedValues || []
-                            input.suggestedValues.push({
-                              value: {
-                                value: value.id,
-                                label: Main.predefinedLabelValue(input.fragment, value.id)
-                              },
-                              source: options.source
+                            _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
+                              input.suggestedValues = input.suggestedValues || []
+                              input.suggestedValues.push({
+                                value: node.value,
+                                source: options.source
+                              })
                             })
                           }
-                        })
-                      }
-                    } else if (input.type === 'hidden-url-query-value') {
-                      _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                        setIdValue(value.id, input, 0)
-                      })
-                    } else {
-                      _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
-                        if (!options.onlyValueSuggestions) {
-                          let valueIndex = input.isSubInput ? rootIndex : index
-                          setSingleValue(value, input, (valueIndex) + (offset), options)
-                          input.values[ valueIndex ].subjectType = type
-                          input.values[ valueIndex ].oldSubjectType = type
-                          if (input.isSubInput && !options.source) {
-                            input.values[ valueIndex ].nonEditable = true
-                            ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
-                            input.parentInput.allowAddNewButton = true
+                        } else if (input.type === 'select-predefined-value') {
+                          if (!options.onlyValueSuggestions) {
+                            setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                            if (input.isSubInput && !options.source) {
+                              input.values[ rootIndex + (offset) ].nonEditable = true
+                              ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
+                              ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
+                            }
+                          } else {
+                            var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
+                            _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
+                              if (input.isSubInput && multiple) {
+                                setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                                input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                              } else {
+                                input.suggestedValues = input.suggestedValues || []
+                                input.suggestedValues.push({
+                                  value: {
+                                    value: value.id,
+                                    label: Main.predefinedLabelValue(input.fragment, value.id)
+                                  },
+                                  source: options.source
+                                })
+                              }
+                            })
                           }
-                          ractive.update(`${input.keypath}.values.${valueIndex}`)
-                          ractive.set(`${input.keypath}.allowAddNewButton`, true)
+                        } else if (input.type === 'hidden-url-query-value') {
+                          _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
+                            setIdValue(value.id, input, 0)
+                          })
                         } else {
-                          input.suggestedValues = input.suggestedValues || []
-                          input.suggestedValues.push({
-                            value: value.value,
-                            source: options.source
+                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
+                            if (!options.onlyValueSuggestions) {
+                              let valueIndex = input.isSubInput ? rootIndex : index
+                              setSingleValue(value, input, (valueIndex) + (offset), options)
+                              input.values[ valueIndex ].subjectType = type
+                              input.values[ valueIndex ].oldSubjectType = type
+                              if (input.isSubInput && !options.source) {
+                                input.values[ valueIndex ].nonEditable = true
+                                ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
+                                input.parentInput.allowAddNewButton = true
+                              }
+                              ractive.set(`${input.keypath}.allowAddNewButton`, true)
+                            } else {
+                              input.suggestedValues = input.suggestedValues || []
+                              input.suggestedValues.push({
+                                value: value.value,
+                                source: options.source
+                              })
+                            }
                           })
                         }
-                      })
+                        rootIndex++
+                      }
+                    })
+                    input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+
+                    if (actualRoots.length > startIndex + rangeLength) {
+                      input.nextRange = loadForRangeOfInputs(startIndex + rangeLength, rangeLength)
+                    } else {
+                      delete input.nextRange
                     }
-                    rootIndex++
+                    if (startIndex > 0) {
+                      input.prevRange = loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength)
+                    } else {
+                      delete input.prevRange
+                    }
                   }
-                })
-                input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+                }
+                loadForRangeOfInputs(rangeStart, rangeLength)(root)
+                if (input.parentInput) {
+                  input.parentInput.nextRanges = []
+                  input.parentInput.prevRanges = []
+                }
               }
             }
           }
@@ -1321,6 +1372,7 @@
       }
       if (prop.type === 'searchable-with-result-in-side-panel') {
         input.searchable = true
+        input.supportable = true
       }
       if (prop.required) {
         input.required = prop.required
@@ -1503,6 +1555,8 @@
           range: compoundInput.subInputs.range,
           inputGroupRequiredVetoes: [],
           accordionHeader: compoundInput.subInputs.accordionHeader,
+          pagination: compoundInput.subInputs.pagination,
+          objectSortOrder: compoundInput.subInputs.objectSortOrder,
           orderBy: compoundInput.subInputs.orderBy,
           id: compoundInput.id,
           keypath: compoundInput.keypath
@@ -1535,6 +1589,7 @@
               id: subInput.id,
               required: subInput.required,
               searchable: type === 'searchable-with-result-in-side-panel',
+              supportable: type === 'searchable-with-result-in-side-panel',
               showOnlyWhen: subInput.showOnlyWhen,
               isTitleSource: subInput.isTitleSource,
               subInputIndex: subInputIndex,
@@ -1619,7 +1674,8 @@
               inputIndex: index,
               id: input.id,
               isTitleSource: input.isTitleSource,
-              searchMainResource: input.searchMainResource
+              searchMainResource: input.searchMainResource,
+              supportable: true
             })
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
@@ -2407,17 +2463,24 @@
               Accept: 'application/ld+json',
               'Content-Type': 'application/ldpatch+json'
             }
-          }).then(function () {
-            // do an extra patch to invalidate cache of old subject
-            if (mainSubject !== deleteSubject) {
-              axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
-                headers: {
-                  Accept: 'application/ld+json',
-                  'Content-Type': 'application/ldpatch+json'
-                }
-              })
-            }
+          }).then(function (response) {
+            let parsed = ldGraph.parse(response.data)
+
+            let root = sortNodes(parsed.byId(mainSubject).outAll('hasPublicationPart'), ractive.get('applicationData'), 'PublicationPart')
+            ractive.get('lastRoots')[ mainSubject ] = { hasPublicationPart: root }
+            ractive.update('lastRoots')
           })
+            .then(function (response) {
+              // do an extra patch to invalidate cache of old subject
+              if (mainSubject !== deleteSubject) {
+                axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
+                  headers: {
+                    Accept: 'application/ld+json',
+                    'Content-Type': 'application/ldpatch+json'
+                  }
+                })
+              }
+            })
             .then(function () {
               _.each(input.subInputs, function (subInput, subInputIndex) {
                 if (subInputIndex === 0) {
@@ -2460,6 +2523,12 @@
             }
             $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
           }, { init: true })
+        }
+
+        function whileUnobserved (doStuff) {
+          _.invoke(ractive.get('observers'), 'cancel')
+          doStuff()
+          enableObservers()
         }
 
         var initRactive = function (applicationData) {
@@ -2977,6 +3046,11 @@
               checkShouldInclude: checkShouldInclude,
               abbreviate: function (label) {
                 return applicationData.config.abbreviations[ label ] || label
+              },
+              hasNextOrPrevRange: function (input) {
+                return _.some(input.subInputs, function (subInput) {
+                  return ractive.get(`${subInput.input.keypath}.nextRange`) || ractive.get(`${subInput.input.keypath}.nextRange`)
+                })
               }
             },
             decorators: {
@@ -3031,6 +3105,18 @@
               .then(function (response) {
                 ractive.set(`${event.keypath}.relations`, response.data)
               })
+          }
+
+          function handleRangeShift (event, direction) {
+            ractive.get('waitHandler').newWaitable(event.original.target)
+            let waiter = ractive.get('waitHandler').thisMayTakeSomTime()
+            setTimeout(function () {
+              whileUnobserved(function () {
+                  _.chain(event.context.subInputs).pluck('input').invoke(direction)
+                }
+              )
+            })
+            setTimeout(waiter.done)
           }
 
           ractive.on({
@@ -3905,10 +3991,24 @@
               },
               toggleAllEnableRelation: function (event) {
                 ractive.set(`${event.keypath}.relations.*.enable`, event.context.selectAll)
+              },
+              nextRange: function (event) {
+                handleRangeShift(event, 'nextRange')
+              },
+              prevRange: function (event) {
+                handleRangeShift(event, 'prevRange')
               }
             }
           )
 
+          ractive.set('inputGroups', applicationData.inputGroups)
+          ractive.set('inputs', applicationData.inputs)
+          ractive.set('predefinedValues', applicationData.predefinedValues)
+          ractive.update()
+          return applicationData
+        }
+
+        function enableObservers (applicationData) {
           function castVetoForRequiredSubInput (inputGroupKeypath, valueIndex, voter, veto) {
             var vetoesKeyPath = inputGroupKeypath + '.inputGroupRequiredVetoes.' + valueIndex
             var inputGroupRequiredVetoes = (ractive.get(vetoesKeyPath) || '').split('')
@@ -3945,119 +4045,115 @@
             }
           }
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
-            checkRequiredSubjectTypeSelection(keypath, newValue)
-          }, { init: false })
+          ractive.set('observers', [
+            ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
+              checkRequiredSubjectTypeSelection(keypath, newValue)
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
-            checkRequiredSubInput(newValue, keypath)
-          }, { init: false })
+            ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+              checkRequiredSubInput(newValue, keypath)
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.nonEditable', function (newValue, oldValue, keypath) {
-            let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
-            let valueIndex = _.last(parentOf(keypath).split('.'))
-            let nonEditableTarget = `${compoundInputKeypath}.subInputs.0.input.values.${valueIndex}.nonEditable`
-            if (newValue === true && ractive.get(nonEditableTarget) !== true) {
-              ractive.set(nonEditableTarget, true)
-            }
-          }, { init: false })
-
-          ractive.observe('inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
-            if (Boolean(newValue) !== Boolean(oldValue)) {
-              if (!newValue || newValue === '') {
-                var inputKeypath = grandParentOf(grandParentOf(keypath))
-                let dependentResourceTypes = ractive.get(`${inputKeypath}.dependentResourceTypes`)
-                _.each(dependentResourceTypes, function (resourceType) {
-                  unloadResourceForDomain(resourceType)
-                })
+            ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.nonEditable', function (newValue, oldValue, keypath) {
+              let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
+              let valueIndex = _.last(parentOf(keypath).split('.'))
+              let nonEditableTarget = `${compoundInputKeypath}.subInputs.0.input.values.${valueIndex}.nonEditable`
+              if (newValue === true && ractive.get(nonEditableTarget) !== true) {
+                ractive.set(nonEditableTarget, true)
               }
-            }
-          }, { init: false })
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
-            if (newValue && newValue.current) {
-              if (!newValue.current.value) {
-                ractive.set(keypath + '.error', false)
-                return
-              }
-              var parent = grandParentOf(keypath)
-              var valid = false
-              try {
-                valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range)
-              } catch (e) {
-                console.log(e)
-                return
-              }
-              if (valid) {
-                ractive.set(keypath + '.error', false)
-              } else {
-                ractive.set(keypath + '.error', 'ugyldig input')
-              }
-            }
-          }, { init: false })
-
-          function copyAdditionalSuggestionsForGroup (groupIndex) {
-            forAllGroupInputs(function (input, groupIndex1) {
-              if (groupIndex1 === Number(groupIndex) && input.widgetOptions && input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom) {
-                var sourceInput = inputFromInputId(input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
-                if (sourceInput) {
-                  var value = _.last(input.values)
-                  if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
-                    (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object') {
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
-                      value: sourceInput.values[ 0 ].current.value,
-                      displayValue: sourceInput.values[ 0 ].current.displayValue
-                    })
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.searchable`, sourceInput.values[ 0 ].searchable)
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.deletable`, sourceInput.values[ 0 ].deletable)
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.subjectType`, input.values[ 0 ].subjectType)
-                  }
+            ractive.observe('inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
+              if (Boolean(newValue) !== Boolean(oldValue)) {
+                if (!newValue || newValue === '') {
+                  var inputKeypath = grandParentOf(grandParentOf(keypath))
+                  let dependentResourceTypes = ractive.get(`${inputKeypath}.dependentResourceTypes`)
+                  _.each(dependentResourceTypes, function (resourceType) {
+                    unloadResourceForDomain(resourceType)
+                  })
                 }
               }
-            })
-          }
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
-            var groupIndex = keypath.split('.')[ 1 ]
-            if (newValue === true) {
-              updateBrowserLocationWithTab(groupIndex)
-              var additionalSuggestionsForGroup = ractive.get(`inputGroups.${groupIndex}.additionalSuggestions`)
-              if (additionalSuggestionsForGroup) {
-                setTimeout(function () {
-                  alertAboutAdditionalSuggestions(additionalSuggestionsForGroup, function (allowPartialSuggestions) {
-                    forAllGroupInputs(function (input, groupIndex1) {
-                      if (groupIndex1 === Number(groupIndex)) {
-                        _.each(input.values, function (value, valueIndex) {
-                          if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion) {
-                            ractive.set(`${input.keypath}.values.${valueIndex}.current`, value.additionalSuggestion)
-                            ractive.set(`${input.keypath}.values.${valueIndex}.additionalSuggestion`, null)
-                          }
-                        })
-                      }
+            ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
+              if (newValue && newValue.current) {
+                if (!newValue.current.value) {
+                  ractive.set(keypath + '.error', false)
+                  return
+                }
+                var parent = grandParentOf(keypath)
+                var valid = false
+                try {
+                  valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range)
+                } catch (e) {
+                  console.log(e)
+                  return
+                }
+                if (valid) {
+                  ractive.set(keypath + '.error', false)
+                } else {
+                  ractive.set(keypath + '.error', 'ugyldig input')
+                }
+              }
+            }, { init: false }),
+
+            ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
+              var groupIndex = keypath.split('.')[ 1 ]
+              if (newValue === true) {
+                updateBrowserLocationWithTab(groupIndex)
+                var additionalSuggestionsForGroup = ractive.get(`inputGroups.${groupIndex}.additionalSuggestions`)
+                if (additionalSuggestionsForGroup) {
+                  setTimeout(function () {
+                    alertAboutAdditionalSuggestions(additionalSuggestionsForGroup, function (allowPartialSuggestions) {
+                      forAllGroupInputs(function (input, groupIndex1) {
+                        if (groupIndex1 === Number(groupIndex)) {
+                          _.each(input.values, function (value, valueIndex) {
+                            if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion) {
+                              ractive.set(`${input.keypath}.values.${valueIndex}.current`, value.additionalSuggestion)
+                              ractive.set(`${input.keypath}.values.${valueIndex}.additionalSuggestion`, null)
+                            }
+                          })
+                        }
+                      })
                     })
                   })
-                })
+                } else {
+                  copyAdditionalSuggestionsForGroup(groupIndex)
+                }
+              }
+            }, { init: false, defer: true }),
+
+            ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
+              var openInputForms = ractive.get('openInputForms') || []
+              if (!isNaN(parseInt(newValue))) {
+                openInputForms = _.union(openInputForms, [ keypath ])
               } else {
-                copyAdditionalSuggestionsForGroup(groupIndex)
+                openInputForms = _.without(openInputForms, keypath)
+              }
+              ractive.set('openInputForms', openInputForms)
+            }, { init: false }) ])
+          return applicationData
+        }
+
+        function copyAdditionalSuggestionsForGroup (groupIndex) {
+          forAllGroupInputs(function (input, groupIndex1) {
+            if (groupIndex1 === Number(groupIndex) && input.widgetOptions && input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom) {
+              var sourceInput = inputFromInputId(input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
+              if (sourceInput) {
+                var value = _.last(input.values)
+                if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                  (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object') {
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
+                    value: sourceInput.values[ 0 ].current.value,
+                    displayValue: sourceInput.values[ 0 ].current.displayValue
+                  })
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.searchable`, sourceInput.values[ 0 ].searchable)
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.deletable`, sourceInput.values[ 0 ].deletable)
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.subjectType`, input.values[ 0 ].subjectType)
+                }
               }
             }
-          }, { init: false, defer: true })
-
-          ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
-            var openInputForms = ractive.get('openInputForms') || []
-            if (!isNaN(parseInt(newValue))) {
-              openInputForms = _.union(openInputForms, [ keypath ])
-            } else {
-              openInputForms = _.without(openInputForms, keypath)
-            }
-            ractive.set('openInputForms', openInputForms)
-          }, { init: false })
-
-          ractive.set('inputGroups', applicationData.inputGroups)
-          ractive.set('inputs', applicationData.inputs)
-          ractive.set('predefinedValues', applicationData.predefinedValues)
-          ractive.update()
-          return applicationData
+          })
         }
 
         var loadOntology = function (applicationData) {
@@ -4106,11 +4202,11 @@
           return applicationData
         }
 
-        function loadWorkOfPublication () {
+        function loadWorkOfPublication (options) {
           withPublicationOfWorkInput(function (publicationOfInput) {
             var workUri = _.flatten([ publicationOfInput.values[ 0 ].current.value ])[ 0 ]
             if (workUri) {
-              return fetchExistingResource(workUri).then(function () {
+              return fetchExistingResource(workUri, options).then(function () {
                 ractive.set('targetUri.Work', workUri)
               })
             }
@@ -4159,8 +4255,8 @@
                   if (!showingWaiting && !cancelled) {
                     showingWaiting = true
                     target.addClass('saving')
-                    var next = target.next()
-                    if (next.hasClass('save-placeholder')) {
+                    var next = target.nextAll('.save-placeholder')
+                    if (next) {
                       next.append(spinner.el)
                     } else {
                       $('#growler').show()
@@ -4512,6 +4608,7 @@
           .then(initSelect2)
           .then(initRactive)
           .then(initWaitHandler)
+          .then(enableObservers)
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
           .then(initHeadlineParts)
@@ -4535,7 +4632,6 @@
           })
           .then(function (applicationData) {
             $('.focusguard-end').on('focus', function () {
-              console.log('.focusguard-end!')
               $('.focusguard-start.visible + div :input:first').focus()
             })
 
