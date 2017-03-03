@@ -36,9 +36,14 @@ if [[ `uname -s` == 'Linux' && "$LSENV" != 'prod' ]]; then
     sudo chmod +x /usr/local/bin/docker-compose
   fi
 
+  echo -e "Configuring system for elasticsearch"
+  sudo sysctl -w vm.max_map_count=262144
+
 else
   echo "Cannot provision for OSX; please install docker & docker-compose yourself"
   echo "You also need envsubst (TODO find a cross-platform solution)"
+  echo "You also need to configure vm.max_map_count on your host, see this link:"
+  echo "https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-prod-cluster-composefile"
 fi
 
 echo -e "\n4) Provisioning system with docker-compose\n"
