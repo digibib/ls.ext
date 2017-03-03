@@ -1,58 +1,51 @@
-PREFIX  deich:     <__ONTOLOGY__>
-PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX  duo:  <http://data.deichman.no/utility#>
+PREFIX :     <__ONTOLOGY__>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX duo:  <http://data.man.no/utility#>
 
 CONSTRUCT {
-  ?person a deich:Person ;
-          deich:name ?name ;
-          deich:birthYear ?birthYear ;
-          deich:deathYear ?deathYear ;
-          deich:ordinal ?ordinal ;
-          deich:specification ?specification ;
-          deich:nationality ?nationalityLabel ;
-          deich:work ?work .
-    ?work a deich:Work ;
-          deich:mainTitle ?mainTitle ;
-          deich:workTypeName ?workTypeName ;
-          deich:partTitle ?partTitle ;
-          deich:partNumber ?partNumber ;
-          deich:subtitle ?subtitle ;
-          deich:publicationYear ?publicationYear ;
-          deich:contribRoleName ?contribRoleName .
+  <__PERSONURI__> a :Person ;
+    :name ?name ;
+    :birthYear ?birthYear ;
+    :deathYear ?deathYear ;
+    :ordinal ?ordinal ;
+    :specification ?specification ;
+    :nationality ?nationalityLabel ;
+    :work ?work .
+  ?work a :Work ;
+    :mainTitle ?mainTitle ;
+    :workTypeName ?workTypeName ;
+    :partTitle ?partTitle ;
+    :partNumber ?partNumber ;
+    :subtitle ?subtitle ;
+    :publicationYear ?publicationYear ;
+    :contribRoleName ?contribRoleName .
 }
-WHERE {
-  BIND(uri("__PERSONURI__") AS ?person)
-  ?person a deich:Person .
 
-  OPTIONAL { ?person deich:name ?name }
-  OPTIONAL { ?person deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
-  OPTIONAL { ?person deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
-  OPTIONAL { ?person deich:ordinal ?ordinalO . BIND(str(?ordinalO) AS ?ordinal) }
-  OPTIONAL { ?person deich:specification ?specificationO . BIND(str(?specificationO) AS ?specification) }
-  OPTIONAL {
-       ?person deich:nationality ?nationality .
-       ?nationality rdfs:label ?nl .
-       FILTER (lang(?nl) = "no")
-       BIND(str(?nl) AS ?nationalityLabel)
-  }
-  OPTIONAL {
-       ?work a deich:Work ;
-             deich:contributor ?contrib .
-    ?contrib deich:agent ?person ;
-             deich:role ?contribRole .
-    ?contribRole rdfs:label ?contribRoleNameNo .
-       FILTER (lang(?contribRoleNameNo) = "no")
-       BIND(str(?contribRoleNameNo) AS ?contribRoleName)
-  }
-  OPTIONAL { ?work deich:mainTitle ?mainTitle }
-  OPTIONAL { ?work deich:subtitle ?subtitle }
-  OPTIONAL {
-        ?work deich:hasWorkType ?hasWorkType .
-        ?hasWorkType rdfs:label ?workTypeNameNo .
-        FILTER(lang(?workTypeNameNo) = "no")
-        BIND(str(?workTypeNameNo) AS ?workTypeName)
-        }
-  OPTIONAL { ?work deich:partTitle ?partTitle }
-  OPTIONAL { ?work deich:partNumber ?partNumber }
-  OPTIONAL { ?work deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
+WHERE {
+        { <__PERSONURI__> a :Person }
+  UNION { <__PERSONURI__> :name ?name }
+  UNION { <__PERSONURI__> :birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
+  UNION { <__PERSONURI__> :deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
+  UNION { <__PERSONURI__> :ordinal ?ordinalO . BIND(str(?ordinalO) AS ?ordinal) }
+  UNION { <__PERSONURI__> :specification ?specificationO . BIND(str(?specificationO) AS ?specification) }
+  UNION { <__PERSONURI__> :nationality ?nationality .
+          ?nationality rdfs:label ?nl .
+          FILTER (lang(?nl) = "no")
+          BIND(str(?nl) AS ?nationalityLabel) }
+  UNION { ?work a :Work ;
+             :contributor ?contrib .
+          ?contrib :agent <__PERSONURI__> ;
+             :role ?contribRole .
+          ?contribRole rdfs:label ?contribRoleNameNo .
+          FILTER (lang(?contribRoleNameNo) = "no")
+          BIND(str(?contribRoleNameNo) AS ?contribRoleName) }
+  UNION { ?work :mainTitle ?mainTitle }
+  UNION { ?work :subtitle ?subtitle }
+  UNION { ?work :hasWorkType ?hasWorkType .
+           ?hasWorkType rdfs:label ?workTypeNameNo .
+            FILTER(lang(?workTypeNameNo) = "no")
+            BIND(str(?workTypeNameNo) AS ?workTypeName) }
+  UNION { ?work :partTitle ?partTitle }
+  UNION { ?work :partNumber ?partNumber }
+  UNION { ?work :publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
 }
