@@ -168,7 +168,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: digibib/elasticsearch:e1cc045c4fd76b52d37939acad25ccb29e800d62
+    image: digibib/elasticsearch:2c7e2caa3ea127ea237c1374923a47ff0ddc75a2
     networks:
       - backend
     volumes:
