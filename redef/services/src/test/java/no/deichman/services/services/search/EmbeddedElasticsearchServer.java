@@ -34,6 +34,7 @@ public final class EmbeddedElasticsearchServer {
                 .withSetting("http.enabled", "true")
                 .withSetting("path.home", ".")
                 .withSetting("path.data", dataDirectory)
+                .withEsJavaOpts("-Xms512m -Xmx512m")
                 .withPlugin("analysis-icu")
                 .withIndex("search", IndexSettings.builder()
                         .withSettings(getSystemResourceAsStream("search_index.json"))
