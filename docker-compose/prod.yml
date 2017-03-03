@@ -34,6 +34,19 @@ services:
       driver: "journald"
 
   rfidhub:
+    container_name: rfidhub
+    image: "digibib/rfidhub2:5cc223d57472232557fbcc608c45f7ac22372fb9"
+    networks:
+      - backend
+    depends_on:
+      - sip_proxy
+    ports:
+      - "8899:8899"
+    environment:
+      SIP_SERVER: sip_proxy:9999
+      TCP_PORT: 6006
+      SIP_USER: rfidhub
+      SIP_PASS: "${SIP_AUTOPASS:-autopass}"
     logging:
       driver: "journald"
 

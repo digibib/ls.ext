@@ -273,27 +273,6 @@ services:
         max-size: "1m"
         max-file: "2"
 
-  rfidhub:
-    container_name: rfidhub
-    image: "digibib/rfidhub2:5cc223d57472232557fbcc608c45f7ac22372fb9"
-    networks:
-      - backend
-    depends_on:
-      - sip_proxy
-    ports:
-      - "6006:6006"
-      - "8899:8899"
-    environment:
-      SIP_SERVER: sip_proxy:9999
-      TCP_PORT: 6006
-      SIP_USER: rfidhub
-      SIP_PASS: "${SIP_AUTOPASS:-autopass}"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
-
   z3950proxy:
     container_name: z3950proxy
     image: "digibib/z3950proxy:331137ac40ba155760c311e5197fa9fa73cf4c27"
