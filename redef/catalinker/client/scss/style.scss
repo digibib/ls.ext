@@ -607,6 +607,20 @@ body {
             float: right;
             width: auto;
           }
+          button.pagination {
+            float: left;
+            margin-left: 5px;
+            &.saving {
+              opacity: 1.0;
+            }
+          }
+          .save-placeholder.pagination {
+            float: left;
+            position: relative;
+            margin-top: 31px;
+            vertical-align: middle;
+            left: 21px;
+          }
           margin-bottom: 12px;
         }
         .support-panel-expander {

@@ -47,6 +47,7 @@
                         {{>(readOnly ? "readonly-" : "") + type}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
+                    {{#if supportable || true}}
                     <span class="support-panel" class-fixed={{editAuthorityMode}} data-support-panel-base-ref="support_panel_base_{{!editAuthorityMode ? uniqueId : 'fixed'}}">
                         {{#if editAuthorityMode}}
                             {{>support-for-edit-authority}}
@@ -54,6 +55,7 @@
                             {{>"support-for-"+type}}
                         {{/if}}
                     </span>
+                    {{/if}}
                 </span>
             {{/if}}
         {{/each}}
@@ -111,7 +113,7 @@
                                             {{>suggested-values}}
                                         {{/if}}
                                     </span>
-                                    {{#if ! nonEditable && !suggested}}
+                                    {{#if ! nonEditable && !suggested && ../../../input.supportable}}
                                         <span class="support-panel"
                                               data-support-panel-base-ref="support_panel_base_{{./uniqueId}}">
                                             {{#with ../../../input}}
@@ -177,10 +179,24 @@
 {{/each}}
 {{/if}}
 {{/if}}
+
 {{#multiple && allowAddNewButton}}
     <span class="pure-u-1-1" style="order: 1000;">
         <div class="add-new-btn-row">
             <div class="pure-u-1-12"> </div>
+{{#if hasNextOrPrevRange(.)}}
+            <button
+                    tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                    class="pure-button pure-button-primary pagination"
+                    on-click="prevRange"
+                    on-enter="prevRange">- 10</button>
+            <button
+                    tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                    class="pure-button pure-button-primary pagination"
+                    on-click="nextRange"
+                    on-enter="nextRange">+ 10</button>
+            <span class="pagination save-placeholder"></span>
+{{/if}}
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                     class="pure-button pure-button-primary"

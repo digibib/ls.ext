@@ -1375,7 +1375,12 @@ module.exports = (app) => {
                   rdfProperty: 'hasPublicationPart', // the rdf property of the resource
                   range: 'PublicationPart', // this is the shorthand name of the type of the blank node
                   accordionHeader: 'collection',
-                  orderBy: [ 'startsAtPageInput' ],
+                  objectSortOrder: [
+                    { predicate: 'partNumber', isNumber: true },
+                    { predicate: 'startsAtPage' },
+                    { predicate: 'mainTitle' }
+                  ],
+                  pagination: 10,
                   inputs: [
                     {
                       label: 'Aktør',
