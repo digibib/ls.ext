@@ -9,36 +9,41 @@
     display: block;
   }
 
-  input {
-    margin-top: rhythm(1);
-    margin-bottom: rhythm(1);
-    max-width: 13em;
-    max-height: 3em;
+  .form-item {
+    display: inline-block;
+    input {
+      margin-top: rhythm(1);
+      margin-bottom: rhythm(1);
+      max-width: 13em;
+      max-height: 3em;
+    }
   }
 
   .postpone-aside {
     width: 50%;
-    /*position: relative;
-    top: rhythm(1.5);*/
   }
 
-  .date-picker-button {
-    position: absolute;
-    font-size: 2em;
-    top: -2.1em;
-    right: -6em;
+  .react-datepicker__input-container {
+    display: inline-block;
+    .date-picker-button {
+      padding: 0;
+      font-size: 2em;
+      position: relative;
+      top: 0.2em;
+    }
   }
 
   .feedback {
     position: absolute;
     font-size: 0.7em;
-    color: red;
+    color: $redColor;
   }
 }
 
 /* Prototype */
 .pickup, .reserve, .loan {
   width: span(12);
+  margin-top: 2.5em;
 
   /* Section title */
   > h1 {
@@ -56,9 +61,11 @@
     justify-content: space-between;
     flex-wrap: wrap;
     float: none;
+    border-bottom: 1px solid $blackColor;
+    margin-bottom: 0.7em;
 
     h1 {
-      font-size: rhythm(3);
+      font-size: rhythm(2.7);
       margin-top: 0;
       margin-bottom: 0;
     }
@@ -66,7 +73,7 @@
     h2 {
       font-size: rhythm(2.5);
       margin-top: rhythm(1);
-      margin-bottom: rhythm(1);
+      margin-bottom: rhythm(0.2);
     }
 
     .entry-details {
@@ -86,7 +93,7 @@
 
     /* Column item */
     .flex-col {
-      margin-bottom: gutter();
+      margin-bottom: 0.4em;
     }
 
     .cancel-button, .renew-button, .reserve-cancel-button, .resume-suspend-button {
@@ -104,20 +111,28 @@
     }
 
     .resume-suspend-button {
-      width: span(9)
+      width: span(9);
+
+      button.btn-red {
+        background-color: $redColor;
+        width: 8.7em;
+      }
+
     }
 
     .reserve-cancel-button {
-      width: span(3)
+      width: span(3);
     }
 
     .media-type {
+      font-size: 0.8em;
       text-transform: uppercase;
       width: span(12);
     }
 
     .feedback {
       color: $redColor;
+      font-weight: normal;
     }
 
   }
@@ -161,19 +176,11 @@
 
   }
 
-  .place-in-queue {
-
-    p {
-      font-weight: normal;
-    }
-
-  }
-
 }
 
 .loan {
 
-  margin-top: -1em;
+  margin-top: 1.5em;
 
   .loan-header {
     display: flex;
@@ -191,7 +198,7 @@
     .renew-all-button {
       font-size: rhythm(2);
       align-self: center;
-      background-color: green;
+      background-color: $green;
 
       &:disabled {
         opacity: 0.4;
@@ -222,7 +229,7 @@
 
     p {
       font-weight: normal;
-      color: green;
+      color: $green;
     }
 
   }
@@ -235,11 +242,11 @@
 
     .single-entry {
       .flex-col {
-        margin-bottom: 2em;
+        margin-bottom: 0.4em;
       }
 
       .media-type {
-        width: span(1);
+        width: span(1.5);
       }
 
       .entry-details {
@@ -248,6 +255,16 @@
 
       .cancel-button, .reserve-cancel-button {
         width: span(1);
+      }
+
+      h1 {
+        margin-bottom: rhythm(0.2);
+      }
+
+      h2 {
+        font-size: 0.8em;
+        margin-top: 0;
+        margin-bottom: rhythm(0.2);
       }
 
     }
@@ -267,7 +284,7 @@
       }
 
       .placeholder-column {
-        width: span(2);
+        width: span(1);
       }
 
       .loan-pickup-location {
@@ -284,6 +301,13 @@
 
       .place-in-queue {
         width: span(2);
+        position: relative;
+
+        .feedback {
+          position: absolute;
+          width: 200%;
+          top: 1.185em;
+        }
       }
 
       .pickup-location {
@@ -291,7 +315,7 @@
       }
 
       .placeholder-column {
-        width: span(2);
+        width: span(1);
       }
 
       .resume-suspend-button {
@@ -320,7 +344,7 @@
       }
 
       .placeholder-column {
-        width: span(3);
+        width: span(2);
       }
 
       .renew-button {

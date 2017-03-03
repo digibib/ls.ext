@@ -60,7 +60,7 @@ function initSimpleQuery (query) {
     'mt',
     'partNumber',
     'partTitle',
-    'publicationYear',
+    // 'publicationYear',
     'publishedBy',
     'recordId',
     'series^10',
@@ -209,6 +209,23 @@ module.exports.buildQuery = function (urlQueryString) {
     elasticSearchQuery.query.filtered.filter.bool.must.push(musts[ aggregation ])
   })
 
+  let yearRangeFilter
+  if (params.yearFrom || params.yearTo) {
+    const from = params.yearFrom || 0
+    const to = params.yearTo || new Date().getFullYear()
+    yearRangeFilter = {
+      range: {
+        publicationYear: {
+          gte: parseInt(from),
+          lte: parseInt(to)
+        }
+      }
+    }
+  }
+  if (yearRangeFilter) {
+    elasticSearchQuery.query.filtered.filter.bool.must.push(yearRangeFilter)
+  }
+
   Object.keys(Constants.filterableFields).forEach(key => {
     const field = Constants.filterableFields[ key ]
     const fieldName = field.name
@@ -226,7 +243,7 @@ module.exports.buildQuery = function (urlQueryString) {
       }
     }
 
-    const aggregationMusts = []
+    const aggregationMusts = yearRangeFilter ? [yearRangeFilter] : []
     Object.keys(musts).forEach(aggregation => {
       const must = musts[ aggregation ]
       if (aggregation !== fieldName) {

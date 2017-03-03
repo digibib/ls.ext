@@ -39,6 +39,7 @@
                 {{#each inputGroups:groupIndex}}
                     {{#if checkRequiredInputValueForShow(.)}}
                         <div id="{{tabId}}" class="grid-panel {{tabSelected ? 'grid-panel-selected' : ''}} pure-g">
+                            {{#if !toolMode}}
                             {{#each inputs:inputIndex}}
                             {{#visible}}
                             {{>input}}
@@ -89,6 +90,12 @@
                             </div>
                             {{/enableSpecialInput}}
                             </div>
+                            {{/if}}
+                                {{#if tools}}
+                                    {{#each tools}}
+                                        {{>template}}
+                                    {{/each}}
+                                {{/if}}
                         </div>
                     {{/if}}
                 {{/each}}

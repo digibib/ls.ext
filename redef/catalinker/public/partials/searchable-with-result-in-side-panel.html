@@ -28,7 +28,7 @@
 <a style-display="{{(nonEditable || !./searchable) ? 'none' : ''}}" class="support-panel-expander" on-click='searchResource:{{./current.displayValue}},{{./current.accepted.selectedIndexType || ./suggested.selectedIndexType}},{{../../selectedIndexType}},{{loadWorksAsSubjectOfItem}}'> </a><span class="save-placeholder"></span>
     {{#if ./deletable}}
         <div class="pure-u-1-1">
-            <span class="select2 select2-container select2-container--default select2-container--above select2-container--focus"
+            <span class="select2 select2-container select2-container--default select2-container--above"
                   style="width: 100%;">
                 <span class="select2-selection--multiple">
                     <ul class="select2-selection__rendered">
@@ -40,6 +40,16 @@
                                 <span class="value">{{current.displayValue}}{{#widgetOptions.explanations}}<span class="explanation">{{getExplanation(., current.value)}}</span>{{/}}</span>
                             {{/if}}
                         </li>
+                        <li class="select2-search select2-search--inline" >
+                            <input class="select2-search__field"
+                                   type="search" tabindex="{{tabSelected ? '0' : '-1'}}"
+                                   autocomplete="off" autocorrect="off"
+                                   autocapitalize="off"
+                                   spellcheck="false" role="textbox"
+                                   aria-autocomplete="list"
+                                   placeholder=""
+                                   style="width: 0.75em;"
+                                   on-backspace="unselectEntity"></li >
                     </ul>
                 </span>
             </span>

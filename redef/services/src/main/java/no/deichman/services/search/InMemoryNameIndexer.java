@@ -163,7 +163,7 @@ public class InMemoryNameIndexer implements NameIndexer {
     }
 
     @Override
-    public final void addNamedItem(String name, String uri) {
+    public final synchronized void addNamedItem(String name, String uri) {
         NameEntry nameEntry = new NameEntry(uri, name);
         ListIterator<NameEntry> found = findNamed(name);
         if (found.hasNext()) {
@@ -179,7 +179,7 @@ public class InMemoryNameIndexer implements NameIndexer {
     }
 
     @Override
-    public final void removeNamedItem(String name, String uri) {
+    public final synchronized void removeNamedItem(String name, String uri) {
         NameEntry nameEntry = new NameEntry(uri, name);
         ListIterator<NameEntry> found = findNamed(name);
         while (found.hasNext() && found.next().equals(nameEntry)) {
@@ -189,7 +189,7 @@ public class InMemoryNameIndexer implements NameIndexer {
     }
 
     @Override
-    public final Collection<NameEntry> getRegister(int startIndex, int length) {
+    public final synchronized Collection<NameEntry> getRegister(int startIndex, int length) {
         List<NameEntry> retVal = newArrayList();
         ListIterator<NameEntry> resultIterator = alphabeticalList.listIterator(startIndex);
         for (int i = 0; i < length && resultIterator.hasNext(); i++) {

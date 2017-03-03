@@ -4,6 +4,7 @@
 {{else}}
 <span style-display="{{nonEditable ? 'none' : ''}}">
     <select
+            as-tabIndex="{{tabSelected}}"
             class="authorized" style="width: 100%;"
             {{#if !multiple || input.isSubInput}}
                 as-select2="{mode: 'singleSelect'}"
@@ -12,12 +13,9 @@
             class-multipleSelect="{{true}}"
                 as-select2="{mode: 'multiSelect'}"
             {{else}}
-            class-singleSelecto="{{true}}"
                 as-select2="{mode: 'singleSelect'}"
             {{/if}}
             as-handleAddNewBySelect2
-            as-tabIndex="{{tabSelected}}"
-            tabindex="-1"
             value="{{./current.value}}"
             data-automation-id="{{dataAutomationId || ../../dataAutomationId}}"
             multiple="multiple"

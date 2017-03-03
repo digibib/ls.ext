@@ -124,6 +124,7 @@ module.exports = (app) => {
       const waitingPeriod = hold.found === 'T' ? '1-2 dager' : 'cirka 2-4 uker'
       const expiry = hold.waitingdate ? new Date(Date.parse(`${hold.waitingdate}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ] : 'unknown'
       const expectedDate = estimateExpectedWait(hold.priority, items)
+      const itype = items.length > 0 ? items[0].itype : 'BOK' // just fallback to book if no items exist
       return {
         recordId: hold.biblionumber,
         reserveId: hold.reserve_id,
@@ -141,7 +142,7 @@ module.exports = (app) => {
         queuePlace: hold.priority,
         suspended: hold.suspend === '1',
         suspendUntil: hold.suspend_until,
-        itype: items[0].itype
+        itype: itype
       }
     })
   }

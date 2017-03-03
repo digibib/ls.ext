@@ -1,5 +1,6 @@
 package no.deichman.services.entity.repository;
 
+import com.google.common.collect.ImmutableSet;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
@@ -11,10 +12,12 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -39,9 +42,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -67,6 +72,10 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             }
         }
     };
+    private static final Set<Property> PROVENANCE_PROPERTIES = ImmutableSet.of(
+            ResourceFactory.createProperty(BaseURI.ontology("created")),
+            ResourceFactory.createProperty(BaseURI.ontology("modified"))
+    );
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
     private final SPARQLQueryBuilder sqb;
@@ -165,6 +174,13 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     private String createResource(Model inputModel, String type, Pair<String, String>... additionalProperties) throws Exception {
+        List<Statement> removeStatements = newArrayList();
+        inputModel.listStatements().forEachRemaining(s -> {
+            if (PROVENANCE_PROPERTIES.contains(s.getPredicate())) {
+                removeStatements.add(s);
+            }
+        });
+        inputModel.remove(removeStatements);
         Model createModel = inputModel.add(tempTypeStatement(type)).add(createdStatement(PLACEHOLDER_RESOURCE));
         if (additionalProperties != null) {
             stream(additionalProperties).forEach(pair -> createModel.add(simpleStatement(pair.getKey(), pair.getValue())));
@@ -410,6 +426,20 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final Set<String> retrievedResourcesConnectedTo(XURI xuri) {
+        try (QueryExecution qexec = getQueryExecution(sqb.relatedResourcesFor(xuri))) {
+            disableCompression(qexec);
+            ResultSet results = qexec.execSelect();
+            Set<String> res = new HashSet<String>();
+            while (results.hasNext()) {
+                QuerySolution binding = results.nextSolution();
+                res.add(binding.get("resource").toString());
+            }
+            return res;
+        }
+    }
+
+    @Override
     public final ResultSet retrieveAllNamesOfType(EntityType type) {
         log.debug("retrieving all names for type: " + type);
         try (QueryExecution qexec = getQueryExecution(sqb.retrieveAllNamesForType(type))) {
@@ -432,6 +462,14 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         log.debug("Replacing instances of <" + replaceeURI + "> with <" + xuri + ">");
         UpdateRequest updateRequest = UpdateFactory.create(sqb.mergeNodes(xuri, replaceeURI));
         executeUpdate(updateRequest);
+    }
+
+    @Override
+    public final Model retrieveInverseRelations(XURI xuri, String predicate) {
+        try (QueryExecution qexec = getQueryExecution(sqb.getGetInverselyRelatedResourceByPredicate(xuri.getUri(), predicate))) {
+            disableCompression(qexec);
+            return qexec.execDescribe().query(WITH_MIGRATION_FILTER);
+        }
     }
 
     private void disableCompression(QueryExecution qexec) {

@@ -168,6 +168,7 @@
           let subjectType = input.values[ 0 ].subjectType
           input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
           input.values[ 0 ].subjectType = subjectType
+          input.values[ 0 ].oldSubjectType = subjectType
         } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
           var valuesToRemove = []
           _.each(input.values, function (value, index) {
@@ -332,6 +333,34 @@
             $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
           }
         })
+      })
+    }
+
+    var cloneParents = function (cloneParentSpec, parentUri, proceed) {
+      $('#clone-parent-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        title: cloneParentSpec.cloneParentDialogTitle,
+        buttons: [
+          {
+            text: 'Fortsett',
+            click: function () {
+              $(this).dialog('close')
+              proceed()
+            }
+          },
+          {
+            text: 'Avbryt',
+            class: 'default',
+            click: function () {
+              $(this).dialog('close')
+            }
+          }
+        ],
+        open: function () {
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        }
       })
     }
 
@@ -559,7 +588,7 @@
         function getValues (onlyFirstField) {
           return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
             .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,\.]$/, '')
+            .join(' ').replace(/[,]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
         }
 
         var values = getValues(options.onlyFirstField)
@@ -898,7 +927,7 @@
           var propNameCore = propName.split(/\.fragment|[#\.,:\(\)-]/).join('')
           var propVal = valueFromPropertyFunc(propNameCore)
 
-          if (propVal) {
+          if (propVal && propVal !== '') {
             displayProperties = displayProperties || []
             let property = { prop: propNameCore }
             var ornamented
@@ -909,7 +938,7 @@
             }
             if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
               let previousPropVal = _.last(displayProperties).val
-              _.last(displayProperties).val = previousPropVal.substr(0, previousPropVal.length)
+              _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
             }
             property.val = ornamented
             displayProperties.push(property)
@@ -1025,6 +1054,7 @@
                             input.values[ index ].searchable = true
                           }
                           input.values[ index ].subjectType = type
+                          input.values[ index ].oldSubjectType = type
                           ractive.update(`${input.keypath}.values.${index}`)
                         })
                       } else {
@@ -1072,6 +1102,7 @@
                           let valueIndex = input.isSubInput ? rootIndex : index
                           setSingleValue(value, input, (valueIndex) + (offset), options)
                           input.values[ valueIndex ].subjectType = type
+                          input.values[ valueIndex ].oldSubjectType = type
                           if (input.isSubInput && !options.source) {
                             input.values[ valueIndex ].nonEditable = true
                             ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
@@ -1395,6 +1426,7 @@
       var inputMap = {}
       var inputsForDomainType = {}
       applicationData.predefinedValues = {}
+      applicationData.predefVals = {}
       applicationData.allLabels = {}
       applicationData.propertyLabels = {}
       var predefinedValues = []
@@ -1513,6 +1545,7 @@
           }
           if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
             newSubInput.input.values[ 0 ].subjectType = currentInput.subjectTypes[ 0 ]
+            newSubInput.input.values[ 0 ].oldSubjectType = currentInput.subjectTypes[ 0 ]
           }
           currentInput.subInputs.push(newSubInput)
         })
@@ -1671,6 +1704,7 @@
         group.tabSelected = false
         group.domain = inputGroup.rdfType
         group.showOnlyWhenInputHasValue = inputGroup.showOnlyWhenInputHasValue
+        group.tools = inputGroup.tools
 
         if (inputGroup.nextStep) {
           group.nextStep = inputGroup.nextStep
@@ -2250,6 +2284,7 @@
           'suggestor-for-input-nonNegativeInteger',
           'suggestor-for-input-literal',
           'select-predefined-value',
+          'inverse-one-to-many-relationship',
           'work',
           'relations',
           'publication',
@@ -2315,64 +2350,139 @@
           return { config: ensureJSON(response.data) }
         }
 
-        function patchObject (input, applicationData, index, operation) {
-          var patch = []
-          var actualSubjectType = _.first(input.subInputs).input.values[ index ].subjectType || input.subjectType || input.rdfType
-          var mainSubject = ractive.get('targetUri.' + actualSubjectType)
-          patch.push({
-            op: operation,
-            s: mainSubject,
-            p: input.predicate,
-            o: {
-              value: '_:b0',
-              type: 'http://www.w3.org/2001/XMLSchema#anyURI'
-            }
-          })
-          if (input.range) {
-            patch.push({
-              op: operation,
-              s: '_:b0',
-              p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-              o: {
-                value: applicationData.ontology[ '@context' ][ 'deichman' ] + input.range,
-                type: 'http://www.w3.org/2001/XMLSchema#anyURI'
-              }
-            })
-          }
-          _.each(input.subInputs, function (subInput) {
-            if (!(subInput.input.visible === false)) {
-              var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-              if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
-                patch.push({
-                  op: operation,
-                  s: '_:b0',
-                  p: subInput.input.predicate,
-                  o: {
-                    value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
-                    type: subInput.input.datatypes[ 0 ]
+        function saveObject (event, applicationData, index, op) {
+          let waitHandler = ractive.get('waitHandler')
+          waitHandler.newWaitable(event.original.target)
+          let waiter = waitHandler.thisMayTakeSomTime()
+          var input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
+          patchObject(input, applicationData, index, op).then(function () {
+            visitInputs(input, function (input) {
+              if (input.isSubInput) {
+                _.each(input.values, function (value, valueIndex) {
+                  if (valueIndex === index) {
+                    ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                   }
                 })
               }
-            }
+            })
+            input.allowAddNewButton = true
+            var promises = []
+            promises.push(ractive.update())
+            var subInputs = grandParentOf(event.keypath)
+            _.each(event.context.subInputs, function (input, subInputIndex) {
+              if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
+                var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
+                promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
+              }
+            })
+            promises.push(new Promise(waiter.done))
+            sequentialPromiseResolver(promises)
           })
-          if (input.isMainEntry) {
+        }
+
+        function patchObject (input, applicationData, index, op) {
+          const opSpec = {
+            add: [ {
+              operation: 'add',
+              useValue: 'current'
+            } ],
+            del: [ {
+              operation: 'del',
+              useValue: 'current'
+            } ],
+            replace: [
+              {
+                operation: 'del',
+                useValue: 'old'
+              },
+              {
+                operation: 'add',
+                useValue: 'current'
+              } ]
+          }
+          var patch = []
+          var actualSubjectType = _.first(input.subInputs).input.values[ index ].subjectType || input.subjectType || input.rdfType
+          var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
+          var mainSubject = ractive.get('targetUri.' + actualSubjectType)
+          var deleteSubject = ractive.get('targetUri.' + deleteSubjectType)
+          _.each(opSpec[ op ], function (spec, opIndex) {
             patch.push({
-              op: operation,
-              s: '_:b0',
-              p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+              op: spec.operation,
+              s: spec.operation === 'del' ? deleteSubject : mainSubject,
+              p: input.predicate,
               o: {
-                value: applicationData.ontology[ '@context' ][ 'deichman' ] + 'MainEntry',
+                value: `_:b${opIndex}`,
                 type: 'http://www.w3.org/2001/XMLSchema#anyURI'
               }
             })
-          }
+            if (input.range) {
+              patch.push({
+                op: spec.operation,
+                s: `_:b${opIndex}`,
+                p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                o: {
+                  value: applicationData.ontology[ '@context' ][ 'deichman' ] + input.range,
+                  type: 'http://www.w3.org/2001/XMLSchema#anyURI'
+                }
+              })
+            }
+            _.each(input.subInputs, function (subInput) {
+              if (!(subInput.input.visible === false)) {
+                var value = subInput.input.values[ index ] ? subInput.input.values[ index ][ spec.useValue ].value : undefined
+                if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
+                  patch.push({
+                    op: spec.operation,
+                    s: `_:b${opIndex}`,
+                    p: subInput.input.predicate,
+                    o: {
+                      value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
+                      type: subInput.input.datatypes[ 0 ]
+                    }
+                  })
+                }
+              }
+            })
+            if (input.isMainEntry) {
+              patch.push({
+                op: spec.operation,
+                s: `_:b${opIndex}`,
+                p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                o: {
+                  value: applicationData.ontology[ '@context' ][ 'deichman' ] + 'MainEntry',
+                  type: 'http://www.w3.org/2001/XMLSchema#anyURI'
+                }
+              })
+            }
+          })
+
           ractive.set('save_status', 'arbeider...')
-          return axios.patch(proxyToServices(mainSubject), JSON.stringify(patch), {
+          return axios.patch(proxyToServices(mainSubject), JSON.stringify(patch, undefined, 2), {
             headers: {
               Accept: 'application/ld+json',
               'Content-Type': 'application/ldpatch+json'
             }
+          }).then(function () {
+            // do an extra patch to invalidate cache of old subject
+            if (mainSubject !== deleteSubject) {
+              axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
+                headers: {
+                  Accept: 'application/ld+json',
+                  'Content-Type': 'application/ldpatch+json'
+                }
+              })
+            }
           })
+            .then(function () {
+              _.each(input.subInputs, function (subInput, subInputIndex) {
+                if (subInputIndex === 0) {
+                  ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
+                }
+                if (!(subInput.input.visible === false)) {
+                  var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
+                  ractive.set(`${subInput.input.keypath}.values.${index}.old.value`, value)
+                }
+              })
+            })
             .then(function (response) {
               // successfully patched resource
               return ractive.set('save_status', 'alle endringer er lagret')
@@ -2403,7 +2513,7 @@
               $(node).attr('tabindex', newValue ? '0' : '-1')
             }
             $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
-          }, { init: false })
+          }, { init: true })
         }
 
         var initRactive = function (applicationData) {
@@ -2693,6 +2803,31 @@
             el: 'container',
             lang: 'no',
             template: applicationData.template,
+            events: {
+              backspace: function (node, fire) {
+                function keydownHandler (event) {
+                  var which = event.which || event.keyCode
+
+                  if (which !== 9) {
+                    event.preventDefault()
+                  }
+                  if (which === 8) {
+                    fire({
+                      node,
+                      original: event
+                    })
+                  }
+                }
+
+                node.addEventListener('keydown', keydownHandler, false)
+
+                return {
+                  teardown () {
+                    node.removeEventListener('keydown', keydownHandler, false)
+                  }
+                }
+              }
+            },
             computed: {
               firstAndLastVisibleInputs: function () {
                 let result = []
@@ -2782,6 +2917,14 @@
                   }
                 }
               },
+              format: function (context, templateKey) {
+                const compiled = _.template(context[ templateKey ])
+                try {
+                  return compiled(context)
+                } catch (e) {
+                  // nop
+                }
+              },
               predefinedLabelValue: Main.predefinedLabelValue,
               publicationId: function () {
                 var publicationIdInput = _.find(ractive.get('inputs'), function (input) {
@@ -2869,7 +3012,7 @@
                   let value = ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
                   let values = ractive.get(`${keyPath}.values`)
                   let index = _.findIndex(_.sortBy(_.filter(values, function (value) {
-                    return value.current.value !== null && value.current.value !== ''
+                    return value.current.value !== null && value.current.value !== '' && value.current.value !== undefined
                   }), function (val) { return val.current.value }), function (v) {
                     return v.current.value === value
                   })
@@ -2882,7 +3025,13 @@
                   return valueIndex + 1
                 }
               },
-              checkShouldInclude: checkShouldInclude
+              oneOrMoreEnabled: function (items) {
+                return _.some(items, function (item) { return item.enable })
+              },
+              checkShouldInclude: checkShouldInclude,
+              abbreviate: function (label) {
+                return applicationData.config.abbreviations[ label ] || label
+              }
             },
             decorators: {
               repositionSupportPanel: repositionSupportPanel,
@@ -2931,6 +3080,13 @@
               }
             }
           })
+          function loadInverseRelated (event, parentUri) {
+            return axios.get(proxyToServices(`${parentUri}/inverseRelationsBy/${event.context.inverseRdfProperty}?projection=${_.pluck(event.context.showFieldsOfRelated, 'field').join('&projection=')}`))
+              .then(function (response) {
+                ractive.set(`${event.keypath}.relations`, response.data)
+              })
+          }
+
           ractive.on({
               toggle: function (event) {
                 if (eventShouldBeIgnored(event)) return
@@ -2951,6 +3107,7 @@
                     values.subjectType = _.isArray(mainInput.subjectTypes) && mainInput.subjectTypes.length === 1
                       ? mainInput.subjectTypes[ 0 ]
                       : null
+                    values.oldSubjectType = values.subjectType
                   }
                   try {
                     promises.push(ractive.push(`${input.keypath}.values`, values))
@@ -3001,35 +3158,16 @@
                   }
                 }
               },
-              saveObject: function (event, index) {
-                if (eventShouldBeIgnored(event)) return
-                let waitHandler = ractive.get('waitHandler')
-                waitHandler.newWaitable(event.original.target)
-                let waiter = waitHandler.thisMayTakeSomTime()
-                var input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
-                patchObject(input, applicationData, index, 'add').then(function () {
-                  visitInputs(input, function (input) {
-                    if (input.isSubInput) {
-                      _.each(input.values, function (value, valueIndex) {
-                        if (valueIndex === index) {
-                          ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
-                        }
-                      })
-                    }
-                  })
-                  input.allowAddNewButton = true
-                  var promises = []
-                  promises.push(ractive.update())
-                  var subInputs = grandParentOf(event.keypath)
-                  _.each(event.context.subInputs, function (input, subInputIndex) {
-                    if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
-                      var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
-                      promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
-                    }
-                  })
-                  promises.push(new Promise(waiter.done))
-                  sequentialPromiseResolver(promises)
-                })
+              saveNewObject: function (event, index) {
+                if (!eventShouldBeIgnored(event)) {
+                  saveObject(event, applicationData, index, 'add')
+                }
+              },
+              replaceObject: function (event, index) {
+                if (!eventShouldBeIgnored(event)) {
+                  saveObject(event, applicationData, index, 'replace')
+                  ractive.set(`${parentOf(grandParentOf(grandParentOf(event.keypath)))}.edit`, null)
+                }
               },
               deleteObject: function (event, parentInput, index) {
                 let waitHandler = ractive.get('waitHandler')
@@ -3061,6 +3199,12 @@
                     ractive.fire('addValue', addValueEvent)
                   }
                 })
+              },
+              editObject: function (event, parentInput, valueIndex) {
+                _.each(parentInput.subInputs, function (input, inputIndex) {
+                  ractive.set(`${parentInput.keypath}.subInputs.${inputIndex}.input.values.${valueIndex}.nonEditable`, false)
+                })
+                ractive.set(`${parentInput.keypath}.edit`, true)
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
                 options = options || {}
@@ -3162,6 +3306,7 @@
                 }
               },
               selectSearchableItem: function (event, context, origin, displayValue, options) {
+                ractive.set('currentSearchResultKeypath', grandParentOf(event.keypath))
                 options = options || {}
                 if (options.loadResourceForCompare) {
                   var queryArg = {}
@@ -3214,6 +3359,7 @@
                 clearSupportPanels()
               },
               unselectEntity: function (event) {
+                const closest = $(event.node).closest('span[data-support-panel-base-id^=support_panel_base_]')
                 ractive.set(event.keypath + '.searchResult', null)
                 ractive.set(event.keypath + '.current.value', '')
                 ractive.set(event.keypath + '.current.displayValue', '')
@@ -3231,6 +3377,7 @@
                     unloadResourceForDomain('Person')
                   }
                 }
+                closest.find('[contenteditable=true]').first().focus()
               },
               activateTab: function (event) {
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
@@ -3740,6 +3887,75 @@
                     closeCompare(typeFromUri(targetUri))
                   }).catch(hideGrowler)
                 })
+              },
+              loadInverseRelated: function (event, parentUri) {
+                ractive.set(`${grandParentOf(event.keypath)}.toolMode`, true)
+                loadInverseRelated(event, parentUri)
+              },
+              unloadInverseRelated: function (event) {
+                ractive.set(`${event.keypath}.relations`, null)
+                ractive.set(`${grandParentOf(event.keypath)}.toolMode`, null)
+              },
+              cloneParentForEachChild: function (event, parentUri) {
+                function patchValue (patchSubject, property, type, oldValue, newValue) {
+                  return axios.patch(proxyToServices(patchSubject), [
+                      {
+                        op: 'del',
+                        s: patchSubject,
+                        p: `http://data.deichman.no/ontology#${property}`,
+                        o: {
+                          value: oldValue,
+                          type: type
+                        }
+                      },
+                      {
+                        op: 'add',
+                        s: patchSubject,
+                        p: `http://data.deichman.no/ontology#${property}`,
+                        o: {
+                          value: newValue,
+                          type: type
+                        }
+                      }
+                    ],
+                    {
+                      headers: {
+                        Accept: 'application/ld+json',
+                        'Content-Type': 'application/ldpatch+json'
+                      }
+                    }
+                  )
+                }
+
+                cloneParents(event.context, parentUri, function () {
+                  const promises = []
+                  showGrowler()
+                  _.each(event.context.relations, function (relation, index) {
+                    if (relation.enable) {
+                      promises.push(axios.post(`${proxyToServices(parentUri)}/clone`)
+                        .then(function (response) {
+                          return patchValue(relation.uri, event.context.inverseRdfProperty, 'http://www.w3.org/2001/XMLSchema#anyURI', parentUri, response.headers.location).then(function () {
+                            return response
+                          })
+                        }).then(function (response) {
+                          const promises = []
+                          _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) { return pair[ 1 ] === true }).map(function (pair) { return pair[ 0 ] }).value(), function (property) {
+                            const input = ractive.get('applicationData.inputMap')[ `${typeFromUri(parentUri)}.http://data.deichman.no/ontology#${property}` ]
+                            const newValue = relation.projections[ property ]
+                            promises.push(patchValue(response.headers.location, property, typesFromRange(input.ranges[ 0 ]).rdfType, input.values[ 0 ].current.value || '', newValue || ''))
+                          })
+                          return Promise.all(promises)
+                        }))
+                    }
+                  })
+                  Promise.all(promises).then(function () {
+                    loadInverseRelated(event, parentUri)
+                    ractive.set(`${event.keypath}.transferFieldsToParent.*`, false)
+                  }).then(hideGrowler)
+                })
+              },
+              toggleAllEnableRelation: function (event) {
+                ractive.set(`${event.keypath}.relations.*.enable`, event.context.selectAll)
               }
             }
           )

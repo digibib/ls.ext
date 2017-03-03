@@ -56,6 +56,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 import static javax.ws.rs.core.Response.accepted;
+import static javax.ws.rs.core.Response.created;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
@@ -457,5 +458,36 @@ public final class EntityResource extends ResourceBase {
         }
 
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/inverseRelationsBy/{predicate}")
+    @Produces(JSON)
+    public Response retrieveInverseRelationsBy(@PathParam("type") String type,
+                                               @PathParam("id") String id,
+                                               @PathParam("predicate") String predicate,
+                                               @QueryParam("projection") final List<String> projections) {
+        XURI xuri = null;
+        try {
+            xuri = new XURI(BaseURI.root(), type, id);
+        } catch (Exception e) {
+            throw new BadRequestException(e);
+        }
+        return ok().entity(GSON.toJson(getEntityService().retrieveInverseRelations(xuri, predicate, projections))).build();
+    }
+
+    @POST
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/clone")
+    public Response cloneResource(@PathParam("type") String type,
+                                  @PathParam("id") String id){
+        try {
+            final Model model = getEntityService().retrieveById(new XURI(BaseURI.root(), type, id));
+            if (model.isEmpty()) {
+                throw new NotFoundException();
+            }
+            return created(URI.create(getEntityService().create(EntityType.get(type), model))).build();
+        } catch (Exception e) {
+            throw new BadRequestException(e);
+        }
     }
 }

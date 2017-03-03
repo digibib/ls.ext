@@ -35,7 +35,7 @@ class Search extends React.Component {
 
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => [ 'query', 'filter' ].includes(key)).forEach(key => {
+    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'yearFrom', 'yearTo' ].includes(key)).forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
@@ -114,7 +114,8 @@ class Search extends React.Component {
               : null }
           </div>
           <SearchFilterBox query={this.props.locationQuery}
-                           toggleFilter={this.props.searchFilterActions.toggleFilter} />
+                           toggleFilter={this.props.searchFilterActions.toggleFilter}
+                           removePeriod={this.props.searchFilterActions.removePeriod} />
           {this.props.totalHits > 0
             ? (<div className="search-sorting patron-placeholder">
             <p>Sorter treff på</p>
@@ -130,17 +131,19 @@ class Search extends React.Component {
         </div>)
           : null}
         {this.props.totalHits > 0
-          ? [ <SearchFilters key="searchFilters"
+          ? [ <SearchFilters key="search_filters"
                              filters={this.props.filters}
                              locationQuery={this.props.location.query}
                              toggleFilter={this.props.searchFilterActions.toggleFilter}
                              toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
                              toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
                              toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                             togglePeriod={this.props.searchFilterActions.togglePeriod}
                              scrollTargetNode={this}
                              isSearching={this.props.isSearching}
                              windowWidth={this.props.windowWidth}
-        />, <SearchResults key="searchResults"
+            />,
+            <SearchResults key="search_results"
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
                            searchResults={this.props.searchResults}
@@ -150,7 +153,7 @@ class Search extends React.Component {
                            resources={this.props.resources}
                            page={this.props.location.query.page}
                            items={this.props.items}
-        /> ]
+          />]
           : null}
         {this.renderPagination()}
       </NonIETransitionGroup>

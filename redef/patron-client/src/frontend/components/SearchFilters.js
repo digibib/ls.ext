@@ -5,6 +5,8 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchFilter from './SearchFilter'
 import Constants from '../constants/Constants'
 
+import DataRangeFilter from '../components/DateRangeFilter'
+
 class SearchFilters extends React.Component {
   constructor (props) {
     super(props)
@@ -83,6 +85,12 @@ class SearchFilters extends React.Component {
 
           <section className="filter-wrapper"
                    data-automation-id="search_filters">
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <DataRangeFilter
+                togglePeriod={this.props.togglePeriod}
+              />
+            }
             {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {
               const filtersByAggregation = groupedFilters[ aggregation ]
               return (
@@ -117,7 +125,8 @@ SearchFilters.propTypes = {
   toggleCollapseFilter: PropTypes.func.isRequired,
   scrollTargetNode: PropTypes.object.isRequired,
   isSearching: PropTypes.bool,
-  windowWidth: PropTypes.number.isRequired
+  windowWidth: PropTypes.number.isRequired,
+  togglePeriod: PropTypes.func.isRequired
 }
 
 SearchFilters.defaultProps = { filters: [] }

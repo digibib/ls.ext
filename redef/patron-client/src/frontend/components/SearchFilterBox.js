@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 
 import SearchFilterBoxItem from '../components/SearchFilterBoxItem'
-import { getFiltersFromQuery } from '../utils/filterParser'
+import SearchFilterDateRangeBoxItem from '../components/SearchFilterDateRangeBoxItem'
+import { getFiltersFromQuery, getDateRange } from '../utils/filterParser'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-const SearchFilterBox = ({ toggleFilter, query }) => {
+const SearchFilterBox = ({ toggleFilter, removePeriod, query }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
     : <FormattedMessage {...messages.titleSearch} />
   const filters = getFiltersFromQuery(query).filter(f => {
@@ -13,7 +14,18 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
     // they by definition allways match all publications of the given work.
     return !f.id.startsWith('fictionNonfiction') && !f.id.startsWith('audience')
   })
-  if (filters.length > 0) {
+
+  const dateRange = []
+
+  if (getDateRange(query, 'yearFrom') !== null) {
+    dateRange.push({ yearFrom: getDateRange(query, 'yearFrom') })
+  }
+
+  if (getDateRange(query, 'yearTo') !== null) {
+    dateRange.push({ yearTo: getDateRange(query, 'yearTo') })
+  }
+
+  if (filters.length > 0 || dateRange.length > 0) {
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -27,6 +39,10 @@ const SearchFilterBox = ({ toggleFilter, query }) => {
         <ul>
           {filters.filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
             key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
+          { dateRange.length > 0
+            ? <SearchFilterDateRangeBoxItem dateRange={dateRange} removePeriod={removePeriod} />
+            : null
+          }
         </ul>
       </NonIETransitionGroup>
     )
@@ -50,7 +66,8 @@ export const messages = defineMessages({
 
 SearchFilterBox.propTypes = {
   toggleFilter: PropTypes.func.isRequired,
-  query: PropTypes.object.isRequired
+  query: PropTypes.object.isRequired,
+  removePeriod: PropTypes.func.isRequired
 }
 
 export default SearchFilterBox

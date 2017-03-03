@@ -116,8 +116,8 @@ def workflow_batch_add_props(domain, data)
       @context[symbol] = value
       @context[label_symbol] = textualValue
       @site.WorkFlow.method(method).call(domain, predicate, textualValue, 0, true)
-    # rescue
-    #   fail "Error adding #{fragment} for #{domain}"
+      # rescue
+      #   fail "Error adding #{fragment} for #{domain}"
     end
   end
 end
@@ -145,10 +145,12 @@ end
 
 def save_value_for_later(input, parameter_label, value)
   input_id = input.attribute_value('data-automation-id')
-  predicate = input_id.sub(/^([a-zA-Z]*)_/, '').sub(/_[0-9]+$/, '')
-  domain = input_id.match(/^([a-zA-Z]*)_.*/).captures[0]
-  @context[parameter_label] = value
-  return domain, predicate
+  if (input_id)
+    predicate = input_id.sub(/^([a-zA-Z]*)_/, '').sub(/_[0-9]+$/, '')
+    domain = input_id.match(/^([a-zA-Z]*)_.*/).captures[0]
+    @context[parameter_label] = value
+    return domain, predicate
+  end
 end
 
 When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label|
@@ -167,7 +169,7 @@ end
 
 def do_select_value(selectable_parameter_label, value)
   select = @browser.selects(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']//select")[0]
-  wait_for{select.present?}
+  wait_for { select.present? }
   select_id = select.attribute_value('data-automation-id')
   predicate = predicate_from_automation_id(select_id)
   domain = domain_of_automation_id(select_id)
@@ -299,7 +301,7 @@ When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisa
   else
     name_line = "#{@context[:person_name]}"
   end
-  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][normalize-space()='#{name_line}']")
+  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][starts-with(normalize-space(), '#{name_line}')]")
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     name.exists?
   }
@@ -443,7 +445,6 @@ When(/^jeg legger inn et nytt navn$/) do
 end
 
 
-
 When(/^trykker jeg på knappen for å legge til ny$/) do
   @browser.a(:text => /Legg til ny/).click
 end
@@ -463,7 +464,7 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled?}.first.click
+  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled? }.first.click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
@@ -512,7 +513,7 @@ end
 
 
 When(/^sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid$/) do
-  @browser.element(:text => "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}").should exist
+  @browser.element(:text => "#{@context[:person_name]}, #{@context[:person_birthyear]}–#{@context[:person_deathyear]}, #{@context[:person_nationality]}.").should exist
 end
 
 When(/^at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter$/) do
@@ -747,4 +748,17 @@ end
 When(/^sjekker jeg at antall relasjoner er ([0-9]*)$/) do |number_of_relations|
   @browser.a(:class => 'toggle-show-sub-items').click
   @browser.lis(:class => 'rel-entry').length.should equal? (number_of_relations.to_i)
+end
+
+When(/^klikker jeg på linken med blyantikon$/) do
+  @browser.as(:class => 'edit').find(&:visible?).click
+end
+
+
+When(/^at jeg vil splitte et verk med flere utgivelser$/) do
+  #
+end
+
+When(/^sjekker jeg at teksten "([^"]*)" finnes på siden$/) do |text|
+  @browser.element(:text => text).should exist
 end

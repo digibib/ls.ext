@@ -90,6 +90,9 @@ body {
   }
 
   .select2-container {
+    &.select2-container--focus {
+      @include focus()
+    }
     .select2-selection--multiple {
       min-height: 38px !important;
       .select2-selection__rendered {
@@ -283,12 +286,12 @@ body {
         }
         .add-item-button {
           float: right;
-          margin-bottom: 9px;
+          margin-top: 6px;
         }
 
         .save-placeholder {
+          padding: 0 !important;
           position: relative;
-          //opacity: 0;
           .spinner {
             zoom: 0.5;
           }
@@ -299,7 +302,7 @@ body {
         }
         .input-wrapper .subject-type-association button.saving + .save-placeholder {
           top: 16px;
-          right: -50px;
+          right: -39px;
         }
         .label {
           padding: 12px 12px 4px 12px;
@@ -799,7 +802,6 @@ body {
           margin-top: 5px;
           display: inline-flex;
           label {
-            padding-right: 25px;
             padding-left: 5px;
             margin-top: 8px;
           }
@@ -812,9 +814,20 @@ body {
           cursor: pointer;
           min-width: 20px;
         }
+        a.edit {
+          background-image: url('/images/lower_right_pencil.svg');
+          background-repeat: no-repeat;
+          background-position: left top;
+          padding-left: 2em;
+          cursor: pointer;
+          min-width: 20px;
+        }
         .default-non-editable {
           min-height: 60px;
           padding: 8px;
+          div.edit {
+            float: right;
+          }
           .inputs {
             display: block;
             border: 1px solid lightgrey;
@@ -895,7 +908,7 @@ body {
           .subject-type-association {
             span:not(.pure-button) {
               background: $mintgreen;
-              padding: 0 12px;
+              padding: 0 12px 8px 8px;
               span.add-association-legend {
                 padding: 0 6px;
                 display: inline-block;
@@ -906,6 +919,9 @@ body {
         .additional-entries-non-editable {
           min-height: 60px;
           padding: 8px;
+          div.edit {
+            float: right;
+          }
           .input-wrapper {
             padding-left: 10px;
             display: block;
@@ -1022,6 +1038,50 @@ body {
               }
             }
           }
+        }
+      }
+    }
+    .inverse-relations-title {
+      margin-top: 20px;
+      font-weight: bold;
+      margin-left: 5px;
+      .close {
+        float: right;
+        margin-right: 8px;
+      }
+    }
+    .inverse-relations {
+      border: 1px solid lightgrey;
+      background: white;
+      .head, .row {
+        padding: 6px;
+        min-height: 37px;
+      }
+      .head {
+        border-bottom: 1px solid $lightergray;
+        font-style: italic;
+      }
+      .table-body {
+        min-height: 450px;
+        max-height: 450px;
+        overflow: scroll;
+        :nth-child(even) .row {
+          background: $lightergray;
+        }
+        .empty-relations {
+          margin: auto;
+          text-align: center;
+        }
+      }
+      .select-all {
+        height: 37px;
+        padding-top: 9px;
+        input[type=checkbox] {
+          float: right;
+          margin-top: 5px;
+        }
+        .label {
+          margin-left: 7px;
         }
       }
     }

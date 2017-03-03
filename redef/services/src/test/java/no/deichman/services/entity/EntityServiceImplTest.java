@@ -41,6 +41,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.google.common.collect.ImmutableMap.of;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static no.deichman.services.entity.EntityType.CORPORATION;
 import static no.deichman.services.entity.EntityType.PERSON;
@@ -57,6 +59,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.riot.Lang.JSONLD;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -881,6 +884,60 @@ public class EntityServiceImplTest {
 
         List<String> result = service.retrieveWorkRecordIds(xuri);
         assertEquals(A_BIBLIO_ID, result.get(0));
+    }
+
+    @Test
+    public void test_retrieve_by_inverse_retaion() throws Exception {
+        final String workUri = "http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20";
+        final String publicationUri = "http://data.deichman.no/publication/p735933031021";
+        String inputGraph = "@prefix ns1: <http://data.deichman.no/duo#> .\n"
+                + "@prefix ns2: <http://data.deichman.no/ontology#> .\n"
+                + "@prefix ns4: <http://data.deichman.no/raw#> .\n"
+                + "@prefix ns5: <http://data.deichman.no/role#> .\n"
+                + "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n"
+                + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+                + "@prefix xml: <http://www.w3.org/XML/1998/namespace> .\n"
+                + "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n"
+                + "<" + publicationUri + "> rdf:type ns2:Publication ;\n"
+                + "    ns2:bibliofilPublicationID \"0626460\" ;\n"
+                + "    ns2:format <http://data.deichman.no/format#EBokBib> ;\n"
+                + "    ns2:hasMediaType <http://data.deichman.no/mediaType#Book> ;\n"
+                + "    ns2:hasFormatAdaptation <http://data.deichman.no/formatAdaptation#largePrint> ;\n"
+                + "    ns2:isbn \"82-495-0272-8\" ;\n"
+                + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
+                + "    ns2:mainTitle \"Berlinerpoplene\" ; ns2:partTitle \"deltittel\" ;\n"
+                + "    ns2:publicationOf <" + workUri + "> ;\n"
+                + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
+                + "    ns2:recordId \"11\" ;\n"
+                + "    ns2:hasImage \"http://static.deichman.no/626460/kr/1_thumb.jpg\" ;\n"
+                + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
+                + "    ns2:subtitle \"roman\" ;\n"
+                + "    ns2:ageLimit \"75\" ;\n"
+                + "    ns2:hasSummary \"abc\";\n"
+                + "    ns2:hasPlaceOfPublication <http://deichman.no/place/p1> ;"
+                + "    ns2:locationSignature \"Rag\" ;\n"
+                + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
+                + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
+                + "<" + workUri + "> rdf:type ns2:Work ;\n"
+                + "    ns2:audience <http://data.deichman.no/audience#adult> ;\n"
+                + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
+                + "    ns2:contributor [ rdf:type ns2:Contribution,\n"
+                + "                ns2:MainEntry ;\n"
+                + "            ns2:agent <http://data.deichman.no/person/h10834700> ;\n"
+                + "            ns2:role ns5:author ] ;\n"
+                + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
+                + "    ns2:fictionNonfiction <http://data.deichman.no/fictionNonfiction#fiction>\n ;"
+                + "    ns2:literaryForm <http://data.deichman.no/literaryForm#novel> ;\n"
+                + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
+                + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> ;"
+                + "    ns2:publicationYear \"2004\"^^xsd:gYear ;\n"
+                + "    ns2:genre <http://deichman.no/genre/g1> ;"
+                + "    ns2:subject <http://deichman.no/subject/e1200005>, <http://deichman.no/subject/e1200006> .\n";
+        Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
+        repository.addData(model);
+        final List<ResourceSummary> resourceSummaries = service.retrieveInverseRelations(new XURI(workUri), "publicationOf", newArrayList("mainTitle", "subtitle", "ageLimit"));
+        assertThat(resourceSummaries.size(), is(1));
+        assertEquals(resourceSummaries.get(0), new ResourceSummary(publicationUri, of("mainTitle", "Berlinerpoplene", "subtitle", "roman", "ageLimit", "75")));
     }
 
     private MarcRecord getMarcRecord(String mainTitle, String name) {

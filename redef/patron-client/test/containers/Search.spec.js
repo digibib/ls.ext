@@ -5,6 +5,9 @@ import TestUtils from 'react-addons-test-utils'
 import {Search} from '../../src/frontend/containers/Search'
 import Constants from '../../src/frontend/constants/Constants'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import rootReducer from '../../src/frontend/reducers'
 import {IntlProvider} from 'react-intl'
 
 function setup (propOverrides) {
@@ -23,7 +26,9 @@ function setup (propOverrides) {
       toggleFilter: () => {},
       toggleFilterVisibility: () => {},
       toggleAllFiltersVisibility: () => {},
-      toggleCollapseFilter: () => {}
+      toggleCollapseFilter: () => {},
+      removePeriod: () => {},
+      togglePeriod: () => {}
     },
     resourceActions: {
       fetchWorkResource: () => {}
@@ -34,10 +39,14 @@ function setup (propOverrides) {
     ...propOverrides
   }
 
+  const store = createStore(rootReducer)
+
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale="en">
-      <Search {...props} />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale="en">
+        <Search {...props} />
+      </IntlProvider>
+    </Provider>
   )
 
   return {

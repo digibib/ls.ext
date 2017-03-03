@@ -22,4 +22,8 @@ class PatronClientLoansAndReservationsPage < PageRoot
   def loans
     @browser.elements(data_automation_id: 'UserLoans_loan')
   end
+
+  def queue_places
+    @browser.elements(data_automation_id: 'UserLoans_reservation_queue_place')
+  end
 end

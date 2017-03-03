@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -53,6 +54,8 @@ public interface EntityService {
 
     Model retrieveSerialWithLinkedResources(XURI serialUri);
 
+    Set<String> retrieveResourcesConnectedTo(XURI xuri);
+
     Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width);
 
     List<RelationshipGroup> retrieveResourceRelationships(XURI uri);
@@ -66,4 +69,6 @@ public interface EntityService {
     void removeFromLocalIndex(XURI xuri);
 
     List<XURI> retrieveResourceRelationshipsUris(XURI uri);
+
+    List<ResourceSummary> retrieveInverseRelations(XURI xuri, String predicate, List<String> projections);
 }

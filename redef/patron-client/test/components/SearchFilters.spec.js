@@ -4,6 +4,9 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import SearchFilters, { __RewireAPI__ as DefaultExportSearchFiltersRewireApi } from '../../src/frontend/components/SearchFilters'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import rootReducer from '../../src/frontend/reducers'
 import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
@@ -19,15 +22,20 @@ function setup (propOverrides) {
     toggleFilterVisibility: () => {},
     toggleAllFiltersVisibility: () => {},
     toggleCollapseFilter: () => {},
+    togglePeriod: () => {},
     scrollTargetNode: {},
     windowWidth: 1000,
     ...propOverrides
   }
 
+  const store = createStore(rootReducer)
+
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale="en">
-      <SearchFilters {...props} />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale="en">
+        <SearchFilters {...props} />
+      </IntlProvider>
+    </Provider>
   )
 
   return {
@@ -67,12 +75,13 @@ describe('components', () => {
         locationQuery: { query: 'test_query' },
         setFilter: () => {}
       })
-      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(1)
+      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(2)
     })
 
     it('should render filters in groups', () => {
       const { node } = setup({ locationQuery: { query: 'test_query' } })
-      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(2)
+      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(3)
     })
   })
 })
+

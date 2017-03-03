@@ -263,6 +263,7 @@ class Publications extends React.Component {
           <h2>Gå til</h2>
           {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
           <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+                           removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
                            query={this.props.query} />
         </header>
         {

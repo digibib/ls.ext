@@ -189,7 +189,9 @@ Egenskap: Gå gjennom lånegrensesnittet
     Og jeg trykker oppfrisk i nettleseren
     Så skal reservasjonen være på ny avdeling
     Når jeg trykker på utsett reservasjon
+    Og velger å utsette reservasjonen til gitt dato
     Så skal jeg se at reservasjonen kan aktiveres
+    Og at reservasjonen får tilbakemelding om utsettelse
     Når jeg trykker på fortsett reservasjon
     Så skal jeg se at reservasjonen kan utsettes
     Når jeg trykker på avbestill reservasjon

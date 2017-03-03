@@ -30,6 +30,7 @@
   }
 
   input {
+    -webkit-appearance: none;
     background-position: 0.5em center;
     padding: rhythm(0.5) rhythm(1);
     background-repeat: no-repeat;
@@ -113,8 +114,10 @@
     }
 
     input {
-      font-size: rhythm(4);
-      padding: rhythm(1) rhythm(0.5) rhythm(1) rhythm(2);
+      font-size: 1.4em;
+      /*font-size: rhythm(4);*/
+      /*padding: rhythm(1) rhythm(0.5) rhythm(1) rhythm(2);*/
+      padding: 0.4em;
       background-position: 1em center;
     }
 
