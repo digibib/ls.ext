@@ -2,6 +2,7 @@
   @include container;
   border-bottom: none;
   margin-top: rhythm(4);
+  cursor: pointer;
 
   h1 {
     @include span(10);
@@ -84,9 +85,9 @@
 .show-all, .show-less, .show-more {
   font-weight: normal;
   color: $redColor;
-  font-size: 0.8em;
 
   h3 {
+    font-size: 0.8em;
     margin-bottom: 0;
     :hover {
       cursor: pointer;
@@ -97,9 +98,14 @@
 
 }
 
-.dateRangeFilters {
-  header {
+.filter-group.dateRangeFilters {
+
+  header.filterTitle {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 1em;
     margin-bottom: 1em;
+    cursor: default;
   }
 
   .form-item {

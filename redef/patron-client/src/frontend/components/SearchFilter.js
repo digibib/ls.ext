@@ -99,9 +99,9 @@ class SearchFilter extends React.Component {
         component="div"
         className="filter-group"
         data-automation-id={`filter_${this.props.aggregation}`}>
-        <header className="filterTitle">
+        <header className="filterTitle" onClick={this.handleCollapse}>
           <h1>{this.renderTitle()}</h1>
-          <button onClick={this.handleCollapse} className="single-filter-close" type="button"
+          <button className="single-filter-close" type="button"
                   aria-label={buttonAriaLabel} aria-expanded={!this.isCollapsed()}>
             {this.isCollapsed()
               ? <i className="icon-plus" aria-hidden="true" />

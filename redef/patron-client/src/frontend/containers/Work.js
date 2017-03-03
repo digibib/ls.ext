@@ -93,7 +93,7 @@ class Work extends React.Component {
     return (
       <div className="meta-item">
         <span className="meta-label"><FormattedMessage {...messages.labelRelation} />: </span>
-        <span className="meta-content">Placholder relation</span>
+        <span className="meta-content">Placeholder relation</span>
       </div>
     )
   }

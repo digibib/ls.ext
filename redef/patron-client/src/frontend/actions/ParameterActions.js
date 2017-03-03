@@ -40,7 +40,7 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
   }
 }
 
-export function ensureLanguageFilterOpen (inputLocationQuery) {
+export function ensureDefinedFiltersOpen (inputLocationQuery) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
@@ -53,7 +53,10 @@ export function ensureLanguageFilterOpen (inputLocationQuery) {
       // but a refinement of existing query.
       return
     }
-    locationQuery[ 'showFilter' ] = ['language']
+
+    locationQuery[ 'showFilter' ] = [ 'language' ]
+    locationQuery[ 'showFilter' ].push([ 'mediatype' ])
+
     return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
 }

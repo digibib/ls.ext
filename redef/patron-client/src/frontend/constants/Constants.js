@@ -101,7 +101,7 @@ module.exports = {
     'år': 'publicationYear'
   },
   backendUri: '/services',
-  maxVisibleFilterItems: 5,
+  maxVisibleFilterItems: 3,
   maxSearchResults: 100,
   maxSearchResultsPerPage: 10,
   filterableFields: {
@@ -109,13 +109,13 @@ module.exports = {
       name: 'languages',
       prefix: 'http://lexvo.org/id/iso639-3/'
     },
-    branch: {
-      name: 'branches',
-      prefix: ''
-    },
     mediatype: {
       name: 'mediatype',
       prefix: 'http://data.deichman.no/mediaType#'
+    },
+    branch: {
+      name: 'branches',
+      prefix: ''
     },
     format: {
       name: 'formats',
