@@ -139,6 +139,7 @@ services:
       KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
       GITREF: "${GITREF:-0}"
       BUILD_TAG: "${BUILD_TAG:-0}"
+      ELASTICSEARCH_URL: "http://es_bulk_indexing_proxy:9200"
     logging:
       driver: "json-file"
       options:
@@ -287,6 +288,21 @@ services:
       BS_DB: "${BS_DB:-replaceme}"
       BS_USER: "${BS_USER:-replaceme}"
       BS_PASS: "${BS_PASS:-replaceme}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  es_bulk_indexing_proxy:
+    container_name: es_bulk_indexing_proxy
+    image: "digibib/es-bulk-indexing-proxy:eaba91db93d6f5eab306b8e10490708532b07602"
+    networks:
+      - backend
+    command:
+      - "/es-bulk-indexing-proxy"
+      - "-l=:9200"
+      - "-es=http://elasticsearch:9200"
     logging:
       driver: "json-file"
       options:

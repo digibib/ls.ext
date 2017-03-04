@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class ModelToIndexMapper {
     private static final String AGENT = "Agent";
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson GSON = new GsonBuilder().create();
     private String query;
     private Map<String, Object> context;
     private String type;
