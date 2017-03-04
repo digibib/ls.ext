@@ -161,7 +161,7 @@ class UserLoans extends React.Component {
           <div className="select-container" data-automation-id="UserLoans_reservation_library">
             <Libraries libraries={this.props.libraries}
                        selectedBranchCode={item.branchCode}
-                       disabled={this.props.isRequestingChangePickupLocation !== false}
+                       disabled={(this.props.isRequestingChangePickupLocation !== false || item.itype === 'REALIA')}
                        onChangeAction={this.props.reservationActions.changePickupLocation}
                        reserveId={item.reserveId} />
           </div>

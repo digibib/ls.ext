@@ -7,3 +7,13 @@ export function mapLibraries (libraries) {
   })
   return mappedLibraries
 }
+
+export function filterPickupLibrariesByItems (libraries, items) {
+  const res = {}
+  const itemBranches = []
+  items.forEach(i => { itemBranches.push(i.branchcode) })
+  if (itemBranches in libraries) {
+    res[itemBranches] = libraries[itemBranches]
+  }
+  return res
+}

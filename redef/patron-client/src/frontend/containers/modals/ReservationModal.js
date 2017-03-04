@@ -6,6 +6,7 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import * as ReservationActions from '../../actions/ReservationActions'
 import * as ModalActions from '../../actions/ModalActions'
 import Libraries from '../../components/Libraries'
+import { filterPickupLibrariesByItems } from '../../utils/libraryFilters'
 
 class ReservationModal extends React.Component {
   constructor (props) {
@@ -16,7 +17,7 @@ class ReservationModal extends React.Component {
 
   handleReserve (event) {
     event.preventDefault()
-    this.props.reservationActions.reservePublication(this.props.recordId, this.librarySelect.getValue())
+    this.props.reservationActions.reservePublication(this.props.publication.recordId, this.librarySelect.getValue())
   }
 
   handleCancel (event) {
@@ -54,6 +55,24 @@ class ReservationModal extends React.Component {
     )
   }
 
+  renderLibrarySelect () {
+    if (this.props.publication.formats && this.props.publication.formats.indexOf('http://data.deichman.no/format#MusicalInstrument') >= 0) {
+      return (
+        <div>
+          <Libraries ref={e => this.librarySelect = e}
+                     libraries={filterPickupLibrariesByItems(this.props.libraries, this.props.publication.items)} />
+          <p>
+            <FormattedMessage {...messages.filteredPickupFromOwnerBranch} />
+          </p>
+        </div>
+      )
+    } else {
+      return (
+        <Libraries ref={e => this.librarySelect = e} libraries={this.props.libraries} selectedBranchCode={this.props.pickupLocation} />
+      )
+    }
+  }
+
   render () {
     if (this.props.isError) {
       return this.renderError()
@@ -66,7 +85,7 @@ class ReservationModal extends React.Component {
           <p>
             <FormattedMessage {...messages.choosePickupLocation} />
           </p>
-          <Libraries ref={e => this.librarySelect = e} libraries={this.props.libraries} selectedBranchCode={this.props.pickupLocation} />
+          {this.renderLibrarySelect()}
           <br />
           <br />
           <button className="black-btn" data-automation-id="reserve_button"
@@ -89,7 +108,7 @@ ReservationModal.propTypes = {
   reservationActions: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
   libraries: PropTypes.object.isRequired,
-  recordId: PropTypes.string.isRequired,
+  publication: PropTypes.object.isRequired,
   isSuccess: PropTypes.bool,
   isError: PropTypes.bool,
   message: PropTypes.string,
@@ -101,6 +120,11 @@ export const messages = defineMessages({
     id: 'ReservationModal.choosePickupLocation',
     description: 'The label for choosing pickup location:',
     defaultMessage: 'Choose pickup location'
+  },
+  filteredPickupFromOwnerBranch: {
+    id: 'ReservationModal.filteredPickupFromOwnerBranch',
+    description: 'Message when material is restricted for pickup only at owning branch',
+    defaultMessage: 'This material is restricted for pickup at owning branch only.'
   },
   reserve: {
     id: 'ReservationModal.reserve',

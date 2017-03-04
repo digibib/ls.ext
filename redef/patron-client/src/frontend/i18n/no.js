@@ -176,6 +176,7 @@ export default {
   'ReservationModal.button': 'OK',
   'ReservationModal.cancel': 'Avbryt',
   'ReservationModal.choosePickupLocation': 'Velg hentested:',
+  'ReservationModal.filteredPickupFromOwnerBranch': 'Dette materialet kan kun hentes ved det biblioteket som eier det.',
   'ReservationModal.genericReservationError': 'Vi beklager, noe gikk galt under reserveringen. Vennligst prøv igjen senere.',
   'ReservationModal.headerTextError': 'Bestillingen feilet.',
   'ReservationModal.headerTextSuccess': 'Din bestilling er registrert',
