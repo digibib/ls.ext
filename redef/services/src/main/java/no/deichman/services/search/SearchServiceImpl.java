@@ -25,6 +25,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,6 +133,35 @@ public class SearchServiceImpl implements SearchService {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
              LOG.info("Indexing " + xuri.getUri());
                 doIndex(xuri);
+        } else {
+            LOG.info("Skipping already indexed uri: " + xuri.getUri());
+            skipped++;
+        }
+        if (indexedUris != null) {
+            indexedUris.add(xuri.getUri());
+        }
+    }
+
+    public final void indexWorkAndPublications(XURI xuri) throws Exception {
+        if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
+            LOG.info("Indexing " + xuri.getUri() + " with publications");
+            Model indexModel = entityService.retrieveWorkWithLinkedResources(xuri);
+            String indexDocument = new ModelToIndexMapper(EntityType.WORK.getPath()).createIndexDocument(indexModel, xuri);
+            indexDocument(xuri, indexDocument);
+            cacheNameIndex(xuri, indexModel);
+            ResIterator subjectIterator = indexModel.listSubjects();
+            while (subjectIterator.hasNext()) {
+                Resource subj = subjectIterator.next();
+                if (subj.isAnon()) {
+                    continue;
+                }
+                if (subj.toString().contains("publication")) { // TODO match more accurately with { subj :publicationOf <xuri> }
+                    XURI pubUri = new XURI(subj.toString());
+                    LOG.info("Indexing " + pubUri.getUri());
+                    indexDocument(pubUri, new ModelToIndexMapper("publication").createIndexDocument(indexModel, pubUri));
+                    cacheNameIndex(pubUri, indexModel);
+                }
+            }
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
             skipped++;
@@ -468,9 +499,18 @@ public class SearchServiceImpl implements SearchService {
             @Override
             public void run() {
                 for (EntityType type : EntityType.values()) {
+                    if (type.equals(EntityType.PUBLICATION)) {
+                        // Publications are indexed when the work they belong to are indexed
+                        continue;
+                    }
                     entityService.retrieveAllWorkUris(type.getPath(), uri -> EXECUTOR_SERVICE.execute(() -> {
                         try {
-                            indexOnly(new XURI(uri));
+                            XURI resource = new XURI(uri);
+                            if (resource.getTypeAsEntityType().equals(EntityType.WORK)) {
+                                indexWorkAndPublications(resource);
+                            } else {
+                                indexOnly(resource);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
