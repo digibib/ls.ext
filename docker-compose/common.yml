@@ -296,7 +296,7 @@ services:
 
   es_bulk_indexing_proxy:
     container_name: es_bulk_indexing_proxy
-    image: "digibib/es-bulk-indexing-proxy:eaba91db93d6f5eab306b8e10490708532b07602"
+    image: "digibib/es-bulk-indexing-proxy:1181cb3b3305f0466cb83a0ddfc747c65aa6de7b"
     networks:
       - backend
     command:
