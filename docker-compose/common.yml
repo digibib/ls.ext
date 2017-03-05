@@ -303,6 +303,7 @@ services:
       - "/es-bulk-indexing-proxy"
       - "-l=:9200"
       - "-es=http://elasticsearch:9200"
+      - "-size=5"
     logging:
       driver: "json-file"
       options:
