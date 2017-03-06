@@ -996,7 +996,34 @@
       })
     }
 
-    function updateInputsForResource (response, resourceUri, options, root, type) {
+  function removeInputsForObject (parentInput, index) {
+    return function () {
+      ractive.update()
+      var promises = []
+      promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
+      _.each(parentInput.subInputs, function (subInput, subInputIndex) {
+        if (_.isArray(subInput.input.values)) {
+          try {
+            promises.push(ractive.splice(`${subInput.input.keypath}.values`, index, 1))
+          } catch (e) {
+            // nop
+          }
+        }
+      })
+      promises.push(new Promise(function () {
+        $(event.node).closest('.ui-accordion-content').prev().remove()
+        $(event.node).closest('.ui-accordion-content, .field').remove()
+      }))
+      promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
+      sequentialPromiseResolver(promises)
+      if (ractive.get(`${parentInput.keypath}.subInputs.0.input.values`).length === 0) {
+        var addValueEvent = { keypath: parentOf(parentInput.keypath) }
+        ractive.fire('addValue', addValueEvent)
+      }
+    }
+  }
+
+  function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
       var graphData = ensureJSON(response.data)
       var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
@@ -1007,9 +1034,9 @@
       }
 
       let inputs = options.inputs || allInputs()
-      var promises = []
-      var skipRest = false
-      var parentInputRootsCache = {}
+      let promises = [];
+      let skipRest = false;
+      let parentInputRootsCache = {};
       _.each([ true, false ], function (onlyDoSuggestionForCreateNewResource) {
         _.each(inputs, function (input, index) {
           if (!skipRest &&
@@ -1083,12 +1110,12 @@
                                   if (!isBlankNodeUri(node.id)) {
                                     ractive.set(`${input.keypath}.values.${index}.deletable`, true)
                                     if (input.isSubInput && !options.source) {
-                                      input.values[ index ].nonEditable = true
-                                      ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                                       input.parentInput.allowAddNewButton = true
                                     }
                                   }
                                 }
+                                  input.values[ index ].nonEditable = true
+                                  ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                                 setAllowNewButtonForInput(input)
                               } else {
                                 setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
@@ -1141,7 +1168,7 @@
                           _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
                             if (!options.onlyValueSuggestions) {
                               let valueIndex = input.isSubInput ? rootIndex : index
-                              setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, {setNonEditable: input.isSubInput && !options.source}))
+                              setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
                               input.values[ valueIndex ].subjectType = type
                               input.values[ valueIndex ].oldSubjectType = type
                               if (input.isSubInput && !options.source) {
@@ -1164,15 +1191,23 @@
                     })
                     input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
 
-                    if (actualRoots.length > startIndex + rangeLength) {
-                      input.nextRange = loadForRangeOfInputs(startIndex + rangeLength, rangeLength)
-                    } else {
-                      delete input.nextRange
-                    }
-                    if (startIndex > 0) {
-                      input.prevRange = loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength)
-                    } else {
-                      delete input.prevRange
+                    ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
+                    ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
+                    ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
+                    // if (actualRoots.length > startIndex + rangeLength) {
+                    //   input.nextRange = loadForRangeOfInputs(startIndex + rangeLength, rangeLength)
+                    // } else {
+                    //   delete input.nextRange
+                    // }
+                    // if (startIndex > 0) {
+                    //   input.prevRange = loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength)
+                    // } else {
+                    //   delete input.prevRange
+                    // }
+                    //input.thisRange = loadForRangeOfInputs(startIndex, rangeLength)
+                    if (input.parentInput && input.parentInput.pagination) {
+                      const fromEnd = actualRoots.length - startIndex
+                      ractive.splice(`${input.keypath}.values`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
                     }
                   }
                 }
@@ -1561,6 +1596,13 @@
           orderBy: compoundInput.subInputs.orderBy,
           id: compoundInput.id,
           keypath: compoundInput.keypath
+        }
+        if (compoundInput.subInputs.objectSortOrder) {
+          applicationData.sortOrders = applicationData.sortOrders || []
+          applicationData.sortOrders.push({
+            predicate: compoundInput.subInputs.rdfProperty,
+            objectSortOrder: compoundInput.subInputs.objectSortOrder
+          })
         }
         _.each(compoundInput.subInputs.inputs, function (subInput, subInputIndex) {
           if (!subInput.rdfProperty) {
@@ -2372,12 +2414,14 @@
             var promises = []
             promises.push(ractive.update())
             var subInputs = grandParentOf(event.keypath)
-            _.each(event.context.subInputs, function (input, subInputIndex) {
-              if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
-                var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
-                promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
-              }
-            })
+            if (event.context) {
+              _.each(event.context.subInputs, function (input, subInputIndex) {
+                if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
+                  var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
+                  promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
+                }
+              })
+            }
             promises.push(new Promise(waiter.done))
             sequentialPromiseResolver(promises)
           })
@@ -2466,10 +2510,13 @@
             }
           }).then(function (response) {
             let parsed = ldGraph.parse(response.data)
-
-            let root = sortNodes(parsed.byId(mainSubject).outAll('hasPublicationPart'), ractive.get('applicationData'), 'PublicationPart')
-            ractive.get('lastRoots')[ mainSubject ] = { hasPublicationPart: root }
-            ractive.update('lastRoots')
+            _.each(applicationData.sortOrders, function (sortOrder) {
+              let root = sortNodes(parsed.byId(mainSubject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
+              ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
+              ractive.update('lastRoots')
+            })
+            removeInputsForObject(input, index)()
+            _.chain(input.subInputs).pluck('input').invoke('thisRange')
           })
             .then(function (response) {
               // do an extra patch to invalidate cache of old subject
@@ -3050,7 +3097,17 @@
               },
               hasNextOrPrevRange: function (input) {
                 return _.some(input.subInputs, function (subInput) {
-                  return ractive.get(`${subInput.input.keypath}.nextRange`) || ractive.get(`${subInput.input.keypath}.nextRange`)
+                  return ractive.get(`${subInput.input.keypath}.nextRange`) || ractive.get(`${subInput.input.keypath}.prevRange`)
+                })
+              },
+              hasPrevRange: function (input) {
+                return _.some(input.subInputs, function (subInput) {
+                  return ractive.get(`${subInput.input.keypath}.prevRange`)
+                })
+              },
+              hasNextRange: function (input) {
+                return _.some(input.subInputs, function (subInput) {
+                  return ractive.get(`${subInput.input.keypath}.nextRange`)
                 })
               }
             },
@@ -3206,32 +3263,7 @@
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
-                patchObject(parentInput, applicationData, index, 'del').then(function () {
-                  ractive.update()
-                  var promises = []
-                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
-                  let subInputsKeypath = grandParentOf(grandParentOf(event.keypath))
-                  _.each(parentInput.subInputs, function (subInput, subInputIndex) {
-                    if (_.isArray(subInput.input.values)) {
-                      try {
-                        promises.push(ractive.splice(`${subInputsKeypath}.${subInputIndex}.input.values`, index, 1))
-                      } catch (e) {
-                        // nop
-                      }
-                    }
-                  })
-                  promises.push(new Promise(function () {
-                    $(event.node).closest('.ui-accordion-content').prev().remove()
-                    $(event.node).closest('.ui-accordion-content, .field').remove()
-                  }))
-                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
-                  promises.push(new Promise(waiter.done))
-                  sequentialPromiseResolver(promises)
-                  if (ractive.get(`${subInputsKeypath}.0.input.values`).length === 0) {
-                    var addValueEvent = { keypath: parentOf(subInputsKeypath) }
-                    ractive.fire('addValue', addValueEvent)
-                  }
-                })
+                patchObject(parentInput, applicationData, index, 'del').then(removeInputsForObject(parentInput, index)).then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
                 _.each(parentInput.subInputs, function (input, inputIndex) {
@@ -4142,8 +4174,8 @@
               var sourceInput = inputFromInputId(input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
               if (sourceInput) {
                 var value = _.last(input.values)
-                if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
-                  (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object') {
+                if (value && (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                  (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object')) {
                   ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
                     value: sourceInput.values[ 0 ].current.value,
                     displayValue: sourceInput.values[ 0 ].current.displayValue
