@@ -3240,8 +3240,10 @@
                     updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
                   }
                 })
-                if (uri.indexOf('publication') !== -1) {
+                if (initOptions.task === 'maintPub') {
                   updateBrowserLocationWithTab(1)
+                } else if (initOptions.task === 'maintWork') {
+                  updateBrowserLocationWithTab(2)
                 }
                 Main.init(initOptions)
 //                updateBrowserLocationWithTemplate(editWith.template)
