@@ -996,34 +996,34 @@
       })
     }
 
-  function removeInputsForObject (parentInput, index) {
-    return function () {
-      ractive.update()
-      var promises = []
-      promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
-      _.each(parentInput.subInputs, function (subInput, subInputIndex) {
-        if (_.isArray(subInput.input.values)) {
-          try {
-            promises.push(ractive.splice(`${subInput.input.keypath}.values`, index, 1))
-          } catch (e) {
-            // nop
+    function removeInputsForObject (parentInput, index) {
+      return function () {
+        ractive.update()
+        var promises = []
+        promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
+        _.each(parentInput.subInputs, function (subInput, subInputIndex) {
+          if (_.isArray(subInput.input.values)) {
+            try {
+              promises.push(ractive.splice(`${subInput.input.keypath}.values`, index, 1))
+            } catch (e) {
+              // nop
+            }
           }
+        })
+        promises.push(new Promise(function () {
+          $(event.node).closest('.ui-accordion-content').prev().remove()
+          $(event.node).closest('.ui-accordion-content, .field').remove()
+        }))
+        promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
+        sequentialPromiseResolver(promises)
+        if (ractive.get(`${parentInput.keypath}.subInputs.0.input.values`).length === 0) {
+          var addValueEvent = { keypath: parentOf(parentInput.keypath) }
+          ractive.fire('addValue', addValueEvent)
         }
-      })
-      promises.push(new Promise(function () {
-        $(event.node).closest('.ui-accordion-content').prev().remove()
-        $(event.node).closest('.ui-accordion-content, .field').remove()
-      }))
-      promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
-      sequentialPromiseResolver(promises)
-      if (ractive.get(`${parentInput.keypath}.subInputs.0.input.values`).length === 0) {
-        var addValueEvent = { keypath: parentOf(parentInput.keypath) }
-        ractive.fire('addValue', addValueEvent)
       }
     }
-  }
 
-  function updateInputsForResource (response, resourceUri, options, root, type) {
+    function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
       var graphData = ensureJSON(response.data)
       var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
@@ -1114,8 +1114,8 @@
                                     }
                                   }
                                 }
-                                  input.values[ index ].nonEditable = true
-                                  ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                                input.values[ index ].nonEditable = true
+                                ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                                 setAllowNewButtonForInput(input)
                               } else {
                                 setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
@@ -1194,17 +1194,14 @@
                     ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
                     ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
                     ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
-                    // if (actualRoots.length > startIndex + rangeLength) {
-                    //   input.nextRange = loadForRangeOfInputs(startIndex + rangeLength, rangeLength)
-                    // } else {
-                    //   delete input.nextRange
-                    // }
-                    // if (startIndex > 0) {
-                    //   input.prevRange = loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength)
-                    // } else {
-                    //   delete input.prevRange
-                    // }
-                    //input.thisRange = loadForRangeOfInputs(startIndex, rangeLength)
+                    if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
+                      const fromEnd = actualRoots.length - startIndex
+                      ractive.set(`${input.keypath}.rangeStats`, {
+                        start: startIndex + 1,
+                        end: Math.min(actualRoots.length, startIndex + rangeLength),
+                        numberOfObjects: actualRoots.length
+                      })
+                    }
                     if (input.parentInput && input.parentInput.pagination) {
                       const fromEnd = actualRoots.length - startIndex
                       ractive.splice(`${input.keypath}.values`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
