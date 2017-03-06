@@ -203,6 +203,12 @@
                     on-enter="nextRange">+ 10</button>
             <span class="pagination save-placeholder"></span>
 {{/if}}
+
+            {{#subInputs[0].input.rangeStats}}
+            <span class="range-indicator pure-u-1-8">
+                {{start}}–{{end}} av {{numberOfObjects}}
+            </span>
+            {{/}}
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                     class="pure-button pure-button-primary"

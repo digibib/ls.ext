@@ -614,6 +614,11 @@ body {
               opacity: 1.0;
             }
           }
+          span.range-indicator {
+            float: left;
+            margin-left: 19px;
+            margin-top: 7px;
+          }
           .save-placeholder.pagination {
             float: left;
             position: relative;
