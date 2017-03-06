@@ -328,6 +328,7 @@ export default {
   'ValidationMessage.invalidPin': 'PIN-koden må være 4 siffer',
   'ValidationMessage.invalidSSN': 'Ugyldig ID-nummer',
   'ValidationMessage.invalidYear': 'Ugyldig år',
+  'ValidationMessage.toYearBeforeFromYear': 'År fra er større enn år til',
   'ValidationMessage.invalidZipcode': 'Ugyldig postnr, må være 4 siffer',
   'ValidationMessage.pinsMustBeEqual': 'PIN-kodene må være like',
   'ValidationMessage.required': 'Feltet må fylles ut',
