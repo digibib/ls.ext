@@ -184,15 +184,21 @@
     <span class="pure-u-1-1" style="order: 1000;">
         <div class="add-new-btn-row">
             <div class="pure-u-1-12"> </div>
-{{#if hasNextOrPrevRange(.)}}
+{{#if hasNextRange(.) || hasPrevRange(.)}}
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                     class="pure-button pure-button-primary pagination"
+                    {{#if !hasPrevRange(.)}}
+                    disabled="disabled"
+                    {{/if}}
                     on-click="prevRange"
                     on-enter="prevRange">- 10</button>
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                     class="pure-button pure-button-primary pagination"
+                    {{#if !hasNextRange(.)}}
+                    disabled="disabled"
+                    {{/if}}
                     on-click="nextRange"
                     on-enter="nextRange">+ 10</button>
             <span class="pagination save-placeholder"></span>
