@@ -541,7 +541,8 @@
             lang: value.lang,
             accepted: options.source ? { source: options.source } : undefined
           },
-          uniqueId: _.uniqueId()
+          uniqueId: _.uniqueId(),
+          nonEditable: options.setNonEditable
         })
         if (input.values[ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
@@ -1140,12 +1141,12 @@
                           _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
                             if (!options.onlyValueSuggestions) {
                               let valueIndex = input.isSubInput ? rootIndex : index
-                              setSingleValue(value, input, (valueIndex) + (offset), options)
+                              setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, {setNonEditable: input.isSubInput && !options.source}))
                               input.values[ valueIndex ].subjectType = type
                               input.values[ valueIndex ].oldSubjectType = type
                               if (input.isSubInput && !options.source) {
-                                input.values[ valueIndex ].nonEditable = true
-                                ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
+                                // input.values[ valueIndex ].nonEditable = true
+                                // ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
                                 input.parentInput.allowAddNewButton = true
                               }
                               ractive.set(`${input.keypath}.allowAddNewButton`, true)
