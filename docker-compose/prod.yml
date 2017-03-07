@@ -85,7 +85,7 @@ services:
 
   tagvision_sip_proxy:
     container_name: tagvision_sip_proxy
-    image: "digibib/sip2proxy:e38b649a1084662c6d3b92f3582adce20618c676"
+    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
     networks:
       - backend
     restart: always
@@ -108,7 +108,7 @@ services:
 
   bibliotheca_sip_proxy:
     container_name: bibliotheca_sip_proxy
-    image: "digibib/sip2proxy:e38b649a1084662c6d3b92f3582adce20618c676"
+    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
     networks:
       - backend
     restart: always
@@ -128,7 +128,7 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/sip2proxy:e38b649a1084662c6d3b92f3582adce20618c676"
+    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
     command:
       - "/sip2proxy"
       - "-from=:9999"
