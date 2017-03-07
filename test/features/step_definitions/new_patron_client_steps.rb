@@ -521,6 +521,7 @@ end
 
 When(/^velger å utsette reservasjonen til gitt dato$/) do
   wait_for { @browser.element(data_automation_id: 'reserve_postpone_modal').present? }
+  @browser.text_field(data_automation_id: 'postponeReservation_date').set("01.01.2023")
   @browser.element(data_automation_id: 'postpone_reserve_button').click
 end
 
