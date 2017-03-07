@@ -3,6 +3,7 @@
 
 @redef
 @check-for-errors
+@wip
 Egenskap: Endre eksisterende verk
   Som katalogisator
   For å kunne rette en feil verksopplysning

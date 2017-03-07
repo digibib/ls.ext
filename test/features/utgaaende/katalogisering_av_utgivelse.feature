@@ -1,8 +1,10 @@
 # encoding: UTF-8
 # language: no
 
+@ignore
 @redef
 @check-for-errors
+@wip
 Egenskap: Katalogisering av utgivelse
   Som katalogisator
   For at brukere skal kunne finne rett utgivelse

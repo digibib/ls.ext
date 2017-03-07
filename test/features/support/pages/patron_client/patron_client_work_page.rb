@@ -30,9 +30,7 @@ class PatronClientWorkPage < PageRoot
   end
 
   def publication_entries(media_type = nil)
-    wait_for {
-      @browser.elements(data_automation_id: /^publication_http/).size > 0
-    }
+    wait_for { @browser.elements(data_automation_id: /^publication_http/).size > 0 }
     if media_type
       @browser.element(data_mediatype: media_type).elements(data_automation_id: /^publication_http/)
     else

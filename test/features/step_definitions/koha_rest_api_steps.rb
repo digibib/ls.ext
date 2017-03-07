@@ -36,7 +36,7 @@ end
 
 Then(/^gir APIet tilbakemelding om at boka er reservert$/) do
   @context[:reserve]["biblionumber"].should eq(@active[:book].biblionumber)
-  @context[:reserve]["branchcode"].should eq(@active[:branch].code)
+  @context[:reserve]["branchcode"].should eq(@context[:defaults][:branches][0].code)
   @context[:reserve]["borrowernumber"].should eq(@active[:patron].borrowernumber)
 end
 
@@ -152,11 +152,11 @@ Then(/^gir APIet tilbakemelding om at de nye meldingspreferansene er registrert$
 end
 
 Given(/^at det finnes informasjon om en bok med eksemplarer$/) do
-  step "at det finnes en avdeling"       unless @active[:branch]
+  step "at det finnes en avdeling"
 
   book = Book.new
   book.addItem # generates unique item with barcode
-  book.items.first.branch   = @active[:branch]
+  book.items.first.branch   = @context[:defaults][:branches][0]
   book.items.first.itemtype = @context[:defaults][:item_type]
   @active[:book] = book
 end
@@ -164,7 +164,7 @@ end
 When(/^jeg legger inn boka via Kohas API$/) do
   marcxml = File.read("features/upload-files/Fargelegg byen!.marc21", :encoding => 'UTF-8')
   marcxml = marcxml.gsub(/\{\{ book_title \}\}/, @active[:book].title)
-  marcxml = marcxml.gsub(/\{\{ branchcode \}\}/, @active[:branch].code)                 # must be existing branchcode
+  marcxml = marcxml.gsub(/\{\{ branchcode \}\}/, @context[:defaults][:branches][0].code)                 # must be existing branchcode
   marcxml = marcxml.gsub(/\{\{ item_type_code \}\}/, @context[:defaults][:item_type][:code])           # must be existing item type
   marcxml = marcxml.gsub(/\{\{ item_barcode \}\}/, @active[:book].items.first.barcode)  # must be unique barcode
 
