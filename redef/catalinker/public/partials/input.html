@@ -182,8 +182,7 @@
 
 {{#multiple && allowAddNewButton}}
     <span class="pure-u-1-1" style="order: 1000;">
-        <div class="add-new-btn-row">
-            <div class="pure-u-1-12"> </div>
+        <div class="add-new-btn-row pure-u-1">
 {{#if hasNextRange(.) || hasPrevRange(.)}}
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
@@ -203,15 +202,13 @@
                     on-enter="nextRange">+ 10</button>
             <span class="pagination save-placeholder"></span>
 
-            {{#subInputs[0].input.rangeStats}}
-            <span class="range-indicator pure-u-1-8">
-                {{start}}–{{end}} av {{numberOfObjects}}
+            <span class="pure-u-11-24 pagination range-slider" as-rangeSlider="{rangeStats: subInputs[0].input.rangeStats, input:.}">
+                   <span class="range-slider-handle ui-slider-handle"/>
             </span>
-            {{/}}
 {{/if}}
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                    class="pure-button pure-button-primary"
+                    class="pure-button pure-button-primary add-button"
                     on-click="addValue"
                     on-keyup="addValue">{{addAnotherLabel || 'Legg til ny'}}</button>
         </div>
