@@ -12,6 +12,26 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.8.9 (2017-03-07)
+
+KOHA: 66b9bc2ca4c9619b71035408a1958572b9d82546
+GITREF:
+
+- Koha:
+  - Liten NL fiks (ikke en uke uten :-)
+  - Sender metrikk (gir oss b.l.a overblikk hva som går treigt)
+- Patron-client:
+  - DEICH-671 Fiks for sett på vent funksjonalitet
+  - DEICH-708 Dato filter for verk, plus layout fiks
+  - DEICH-682 Realia skal kun reservers til eie bibliotek
+- Services:
+  - DEICH-684 Optimalisere indekseringshastighet
+- Catalinker:
+  - DEICH-678 Feil lenke for redigering av verk
+- Infrastruktur
+  - DEICH-643 Oppgradert Elsaticsearch fra 2 -> 5
+  - Ny Metrikkdatabase
+
 ## 0.8.8 (2017-03-02)
 
 KOHA: 53e98d75963bb5287d02660b7450b064428a4427
