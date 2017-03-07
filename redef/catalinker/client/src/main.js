@@ -1202,7 +1202,7 @@
                         numberOfObjects: actualRoots.length
                       })
                     }
-                    if (input.parentInput && input.parentInput.pagination) {
+                    if (actualRoots.length > rangeLength && input.parentInput && input.parentInput.pagination) {
                       const fromEnd = actualRoots.length - startIndex
                       ractive.splice(`${input.keypath}.values`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
                     }
@@ -3260,7 +3260,9 @@
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
-                patchObject(parentInput, applicationData, index, 'del').then(removeInputsForObject(parentInput, index)).then(waiter.done)
+                patchObject(parentInput, applicationData, index, 'del')
+                  .then(removeInputsForObject(parentInput, index))
+                  .then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
                 _.each(parentInput.subInputs, function (input, inputIndex) {
