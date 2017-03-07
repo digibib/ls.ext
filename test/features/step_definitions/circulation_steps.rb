@@ -131,8 +131,16 @@ Given(/^at materialet ikke er holdt av til en annen låner$/) do
 end
 
 Given(/^at det finnes en reservasjon på materialet$/) do
-  biblionumber = @context[:publication_recordid]
-  @context[:koha].add_hold({numberOfHolds: 1, biblionumber: biblionumber.to_i})
+  # TODO: Remove :publication_recordid
+  recId = @context[:publication_recordid] ?
+    @context[:publication_recordid] :
+    @context[:services].get_value(@context[:services].publications[0], 'recordId')
+  @context[:koha].add_hold({numberOfHolds: 1, biblionumber: recId.to_i})
+  @cleanup.push("sletter reservasjon på recId #{recId}" =>
+    lambda do
+      @context[:koha].delete_holds if @context[:koha]
+    end
+  )
 end
 
 Gitt(/^at det finnes en reservasjon på en annen avdeling$/) do
@@ -189,10 +197,7 @@ When(/^boka reserveres av "(.*?)" på egen avdeling$/) do |name|
   # form.radio(:value => book.items.first.itemnumber).set
   form.submit
   @cleanup.push("reservasjon på #{barcode}" =>
-                    lambda do
-                      @browser.goto intranet(:reserve)+@context[:publication_recordid]
-                      @browser.link(:href => /action=cancel/).click
-                    end
+    lam
   )
 end
 
@@ -467,47 +472,14 @@ Given(/^at sirkulasjonsreglene på sida stemmer overens med følgende data$/) do
   b.should == true
 end
 
-When(/^jeg besøker bokposten$/) do
-  @site.BiblioDetail.visit(@context[:publication_recordid])
-end
-
-When(/^ser jeg tittelen i bokposten$/) do
-  tries = 5
-  begin
-    @browser.div(:id => 'catalogue_detail_biblio').h1.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).text.should be == @context[:publication_maintitle]
-  rescue Watir::Wait::TimeoutError
-    STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
-    if (tries == 0)
-      fail
-    else
-      step "katalogen reindekseres"
-      step "jeg besøker bokposten"
-      retry
-    end
-  end
-end
-
-When(/^ser jeg forfatteren i bokposten$/) do
-  tries = 5
-  begin
-    @browser.div(:id => 'catalogue_detail_biblio').h5.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).a.text.should be == @context[:work_creator]
-  rescue Watir::Wait::TimeoutError
-    STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
-    if (tries == 0)
-      fail
-    else
-      step "katalogen reindekseres"
-      step "jeg besøker bokposten"
-      retry
-    end
-  end
-end
-
 When(/^ser jeg tittelen i plukklisten$/) do
   tries = 3
+  title = @context[:publication_updated_title] ?
+    @context[:publication_updated_title] :
+    @context[:services].get_value(@context[:services].publications[0], 'mainTitle')
   begin
     @browser.table(:id => "holdst").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).trs.take_while { |row|
-      row.td(:class => "hq-title") }.any? { |element| element.text.include? @context[:publication_maintitle] }.should be true
+      row.td(:class => "hq-title") }.any? { |element| element.text.include? title }.should be true
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -522,8 +494,13 @@ end
 
 When(/^ser jeg forfatteren i plukklisten$/) do
   tries = 3
+  authorName = @context[:work_creator] ?
+    @context[:work_creator] :
+    @context[:services].get_value(@context[:services].persons[0], 'name')
   begin
-    @browser.table(:id => "holdst").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).divs(:class => 'hq-author').any? { |element| element.text.include? @context[:work_creator] }.should be true
+    @browser.table(:id => "holdst").wait_until_present(timeout: BROWSER_WAIT_TIMEOUT).divs(:class => 'hq-author').any? { |element|
+      element.text.include? authorName
+    }.should be true
   rescue Watir::Wait::TimeoutError
     STDERR.puts "TIMEOUT: retrying ... #{(tries -= 1)}"
     if (tries == 0)
@@ -591,7 +568,7 @@ Given(/^at epost er aktivert ved brukerregistrering$/) do
 end
 
 When(/^jeg registrerer en ny låner med gyldig epostadresse$/) do
-  step "at det finnes en avdeling" unless @active[:branch]
+  step "at det finnes en avdeling"
   step "jeg legger til en lånerkategori" unless @active[:patroncategory]
   step "at det finnes en låner med lånekort", table(%{
     | firstname | dateenrolled | dateexpiry | dateofbirth | email         | lost  | debarred | password | flags |
@@ -623,6 +600,7 @@ end
 
 
 When(/^jeg finner strekkoden for et ledig eksemplar$/) do
+  # TODO remove @context[:first_available_exemplar_barcode]
   @context[:first_available_exemplar_barcode] = @site.BiblioDetail.visit(@context[:reserve_record_id]).find_first_available_exemplar
 end
 
@@ -639,9 +617,19 @@ When(/^jeg låner ut boka$/) do
   cardnumber = @active[:patron] ?
     @active[:patron].cardnumber :
     @context[:koha].patrons[0]["cardnumber"]
+  usermail = @active[:patron] ?
+    @active[:patron].email :
+    @context[:koha].patrons[0]["email"]
   barcode = @context[:first_available_exemplar_barcode] ?
     @context[:first_available_exemplar_barcode] :
     @context[:koha].biblio["items"][0]["barcode"]
+  branchcode = @context[:defaults][:branches][0].code
   @context[:circ] = TestSetup::Circulation.new "sip_proxy", "9999"
-  @context[:circ].checkout(@context[:random_migrate_branchcode], cardnumber, "1234", barcode)
+  @context[:circ].checkout(branchcode, cardnumber, "1234", barcode)
+
+  @cleanup.push("email box #{usermail}" =>
+    lambda do
+     @context[:circ].checkin(branchcode, barcode)
+    end
+  )
 end

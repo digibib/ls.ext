@@ -3,6 +3,7 @@
 
 @redef
 @wip
+@ignore
 #step is missing
 Egenskap: Gruppering på utgivelse
   Som bruker av bibliotekets nettsider
@@ -13,9 +14,3 @@ Egenskap: Gruppering på utgivelse
     Gitt et verk med en utgivelse
     Når jeg er på sida til verket
     Så ser jeg format og språk for utgivelsen
-
-  Scenario: Flere utgivelser og flere eksemplarer
-    Gitt et verk med flere utgivelser og eksemplarer
-    Når jeg er på sida til verket
-    Så har eksemplarene en identifikator (strekkode)
-    Og eksemplarene er gruppert etter utgave m/informasjon om format og språk

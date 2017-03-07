@@ -17,7 +17,7 @@ Given(/^at boka er tilgjengelig \(Opac\)$/) do
 end
 
 When(/^jeg legger inn boka som en ny bok$/) do
-  step "at det finnes en avdeling"       unless @active[:branch]
+  step "at det finnes en avdeling"
   book = SVC::Biblio.new(@browser,@context,@active).add
 
   @active[:book] = book
@@ -56,36 +56,4 @@ Then(/^viser systemet at boka er en bok som( ikke)? kan lånes ut$/) do |boolean
   else
     item_status.should include("vailable")
   end
-end
-
-Then(/^kan jeg søke opp boka$/) do
-  biblio_page = @site.Home.search_catalog(@active[:book].title)
-  biblio_page.header.should include(@active[:book].title)
-  biblio_page.status.should include("vailable")
-end
-
-Given(/^at det finnes et verk med en publikasjon og et eksemplar$/) do
-  id = SecureRandom.hex(8)
-  services = "http://#{ENV['HOST']}:#{port(:services)}"
-  migrator = RandomMigrate::Migrator.new(services)
-
-  work = RandomMigrate::Entity.new('http://host/work/w1', services)
-  @context[:work_uri] = migrator.post_ntriples('work', work.to_ntriples)
-
-  publication = RandomMigrate::Entity.new('http://host/publication/p1', services)
-  @context[:publication_maintitle] = "book #{id}"
-  publication.add_literal('mainTitle', @context[:publication_maintitle])
-  publication.add_authorized('publicationOf', @context[:work_uri])
-  @context[:publication_uri] = migrator.post_ntriples('publication', publication.to_ntriples)
-  id = migrator.get_record_id(@context[:publication_uri])
-  migrator.add_item(id, false, 'placement1', @active[:branch].code, 0)
-
-  record_data = migrator.get_record_data(@context[:work_uri], @context[:publication_uri])
-  @context[:publication_recordid] = record_data[:publication_recordid]
-  @context[:item_barcode] = record_data[:item_barcode]
-  @cleanup.push("biblio #{@context[:publication_recordid]} med eksemplarer" =>
-                    lambda do
-                      SVC::Biblio.new(@browser).delete(@context[:publication_recordid])
-                    end
-  )
 end

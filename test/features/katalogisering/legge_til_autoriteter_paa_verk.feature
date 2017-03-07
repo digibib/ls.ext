@@ -5,7 +5,7 @@ Egenskap: Legge til autoriteter på verk
   Som katalogisator
   For å gjøre det mulig for brukere å se og søke opp emner og sjangre på verk
   Ønsker jeg å legge til emner og sjangre på verk
-  
+
   @wip
   Scenario: Opprettelse av emne
     Når jeg vil lage et nytt emne
@@ -20,7 +20,7 @@ Egenskap: Legge til autoriteter på verk
     Når jeg skriver inn emne i feltet for emne og trykker enter
     Så søker jeg opp emner og kan velge det jeg vil ha
     Og verket er tilkoplet et emne
-  
+
   @wip
   Scenario: Opprettelse av sjanger
     Gitt at jeg er på sjangeropprettelsessida
@@ -34,4 +34,3 @@ Egenskap: Legge til autoriteter på verk
     Når jeg skriver inn sjangernavn i feltet for sjanger og trykker enter
     Så søker jeg opp sjangeren og kan velge den jeg vil ha
     Og verket er tilkoplet en sjanger
-  

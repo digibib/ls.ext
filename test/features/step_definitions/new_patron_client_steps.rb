@@ -106,7 +106,17 @@ When(/^jeg søker på "([^"]*)"$/) do |query|
 end
 
 When(/^jeg trykker på første treff$/) do
+  wait_retry { @browser.link(data_automation_id: 'work-link').present? }
   @site.SearchPatronClient.follow_first_item_in_search_result
+end
+
+When(/^jeg finner riktig treff og trykker på det$/) do
+  title = @context[:services].get_value(@context[:services].publications[0], 'mainTitle')
+  wait_retry {
+    element = @browser.element(data_automation_id: 'work-title')
+    element.present? && element.text.include?(title)
+  }
+  @browser.link(data_automation_id: 'work-link').click
 end
 
 When(/^skal jeg se "([^"]*)" utgivelser$/) do |count|
@@ -189,6 +199,7 @@ When(/^skal jeg se informasjonen min$/) do
 end
 
 When(/^låneren trykker bestill på en utgivelse$/) do
+  wait_retry { @browser.element(data_automation_id: 'publication_available').exists? }
   record_id = @site.PatronClientWorkPage.click_first_reserve
   @context[:reserve_record_id] = record_id
 end
@@ -520,8 +531,9 @@ When(/^jeg trykker på utsett reservasjon$/) do
 end
 
 When(/^velger å utsette reservasjonen til gitt dato$/) do
+  inFourWeeks = (Time.now + (4*7*24*60*60)).strftime('%d.%m.%Y')
   wait_for { @browser.element(data_automation_id: 'reserve_postpone_modal').present? }
-  @browser.text_field(data_automation_id: 'postponeReservation_date').set("01.01.2023")
+  @browser.text_field(data_automation_id: 'postponeReservation_dateCurrentAndAbove').set(inFourWeeks)
   @browser.element(data_automation_id: 'postpone_reserve_button').click
 end
 
@@ -544,33 +556,25 @@ When(/^skal jeg se at reservasjonen kan utsettes$/) do
 end
 
 When(/^at reservasjonen er på riktig avdeling$/) do
-  wait_for {
-    @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql? "hutl"
-  }
+  wait_for { @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql? "hutl" }
 end
 
 When(/^jeg endrer avdeling$/) do
-  branchcode = @active[:branch] ?
-    @active[:branch].code :
-    @context[:random_migrate_branchcode]
+  branchcode = 'ffur'
   @site.PatronClientLoansAndReservationsPage.reservations.first.select.select_value(branchcode)
-  wait_for {
-    @site.PatronClientLoansAndReservationsPage.reservations.first.select.present?
-  }
+  wait_for { @site.PatronClientLoansAndReservationsPage.reservations.first.select.present? }
 end
 
 When(/^skal reservasjonen være på ny avdeling$/) do
-  wait_for {
-    @site.PatronClientLoansAndReservationsPage.reservations.first && @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql?(@context[:random_migrate_branchcode])
-  }
+  # TODO remove random_migrate_branchcode
+  branchcode = 'ffur'
+  wait_for { @site.PatronClientLoansAndReservationsPage.reservations.first && @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql?(branchcode) }
 end
 When(/^skal jeg se at jeg er logget inn$/) do
   surname = @active[:patron] ?
     @active[:patron].surname :
     @context[:koha].patrons[0]["surname"]
-  wait_for {
-    @browser.element(data_automation_id: 'borrowerName').text.should eq surname
-  }
+  wait_for { @browser.element(data_automation_id: 'borrowerName').text.should eq surname }
 end
 
 When(/^jeg skriver inn riktig brukernavn men feil passord$/) do
@@ -581,15 +585,11 @@ When(/^jeg skriver inn riktig brukernavn men feil passord$/) do
 end
 
 When(/^skal jeg se en melding om feil brukernavn og\/eller passord$/) do
-  wait_for {
-    @browser.element(data_automation_id: 'login_error_message').present?
-  }
+  wait_for { @browser.element(data_automation_id: 'login_error_message').present? }
 end
 
 When(/^skal jeg se at jeg ikke er logget inn$/) do
-  wait_for {
-    @browser.element(data_automation_id: 'login_element').present?
-  }
+  wait_for { @browser.element(data_automation_id: 'login_element').present? }
 end
 
 When(/^trykker jeg på sorteringsknappen etter "([^"]*)"$/) do |column_name|

@@ -2,9 +2,9 @@
 require_relative '../support/services/test_setup/TestSetup.rb'
 require 'pp'
 
-Given(/^at Koha er populert med "(.*)" lånere, "(.*)" eksemplarer og "(.*)" reserveringer$/) do |patrons,items,holds|
+Given(/^at Koha er populert med ([0-9]) lånere, ([0-9]) eksemplarer og ([0-9]) reserveringer$/) do |patrons,items,holds|
 
-  @context[:koha].populate({patrons: patrons, items: items, holds: {numberOfHolds: holds}})
+  @context[:koha].populate({patrons: patrons.to_i, items: items.to_i, holds: {numberOfHolds: holds.to_i}})
   @context[:c] = []
   @cleanup.push( "cleaning up TestSetup, #{patrons} patrons, #{items} items and #{holds} holds" =>
     lambda do

@@ -45,7 +45,7 @@ Given(/^at det er opprettet (?:et|en) (verk|utgivelse)$/) do | resource_name |
 end
 
 When(/^jeg sender inn endringer i (verk|utgivelse)(?:et|n) til APIet$/) do | resource_name |
-  @context[Resource.sym_from_name(resource_name)].gen_literals
+  @context[Resource.sym_from_name(resource_name)].gen_literals(Resource.type_from_name(resource_name))
   r = @context[Resource.sym_from_name(resource_name)]
   ServicesAPIClient.new().patch_resource(r.uri, r.literals)
 end
