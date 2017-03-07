@@ -27,8 +27,15 @@ class PostponeReservationForm extends React.Component {
     this.handleDateChange = this.handleDateChange.bind(this)
   }
 
-  handlePostponeReservation () {
-    this.props.reservationActions.changeReservationSuspension(this.props.modalProps.reserveId, this.props.modalProps.suspended, this.props.date.date)
+  handlePostponeReservation (field) {
+    if (this.props.date === null || this.props.date !== field.date) {
+      this.props.datepickerActions.handleDateChange(moment(field.date, 'DD.MM.YYYY'))
+    }
+
+    this.props.reservationActions.changeReservationSuspension(
+      this.props.modalProps.reserveId,
+      this.props.modalProps.suspended,
+      this.props.date.date)
     this.props.modalActions.hideModal()
   }
 
@@ -147,7 +154,6 @@ PostponeReservationForm.propTypes = {
 }
 
 function mapStateToProps (state) {
-  console.log(state)
   return {
     isLoggedIn: state.application.isLoggedIn,
     isRequestingReservation: state.reservation.isRequestingReservation,
