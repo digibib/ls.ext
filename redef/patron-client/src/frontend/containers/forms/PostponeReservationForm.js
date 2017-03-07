@@ -83,7 +83,7 @@ class PostponeReservationForm extends React.Component {
             />
           </div>
           <div className="postpone-aside">
-            <p>NB: Du beholder din nåværende plass i køen</p>
+            <p><FormattedMessage {...messages.postponeInfoMsg} /></p>
           </div>
         </div>
         <button
@@ -104,6 +104,11 @@ class PostponeReservationForm extends React.Component {
 }
 
 export const messages = defineMessages({
+  postponeInfoMsg: {
+    id: 'UserLoans.postponeInfoMsg',
+    description: 'Supplement message for postponing reservation',
+    defaultMessage: 'NB: You will keep your place in queue. You can cancel postponement at any time.'
+  },
   activateAfter: {
     id: 'UserLoans.activateAfter',
     description: 'Form label for datepicker field in postpone reservation',
@@ -134,7 +139,7 @@ export const messages = defineMessages({
 PostponeReservationForm.propTypes = {
   reservationActions: PropTypes.object.isRequired,
   modalProps: PropTypes.object.isRequired,
-  date: PropTypes.object.isRequired,
+  date: PropTypes.object,
   modalActions: PropTypes.object.isRequired,
   datepickerActions: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -142,6 +147,7 @@ PostponeReservationForm.propTypes = {
 }
 
 function mapStateToProps (state) {
+  console.log(state)
   return {
     isLoggedIn: state.application.isLoggedIn,
     isRequestingReservation: state.reservation.isRequestingReservation,
@@ -168,7 +174,7 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: formName,
-  enableReinitialize: true,
+  // enableReinitialize: true,
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
   validate: validator(fields)

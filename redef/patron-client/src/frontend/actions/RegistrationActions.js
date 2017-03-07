@@ -21,7 +21,6 @@ export function requestCheckForExistingUser () {
 }
 
 export function postRegistrationFailure (error, message) {
-  console.log(error)
   return dispatch => {
     dispatch(showModal(ModalComponents.REGISTRATION, {
       isError: true
@@ -59,7 +58,6 @@ export function checkForExistingUser () {
       year: year,
       ssn: ssn
     }
-    console.log('info', registrationInfo)
     dispatch(requestCheckForExistingUser())
     return fetch(url, {
       method: 'POST',

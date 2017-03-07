@@ -13,11 +13,6 @@ class PostponeReservationModal extends React.Component {
     this.handleCancel = this.handleCancel.bind(this)
   }
 
-  handlePostponeReserve (event) {
-    event.preventDefault()
-    // this.props.reservationActions.reservePublication(this.props.recordId, this.librarySelect.getValue())
-  }
-
   handleCancel (event) {
     event.preventDefault()
     this.props.modalActions.hideModal()
@@ -37,7 +32,6 @@ PostponeReservationModal.propTypes = {
   isRequestingReservation: PropTypes.bool.isRequired,
   reservationActions: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
-  // recordId: PropTypes.string.isRequired,
   isSuccess: PropTypes.bool,
   isError: PropTypes.bool,
   message: PropTypes.string
