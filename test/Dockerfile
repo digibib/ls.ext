@@ -35,7 +35,8 @@ RUN gem install \
     json-ld \
     rest-client \
     nokogiri \
-    bcrypt
+    bcrypt \
+    faker
 
 RUN gem install cucumber -v 2.4.0
 RUN gem install selenium-webdriver -v 3.0.3

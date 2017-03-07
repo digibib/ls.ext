@@ -18,7 +18,7 @@ module SVC
       # Book item needs branch and itemtype before import
       book = Book.new
       book.addItem
-      book.items.first.branch   = @active[:branch]
+      book.items.first.branch   = @context[:defaults][:branches][0]
       book.items.first.itemtype = @context[:defaults][:item_type]
 
       data = File.read("features/upload-files/Fargelegg byen!.marc21", :encoding => 'UTF-8')

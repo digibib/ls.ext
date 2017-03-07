@@ -7,7 +7,11 @@ end
 
 
 When(/^jeg er på sida til verket$/) do
-  @site.PatronClientWorkPage.visit(@context[:work_identifier].split("/").last)
+  # TODO: Remove @context[:work_identifier]
+  path = @context[:work_identifier] ?
+    @context[:work_identifier].split("/").last :
+    @context[:services].works[0].uri.split("/").last
+  @site.PatronClientWorkPage.visit(path)
 end
 
 Then(/^ordet "(.*?)" som førsteutgave vises IKKE på verks\-siden$/) do |arg1|
@@ -90,19 +94,31 @@ Then(/^ser jeg format og språk for utgivelsen$/) do
 end
 
 Then(/^ser jeg oppstillinga av eksemplaret$/) do
-  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+  #TODO: remove @context[:publication_identifier]
+  pubURI = @context[:publication_identifier] ?
+    @context[:publication_identifier] :
+    @context[:services].publications[0].uri
+  @site.PatronClientWorkPage.get_items(pubURI).each do |row|
     row.td(data_automation_id: 'item_shelfmark').text.should_not be_empty
   end
 end
 
 Then(/^ser jeg at eksemplaret er ledig$/) do
-  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+  #TODO: remove @context[:publication_identifier]
+  pubURI = @context[:publication_identifier] ?
+    @context[:publication_identifier] :
+    @context[:services].publications[0].uri
+  @site.PatronClientWorkPage.get_items(pubURI).each do |row|
     row.td(data_automation_id: "item_status").text.should eq("1 av 1 ledige")
   end
 end
 
 Then(/^ser jeg at eksemplaret ikke er ledig$/) do
-  @site.PatronClientWorkPage.get_items(@context[:publication_identifier]).each do |row|
+  #TODO: remove @context[:publication_identifier]
+  pubURI = @context[:publication_identifier] ?
+    @context[:publication_identifier] :
+    @context[:services].publications[0].uri
+  @site.PatronClientWorkPage.get_items(pubURI).each do |row|
     row.td(data_automation_id: "item_status").text.should eq("0 av 1 ledige")
   end
 end

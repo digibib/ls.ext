@@ -8,7 +8,7 @@ Egenskap: Bibliografiske poster via API
 
   @kohadb
   Scenario: Vis eksemplarinfo for aktivt lån via API
-    Gitt at Koha er populert med "1" lånere, "1" eksemplarer og "0" reserveringer
+    Gitt at Koha er populert med 1 lånere, 1 eksemplarer og 0 reserveringer
     Og jeg låner ut boka
     Når jeg sjekker lånerens aktive lån via API
     Og jeg slår opp eksemplaret via API

@@ -149,6 +149,10 @@ test_one:						## Run 'utlaan_via_adminbruker'.
 	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Superbruker l.ner ut bok til Knut"'
 	@$(XHOST_REMOVE)
 
+list_unused_steps:
+	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) run --rm cuke_tests \
+	cucumber --tags=~@ignore --tags=~@migration -d -f Unused'
+
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"
 	$(CMD) -c 'sudo docker stop xkoha'

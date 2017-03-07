@@ -10,7 +10,7 @@ Egenskap: Min Side
 
   Bakgrunn:
     Gitt at jeg er logget inn som superbruker
-    Og at Koha er populert med "1" lånere, "0" eksemplarer og "0" reserveringer
+    Og at Koha er populert med 1 lånere, 0 eksemplarer og 0 reserveringer
     Og at jeg er i søkegrensesnittet
     Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet

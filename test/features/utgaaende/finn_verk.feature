@@ -1,6 +1,8 @@
 # encoding: UTF-8
 # language: no
 
+@wip
+@ignore
 @redef
 @check-for-errors
 Egenskap: Finn verk
@@ -23,11 +25,6 @@ Egenskap: Finn verk
     Når jeg vil finne verket i trefflista
     Så søker jeg på verkets ID i lånergrensesnittet
     Så skal ikke verket finnes i trefflisten
-
-  Scenario: Søk etter ord i tittel for å finne verk
-    Gitt at det finnes et verk med tre ledd i tittelen
-    Når jeg søker på verket i lånergrensesnittet basert på det første og siste leddet i tittelen
-    Så vil jeg finne verket i trefflista
 
   @ignore
   Scenario: Finn andre verk av samme forfatter

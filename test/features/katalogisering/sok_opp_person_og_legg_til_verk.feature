@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-
 @check-for-errors
 @wip @redef
 Egenskap: Søk opp person og legg til som opphavsperson for verk
