@@ -30,6 +30,7 @@
     let supportPanelWidth
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
+    require('jquery-ui/slider')
     require('jquery.scrollto')
     let etagData = {}
     require('isbn2')
@@ -1194,12 +1195,14 @@
                     ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
                     ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
                     ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
+                    ractive.set(`${input.keypath}.customRange`, loadForRangeOfInputs)
                     if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
                       const fromEnd = actualRoots.length - startIndex
                       ractive.set(`${input.keypath}.rangeStats`, {
                         start: startIndex + 1,
                         end: Math.min(actualRoots.length, startIndex + rangeLength),
-                        numberOfObjects: actualRoots.length
+                        numberOfObjects: actualRoots.length,
+                        rangeLength
                       })
                     }
                     if (actualRoots.length > rangeLength && input.parentInput && input.parentInput.pagination) {
@@ -2681,7 +2684,7 @@
             }
           }
 
-          var accordionDecorator = function (node) {
+          var accordion = function (node) {
             $(node).accordion({
               collapsible: true,
               header: '> .accordion-header'
@@ -2840,6 +2843,50 @@
             Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
+            }
+          }
+          var rangeSlider = function (node, args) {
+            var stats = args.rangeStats
+            var input = args.input
+            const $node = $(node)
+            var handle = $node.find('.range-slider-handle')
+            var shifting = false;
+            $node.slider({
+              value: stats.start,
+              min: 1,
+              max: stats.numberOfObjects,
+              step: stats.rangeLength,
+              create: function () {
+                const sliderPos = $(this).slider("value")
+                handle.text(`${sliderPos}/${stats.numberOfObjects}`);
+              },
+              slide: function (event, ui) {
+                handle.text(`${ui.value}/${stats.numberOfObjects}`);
+              },
+              change: function (event, ui) {
+                handle.text(`${ui.value}/${stats.numberOfObjects}`);
+              },
+              stop: function (event, ui) {
+                console.log(ui.value)
+                handleRangeShift({
+                  original: {
+                    target: $node.prev('.save-placeholder').prev()
+                  },
+                  context: args.input
+                }, 'customRange', ui.value, stats.rangeLength)
+              }
+            })
+            var observer = ractive.observe(`${input.keypath}.subInputs.0.input.rangeStats`, function (stats, oldVal, keypath) {
+              $node.slider('option', {
+                value: stats.start,
+                max: stats.numberOfObjects,
+              })
+            }, { init: false })
+
+            return {
+              teardown: function () {
+                observer.cancel()
+              }
             }
           }
           titleRactive = new Ractive({
@@ -3109,21 +3156,22 @@
               }
             },
             decorators: {
-              repositionSupportPanel: repositionSupportPanel,
-              select2: select2,
-              handleAddNewBySelect2: handleAddNewBySelect2,
-              clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
-              unload: unload,
-              accordion: accordionDecorator,
-              timePicker: timePicker,
-              slideDown: slideDown,
-              pasteSanitizer: pasteSanitizer,
-              formatter: formatter,
-              searchable: searchable,
-              tabIndex: tabIndex,
-              disabled: disabled,
-              relations: relations,
-              repositionSupportPanels: repositionSupportPanels
+              repositionSupportPanel,
+              select2,
+              handleAddNewBySelect2,
+              clickOutsideSupportPanelDetector,
+              unload,
+              accordion,
+              timePicker,
+              slideDown,
+              pasteSanitizer,
+              formatter,
+              searchable,
+              tabIndex,
+              disabled,
+              relations,
+              repositionSupportPanels,
+              rangeSlider
             },
             partials: applicationData.partials,
             transitions: {
@@ -3162,12 +3210,18 @@
               })
           }
 
-          function handleRangeShift (event, direction) {
+          function handleRangeShift (event, direction, start, rangeLength) {
             ractive.get('waitHandler').newWaitable(event.original.target)
             let waiter = ractive.get('waitHandler').thisMayTakeSomTime()
             setTimeout(function () {
               whileUnobserved(function () {
-                  _.chain(event.context.subInputs).pluck('input').invoke(direction)
+                  if (start !== undefined) {
+                    _.each(_.chain(event.context.subInputs).pluck('input').invoke(direction, start, rangeLength).value(), function (f) {
+                      f()
+                    })
+                  } else {
+                    _.chain(event.context.subInputs).pluck('input').invoke(direction, start, rangeLength)
+                  }
                 }
               )
             })

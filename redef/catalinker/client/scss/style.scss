@@ -603,30 +603,47 @@ body {
         }
         .add-new-btn-row {
           padding: 0 13px 23px 8px;
-          a:not(.delete-link), button, span {
+          float: none !important;
+          a:not(.delete-link), button.add-button {
             float: right;
             width: auto;
           }
           button.pagination {
-            float: left;
             margin-left: 5px;
-            &.saving {
+            &.saving, &.saving + button {
               opacity: 1.0;
+              +.save-placeholder {
+                position: static;
+                display: inline-block;
+                margin-left: 13px;
+                margin-right: -44px;
+                margin-bottom: 4px;              }
             }
           }
-          span.range-indicator {
-            float: left;
-            margin-left: 37px;
-            margin-top: 7px;
+          span.range-slider {
+            margin-left: 31px;
+            margin-top: 12px;
+            width: 40%;
+            .range-slider-handle {
+              width: auto;
+              height: 1.6em;
+              top: 50%;
+              margin-top: -.8em;
+              text-align: center;
+              font-size: small;
+              padding-left: 6px;
+              padding-right: 6px;
+              padding-top: 2px;
+            }
+            span.range-indicator {
+              margin-left: 37px;
+              margin-top: 7px;
+            }
           }
           .save-placeholder.pagination {
-            float: left;
-            position: relative;
-            margin-top: 31px;
-            vertical-align: middle;
-            left: 21px;
-          }
-          margin-bottom: 12px;
+            min-width: 25px;
+            margin-top: 2px;
+            float: none;          }
         }
         .support-panel-expander {
           width: 22px;
