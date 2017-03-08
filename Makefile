@@ -115,6 +115,7 @@ ifeq ($(LSDEVMODE),ci)
 	  $(DOCKER_COMPOSE) rm -f build_services || true &&\
 	  $(DOCKER_COMPOSE) build build_services &&\
 	  $(DOCKER_COMPOSE) run build_services &&\
+	  cd $(LSEXTPATH) &&\
 	  docker run --rm \
 		   -v dockercompose_services_build:/from \
 		   -v $(LSEXTPATH):/to \
