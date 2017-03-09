@@ -47,7 +47,7 @@
                         {{>(readOnly ? "readonly-" : "") + type}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
-                    {{#if supportable || true}}
+                    {{#if supportable}}
                     <span class="support-panel" class-fixed={{editAuthorityMode}} data-support-panel-base-ref="support_panel_base_{{!editAuthorityMode ? uniqueId : 'fixed'}}">
                         {{#if editAuthorityMode}}
                             {{>support-for-edit-authority}}
@@ -103,7 +103,7 @@
                         {{#if !(./input.visible === false)}}
                             <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
                                 <span class="label"
-                                      class-pure-u-1-1="{{!nonEditable && !suggested}}"
+                                      class-pure-u-3-4="{{!nonEditable && !suggested}}"
                                       class-for-one-liner="{{input.type === 'input-boolean' || oneLiner == true}}"
                                       data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
                                 {{#with input.values[inputValueIndex]}}
@@ -113,7 +113,7 @@
                                             {{>suggested-values}}
                                         {{/if}}
                                     </span>
-                                    {{#if ! nonEditable && !suggested && ../../../input.supportable}}
+                                    {{#if (! nonEditable && !suggested && ../../../input.supportable) || showSupportPanel}}
                                         <span class="support-panel"
                                               data-support-panel-base-ref="support_panel_base_{{./uniqueId}}">
                                             {{#with ../../../input}}

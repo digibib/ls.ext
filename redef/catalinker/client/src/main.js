@@ -997,7 +997,7 @@
       })
     }
 
-    function removeInputsForObject (parentInput, index) {
+    function removeInputsForObject (parentInput, index, event) {
       return function () {
         ractive.update()
         var promises = []
@@ -1011,10 +1011,12 @@
             }
           }
         })
-        promises.push(new Promise(function () {
-          $(event.node).closest('.ui-accordion-content').prev().remove()
-          $(event.node).closest('.ui-accordion-content, .field').remove()
-        }))
+        if (event) {
+          promises.push(new Promise(function () {
+            $(event.node).closest('.ui-accordion-content').prev().remove()
+            $(event.node).closest('.ui-accordion-content, .field').remove()
+          }))
+        }
         promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
         sequentialPromiseResolver(promises)
         if (ractive.get(`${parentInput.keypath}.subInputs.0.input.values`).length === 0) {
@@ -1026,8 +1028,8 @@
 
     function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
-      var graphData = ensureJSON(response.data)
-      var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
+      const graphData = ensureJSON(response.data)
+      const offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
       type = type || typeFromUri(resourceUri)
       root = root || ldGraph.parse(graphData).byId(resourceUri)
       if (!ractive.get('lastRoots')) {
@@ -1035,9 +1037,9 @@
       }
 
       let inputs = options.inputs || allInputs()
-      let promises = [];
-      let skipRest = false;
-      let parentInputRootsCache = {};
+      let promises = []
+      let skipRest = false
+      let parentInputRootsCache = {}
       _.each([ true, false ], function (onlyDoSuggestionForCreateNewResource) {
         _.each(inputs, function (input, index) {
           if (!skipRest &&
@@ -1197,7 +1199,6 @@
                     ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
                     ractive.set(`${input.keypath}.customRange`, loadForRangeOfInputs)
                     if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
-                      const fromEnd = actualRoots.length - startIndex
                       ractive.set(`${input.keypath}.rangeStats`, {
                         start: startIndex + 1,
                         end: Math.min(actualRoots.length, startIndex + rangeLength),
@@ -1209,6 +1210,7 @@
                       const fromEnd = actualRoots.length - startIndex
                       ractive.splice(`${input.keypath}.values`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
                     }
+                    return true
                   }
                 }
                 loadForRangeOfInputs(rangeStart, rangeLength)(root)
@@ -2318,6 +2320,7 @@
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
+          'support-for-input-string',
           'support-for-edit-authority',
           'searchable-authority-dropdown',
           'searchable-for-value-suggestions',
@@ -2399,8 +2402,44 @@
           let waitHandler = ractive.get('waitHandler')
           waitHandler.newWaitable(event.original.target)
           let waiter = waitHandler.thisMayTakeSomTime()
-          var input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
-          patchObject(input, applicationData, index, op).then(function () {
+          const input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
+          const bulkEntryInputChain = _.chain(ractive.get('inputGroups.4.inputs.0.subInputs'))
+            .pluck('input')
+            .filter(function (input) { return input.widgetOptions && input.widgetOptions.enableBulkEntry })
+          const bulkEntryData = bulkEntryInputChain
+            .pluck('values')
+            .pluck(index)
+            .filter(function (value) { return value.multiline })
+            .pluck('current')
+            .pluck('value')
+            .map(function (value) { return value.split('\n') })
+            .flatten()
+            .compact()
+            .value()
+          const bulkEntryPredicate = bulkEntryInputChain
+            .pluck('predicate').first().value()
+
+          const autoNumberInput = inputFromInputId(bulkEntryInputChain.first().value().widgetOptions.enableBulkEntry.autoNumberInputRef)
+          let nextAutoNumber = autoNumberInput.nextNumber
+          var options = bulkEntryData && bulkEntryData.length > 0 ? {
+              bulkMultiply: function (ops) {
+                return _.chain(bulkEntryData).map(function (value) {
+                    var opsClone = deepClone(ops)
+                    _.each(opsClone, function (opSpec) {
+                      opSpec.alternativeValueFor = {
+                        [bulkEntryPredicate]: value
+                      }
+                      if (!Number(nextAutoNumber).isNaN) {
+                        opSpec.alternativeValueFor[ autoNumberInput.predicate ] = nextAutoNumber++
+                      }
+                    })
+                    return opsClone
+                  }
+                ).flatten().value()
+              }
+            } : {}
+
+          patchObject(input, applicationData, index, op, options).then(function () {
             visitInputs(input, function (input) {
               if (input.isSubInput) {
                 _.each(input.values, function (value, valueIndex) {
@@ -2427,7 +2466,12 @@
           })
         }
 
-        function patchObject (input, applicationData, index, op) {
+        function patchObject (input, applicationData, index, op, options) {
+          options = _.defaults(options || {}, {
+            bulkMultiply: function (ops) {
+              return ops
+            }
+          })
           const opSpec = {
             add: [ {
               operation: 'add',
@@ -2452,7 +2496,7 @@
           var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
           var mainSubject = ractive.get('targetUri.' + actualSubjectType)
           var deleteSubject = ractive.get('targetUri.' + deleteSubjectType)
-          _.each(opSpec[ op ], function (spec, opIndex) {
+          _.each(options.bulkMultiply(opSpec[ op ]), function (spec, opIndex) {
             patch.push({
               op: spec.operation,
               s: spec.operation === 'del' ? deleteSubject : mainSubject,
@@ -2475,14 +2519,16 @@
             }
             _.each(input.subInputs, function (subInput) {
               if (!(subInput.input.visible === false)) {
-                var value = subInput.input.values[ index ] ? subInput.input.values[ index ][ spec.useValue ].value : undefined
+                var value = spec.alternativeValueFor && spec.alternativeValueFor[ subInput.input.predicate ]
+                  ? spec.alternativeValueFor[ subInput.input.predicate ]
+                  : subInput.input.values[ index ] ? subInput.input.values[ index ][ spec.useValue ].value : undefined
                 if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
                   patch.push({
                     op: spec.operation,
                     s: `_:b${opIndex}`,
                     p: subInput.input.predicate,
                     o: {
-                      value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
+                      value: (_.isArray(value) ? `${value[ 0 ]}` : `${value}`).trim(),
                       type: subInput.input.datatypes[ 0 ]
                     }
                   })
@@ -2516,7 +2562,7 @@
               ractive.update('lastRoots')
             })
             removeInputsForObject(input, index)()
-            _.chain(input.subInputs).pluck('input').invoke('thisRange')
+            return response
           })
             .then(function (response) {
               // do an extra patch to invalidate cache of old subject
@@ -2528,8 +2574,9 @@
                   }
                 })
               }
+              return response
             })
-            .then(function () {
+            .then(function (response) {
               _.each(input.subInputs, function (subInput, subInputIndex) {
                 if (subInputIndex === 0) {
                   ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
@@ -2537,12 +2584,22 @@
                 if (!(subInput.input.visible === false)) {
                   var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
                   ractive.set(`${subInput.input.keypath}.values.${index}.old.value`, value)
+                  ractive.set(`${subInput.input.keypath}.values.${index}.showSupportPanel`, null)
+                  ractive.set(`${subInput.input.keypath}.values.${index}.multiline`, null)
                 }
               })
+              return response
             })
             .then(function (response) {
               // successfully patched resource
-              return ractive.set('save_status', 'alle endringer er lagret')
+              ractive.set('save_status', 'alle endringer er lagret')
+              return response
+            })
+            .then(function (response) {
+              if (_.chain(input.subInputs).pluck('input').invoke('thisRange').compact().value().length === 0) {
+                updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
+              }
+              return response
             })
           // .catch(function (response) {
           //    // failed to patch resource
@@ -2693,14 +2750,14 @@
               teardown: function () {}
             }
           }
-          var repositionSupportPanel = function (node) {
+          const repositionSupportPanel = function (node) {
             Main.repositionSupportPanelsHorizontally()
             positionSupportPanels()
             return {
               teardown: function () {}
             }
           }
-          var pasteSanitizer = function (node) {
+          const pasteSanitizer = function (node) {
             $(node)
               .keypress(function (e) {
                 return e.which !== 13
@@ -2717,28 +2774,28 @@
             }
           }
 
-          var handleAddNewBySelect2 = function (node) {
-            var inputKeyPath = grandParentOf(Ractive.getNodeInfo(node).keypath)
+          const handleAddNewBySelect2 = function (node) {
+            const inputKeyPath = grandParentOf(Ractive.getNodeInfo(node).keypath)
             ractive.set(inputKeyPath + '.allowAddNewButton', false)
             ractive.set(inputKeyPath + '.addNewHandledBySelect2', true)
             return {
               teardown: function () {}
             }
           }
-          var clickOutsideSupportPanelDetector = function (node) {
+          const clickOutsideSupportPanelDetector = function (node) {
             const rightDummyPanel = $('#right-dummy-panel')
             $(document).click(function (event) {
               if (!event.isDefaultPrevented()) {
-                var supportPanelLeftEdge = rightDummyPanel.offset().left
-                var supportPanelWidth = rightDummyPanel.width()
-                var outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
-                var targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
-                var targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
-                var targetIsASupportPanelButton = !outsideX && $(event.originalEvent.target).is('.support-panel-button')
+                const supportPanelLeftEdge = rightDummyPanel.offset().left
+                const supportPanelWidth = rightDummyPanel.width()
+                const outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
+                const targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
+                const targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
+                const targetIsASupportPanelButton = !outsideX && $(event.originalEvent.target).is('.support-panel-button')
 
-                var targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.originalEvent.target).is('input[type=\'radio\'][value=\'on\']')
-                var targetIsEditResourceLink = !outsideX && $(event.originalEvent.target).is('a.edit-resource')
-                var targetIsASelect2RemoveSelectionCross = !outsideX && $(event.originalEvent.target).is('span.select2-selection__choice__remove') && !$(event.originalEvent.target).is('.overrride-outside-detect')
+                const targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.originalEvent.target).is('input[type=\'radio\'][value=\'on\']')
+                const targetIsEditResourceLink = !outsideX && $(event.originalEvent.target).is('a.edit-resource')
+                const targetIsASelect2RemoveSelectionCross = !outsideX && $(event.originalEvent.target).is('span.select2-selection__choice__remove') && !$(event.originalEvent.target).is('.overrride-outside-detect')
                 if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross || targetIsEditResourceLink)) {
                   clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
                 }
@@ -2748,20 +2805,20 @@
               teardown: function () {}
             }
           }
-          var unload = function (node) {
+          const unload = function (node) {
             window.onbeforeunload = saveSuggestionData
             return {
               teardown: function () {}
             }
           }
-          var timePicker = function (node) {
+          const timePicker = function (node) {
             require('timepicker')
             $(node).timepicker({ 'timeFormat': 'H:i:s', step: 50000, 'wrapHours': false })
             return {
               teardown: function () {}
             }
           }
-          var slideDown = function (node) {
+          const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
             $(suggestedValues).hide()
             let toggle = function () {
@@ -2777,9 +2834,9 @@
             }
           }
 
-          var searchable = function (node) {
+          const searchable = function (node) {
             let keypath = Ractive.getNodeInfo(node).keypath
-            var value = ractive.get(keypath)
+            const value = ractive.get(keypath)
             if (!value.searchable) {
               ractive.set(`${keypath}.searchable`, true)
               ractive.set(`${keypath}.uniqueId`, _.uniqueId())
@@ -2788,8 +2845,8 @@
               teardown: function () {}
             }
           }
-          var tabIndex = function (node, tabSelected) {
-            var focusable = tabSelected
+          const tabIndex = function (node, tabSelected) {
+            let focusable = tabSelected
             if (typeof focusable === 'undefined') {
               tabIndexForNode(node)
             } else {
@@ -2800,13 +2857,13 @@
               teardown: function () {}
             }
           }
-          var disabled = function (node) {
+          const disabled = function (node) {
             $(node).find('input,select').prop('disabled', true)
             return {
               teardown: function () {}
             }
           }
-          var formatter = function (node, formatter) {
+          const formatter = function (node, formatter) {
             if (formatter === 'isbn') {
               $(node).on('input', function () {
                 let value = $(node).val().replace(/[^\dXx]*/g, '') // ISBN.parse not 100% with hyphens
@@ -2827,7 +2884,7 @@
               teardown: function () {}
             }
           }
-          var relations = function (node, uri) {
+          const relations = function (node, uri) {
             const keypath = Ractive.getNodeInfo(node).keypath
             ractive.set(`${keypath}.relations`, null)
             let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
@@ -2839,35 +2896,33 @@
               teardown: function () {}
             }
           }
-          var repositionSupportPanels = function (node) {
+          const repositionSupportPanels = function (node) {
             Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
             }
           }
-          var rangeSlider = function (node, args) {
-            var stats = args.rangeStats
-            var input = args.input
+          const rangeSlider = function (node, args) {
+            const stats = args.rangeStats
+            const input = args.input
             const $node = $(node)
-            var handle = $node.find('.range-slider-handle')
-            var shifting = false;
+            const handle = $node.find('.range-slider-handle')
             $node.slider({
               value: stats.start,
               min: 1,
               max: stats.numberOfObjects,
               step: stats.rangeLength,
               create: function () {
-                const sliderPos = $(this).slider("value")
-                handle.text(`${sliderPos}/${stats.numberOfObjects}`);
+                const sliderPos = $(this).slider('value')
+                handle.text(`${sliderPos}/${stats.numberOfObjects}`)
               },
               slide: function (event, ui) {
-                handle.text(`${ui.value}/${stats.numberOfObjects}`);
+                handle.text(`${ui.value}/${stats.numberOfObjects}`)
               },
               change: function (event, ui) {
-                handle.text(`${ui.value}/${stats.numberOfObjects}`);
+                handle.text(`${ui.value}/${stats.numberOfObjects}`)
               },
               stop: function (event, ui) {
-                console.log(ui.value)
                 handleRangeShift({
                   original: {
                     target: $node.prev('.save-placeholder').prev()
@@ -2876,10 +2931,10 @@
                 }, 'customRange', ui.value, stats.rangeLength)
               }
             })
-            var observer = ractive.observe(`${input.keypath}.subInputs.0.input.rangeStats`, function (stats, oldVal, keypath) {
+            const observer = ractive.observe(`${input.keypath}.subInputs.0.input.rangeStats`, function (stats, oldVal, keypath) {
               $node.slider('option', {
                 value: stats.start,
-                max: stats.numberOfObjects,
+                max: stats.numberOfObjects
               })
             }, { init: false })
 
@@ -2895,12 +2950,12 @@
             data: applicationData
           })
 
-          var valueOfInputById = function (inputId, valueIndex) {
+          const valueOfInputById = function (inputId, valueIndex) {
             var keyPath = ractive.get(`inputLinks.${inputId}`)
             return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
           }
 
-          var displayValueOfInputById = function (inputId, valueIndex) {
+          const displayValueOfInputById = function (inputId, valueIndex) {
             var keyPath = ractive.get(`inputLinks.${inputId}`)
             return ractive.get(`${keyPath}.values.${valueIndex}.current.displayValue`)
           }
@@ -3315,7 +3370,7 @@
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
                 patchObject(parentInput, applicationData, index, 'del')
-                  .then(removeInputsForObject(parentInput, index))
+                  .then(removeInputsForObject(parentInput, index, event))
                   .then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
@@ -4083,6 +4138,35 @@
               },
               prevRange: function (event) {
                 handleRangeShift(event, 'prevRange')
+              },
+              openBulkEdit: function (event, args) {
+                ractive.set(`${event.keypath}.showSupportPanel`, true)
+                ractive.set(`${event.keypath}.multiline`, true)
+                const autoNumberInputRef = ractive.get(`${grandParentOf(event.keypath)}.widgetOptions.enableBulkEntry.autoNumberInputRef`)
+                if (autoNumberInputRef) {
+                  const numberingInput = inputFromInputId(autoNumberInputRef)
+                  ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.showAutonumber`, true)
+                  ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`, true)
+                  var nextNumber = (_
+                      .chain(ractive.get(`${numberingInput.keypath}.values`))
+                      .pluck('current')
+                      .pluck('value')
+                      .map(Number)
+                      .map(function (value) {
+                        return isNaN(value) ? 0 : value
+                      })
+                      .reduce(function (memo, num) { return Math.max(memo, num) })
+                      .value() || 0) + 1
+                  ractive.set(`${numberingInput.keypath}.nextNumber`, nextNumber)
+                  ractive.observe(`${event.keypath}.current.value ${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`, function (newVal, oldVal, keypath) {
+                    const textBody = ractive.get(`${event.keypath}.current.value`)
+                    if (textBody && ractive.get(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`)) {
+                      var lines = _.compact(textBody.split(/\r\n|\r|\n/)).length
+                      ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.current.value`, `${nextNumber}${lines > 1 ? '–' : ''}${lines > 1 ? (nextNumber + lines - 1) : ''}`)
+                    }
+                  })
+                }
+                positionSupportPanels()
               }
             }
           )
