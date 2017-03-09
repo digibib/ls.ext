@@ -151,7 +151,8 @@ PostponeReservationForm.propTypes = {
   modalActions: PropTypes.object.isRequired,
   datepickerActions: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired
+  submitting: PropTypes.bool.isRequired,
+  changeFieldValue: PropTypes.func
 }
 
 function mapStateToProps (state) {
@@ -159,9 +160,7 @@ function mapStateToProps (state) {
     isLoggedIn: state.application.isLoggedIn,
     isRequestingReservation: state.reservation.isRequestingReservation,
     date: state.datepicker.date,
-    // initialValues: state.datepicker.date,
-    modalProps: state.modal.modalProps,
-    // fields: state.form.postponeReservation ? state.form.postponeReservation : {}
+    modalProps: state.modal.modalProps
   }
 }
 
