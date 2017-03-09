@@ -613,7 +613,7 @@ body {
         .add-new-btn-row {
           padding: 0 13px 23px 8px;
           float: none !important;
-          a:not(.delete-link), button.add-button {
+          a:not(.delete-link), button:not(.pagination) {
             float: right;
             width: auto;
           }
