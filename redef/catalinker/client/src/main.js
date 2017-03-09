@@ -532,7 +532,7 @@
         input.compareValues = input.compareValues || emptyValues()
       }
       if (value) {
-        ractive.set(`${input.keypath}.${options.compareValues ? 'compareValues' : 'values'}.${index}`, {
+        input[ options.compareValues ? 'compareValues' : 'values' ][ index ] = {
           old: options.keepOld ? input.values[ index ].old : {
               value: value.value,
               lang: value.lang
@@ -542,13 +542,12 @@
             lang: value.lang,
             accepted: options.source ? { source: options.source } : undefined
           },
-          uniqueId: _.uniqueId(),
-          nonEditable: options.setNonEditable
-        })
+          uniqueId: _.uniqueId()
+        }
         if (input.values[ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
-          ractive.update(`${input.keypath}.values.${index}`)
         }
+        ractive.update(`${input.keypath}.values.${index}`)
       }
     }
 
@@ -1172,8 +1171,10 @@
                             if (!options.onlyValueSuggestions) {
                               let valueIndex = input.isSubInput ? rootIndex : index
                               setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
-                              input.values[ valueIndex ].subjectType = type
-                              input.values[ valueIndex ].oldSubjectType = type
+                              ractive.set(`${input.keypath}.values.${valueIndex}`, {
+                                subjectType: type,
+                                oldSubjectType: type
+                              })
                               if (input.isSubInput && !options.source) {
                                 // input.values[ valueIndex ].nonEditable = true
                                 // ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
