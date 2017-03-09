@@ -28,9 +28,7 @@ class PostponeReservationForm extends React.Component {
   }
 
   handlePostponeReservation (field) {
-    if (this.props.date === null || this.props.date !== field.date) {
-      this.props.datepickerActions.handleDateChange(moment(field.date, 'DD.MM.YYYY'))
-    }
+    this.props.datepickerActions.handleDateChange(field.dateCurrentAndAbove)
 
     this.props.reservationActions.changeReservationSuspension(
       this.props.modalProps.reserveId,
@@ -51,7 +49,7 @@ class PostponeReservationForm extends React.Component {
   }
 
   handleDateChange (date) {
-    this.props.datepickerActions.handleDateChange(date)
+    this.props.datepickerActions.handleDateChange(date.format('DD.MM.YYYY'))
     this.props.changeFieldValue('dateCurrentAndAbove', date.format('DD.MM.YYYY'))
   }
 
