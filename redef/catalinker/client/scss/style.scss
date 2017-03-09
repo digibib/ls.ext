@@ -454,6 +454,15 @@ body {
               top: 15px;
               right: 16px;
             }
+            .sub-field a.open-bulk-edit {
+              float: right;
+              margin-top: 3px;
+            }
+            .sub-field textarea {
+              max-width: 292px;
+              min-width: 292px;
+              white-space: nowrap;
+            }
             padding: 0px 12px 15px 12px;
             background: $input-background;
 
@@ -918,10 +927,11 @@ body {
               margin-bottom: -1px;
               .value input[type=checkbox] {
                 width: auto;
-                margin-top: -5px;
+                margin-top: 3px;
               }
               .label {
                 background: inherit;
+                display: inline-block;
               }
               .field {
                 padding: 0;

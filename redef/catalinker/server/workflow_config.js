@@ -1425,7 +1425,21 @@ module.exports = (app) => {
                     {
                       label: 'Tittel på del',
                       rdfProperty: 'mainTitle',
-                      required: true
+                      required: true,
+                      widgetOptions: {
+                        enableBulkEntry: {
+                          autoNumberInputRef: 'publicationPartNumberInput',
+                          activationLinkLabel: 'Masseregistrering',
+                          activationLinkToolTip: 'Åpne mulighet for å legge inn flere titler på én gang',
+                          legend: `
+                          Legg inn titler på delene her med et linjeskift mellom hver. Når du trykker på "Legg til",
+                          opprettes en utgivelesedel for hver tittel. Tomme linjer blir ignorert. Hver del får også
+                          knyttet til seg samme aktør og rolle hvis det er angitt over. Hvis du ikke vil ha automatisk 
+                          nummerering av deler som opprettes, fjerner du krysset for det valget nedenfor. 
+                          `,
+                          rows: 10
+                        }
+                      }
                     },
                     {
                       label: 'Verk',
@@ -1445,7 +1459,8 @@ module.exports = (app) => {
                     },
                     {
                       label: 'Del',
-                      rdfProperty: 'partNumber'
+                      rdfProperty: 'partNumber',
+                      id: 'publicationPartNumberInput'
                     },
                     // the following pair of properties is a range, which will be placed on the same line, with the label of the first one only.
                     {

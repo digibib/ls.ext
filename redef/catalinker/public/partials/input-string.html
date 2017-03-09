@@ -3,6 +3,7 @@
 {{else}}
 {{#if multiline}}
 <textarea {{#disabled}} disabled="true" {{/}}
+rows={{input.widgetOptions.enableBulkEntry.rows || 4}}
 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 class="pure-u-1-1"
 class-invalid-input="{{error}}"
@@ -18,7 +19,19 @@ class-valid="{{!error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}},{{editAuthorityMode}}'
 data-automation-id="{{../../dataAutomationId}}"
 as-formatter="format: {{../../formatter}}"
+{{#if autoNumber}}
+disabled="disabled"
+{{/if}}
 value="{{./current.value}}" />
 {{/if}}
 <span class="save-placeholder"></span>
+{{#if input.widgetOptions.enableBulkEntry && !multiline}}
+<a class="open-bulk-edit" on-click="openBulkEdit:{{valueIndex}}" title="{{input.widgetOptions.enableBulkEntry.activationLinkToolTip}}">{{input.widgetOptions.enableBulkEntry.activationLinkLabel}}</a>
+{{/if}}
+{{#if showAutonumber}}
+    <span class="pure-u-1">
+        <span class="pure-u-3-4 label for-one-liner">Automatisk nummerering</span>
+        <span class="sub-field"><input type="checkbox" checked="{{autoNumber}}"/></span>
+    </span>
+{{/if}}
 {{/if}}
