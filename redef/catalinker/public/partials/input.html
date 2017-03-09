@@ -33,9 +33,6 @@
                         {{>(readOnly ? "readonly-" : "") + type }}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
-                    <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
-                        {{>"support-for-"+type}}
-                    </span>
                 </span>
             {{/if}}
         {{/each}}
@@ -113,7 +110,7 @@
                                             {{>suggested-values}}
                                         {{/if}}
                                     </span>
-                                    {{#if (! nonEditable && !suggested && ../../../input.supportable) || showSupportPanel}}
+                                    {{#if (! nonEditable && !suggested && ../../../input.supportable && !compareMode) || showSupportPanel}}
                                         <span class="support-panel"
                                               data-support-panel-base-ref="support_panel_base_{{./uniqueId}}">
                                             {{#with ../../../input}}

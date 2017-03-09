@@ -17,7 +17,7 @@
             {{/if}}
             <div class="inner-content" >
                 {{#each applicationData.inputsForDomainType[rdfType]:inputIndex}}
-                {{>input {editAuthorityMode:inputIndex==0}}}{{#if compare}}{{>input {compareMode:true}}}{{/if}}
+                {{>input {editAuthorityMode:inputIndex==0, supportable:inputIndex==0}}}{{#if compare}}{{>input {compareMode:true}}}{{/if}}
                 {{#if (type === 'input-boolean') && !(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) &&
                 (checkShouldInclude(.)) &&!compare}}
                 <span class="prop-input boolean-separator pure-u-1-2 {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}" >
