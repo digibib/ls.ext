@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
+import { reduxForm, change } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
@@ -52,6 +52,7 @@ class PostponeReservationForm extends React.Component {
 
   handleDateChange (date) {
     this.props.datepickerActions.handleDateChange(date)
+    this.props.changeFieldValue('date', date.format('DD.MM.YYYY'))
   }
 
   render () {
@@ -158,8 +159,9 @@ function mapStateToProps (state) {
     isLoggedIn: state.application.isLoggedIn,
     isRequestingReservation: state.reservation.isRequestingReservation,
     date: state.datepicker.date,
-    initialValues: state.datepicker.date,
-    modalProps: state.modal.modalProps
+    // initialValues: state.datepicker.date,
+    modalProps: state.modal.modalProps,
+    // fields: state.form.postponeReservation ? state.form.postponeReservation : {}
   }
 }
 
@@ -168,7 +170,10 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     reservationActions: bindActionCreators(ReservationActions, dispatch),
     modalActions: bindActionCreators(ModalActions, dispatch),
-    datepickerActions: bindActionCreators(DatepickerActions, dispatch)
+    datepickerActions: bindActionCreators(DatepickerActions, dispatch),
+    changeFieldValue: (field, value) => {
+      dispatch(change(formName, field, value))
+    }
   }
 }
 

@@ -41,7 +41,7 @@ class UserLoans extends React.Component {
     } else if (itype === 'SETT' || itype === 'TOUKESLAAN' || itype === 'UKESLAAN' || itype === 'DAGSLAAN' || itype === 'EBOK') {
       return 'http://data.deichman.no/mediaType#Book'
     } else {
-      return 'undefined'
+      return '?'
     }
   }
 
