@@ -89,6 +89,12 @@ services:
       - "--max_allowed_packet=64M"
       - "--wait_timeout=6000"
       - "--bind-address=0.0.0.0"
+      - "--server-id=101"
+      - "--log_bin=mysql-bin"
+      - "--sync_binlog=1"
+      - "--binlog-format=row"
+      - "--max_binlog_size=100M"
+      - "--log_bin_trust_function_creators=true"
     environment:
       MYSQL_DATABASE: "koha_${KOHA_INSTANCE:-name}"
       MYSQL_PASSWORD: "${KOHA_ADMINPASS:-secret}"
