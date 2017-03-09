@@ -52,7 +52,7 @@ class PostponeReservationForm extends React.Component {
 
   handleDateChange (date) {
     this.props.datepickerActions.handleDateChange(date)
-    this.props.changeFieldValue('date', date.format('DD.MM.YYYY'))
+    this.props.changeFieldValue('dateCurrentAndAbove', date.format('DD.MM.YYYY'))
   }
 
   render () {
@@ -67,7 +67,7 @@ class PostponeReservationForm extends React.Component {
         </h2>
         <div className="postpone-reserve">
           <div className="item">
-          <FormInputField name="date"
+          <FormInputField name="dateCurrentAndAbove"
                           message={messages.activateAfter}
                           formName={formName}
                           getValidator={this.getValidator}
