@@ -1903,7 +1903,6 @@
     }
 
     function doSearch (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem) {
-
       searchString = stripHtml(searchString).trim()
 
       if (!searchString) {
@@ -1934,7 +1933,7 @@
         searchURI = searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
       } else {
         // B) Searching in Elasticsearch
-        var indexType = config.search[ indexType ].type
+        indexType = config.search[ indexType ].type
         searchURI = `/search/${indexType}/_search`
         axiosMethod = axios.post
 
