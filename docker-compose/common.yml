@@ -179,6 +179,10 @@ services:
       - backend
     volumes:
       - "elasticsearch_data:/usr/share/elasticsearch/data"
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     logging:
       driver: "json-file"
       options:
