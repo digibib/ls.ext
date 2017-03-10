@@ -394,6 +394,9 @@
       }
     }
   },
+  "genres": {
+    "@embed": "@always"
+  },
   "publications": {
     "type": "deichman:Publication",
     "@embed": "@always",
@@ -422,9 +425,6 @@
       "@embed": "@never"
     },
     "formats": {
-      "@embed": "@never"
-    },
-    "genres": {
       "@embed": "@never"
     },
     "mediaTypes": {
