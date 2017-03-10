@@ -1,40 +1,24 @@
-PREFIX  :     <__ONTOLOGY__>
+PREFIX : <__ONTOLOGY__>
 
-CONSTRUCT
-  { ?corporationUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Corporation ;
-     :name ?name ;
-     :subdivision ?subdivision ;
-     :specification ?specification ;
-     :alternativeName  ?alternativeName ;
-     :placePrefLabel ?placePrefLabel ;
-     :placeAlternativeName ?placeAlternativeName .
-  }
-WHERE
-  { SELECT DISTINCT  ?corporationUri ?name ?subdivision ?specification ?alternativeName ?placePrefLabel ?placeAlternativeName
-    WHERE
-      { BIND(uri("__CORPORATIONURI__") AS ?corporationUri)
-        ?corporationUri  a                   :Corporation ;
+CONSTRUCT {
+  <__CORPORATIONURI__> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Corporation ;
+    :name ?name ;
+    :subdivision ?subdivision ;
+    :specification ?specification ;
+    :alternativeName ?alternativeName ;
+    :placePrefLabel ?placePrefLabel ;
+    :placeAlternativeName ?placeAlternativeName .
+}
 
-        OPTIONAL
-          { ?corporationUri  :name  ?name
-          }
-        OPTIONAL
-          { ?corporationUri  :subdivision  ?subdivision
-          }
-        OPTIONAL
-          { ?corporationUri  :specification  ?specification
-          }
-        OPTIONAL
-          { ?corporationUri  :alternativeName  ?alternativeName
-          }
-        OPTIONAL
-          {
-            ?corporationUri  :place  ?placeUri .
-            ?placeUri a :Place ;
-                      :prefLabel ?placePrefLabel .
-            OPTIONAL {
-                ?placeUri :alternativeName ?placeAlternativeName .
-            }
-          }
+WHERE {
+        { <__CORPORATIONURI__> a :Corporation }
+  UNION { <__CORPORATIONURI__> :name  ?name }
+  UNION { <__CORPORATIONURI__> :subdivision ?subdivision }
+  UNION { <__CORPORATIONURI__> :specification ?specification }
+  UNION { <__CORPORATIONURI__> :alternativeName ?alternativeName }
+  UNION { <__CORPORATIONURI__> :place ?placeUri .
+          ?placeUri a :Place ;
+            :prefLabel ?placePrefLabel .
+          OPTIONAL { ?placeUri :alternativeName ?placeAlternativeName }
       }
-  }
+}

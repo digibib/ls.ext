@@ -1,8 +1,7 @@
 import { DATEPICKER_CHANGE_DATE } from '../constants/ActionTypes'
-import moment from 'moment'
 
 const initialState = {
-  date: { date: moment().format('DD.MM.YYYY') },
+  date: null,
   datePickerProps: {}
 }
 

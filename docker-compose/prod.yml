@@ -34,6 +34,19 @@ services:
       driver: "journald"
 
   rfidhub:
+    container_name: rfidhub
+    image: "digibib/rfidhub2:5cc223d57472232557fbcc608c45f7ac22372fb9"
+    networks:
+      - backend
+    depends_on:
+      - sip_proxy
+    ports:
+      - "8899:8899"
+    environment:
+      SIP_SERVER: sip_proxy:9999
+      TCP_PORT: 6006
+      SIP_USER: rfidhub
+      SIP_PASS: "${SIP_AUTOPASS:-autopass}"
     logging:
       driver: "journald"
 
@@ -52,6 +65,19 @@ services:
   elasticsearch:
     logging:
       driver: "journald"
+    environment:
+      - cluster.name=deichman-es
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
 
   fuseki:
     logging:
@@ -59,7 +85,7 @@ services:
 
   tagvision_sip_proxy:
     container_name: tagvision_sip_proxy
-    image: "digibib/sip2proxy:e38b649a1084662c6d3b92f3582adce20618c676"
+    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
     networks:
       - backend
     restart: always
@@ -82,7 +108,7 @@ services:
 
   bibliotheca_sip_proxy:
     container_name: bibliotheca_sip_proxy
-    image: "digibib/sip2proxy:e38b649a1084662c6d3b92f3582adce20618c676"
+    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
     networks:
       - backend
     restart: always
@@ -102,7 +128,7 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/sip2proxy:e38b649a1084662c6d3b92f3582adce20618c676"
+    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
     command:
       - "/sip2proxy"
       - "-from=:9999"

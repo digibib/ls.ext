@@ -55,7 +55,7 @@ export function fetchWorkResource (workId) {
         throw Error('Error fetching work resource')
       }
     }).then(work => dispatch(receiveResource(workId, work)))
-      .then(() => dispatch(fetchWorkItems(workId)))
+      .then(() => dispatch(fetchWorkItems(workId))) // NB: Maybe not in use?
       .catch(error => dispatch(resourceFailure(error)))
   }
 }

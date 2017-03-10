@@ -1,31 +1,26 @@
-PREFIX  :     <__ONTOLOGY__>
+PREFIX : <__ONTOLOGY__>
 
 CONSTRUCT {
-  ?eventUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Event ;
-            :prefLabel ?label ;
-            :specification ?specification ;
-            :ordinal ?ordinal ;
-            :date ?date ;
-            :alternativeName  ?alternativeName ;
-            :placePrefLabel ?placePrefLabel ;
-            :placeAlternativeName ?placeAlternativeName .
+  <__EVENTURI__> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Event ;
+    :prefLabel ?label ;
+    :specification ?specification ;
+    :ordinal ?ordinal ;
+    :date ?date ;
+    :alternativeName  ?alternativeName ;
+    :placePrefLabel ?placePrefLabel ;
+    :placeAlternativeName ?placeAlternativeName .
 }
 
 WHERE {
-  BIND(uri("__EVENTURI__") AS ?eventUri)
-  ?eventUri a :Event .
-  OPTIONAL { ?eventUri :prefLabel ?label }
-  OPTIONAL { ?eventUri :alternativeName  ?alternativeName }
-  OPTIONAL { ?eventUri :specification ?specification }
-  OPTIONAL { ?eventUri :ordinal ?ordinal }
-  OPTIONAL { ?eventUri :date ?date }
-  OPTIONAL
-    {
-      ?eventUri  :place  ?placeUri .
-      ?placeUri a :Place ;
-                :prefLabel ?placePrefLabel.
-      OPTIONAL {
-          ?placeUri :alternativeName ?placeAlternativeName .
-      }
+        { <__EVENTURI__> a :Event }
+  UNION { <__EVENTURI__> :prefLabel ?label }
+  UNION { <__EVENTURI__> :alternativeName ?alternativeName }
+  UNION { <__EVENTURI__> :specification ?specification }
+  UNION { <__EVENTURI__> :ordinal ?ordinal }
+  UNION { <__EVENTURI__> :date ?date }
+  UNION { <__EVENTURI__>  :place  ?placeUri .
+          ?placeUri a :Place ;
+            :prefLabel ?placePrefLabel.
+          OPTIONAL { ?placeUri :alternativeName ?placeAlternativeName }
     }
 }

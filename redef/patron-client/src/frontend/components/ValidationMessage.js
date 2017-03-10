@@ -88,6 +88,11 @@ export const messages = defineMessages({
     id: 'ValidationMessage.invalidSSN',
     description: 'Displayed if entered ID-number is not valid',
     defaultMessage: 'Invalid ID-number'
+  },
+  toYearBeforeFromYear: {
+    id: 'ValidationMessage.toYearBeforeFromYear',
+    description: 'Displayed if to year is before the from year',
+    defaultMessage: 'From-year is greater than to-year'
   }
 })
 

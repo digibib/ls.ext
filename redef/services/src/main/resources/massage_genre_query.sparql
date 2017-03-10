@@ -1,25 +1,14 @@
-PREFIX  :     <__ONTOLOGY__>
+PREFIX : <__ONTOLOGY__>
 
-CONSTRUCT
-  { ?genreUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Genre ;
-        :prefLabel ?prefLabel ;
-        :specification  ?specification ;
-        :alternativeName  ?alternativeName .
-  }
-WHERE
-  { SELECT DISTINCT  ?genreUri ?prefLabel ?specification ?alternativeName
-    WHERE
-      { BIND(uri("__GENREURI__") AS ?genreUri)
-        ?genreUri a :Genre ;
+CONSTRUCT { <__GENREURI__> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Genre ;
+  :prefLabel ?prefLabel ;
+  :specification ?specification ;
+  :alternativeName ?alternativeName .
+}
 
-        OPTIONAL
-          { ?genreUri  :prefLabel  ?prefLabel
-          }
-        OPTIONAL
-          { ?genreUri  :specification  ?specification
-          }
-        OPTIONAL
-          { ?genreUri  :alternativeName  ?alternativeName .
-          }
-      }
-  }
+WHERE {
+        { <__GENREURI__> a :Genre }
+  UNION { <__GENREURI__> :prefLabel ?prefLabel }
+  UNION { <__GENREURI__> :specification ?specification }
+  UNION { <__GENREURI__> :alternativeName ?alternativeName }
+}

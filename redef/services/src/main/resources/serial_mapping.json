@@ -1,39 +1,39 @@
 {
-  "properties":
-  {
-    "serialMainTitle": {
-      "type": "string",
-      "index": "analyzed",
-      "analyzer": "name_analyzer"
-    },
-    "subtitle": {
-      "type": "string"
-    },
-    "uri": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "publishedByName": {
-      "type": "string"
-    },
-    "publishedByAlternativeName": {
-      "type": "string"
-    },
-    "publishedByPlacePrefLabel": {
-      "type": "string"
-    },
-    "publishedByPlaceAlternativeName": {
-      "type": "string"
-    },
-    "partTitle": {
-      "type": "string"
-    },
-    "partNumber": {
-      "type": "string"
-    },
-    "issn": {
-      "type": "string",
-      "analyzer": "isbn_analyzer"
+  "serial": {
+    "properties":
+    {
+      "serialMainTitle": {
+        "type": "text",
+        "analyzer": "name_analyzer"
+      },
+      "subtitle": {
+        "type": "text"
+      },
+      "uri": {
+        "type": "keyword"
+      },
+      "publishedByName": {
+        "type": "text"
+      },
+      "publishedByAlternativeName": {
+        "type": "text"
+      },
+      "publishedByPlacePrefLabel": {
+        "type": "text"
+      },
+      "publishedByPlaceAlternativeName": {
+        "type": "text"
+      },
+      "partTitle": {
+        "type": "text"
+      },
+      "partNumber": {
+        "type": "text"
+      },
+      "issn": {
+        "type": "text",
+        "analyzer": "isbn_analyzer"
+      }
     }
   }
 }

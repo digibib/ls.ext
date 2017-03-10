@@ -1,350 +1,348 @@
 {
-  "settings": {
-    "analysis": {
-      "filter": {
-        "isbn_clean_filter": {
-          "type": "pattern_replace",
-          "pattern": "-",
-          "replacement": ""
-        },
-        "litform_synonym_filter": {
-          "type": "synonym",
-          "tokenizer": "keyword",
-          "synonyms": [
-            "r, romaner, novel => roman",
-            "n, noveller, fortelling, fortellinger, short story => noveller/fortellinger",
-            "d, poem => dikt",
-            "s, drama => skuespill",
-            "t, tegneserier, comic book => tegneserie",
-            "a, antologier, anthology => antologi",
-            "l, lærebøker, text book => lærebok",
-            "p, pekebøker, pointing book => pekebok",
-            "bl, bildebøker, picture book => bildebok",
-            "o, ordbøker, dictionary => ordbok",
-            "ref, reference work => oppslagsverk",
-            "bio, biografier, biography => biografi",
-            "spf, spillefilmer, feature film => spillefilm",
-            "anf, animasjonsfilmer, animated film => animasjonsfilm",
-            "tv, tv-serier, tv series => tv-serie",
-            "kort, kortfilmer, short film => kortfilm",
-            "oppg, oppgavebøker, exercise book => oppgavebok"
-          ]
-        },
-        "language_synonym_filter": {
-          "type": "synonym",
-          "tokenizer": "keyword",
-          "synonyms": [
-            "bokmål, nob",
-            "nynorsk, nno",
-            "dansk, danish, dan",
-            "engelsk, english, eng",
-            "svensk, swedish, swe",
-            "afrikaans, afr",
-            "albansk, albanian, alb",
-            "amharisk, amharic, amh",
-            "arabisk, arabic, ara",
-            "armensk, armenian, arm",
-            "aserbajdsjansk, azerbaijani, aze",
-            "bambara, bambara, bam",
-            "baskisk, basque, baq",
-            "bengali, ben",
-            "bosnisk, bosnian, bos",
-            "bulgarsk, bulgarian, bul",
-            "burmansk, burmese, bur",
-            "cebuano, ceb",
-            "dari, prs",
-            "dinka, din",
-            "duala, dua",
-            "dyula, dyu",
-            "egyptisk, egyptian, egy",
-            "esperanto, esperanto, epo",
-            "estisk, estonian, est",
-            "farsi, persian, per",
-            "finsk, finnish, fin",
-            "fransk, french, fre",
-            "færøysk, faroese, fao",
-            "galisisk, galician, glg",
-            "gammelgresk, ancient greek, grc",
-            "gammelsyrisk, classical syriac, syc",
-            "georgisk, georgian, geo",
-            "gresk, greek, gre",
-            "grønlandsk, greenlandic, kal",
-            "gujarati, gujarati, guj",
-            "hausa, hau",
-            "hebraisk, hebrew, heb",
-            "hiligaynon, hiligaynon, hil",
-            "hindi, hin",
-            "hviterussisk, belarusian, bel",
-            "ibo, ibo",
-            "iloko, ilo",
-            "inarisamisk, inari sami, smn",
-            "indonesisk, indonesian, ind",
-            "inuittisk, inuktitut, iku",
-            "irsk, irish, gle",
-            "islandsk, icelandic, ice",
-            "italiensk, italian, ita",
-            "japansk, japanese, jpn",
-            "jiddisch, yiddish, yid",
-            "joruba, yor",
-            "kannada, kan",
-            "katalansk, catalan, cat",
-            "khmer, cam",
-            "kinesisk, chinese, chi",
-            "koreansk, korean, kor",
-            "kroatisk, croatian, hrv",
-            "kurdisk, kurdish, kur",
-            "kurdisk (kurmandji), kurdish (kurmanji), kmr",
-            "kurdisk (sorani), kurdish (sorani), ckb",
-            "kvensk, kven, fkv",
-            "laotisk, lao, lao",
-            "latin, lat",
-            "latvisk, latvian, lav",
-            "lingala, lingala, lin",
-            "litauisk, lithuanian, lit",
-            "lulesamisk, lule sami, smj",
-            "luo, luo",
-            "makedonsk, macedonian, mac",
-            "madagassisk, malagasy, mlg",
-            "malayalam, malayalam, mal",
-            "malayisk, malay, may",
-            "mandinka, mandinka, mnk",
-            "maori, maori, mri",
-            "marathi, marathi, mar",
-            "maya, mayan, myn",
-            "mongolsk, mongolian, mon",
-            "mossisk, mossi, mos",
-            "nederlandsk, dutch, dut",
-            "nepali, nepali, nep",
-            "niger-kongospråk, niger-congo languages, nic",
-            "nordsamisk, northern sami, sme",
-            "nordsotho, northern sotho, nso",
-            "norrønt, old norse, non",
-            "norsk, norwegian, nor",
-            "nyanja, nyanja, nya",
-            "oromo, orm",
-            "pampanga, pampanga, pam",
-            "panjabi, pan",
-            "pashto, pushto, pus",
-            "polsk, polish, pol",
-            "portugisisk, portuguese, por",
-            "quechua, quechua, que",
-            "retoromansk, romansh, roh",
-            "romanii, rom",
-            "rumensk, romanian, rum",
-            "russisk, russian, rus",
-            "samisk, sami, smi",
-            "sanskrit, sanskrit, san",
-            "serbisk, serbian, srp",
-            "shona, shona, sna",
-            "singalesisk, sinhala, sin",
-            "skoltesamisk, skolt sami, sms",
-            "skotsk, scots, sco",
-            "skotsk-gælisk, gaelic, gla",
-            "slovakisk, slovak, slo",
-            "slovensk, slovene, slv",
-            "somalii, som",
-            "sotho, sot",
-            "spansk, spanish, spa",
-            "swahili, swahili, swa",
-            "sørsamisk, southern sami, sma",
-            "tagalog, tgl",
-            "tadsjikisk, tajik, tgk",
-            "tamil, tam",
-            "tegnspråk, sign language, sgn",
-            "telugu, tel",
-            "tetum, tet",
-            "thai, tha",
-            "tibetansk, tibetan, tib",
-            "tigré, tigre, tig",
-            "tigrinja, tigrinya, tir",
-            "tsjekkisk, czech, cze",
-            "tsjetsjensk, chechen, che",
-            "tsonga, tso",
-            "turkmensk, turkmen, tuk",
-            "twii, twi",
-            "tyrkisk, turkish, tur",
-            "tysk, german, ger",
-            "ukrainsk, ukrainian, ukr",
-            "ungarsk, hungarian, hun",
-            "urdu, urd",
-            "usbekisk, uzbek, uzb",
-            "vietnamesisk, vietnamese, vie",
-            "volapyk, volapük, vol",
-            "walisisk, welsh, wel",
-            "wolof, wolof, wol",
-            "xhosa, xhosa, xho",
-            "zazaki, zza",
-            "zulu, zul",
-            "pali, pli",
-            "sumerisk, sumerian, sux",
-            "kikuyu, kik",
-            "fulani, fula, ful",
-            "akkadisk, akkadian, akk",
-            "geez, ge'ez, gez",
-            "arameisk, aramaic, arc",
-            "ingen, ing"
-          ]
-        },
-        "format_synonym_filter": {
-          "type": "synonym",
-          "tokenizer": "keyword",
-          "synonyms": [
-            "blu, bluray => blu-ray",
-            "3d => 3d-film",
-            "mp3cd, mp3 => mp3-cd",
-            "cdr, cdrom => cd-rom",
-            "dvdr, dvdrom => dvd-rom",
-            "digik => digikort",
-            "digib => digibok",
-            "kass => kassett",
-            "vinyl, lp => vinylplate",
-            "pc, pcspill => pc-spill",
-            "brsp => brettspill",
-            "ksp => kortspill",
-            "ds, nintendo ds => nintendo ds-spill",
-            "wii, nintendo wii => nintendo wii-spill",
-            "ps2, playstation 2 => playstation 2-spill",
-            "ps3, playstation 3 => playstation 3-spill",
-            "ps4, playstation 4 => playstation 4-spill",
-            "xbox1, xboxone, xbox one => xbox one-spill",
-            "xbox360, xbox 360 => xbox 360-spill",
-            "inst, instrument => musikkinstrument"
-          ]
-        },
-        "mediatype_synonym_filter": {
-          "type": "synonym",
-          "tokenizer": "keyword",
-          "synonyms": [
-            "book => bok",
-            "e-book => e-bok",
-            "audiobook => lydbok",
-            "comic book => tegneserie",
-            "language course => språkkurs",
-            "music record => musikkopptak",
-            "sheet music => noter",
-            "game => spill",
-            "other => andre",
-            "periodical, magazine => periodika"
-          ]
-        },
-        "writing_system_synonym_filter": {
-          "type": "synonym",
-          "tokenizer": "keyword",
-          "synonyms": [
-            "cyrillic => kyrillisk",
-            "japanese => japansk",
-            "chinese => kinesisk",
-            "arabic => arabisk",
-            "greek => gresk",
-            "hebrew => hebraisk",
-            "korean => koreansk",
-            "latin => latinsk",
-            "georgian => georgisk",
-            "burmese => burmesisk",
-            "armenian => armensk"
-          ]
-        },
-        "biography_synonym_filter": {
-          "type": "synonym",
-          "tokenizer": "keyword",
-          "synonyms": [
-            "a, autobiography => selvbiografi",
-            "b, single biography => enkeltbiografi",
-            "c, collective biography => samlingsbiografi",
-            "d, biographical content => biografisk innhold"
-            ]
-        },
-        "content_adaptation_synonym_filter": {
-          "type": "synonym",
-          "tokenizer": "keyword",
-          "synonyms": [
-            "easy to read, easy language, lettlest, enkelt språk, ta",
-            "easy to read, easy content, lettlest, enkelt innhold, tb"
-          ]
-        },
-        "norwegian_folding": {
-          "type": "icu_folding",
-          "unicodeSetFilter": "[^æøåÆØÅ]"
-        }
+  "analysis": {
+    "analyzer": {
+      "biography_analyzer": {
+        "filter": [
+          "lowercase",
+          "biography_synonym_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
       },
-      "analyzer": {
-        "default": {
-          "tokenizer": "icu_tokenizer",
-          "filter": [
-            "norwegian_folding",
-            "lowercase"
-          ]
-        },
-        "mediatype_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "mediatype_synonym_filter"
-          ]
-        },
-        "format_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "format_synonym_filter"
-          ]
-        },
-        "name_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase"
-          ]
-        },
-        "language_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "language_synonym_filter"
-          ]
-        },
-        "litform_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "litform_synonym_filter"
-          ]
-        },
-        "isbn_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "isbn_clean_filter"
-          ]
-        },
-        "writing_system_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "writing_system_synonym_filter"
-          ]
-        },
-        "biography_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "biography_synonym_filter"
-          ]
-        },
-        "content_adaptation_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase",
-            "content_adaptation_synonym_filter"
-          ]
-        }
+      "content_adaptation_analyzer": {
+        "filter": [
+          "lowercase",
+          "content_adaptation_synonym_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      },
+      "default": {
+        "filter": [
+          "norwegian_folding",
+          "lowercase"
+        ],
+        "tokenizer": "icu_tokenizer"
+      },
+      "format_analyzer": {
+        "filter": [
+          "lowercase",
+          "format_synonym_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      },
+      "isbn_analyzer": {
+        "filter": [
+          "isbn_clean_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      },
+      "language_analyzer": {
+        "filter": [
+          "lowercase",
+          "language_synonym_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      },
+      "litform_analyzer": {
+        "filter": [
+          "lowercase",
+          "litform_synonym_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      },
+      "mediatype_analyzer": {
+        "filter": [
+          "lowercase",
+          "mediatype_synonym_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      },
+      "name_analyzer": {
+        "filter": [
+          "lowercase"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      },
+      "writing_system_analyzer": {
+        "filter": [
+          "lowercase",
+          "writing_system_synonym_filter"
+        ],
+        "tokenizer": "keyword",
+        "type": "custom"
+      }
+    },
+    "filter": {
+      "biography_synonym_filter": {
+        "synonyms": [
+          "a, autobiography => selvbiografi",
+          "b, single biography => enkeltbiografi",
+          "c, collective biography => samlingsbiografi",
+          "d, biographical content => biografisk innhold"
+        ],
+        "tokenizer": "keyword",
+        "type": "synonym"
+      },
+      "content_adaptation_synonym_filter": {
+        "synonyms": [
+          "easy to read, easy language, lettlest, enkelt språk, ta",
+          "easy to read, easy content, lettlest, enkelt innhold, tb"
+        ],
+        "tokenizer": "keyword",
+        "type": "synonym"
+      },
+      "format_synonym_filter": {
+        "synonyms": [
+          "blu, bluray => blu-ray",
+          "3d => 3d-film",
+          "mp3cd, mp3 => mp3-cd",
+          "cdr, cdrom => cd-rom",
+          "dvdr, dvdrom => dvd-rom",
+          "digik => digikort",
+          "digib => digibok",
+          "kass => kassett",
+          "vinyl, lp => vinylplate",
+          "pc, pcspill => pc-spill",
+          "brsp => brettspill",
+          "ksp => kortspill",
+          "ds, nintendo ds => nintendo ds-spill",
+          "wii, nintendo wii => nintendo wii-spill",
+          "ps2, playstation 2 => playstation 2-spill",
+          "ps3, playstation 3 => playstation 3-spill",
+          "ps4, playstation 4 => playstation 4-spill",
+          "xbox1, xboxone, xbox one => xbox one-spill",
+          "xbox360, xbox 360 => xbox 360-spill",
+          "inst, instrument => musikkinstrument"
+        ],
+        "tokenizer": "keyword",
+        "type": "synonym"
+      },
+      "isbn_clean_filter": {
+        "pattern": "-",
+        "replacement": "",
+        "type": "pattern_replace"
+      },
+      "language_synonym_filter": {
+        "synonyms": [
+          "bokmål, nob",
+          "nynorsk, nno",
+          "dansk, danish, dan",
+          "engelsk, english, eng",
+          "svensk, swedish, swe",
+          "afrikaans, afr",
+          "albansk, albanian, alb",
+          "amharisk, amharic, amh",
+          "arabisk, arabic, ara",
+          "armensk, armenian, arm",
+          "aserbajdsjansk, azerbaijani, aze",
+          "bambara, bambara, bam",
+          "baskisk, basque, baq",
+          "bengali, ben",
+          "bosnisk, bosnian, bos",
+          "bulgarsk, bulgarian, bul",
+          "burmansk, burmese, bur",
+          "cebuano, ceb",
+          "dari, prs",
+          "dinka, din",
+          "duala, dua",
+          "dyula, dyu",
+          "egyptisk, egyptian, egy",
+          "esperanto, esperanto, epo",
+          "estisk, estonian, est",
+          "farsi, persian, per",
+          "finsk, finnish, fin",
+          "fransk, french, fre",
+          "færøysk, faroese, fao",
+          "galisisk, galician, glg",
+          "gammelgresk, ancient greek, grc",
+          "gammelsyrisk, classical syriac, syc",
+          "georgisk, georgian, geo",
+          "gresk, greek, gre",
+          "grønlandsk, greenlandic, kal",
+          "gujarati, gujarati, guj",
+          "hausa, hau",
+          "hebraisk, hebrew, heb",
+          "hiligaynon, hiligaynon, hil",
+          "hindi, hin",
+          "hviterussisk, belarusian, bel",
+          "ibo, ibo",
+          "iloko, ilo",
+          "inarisamisk, inari sami, smn",
+          "indonesisk, indonesian, ind",
+          "inuittisk, inuktitut, iku",
+          "irsk, irish, gle",
+          "islandsk, icelandic, ice",
+          "italiensk, italian, ita",
+          "japansk, japanese, jpn",
+          "jiddisch, yiddish, yid",
+          "joruba, yor",
+          "kannada, kan",
+          "katalansk, catalan, cat",
+          "khmer, cam",
+          "kinesisk, chinese, chi",
+          "koreansk, korean, kor",
+          "kroatisk, croatian, hrv",
+          "kurdisk, kurdish, kur",
+          "kurdisk (kurmandji), kurdish (kurmanji), kmr",
+          "kurdisk (sorani), kurdish (sorani), ckb",
+          "kvensk, kven, fkv",
+          "laotisk, lao, lao",
+          "latin, lat",
+          "latvisk, latvian, lav",
+          "lingala, lingala, lin",
+          "litauisk, lithuanian, lit",
+          "lulesamisk, lule sami, smj",
+          "luo, luo",
+          "makedonsk, macedonian, mac",
+          "madagassisk, malagasy, mlg",
+          "malayalam, malayalam, mal",
+          "malayisk, malay, may",
+          "mandinka, mandinka, mnk",
+          "maori, maori, mri",
+          "marathi, marathi, mar",
+          "maya, mayan, myn",
+          "mongolsk, mongolian, mon",
+          "mossisk, mossi, mos",
+          "nederlandsk, dutch, dut",
+          "nepali, nepali, nep",
+          "niger-kongospråk, niger-congo languages, nic",
+          "nordsamisk, northern sami, sme",
+          "nordsotho, northern sotho, nso",
+          "norrønt, old norse, non",
+          "norsk, norwegian, nor",
+          "nyanja, nyanja, nya",
+          "oromo, orm",
+          "pampanga, pampanga, pam",
+          "panjabi, pan",
+          "pashto, pushto, pus",
+          "polsk, polish, pol",
+          "portugisisk, portuguese, por",
+          "quechua, quechua, que",
+          "retoromansk, romansh, roh",
+          "romanii, rom",
+          "rumensk, romanian, rum",
+          "russisk, russian, rus",
+          "samisk, sami, smi",
+          "sanskrit, sanskrit, san",
+          "serbisk, serbian, srp",
+          "shona, shona, sna",
+          "singalesisk, sinhala, sin",
+          "skoltesamisk, skolt sami, sms",
+          "skotsk, scots, sco",
+          "skotsk-gælisk, gaelic, gla",
+          "slovakisk, slovak, slo",
+          "slovensk, slovene, slv",
+          "somalii, som",
+          "sotho, sot",
+          "spansk, spanish, spa",
+          "swahili, swahili, swa",
+          "sørsamisk, southern sami, sma",
+          "tagalog, tgl",
+          "tadsjikisk, tajik, tgk",
+          "tamil, tam",
+          "tegnspråk, sign language, sgn",
+          "telugu, tel",
+          "tetum, tet",
+          "thai, tha",
+          "tibetansk, tibetan, tib",
+          "tigré, tigre, tig",
+          "tigrinja, tigrinya, tir",
+          "tsjekkisk, czech, cze",
+          "tsjetsjensk, chechen, che",
+          "tsonga, tso",
+          "turkmensk, turkmen, tuk",
+          "twii, twi",
+          "tyrkisk, turkish, tur",
+          "tysk, german, ger",
+          "ukrainsk, ukrainian, ukr",
+          "ungarsk, hungarian, hun",
+          "urdu, urd",
+          "usbekisk, uzbek, uzb",
+          "vietnamesisk, vietnamese, vie",
+          "volapyk, volapük, vol",
+          "walisisk, welsh, wel",
+          "wolof, wolof, wol",
+          "xhosa, xhosa, xho",
+          "zazaki, zza",
+          "zulu, zul",
+          "pali, pli",
+          "sumerisk, sumerian, sux",
+          "kikuyu, kik",
+          "fulani, fula, ful",
+          "akkadisk, akkadian, akk",
+          "geez, ge'ez, gez",
+          "arameisk, aramaic, arc",
+          "ingen, ing"
+        ],
+        "tokenizer": "keyword",
+        "type": "synonym"
+      },
+      "litform_synonym_filter": {
+        "synonyms": [
+          "r, romaner, novel => roman",
+          "n, noveller, fortelling, fortellinger, short story => noveller/fortellinger",
+          "d, poem => dikt",
+          "s, drama => skuespill",
+          "t, tegneserier, comic book => tegneserie",
+          "a, antologier, anthology => antologi",
+          "l, lærebøker, text book => lærebok",
+          "p, pekebøker, pointing book => pekebok",
+          "bl, bildebøker, picture book => bildebok",
+          "o, ordbøker, dictionary => ordbok",
+          "ref, reference work => oppslagsverk",
+          "bio, biografier, biography => biografi",
+          "spf, spillefilmer, feature film => spillefilm",
+          "anf, animasjonsfilmer, animated film => animasjonsfilm",
+          "tv, tv-serier, tv series => tv-serie",
+          "kort, kortfilmer, short film => kortfilm",
+          "oppg, oppgavebøker, exercise book => oppgavebok"
+        ],
+        "tokenizer": "keyword",
+        "type": "synonym"
+      },
+      "mediatype_synonym_filter": {
+        "synonyms": [
+          "book => bok",
+          "e-book => e-bok",
+          "audiobook => lydbok",
+          "comic book => tegneserie",
+          "language course => språkkurs",
+          "music record => musikkopptak",
+          "sheet music => noter",
+          "game => spill",
+          "other => andre",
+          "periodical, magazine => periodika"
+        ],
+        "tokenizer": "keyword",
+        "type": "synonym"
+      },
+      "norwegian_folding": {
+        "type": "icu_folding",
+        "unicodeSetFilter": "[^æøåÆØÅ]"
+      },
+      "writing_system_synonym_filter": {
+        "synonyms": [
+          "cyrillic => kyrillisk",
+          "japanese => japansk",
+          "chinese => kinesisk",
+          "arabic => arabisk",
+          "greek => gresk",
+          "hebrew => hebraisk",
+          "korean => koreansk",
+          "latin => latinsk",
+          "georgian => georgisk",
+          "burmese => burmesisk",
+          "armenian => armensk"
+        ],
+        "tokenizer": "keyword",
+        "type": "synonym"
       }
     }
   }

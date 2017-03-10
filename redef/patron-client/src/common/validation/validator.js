@@ -23,6 +23,17 @@ module.exports = form => values => {
     }
   })
 
+  if (values.hasOwnProperty('yearFrom') && values.hasOwnProperty('yearTo')) {
+    if (parseInt(values.yearFrom) > parseInt(values.yearTo)) {
+      Object.keys(form).forEach(field => {
+        if (field === 'yearTo') {
+          errors[ field ] = 'toYearBeforeFromYear'
+          return
+        }
+      })
+    }
+  }
+
   // Only email is required per 18.01.17
   /* if (form.email && form.mobile && !values.email && !values.mobile) {
     errors.email = 'emailOrMobileRequired'

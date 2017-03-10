@@ -1934,7 +1934,7 @@
                   path: 'contributors',
                   query: {
                     bool: {
-                      filter: [
+                      must: [
                         {
                           term: {
                             'contributors.mainEntry': true
@@ -1979,13 +1979,9 @@
               const transformedQuery = transformQueryString(queryTerm)
               console.dir(transformedQuery)
               fieldAndTerm[ queryTerm.field ] = transformedQuery
-              matchBody = {
-                query: queryTerm.wildcard ? {
-                    match_phrase_prefix: fieldAndTerm
-                  } : {
-                    match: fieldAndTerm
-                  }
-              }
+              matchBody = queryTerm.wildcard
+                ? { match_phrase_prefix: fieldAndTerm }
+                : { match: fieldAndTerm }
             }
           })
 
@@ -1994,7 +1990,7 @@
             size: 100,
             query: {
               bool: {
-                filter: [
+                must: [
                   matchBody,
                   filters[ filterName ](filterArg)
                 ]
@@ -3244,8 +3240,10 @@
                     updateBrowserLocationWithQueryParameter(input.widgetOptions.queryParameter, shortValue)
                   }
                 })
-                if (uri.indexOf('publication') !== -1) {
+                if (initOptions.task === 'maintPub') {
                   updateBrowserLocationWithTab(1)
+                } else if (initOptions.task === 'maintWork') {
+                  updateBrowserLocationWithTab(2)
                 }
                 Main.init(initOptions)
 //                updateBrowserLocationWithTemplate(editWith.template)

@@ -1,54 +1,31 @@
-PREFIX  :     <__ONTOLOGY__>
+PREFIX : <__ONTOLOGY__>
 
-CONSTRUCT
-  { ?serialUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Serial ;
-               :mainTitle ?mainTitle ;
-               :subtitle ?subtitle ;
-               :partTitle ?partTitle ;
-               :partNumber ?partNumber ;
-               :publishedByName ?publishedByName ;
-               :publishedByAlternativeName ?publishedByAlternativeName ;
-               :publishedByPlacePrefLabel ?publishedByPlacePrefLabel ;
-               :publishedByPlaceAlternativeName ?publishedByPlaceAlternativeName ;
-               :issn ?issn .
-  }
-WHERE
-  { SELECT DISTINCT  ?serialUri ?mainTitle ?subtitle ?publishedByName ?publishedByAlternativeName ?publishedByPlacePrefLabel ?publishedByPlaceAlternativeName ?partTitle ?partNumber ?issn
-    WHERE
-      { BIND(uri("__SERIALURI__") AS ?serialUri)
-        ?serialUri  a                   :Serial ;
+CONSTRUCT {
+  <__SERIALURI__> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :Serial ;
+    :mainTitle ?mainTitle ;
+    :subtitle ?subtitle ;
+    :partTitle ?partTitle ;
+    :partNumber ?partNumber ;
+    :publishedByName ?publishedByName ;
+    :publishedByAlternativeName ?publishedByAlternativeName ;
+    :publishedByPlacePrefLabel ?publishedByPlacePrefLabel ;
+    :publishedByPlaceAlternativeName ?publishedByPlaceAlternativeName ;
+    :issn ?issn .
+}
 
-        OPTIONAL
-          { ?serialUri  :mainTitle  ?mainTitle
-          }
-        OPTIONAL
-          { ?serialUri  :subtitle  ?subtitle
-          }
-        OPTIONAL
-          { ?serialUri  :partTitle  ?partTitle
-          }
-        OPTIONAL
-          { ?serialUri  :partNumber ?partNumber
-          }
-        OPTIONAL
-          { ?serialUri  :issn ?issn
-          }
-        OPTIONAL
-          {
-            ?serialUri  :publishedBy  ?publishedByUri .
-            ?publishedByUri :name ?publishedByName .
-            OPTIONAL {
-                ?publishedByUri :alternativeName ?publishedByAlternativeName .
-            }
-            OPTIONAL {
-                ?publishedByUri :place ?publishedByPlaceUri .
-                ?publishedByPlaceUri a :Place ;
-                                     :prefLabel ?publishedByPlacePrefLabel .
-                OPTIONAL {
-                    ?publishedByPlaceUri :alternativeName ?publishedByPlaceAlternativeName .
-                }
-
-            }
-          }
-      }
-  }
+WHERE {
+        { <__SERIALURI__> a :Serial }
+  UNION { <__SERIALURI__> :mainTitle ?mainTitle }
+  UNION { <__SERIALURI__> :subtitle ?subtitle }
+  UNION { <__SERIALURI__> :partTitle ?partTitle }
+  UNION { <__SERIALURI__> :partNumber ?partNumber }
+  UNION { <__SERIALURI__> :issn ?issn }
+  UNION { <__SERIALURI__> :publishedBy ?publishedByUri .
+          ?publishedByUri :name ?publishedByName .
+          OPTIONAL { ?publishedByUri :alternativeName ?publishedByAlternativeName }
+          OPTIONAL { ?publishedByUri :place ?publishedByPlaceUri .
+                     ?publishedByPlaceUri a :Place ;
+                       :prefLabel ?publishedByPlacePrefLabel . }
+          OPTIONAL { ?publishedByPlaceUri :alternativeName ?publishedByPlaceAlternativeName }
+   }
+}

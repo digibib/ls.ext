@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, SubmissionError } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 
@@ -19,12 +19,8 @@ class DateRangeFilter extends React.Component {
   }
 
   handleYearRange (fields) {
-    if (parseInt(fields.yearTo) < parseInt(fields.yearFrom)) {
-      throw new SubmissionError({ _error: 'Failed YEAR!' })
-    } else {
-      this.props.reset()
-      this.props.togglePeriod({ yearFrom: fields.yearFrom || '', yearTo: fields.yearTo || '' })
-    }
+    this.props.reset()
+    this.props.togglePeriod({ yearFrom: fields.yearFrom || '', yearTo: fields.yearTo || '' })
   }
 
   handleKeyDown (e) {
@@ -44,6 +40,7 @@ class DateRangeFilter extends React.Component {
       submitting,
       handleSubmit
     } = this.props
+
     return (
       <form className="filter-group dateRangeFilters" data-automation-id="filter_dateRange"
             onSubmit={handleSubmit(this.handleYearRange)}
@@ -146,13 +143,3 @@ export default connect(
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
   validate: validator(fields)
 })(intlDateRangeFilter))
-
-/*
-export default reduxForm({
-  form: formName,
-  enableReinitialize: true,
-  asyncValidate,
-  asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
-  validate: validator(fields)
-})(DateRangeFilter)
-*/

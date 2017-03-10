@@ -102,8 +102,8 @@ export const changeReservationSuspensionSuccess = (reserveId, suspended, suspend
 
 export const changeReservationSuspensionFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
 
-export function startReservation (recordId) {
-  return requireLoginBeforeAction(showModal(ModalComponents.RESERVATION, { recordId: recordId }))
+export function startReservation (publication) {
+  return requireLoginBeforeAction(showModal(ModalComponents.RESERVATION, { publication: publication }))
 }
 
 export function requestReservePublication (recordId, branchCode) {

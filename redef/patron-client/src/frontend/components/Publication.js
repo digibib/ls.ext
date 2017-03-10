@@ -70,7 +70,7 @@ class Publication extends React.Component {
           </div>
           {(publication.items.length > 0 && publication.items.filter(item => item.reservable).length > 0) ? (
             <div className="reserve-button">
-              <ClickableElement onClickAction={startReservation} onClickArguments={publication.recordId}>
+              <ClickableElement onClickAction={startReservation} onClickArguments={publication}>
                 <button className="red-btn" type="button"
                         data-automation-id={`recordId_${publication.recordId}`}>
                   <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>

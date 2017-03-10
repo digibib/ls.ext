@@ -27,8 +27,15 @@ class PostponeReservationForm extends React.Component {
     this.handleDateChange = this.handleDateChange.bind(this)
   }
 
-  handlePostponeReservation () {
-    this.props.reservationActions.changeReservationSuspension(this.props.modalProps.reserveId, this.props.modalProps.suspended, this.props.date.date)
+  handlePostponeReservation (field) {
+    if (this.props.date === null || this.props.date !== field.date) {
+      this.props.datepickerActions.handleDateChange(moment(field.date, 'DD.MM.YYYY'))
+    }
+
+    this.props.reservationActions.changeReservationSuspension(
+      this.props.modalProps.reserveId,
+      this.props.modalProps.suspended,
+      this.props.date.date)
     this.props.modalActions.hideModal()
   }
 
@@ -83,7 +90,7 @@ class PostponeReservationForm extends React.Component {
             />
           </div>
           <div className="postpone-aside">
-            <p>NB: Du beholder din nåværende plass i køen</p>
+            <p><FormattedMessage {...messages.postponeInfoMsg} /></p>
           </div>
         </div>
         <button
@@ -104,6 +111,11 @@ class PostponeReservationForm extends React.Component {
 }
 
 export const messages = defineMessages({
+  postponeInfoMsg: {
+    id: 'UserLoans.postponeInfoMsg',
+    description: 'Supplement message for postponing reservation',
+    defaultMessage: 'NB: You will keep your place in queue. You can cancel postponement at any time.'
+  },
   activateAfter: {
     id: 'UserLoans.activateAfter',
     description: 'Form label for datepicker field in postpone reservation',
@@ -134,7 +146,7 @@ export const messages = defineMessages({
 PostponeReservationForm.propTypes = {
   reservationActions: PropTypes.object.isRequired,
   modalProps: PropTypes.object.isRequired,
-  date: PropTypes.object.isRequired,
+  date: PropTypes.object,
   modalActions: PropTypes.object.isRequired,
   datepickerActions: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -168,7 +180,7 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: formName,
-  enableReinitialize: true,
+  // enableReinitialize: true,
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
   validate: validator(fields)

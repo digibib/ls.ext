@@ -64,7 +64,7 @@ describe('containers', () => {
     })
 
     it('should display ReservationModal', () => {
-      const { node } = setup({ modalType: 'RESERVATION', modalProps: { recordId: 'test_recordId' } })
+      const { node } = setup({ modalType: 'RESERVATION', modalProps: { publication: { formats: [], recordId: 'test_recordId', items: [ { itemnumber: 123 } ] } } })
       expect(node.querySelectorAll("[data-automation-id='reservation_modal']").length).toBe(1)
     })
   })

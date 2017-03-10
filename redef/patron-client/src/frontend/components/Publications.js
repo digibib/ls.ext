@@ -8,7 +8,7 @@ import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
 import {getId, getFragment} from '../utils/uriParser'
 import ClickableElement from './ClickableElement'
-import {getCategorizedFilters} from '../utils/filterParser'
+import {getCategorizedFilters, getDateRange} from '../utils/filterParser'
 import Constants from '../constants/Constants'
 import ShowFilteredPublicationsLabel from '../components/ShowFilteredPublicationsLabel'
 import SearchFilterBox from '../components/SearchFilterBox'
@@ -37,6 +37,31 @@ class Publications extends React.Component {
 
   isArraysIntersecting (array1, array2) {
     return array1.some((item) => array2.includes(item))
+  }
+
+  checkIfWithinDateRange (dateRange, publicationYear) {
+    if (dateRange.length === 0 || !publicationYear) {
+      return true
+    }
+
+    if (dateRange.length === 2) {
+      if (dateRange[0].yearFrom <= parseInt(publicationYear) && dateRange[1].yearTo >= parseInt(publicationYear)) {
+        return true
+      }
+    }
+
+    if (dateRange.length === 1 && dateRange[0].hasOwnProperty('yearFrom')) {
+      if (dateRange[0].yearFrom <= parseInt(publicationYear) && new Date().getFullYear() >= parseInt(publicationYear)) {
+        return true
+      }
+    }
+
+    if (dateRange.length === 1 && dateRange[0].hasOwnProperty('yearTo')) {
+      if (parseInt(publicationYear) >= 1000 && dateRange[0].yearTo >= parseInt(publicationYear)) {
+        return true
+      }
+    }
+    return false
   }
 
   generatePublicationRows (publicationRows) {
@@ -70,8 +95,19 @@ class Publications extends React.Component {
     let filteredPublications = []
     const filteredPublicationsRest = []
     const filters = getCategorizedFilters(this.props.locationQuery)
-    if (filters.branch || filters.language || filters.format || filters.mediatype) {
+    const dateRange = []
+
+    if (getDateRange(this.props.locationQuery, 'yearFrom') !== null) {
+      dateRange.push({ yearFrom: getDateRange(this.props.locationQuery, 'yearFrom') })
+    }
+
+    if (getDateRange(this.props.locationQuery, 'yearTo') !== null) {
+      dateRange.push({ yearTo: getDateRange(this.props.locationQuery, 'yearTo') })
+    }
+
+    if (filters.branch || filters.language || filters.format || filters.mediatype || dateRange.length !== 0) {
       publicationsCopy.forEach(publication => {
+        const withinDateRange = this.checkIfWithinDateRange(dateRange, publication.publicationYear)
         const formats = filters.format
         const languages = filters.language
         const branches = []
@@ -88,7 +124,8 @@ class Publications extends React.Component {
         ((formats ? this.isArraysIntersecting(formats, publication.formats) : true) &&
           (mediatypes ? this.isArraysIntersecting(mediatypes, publication.mediaTypes) : true) &&
           (languages ? this.isArraysIntersecting(languages, publication.languages) : true) &&
-          (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true))
+          (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true)) &&
+          withinDateRange
           ? filteredPublications.push(publication) : filteredPublicationsRest.push(publication)
       })
     } else {

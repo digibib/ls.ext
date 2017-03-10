@@ -12,8 +12,7 @@ function setup (propOverrides) {
     filters: [
       { id: 'language_nob', bucket: 'http://lexvo.org/id/iso639-3/nob', count: '10', active: true },
       { id: 'language_eng', bucket: 'http://lexvo.org/id/iso639-3/eng', count: '40', active: false },
-      { id: 'language_fin', bucket: 'http://lexvo.org/id/iso639-3/fin', count: '30', active: false },
-      { id: 'language_swe', bucket: 'http://lexvo.org/id/iso639-3/swe', count: '20', active: true }
+      { id: 'language_fin', bucket: 'http://lexvo.org/id/iso639-3/fin', count: '30', active: false }
     ],
     locationQuery: {
       'showFilter': ['language']
@@ -28,8 +27,7 @@ function setup (propOverrides) {
   const messages = {
     'http://lexvo.org/id/iso639-3/nob': 'Norwegian',
     'http://lexvo.org/id/iso639-3/eng': 'English',
-    'http://lexvo.org/id/iso639-3/fin': 'Finnish',
-    'http://lexvo.org/id/iso639-3/swe': 'Swedish'
+    'http://lexvo.org/id/iso639-3/fin': 'Finnish'
   }
 
   const output = TestUtils.renderIntoDocument(
@@ -56,7 +54,6 @@ describe('components', () => {
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 0 ].id}']`).innerHTML).toContain('Norwegian')
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 1 ].id}']`).innerHTML).toContain('English')
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 2 ].id}']`).innerHTML).toContain('Finnish')
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 3 ].id}']`).innerHTML).toContain('Swedish')
     })
 
     it('should render checked filters', () => {
@@ -64,7 +61,6 @@ describe('components', () => {
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 0 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 1 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
       expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 2 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(false)
-      expect(node.querySelector(`[data-automation-id='filter_${props.filters[ 3 ].id}']`).getElementsByTagName('input')[ 0 ].checked).toBe(true)
     })
 
     it('should order by count', () => {
@@ -72,8 +68,7 @@ describe('components', () => {
       const nodes = node.querySelectorAll("[data-automation-id^='filter_language_']")
       expect(nodes[ 0 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 1 ].id}`)
       expect(nodes[ 1 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 2 ].id}`)
-      expect(nodes[ 2 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 3 ].id}`)
-      expect(nodes[ 3 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 0 ].id}`)
+      expect(nodes[ 2 ].getAttribute('data-automation-id')).toBe(`filter_${props.filters[ 0 ].id}`)
     })
   })
 })

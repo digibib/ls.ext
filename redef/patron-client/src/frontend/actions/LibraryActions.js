@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
-import { mapLibraries } from '../utils/libraryMapper'
+import { mapLibraries } from '../utils/libraryFilters'
 
 export function requestLibraries () {
   return {

@@ -7,6 +7,8 @@ services:
       - "3030:3030"
 
   elasticsearch:
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
 

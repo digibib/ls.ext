@@ -1,16 +1,15 @@
-PREFIX  :     <__ONTOLOGY__>
+PREFIX : <__ONTOLOGY__>
 
 CONSTRUCT {
-  ?compositionTypeUri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :CompositionType ;
-            :prefLabel ?label ;
-            :specification ?specification ;
-            :alternativeName  ?alternativeName .
+  <__COMPOSITIONTYPEURI__> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> :CompositionType ;
+	  :prefLabel ?label ;
+	  :specification ?specification ;
+	  :alternativeName  ?alternativeName .
 }
 
 WHERE {
-  BIND(uri("__COMPOSITIONTYPEURI__") AS ?compositionTypeUri)
-  ?compositionTypeUri a :CompositionType .
-  OPTIONAL { ?compositionTypeUri :prefLabel ?label }
-  OPTIONAL { ?compositionTypeUri :specification ?specification }
-  OPTIONAL { ?compositionTypeUri :alternativeName  ?alternativeName }
+        { <__COMPOSITIONTYPEURI__> a :CompositionType }
+  UNION { <__COMPOSITIONTYPEURI__> :prefLabel ?label }
+  UNION { <__COMPOSITIONTYPEURI__> :specification ?specification }
+  UNION { <__COMPOSITIONTYPEURI__> :alternativeName  ?alternativeName }
 }

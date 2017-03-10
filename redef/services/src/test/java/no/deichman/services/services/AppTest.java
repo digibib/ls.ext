@@ -32,9 +32,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDFS;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -49,7 +46,6 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +118,7 @@ public class AppTest {
     }
 
     private static void setupElasticSearch() throws Exception {
-        embeddedElasticsearchServer = EmbeddedElasticsearchServer.getInstance();
+        embeddedElasticsearchServer = new EmbeddedElasticsearchServer();
         Unirest.post(appURI + "/search/clear_index");
     }
 
@@ -1020,22 +1016,20 @@ public class AppTest {
 
 
     private void indexWork(String workId, String title) {
-        getClient().prepareIndex("search", "work", workId)
-                .setSource(""
-                        + "{ "
-                        + "    \"mainTitle\": \"" + title + "\","
-                        + "    \"publicationYear\": \"1890\","
-                        + "    \"uri\": \"http://deichman.no/work/w12344553\","
-                        + "    \"contributor\": [{ \"role\": \"http://data.deichman.no/role#author\", \"agent\":{"
-                        + "       \"name\": \"Knut Hamsun\","
-                        + "       \"birthYear\": \"1859\","
-                        + "       \"deathYear\": \"1952\","
-                        + "       \"uri\": \"http://deichman.no/person/h12345\"}"
-                        + "    }]"
-                        + "}")
-                .execute()
-                .actionGet();
-    }
+        String source = ""
+                + "{ "
+                + "    \"mainTitle\": \"" + title + "\","
+                + "    \"publicationYear\": \"1890\","
+                + "    \"uri\": \"http://deichman.no/work/w12344553\","
+                + "    \"contributors\": [{ \"role\": \"http://data.deichman.no/role#author\", \"agent\":{"
+                + "       \"name\": \"Knut Hamsun\","
+                + "       \"birthYear\": \"1859\","
+                + "       \"deathYear\": \"1952\","
+                + "       \"uri\": \"http://deichman.no/person/h12345\"}"
+                + "    }]"
+                + "}";
+        embeddedElasticsearchServer.getClient().index("search", "work", source);
+     }
 
     @Test
     public void when_get_elasticsearch_work_without_query_parameter_should_get_bad_request_response() throws Exception {
@@ -1055,10 +1049,6 @@ public class AppTest {
         return Unirest
                 .get(appURI + workUri)
                 .header("Accept", "application/ld+json");
-    }
-
-    private Client getClient() {
-        return embeddedElasticsearchServer.getClient();
     }
 
     @Test
@@ -1288,13 +1278,14 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 2));
         assertTrue(resourceIsIndexedWithinNumSeconds(persUri1, 2));
 
-        // 4) Patch person, and verify that work and publications gets reindexed within few seconds
+        // 4) Patch person, and verify that persn, work and publications gets reindexed within few seconds
         buildPatchRequest(
                 resolveLocally(persUri1),
                 buildLDPatch(
                         buildPatchStatement("del", persUri1, BaseURI.ontology("name"), "Ragde, Anne B."),
                         buildPatchStatement("add", persUri1, BaseURI.ontology("name"), "Zappa, Frank"))).asString();
 
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(persUri1, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Zappa, Frank", 2));
@@ -1449,21 +1440,27 @@ public class AppTest {
     }
 
     private Boolean resourceIsIndexed(String uri) throws Exception {
-        String uriEncoded = URLEncoder.encode(uri, "UTF-8");
-        SearchResponse res = EmbeddedElasticsearchServer.getInstance().getClient()
-                .prepareSearch().setQuery(QueryBuilders.idsQuery().addIds(uriEncoded))
-                .execute().actionGet();
-
-        return res.getHits().getTotalHits() > 0;
+        Boolean found = false;
+        List<String> docs = embeddedElasticsearchServer.getClient().fetchAllDocuments("search");
+        for (String doc : docs) {
+            if (doc.contains(uri)) {
+                found = true;
+                break;
+            }
+        }
+       return found;
     }
 
     private Boolean resourceIsIndexedWithValue(String uri, String value) throws Exception {
-        String uriEncoded = URLEncoder.encode(uri, "UTF-8");
-        SearchResponse res = EmbeddedElasticsearchServer.getInstance().getClient()
-                .prepareSearch().setQuery(QueryBuilders.idsQuery().addIds(uriEncoded))
-                .execute().actionGet();
-
-        return res.toString().contains(value);
+        List<String> docs = embeddedElasticsearchServer.getClient().fetchAllDocuments("search");
+        Boolean found = false;
+        for (String doc : docs) {
+            if (doc.contains(uri) && doc.contains(value)) {
+                found = true;
+                break;
+            }
+        }
+        return found;
     }
 
     private Boolean resourceIsIndexedWithinNumSeconds(String uri, Integer numSeconds) throws Exception {

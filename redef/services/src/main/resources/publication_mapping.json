@@ -1,316 +1,306 @@
 {
-  "properties": {
-    "contributors": {
-      "type": "nested",
-      "properties": {
-        "role": {
-          "type": "string",
-          "index": "no"
-        },
-        "agent": {
-          "type": "nested",
-          "properties": {
-            "uri": {
-              "type": "string",
-              "index": "not_analyzed"
-            },
-            "name": {
-              "type": "string"
-            },
-            "birthYear": {
-              "type": "string",
-              "index": "no"
-            },
-            "deathYear": {
-              "type": "string",
-              "index": "no"
+  "publication": {
+    "properties": {
+      "contributors": {
+        "type": "nested",
+        "properties": {
+          "role": {
+            "type": "text",
+            "index": false
+          },
+          "agent": {
+            "type": "nested",
+            "properties": {
+              "uri": {
+                "type": "keyword"
+              },
+              "name": {
+                "type": "text"
+              },
+              "birthYear": {
+                "type": "text",
+                "index": false
+              },
+              "deathYear": {
+                "type": "text",
+                "index": false
+              }
             }
+          },
+          "mainEntry": {
+            "type": "boolean"
           }
-        },
-        "mainEntry": {
-          "type": "boolean"
         }
-      }
-    },
-    "parts": {
-      "type": "nested",
-      "properties": {
-        "role": {
-          "type": "string",
-          "index": "no"
-        },
-        "agent": {
-          "type": "nested",
-          "properties": {
-            "uri": {
-              "type": "string",
-              "index": "not_analyzed"
-            },
-            "name": {
-              "type": "string"
-            },
-            "birthYear": {
-              "type": "string",
-              "index": "no"
-            },
-            "deathYear": {
-              "type": "string",
-              "index": "no"
+      },
+      "parts": {
+        "type": "nested",
+        "properties": {
+          "role": {
+            "type": "text",
+            "index": false
+          },
+          "agent": {
+            "type": "nested",
+            "properties": {
+              "uri": {
+                "type": "keyword"
+              },
+              "name": {
+                "type": "text"
+              },
+              "birthYear": {
+                "type": "text",
+                "index": false
+              },
+              "deathYear": {
+                "type": "text",
+                "index": false
+              }
             }
+          },
+          "mainTitle": {
+            "type": "text"
           }
-        },
-        "mainTitle": {
-          "type": "string"
         }
-      }
-    },
-    "bio": {
-      "type": "string",
-      "analyzer": "biography_analyzer"
-    },
-    "dewey": {
-      "type": "string"
-    },
-    "nationality": {
-      "type": "string"
-    },
-    "recordId": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "contributorNames": {
-      "type": "string"
-    },
-    "title": {
-      "type": "string"
-    },
-    "mainTitle": {
-      "type": "string"
-    },
-    "partTitle": {
-      "type": "string"
-    },
-    "subtitle": {
-      "type": "string"
-    },
-    "partNumber": {
-      "type": "string"
-    },
-    "subtitles": {
-      "type": "string",
-      "analyzer": "language_analyzer"
-    },
-    "norwegianTitle": {
-      "type": "string",
-      "index": "no"
-    },
-    "englishTitle": {
-      "type": "string",
-      "index": "no"
-    },
-    "uri": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "publicationYear": {
-      "type": "short"
-    },
-    "firstPublicationYear": {
-      "type": "short"
-    },
-    "audiences": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "holdingBranches": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "image": {
-      "type": "string",
-      "index": "no"
-    },
-    "fictionNonfiction": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "mediatype": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "mt": {
-      "type": "string",
-      "analyzer": "mediatype_analyzer"
-    },
-    "formats": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "litform": {
-      "type": "string",
-      "analyzer": "litform_analyzer"
-    },
-    "format": {
-      "type": "string",
-      "analyzer": "format_analyzer"
-    },
-    "desc": {
-      "type": "string"
-    },
-    "inst": {
-      "type": "string"
-    },
-    "formatAdaptation": {
-      "type": "string"
-    },
-    "language": {
-      "type": "string",
-      "analyzer": "language_analyzer"
-    },
-    "languages": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "writingSystem": {
-      "type": "string",
-      "analyzer": "writing_system_analyzer"
-    },
-    "isbn": {
-      "type": "string",
-      "analyzer": "isbn_analyzer"
-    },
-    "ismn": {
-      "type": "string",
-      "analyzer": "isbn_analyzer"
-    },
-    "ean": {
-      "type": "string",
-      "analyzer": "isbn_analyzer"
-    },
-    "series": {
-      "type": "string"
-    },
-    "subject": {
-      "type": "string"
-    },
-    "genre": {
-      "type": "string"
-    },
-    "ageLimit": {
-      "type": "integer"
-    },
-    "workUri": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "scriptWriter": {
-      "type": "string"
-    },
-    "agents": {
-      "type": "string"
-    },
-    "actor": {
-      "type": "string"
-    },
-    "photographer": {
-      "type": "string"
-    },
-    "lyricist": {
-      "type": "string"
-    },
-    "composer": {
-      "type": "string"
-    },
-    "director": {
-      "type": "string"
-    },
-    "performer": {
-      "type": "string"
-    },
-    "musicalArranger": {
-      "type": "string"
-    },
-    "reader": {
-      "type": "string"
-    },
-    "conductor": {
-      "type": "string"
-    },
-    "author": {
-      "type": "string"
-    },
-    "translator": {
-      "type": "string"
-    },
-    "illustrator": {
-      "type": "string"
-    },
-    "editor": {
-      "type": "string"
-    },
-    "contributor": {
-      "type": "string"
-    },
-    "coreographer": {
-      "type": "string"
-    },
-    "producer": {
-      "type": "string"
-    },
-    "mainEntryName": {
-      "type": "string"
-    },
-    "summary": {
-      "type": "string",
-      "index": "no"
-    },
-    "compType": {
-      "type": "string"
-    },
-    "publishedBy": {
-      "type": "string"
-    },
-    "langTitles": {
-      "enabled": false
-    },
-    "mediatypesFromAllPublications": {
-      "type": "nested",
-      "properties": {
-        "uri": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "formats": {
-          "type": "string",
-          "index": "no"
+      },
+      "bio": {
+        "type": "text",
+        "analyzer": "biography_analyzer"
+      },
+      "dewey": {
+        "type": "text"
+      },
+      "nationality": {
+        "type": "text"
+      },
+      "recordId": {
+        "type": "keyword"
+      },
+      "contributorNames": {
+        "type": "text"
+      },
+      "title": {
+        "type": "text"
+      },
+      "mainTitle": {
+        "type": "text"
+      },
+      "partTitle": {
+        "type": "text"
+      },
+      "subtitle": {
+        "type": "text"
+      },
+      "partNumber": {
+        "type": "text"
+      },
+      "subtitles": {
+        "type": "text",
+        "analyzer": "language_analyzer"
+      },
+      "norwegianTitle": {
+        "type": "text",
+        "index": false
+      },
+      "englishTitle": {
+        "type": "text",
+        "index": false
+      },
+      "uri": {
+        "type": "keyword"
+      },
+      "publicationYear": {
+        "type": "short"
+      },
+      "firstPublicationYear": {
+        "type": "short"
+      },
+      "audiences": {
+        "type": "keyword"
+      },
+      "branches": {
+        "type": "keyword"
+      },
+      "image": {
+        "type": "text",
+        "index": false
+      },
+      "fictionNonfiction": {
+        "type": "keyword"
+      },
+      "mediatype": {
+        "type": "keyword"
+      },
+      "mt": {
+        "type": "text",
+        "analyzer": "mediatype_analyzer"
+      },
+      "formats": {
+        "type": "keyword"
+      },
+      "litform": {
+        "type": "text",
+        "analyzer": "litform_analyzer"
+      },
+      "format": {
+        "type": "text",
+        "analyzer": "format_analyzer"
+      },
+      "desc": {
+        "type": "text"
+      },
+      "inst": {
+        "type": "text"
+      },
+      "formatAdaptation": {
+        "type": "text"
+      },
+      "language": {
+        "type": "text",
+        "analyzer": "language_analyzer"
+      },
+      "languages": {
+        "type": "keyword"
+      },
+      "writingSystem": {
+        "type": "text",
+        "analyzer": "writing_system_analyzer"
+      },
+      "isbn": {
+        "type": "text",
+        "analyzer": "isbn_analyzer"
+      },
+      "ismn": {
+        "type": "text",
+        "analyzer": "isbn_analyzer"
+      },
+      "ean": {
+        "type": "text",
+        "analyzer": "isbn_analyzer"
+      },
+      "series": {
+        "type": "text"
+      },
+      "subject": {
+        "type": "text"
+      },
+      "genre": {
+        "type": "text"
+      },
+      "ageLimit": {
+        "type": "integer"
+      },
+      "workUri": {
+        "type": "keyword"
+      },
+      "scriptWriter": {
+        "type": "text"
+      },
+      "agents": {
+        "type": "text"
+      },
+      "actor": {
+        "type": "text"
+      },
+      "photographer": {
+        "type": "text"
+      },
+      "lyricist": {
+        "type": "text"
+      },
+      "composer": {
+        "type": "text"
+      },
+      "director": {
+        "type": "text"
+      },
+      "performer": {
+        "type": "text"
+      },
+      "musicalArranger": {
+        "type": "text"
+      },
+      "reader": {
+        "type": "text"
+      },
+      "conductor": {
+        "type": "text"
+      },
+      "author": {
+        "type": "text"
+      },
+      "translator": {
+        "type": "text"
+      },
+      "illustrator": {
+        "type": "text"
+      },
+      "editor": {
+        "type": "text"
+      },
+      "contributor": {
+        "type": "text"
+      },
+      "coreographer": {
+        "type": "text"
+      },
+      "producer": {
+        "type": "text"
+      },
+      "mainEntryName": {
+        "type": "text"
+      },
+      "summary": {
+        "type": "text",
+        "index": false
+      },
+      "compType": {
+        "type": "text"
+      },
+      "publishedBy": {
+        "type": "text"
+      },
+      "langTitles": {
+        "enabled": false
+      },
+      "mediatypesFromAllPublications": {
+        "type": "nested",
+        "properties": {
+          "uri": {
+            "type": "keyword"
+          },
+          "formats": {
+            "type": "text",
+            "index": false
+          }
         }
+      },
+      "kd": {
+        "type": "text"
+      },
+      "workMainTitle": {
+        "type": "text"
+      },
+      "country": {
+        "type": "text"
+      },
+      "origLang": {
+        "type": "text",
+        "analyzer": "language_analyzer"
+      },
+      "contentAdaptation": {
+        "type": "text",
+        "analyzer": "content_adaptation_analyzer"
+      },
+      "workSubtitle": {
+        "type": "text"
+      },
+      "workPartNumber": {
+        "type": "text"
+      },
+      "workPartTitle": {
+        "type": "text"
       }
-    },
-    "kd": {
-      "type": "string"
-    },
-    "workMainTitle": {
-      "type": "string"
-    },
-    "country": {
-      "type": "string"
-    },
-    "origLang": {
-      "type": "string",
-      "analyzer": "language_analyzer"
-    },
-    "contentAdaptation": {
-      "type": "string",
-      "analyzer": "content_adaptation_analyzer"
-    },
-    "workSubtitle": {
-      "type": "string"
-    },
-    "workPartNumber": {
-      "type": "string"
-    },
-    "workPartTitle": {
-      "type": "string"
     }
   }
 }

@@ -5,7 +5,7 @@ import ClickableElement from '../components/ClickableElement'
 const SearchFilterBoxItemDateRange = ({ dateRange, removePeriod }) => {
   const filterText = <FormattedMessage {...messages.filterTitle} />
 
-  const dateEl = dateRange.map((el, i) => {
+  const dateEl = dateRange.map((el) => {
     if (el.hasOwnProperty('yearFrom')) {
       return <span key="yearFrom">{el.yearFrom}</span>
     }

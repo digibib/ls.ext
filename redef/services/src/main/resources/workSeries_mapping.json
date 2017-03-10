@@ -1,23 +1,22 @@
 {
-  "properties":
-  {
-    "workSeriesMainTitle": {
-      "type": "string",
-      "index": "analyzed",
-      "analyzer": "name_analyzer"
-    },
-    "subtitle": {
-      "type": "string"
-    },
-    "partTitle": {
-      "type": "string"
-    },
-    "partNumber": {
-      "type": "string"
-    },
-    "uri": {
-      "type": "string",
-      "index": "not_analyzed"
+  "workSeries": {
+    "properties": {
+      "workSeriesMainTitle": {
+        "type": "text",
+        "analyzer": "name_analyzer"
+      },
+      "subtitle": {
+        "type": "text"
+      },
+      "partTitle": {
+        "type": "text"
+      },
+      "partNumber": {
+        "type": "text"
+      },
+      "uri": {
+        "type": "keyword"
+      }
     }
   }
 }

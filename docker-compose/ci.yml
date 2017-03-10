@@ -1,6 +1,9 @@
 ---
 version: '2.1'
 
+volumes:
+  services_build: {}
+
 services:
 
   build_services:
@@ -9,7 +12,7 @@ services:
       context: "${LSEXTPATH:-..}/redef/services"
       dockerfile: Dockerfile.build
     volumes:
-      - "${LSEXTPATH:-..}/redef/services/build:/services/build"
+      - "services_build:/services"
 
   services:
     build:

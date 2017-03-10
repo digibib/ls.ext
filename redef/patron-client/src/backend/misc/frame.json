@@ -450,6 +450,9 @@
   "audiences": {
     "@embed": "@never"
   },
+  "biographies": {
+    "@embed": "@always"
+  },
   "languages": {
     "@embed": "@never"
   },

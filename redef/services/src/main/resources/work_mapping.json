@@ -1,79 +1,77 @@
 {
-  "properties": {
-    "subjects": {
-      "type": "nested",
-      "properties": {
-        "uri": {
-          "type": "string",
-          "index": "not_analyzed"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "contributors": {
-      "type": "nested",
-      "properties": {
-        "role": {
-          "type": "string",
-          "index": "no"
-        },
-        "agent": {
-          "type": "nested",
-          "properties": {
-            "uri": {
-              "type": "string",
-              "index": "not_analyzed"
-            },
-            "name": {
-              "type": "string"
-            },
-            "birthYear": {
-              "type": "string",
-              "index": "no"
-            },
-            "deathYear": {
-              "type": "string",
-              "index": "no"
-            }
+  "work": {
+    "properties": {
+      "subjects": {
+        "type": "nested",
+        "properties": {
+          "uri": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "text"
           }
-        },
-        "mainEntry": {
-          "type": "boolean"
         }
-      }
-    },
-    "mainTitle": {
-      "type": "string"
-    },
-    "subtitle": {
-      "type": "string"
-    },
-    "partTitle": {
-      "type": "string"
-    },
-    "partNumber": {
-      "type": "string"
-    },
-    "uri": {
-      "type": "string",
-      "index": "not_analyzed"
-    },
-    "publicationYear": {
-      "type": "short"
-    },
-    "workType": {
-      "type": "nested",
-      "properties": {
-        "uri": {
-          "type": "string",
-          "index": "not_analyzed"
+      },
+      "contributors": {
+        "type": "nested",
+        "properties": {
+          "role": {
+            "type": "text",
+            "index": false
+          },
+          "agent": {
+            "type": "nested",
+            "properties": {
+              "uri": {
+                "type": "keyword"
+              },
+              "name": {
+                "type": "text"
+              },
+              "birthYear": {
+                "type": "text",
+                "index": false
+              },
+              "deathYear": {
+                "type": "text",
+                "index": false
+              }
+            }
+          },
+          "mainEntry": {
+            "type": "boolean"
+          }
         }
+      },
+      "mainTitle": {
+        "type": "text"
+      },
+      "subtitle": {
+        "type": "text"
+      },
+      "partTitle": {
+        "type": "text"
+      },
+      "partNumber": {
+        "type": "text"
+      },
+      "uri": {
+        "type": "keyword"
+      },
+      "publicationYear": {
+        "type": "short"
+      },
+      "workType": {
+        "type": "nested",
+        "properties": {
+          "uri": {
+            "type": "keyword"
+          }
+        }
+      },
+      "workTypeLabel": {
+        "type": "text"
       }
-    },
-    "workTypeLabel": {
-      "type": "string"
     }
   }
 }

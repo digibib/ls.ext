@@ -1,6 +1,6 @@
 module.exports = {
   date: {
-    required: false,
+    required: true,
     asyncValidation: true
   }
 }
