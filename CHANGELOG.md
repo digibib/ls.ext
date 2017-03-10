@@ -15,9 +15,10 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 ## 0.8.9 (2017-03-07)
 
 KOHA: 66b9bc2ca4c9619b71035408a1958572b9d82546
-GITREF:
+GITREF: f7be7f1d3738bf879d3468487dd8185f0b6245fb
 
 - Koha:
+  - DEICH-723 Branchtransfer tar ikke hensyn til reservasjoner som er satt på vent
   - Liten NL fiks (ikke en uke uten :-)
   - Sender metrikk (gir oss b.l.a overblikk hva som går treigt)
 - Patron-client:
