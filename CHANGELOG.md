@@ -12,6 +12,18 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.8.99 (2017-03-15)
+
+KOHA: ?
+GITREF: ?
+
+- Patron-client:
+  - Div fikser og forbedringer i sett hold på vent
+  - DEICH-724 Sjanger vises ikke på verkssiden
+- Catalinker:
+  - DEICH-602 Uforståelig treffliste for verk og utgivelser
+
+
 ## 0.8.9 (2017-03-07)
 
 KOHA: 66b9bc2ca4c9619b71035408a1958572b9d82546
