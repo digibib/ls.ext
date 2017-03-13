@@ -14,7 +14,7 @@ public final class LiteraryForm {
     private static final Map<String, String> FORMAT_MAP = ImmutableMap.<String, String>builder()
             .put("r", "novel")
             .put("n", "shortStory")
-            .put("d", "poem")
+            .put("d", "poetry")
             .put("s", "drama")
             .put("t", "comicBook")
             .put("a", "anthology")
