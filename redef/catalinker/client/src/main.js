@@ -1914,7 +1914,8 @@
             $(panel).css({
               top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,
               left: supportPanelLeftEdge,
-              width: supportPanelWidth
+              width: supportPanelWidth,
+              'z-index': 100 - index
             })
           }
         })
