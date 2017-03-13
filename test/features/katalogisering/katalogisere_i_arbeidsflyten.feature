@@ -218,6 +218,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg velger rollen "Forfatter"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
+    Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor organisasjonen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
     Og at jeg skriver inn tilfeldig organisasjon i feltet "Utgitt av" og trykker enter

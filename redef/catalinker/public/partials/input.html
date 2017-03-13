@@ -188,7 +188,7 @@
                     disabled="disabled"
                     {{/if}}
                     on-click="prevRange"
-                    on-enter="prevRange">- 10</button>
+                    on-enter="prevRange">-{{pagination}}</button>
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                     class="pure-button pure-button-primary pagination"
@@ -196,7 +196,7 @@
                     disabled="disabled"
                     {{/if}}
                     on-click="nextRange"
-                    on-enter="nextRange">+ 10</button>
+                    on-enter="nextRange">+{{pagination}}</button>
             <span class="pagination save-placeholder"></span>
 
             <span class="pure-u-11-24 pagination range-slider" as-rangeSlider="{rangeStats: subInputs[0].input.rangeStats, input:.}">

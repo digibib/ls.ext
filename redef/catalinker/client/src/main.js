@@ -547,7 +547,7 @@
         if (input.values[ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        ractive.update(`${input.keypath}.values.${index}`)
+        ractive.update(`${input.keypath}.${options.compareValues ? 'compareValues' : 'values'}.${index}`)
       }
     }
 
@@ -624,6 +624,7 @@
             }
           }
         } else {
+          input.values[ index ] = input.values[ index ] || {}
           input.values[ index ].current = input.values[ index ].current || {}
           input.values[ index ].current.displayValue = values
           if (options.source) {
@@ -1001,7 +1002,7 @@
         ractive.update()
         var promises = []
         promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
-        _.each(parentInput.subInputs, function (subInput, subInputIndex) {
+        _.each(parentInput.subInputs, function (subInput) {
           if (_.isArray(subInput.input.values)) {
             try {
               promises.push(ractive.splice(`${subInput.input.keypath}.values`, index, 1))
@@ -1019,7 +1020,7 @@
         promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
         sequentialPromiseResolver(promises)
         if (ractive.get(`${parentInput.keypath}.subInputs.0.input.values`).length === 0) {
-          var addValueEvent = { keypath: parentOf(parentInput.keypath) }
+          var addValueEvent = { keypath: parentInput.keypath }
           ractive.fire('addValue', addValueEvent)
         }
       }
@@ -1113,11 +1114,11 @@
                                     ractive.set(`${input.keypath}.values.${index}.deletable`, true)
                                     if (input.isSubInput && !options.source) {
                                       input.parentInput.allowAddNewButton = true
+                                      input.values[ index ].nonEditable = true
+                                      ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                                     }
                                   }
                                 }
-                                input.values[ index ].nonEditable = true
-                                ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
                                 setAllowNewButtonForInput(input)
                               } else {
                                 setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
@@ -1171,10 +1172,8 @@
                             if (!options.onlyValueSuggestions) {
                               let valueIndex = input.isSubInput ? rootIndex : index
                               setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
-                              ractive.set(`${input.keypath}.values.${valueIndex}`, {
-                                subjectType: type,
-                                oldSubjectType: type
-                              })
+                              input.values[ valueIndex ].subjectType = type
+                              input.values[ valueIndex ].oldSubjectType = type
                               if (input.isSubInput && !options.source) {
                                 // input.values[ valueIndex ].nonEditable = true
                                 // ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
@@ -2410,7 +2409,7 @@
           const bulkEntryData = bulkEntryInputChain
             .pluck('values')
             .pluck(index)
-            .filter(function (value) { return value.multiline })
+            .filter(function (value) { return value && value.multiline })
             .pluck('current')
             .pluck('value')
             .map(function (value) { return value.split('\n') })
@@ -2497,7 +2496,9 @@
           var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
           var mainSubject = ractive.get('targetUri.' + actualSubjectType)
           var deleteSubject = ractive.get('targetUri.' + deleteSubjectType)
-          _.each(options.bulkMultiply(opSpec[ op ]), function (spec, opIndex) {
+          const opSpecs = options.bulkMultiply(opSpec[ op ])
+          var lastIndex = index + opSpecs.length
+          _.each(opSpecs, function (spec, opIndex) {
             patch.push({
               op: spec.operation,
               s: spec.operation === 'del' ? deleteSubject : mainSubject,
@@ -2562,7 +2563,12 @@
               ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
               ractive.update('lastRoots')
             })
-            removeInputsForObject(input, index)()
+            if (input.subInputs && lastIndex > input.pagination) {
+              removeInputsForObject(input, index)()
+              if (op !== 'del' && _.chain(input.subInputs).pluck('input').invoke('thisRange').compact().value().length === 0) {
+                updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
+              }
+            }
             return response
           })
             .then(function (response) {
@@ -2577,29 +2583,26 @@
               }
               return response
             })
-            .then(function (response) {
-              _.each(input.subInputs, function (subInput, subInputIndex) {
-                if (subInputIndex === 0) {
-                  ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
-                }
-                if (!(subInput.input.visible === false)) {
-                  var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-                  ractive.set(`${subInput.input.keypath}.values.${index}.old.value`, value)
-                  ractive.set(`${subInput.input.keypath}.values.${index}.showSupportPanel`, null)
-                  ractive.set(`${subInput.input.keypath}.values.${index}.multiline`, null)
-                }
-              })
-              return response
-            })
+            // .then(function (response) {
+            //   _.each(input.subInputs, function (subInput, subInputIndex) {
+            //     if (subInputIndex === 0) {
+            //       ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
+            //     }
+            //     if (!(subInput.input.visible === false)) {
+            //       var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
+            //       ractive.set(`${subInput.input.keypath}.values.${index}.old.value`, value)
+            //       ractive.set(`${subInput.input.keypath}.values.${index}.showSupportPanel`, null)
+            //       ractive.set(`${subInput.input.keypath}.values.${index}.multiline`, null)
+            //     }
+            //   })
+            //   return response
+            // })
             .then(function (response) {
               // successfully patched resource
               ractive.set('save_status', 'alle endringer er lagret')
               return response
             })
             .then(function (response) {
-              if (_.chain(input.subInputs).pluck('input').invoke('thisRange').compact().value().length === 0) {
-                updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
-              }
               return response
             })
           // .catch(function (response) {
@@ -2929,7 +2932,7 @@
                     target: $node.prev('.save-placeholder').prev()
                   },
                   context: args.input
-                }, 'customRange', ui.value, stats.rangeLength)
+                }, 'customRange', ui.value - 1, stats.rangeLength)
               }
             })
             const observer = ractive.observe(`${input.keypath}.subInputs.0.input.rangeStats`, function (stats, oldVal, keypath) {
@@ -3570,7 +3573,7 @@
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 var newResourceType = event.context.createNewResource
-                if (newResourceType && (!ractive.get('targetUri.' + newResourceType))) {
+                if (newResourceType && (!ractive.get('targetUri.' + newResourceType.type))) {
                   var inputs = allInputs()
                   _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
                     _.each(newResourceType.prefillValuesFromResource[ copyFromType ], function (fragment) {
