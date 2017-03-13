@@ -727,6 +727,18 @@
       history.replaceState('', '', URI.build(oldUri))
     }
 
+    function updateBrowserLocationClearAllExcept (keep) {
+      var oldUri = URI.parse(document.location.href)
+      var queryParameters = URI.parseQuery(oldUri.query)
+      for (let param in queryParameters) {
+        if (!keep.includes(param)) {
+          delete queryParameters[param]
+        }
+      }
+      oldUri.query = URI.buildQuery(queryParameters)
+      history.replaceState('', '', URI.build(oldUri))
+    }
+
     function loadLabelsForAuthorizedValues (values, input, index, root) {
       var promises = []
       if (input.nameProperties) {
@@ -3168,6 +3180,7 @@
                   task: editWith.descriptionKey || `edit${event.context.rdfType}`,
                   template: editWith.template
                 }
+                updateBrowserLocationClearAllExcept(['openTab'])
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
                   if (input.type === 'hidden-url-query-value' &&
