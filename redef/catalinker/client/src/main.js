@@ -2584,26 +2584,9 @@
               }
               return response
             })
-            // .then(function (response) {
-            //   _.each(input.subInputs, function (subInput, subInputIndex) {
-            //     if (subInputIndex === 0) {
-            //       ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
-            //     }
-            //     if (!(subInput.input.visible === false)) {
-            //       var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-            //       ractive.set(`${subInput.input.keypath}.values.${index}.old.value`, value)
-            //       ractive.set(`${subInput.input.keypath}.values.${index}.showSupportPanel`, null)
-            //       ractive.set(`${subInput.input.keypath}.values.${index}.multiline`, null)
-            //     }
-            //   })
-            //   return response
-            // })
             .then(function (response) {
               // successfully patched resource
               ractive.set('save_status', 'alle endringer er lagret')
-              return response
-            })
-            .then(function (response) {
               return response
             })
           // .catch(function (response) {
