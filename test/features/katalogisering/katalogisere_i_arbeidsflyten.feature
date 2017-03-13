@@ -107,6 +107,32 @@ Egenskap: Katalogisere i arbeidsflyt
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke inngå i verksliste"
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Og jeg trykker på "Legg til en del til"-knappen
+    Så klikker jeg på linken for masseregistrering
+    Og jeg skriver i feltet "Tittel på del" teksten
+      """
+      Del 1
+      Del 2
+      Del 3
+      Del 4
+      Del 5
+      Del 6
+      Del 7
+      Del 8
+      Del 9
+      Del 10
+      Del 11
+      Del 12
+      """
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Så skal det vises 10 deler i utgivelsen
+    Så trykker jeg på "+10"-knappen
+    Så skal det vises 4 deler i utgivelsen
+    Og jeg venter litt
     Og bekrefter for å gå videre til "Biinnførsler"
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt
