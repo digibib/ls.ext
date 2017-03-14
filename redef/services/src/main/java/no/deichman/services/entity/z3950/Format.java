@@ -13,6 +13,7 @@ public final class Format {
 
     private static final Map<String, String> FORMAT_MAP = ImmutableMap.<String, String>builder()
             .put("a", "Map")
+            .put("ab", "Map")
             .put("da", "GramophoneRecord")
             .put("db", "CompactCassette")
             .put("dc", "CompactDisc")

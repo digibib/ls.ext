@@ -12,11 +12,9 @@ public final class MediaType {
     }
 
     private static final Map<String, String> UNITED_MEDIA_TYPE_MAP = ImmutableMap.<String, String>builder()
-            .put("da", "MusicRecording")
-            .put("db", "MusicRecording")
-            .put("dc", "MusicRecording")
+            .put("dd", "Audiobook")
+            .put("de", "Audiobook")
             .put("dg", "MusicRecording")
-            .put("dz", "MusicRecording")
             .put("dh", "LanguageCourse")
             .put("di", "Audiobook")
             .put("gt", "Audiobook")
@@ -24,8 +22,6 @@ public final class MediaType {
             .put("ee", "Film")
             .put("ef", "Film")
             .put("eg", "Film")
-            .put("gc", "Game")
-            .put("gd", "Other")
             .put("ma", "Game")
             .put("mb", "Game")
             .put("mc", "Game")
@@ -37,12 +33,10 @@ public final class MediaType {
             .put("fd", "Other")
             .build();
 
-    public static final Map<String, String> PAGED_MEDIA_TYPE_MAP = ImmutableMap.<String, String>builder()
-            .put("a", "Map")
-            .put("ab", "Map")
+    private static final Map<String, String> PAGED_MEDIA_TYPE_MAP = ImmutableMap.<String, String>builder()
+            .put("a", "Other")
+            .put("ab", "Other")
             .put("c", "SheetMusic")
-            .put("dd", "E-book")
-            .put("de", "E-book")
             .put("ga", "E-book")
             .put("la", "E-book")
             .put("na", "E-book")
