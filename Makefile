@@ -150,6 +150,10 @@ rebuild_overview:					## Force rebuilds overview
 	@echo "======= FORCE RECREATING OVERVIEW ======\n"
 	$(call rebuild,overview)
 
+rebuild_cuke_tests:					## Force rebuilds cuke_tests
+	@echo "======= FORCE RECREATING CUKE_TESTS ======\n"
+	$(call rebuild,cuke_tests)
+
 cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
 	$(CMD) -c "rm -rf $(LSEXTPATH)/test/report/*.* && \
