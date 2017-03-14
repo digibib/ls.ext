@@ -13,7 +13,6 @@ public final class FormatAdaption {
 
     private static final Map<String, String> FORMAT_MAP = ImmutableMap.<String, String>builder()
             .put("tc", "largePrint")
-            .put("td", "largePrint")
             .put("te", "braille")
             .put("tf", "signLanguage")
             .put("tg", "tactile")
