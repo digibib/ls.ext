@@ -171,7 +171,7 @@ public class SearchServiceImpl implements SearchService {
             LOG.info("Indexing " + xuri.getUri() + " with publications");
             Model indexModel = entityService.retrieveWorkWithLinkedResources(xuri);
             Map<String, Object> indexDocument = new ModelToIndexMapper(EntityType.WORK.getPath()).createIndexObject(indexModel, xuri);
-            indexDocument(idx, xuri, GSON.toJson(indexDocument, null));
+            indexDocument(idx, xuri, GSON.toJson(indexDocument), null);
             cacheNameIndex(xuri, indexDocument);
             ResIterator subjectIterator = indexModel.listSubjects();
             while (subjectIterator.hasNext()) {
@@ -260,18 +260,18 @@ public class SearchServiceImpl implements SearchService {
                     throw new ServerErrorException("Failed to create elasticsearch index", HTTP_INTERNAL_ERROR);
                 }
             }
-            putIndexMapping(httpclient, "work");
-            putIndexMapping(httpclient, "person");
-            putIndexMapping(httpclient, "serial");
-            putIndexMapping(httpclient, "corporation");
-            putIndexMapping(httpclient, "place");
-            putIndexMapping(httpclient, "subject");
-            putIndexMapping(httpclient, "genre");
-            putIndexMapping(httpclient, "publication");
-            putIndexMapping(httpclient, "instrument");
-            putIndexMapping(httpclient, "compositionType");
-            putIndexMapping(httpclient, "event");
-            putIndexMapping(httpclient, "workSeries");
+            putIndexMapping(httpclient, idx,"publication");
+            putIndexMapping(httpclient, idx,"work");
+            putIndexMapping(httpclient, idx,"person");
+            putIndexMapping(httpclient, idx,"serial");
+            putIndexMapping(httpclient, idx,"corporation");
+            putIndexMapping(httpclient, idx,"place");
+            putIndexMapping(httpclient, idx,"subject");
+            putIndexMapping(httpclient, idx,"genre");
+            putIndexMapping(httpclient, idx,"instrument");
+            putIndexMapping(httpclient, idx,"compositionType");
+            putIndexMapping(httpclient, idx,"event");
+            putIndexMapping(httpclient, idx,"workSeries");
 
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -776,7 +776,7 @@ public class SearchServiceImpl implements SearchService {
         Monitor mon = MonitorFactory.start("createIndexDocument");
         Map<String, Object> indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexObject(indexModel, xuri);
         mon.stop();
-        indexDocument(idx, xuri, GSON.toJson(indexDocument, workXURI));
+        indexDocument(idx, xuri, GSON.toJson(indexDocument), workXURI);
         cacheNameIndex(xuri, indexDocument);
     }
 
