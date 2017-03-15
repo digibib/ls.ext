@@ -160,7 +160,7 @@ public class SearchServiceImpl implements SearchService {
             LOG.info("Indexing " + xuri.getUri() + " with publications");
             Model indexModel = entityService.retrieveWorkWithLinkedResources(xuri);
             Map<String, Object> indexDocument = new ModelToIndexMapper(EntityType.WORK.getPath()).createIndexObject(indexModel, xuri);
-            indexDocument(xuri, GSON.toJson(indexDocument, null));
+            indexDocument(xuri, GSON.toJson(indexDocument), null);
             cacheNameIndex(xuri, indexDocument);
             ResIterator subjectIterator = indexModel.listSubjects();
             while (subjectIterator.hasNext()) {
@@ -677,7 +677,7 @@ public class SearchServiceImpl implements SearchService {
         Monitor mon = MonitorFactory.start("createIndexDocument");
         Map<String, Object> indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexObject(indexModel, xuri);
         mon.stop();
-        indexDocument(xuri, GSON.toJson(indexDocument, workXURI));
+        indexDocument(xuri, GSON.toJson(indexDocument), workXURI);
         cacheNameIndex(xuri, indexDocument);
     }
 
