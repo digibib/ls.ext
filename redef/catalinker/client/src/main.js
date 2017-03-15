@@ -2540,7 +2540,7 @@
                 ractive.set(keypath + '.current.value', $(e.target).val() || [])
                 var inputNode = ractive.get(grandParentOf(keypath))
                 let target = ractive.get('targetUri.' + unPrefix(inputNode.domain))
-                if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') === -1)) {
+                if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') !== -1)) {
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
                 }
