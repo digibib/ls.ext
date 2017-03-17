@@ -576,6 +576,11 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
     Så sjekker jeg at teksten "Verket har 0 utgivelser:" finnes på siden
 
   Scenario: Redigere biinførsel
@@ -595,6 +600,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg velger rollen "Forfatter"
     Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"
     Så trykker jeg på knappen for legge til biinnførselen
+    Og jeg venter litt
+    Og jeg venter litt
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så klikker jeg på linken med blyantikon
