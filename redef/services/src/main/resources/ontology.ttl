@@ -272,6 +272,13 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Person, :Event ;
   rdfs:range xsd:string .
 
+# ToDo: Erstatte personTitle med :specification. Domain: Person, Corporation, Subject, Place
+:personTitle a rdfs:Property ;
+  rdfs:label "Person mainTitle"@en ;
+  rdfs:label "Personens tittel"@no ;
+  rdfs:domain :Person ;
+  rdfs:range xsd:string .
+
 :specification a rdfs:Property ;
   rdfs:label "Specification"@en ;
   rdfs:label "Forklarende tilføyelse"@no ;
