@@ -104,7 +104,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Så jeg skriver verdien "Deltittel" for "Tittel på del"
     Og jeg skriver verdien "1" for "Del"
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
-    Så krysser jeg av i avkrysningboksen for "Skal ikke inngå i verksliste"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Og jeg trykker på "Legg til en del til"-knappen
@@ -452,7 +451,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
     Og jeg venter litt
-    Så krysser jeg av i avkrysningboksen for "Skal ikke inngå i verksliste"
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så verifiserer jeg innskrevet verdi for "Verket har ikke hovedansvarlig", som i gammelt grensesnitt heter "Mangler hovedansvarlig"
