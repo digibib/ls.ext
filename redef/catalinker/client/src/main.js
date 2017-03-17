@@ -30,6 +30,7 @@
     let supportPanelWidth
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
+    require('jquery-ui/slider')
     require('jquery.scrollto')
     let etagData = {}
     require('isbn2')
@@ -546,7 +547,7 @@
         if (input.values[ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        ractive.update(`${input.keypath}.values.${index}`)
+        ractive.update(`${input.keypath}.${options.compareValues ? 'compareValues' : 'values'}.${index}`)
       }
     }
 
@@ -623,6 +624,7 @@
             }
           }
         } else {
+          input.values[ index ] = input.values[ index ] || {}
           input.values[ index ].current = input.values[ index ].current || {}
           input.values[ index ].current.displayValue = values
           if (options.source) {
@@ -986,16 +988,58 @@
       }
     }
 
+    function sortNodes (roots, sortOrder, type) {
+      return _.sortBy(roots, function (node) {
+        return _.chain(sortOrder).map(function (sortSpec) {
+          const value = (node.getAll(sortSpec.predicate)[ 0 ] || {}).value
+          return sortSpec.isNumber ? (`000${value}`).slice(-4) : value || ''
+        }).value().join('|')
+      })
+    }
+
+    function removeInputsForObject (parentInput, index, event) {
+      return function () {
+        ractive.update()
+        var promises = []
+        promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
+        _.each(parentInput.subInputs, function (subInput) {
+          if (_.isArray(subInput.input.values)) {
+            try {
+              promises.push(ractive.splice(`${subInput.input.keypath}.values`, index, 1))
+            } catch (e) {
+              // nop
+            }
+          }
+        })
+        if (event) {
+          promises.push(new Promise(function () {
+            $(event.node).closest('.ui-accordion-content').prev().remove()
+            $(event.node).closest('.ui-accordion-content, .field').remove()
+          }))
+        }
+        promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
+        sequentialPromiseResolver(promises)
+        if (ractive.get(`${parentInput.keypath}.subInputs.0.input.values`).length === 0) {
+          var addValueEvent = { keypath: parentInput.keypath }
+          ractive.fire('addValue', addValueEvent)
+        }
+      }
+    }
+
     function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
-      var graphData = ensureJSON(response.data)
-      var offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
+      const graphData = ensureJSON(response.data)
+      const offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
       type = type || typeFromUri(resourceUri)
       root = root || ldGraph.parse(graphData).byId(resourceUri)
+      if (!ractive.get('lastRoots')) {
+        ractive.set('lastRoots', {})
+      }
 
       let inputs = options.inputs || allInputs()
-      var promises = []
-      var skipRest = false
+      let promises = []
+      let skipRest = false
+      let parentInputRootsCache = {}
       _.each([ true, false ], function (onlyDoSuggestionForCreateNewResource) {
         _.each(inputs, function (input, index) {
           if (!skipRest &&
@@ -1013,122 +1057,168 @@
               skipRest = true
             } else {
               if (!onlyDoSuggestionForCreateNewResource) {
-                input.offset = input.offset || {}
-                var offset = 0
-                if (input.offset[ offsetCrossTypes[ type ] ]) {
-                  offset = input.offset[ offsetCrossTypes[ type ] ]
-                }
-                var predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
-                var actualRoots = input.isSubInput ? root.outAll(fragmentPartOf(input.parentInput.predicate)) : [ root ]
-                var rootIndex = 0
-                _.each(actualRoots, function (root) {
-                  var mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
-                  var mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
-                  if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
-                    if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
-                      var index = 0
-                      let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
-                      promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
-                    } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
-                      if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
-                        _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
-                          index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                          setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
-                          if (options.source && node.id !== '') {
-                            setPreviewValues(input, node, index)
-                          }
-                          if (!options.onlyValueSuggestions) {
-                            if (options.source) {
-                              input.values[ index ].searchable = true
-                            } else {
-                              input.values[ index ].searchable = false
-                            }
-                            if (node.id !== '') {
-                              promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
-                              if (!isBlankNodeUri(node.id)) {
-                                ractive.set(`${input.keypath}.values.${index}.deletable`, true)
-                                if (input.isSubInput && !options.source) {
-                                  input.values[ index ].nonEditable = true
-                                  ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
-                                  input.parentInput.allowAddNewButton = true
-                                }
-                              }
-                            }
-                            setAllowNewButtonForInput(input)
-                          } else {
-                            setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
-                            input.values[ index ].searchable = true
-                          }
-                          input.values[ index ].subjectType = type
-                          input.values[ index ].oldSubjectType = type
-                          ractive.update(`${input.keypath}.values.${index}`)
-                        })
+                const rangeStart = (options.range || {}).start || 0
+                const rangeLength = (options.range || {}).rangeLength || ((input.parentInput || {}).pagination || 10000)
+                const loadForRangeOfInputs = function (startIndex, rangeLength) {
+                  return function (_root) {
+                    _root = _root || root
+                    input.offset = input.offset || {}
+                    let offset = 0
+                    if (input.offset[ offsetCrossTypes[ type ] ]) {
+                      offset = input.offset[ offsetCrossTypes[ type ] ]
+                    }
+                    const predicate = options.onlyValueSuggestions && input.suggestValueFrom ? input.suggestValueFrom.predicate : input.predicate
+
+                    let actualRoots
+                    if (input.isSubInput) {
+                      const cachedRoot = (parentInputRootsCache[ resourceUri ] || {})[ fragmentPartOf(input.parentInput.predicate) ]
+                      if (cachedRoot) {
+                        actualRoots = cachedRoot.outAll(fragmentPartOf(input.parentInput.predicate))
                       } else {
-                        _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
-                          input.suggestedValues = input.suggestedValues || []
-                          input.suggestedValues.push({
-                            value: node.value,
-                            source: options.source
-                          })
-                        })
+                        actualRoots = (ractive.get('lastRoots')[ resourceUri ] || {})[ fragmentPartOf(input.parentInput.predicate) ] || _root.outAll(fragmentPartOf(input.parentInput.predicate))
+                        parentInputRootsCache[ resourceUri ] = parentInputRootsCache[ resourceUri ] || {}
+                        parentInputRootsCache[ resourceUri ][ input.parentInput.predicate ] = actualRoots
                       }
-                    } else if (input.type === 'select-predefined-value') {
-                      if (!options.onlyValueSuggestions) {
-                        setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                        if (input.isSubInput && !options.source) {
-                          input.values[ rootIndex + (offset) ].nonEditable = true
-                          ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
-                          ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
-                        }
-                      } else {
-                        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-                        _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                          if (input.isSubInput && multiple) {
-                            setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                            input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                    } else {
+                      actualRoots = [ _root ]
+                    }
+                    let rootIndex = 0
+                    _.each(_.filter(input.parentInput && input.parentInput.objectSortOrder ? sortNodes(actualRoots, input.parentInput.objectSortOrder) : actualRoots, function (root, index) {
+                      return index >= startIndex && index < (startIndex + (rangeLength))
+                    }), function (root) {
+                      let index
+                      const mainEntryInput = (input.parentInput && input.parentInput.isMainEntry === true) || (input.targetResourceIsMainEntry === true) || false
+                      const mainEntryNode = (root.isA('MainEntry') === true) || ((options.wrapperObject && options.wrapperObject.isA('MainEntry') === true) || false)
+                      if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
+                        if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
+                          index = 0
+                          let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
+                          promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
+                        } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
+                          if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
+                            _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
+                              index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
+                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
+                              if (options.source && node.id !== '') {
+                                setPreviewValues(input, node, index)
+                              }
+                              if (!options.onlyValueSuggestions) {
+                                if (options.source) {
+                                  input.values[ index ].searchable = true
+                                } else {
+                                  input.values[ index ].searchable = false
+                                }
+                                if (node.id !== '') {
+                                  promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
+                                  if (!isBlankNodeUri(node.id)) {
+                                    ractive.set(`${input.keypath}.values.${index}.deletable`, true)
+                                    if (input.isSubInput && !options.source) {
+                                      input.parentInput.allowAddNewButton = true
+                                      input.values[ index ].nonEditable = true
+                                      ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                                      ractive.set(`${input.parentInput.keypath}.subInputs.0.input.values.${index}.nonEditable`, true)
+                                    }
+                                  }
+                                }
+                                setAllowNewButtonForInput(input)
+                              } else {
+                                setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
+                                input.values[ index ].searchable = true
+                              }
+                              input.values[ index ].subjectType = type
+                              input.values[ index ].oldSubjectType = type
+                              ractive.update(`${input.keypath}.values.${index}`)
+                            })
                           } else {
-                            input.suggestedValues = input.suggestedValues || []
-                            input.suggestedValues.push({
-                              value: {
-                                value: value.id,
-                                label: Main.predefinedLabelValue(input.fragment, value.id)
-                              },
-                              source: options.source
+                            _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
+                              input.suggestedValues = input.suggestedValues || []
+                              input.suggestedValues.push({
+                                value: node.value,
+                                source: options.source
+                              })
                             })
                           }
-                        })
-                      }
-                    } else if (input.type === 'hidden-url-query-value') {
-                      _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                        setIdValue(value.id, input, 0)
-                      })
-                    } else {
-                      _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
-                        if (!options.onlyValueSuggestions) {
-                          let valueIndex = input.isSubInput ? rootIndex : index
-                          setSingleValue(value, input, (valueIndex) + (offset), options)
-                          input.values[ valueIndex ].subjectType = type
-                          input.values[ valueIndex ].oldSubjectType = type
-                          if (input.isSubInput && !options.source) {
-                            input.values[ valueIndex ].nonEditable = true
-                            ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
-                            input.parentInput.allowAddNewButton = true
+                        } else if (input.type === 'select-predefined-value') {
+                          if (!options.onlyValueSuggestions) {
+                            setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                            if (input.isSubInput && !options.source) {
+                              input.values[ rootIndex + (offset) ].nonEditable = true
+                              ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
+                              ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
+                            }
+                          } else {
+                            var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
+                            _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
+                              if (input.isSubInput && multiple) {
+                                setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                                input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                              } else {
+                                input.suggestedValues = input.suggestedValues || []
+                                input.suggestedValues.push({
+                                  value: {
+                                    value: value.id,
+                                    label: Main.predefinedLabelValue(input.fragment, value.id)
+                                  },
+                                  source: options.source
+                                })
+                              }
+                            })
                           }
-                          ractive.update(`${input.keypath}.values.${valueIndex}`)
-                          ractive.set(`${input.keypath}.allowAddNewButton`, true)
+                        } else if (input.type === 'hidden-url-query-value') {
+                          _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
+                            setIdValue(value.id, input, 0)
+                          })
                         } else {
-                          input.suggestedValues = input.suggestedValues || []
-                          input.suggestedValues.push({
-                            value: value.value,
-                            source: options.source
+                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
+                            if (!options.onlyValueSuggestions) {
+                              let valueIndex = input.isSubInput ? rootIndex : index
+                              setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
+                              input.values[ valueIndex ].subjectType = type
+                              input.values[ valueIndex ].oldSubjectType = type
+                              if (input.isSubInput && !options.source) {
+                                input.values[ valueIndex ].nonEditable = true
+                                ractive.set(`${input.parentInput.keypath}.subInputs.0.input.values.${valueIndex}.nonEditable`, true)
+                                input.parentInput.allowAddNewButton = true
+                              }
+                              ractive.set(`${input.keypath}.allowAddNewButton`, true)
+                            } else {
+                              input.suggestedValues = input.suggestedValues || []
+                              input.suggestedValues.push({
+                                value: value.value,
+                                source: options.source
+                              })
+                            }
                           })
                         }
+                        rootIndex++
+                      }
+                    })
+                    input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+
+                    ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
+                    ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
+                    ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
+                    ractive.set(`${input.keypath}.customRange`, loadForRangeOfInputs)
+                    if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
+                      ractive.set(`${input.keypath}.rangeStats`, {
+                        start: startIndex + 1,
+                        end: Math.min(actualRoots.length, startIndex + rangeLength),
+                        numberOfObjects: actualRoots.length,
+                        rangeLength
                       })
                     }
-                    rootIndex++
+                    if (actualRoots.length > rangeLength && input.parentInput && input.parentInput.pagination) {
+                      const fromEnd = actualRoots.length - startIndex
+                      ractive.splice(`${input.keypath}.values`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
+                    }
+                    return true
                   }
-                })
-                input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+                }
+                loadForRangeOfInputs(rangeStart, rangeLength)(root)
+                if (input.parentInput) {
+                  input.parentInput.nextRanges = []
+                  input.parentInput.prevRanges = []
+                }
               }
             }
           }
@@ -1321,6 +1411,7 @@
       }
       if (prop.type === 'searchable-with-result-in-side-panel') {
         input.searchable = true
+        input.supportable = true
       }
       if (prop.required) {
         input.required = prop.required
@@ -1503,9 +1594,18 @@
           range: compoundInput.subInputs.range,
           inputGroupRequiredVetoes: [],
           accordionHeader: compoundInput.subInputs.accordionHeader,
+          pagination: compoundInput.subInputs.pagination,
+          objectSortOrder: compoundInput.subInputs.objectSortOrder,
           orderBy: compoundInput.subInputs.orderBy,
           id: compoundInput.id,
           keypath: compoundInput.keypath
+        }
+        if (compoundInput.subInputs.objectSortOrder) {
+          applicationData.sortOrders = applicationData.sortOrders || []
+          applicationData.sortOrders.push({
+            predicate: compoundInput.subInputs.rdfProperty,
+            objectSortOrder: compoundInput.subInputs.objectSortOrder
+          })
         }
         _.each(compoundInput.subInputs.inputs, function (subInput, subInputIndex) {
           if (!subInput.rdfProperty) {
@@ -1535,6 +1635,7 @@
               id: subInput.id,
               required: subInput.required,
               searchable: type === 'searchable-with-result-in-side-panel',
+              supportable: type === 'searchable-with-result-in-side-panel',
               showOnlyWhen: subInput.showOnlyWhen,
               isTitleSource: subInput.isTitleSource,
               subInputIndex: subInputIndex,
@@ -1619,7 +1720,8 @@
               inputIndex: index,
               id: input.id,
               isTitleSource: input.isTitleSource,
-              searchMainResource: input.searchMainResource
+              searchMainResource: input.searchMainResource,
+              supportable: true
             })
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
@@ -1813,7 +1915,8 @@
             $(panel).css({
               top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,
               left: supportPanelLeftEdge,
-              width: supportPanelWidth
+              width: supportPanelWidth,
+              'z-index': 100 - index
             })
           }
         })
@@ -2219,6 +2322,7 @@
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
+          'support-for-input-string',
           'support-for-edit-authority',
           'searchable-authority-dropdown',
           'searchable-for-value-suggestions',
@@ -2300,8 +2404,44 @@
           let waitHandler = ractive.get('waitHandler')
           waitHandler.newWaitable(event.original.target)
           let waiter = waitHandler.thisMayTakeSomTime()
-          var input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
-          patchObject(input, applicationData, index, op).then(function () {
+          const input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
+          const bulkEntryInputChain = _.chain(ractive.get('inputGroups.4.inputs.0.subInputs'))
+            .pluck('input')
+            .filter(function (input) { return input.widgetOptions && input.widgetOptions.enableBulkEntry })
+          const bulkEntryData = bulkEntryInputChain
+            .pluck('values')
+            .pluck(index)
+            .filter(function (value) { return value && value.multiline })
+            .pluck('current')
+            .pluck('value')
+            .map(function (value) { return value.split('\n') })
+            .flatten()
+            .compact()
+            .value()
+          const bulkEntryPredicate = bulkEntryInputChain
+            .pluck('predicate').first().value()
+
+          const autoNumberInput = inputFromInputId(bulkEntryInputChain.first().value().widgetOptions.enableBulkEntry.autoNumberInputRef)
+          let nextAutoNumber = autoNumberInput.nextNumber
+          var options = bulkEntryData && bulkEntryData.length > 0 ? {
+              bulkMultiply: function (ops) {
+                return _.chain(bulkEntryData).map(function (value) {
+                    var opsClone = deepClone(ops)
+                    _.each(opsClone, function (opSpec) {
+                      opSpec.alternativeValueFor = {
+                        [bulkEntryPredicate]: value
+                      }
+                      if (!Number(nextAutoNumber).isNaN) {
+                        opSpec.alternativeValueFor[ autoNumberInput.predicate ] = nextAutoNumber++
+                      }
+                    })
+                    return opsClone
+                  }
+                ).flatten().value()
+              }
+            } : {}
+
+          patchObject(input, applicationData, index, op, options).then(function () {
             visitInputs(input, function (input) {
               if (input.isSubInput) {
                 _.each(input.values, function (value, valueIndex) {
@@ -2315,18 +2455,25 @@
             var promises = []
             promises.push(ractive.update())
             var subInputs = grandParentOf(event.keypath)
-            _.each(event.context.subInputs, function (input, subInputIndex) {
-              if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
-                var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
-                promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
-              }
-            })
+            if (event.context) {
+              _.each(event.context.subInputs, function (input, subInputIndex) {
+                if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
+                  var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
+                  promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
+                }
+              })
+            }
             promises.push(new Promise(waiter.done))
             sequentialPromiseResolver(promises)
           })
         }
 
-        function patchObject (input, applicationData, index, op) {
+        function patchObject (input, applicationData, index, op, options) {
+          options = _.defaults(options || {}, {
+            bulkMultiply: function (ops) {
+              return ops
+            }
+          })
           const opSpec = {
             add: [ {
               operation: 'add',
@@ -2351,7 +2498,9 @@
           var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
           var mainSubject = ractive.get('targetUri.' + actualSubjectType)
           var deleteSubject = ractive.get('targetUri.' + deleteSubjectType)
-          _.each(opSpec[ op ], function (spec, opIndex) {
+          const opSpecs = options.bulkMultiply(opSpec[ op ])
+          var lastIndex = index + opSpecs.length
+          _.each(opSpecs, function (spec, opIndex) {
             patch.push({
               op: spec.operation,
               s: spec.operation === 'del' ? deleteSubject : mainSubject,
@@ -2374,14 +2523,16 @@
             }
             _.each(input.subInputs, function (subInput) {
               if (!(subInput.input.visible === false)) {
-                var value = subInput.input.values[ index ] ? subInput.input.values[ index ][ spec.useValue ].value : undefined
+                var value = spec.alternativeValueFor && spec.alternativeValueFor[ subInput.input.predicate ]
+                  ? spec.alternativeValueFor[ subInput.input.predicate ]
+                  : subInput.input.values[ index ] ? subInput.input.values[ index ][ spec.useValue ].value : undefined
                 if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
                   patch.push({
                     op: spec.operation,
                     s: `_:b${opIndex}`,
                     p: subInput.input.predicate,
                     o: {
-                      value: _.isArray(value) ? `${value[ 0 ]}` : `${value}`,
+                      value: (_.isArray(value) ? `${value[ 0 ]}` : `${value}`).trim(),
                       type: subInput.input.datatypes[ 0 ]
                     }
                   })
@@ -2407,31 +2558,37 @@
               Accept: 'application/ld+json',
               'Content-Type': 'application/ldpatch+json'
             }
-          }).then(function () {
-            // do an extra patch to invalidate cache of old subject
-            if (mainSubject !== deleteSubject) {
-              axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
-                headers: {
-                  Accept: 'application/ld+json',
-                  'Content-Type': 'application/ldpatch+json'
-                }
-              })
+          }).then(function (response) {
+            let parsed = ldGraph.parse(response.data)
+            _.each(applicationData.sortOrders, function (sortOrder) {
+              let root = sortNodes(parsed.byId(mainSubject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
+              ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
+              ractive.update('lastRoots')
+            })
+            if (input.subInputs && input.pagination) {
+              removeInputsForObject(input, index)()
+              if (op !== 'del' && _.chain(input.subInputs).pluck('input').invoke('thisRange').compact().value().length === 0) {
+                updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
+              }
             }
+            return response
           })
-            .then(function () {
-              _.each(input.subInputs, function (subInput, subInputIndex) {
-                if (subInputIndex === 0) {
-                  ractive.set(`${subInput.input.keypath}.values.0.oldSubjectType`, actualSubjectType)
-                }
-                if (!(subInput.input.visible === false)) {
-                  var value = subInput.input.values[ index ] ? subInput.input.values[ index ].current.value : undefined
-                  ractive.set(`${subInput.input.keypath}.values.${index}.old.value`, value)
-                }
-              })
+            .then(function (response) {
+              // do an extra patch to invalidate cache of old subject
+              if (mainSubject !== deleteSubject) {
+                axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
+                  headers: {
+                    Accept: 'application/ld+json',
+                    'Content-Type': 'application/ldpatch+json'
+                  }
+                })
+              }
+              return response
             })
             .then(function (response) {
               // successfully patched resource
-              return ractive.set('save_status', 'alle endringer er lagret')
+              ractive.set('save_status', 'alle endringer er lagret')
+              return response
             })
           // .catch(function (response) {
           //    // failed to patch resource
@@ -2460,6 +2617,12 @@
             }
             $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
           }, { init: true })
+        }
+
+        function whileUnobserved (doStuff) {
+          _.invoke(ractive.get('observers'), 'cancel')
+          doStuff()
+          enableObservers()
         }
 
         var initRactive = function (applicationData) {
@@ -2567,7 +2730,7 @@
             }
           }
 
-          var accordionDecorator = function (node) {
+          var accordion = function (node) {
             $(node).accordion({
               collapsible: true,
               header: '> .accordion-header'
@@ -2576,14 +2739,14 @@
               teardown: function () {}
             }
           }
-          var repositionSupportPanel = function (node) {
+          const repositionSupportPanel = function (node) {
             Main.repositionSupportPanelsHorizontally()
             positionSupportPanels()
             return {
               teardown: function () {}
             }
           }
-          var pasteSanitizer = function (node) {
+          const pasteSanitizer = function (node) {
             $(node)
               .keypress(function (e) {
                 return e.which !== 13
@@ -2600,28 +2763,28 @@
             }
           }
 
-          var handleAddNewBySelect2 = function (node) {
-            var inputKeyPath = grandParentOf(Ractive.getNodeInfo(node).keypath)
+          const handleAddNewBySelect2 = function (node) {
+            const inputKeyPath = grandParentOf(Ractive.getNodeInfo(node).keypath)
             ractive.set(inputKeyPath + '.allowAddNewButton', false)
             ractive.set(inputKeyPath + '.addNewHandledBySelect2', true)
             return {
               teardown: function () {}
             }
           }
-          var clickOutsideSupportPanelDetector = function (node) {
+          const clickOutsideSupportPanelDetector = function (node) {
             const rightDummyPanel = $('#right-dummy-panel')
             $(document).click(function (event) {
               if (!event.isDefaultPrevented()) {
-                var supportPanelLeftEdge = rightDummyPanel.offset().left
-                var supportPanelWidth = rightDummyPanel.width()
-                var outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
-                var targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
-                var targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
-                var targetIsASupportPanelButton = !outsideX && $(event.originalEvent.target).is('.support-panel-button')
+                const supportPanelLeftEdge = rightDummyPanel.offset().left
+                const supportPanelWidth = rightDummyPanel.width()
+                const outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
+                const targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
+                const targetIsSupportPanel = !outsideX && $(event.originalEvent.target).is('span.support-panel')
+                const targetIsASupportPanelButton = !outsideX && $(event.originalEvent.target).is('.support-panel-button')
 
-                var targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.originalEvent.target).is('input[type=\'radio\'][value=\'on\']')
-                var targetIsEditResourceLink = !outsideX && $(event.originalEvent.target).is('a.edit-resource')
-                var targetIsASelect2RemoveSelectionCross = !outsideX && $(event.originalEvent.target).is('span.select2-selection__choice__remove') && !$(event.originalEvent.target).is('.overrride-outside-detect')
+                const targetIsARadioButtonThatWasOffButIsOnNow = !outsideX && $(event.originalEvent.target).is('input[type=\'radio\'][value=\'on\']')
+                const targetIsEditResourceLink = !outsideX && $(event.originalEvent.target).is('a.edit-resource')
+                const targetIsASelect2RemoveSelectionCross = !outsideX && $(event.originalEvent.target).is('span.select2-selection__choice__remove') && !$(event.originalEvent.target).is('.overrride-outside-detect')
                 if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross || targetIsEditResourceLink)) {
                   clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
                 }
@@ -2631,20 +2794,20 @@
               teardown: function () {}
             }
           }
-          var unload = function (node) {
+          const unload = function (node) {
             window.onbeforeunload = saveSuggestionData
             return {
               teardown: function () {}
             }
           }
-          var timePicker = function (node) {
+          const timePicker = function (node) {
             require('timepicker')
             $(node).timepicker({ 'timeFormat': 'H:i:s', step: 50000, 'wrapHours': false })
             return {
               teardown: function () {}
             }
           }
-          var slideDown = function (node) {
+          const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
             $(suggestedValues).hide()
             let toggle = function () {
@@ -2660,9 +2823,9 @@
             }
           }
 
-          var searchable = function (node) {
+          const searchable = function (node) {
             let keypath = Ractive.getNodeInfo(node).keypath
-            var value = ractive.get(keypath)
+            const value = ractive.get(keypath)
             if (!value.searchable) {
               ractive.set(`${keypath}.searchable`, true)
               ractive.set(`${keypath}.uniqueId`, _.uniqueId())
@@ -2671,8 +2834,8 @@
               teardown: function () {}
             }
           }
-          var tabIndex = function (node, tabSelected) {
-            var focusable = tabSelected
+          const tabIndex = function (node, tabSelected) {
+            let focusable = tabSelected
             if (typeof focusable === 'undefined') {
               tabIndexForNode(node)
             } else {
@@ -2683,13 +2846,13 @@
               teardown: function () {}
             }
           }
-          var disabled = function (node) {
+          const disabled = function (node) {
             $(node).find('input,select').prop('disabled', true)
             return {
               teardown: function () {}
             }
           }
-          var formatter = function (node, formatter) {
+          const formatter = function (node, formatter) {
             if (formatter === 'isbn') {
               $(node).on('input', function () {
                 let value = $(node).val().replace(/[^\dXx]*/g, '') // ISBN.parse not 100% with hyphens
@@ -2710,7 +2873,7 @@
               teardown: function () {}
             }
           }
-          var relations = function (node, uri) {
+          const relations = function (node, uri) {
             const keypath = Ractive.getNodeInfo(node).keypath
             ractive.set(`${keypath}.relations`, null)
             let type = _.last(parentOf(grandParentOf(keypath)).split('.'))
@@ -2722,10 +2885,52 @@
               teardown: function () {}
             }
           }
-          var repositionSupportPanels = function (node) {
+          const repositionSupportPanels = function (node) {
             Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
+            }
+          }
+          const rangeSlider = function (node, args) {
+            const stats = args.rangeStats
+            const input = args.input
+            const $node = $(node)
+            const handle = $node.find('.range-slider-handle')
+            $node.slider({
+              value: stats.start,
+              min: 1,
+              max: stats.numberOfObjects,
+              step: stats.rangeLength,
+              create: function () {
+                const sliderPos = $(this).slider('value')
+                handle.text(`${sliderPos}/${stats.numberOfObjects}`)
+              },
+              slide: function (event, ui) {
+                handle.text(`${ui.value}/${stats.numberOfObjects}`)
+              },
+              change: function (event, ui) {
+                handle.text(`${ui.value}/${stats.numberOfObjects}`)
+              },
+              stop: function (event, ui) {
+                handleRangeShift({
+                  original: {
+                    target: $node.prev('.save-placeholder').prev()
+                  },
+                  context: args.input
+                }, 'customRange', ui.value - 1, stats.rangeLength)
+              }
+            })
+            const observer = ractive.observe(`${input.keypath}.subInputs.0.input.rangeStats`, function (stats, oldVal, keypath) {
+              $node.slider('option', {
+                value: stats.start,
+                max: stats.numberOfObjects
+              })
+            }, { init: false })
+
+            return {
+              teardown: function () {
+                observer.cancel()
+              }
             }
           }
           titleRactive = new Ractive({
@@ -2734,12 +2939,12 @@
             data: applicationData
           })
 
-          var valueOfInputById = function (inputId, valueIndex) {
+          const valueOfInputById = function (inputId, valueIndex) {
             var keyPath = ractive.get(`inputLinks.${inputId}`)
             return ractive.get(`${keyPath}.values.${valueIndex}.current.value`)
           }
 
-          var displayValueOfInputById = function (inputId, valueIndex) {
+          const displayValueOfInputById = function (inputId, valueIndex) {
             var keyPath = ractive.get(`inputLinks.${inputId}`)
             return ractive.get(`${keyPath}.values.${valueIndex}.current.displayValue`)
           }
@@ -2977,24 +3182,40 @@
               checkShouldInclude: checkShouldInclude,
               abbreviate: function (label) {
                 return applicationData.config.abbreviations[ label ] || label
+              },
+              hasNextOrPrevRange: function (input) {
+                return _.some(input.subInputs, function (subInput) {
+                  return ractive.get(`${subInput.input.keypath}.nextRange`) || ractive.get(`${subInput.input.keypath}.prevRange`)
+                })
+              },
+              hasPrevRange: function (input) {
+                return _.some(input.subInputs, function (subInput) {
+                  return ractive.get(`${subInput.input.keypath}.prevRange`)
+                })
+              },
+              hasNextRange: function (input) {
+                return _.some(input.subInputs, function (subInput) {
+                  return ractive.get(`${subInput.input.keypath}.nextRange`)
+                })
               }
             },
             decorators: {
-              repositionSupportPanel: repositionSupportPanel,
-              select2: select2,
-              handleAddNewBySelect2: handleAddNewBySelect2,
-              clickOutsideSupportPanelDetector: clickOutsideSupportPanelDetector,
-              unload: unload,
-              accordion: accordionDecorator,
-              timePicker: timePicker,
-              slideDown: slideDown,
-              pasteSanitizer: pasteSanitizer,
-              formatter: formatter,
-              searchable: searchable,
-              tabIndex: tabIndex,
-              disabled: disabled,
-              relations: relations,
-              repositionSupportPanels: repositionSupportPanels
+              repositionSupportPanel,
+              select2,
+              handleAddNewBySelect2,
+              clickOutsideSupportPanelDetector,
+              unload,
+              accordion,
+              timePicker,
+              slideDown,
+              pasteSanitizer,
+              formatter,
+              searchable,
+              tabIndex,
+              disabled,
+              relations,
+              repositionSupportPanels,
+              rangeSlider
             },
             partials: applicationData.partials,
             transitions: {
@@ -3031,6 +3252,24 @@
               .then(function (response) {
                 ractive.set(`${event.keypath}.relations`, response.data)
               })
+          }
+
+          function handleRangeShift (event, direction, start, rangeLength) {
+            ractive.get('waitHandler').newWaitable(event.original.target)
+            let waiter = ractive.get('waitHandler').thisMayTakeSomTime()
+            setTimeout(function () {
+              whileUnobserved(function () {
+                  if (start !== undefined) {
+                    _.each(_.chain(event.context.subInputs).pluck('input').invoke(direction, start, rangeLength).value(), function (f) {
+                      f()
+                    })
+                  } else {
+                    _.chain(event.context.subInputs).pluck('input').invoke(direction, start, rangeLength)
+                  }
+                }
+              )
+            })
+            setTimeout(waiter.done)
           }
 
           ractive.on({
@@ -3119,32 +3358,9 @@
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
-                patchObject(parentInput, applicationData, index, 'del').then(function () {
-                  ractive.update()
-                  var promises = []
-                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, true))
-                  let subInputsKeypath = grandParentOf(grandParentOf(event.keypath))
-                  _.each(parentInput.subInputs, function (subInput, subInputIndex) {
-                    if (_.isArray(subInput.input.values)) {
-                      try {
-                        promises.push(ractive.splice(`${subInputsKeypath}.${subInputIndex}.input.values`, index, 1))
-                      } catch (e) {
-                        // nop
-                      }
-                    }
-                  })
-                  promises.push(new Promise(function () {
-                    $(event.node).closest('.ui-accordion-content').prev().remove()
-                    $(event.node).closest('.ui-accordion-content, .field').remove()
-                  }))
-                  promises.push(ractive.set(`${parentInput.keypath}.unFinished`, false))
-                  promises.push(new Promise(waiter.done))
-                  sequentialPromiseResolver(promises)
-                  if (ractive.get(`${subInputsKeypath}.0.input.values`).length === 0) {
-                    var addValueEvent = { keypath: parentOf(subInputsKeypath) }
-                    ractive.fire('addValue', addValueEvent)
-                  }
-                })
+                patchObject(parentInput, applicationData, index, 'del')
+                  .then(removeInputsForObject(parentInput, index, event))
+                  .then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
                 _.each(parentInput.subInputs, function (input, inputIndex) {
@@ -3342,7 +3558,7 @@
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 var newResourceType = event.context.createNewResource
-                if (newResourceType && (!ractive.get('targetUri.' + newResourceType))) {
+                if (newResourceType && (!ractive.get('targetUri.' + newResourceType.type))) {
                   var inputs = allInputs()
                   _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
                     _.each(newResourceType.prefillValuesFromResource[ copyFromType ], function (fragment) {
@@ -3905,10 +4121,53 @@
               },
               toggleAllEnableRelation: function (event) {
                 ractive.set(`${event.keypath}.relations.*.enable`, event.context.selectAll)
+              },
+              nextRange: function (event) {
+                handleRangeShift(event, 'nextRange')
+              },
+              prevRange: function (event) {
+                handleRangeShift(event, 'prevRange')
+              },
+              openBulkEdit: function (event, args) {
+                ractive.set(`${event.keypath}.showSupportPanel`, true)
+                ractive.set(`${event.keypath}.multiline`, true)
+                const autoNumberInputRef = ractive.get(`${grandParentOf(event.keypath)}.widgetOptions.enableBulkEntry.autoNumberInputRef`)
+                if (autoNumberInputRef) {
+                  const numberingInput = inputFromInputId(autoNumberInputRef)
+                  ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.showAutonumber`, true)
+                  ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`, true)
+                  var nextNumber = (_
+                      .chain(ractive.get(`${numberingInput.keypath}.values`))
+                      .pluck('current')
+                      .pluck('value')
+                      .map(Number)
+                      .map(function (value) {
+                        return isNaN(value) ? 0 : value
+                      })
+                      .reduce(function (memo, num) { return Math.max(memo, num) })
+                      .value() || 0) + 1
+                  ractive.set(`${numberingInput.keypath}.nextNumber`, nextNumber)
+                  ractive.observe(`${event.keypath}.current.value ${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`, function (newVal, oldVal, keypath) {
+                    const textBody = ractive.get(`${event.keypath}.current.value`)
+                    if (textBody && ractive.get(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`)) {
+                      var lines = _.compact(textBody.split(/\r\n|\r|\n/)).length
+                      ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.current.value`, `${nextNumber}${lines > 1 ? '–' : ''}${lines > 1 ? (nextNumber + lines - 1) : ''}`)
+                    }
+                  })
+                }
+                positionSupportPanels()
               }
             }
           )
 
+          ractive.set('inputGroups', applicationData.inputGroups)
+          ractive.set('inputs', applicationData.inputs)
+          ractive.set('predefinedValues', applicationData.predefinedValues)
+          ractive.update()
+          return applicationData
+        }
+
+        function enableObservers (applicationData) {
           function castVetoForRequiredSubInput (inputGroupKeypath, valueIndex, voter, veto) {
             var vetoesKeyPath = inputGroupKeypath + '.inputGroupRequiredVetoes.' + valueIndex
             var inputGroupRequiredVetoes = (ractive.get(vetoesKeyPath) || '').split('')
@@ -3945,119 +4204,115 @@
             }
           }
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
-            checkRequiredSubjectTypeSelection(keypath, newValue)
-          }, { init: false })
+          ractive.set('observers', [
+            ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
+              checkRequiredSubjectTypeSelection(keypath, newValue)
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
-            checkRequiredSubInput(newValue, keypath)
-          }, { init: false })
+            ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+              checkRequiredSubInput(newValue, keypath)
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.nonEditable', function (newValue, oldValue, keypath) {
-            let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
-            let valueIndex = _.last(parentOf(keypath).split('.'))
-            let nonEditableTarget = `${compoundInputKeypath}.subInputs.0.input.values.${valueIndex}.nonEditable`
-            if (newValue === true && ractive.get(nonEditableTarget) !== true) {
-              ractive.set(nonEditableTarget, true)
-            }
-          }, { init: false })
-
-          ractive.observe('inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
-            if (Boolean(newValue) !== Boolean(oldValue)) {
-              if (!newValue || newValue === '') {
-                var inputKeypath = grandParentOf(grandParentOf(keypath))
-                let dependentResourceTypes = ractive.get(`${inputKeypath}.dependentResourceTypes`)
-                _.each(dependentResourceTypes, function (resourceType) {
-                  unloadResourceForDomain(resourceType)
-                })
+            ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.nonEditable', function (newValue, oldValue, keypath) {
+              let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
+              let valueIndex = _.last(parentOf(keypath).split('.'))
+              let nonEditableTarget = `${compoundInputKeypath}.subInputs.0.input.values.${valueIndex}.nonEditable`
+              if (newValue === true && ractive.get(nonEditableTarget) !== true) {
+                ractive.set(nonEditableTarget, true)
               }
-            }
-          }, { init: false })
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
-            if (newValue && newValue.current) {
-              if (!newValue.current.value) {
-                ractive.set(keypath + '.error', false)
-                return
-              }
-              var parent = grandParentOf(keypath)
-              var valid = false
-              try {
-                valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range)
-              } catch (e) {
-                console.log(e)
-                return
-              }
-              if (valid) {
-                ractive.set(keypath + '.error', false)
-              } else {
-                ractive.set(keypath + '.error', 'ugyldig input')
-              }
-            }
-          }, { init: false })
-
-          function copyAdditionalSuggestionsForGroup (groupIndex) {
-            forAllGroupInputs(function (input, groupIndex1) {
-              if (groupIndex1 === Number(groupIndex) && input.widgetOptions && input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom) {
-                var sourceInput = inputFromInputId(input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
-                if (sourceInput) {
-                  var value = _.last(input.values)
-                  if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
-                    (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object') {
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
-                      value: sourceInput.values[ 0 ].current.value,
-                      displayValue: sourceInput.values[ 0 ].current.displayValue
-                    })
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.searchable`, sourceInput.values[ 0 ].searchable)
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.deletable`, sourceInput.values[ 0 ].deletable)
-                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.subjectType`, input.values[ 0 ].subjectType)
-                  }
+            ractive.observe('inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
+              if (Boolean(newValue) !== Boolean(oldValue)) {
+                if (!newValue || newValue === '') {
+                  var inputKeypath = grandParentOf(grandParentOf(keypath))
+                  let dependentResourceTypes = ractive.get(`${inputKeypath}.dependentResourceTypes`)
+                  _.each(dependentResourceTypes, function (resourceType) {
+                    unloadResourceForDomain(resourceType)
+                  })
                 }
               }
-            })
-          }
+            }, { init: false }),
 
-          ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
-            var groupIndex = keypath.split('.')[ 1 ]
-            if (newValue === true) {
-              updateBrowserLocationWithTab(groupIndex)
-              var additionalSuggestionsForGroup = ractive.get(`inputGroups.${groupIndex}.additionalSuggestions`)
-              if (additionalSuggestionsForGroup) {
-                setTimeout(function () {
-                  alertAboutAdditionalSuggestions(additionalSuggestionsForGroup, function (allowPartialSuggestions) {
-                    forAllGroupInputs(function (input, groupIndex1) {
-                      if (groupIndex1 === Number(groupIndex)) {
-                        _.each(input.values, function (value, valueIndex) {
-                          if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion) {
-                            ractive.set(`${input.keypath}.values.${valueIndex}.current`, value.additionalSuggestion)
-                            ractive.set(`${input.keypath}.values.${valueIndex}.additionalSuggestion`, null)
-                          }
-                        })
-                      }
+            ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
+              if (newValue && newValue.current) {
+                if (!newValue.current.value) {
+                  ractive.set(keypath + '.error', false)
+                  return
+                }
+                var parent = grandParentOf(keypath)
+                var valid = false
+                try {
+                  valid = Ontology.validateLiteral(newValue.current.value, ractive.get(parent).range)
+                } catch (e) {
+                  console.log(e)
+                  return
+                }
+                if (valid) {
+                  ractive.set(keypath + '.error', false)
+                } else {
+                  ractive.set(keypath + '.error', 'ugyldig input')
+                }
+              }
+            }, { init: false }),
+
+            ractive.observe('inputGroups.*.tabSelected', function (newValue, oldValue, keypath) {
+              var groupIndex = keypath.split('.')[ 1 ]
+              if (newValue === true) {
+                updateBrowserLocationWithTab(groupIndex)
+                var additionalSuggestionsForGroup = ractive.get(`inputGroups.${groupIndex}.additionalSuggestions`)
+                if (additionalSuggestionsForGroup) {
+                  setTimeout(function () {
+                    alertAboutAdditionalSuggestions(additionalSuggestionsForGroup, function (allowPartialSuggestions) {
+                      forAllGroupInputs(function (input, groupIndex1) {
+                        if (groupIndex1 === Number(groupIndex)) {
+                          _.each(input.values, function (value, valueIndex) {
+                            if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion) {
+                              ractive.set(`${input.keypath}.values.${valueIndex}.current`, value.additionalSuggestion)
+                              ractive.set(`${input.keypath}.values.${valueIndex}.additionalSuggestion`, null)
+                            }
+                          })
+                        }
+                      })
                     })
                   })
-                })
+                } else {
+                  copyAdditionalSuggestionsForGroup(groupIndex)
+                }
+              }
+            }, { init: false, defer: true }),
+
+            ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
+              var openInputForms = ractive.get('openInputForms') || []
+              if (!isNaN(parseInt(newValue))) {
+                openInputForms = _.union(openInputForms, [ keypath ])
               } else {
-                copyAdditionalSuggestionsForGroup(groupIndex)
+                openInputForms = _.without(openInputForms, keypath)
+              }
+              ractive.set('openInputForms', openInputForms)
+            }, { init: false }) ])
+          return applicationData
+        }
+
+        function copyAdditionalSuggestionsForGroup (groupIndex) {
+          forAllGroupInputs(function (input, groupIndex1) {
+            if (groupIndex1 === Number(groupIndex) && input.widgetOptions && input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom) {
+              var sourceInput = inputFromInputId(input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
+              if (sourceInput) {
+                var value = _.last(input.values)
+                if (value && (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                  (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object')) {
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
+                    value: sourceInput.values[ 0 ].current.value,
+                    displayValue: sourceInput.values[ 0 ].current.displayValue
+                  })
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.searchable`, sourceInput.values[ 0 ].searchable)
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.deletable`, sourceInput.values[ 0 ].deletable)
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.subjectType`, input.values[ 0 ].subjectType)
+                }
               }
             }
-          }, { init: false, defer: true })
-
-          ractive.observe('applicationData.maintenanceInputs.*.widgetOptions.*.showInputs', function (newValue, oldValue, keypath) {
-            var openInputForms = ractive.get('openInputForms') || []
-            if (!isNaN(parseInt(newValue))) {
-              openInputForms = _.union(openInputForms, [ keypath ])
-            } else {
-              openInputForms = _.without(openInputForms, keypath)
-            }
-            ractive.set('openInputForms', openInputForms)
-          }, { init: false })
-
-          ractive.set('inputGroups', applicationData.inputGroups)
-          ractive.set('inputs', applicationData.inputs)
-          ractive.set('predefinedValues', applicationData.predefinedValues)
-          ractive.update()
-          return applicationData
+          })
         }
 
         var loadOntology = function (applicationData) {
@@ -4106,11 +4361,11 @@
           return applicationData
         }
 
-        function loadWorkOfPublication () {
+        function loadWorkOfPublication (options) {
           withPublicationOfWorkInput(function (publicationOfInput) {
             var workUri = _.flatten([ publicationOfInput.values[ 0 ].current.value ])[ 0 ]
             if (workUri) {
-              return fetchExistingResource(workUri).then(function () {
+              return fetchExistingResource(workUri, options).then(function () {
                 ractive.set('targetUri.Work', workUri)
               })
             }
@@ -4159,8 +4414,8 @@
                   if (!showingWaiting && !cancelled) {
                     showingWaiting = true
                     target.addClass('saving')
-                    var next = target.next()
-                    if (next.hasClass('save-placeholder')) {
+                    var next = target.nextAll('.save-placeholder')
+                    if (next) {
                       next.append(spinner.el)
                     } else {
                       $('#growler').show()
@@ -4512,6 +4767,7 @@
           .then(initSelect2)
           .then(initRactive)
           .then(initWaitHandler)
+          .then(enableObservers)
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
           .then(initHeadlineParts)
@@ -4535,7 +4791,6 @@
           })
           .then(function (applicationData) {
             $('.focusguard-end').on('focus', function () {
-              console.log('.focusguard-end!')
               $('.focusguard-start.visible + div :input:first').focus()
             })
 

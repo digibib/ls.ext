@@ -33,9 +33,6 @@
                         {{>(readOnly ? "readonly-" : "") + type }}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
-                    <span class="support-panel" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
-                        {{>"support-for-"+type}}
-                    </span>
                 </span>
             {{/if}}
         {{/each}}
@@ -47,6 +44,7 @@
                         {{>(readOnly ? "readonly-" : "") + type}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
+                    {{#if supportable}}
                     <span class="support-panel" class-fixed={{editAuthorityMode}} data-support-panel-base-ref="support_panel_base_{{!editAuthorityMode ? uniqueId : 'fixed'}}">
                         {{#if editAuthorityMode}}
                             {{>support-for-edit-authority}}
@@ -54,6 +52,7 @@
                             {{>"support-for-"+type}}
                         {{/if}}
                     </span>
+                    {{/if}}
                 </span>
             {{/if}}
         {{/each}}
@@ -101,7 +100,7 @@
                         {{#if !(./input.visible === false)}}
                             <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
                                 <span class="label"
-                                      class-pure-u-1-1="{{!nonEditable && !suggested}}"
+                                      class-pure-u-3-4="{{!nonEditable && !suggested}}"
                                       class-for-one-liner="{{input.type === 'input-boolean' || oneLiner == true}}"
                                       data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
                                 {{#with input.values[inputValueIndex]}}
@@ -111,7 +110,7 @@
                                             {{>suggested-values}}
                                         {{/if}}
                                     </span>
-                                    {{#if ! nonEditable && !suggested}}
+                                    {{#if (! nonEditable && !suggested && ../../../input.supportable && !compareMode) || showSupportPanel}}
                                         <span class="support-panel"
                                               data-support-panel-base-ref="support_panel_base_{{./uniqueId}}">
                                             {{#with ../../../input}}
@@ -177,13 +176,36 @@
 {{/each}}
 {{/if}}
 {{/if}}
+
 {{#multiple && allowAddNewButton}}
     <span class="pure-u-1-1" style="order: 1000;">
-        <div class="add-new-btn-row">
-            <div class="pure-u-1-12"> </div>
+        <div class="add-new-btn-row pure-u-1">
+{{#if hasNextRange(.) || hasPrevRange(.)}}
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                    class="pure-button pure-button-primary"
+                    class="pure-button pure-button-primary pagination"
+                    {{#if !hasPrevRange(.)}}
+                    disabled="disabled"
+                    {{/if}}
+                    on-click="prevRange"
+                    on-enter="prevRange">-{{pagination}}</button>
+            <button
+                    tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                    class="pure-button pure-button-primary pagination"
+                    {{#if !hasNextRange(.)}}
+                    disabled="disabled"
+                    {{/if}}
+                    on-click="nextRange"
+                    on-enter="nextRange">+{{pagination}}</button>
+            <span class="pagination save-placeholder"></span>
+
+            <span class="pure-u-11-24 pagination range-slider" as-rangeSlider="{rangeStats: subInputs[0].input.rangeStats, input:.}">
+                   <span class="range-slider-handle ui-slider-handle"/>
+            </span>
+{{/if}}
+            <button
+                    tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                    class="pure-button pure-button-primary add-button"
                     on-click="addValue"
                     on-keyup="addValue">{{addAnotherLabel || 'Legg til ny'}}</button>
         </div>
