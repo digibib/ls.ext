@@ -454,7 +454,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg åpner verket i gammelt katalogiseringsgrensesnitt
     Så verifiserer jeg innskrevet verdi for "Verket har ikke hovedansvarlig", som i gammelt grensesnitt heter "Mangler hovedansvarlig"
-    Så verifiserer jeg innskrevet verdi for "Skal ikke inngå i verksliste", som i gammelt grensesnitt heter "Ikke eget verk"
 
   Scenario: katalogisere verk med relasjon til annet verk
     Gitt jeg kan dikte opp en verkstittel
