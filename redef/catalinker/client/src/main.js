@@ -1116,6 +1116,7 @@
                                       input.parentInput.allowAddNewButton = true
                                       input.values[ index ].nonEditable = true
                                       ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
+                                      ractive.set(`${input.parentInput.keypath}.subInputs.0.input.values.${index}.nonEditable`, true)
                                     }
                                   }
                                 }
@@ -1175,8 +1176,8 @@
                               input.values[ valueIndex ].subjectType = type
                               input.values[ valueIndex ].oldSubjectType = type
                               if (input.isSubInput && !options.source) {
-                                // input.values[ valueIndex ].nonEditable = true
-                                // ractive.set(`${input.keypath}.values.${valueIndex}.nonEditable`, true)
+                                input.values[ valueIndex ].nonEditable = true
+                                ractive.set(`${input.parentInput.keypath}.subInputs.0.input.values.${valueIndex}.nonEditable`, true)
                                 input.parentInput.allowAddNewButton = true
                               }
                               ractive.set(`${input.keypath}.allowAddNewButton`, true)
@@ -2564,7 +2565,7 @@
               ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
               ractive.update('lastRoots')
             })
-            if (input.subInputs && lastIndex > input.pagination) {
+            if (input.subInputs && input.pagination) {
               removeInputsForObject(input, index)()
               if (op !== 'del' && _.chain(input.subInputs).pluck('input').invoke('thisRange').compact().value().length === 0) {
                 updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
