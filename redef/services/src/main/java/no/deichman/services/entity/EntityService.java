@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  * Responsibility: TODO.
  */
 public interface EntityService {
-    
+
     void updateWork(String work);
     Model retrieveById(XURI xuri);
     Model retrieveWorkWithLinkedResources(XURI xuri);
@@ -49,6 +49,8 @@ public interface EntityService {
     Map<String, Integer> getNumberOfRelationsForResource(XURI uri);
 
     Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection);
+
+    Model describePublicationFromParsedCoreISBNQuery(String isbn);
 
     Model retrieveEventWithLinkedResources(XURI eventUri);
 

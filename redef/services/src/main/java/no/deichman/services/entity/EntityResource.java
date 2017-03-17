@@ -420,6 +420,14 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
+    @Path("/isbn/{isbn: [0-9Xx-]+}")
+    @Produces(LD_JSON)
+    public Response describePublicationFromParsedCoreISBNQuery(@PathParam("isbn") String isbn) throws Exception {
+        Model model = getEntityService().describePublicationFromParsedCoreISBNQuery(isbn);
+        return ok().entity(getJsonldCreator().asJSONLD(model)).build();
+    }
+
+    @GET
     @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/relations")
     @Produces(JSON)
     public Response retriveResourceParticipations(@PathParam("type") String type, @PathParam("id") String id) throws Exception {

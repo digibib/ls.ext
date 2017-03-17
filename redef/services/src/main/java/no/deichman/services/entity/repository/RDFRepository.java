@@ -82,6 +82,8 @@ public interface RDFRepository {
 
     Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection);
 
+    Model describePublicationFromParsedCoreISBNQuery(String isbn);
+
     String createWorkSeries(Model inputModel) throws Exception;
 
     Model retrieveEventAndLinkedResourcesByURI(XURI eventUri);
