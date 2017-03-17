@@ -1365,7 +1365,7 @@ module.exports = (app) => {
             reportLabel: 'Deler',
             inputs: [
               {
-                label: 'Verk som inngår i samling',
+                label: 'Deler som inngår i samling',
                 multiple: true,
                 reportFormat: {
                   topLevel: true // this input is promoted to act on behalf of its group in the report
@@ -1459,10 +1459,6 @@ module.exports = (app) => {
                         isRangeEnd: true,
                         reportLabel: 'Sidetall til'
                       }
-                    },
-                    {
-                      label: 'Skal ikke inngå i verksliste',
-                      rdfProperty: 'improperWork'
                     }
                   ]
                 },
