@@ -669,6 +669,11 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
+    public Model describePublicationFromParsedCoreISBNQuery(String isbn) {
+        return repository.describePublicationFromParsedCoreISBNQuery(isbn);
+    }
+
+    @Override
     public Model retrieveEventWithLinkedResources(XURI eventUri) {
         Model m = ModelFactory.createDefaultModel();
         m.add(repository.retrieveEventAndLinkedResourcesByURI(eventUri));

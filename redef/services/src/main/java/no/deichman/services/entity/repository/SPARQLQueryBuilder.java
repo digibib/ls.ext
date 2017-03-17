@@ -42,6 +42,8 @@ public final class SPARQLQueryBuilder {
     private static final String INDENT = "    ";
     public static final boolean KEEP_BLANK_NODES = true;
     public static final boolean SKIP_BLANK_NODES = false;
+    public static final String STARTSWITH_NINE_SEVEN_EIGHT = "^978";
+    public static final String VALID_ISBN_CHARS = "[^0-9Xx]";
 
     public SPARQLQueryBuilder() {
     }
@@ -557,6 +559,20 @@ public final class SPARQLQueryBuilder {
         Stream<String> end = newArrayList("}\n").stream();
         String query = concat(start, concat(projections, concat(where, concat(type, concat(conditionals, concat(selects, end)))))).collect(joining("\n"));
         return QueryFactory.create(query);
+    }
+
+    public Query describePublicationFromParsedCoreISBNQuery(String isbn) {
+        String strippedIsbn = isbn.replaceAll("-", "").replaceAll(STARTSWITH_NINE_SEVEN_EIGHT, "");
+        String parsedIsbnCore = strippedIsbn.substring(0, Math.min(strippedIsbn.length(), 9));
+        String queryString = format("PREFIX deichman: <%1$s>\n"
+                + "DESCRIBE ?uri\n"
+                + "WHERE {\n"
+                + "    VALUES ?isbnInput { \'%2$s\' }\n"
+                + "     ?uri deichman:isbn ?isbn .\n"
+                + "     BIND( SUBSTR(REPLACE( REPLACE (?isbn, \'" + VALID_ISBN_CHARS + "\', ''), \"" + STARTSWITH_NINE_SEVEN_EIGHT + "\", ''), 1,9) AS ?isbnCore)\n"
+                + "     FILTER( ?isbnCore = ?isbnInput )\n"
+                + "}", BaseURI.ontology(), parsedIsbnCore);
+        return QueryFactory.create(queryString);
     }
 
     public String patch(List<Patch> deleteModelAsPatches) {
