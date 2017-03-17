@@ -12,12 +12,27 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.8.99 (2017-03-15)
+
+KOHA: 7933c6de69c171ef9bb394e19c8202a3d5978ec1
+GITREF: ?
+
+- Patron-client:
+  - Div fikser og forbedringer i sett hold på vent
+  - DEICH-724 Sjanger vises ikke på verkssiden
+  - fiks flere til avhenting på samme biblionummer
+- Catalinker:
+  - DEICH-602 Uforståelig treffliste for verk og utgivelser
+- Koha:
+  - Fiks automatic branchtransfer til å inkludere reservasjoner satt på vent
+
 ## 0.8.9 (2017-03-07)
 
 KOHA: 66b9bc2ca4c9619b71035408a1958572b9d82546
-GITREF:
+GITREF: f7be7f1d3738bf879d3468487dd8185f0b6245fb
 
 - Koha:
+  - DEICH-723 Branchtransfer tar ikke hensyn til reservasjoner som er satt på vent
   - Liten NL fiks (ikke en uke uten :-)
   - Sender metrikk (gir oss b.l.a overblikk hva som går treigt)
 - Patron-client:

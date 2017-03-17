@@ -2,6 +2,7 @@
 # language: no
 
 @redef
+@wip
 Egenskap: Se person
   Som bruker av bibliotekets nettsider
   Siden jeg er interessert i bibliografiske mennesker

@@ -9,7 +9,7 @@ Egenskap: Superbruker låner ut bok
 
   Bakgrunn:
     Gitt at jeg er logget inn som superbruker
-    Og at Koha er populert med "1" lånere, "1" eksemplarer og "0" reserveringer
+    Og at Koha er populert med 1 lånere, 1 eksemplarer og 0 reserveringer
 
   Scenario: Superbruker låner ut bok til Knut
     Når jeg går til lånerens side i Koha

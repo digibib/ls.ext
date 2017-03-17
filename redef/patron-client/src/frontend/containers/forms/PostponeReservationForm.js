@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reduxForm } from 'redux-form'
+import { reduxForm, change } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
@@ -28,9 +28,7 @@ class PostponeReservationForm extends React.Component {
   }
 
   handlePostponeReservation (field) {
-    if (this.props.date === null || this.props.date !== field.date) {
-      this.props.datepickerActions.handleDateChange(moment(field.date, 'DD.MM.YYYY'))
-    }
+    this.props.datepickerActions.handleDateChange(field.dateCurrentAndAbove)
 
     this.props.reservationActions.changeReservationSuspension(
       this.props.modalProps.reserveId,
@@ -51,7 +49,8 @@ class PostponeReservationForm extends React.Component {
   }
 
   handleDateChange (date) {
-    this.props.datepickerActions.handleDateChange(date)
+    this.props.datepickerActions.handleDateChange(date.format('DD.MM.YYYY'))
+    this.props.changeFieldValue('dateCurrentAndAbove', date.format('DD.MM.YYYY'))
   }
 
   render () {
@@ -66,7 +65,7 @@ class PostponeReservationForm extends React.Component {
         </h2>
         <div className="postpone-reserve">
           <div className="item">
-          <FormInputField name="date"
+          <FormInputField name="dateCurrentAndAbove"
                           message={messages.activateAfter}
                           formName={formName}
                           getValidator={this.getValidator}
@@ -150,7 +149,8 @@ PostponeReservationForm.propTypes = {
   modalActions: PropTypes.object.isRequired,
   datepickerActions: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired
+  submitting: PropTypes.bool.isRequired,
+  changeFieldValue: PropTypes.func
 }
 
 function mapStateToProps (state) {
@@ -158,7 +158,6 @@ function mapStateToProps (state) {
     isLoggedIn: state.application.isLoggedIn,
     isRequestingReservation: state.reservation.isRequestingReservation,
     date: state.datepicker.date,
-    initialValues: state.datepicker.date,
     modalProps: state.modal.modalProps
   }
 }
@@ -168,7 +167,10 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     reservationActions: bindActionCreators(ReservationActions, dispatch),
     modalActions: bindActionCreators(ModalActions, dispatch),
-    datepickerActions: bindActionCreators(DatepickerActions, dispatch)
+    datepickerActions: bindActionCreators(DatepickerActions, dispatch),
+    changeFieldValue: (field, value) => {
+      dispatch(change(formName, field, value))
+    }
   }
 }
 

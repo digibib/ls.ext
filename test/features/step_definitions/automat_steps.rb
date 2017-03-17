@@ -41,7 +41,7 @@ When(/^låneren legger materialet på automaten$/) do
 end
 
 When(/^"(.*?)" legger materialet på automaten$/) do |name|
-  branch = @active[:branch]
+  branch = @context[:defaults][:branches][0]
   patron = @context[:patrons].find {|p| p.firstname == "#{name}" }
   item   = @active[:item] || @active[:book].items.first
   case @context[:sip_mode]
@@ -115,7 +115,7 @@ end
 Given(/^at materialets henteavdeling( ikke)? er lik den avdelingen der materialet blir levert$/) do |notsamebranch|
   if notsamebranch
     step "jeg legger inn en ny avdeling med ny avdelingskode"
-    @context[:sip_checkin_branch] = @active[:branch].code
+    @context[:sip_checkin_branch] = @context[:defaults][:branches][1].code
   else
     @context[:sip_checkin_branch] = @active[:item].branch.code
   end

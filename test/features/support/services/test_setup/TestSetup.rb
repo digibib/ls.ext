@@ -3,6 +3,8 @@ require "uri"
 require "json"
 require "date"
 require_relative "../sip/SIP2Client.rb"
+require_relative '../resource_api/client.rb'
+require_relative '../../context_structs.rb'
 require "pry"
 require 'bcrypt'
 
@@ -29,8 +31,6 @@ module TestSetup
     def setup_db(dbversion="16.1104000")
       apipassenc = BCrypt::Password.create(@apipass, cost: 8)
       sippassenc = BCrypt::Password.create(@sippass, cost: 8)
-      STDOUT.puts "Dumping koha db..."
-      `docker run --rm -v dockercompose_koha_mysql_data:/from alpine ash -c "cd /from ; tar -cf - ." > kohadb.tar`
 
       STDOUT.puts "Pre-populating koha db..."
       mysqlcmd = "mysql --local-infile=1 --default-character-set=utf8 --init-command=\"SET SESSION FOREIGN_KEY_CHECKS=0;\" -h koha_mysql -u\$MYSQL_USER -p\$MYSQL_PASSWORD koha_name"
@@ -39,15 +39,21 @@ module TestSetup
       `docker exec -i xkoha bash -c "supervisorctl -uadmin -p#{@apipass} restart plack"`
     end
 
+    def self.dump_db
+      STDOUT.puts "Dumping koha db..."
+      `docker run --rm -v dockercompose_koha_mysql_data:/from alpine ash -c "cd /from ; tar -cf - ." > kohadb.tar`
+    end
+
     def self.restore_db
+      STDOUT.puts "Restoring koha db..."
       `docker stop koha_mysql`
       `cat kohadb.tar | docker run -i --rm -v dockercompose_koha_mysql_data:/to alpine ash -c "cd /to ; tar -xf -"`
       `docker start koha_mysql`
     end
 
     def populate(args = {})
-      self.add_patrons(args[:patrons])
-      self.add_biblio(args[:items])
+      self.add_patrons(args[:patrons]) if args[:patrons] > 0
+      self.add_biblio(args[:items]) if args[:items] > 0
       self.add_hold(args[:holds])
       self
     end
@@ -64,7 +70,7 @@ module TestSetup
     def add_patrons(numberOfPatrons=1)
       @headers["Content-Type"] = "application/json"
 
-      numberOfPatrons.to_i.times do
+      numberOfPatrons.times do
         id = random_number(10)
         params = {
           categorycode: "V",
@@ -101,7 +107,7 @@ module TestSetup
       itemxml = File.read("#{@basedir}/item.xml", :encoding => "UTF-8")
 
       itemsxml = ''
-      numberOfItems.to_i.times do
+      numberOfItems.times do
         item = itemxml.gsub("__BARCODE__", random_number(14))
         item.gsub!("__BRANCHCODE__", "hutl")
         item.gsub!("__BRANCHCODE__", "hutl")
@@ -121,7 +127,7 @@ module TestSetup
     end
 
     def delete_biblio
-      return unless @biblio["items"]
+      return if @biblio.empty?
       @biblio["items"].each do |item|
         http = Net::HTTP.new(@api.host, @api.port)
         uri = URI(@api + "biblios/" + item["itemnumber"].to_s)
@@ -133,10 +139,11 @@ module TestSetup
 
     # JSON params: borrowernumber, biblionumber, itemnumber, branchcode, expirationdate
     def add_hold(args = {})
+      return unless args[:numberOfHolds] && args[:numberOfHolds] > 0
       borrowernumber = args[:borrowernumber] ? args[:borrowernumber].to_i : @patrons[0]["borrowernumber"].to_i
       biblionumber   = args[:biblionumber]   ? args[:biblionumber].to_i   : @biblio["biblio"]["biblionumber"].to_i
       branchcode     = args[:branchcode]     ? args[:branchcode]          : "hutl"
-      numberOfHolds  = args[:numberOfHolds]  ? args[:numberOfHolds].to_i  : 0
+      numberOfHolds  = args[:numberOfHolds]  ? args[:numberOfHolds]       : 0
       numberOfHolds.to_i.times do
         @headers["Content-Type"] = "application/json"
         params = {
@@ -200,13 +207,120 @@ module TestSetup
   end
 
   class Services
-    # TODO
-    attr_accessor :api, :http, :headers
+    attr_accessor :api, :client, :ontology, :works, :publications, :persons
 
     def initialize(host="localhost", port="8005")
       @api = URI.parse("http://#{host}:#{port}//")
+      @client = ServicesAPIClient.new()
+      @ontology = client.get_ontology()
+      @mediatypes = %w(Book DVD Blu-ray CD-ROM NintendoDSGame Other)
+      @languages = %w(http://lexvo.org/id/iso639-3/eng http://lexvo.org/id/iso639-3/dan http://lexvo.org/id/iso639-3/nob)
+      @audiences = %w(adult juvenile ages11To12 ages13To15)
+      @roles = %w(author illustrator composer)
+      @works, @publications, @persons = [],[],[]
     end
 
+    def add_work_with_publications_and_contributors(numberOfPublications=1, numberOfContributors=1)
+      w = Resource.new(@ontology, :work)
+      w.uri = @client.create_resource(w.type, w.literals)
+      w.gen_literals("Work")
+      @client.patch_resource(w.uri,w.literals)
+      @works.push(w)
+
+      numberOfContributors.times do |i|
+        if i == 0
+          add_contributor(w, "author", true) # First contributor is author and MainEntry
+        else
+          add_contributor(w, @roles.sample)
+        end
+      end
+
+      numberOfPublications.times do
+        p = Resource.new(@ontology, :publication)
+        p.uri = @client.create_resource(p.type, p.literals)
+        p.gen_literals("Publication")
+        p.literals << RDF::Statement.new( RDF::URI.new(p.uri), ONTOLOGY.publicationOf, RDF::URI.new(w.uri) )
+        p.literals << RDF::Statement.new( RDF::URI.new(p.uri), ONTOLOGY.language, RDF::URI(@languages.sample) )
+        p.literals << RDF::Statement.new( RDF::URI.new(p.uri), ONTOLOGY.audience, DEICH[@audiences.sample] )
+        p.literals << RDF::Statement.new( RDF::URI.new(p.uri), ONTOLOGY.mediaType, DEICH[@mediatypes.sample] )
+        @client.patch_resource(p.uri,p.literals)
+        updatedPub = @client.get_resource(p.uri) # Fetch generated resource, including record Id in Koha
+        p.literals = updatedPub
+        @publications.push(p)
+      end
+      self
+    end
+
+    def add_person
+      c = Resource.new(@ontology, :person)
+      c.uri = @client.create_resource(c.type, c.literals)
+      c.gen_literals("Person")
+      @client.patch_resource(c.uri,c.literals)
+      updatedPerson = @client.get_resource(c.uri)
+      c.literals = updatedPerson
+      @persons.push(c)
+      c
+    end
+
+    def add_contributor(work, role, mainEntry=false)
+      c = add_person
+      bnode = RDF::Node.new
+      graph = RDF::Graph.new
+      graph << RDF::Statement.new( RDF::URI.new(work.uri), ONTOLOGY.contributor, bnode )
+      graph << RDF::Statement.new( bnode, RDF.type, ONTOLOGY.Contribution )
+      graph << RDF::Statement.new( bnode, RDF.type, ONTOLOGY.MainEntry ) if mainEntry
+      graph << RDF::Statement.new( bnode, ONTOLOGY.agent, RDF::URI.new(c.uri) )
+      graph << RDF::Statement.new( bnode, ONTOLOGY.role, ROLE[role] )
+      @client.patch_resource(work.uri, graph.statements)
+      updated = @client.get_resource(work.uri)
+      work.literals = updated
+      @works.map!{|el|el.uri == work.uri ? work : el} # replace work in instance array
+    end
+
+    def del_contributor(work, role)
+      r = work.literals.statements.select {|s| s.object == ROLE[role] }
+      bnode = r[0].subject
+      c = work.literals.statements.select {|s| s.subject == bnode || s.object == bnode }
+      @client.patch_resource(work.uri, c, op="del")
+      updated = @client.get_resource(work.uri)
+      work.literals = updated
+      @works.map!{|el|el.uri == work.uri ? work : el} # replace work in instance array
+    end
+
+    def get_value(resource, prop)
+      stmt = resource.literals.statements.select {|s| s.predicate == ONTOLOGY[prop] }
+      stmt[0].object.value if stmt.length > 0
+    end
+
+    def set_value(resource, prop, newValue)
+      oldStmt = resource.literals.statements.select {|s| s.predicate == ONTOLOGY[prop] }
+      @client.patch_resource(resource.uri, oldStmt, op="del")
+      graph = RDF::Graph.new
+      graph << RDF::Statement.new(RDF::URI.new(resource.uri), ONTOLOGY[prop], RDF::Literal.new(newValue))
+      @client.patch_resource(resource.uri, graph.statements)
+      updated = @client.get_resource(resource.uri)
+    end
+
+    def get_contributor_value(contributor, prop)
+      # NOT IMPLEMENTED
+    end
+
+    def add_item(numberOfItems=1)
+      # NOT IMPLEMENTED
+    end
+
+    def cleanup
+      @works.each do |w|
+        @client.remove_resource(w.uri)
+      end
+      @works = []
+      @publications.each do |p|
+        @client.remove_resource(p.uri)
+      end
+      @publications = []
+      @persons.each do |h|
+        @client.remove_resource(h.uri)
+      end
+    end
   end
 end
-

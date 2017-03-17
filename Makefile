@@ -150,6 +150,10 @@ rebuild_overview:					## Force rebuilds overview
 	@echo "======= FORCE RECREATING OVERVIEW ======\n"
 	$(call rebuild,overview)
 
+rebuild_cuke_tests:					## Force rebuilds cuke_tests
+	@echo "======= FORCE RECREATING CUKE_TESTS ======\n"
+	$(call rebuild,cuke_tests)
+
 cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
 	$(CMD) -c "rm -rf $(LSEXTPATH)/test/report/*.* && \
@@ -163,6 +167,10 @@ test_one:						## Run 'utlaan_via_adminbruker'.
 	@$(XHOST_ADD)
 	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Superbruker l.ner ut bok til Knut"'
 	@$(XHOST_REMOVE)
+
+list_unused_steps:
+	$(CMD) -c 'cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) run --rm cuke_tests \
+	cucumber --tags=~@ignore --tags=~@migration -d -f Unused'
 
 stop_koha:
 	@echo "======= STOPPING KOHA CONTAINER ======\n"

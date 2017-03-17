@@ -1,3 +1,7 @@
+Given(/^at jeg har en bok$/) do
+  true
+end
+
 When(/^debugger jeg$/) do
   sleep(1)
 end
@@ -6,8 +10,15 @@ When(/^avbryter jeg$/) do
   fail 'Aborting'
 end
 
-When(/^at jeg har en bok$/) do
-  #
+When(/^jeg venter litt$/) do
+  sleep 2
+  @browser.execute_script("console.log('waiting...')")
+  if @browser.div(:id => 'ui-blocker').exists?
+    puts("blocker")
+  end
+  if @browser.div(:id => 'ui-blocker').exists? && @browser.div(:id => 'ui-blocker').visible?
+    sleep 4
+  end
 end
 
 When(/^at det finnes et verk med forfatter$/) do
@@ -205,7 +216,6 @@ When(/^tar jeg en liten pause$/) do
   sleep(1)
 end
 
-
 When(/^at jeg skriver inn sted i feltet for utgivelsessted og trykker enter$/) do
   data_automation_id = "Publication_http://data.deichman.no/ontology#hasPlaceOfPublication_0"
   publication_place_field = @browser.element(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']|//span[@data-automation-id='#{data_automation_id}']//span[@contenteditable]")
@@ -226,10 +236,13 @@ When(/^at jeg skriver inn (tilfeldig |)([a-z]*) i feltet "([^"]*)" og trykker en
   field.send_keys :enter
 end
 
-When(/^at jeg skriver inn (.*) nr ([0-9]) i feltet "([^"]*)" og trykker enter$/) do |concept, index, label|
+When(/^at jeg skriver inn person nr ([0-9]) i feltet "([^"]*)" og trykker enter$/) do |index, label|
+  # TODO: remove @context[:random_migrate_person_names][index.to_i]
+  person = @context[:services].persons[index.to_i-1]
+  personName = @context[:services].get_value(person, 'name')
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
-  field.send_keys (@context[:random_migrate_person_names][index.to_i])
+  field.send_keys (personName)
   field.send_keys :enter
 end
 
@@ -495,8 +508,12 @@ When(/^at jeg vil opprette (en|et) (.*)$/) do |article, concept|
   #
 end
 
-When(/^at jeg vil slå sammen to (.*)$/) do |concept|
-  #
+When(/^at jeg vil slå sammen to personer$/) do
+  s = TestSetup::Services.new()
+  2.times do
+    s.add_work_with_publications_and_contributors(0,2)
+  end
+  @context[:services] = s
 end
 
 When(/^trykker jeg på knappen for å slå sammen to autoriteter$/) do

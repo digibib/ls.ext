@@ -41,7 +41,7 @@ class UserLoans extends React.Component {
     } else if (itype === 'SETT' || itype === 'TOUKESLAAN' || itype === 'UKESLAAN' || itype === 'DAGSLAAN' || itype === 'EBOK') {
       return 'http://data.deichman.no/mediaType#Book'
     } else {
-      return 'undefined'
+      return '?'
     }
   }
 
@@ -51,7 +51,7 @@ class UserLoans extends React.Component {
         <section className="pickup">
           <h1><FormattedMessage {...messages.canBePickedUp} /></h1>
             {this.props.loansAndReservations.pickups.map(item => (
-              <article key={item.recordId}
+              <article key={item.reserveId}
                        className="single-entry"
                        data-automation-id="UserLoans_pickup"
                        data-recordid={item.recordId}>

@@ -1131,7 +1131,7 @@ module.exports = (app) => {
                 ],
                 cloneParentButtonExplanation: `
                   Hvis du velger å splitte verket, opprettes det en ny kopi av det for hver utgivelse som er valgt over. Hver utgivelse knyttes
-                  deretter til sitt nye verk som utgivelse av det verket. Før verket splittes blir du bedt om å angi hvilke verdier 
+                  deretter til sitt nye verk som utgivelse av det verket. Før verket splittes blir du bedt om å angi hvilke verdier
                   fra utgivelsene som skal overføres til tilsvarende felt på de nye verkene.`,
                 cloneParentDialogLegend: 'Velg hvilke verdier som skal kopieres fra de eksisterende utgivelsene til de nye verkene som skal opprettes:'
               }
@@ -1605,21 +1605,6 @@ module.exports = (app) => {
             type: 'work',
             structuredQuery: true,
             selectIndexLabel: 'Verk',
-            queryTerms: [
-              {
-                field: 'mainTitle',
-                wildcard: true,
-                onlyIfNotMatching: '^w[a-f0-9]+$'
-              },
-              {
-                field: 'uri',
-                matchAndTransformQuery: {
-                  regExp: 'w[a-f0-9]+',
-                  replacement: 'http://data.deichman.no/work/$&'
-                },
-                onlyIfMatching: '^w[a-f0-9]+$'
-              }
-            ],
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
@@ -1633,20 +1618,7 @@ module.exports = (app) => {
           workUnstructured: {
             type: 'work',
             selectIndexLabel: 'Verk',
-            queryTerms: [
-              { field: 'mainTitle', wildcard: true },
-              { field: 'partTitle', wildcard: true },
-              { field: 'publicationYear', onlyIfMatching: '^[0-9]{3,4}$' },
-              {
-                field: 'uri',
-                matchAndTransformQuery: {
-                  regExp: 'w[a-f0-9]+',
-                  replacement: '"http://data.deichman.no/work/$&"'
-                },
-                onlyIfMatching: 'w[a-f0-9]+'
-              }
-            ],
-            legend: 'Søk etter tittel og/eller utgivelsesår',
+            legend: 'Søk etter tittel, hovedinnførsel eller verksuri',
             resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
@@ -1700,13 +1672,7 @@ module.exports = (app) => {
           publication: {
             type: 'publication',
             selectIndexLabel: 'Utgivelse',
-            queryTerms: [
-              { field: 'recordId', onlyIfMatching: '^\\d{1,11}$' },
-              { field: 'mainTitle', boost: 20, wildcard: true },
-              { field: 'subtitle', wildcard: true },
-              { field: 'mainEntryName', boost: 30, wildcard: true }
-            ],
-            legend: 'Søk etter tittel , tittelnummer eller hovedinnførsel.',
+            legend: 'Søk etter tittel eller tittelnummer',
             resultItemLabelProperties: [ 'creator', 'mainTitle', 'subtitle', 'publicationYear', 'recordIdPrefixed' ],
             itemHandler: 'publicationItemHandler'
           },

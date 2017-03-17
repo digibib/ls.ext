@@ -37,7 +37,7 @@ class GlobalSetup
 DROP TRIGGER IF EXISTS autoBiblioFrameworkCode;
 
 INSERT IGNORE INTO branches  (branchcode, branchname)
-VALUES ('hutl','Hovedbiblioteket');
+VALUES ('hutl','Hovedbiblioteket'),('ffur', 'Furuset');
 
 INSERT IGNORE INTO itemtypes (itemtype, description)
 VALUES ('B','Bok');

@@ -12,7 +12,8 @@ CONSTRUCT {
                deich:contributor ?workContrib ;
                deich:subject ?subject ;
                deich:hasWorkType ?hasWorkType ;
-               deich:workTypeLabel ?workTypeLabel .
+               deich:workTypeLabel ?workTypeLabel ;
+               deich:mainEntryName ?mainEntryName .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
                deich:mainEntry ?mainEntry ;
@@ -47,7 +48,8 @@ WHERE {
              deich:role ?roleURI .
           OPTIONAL {
                ?workContrib a deich:MainEntry.
-               BIND(true as ?mainEntry) .
+               BIND(true AS ?mainEntry) .
+               ?agent deich:name ?mainEntryName .
            }
           ?agent deich:name ?name .
           BIND(str(?roleURI) AS ?role)

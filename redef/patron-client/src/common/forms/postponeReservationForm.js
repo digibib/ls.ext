@@ -1,5 +1,5 @@
 module.exports = {
-  date: {
+  dateCurrentAndAbove: {
     required: true,
     asyncValidation: true
   }

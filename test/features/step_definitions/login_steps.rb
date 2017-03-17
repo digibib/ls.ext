@@ -34,11 +34,3 @@ Given(/^at jeg er pålogget som adminbruker$/) do
     Når jeg fyller inn credentials for en adminbruker og trykker Logg inn
   }
 end
-
-Then(/^har jeg kommet til førstesiden til koha$/) do
-  @browser.body.id.should == "main_intranet-main"
-end
-
-Then(/^vises det at jeg er pålogget$/) do
-  @site.Home.logged_in(@context[:loginuser]).should == true
-end

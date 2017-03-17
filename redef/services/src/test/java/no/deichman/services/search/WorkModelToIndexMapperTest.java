@@ -24,6 +24,7 @@ public class WorkModelToIndexMapperTest {
             + "            \"mainEntry\": true,\n"
             + "            \"role\": \"http://data.deichman.no/role#author\"\n"
             + "        }],\n"
+            + "        \"mainEntryName\": \"Ragde, Anne B.\","
             + "        \"mainTitle\": \"Berlinerpoplene\","
             + "        \"subtitle\": \"Hvit uke i Trondheim\","
             + "        \"partTitle\": \"Tredje del\","

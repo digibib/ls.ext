@@ -63,6 +63,20 @@ module.exports = {
     if (!/(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/.test(date)) {
       return 'invalidNoDate'
     }
+  },
+  dateCurrentAndAbove: date => {
+    return dateCurrentAndAbove(date)
+  }
+
+}
+
+function dateCurrentAndAbove (date) {
+  const pattern = /(\d{2})\.(\d{2})\.(\d{4})/
+  const currentDate = new Date()
+  if (!/(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[012])\.(19|20)\d\d$/.test(date) ||
+    new Date(date.replace(pattern, '$3-$2-$1')) < new Date() ||
+    new Date(date.replace(pattern, '$3-$2-$1')) > currentDate.setFullYear(currentDate.getFullYear() + 1)) {
+    return 'invalidNoDate'
   }
 }
 

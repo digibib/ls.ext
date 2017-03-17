@@ -50,6 +50,7 @@
     "hasWorkType": "deichman:hasWorkType",
     "workTypeLabel": "deichman:workTypeLabel",
     "Contribution": "deichman:Contribution",
-    "Agent": "deichman:Agent"
+    "Agent": "deichman:Agent",
+    "mainEntryName": "deichman:mainEntryName"
   }
 }

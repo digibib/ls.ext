@@ -91,7 +91,7 @@ describe('searchBuilder', () => {
 
     it('should build advanced query', () => {
       const queryString = 'query=author%3A+Hamsun'
-      const queryWant = 'author: Hamsun'
+      const queryWant = 'author: hamsun'
       expect(buildQuery(queryString).query).toEqual(
         {
           bool: {

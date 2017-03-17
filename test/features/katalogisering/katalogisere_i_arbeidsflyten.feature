@@ -1,7 +1,6 @@
 # encoding: UTF-8
 # language: no
 
-@random_migrate
 @redef @arbeidsflyt
 Egenskap: Katalogisere i arbeidsflyt
   Som katalogisator

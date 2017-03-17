@@ -2,34 +2,15 @@
 require 'csv'
 require_relative '../support/services/koha/patron.rb'
 
-Given(/^at en låner ikke finnes som låner hos biblioteket fra før$/) do
-  steps %Q{
-    Gitt at det finnes en lånerkategori
-    Og at det finnes en avdeling
-  }
-end
-
 Given(/^at det finnes en lånerkategori$/) do
   steps %Q{
     Når jeg legger til en lånerkategori
   }
 end
 
-Given(/^at "(.*?)" eksisterer som en låner$/) do |name|
-  steps %Q{
-    Gitt at det finnes en lånerkategori
-    Når jeg legger inn \"#{name}\" som ny låner
-    Så viser systemet at \"#{name}\" er låner
-  }
-end
-
-Given(/^at det finnes en låner$/) do
-  step "at \"Knut\" eksisterer som en låner"
-end
-
 Given(/^at det finnes en låner med lånekort$/) do |table|
-  step "at det finnes en avdeling" unless (@active[:branch] || @context[:branches])
-  branch = @active[:branch] ? @active[:branch] : @context[:branches][0]
+  step "at det finnes en avdeling"
+  branch = @context[:defaults][:branches][0]
 
   step "at det finnes en lånerkategori" unless (@active[:patroncategory] || @context[:patroncategories])
   patroncategory = @active[:patroncategory] ? @active[:patroncategory] : @context[:patroncategories][0]
@@ -75,10 +56,6 @@ Given(/^at det finnes en låner med lånekort$/) do |table|
     )
 
   end
-end
-
-Given(/^at jeg har en liste over lånerkategorier$/) do
-  @borrower_categories = File.join(File.dirname(__FILE__), '..', 'upload-files', 'borrower_categories.csv')
 end
 
 Given(/^at låneren ikke har utestående purregebyr$/) do
@@ -144,7 +121,7 @@ end
 When(/^jeg legger inn "(.*?)" som ny låner$/) do |name|
   patron = Patron.new
   # Branch and PatronCategory are prerequisites
-  patron.branch    = @active[:branch]
+  patron.branch    = @context[:defaults][:branches][0]
   patron.category  = @active[:patroncategory]
   patron.firstname = name
 
@@ -223,7 +200,7 @@ Then(/^viser systemet at låneren er importert$/) do
         label = patronform.label(:for => "#{key}")
         label.parent.html.should include(Date.parse(value).strftime("%m/%d/%Y"))
       when "branchcode"
-        @browser.select_list(:id => "libraries").selected?(@active[:branch].name).should == true
+        @browser.select_list(:id => "libraries").selected?(@context[:defaults][:branches][0].name).should == true
       when "categorycode"
         @browser.select_list(:id => "categorycode_entry").selected?(@active[:patron].category.description).should == true
       when "smsalertnumber"

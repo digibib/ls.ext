@@ -44,16 +44,36 @@
         }
       },
       "mainTitle": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "subtitle": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "partTitle": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "partNumber": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "uri": {
         "type": "keyword"
@@ -71,6 +91,14 @@
       },
       "workTypeLabel": {
         "type": "text"
+      },
+      "mainEntryName": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       }
     }
   }
