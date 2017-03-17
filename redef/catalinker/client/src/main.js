@@ -2499,7 +2499,6 @@
           var mainSubject = ractive.get('targetUri.' + actualSubjectType)
           var deleteSubject = ractive.get('targetUri.' + deleteSubjectType)
           const opSpecs = options.bulkMultiply(opSpec[ op ])
-          var lastIndex = index + opSpecs.length
           _.each(opSpecs, function (spec, opIndex) {
             patch.push({
               op: spec.operation,
