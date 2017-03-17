@@ -735,7 +735,6 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'hasExtent',
-                multiple: true,
                 addAnotherLabel: 'Legg til et omfang'
               },
               {
