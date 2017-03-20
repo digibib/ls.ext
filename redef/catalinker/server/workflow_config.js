@@ -510,9 +510,8 @@ module.exports = (app) => {
                     name: 'Biblioteksentralen'
                   },
                   checkExistingResource: {
-                    url: 'services/publication',
+                    url: 'services/publication/isbn/',
                     queryParameter: 'isbn',
-                    showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear' ],
                     type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme ISBN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
