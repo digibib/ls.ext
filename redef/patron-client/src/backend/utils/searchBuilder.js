@@ -184,7 +184,7 @@ function createMust (field, terms) {
 
 module.exports.buildQuery = function (urlQueryString) {
   const params = querystring.parse(urlQueryString)
-  const queryString = params.query
+  const queryString = params.query.toLowerCase()
   let elasticSearchQuery = {}
   if (isAdvancedQuery(queryString)) {
     elasticSearchQuery = advancedSearchBuilder(queryString)
