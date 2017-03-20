@@ -134,7 +134,7 @@ function translateFieldTerms (query, translations) {
 }
 
 function isAdvancedQuery (queryString) {
-  return /[:+-^()"*]/.test(queryString)
+  return /[:+\-^()"*]/.test(queryString)
 }
 
 function simpleSearchBuilder (queryString) {
