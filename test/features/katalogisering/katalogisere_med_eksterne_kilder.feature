@@ -79,7 +79,6 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor organisasjonen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"
 
-    
   Scenario: Legge inn et ISBN-nummer som finnes fra før
     Gitt at jeg har en bok
     Og jeg legger inn et ISBN-nummer på startsida og trykker enter
