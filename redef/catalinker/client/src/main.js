@@ -2564,7 +2564,7 @@
               ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
               ractive.update('lastRoots')
             })
-            if (input.subInputs && input.pagination) {
+            if (input.subInputs) {
               removeInputsForObject(input, index)()
               if (op !== 'del' && _.chain(input.subInputs).pluck('input').invoke('thisRange').compact().value().length === 0) {
                 updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
