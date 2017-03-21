@@ -100,6 +100,7 @@ function processItems (allItems, work) {
 export function expandSubResource (id, replacePath) {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    delete locationQuery.showDetails // clean any display items or parts state
     if (!id) {
       delete locationQuery.showMore
     } else if (locationQuery.showMore === id) {
