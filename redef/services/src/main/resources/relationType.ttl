@@ -5,10 +5,10 @@ relationType:partOf a duo:RelationType ;
   duo:code "po" ;
   rdfs:label "Del av"@no ;
   rdfs:label "Part of"@en .
-relationType:basedOn a duo:relationType ;
+relationType:relatedWork a duo:relationType ;
   duo:code "bo" ;
-  rdfs:label "Basert på"@no ;
-  rdfs:label "Based on"@en .
+  rdfs:label "Relatert verk"@no ;
+  rdfs:label "Related to work"@en .
 relationType:continuationOf a duo:relationType ;
   duo:code "co" ;
   rdfs:label "Fortsettelse av"@no ;

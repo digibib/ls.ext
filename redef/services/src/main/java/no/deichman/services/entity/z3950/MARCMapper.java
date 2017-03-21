@@ -338,13 +338,13 @@ public class MARCMapper {
                                 publication.addPublicationPart(publicationPart);
                                 publicationParts.add(publicationPart);
                             });
-                        } else if (hasBasedOnRelationship(dataField)) {
+                        } else if (hasrelatedWorkRelationship(dataField)) {
                             getSubfieldValue(dataField, 'a').ifPresent(name -> {
                                 Named named = extractNewNamed(persons, corporations, dataField, name);
                                 getSubfieldValue(dataField, 't').ifPresent(title -> {
                                     Work work2 = new Work(newBlankNodeId(), title);
                                     graphList.add(work2);
-                                    WorkRelation workRelation = new WorkRelation(newBlankNodeId(), work2.getId(), dataPrefix(path("relationType", "basedOn")));
+                                    WorkRelation workRelation = new WorkRelation(newBlankNodeId(), work2.getId(), dataPrefix(path("relationType", "relatedWork")));
                                     graphList.add(workRelation);
                                     work.isRelatedTo(workRelation);
                                     Contribution contribution = new Contribution(named, newBlankNodeId());
@@ -363,11 +363,11 @@ public class MARCMapper {
                         publicationParts.add(publicationPart);
                     } else {
                         if (getSubfieldValue(dataField, 'a').isPresent()) {
-                            Work basedOnWork = new Work(newBlankNodeId());
-                            setBibliographicDataFromDataField(dataField, basedOnWork);
-                            graphList.add(basedOnWork);
-                            WorkRelation workRelation = new WorkRelation(newBlankNodeId(), basedOnWork.getId(),
-                                    dataPrefix(path("relationType", "basedOn")));
+                            Work relatedToWork = new Work(newBlankNodeId());
+                            setBibliographicDataFromDataField(dataField, relatedToWork);
+                            graphList.add(relatedToWork);
+                            WorkRelation workRelation = new WorkRelation(newBlankNodeId(), relatedToWork.getId(),
+                                    dataPrefix(path("relationType", "relatedWork")));
                             graphList.add(workRelation);
                             work.isRelatedTo(workRelation);
                         }
@@ -423,7 +423,7 @@ public class MARCMapper {
         return dataField.getIndicator2() == '2';
     }
 
-    private boolean hasBasedOnRelationship(DataField dataField) {
+    private boolean hasrelatedWorkRelationship(DataField dataField) {
         return dataField.getIndicator2() != '2';
     }
 

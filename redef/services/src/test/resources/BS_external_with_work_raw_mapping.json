@@ -488,7 +488,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#basedOn"
+          "@id": "http://data.deichman.no/relationType#relatedWork"
         },
         "@id": "_:0000000",
         "deichman:work": {
@@ -505,7 +505,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#basedOn"
+          "@id": "http://data.deichman.no/relationType#relatedWork"
         },
         "@id": "_:0000000",
         "deichman:work": {
@@ -526,7 +526,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#basedOn"
+          "@id": "http://data.deichman.no/relationType#relatedWork"
         },
         "@id": "_:0000000",
         "deichman:work": {
