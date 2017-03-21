@@ -2566,9 +2566,7 @@
             })
             if (input.subInputs) {
               removeInputsForObject(input, index)()
-              if (op !== 'del' && _.chain(input.subInputs).pluck('input').invoke('thisRange').compact().value().length === 0) {
-                updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
-              }
+              updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
             }
             return response
           })
