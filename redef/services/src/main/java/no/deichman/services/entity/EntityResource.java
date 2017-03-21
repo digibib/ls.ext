@@ -481,10 +481,15 @@ public final class EntityResource extends ResourceBase {
     public Response cloneResource(@PathParam("type") String type,
                                   @PathParam("id") String id){
         try {
-            final Model model = getEntityService().retrieveById(new XURI(BaseURI.root(), type, id));
+            XURI xuri = new XURI(BaseURI.root(), type, id);
+            final Model model = getEntityService().retrieveById(xuri);
             if (model.isEmpty()) {
                 throw new NotFoundException();
             }
+            model.add(ResourceFactory.createStatement(
+                    ResourceFactory.createResource(xuri.getUri()),
+                    ResourceFactory.createProperty("http://migration.deichman.no/clonedFrom"),
+                    ResourceFactory.createResource(xuri.getUri())));
             return created(URI.create(getEntityService().create(EntityType.get(type), model))).build();
         } catch (Exception e) {
             throw new BadRequestException(e);
