@@ -125,7 +125,7 @@ test .dependsOn allTestsExceptAppTest, testAppTest
 
 checkstyle {
     configProperties = [samedir: "${rootDir}"]
-    toolVersion = 6.18
+    toolVersion = '7.6'
 }
 
 pmd {
