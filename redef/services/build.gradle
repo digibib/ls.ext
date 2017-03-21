@@ -40,7 +40,7 @@ configurations {
 }
 
 def version_jetty = '9.4.2.v20170220'
-def version_jersey = '2.21'
+def version_jersey = '2.25.1'
 def version_jackson = '2.6.2'
 def version_slf4j = '1.7.12'
 def version_jena = '3.2.0'
