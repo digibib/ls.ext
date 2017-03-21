@@ -44,7 +44,7 @@ def version_jersey = '2.25.1'
 def version_jackson = '2.8.7'
 def version_slf4j = '1.7.25'
 def version_jena = '3.2.0'
-def version_commons_lang = '2.6'
+def version_commons_lang = '3.5'
 def version_commons_io = '2.4'
 
 dependencies {
@@ -62,7 +62,7 @@ dependencies {
     compile group: 'org.apache.jena', name: 'apache-jena-libs', version: version_jena
     compile group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.8.2'
     compile group: 'commons-io', name: 'commons-io', version: version_commons_io
-    compile group: 'commons-lang', name: 'commons-lang', version: version_commons_lang
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: version_commons_lang
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
     compile ('info.freelibrary:freelib-marc4j:2.6.7') {
         transitive = false
