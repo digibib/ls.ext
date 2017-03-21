@@ -264,6 +264,7 @@ function transformContributors (input) {
     const contributors = {}
     input.forEach(inputContributor => {
       const contributor = inputContributor.agent
+      contributor.mainEntry = inputContributor.type.includes('MainEntry')
       contributor.uri = contributor.id
       contributor.id = getId(contributor.id)
       contributor.relativeUri = relativeUri(contributor.uri)
@@ -337,6 +338,7 @@ function transformBy (contributors) {
       .concat(contributors[ 'http://data.deichman.no/role#composer' ])
       .concat(contributors[ 'http://data.deichman.no/role#performer' ])
       .filter(by => by)
+      .filter(by => by.mainEntry)
       .map(by => by.name)
   } catch (error) {
     console.log(error)
