@@ -109,6 +109,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg trykker på "Legg til en del til"-knappen
     Så klikker jeg på linken for masseregistrering
+    Og jeg venter litt
     Og jeg skriver i feltet "Tittel på del" teksten
       """
       Del 1
