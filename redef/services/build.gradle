@@ -130,11 +130,11 @@ checkstyle {
 
 pmd {
     consoleOutput = true
-    toolVersion = '5.4.1'
+    toolVersion = '5.5.4'
 }
 
 cpd {
-    toolVersion = '5.3.3'
+    toolVersion = '5.5.4'
     ignoreIdentifiers = true
     ignoreLiterals = true
 
