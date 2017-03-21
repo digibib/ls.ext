@@ -25,7 +25,7 @@ When(/^at det finnes et verk med forfatter$/) do
   step "at jeg er i personregistergrensesnittet"
   step "leverer systemet en ny ID for den nye personen"
   step "jeg kan legge inn navn fødselsår og dødsår for personen"
-  step "jeg kan legge inn tittel og nasjonalitet for personen"
+  step "jeg kan legge inn nasjonalitet for personen"
   @site.RegWork.visit
   step "leverer systemet en ny ID for det nye verket"
   step "jeg søker på navn til opphavsperson for det nye verket"
