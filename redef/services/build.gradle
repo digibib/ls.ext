@@ -45,7 +45,7 @@ def version_jackson = '2.8.7'
 def version_slf4j = '1.7.25'
 def version_jena = '3.2.0'
 def version_commons_lang = '3.5'
-def version_commons_io = '2.4'
+def version_commons_io = '2.5'
 
 dependencies {
 
