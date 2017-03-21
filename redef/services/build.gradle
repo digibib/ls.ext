@@ -63,7 +63,7 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: version_commons_io
     compile group: 'org.apache.commons', name: 'commons-lang3', version: version_commons_lang
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-    compile ('info.freelibrary:freelib-marc4j:2.6.7') {
+    compile ('info.freelibrary:freelib-marc4j:2.6.12') {
         transitive = false
     }
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
