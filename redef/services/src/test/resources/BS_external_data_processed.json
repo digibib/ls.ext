@@ -31,6 +31,11 @@
           "deichman:biography": {
             "@id": "http://data.deichman.no/biography#biographicalContent"
           },
+          "deichman:hasContentAdaptation": [
+            {
+              "@id": "http://data.deichman.no/contentAdaptation#easyLanguage"
+            }
+          ],
           "deichman:hasClassification": [
             {
               "@id": "_:0000000"

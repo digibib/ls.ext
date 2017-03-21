@@ -112,12 +112,12 @@
         "deichman:biography": {
           "@id": "http://data.deichman.no/biography#biographicalContent"
         },
-        "deichman:contentAdaption": [
+        "deichman:hasContentAdaptation": [
           {
-            "@id": "http://data.deichman.no/contentAdaption#easyLanguage"
+            "@id": "http://data.deichman.no/contentAdaptation#easyLanguage"
           },
           {
-            "@id": "http://data.deichman.no/contentAdaption#easyContent"
+            "@id": "http://data.deichman.no/contentAdaptation#easyContent"
           }
         ],
         "deichman:hasClassification": [

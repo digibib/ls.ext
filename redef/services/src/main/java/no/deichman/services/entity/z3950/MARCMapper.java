@@ -108,7 +108,7 @@ public class MARCMapper {
                     setUriObject(dataField, 'b', "mediaType", MediaType::translateUnitedMediaType, publication::setUnitedMediaType);
                     setUriObject(dataField, 'b', "mediaType", MediaType::translatePagedMediaType, publication::setPagedMediaType);
                     setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", LiteraryForm::translate, work::addLiteraryForm);
-                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaption", ContentAdaption::translate, work::addContentAdaption);
+                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaptation", ContentAdaption::translate, work::addContentAdaption);
                     setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaption", FormatAdaption::translate, publication::addFormatAdaption);
                     getSubfieldValue(dataField, 's').ifPresent(publication::setAgeLimit);
                     break;
