@@ -3358,7 +3358,6 @@
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
                 patchObject(parentInput, applicationData, index, 'del')
-                  .then(removeInputsForObject(parentInput, index, event))
                   .then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
