@@ -60,7 +60,6 @@ dependencies {
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-smile', version: version_jackson
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: version_jackson
     compile group: 'org.apache.jena', name: 'apache-jena-libs', version: version_jena
-    compile group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.8.2'
     compile group: 'commons-io', name: 'commons-io', version: version_commons_io
     compile group: 'org.apache.commons', name: 'commons-lang3', version: version_commons_lang
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
