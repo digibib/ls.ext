@@ -474,8 +474,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     private void disableCompression(QueryExecution qexec) {
         if (qexec instanceof QueryEngineHTTP) {
-            ((QueryEngineHTTP) qexec).setAllowGZip(false);
-            ((QueryEngineHTTP) qexec).setAllowDeflate(false);
+            ((QueryEngineHTTP) qexec).setAllowCompression(false);
         }
     }
 }
