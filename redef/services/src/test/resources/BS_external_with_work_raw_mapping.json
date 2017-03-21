@@ -201,21 +201,21 @@
         "deichman:hasMediaType": {
           "@id": "http://data.deichman.no/mediaType#Book"
         },
-        "deichman:formatAdaption": [
+        "deichman:hasFormatAdaptation": [
           {
-            "@id": "http://data.deichman.no/formatAdaption#largePrint"
+            "@id": "http://data.deichman.no/formatAdaptation#largePrint"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#braille"
+            "@id": "http://data.deichman.no/formatAdaptation#braille"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#signLanguage"
+            "@id": "http://data.deichman.no/formatAdaptation#signLanguage"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#tactile"
+            "@id": "http://data.deichman.no/formatAdaptation#tactile"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#capitalLetters"
+            "@id": "http://data.deichman.no/formatAdaptation#capitalLetters"
           }
         ],
         "deichman:ageLimit": 18,

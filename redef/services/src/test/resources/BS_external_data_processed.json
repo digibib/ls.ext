@@ -76,6 +76,11 @@
           "deichman:hasMediaType": {
             "@id": "http://data.deichman.no/mediaType#Book"
           },
+          "deichman:hasFormatAdaptation": [
+            {
+              "@id": "http://data.deichman.no/formatAdaptation#capitalLetters"
+            }
+          ],
           "deichman:contributor": [
             {
               "@id": "_:0000000"
