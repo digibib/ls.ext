@@ -97,6 +97,8 @@
     "coreographer": "http://data.deichman.no/role#coreographer",
     "publisher": "http://data.deichman.no/role#publisher",
     "producer": "http://data.deichman.no/role#producer",
+    "productionCompany": "http://data.deichman.no/role#productionCompany",
+    "featuring":"http://data.deichman.no/role#featuring",
     "recordId": "deichman:recordId",
     "agents": "deichman:agents",
     "summary": "deichman:summary",
