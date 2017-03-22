@@ -16,7 +16,6 @@ export const loginSuccess = (username, borrowerNumber, borrowerName) => action(t
 })
 
 export function loginFailure (username, error) {
-  console.log(error)
   return {
     type: types.LOGIN_FAILURE,
     payload: {

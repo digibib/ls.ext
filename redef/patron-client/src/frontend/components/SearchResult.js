@@ -6,8 +6,9 @@ import Items from '../components/Items'
 import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
-import {groupByBranch} from '../utils/sorting'
+import { groupByBranch, groupByMediaType } from '../utils/sorting'
 import fieldQueryLink from '../utils/link'
+import { connect } from 'react-redux'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -131,29 +132,117 @@ class SearchResult extends React.Component {
     })
   }
 
-  /*
-   renderItems (result) {
-   const work = this.props.resources[ result.id ]
-   if (work) {
-   const items = [].concat.apply([], work.publications.map(publication => this.props.items[ publication.recordId ] || []).filter(array => array.length > 0))
-   return <Items items={items} />
-   }
-   }
-   */
+  getActiveBranchFilters () {
+    let activeBranches = []
+    this.props.filters.map(el => {
+      if (el.id.includes('branch') && el.active) {
+        activeBranches.push(el)
+      }
+      return el
+    })
+    return activeBranches
+  }
 
   renderItems (result) {
+    const activeFilters = this.getActiveBranchFilters()
+
+    // console.log('ACTIVE FILTERS', activeFilters)
+
+    let filteredBranches = []
+    let unfilteredBranches = []
+    let homeBranchPos
     const work = this.props.resources[ result.id ]
+
     if (work) {
       const items = [].concat(...work.publications.map(publication => (this.props.items[ publication.recordId ] || []).items || []).filter(array => array.length > 0))
-      return groupByBranch(items).map(el => {
+
+      const groupedByBranchSortedByMediaType = groupByBranch(items)
+
+      groupedByBranchSortedByMediaType.map(el => {
+        el.items.forEach(e => {
+          e.mediaType = this.props.intl.formatMessage({ id: e.mediaTypes[0] })
+          e.mediaTypeURI = e.mediaTypes[0]
+        })
+
+        el.items.sort((a, b) => {
+          if (a.mediaType < b.mediaType) return -1
+          if (a.mediaType > b.mediaType) return 1
+
+          return 0
+        })
+        return el
+      })
+
+      const groupedByBranchAndMedia = groupedByBranchSortedByMediaType.map(el => {
+        el.mediaItems = groupByMediaType(el.items)
+        return el
+      })
+
+      const byBranch = groupedByBranchAndMedia.map((el, i) => {
+        if (this.props.homeBranch && this.props.homeBranch === el.branchcode && activeFilters.length === 0) {
+          homeBranchPos = i
+        }
+
+        return (
+          <div className="items-by-branch" key={el.branchcode}>
+            <div className="flex-wrapper">
+              <div className="flex-item">
+                <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
+              </div>
+              <div className="flex-item item-icon-button">
+                <button className="flex-item" onClick={() => { this.handleBranchStatus(el.branchcode) }}><span className="is-vishidden"><FormattedMessage {...messages.hideBranchAvailability} /></span><i className="icon-up-open" aria-hidden="true"></i></button>
+              </div>
+            </div>
+            <Items mediaItems={el.mediaItems} />
+          </div>
+        )
+      })
+
+      /*
+      activeFilters.map(filter => {
+        groupedByBranchSortedByMediaType.map(el => {
+          console.log(el.branchcode)
+          if (filter.bucket === el.branchcode) {
+            filteredBranches.push(el)
+          }
+          return el
+        })
+        return filter
+      })
+
+      const byBranch = filteredBranches.map((el, i) => {
         return (
           <div className="items-by-branch" key={el.branchcode}>
             <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
-            <Items items={el.items} />
+            <Items mediaItems={el.mediaItems} />
             <p style={{ clear: 'both' }} />
           </div>
         )
       })
+
+
+      if (activeFilters.length > 0) {
+        activeFilters.map(filter => {
+          if (filter.bucket === el.branchcode) {
+            filteredBranches.push(el)
+            return (
+              <div className="items-by-branch" key={el.branchcode}>
+                <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
+                <Items mediaItems={el.mediaItems} />
+                <p style={{ clear: 'both' }} />
+              </div>
+            )
+          }
+        })
+      }
+      */
+
+      if (homeBranchPos) {
+        const userBranch = byBranch.splice(homeBranchPos, 1)
+        byBranch.unshift(userBranch)
+      }
+
+      return byBranch
     }
   }
 
@@ -161,6 +250,11 @@ class SearchResult extends React.Component {
     event.stopPropagation()
     this.props.fetchWorkResource(this.props.result.id)
     this.props.showStatus(this.props.result.id)
+  }
+
+  handleBranchStatus (code) {
+    console.log('SHOWIING BRANCH status', code)
+    this.props.showBranchStatus(code)
   }
 
   handleEnter (event) {
@@ -260,10 +354,21 @@ SearchResult.propTypes = {
   resources: PropTypes.object.isRequired,
   fetchWorkResource: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  homeBranch: PropTypes.string
 }
 
 export const messages = defineMessages({
+  showBranchAvailability: {
+    id: 'SearchResult.showBranchAvailability',
+    description: 'Label for icon button showing availability info in branch',
+    defaultMessage: 'Show branch availability'
+  },
+  hideBranchAvailability: {
+    id: 'SearchResult.hideBranchAvailability',
+    description: 'Label for icon button collapsing availability info in branch',
+    defaultMessage: 'Hide branch availability'
+  },
   originalTitle: {
     id: 'SearchResult.originalTitle',
     description: 'The label for the original title',
@@ -321,4 +426,20 @@ export const messages = defineMessages({
   }
 })
 
-export default injectIntl(SearchResult)
+function mapStateToProps (state) {
+  return {
+    filters: state.search.filters
+  }
+}
+
+let intlSearchResult = injectIntl(SearchResult)
+
+intlSearchResult = connect(
+  mapStateToProps
+)(intlSearchResult)
+
+export { intlSearchResult as SearchResult }
+
+export default intlSearchResult
+
+// export default injectIntl(SearchResult)

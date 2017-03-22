@@ -36,6 +36,7 @@ function setup (propOverrides) {
     resources: {},
     items: {},
     windowWidth: 1000,
+    userProfile: { personalInformation: 'hutl' },
     ...propOverrides
   }
 

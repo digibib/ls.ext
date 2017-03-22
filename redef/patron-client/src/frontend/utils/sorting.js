@@ -22,3 +22,13 @@ export function groupByBranch (items) {
 
   return res
 }
+
+export function groupByMediaType (items) {
+  const groups = groupBy(items, 'mediaTypeURI')
+  const res = []
+  Object.keys(groups).forEach((mediaTypeURI) => {
+    res.push({ mediaTypeURI: mediaTypeURI, items: groups[ mediaTypeURI ] })
+  })
+
+  return res
+}

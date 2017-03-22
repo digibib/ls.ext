@@ -150,6 +150,7 @@ class Search extends React.Component {
                            resources={this.props.resources}
                            page={this.props.location.query.page}
                            items={this.props.items}
+                           homeBranch={this.props.userProfile.personalInformation.homeBranch}
           />]
           : null}
         {this.renderPagination()}
@@ -175,7 +176,8 @@ Search.propTypes = {
   resourceActions: PropTypes.object.isRequired,
   items: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  windowWidth: PropTypes.number.isRequired
+  windowWidth: PropTypes.number.isRequired,
+  userProfile: PropTypes.object
 }
 
 const intlSearch = injectIntl(Search)
@@ -192,7 +194,8 @@ function mapStateToProps (state) {
     locationQuery: state.routing.locationBeforeTransitions.query,
     resources: state.resources.resources,
     items: state.resources.items,
-    windowWidth: state.application.windowWidth
+    windowWidth: state.application.windowWidth,
+    userProfile: state.profile
   }
 }
 

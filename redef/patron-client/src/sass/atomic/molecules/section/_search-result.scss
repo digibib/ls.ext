@@ -164,20 +164,93 @@
 }
 
 .entry-content-more {
-  background-color: #eee;
   padding: 1em;
   clear: both;
 }
 
 .items-by-branch {
+  border: 1px solid #767676;
+  margin-bottom: 0.5em;
+
   h1 {
     @include regularFont;
     font-weight: normal;
+    margin: 0.2em 1em 0.2em 0;
+    font-size: 1.2em;
   }
 
-  table {
-    th { background-color: #eee; }
+  .entry-content-icon-single {
+    font-weight: normal;
   }
+
+  .header {
+    background-color: $greyColor;
+    font-weight: 700;
+    text-transform: capitalize;
+
+    .flex-item {
+      width: 25%;
+    }
+
+    .media-item {
+      display: none;
+    }
+  }
+
+  .flex-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .sub-wrapper {
+    padding: 0;
+  }
+
+  .sub-wrapper:nth-child(odd) {
+    background: $white;
+  }
+
+  .sub-wrapper:nth-child(even) {
+    background: $greyColor;
+  }
+
+  .sub-wrapper:first-child {
+    padding-bottom: 0.5em;
+  }
+
+  .flex-item {
+    flex: 1 1 auto;
+    padding: 0.5em 0.5em 0.5em 1.1em;
+  }
+
+  .item-icon-button {
+    text-align: right;
+    align-self: center;
+
+    button {
+      font-size: 1.2em;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .main-row-2 {
+    padding: 0.5em 0 0.5em 0;
+  }
+
+  .main-row-1 {
+    width: 100%;
+  }
+
+  .main-row-2 {
+    width: 75%;
+  }
+
+  .sub-row {
+    width: 33.33%;
+  }
+
 }
 
 @include breakpoint($small) {
@@ -203,6 +276,22 @@
 
     .subjects, .genres {
       margin-top: rhythm(0);
+    }
+
+  }
+
+  .items-by-branch {
+
+    .main-row-1 {
+      width: 25%;
+      margin-bottom: 0;
+      margin-top: 0.5em;
+    }
+
+    .header {
+      .media-item {
+        display: block;
+      }
     }
 
   }
