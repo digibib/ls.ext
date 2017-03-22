@@ -66,6 +66,7 @@ Egenskap: katalogisere med eksterne kilder
     Og velger radioknappen for "Utgivelse" for å velge "Rollen gjelder:"
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
+    Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor organisasjonen jeg valgte har rollen "Oversetter" knyttet til "utgivelsen"
     Og jeg trykker på "Bruk forslag"-knappen
     Så trykker jeg på den første trekanten for å søke opp personen i forslaget
