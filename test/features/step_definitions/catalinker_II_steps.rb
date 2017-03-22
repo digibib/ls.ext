@@ -173,7 +173,7 @@ end
 When(/^jeg skriver i feltet "([^"]*)" teksten$/) do |parameter_label, value|
   input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").find(&:visible?)
   domain, predicate = save_value_for_later(input, parameter_label, value)
-  @site.WorkFlow.add_prop(domain, predicate, value, true)
+  @site.WorkFlow.add_prop(domain, predicate, value, 0, true)
 end
 
 def predicate_from_automation_id(select_id)
