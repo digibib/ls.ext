@@ -734,7 +734,7 @@
       var queryParameters = URI.parseQuery(oldUri.query)
       for (let param in queryParameters) {
         if (!keep.includes(param)) {
-          delete queryParameters[param]
+          delete queryParameters[ param ]
         }
       }
       oldUri.query = URI.buildQuery(queryParameters)
@@ -2564,7 +2564,7 @@
               ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
               ractive.update('lastRoots')
             })
-            let addedMultivalues = _.select(opSpecs, function(spec){return spec.operation === 'add'}).length
+            let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
             if (op === 'del' || addedMultivalues > 1) {
               removeInputsForObject(input, index)()
               if (addedMultivalues > 1) {
@@ -3395,7 +3395,7 @@
                   task: editWith.descriptionKey || `edit${event.context.rdfType}`,
                   template: editWith.template
                 }
-                updateBrowserLocationClearAllExcept(['openTab'])
+                updateBrowserLocationClearAllExcept([ 'openTab' ])
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
                   if (input.type === 'hidden-url-query-value' &&
