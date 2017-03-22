@@ -77,3 +77,11 @@ deichman-role:coreographer a duo:Role;
 deichman-role:producer a duo:Role;
 	rdfs:label "Produsent"@no ;
 	rdfs:label "Producer"@en .
+
+deichman-role:productionCompany a duo:Role;
+	rdfs:label "Produksjonsselskap"@no ;
+	rdfs:label "Production company"@en .
+
+deichman-role:featuring a duo:Role;
+	rdfs:label "Medvirkende"@no ;
+	rdfs:label "Featuring"@en .
