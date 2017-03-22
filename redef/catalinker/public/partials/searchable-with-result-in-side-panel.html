@@ -34,9 +34,11 @@
                     <ul class="select2-selection__rendered">
                         <li class="select2-selection__choice">
                             {{#if waiting}}
-                                <span class="select2-selection__choice__remove spinner"> </span>
+                                <span class-compareValue={{compareValue}} class="select2-selection__choice__remove spinner"> </span>
                             {{else}}
-                                <span class="select2-selection__choice__remove overrride-outside-detect" on-click="unselectEntity">×</span>
+                                {{#if !compareMode }}
+                                    <span class-select2-selection__choice__remove="{{!compareMode}}" class="overrride-outside-detect" on-click="unselectEntity">×</span>
+                                {{/if}}
                                 <span class="value">{{current.displayValue}}{{#widgetOptions.explanations}}<span class="explanation">{{getExplanation(., current.value)}}</span>{{/}}</span>
                             {{/if}}
                         </li>

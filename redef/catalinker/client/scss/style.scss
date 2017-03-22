@@ -342,7 +342,6 @@ body {
           &:last-child:not(.last-one):after, &.boolean-separator:not(last-one):after {
             display: block;
             height: 2px;
-            //            width: 100%;
             background: lightgrey;
             content: "";
             margin: 0 12px 2px 12px;
@@ -392,6 +391,7 @@ body {
               .support-panel-content:before {
                 display: none !important;
               }
+              z-index: 50 !important;
             }
             .prop-search-result {
               height: 300px;
@@ -613,6 +613,7 @@ body {
         .add-new-btn-row {
           padding: 0 13px 23px 8px;
           float: none !important;
+          min-height: 54px;
           a:not(.delete-link), button:not(.pagination) {
             float: right;
             width: auto;
@@ -972,6 +973,7 @@ body {
             padding-left: 10px;
             display: block;
             border: 1px solid black;
+            min-height: 70px;
             .inputs {
               text-align: center;
               padding-right: 24px;

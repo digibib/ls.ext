@@ -544,29 +544,26 @@
           },
           uniqueId: _.uniqueId()
         }
-        if (input.values[ index ].current.accepted) {
+        if (input[ options.compareValues ? 'compareValues' : 'values' ][ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
         ractive.update(`${input.keypath}.${options.compareValues ? 'compareValues' : 'values'}.${index}`)
       }
     }
 
-    function setIdValue (id, input, index, predicate) {
-      input.values = input.values || []
-      if (!input.values[ index ]) {
-        input.values[ index ] = {}
+    function setIdValue (id, input, index, valuesField) {
+      input[ valuesField ] = input[ valuesField ] || []
+      if (!input[ valuesField ][ index ]) {
+        input[ valuesField ][ index ] = {}
       }
-      if (predicate) {
-        input.values[ index ].predicate = predicate
-      }
-      input.values[ index ].old = {
+      input[ valuesField ][ index ].old = {
         value: id
       }
-      input.values[ index ].current = {
+      input[ valuesField ][ index ].current = {
         value: id
       }
-      input.values[ index ].uniqueId = _.uniqueId()
-      ractive.update(`${input.keypath}.values.${index}`)
+      input[ valuesField ][ index ].uniqueId = _.uniqueId()
+      ractive.update(`${input.keypath}.${valuesField}.${index}`)
     }
 
     function valuePropertyFromNode (node) {
@@ -581,7 +578,8 @@
 
     function setDisplayValue (input, index, root, options) {
       options = options || {}
-      var uri = input.values[ index ].current.value
+      let valuesField = options.valuesField || 'values'
+      var uri = input[ valuesField ][ index ].current.value
       if (input.type === 'searchable-authority-dropdown') {
         uri = uri[ 0 ]
       }
@@ -602,18 +600,18 @@
           }
         })
         if ((options.onlyFirstField || (input.nameProperties || []).length === 1) && /^\[.*\]$/.test(values)) {
-          input.values[ index ].bracketed = true
+          input[ valuesField ][ index ].bracketed = true
           values = values.replace('[', '').replace(']', '')
         }
 
         var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
         if (options.onlyValueSuggestions) {
           if (multiple) {
-            input.values[ index ].suggested = {
+            input[ valuesField ][ index ].suggested = {
               source: options.source,
               selectedIndexType: selectedIndexType
             }
-            input.values[ index ].current.displayValue = values
+            input[ valuesField ][ index ].current.displayValue = values
           } else {
             input.suggestedValues = input.suggestedValues || []
             input.suggestedValues[ index ] = {
@@ -624,17 +622,17 @@
             }
           }
         } else {
-          input.values[ index ] = input.values[ index ] || {}
-          input.values[ index ].current = input.values[ index ].current || {}
-          input.values[ index ].current.displayValue = values
+          input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
+          input[ valuesField ][ index ].current = input[ valuesField ][ index ].current || {}
+          input[ valuesField ][ index ].current.displayValue = values
           if (options.source) {
-            input.values[ index ].current.accepted = {
+            input[ valuesField ][ index ].current.accepted = {
               source: options.source,
               selectedIndexType: selectedIndexType
             }
           }
         }
-        ractive.update(`${input.keypath}.values.${index}`)
+        ractive.update(`${input.keypath}.${valuesField}.${index}`)
       }
 
       if (isBlankNodeUri(uri)) {
@@ -682,7 +680,8 @@
     function updateBrowserLocationWithUri (type, resourceUri) {
       var oldUri = URI.parse(document.location.href)
       var queryParameters = URI.parseQuery(oldUri.query)
-      var triumphRanking = { 'Work': 1, 'Publication': 2 }
+      const prefix = type.startsWith('compare_with_') ? 'compare_with_' : ''
+      var triumphRanking = { [`${prefix}Work`]: 1, [`${prefix}Publication`]: 2 }
       var parametersPresentInUrl = _.keys(queryParameters)
       var triumph = _.reduce(parametersPresentInUrl, function (memo, param) {
         return triumphRanking[ param ] > triumphRanking[ memo ] ? param : memo
@@ -808,7 +807,7 @@
     function forAllGroupInputs (handleInput, options) {
       options = options || {}
       var abort = false
-      _.each(ractive.get('inputGroups'), function (group, groupIndex) {
+      _.each(options.inputGroups || ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           if (input.subInputs) {
             _.each(input.subInputs, function (subInput, subInputIndex) {
@@ -1028,6 +1027,7 @@
 
     function updateInputsForResource (response, resourceUri, options, root, type) {
       options = options || {}
+      const valuesField = options.compareValues ? 'compareValues' : 'values'
       const graphData = ensureJSON(response.data)
       const offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
       type = type || typeFromUri(resourceUri)
@@ -1098,36 +1098,42 @@
                           if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                             _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                               index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index)
+                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField)
                               if (options.source && node.id !== '') {
                                 setPreviewValues(input, node, index)
                               }
                               if (!options.onlyValueSuggestions) {
                                 if (options.source) {
-                                  input.values[ index ].searchable = true
+                                  input[ valuesField ][ index ].searchable = true
                                 } else {
-                                  input.values[ index ].searchable = false
+                                  input[ valuesField ][ index ].searchable = false
                                 }
                                 if (node.id !== '') {
-                                  promises.push(setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source })))
+                                  promises.push(setDisplayValue(input, index, node, _.extend(options, {
+                                    onlyFirstField: options.source,
+                                    valuesField
+                                  })))
                                   if (!isBlankNodeUri(node.id)) {
-                                    ractive.set(`${input.keypath}.values.${index}.deletable`, true)
+                                    ractive.set(`${input.keypath}.${valuesField}.${index}.deletable`, true)
                                     if (input.isSubInput && !options.source) {
                                       input.parentInput.allowAddNewButton = true
-                                      input.values[ index ].nonEditable = true
-                                      ractive.set(`${input.keypath}.values.${index}.nonEditable`, true)
-                                      ractive.set(`${input.parentInput.keypath}.subInputs.0.input.values.${index}.nonEditable`, true)
+                                      input[ valuesField ][ index ].nonEditable = true
+                                      ractive.set(`${input.keypath}.${valuesField}.${index}.nonEditable`, true)
+                                      ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${index}.nonEditable`, true)
                                     }
                                   }
                                 }
                                 setAllowNewButtonForInput(input)
                               } else {
-                                setDisplayValue(input, index, node, _.extend(options, { onlyFirstField: options.source }))
-                                input.values[ index ].searchable = true
+                                setDisplayValue(input, index, node, _.extend(options, {
+                                  onlyFirstField: options.source,
+                                  valuesField
+                                }))
+                                input[ valuesField ][ index ].searchable = true
                               }
-                              input.values[ index ].subjectType = type
-                              input.values[ index ].oldSubjectType = type
-                              ractive.update(`${input.keypath}.values.${index}`)
+                              input[ valuesField ][ index ].subjectType = type
+                              input[ valuesField ][ index ].oldSubjectType = type
+                              ractive.update(`${input.keypath}.${valuesField}.${index}`)
                             })
                           } else {
                             _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
@@ -1142,16 +1148,16 @@
                           if (!options.onlyValueSuggestions) {
                             setMultiValues(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { id: '' } ]), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
                             if (input.isSubInput && !options.source) {
-                              input.values[ rootIndex + (offset) ].nonEditable = true
-                              ractive.update(`${input.keypath}.values.${rootIndex + (offset)}`)
-                              ractive.set(`${input.keypath}.values.${rootIndex + (offset)}.nonEditable`, true)
+                              input[ valuesField ][ rootIndex + (offset) ].nonEditable = true
+                              ractive.update(`${input.keypath}.${valuesField}.${rootIndex + (offset)}`)
+                              ractive.set(`${input.keypath}.${valuesField}.${rootIndex + (offset)}.nonEditable`, true)
                             }
                           } else {
                             var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
                             _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
                               if (input.isSubInput && multiple) {
                                 setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                                input.values[ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                                input[ valuesField ][ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
                               } else {
                                 input.suggestedValues = input.suggestedValues || []
                                 input.suggestedValues.push({
@@ -1166,18 +1172,18 @@
                           }
                         } else if (input.type === 'hidden-url-query-value') {
                           _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                            setIdValue(value.id, input, 0)
+                            setIdValue(value.id, input, 0, valuesField)
                           })
                         } else {
                           _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
                             if (!options.onlyValueSuggestions) {
                               let valueIndex = input.isSubInput ? rootIndex : index
                               setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
-                              input.values[ valueIndex ].subjectType = type
-                              input.values[ valueIndex ].oldSubjectType = type
+                              input[ valuesField ][ valueIndex ].subjectType = type
+                              input[ valuesField ][ valueIndex ].oldSubjectType = type
                               if (input.isSubInput && !options.source) {
-                                input.values[ valueIndex ].nonEditable = true
-                                ractive.set(`${input.parentInput.keypath}.subInputs.0.input.values.${valueIndex}.nonEditable`, true)
+                                input[ valuesField ][ valueIndex ].nonEditable = true
+                                ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
                                 input.parentInput.allowAddNewButton = true
                               }
                               ractive.set(`${input.keypath}.allowAddNewButton`, true)
@@ -1193,7 +1199,7 @@
                         rootIndex++
                       }
                     })
-                    input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input.values, 'current'), 'value'))).length
+                    input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input[ valuesField ], 'current'), 'value'))).length
 
                     ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
                     ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
@@ -1209,7 +1215,7 @@
                     }
                     if (actualRoots.length > rangeLength && input.parentInput && input.parentInput.pagination) {
                       const fromEnd = actualRoots.length - startIndex
-                      ractive.splice(`${input.keypath}.values`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
+                      ractive.splice(`${input.keypath}.${valuesField}`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
                     }
                     return true
                   }
@@ -1652,6 +1658,7 @@
           }
           if (_.isArray(currentInput.subjectTypes) && currentInput.subjectTypes.length === 1) {
             newSubInput.input.values[ 0 ].subjectType = currentInput.subjectTypes[ 0 ]
+            newSubInput.input.values[ 0 ].subjectType = currentInput.subjectTypes[ 0 ]
             newSubInput.input.values[ 0 ].oldSubjectType = currentInput.subjectTypes[ 0 ]
           }
           currentInput.subInputs.push(newSubInput)
@@ -1743,7 +1750,7 @@
           } else {
             input.inputIndex = index
             if (input.rdfProperty) {
-              ontologyInput = deepClone(inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ])
+              ontologyInput = inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ]
               ontologyInput.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput.suggestedValuesForNewResource = []
 
@@ -1834,17 +1841,17 @@
       applicationData.inputGroups = inputGroups
       applicationData.inputs = inputs
       applicationData.inputMap = inputMap
-
-      _.each(_.values(inputsForDomainType), function (inputs) {
-        markFirstAndLastInputsInGroup({ inputs: inputs })
-      })
-      applicationData.inputsForDomainType = inputsForDomainType
       applicationData.maintenanceInputs = createInputsForGroup(applicationData.config.authorityMaintenance[ 0 ])
       markFirstAndLastInputsInGroup({ inputs: applicationData.maintenanceInputs })
 
       var searchIndexForType = {}
+      _.each(_.pairs(applicationData.config.rdfTypeToIndexType), function (pair) {
+        searchIndexForType[ pair[ 0 ] ] = pair[ 1 ]
+      })
+
+      // sort arrays of inputs for each domain type according to order in corresponding forms
       var maintenanceForms = _.chain(applicationData.maintenanceInputs)
-        .pluck('widgetOptions').pluck('enableEditResource').compact().pluck('forms').value()
+        .pluck('widgetOptions').pluck('enableCreateNewResource').compact().pluck('forms').value()
 
       _.each(maintenanceForms, function (form) {
         var formContent = _.chain(form).pairs().first().value()
@@ -1868,6 +1875,30 @@
         searchIndexForType[ formContent[ 1 ].rdfType ] = formContent[ 0 ]
         applicationData.searchIndexForType = searchIndexForType
       })
+
+      _.each(applicationData.config.tabs, function (tab) {
+        delete inputsForDomainType[ tab.rdfType ]
+      })
+
+      _.each(_.values(inputsForDomainType), function (inputs) {
+        markFirstAndLastInputsInGroup({ inputs: inputs })
+      })
+
+      forAllGroupInputs(function (input, groupIndex, inputIndex) {
+        if (input.domain) {
+          inputsForDomainType[ unPrefix(input.domain) ] = inputsForDomainType[ unPrefix(input.domain) ] || []
+          inputsForDomainType[ unPrefix(input.domain) ].push(input)
+        }
+      }, { handleInputGroups: true, inputGroups: inputGroups })
+
+      let flattenedInputsForDomainType = _.chain(inputsForDomainType).mapObject(function (inputs, domainType) {
+        return _.chain(inputs).map(function (input) {
+          return input.subInputs ? _.pluck(input.subInputs, 'input') : [ input ]
+        }).flatten(true).value()
+      }).value()
+
+      applicationData.inputsForDomainType = inputsForDomainType
+      applicationData.flattenedInputsForDomainType = flattenedInputsForDomainType
 
       return axios.all(predefinedValues).then(function (values) {
         _.each(values, function (predefinedValue) {
@@ -2239,6 +2270,15 @@
     function closeCompare (type) {
       ractive.set('compare', null)
       ractive.set('duplicateSearchTerm', undefined)
+      _.each(ractive.get(`applicationData.flattenedInputsForDomainType.${type}`), function (input) {
+        delete input.compareValues
+        _.each(input.subInputs, function (subInput) {
+          delete subInput.input.compareValues
+        })
+      })
+      ractive.update()
+      // ractive.set(`applicationData.inputsForDomainType.${type}.*.subInputs.*.input.compareValues`, [ { nonEditable: true } ])
+      // ractive.set(`applicationData.inputsForDomainType.${type}.*.compareValues`, [ { nonEditable: true } ])
       setTaskDescription(`edit${type}`)
       updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
       // hack to make things not look uncool
@@ -2826,7 +2866,7 @@
           const searchable = function (node) {
             let keypath = Ractive.getNodeInfo(node).keypath
             const value = ractive.get(keypath)
-            if (!value.searchable) {
+            if (value && !value.searchable) {
               ractive.set(`${keypath}.searchable`, true)
               ractive.set(`${keypath}.uniqueId`, _.uniqueId())
             }
@@ -2931,6 +2971,45 @@
               teardown: function () {
                 observer.cancel()
               }
+            }
+          }
+          const heightAligned = function (node) {
+            const panelParts = $(node).closest('.height-aligned').find('.panel-part')
+            if (panelParts.length === 4) {
+              const leftPanelPart = panelParts.get(1)
+              const leftBottom = leftPanelPart.getBoundingClientRect().bottom
+              const rightPanelPart = panelParts.get(3)
+              const rightBottom = rightPanelPart.getBoundingClientRect().bottom
+              const diff = rightBottom - leftBottom
+              if (diff > 0) {
+                $(leftPanelPart).find('.field').css('margin-bottom', diff)
+              }
+              if (diff < 0) {
+                $(rightPanelPart).find('.field').css('margin-bottom', -diff)
+              }
+            }
+            return {
+              teardown: function () {}
+            }
+          }
+          const authorityEdit = function (node, args) {
+            if (args.inputsKeypath) {
+              ractive.set('tabSelected', true)
+              _.invoke(ractive.get('observers'), 'cancel')
+              enableObservers(applicationData, args.inputsKeypath)
+              if (args.subjectType) {
+                _.each(ractive.get(args.inputsKeypath), function (input) {
+                  input.subjectTypes = [ args.subjectType ]
+                  _.chain(input.subInputs).pluck('input').each(function (input) {
+                    if (input.values[ 0 ]) {
+                      input.values[ 0 ].subjectType = args.subjectType
+                    }
+                  })
+                })
+              }
+            }
+            return {
+              teardown: function () {}
             }
           }
           titleRactive = new Ractive({
@@ -3215,7 +3294,9 @@
               disabled,
               relations,
               repositionSupportPanels,
-              rangeSlider
+              rangeSlider,
+              heightAligned,
+              authorityEdit
             },
             partials: applicationData.partials,
             transitions: {
@@ -3283,7 +3364,7 @@
               // addValue adds another input field for the predicate.
               addValue: function (event) {
                 if (eventShouldBeIgnored(event)) return
-                var mainInput = ractive.get(event.keypath)
+                var mainInput = (event.context || {}).input || ractive.get(event.keypath)
                 let promises = []
                 ractive.set(`${mainInput.keypath}.unFinished`, true)
                 visitInputs(mainInput, function (input, index) {
@@ -3305,6 +3386,7 @@
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
                 copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
+                ractive.update()
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
@@ -3366,6 +3448,7 @@
                   ractive.set(`${parentInput.keypath}.subInputs.${inputIndex}.input.values.${valueIndex}.nonEditable`, false)
                 })
                 ractive.set(`${parentInput.keypath}.edit`, true)
+                ractive.update()
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
                 options = options || {}
@@ -3393,7 +3476,8 @@
                 let initOptions = {
                   presetValues: {},
                   task: editWith.descriptionKey || `edit${event.context.rdfType}`,
-                  template: editWith.template
+                  template: editWith.template,
+                  inputsKeypath: editWith.inputsKeypath
                 }
                 updateBrowserLocationClearAllExcept([ 'openTab' ])
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
@@ -4166,7 +4250,9 @@
           return applicationData
         }
 
-        function enableObservers (applicationData) {
+        function enableObservers (applicationData, altInputsKeypath) {
+          let inputsKeypath = altInputsKeypath || options.inputsKeypath || 'inputGroups.*.inputs'
+
           function castVetoForRequiredSubInput (inputGroupKeypath, valueIndex, voter, veto) {
             var vetoesKeyPath = inputGroupKeypath + '.inputGroupRequiredVetoes.' + valueIndex
             var inputGroupRequiredVetoes = (ractive.get(vetoesKeyPath) || '').split('')
@@ -4204,15 +4290,15 @@
           }
 
           ractive.set('observers', [
-            ractive.observe('inputGroups.*.inputs.*.subInputs.0.input.values.*.subjectType', function (newValue, oldValue, keypath) {
+            ractive.observe(`${inputsKeypath}.*.subInputs.0.input.values.*.subjectType`, function (newValue, oldValue, keypath) {
               checkRequiredSubjectTypeSelection(keypath, newValue)
             }, { init: false }),
 
-            ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.current.value', function (newValue, oldValue, keypath) {
+            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, function (newValue, oldValue, keypath) {
               checkRequiredSubInput(newValue, keypath)
             }, { init: false }),
 
-            ractive.observe('inputGroups.*.inputs.*.subInputs.*.input.values.*.nonEditable', function (newValue, oldValue, keypath) {
+            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.nonEditable`, function (newValue, oldValue, keypath) {
               let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
               let valueIndex = _.last(parentOf(keypath).split('.'))
               let nonEditableTarget = `${compoundInputKeypath}.subInputs.0.input.values.${valueIndex}.nonEditable`
@@ -4221,7 +4307,7 @@
               }
             }, { init: false }),
 
-            ractive.observe('inputGroups.*.inputs.*.values.0.current.value', function (newValue, oldValue, keypath) {
+            ractive.observe(`${inputsKeypath}.*.values.0.current.value`, function (newValue, oldValue, keypath) {
               if (Boolean(newValue) !== Boolean(oldValue)) {
                 if (!newValue || newValue === '') {
                   var inputKeypath = grandParentOf(grandParentOf(keypath))
@@ -4233,7 +4319,7 @@
               }
             }, { init: false }),
 
-            ractive.observe('inputGroups.*.inputs.*.values.*', function (newValue, oldValue, keypath) {
+            ractive.observe(`${inputsKeypath}.*.values.*`, function (newValue, oldValue, keypath) {
               if (newValue && newValue.current) {
                 if (!newValue.current.value) {
                   ractive.set(keypath + '.error', false)
@@ -4455,14 +4541,6 @@
           return applicationData
         }
 
-        function loadWork (query, tab) {
-          fetchExistingResource(query.Work)
-            .then(function () {
-              ractive.set('targetUri.Work', query.Work)
-              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '2') })
-            })
-        }
-
         function loadPublication (query, tab) {
           fetchExistingResource(query.Publication)
             .then(loadWorkOfPublication)
@@ -4489,10 +4567,9 @@
             })
             if (desiredType) {
               fetchExistingResource(query[ qualifierSpec.qualifier + desiredType ], {
-                inputs: ractive.get(`applicationData.inputsForDomainType.${desiredType}`),
-                overrideMainEntry: true,
+                inputs: ractive.get(`applicationData.flattenedInputsForDomainType.${desiredType}`),
                 compareValues: qualifierSpec.compare
-              })
+              }, desiredType)
                 .then(function () {
                   if (qualifierSpec.main) {
                     ractive.set(`targetUri.${desiredType}`, query[ desiredType ])
@@ -4551,7 +4628,7 @@
           if (query.Publication && !ractive.get(`targetUri.${query.Publication}`)) {
             loadPublication(query, tab)
           } else if (query.Work && !ractive.get(`targetUri.${query.Work}`)) {
-            loadWork(query, tab)
+            loadOtherResource(query, tab)
           } else {
             loadOtherResource(query, tab)
           }

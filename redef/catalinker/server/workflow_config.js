@@ -1828,6 +1828,7 @@ module.exports = (app) => {
           compareWorkSeries: 'Sammenlikne og slå sammen verksserie',
           compareInstrument: 'Sammenlikne og slå sammen instrumentautoritet',
           compareCompositionType: 'Sammenlikne og slå sammen komposjonstype',
+          compareWork: 'Sammenlikne og slå sammen verk',
         },
         translations: {
           Work: {
