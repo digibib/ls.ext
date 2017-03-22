@@ -2564,7 +2564,9 @@
               ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
               ractive.update('lastRoots')
             })
-            let addedMultivalues = _.select(opSpecs, function(spec){return spec.operation === 'add'}).length
+            let addedMultivalues = _.select(opSpecs, function (spec) {
+              return spec.operation === 'add'
+            }).length
             if (op === 'del' || addedMultivalues > 1) {
               removeInputsForObject(input, index)()
               if (addedMultivalues > 1) {

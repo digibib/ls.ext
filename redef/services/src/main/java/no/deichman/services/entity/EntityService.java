@@ -62,7 +62,7 @@ public interface EntityService {
 
     void addIndexedName(EntityType type, String name, String uri);
 
-    StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates);
+    StmtIterator statementsInModelAbout(XURI xuri, Model indexModel, String... predicates);
 
     void mergeResource(XURI xuri, XURI replaceeUri);
 
