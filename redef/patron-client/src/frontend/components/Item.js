@@ -4,18 +4,12 @@ import Constants from '../constants/Constants'
 
 const Item = ({ item, intl }) => {
   const languages = [ ...new Set(item.languages.map(language => intl.formatMessage({ id: language }))) ]
-  const mediaType = item.mediaTypes[ 0 ]
   return (
-    <tr about={item.barcode}>
-      <td className="entry-content-icon-single" data-automation-id="item_media_type">
-        <i
-          className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType ] ]} />{mediaType ? intl.formatMessage({ id: mediaType }) : ''}
-      </td>
-      <td
-        data-automation-id="item_languages">{languages.join(', ')}</td>
-      <td data-automation-id="item_shelfmark">{item.shelfmark}</td>
-      <td data-automation-id="item_status">{item.available} av {item.total} ledige</td>
-    </tr>
+    <div role="row" className="flex-wrapper sub-wrapper">
+      <div data-automation-id="item_languages" className="flex-item sub-row">{languages.join(', ')}</div>
+      <div data-automation-id="item_shelfmark" className="flex-item sub-row">{item.shelfmark}</div>
+      <div data-automation-id="item_status" className="flex-item sub-row">{item.available} av {item.total} ledige</div>
+    </div>
   )
 }
 

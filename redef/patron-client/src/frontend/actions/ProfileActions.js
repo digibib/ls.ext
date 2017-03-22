@@ -166,7 +166,6 @@ export const changePasswordSuccess = () => action(types.CHANGE_PASSWORD_SUCCESS)
 export function changePasswordFromForm (successAction) {
   return (dispatch, getState) => {
     const { changePin: { values: { currentPin, newPin } } } = getState().form
-    console.log('pins', currentPin, newPin)
     dispatch(changePassword(currentPin, newPin, successAction))
   }
 }

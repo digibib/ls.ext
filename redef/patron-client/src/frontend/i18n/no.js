@@ -232,6 +232,8 @@ export default {
   'SearchResult.partOfSeries': 'Inngår i serie: ',
   'SearchResult.showStatus': 'Hvor finnes denne?',
   'SearchResult.subjects': 'Emner:',
+  'SearchResult.showBranchAvailability': 'Vis avdelingsstatus',
+  'SearchResult.hideBranchAvailability': 'Skjul avdelingsstatus',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.searchForWork': 'Søk etter verk',
   'SearchResultsText.searching': 'Søker...',
