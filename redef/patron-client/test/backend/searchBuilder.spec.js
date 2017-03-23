@@ -1,38 +1,7 @@
 /* eslint-env mocha */
 import expect from 'expect'
 import { buildQuery, translateFieldTerms } from '../../src/backend/utils/searchBuilder'
-
-const defaultFields = [
-  'agents',
-  'author^50',
-  'bio',
-  'compType',
-  'country',
-  'desc',
-  'ean',
-  'format',
-  'genre',
-  'inst',
-  'isbn',
-  'ismn',
-  'language',
-  'litform',
-  'mainTitle^30',
-  'mt',
-  'partNumber',
-  'partTitle',
-  // 'publicationYear',
-  'publishedBy',
-  'recordId',
-  'series^10',
-  'subject^10',
-  'summary',
-  'title^20',
-  'workMainTitle',
-  'workPartNumber',
-  'workPartTitle',
-  'workSubtitle'
-]
+import { defaultFields } from '../../src/backend/utils/queryConstants'
 
 describe('searchBuilder', () => {
   describe('building query', () => {
@@ -60,46 +29,56 @@ describe('searchBuilder', () => {
       })
     })
 
-    // it('should build simple query', () => {
-    //   const queryString = 'query=some+strings'
-    //   const queryWant = 'some strings'
-    //   expect(buildQuery(queryString).query).toEqual(
-    //     {
-    //       filtered: {
-    //         filter: {
-    //           bool: {
-    //             must: []
-    //           }
-    //         },
-    //         query: {
-    //           bool: {
-    //             filter: [
-    //               {
-    //                 simple_query_string: {
-    //                   query: queryWant,
-    //                   default_operator: 'and',
-    //                   fields: ['mainTitle^2', 'partTitle', 'subject', 'agents^2', 'genre', 'series', 'format', 'mt', 'title' ]
-    //                 }
-    //               }
-    //             ],
-    //             must: []
-    //           }
-    //         }
-    //       }
-    //     })
-    // })
+    it('should build simple query', () => {
+      const urlQueryString = 'query=some+strings'
+      const queryWant = 'some strings'
+      const q = buildQuery(urlQueryString).query
+      expect(q).toEqual(
+        {
+          bool: {
+            must: [
+              {
+                simple_query_string: {
+                  default_operator: 'and',
+                  fields: defaultFields,
+                  query: queryWant
+                }
+              }
+            ]
+          }
+        })
+    })
 
     it('should build advanced query', () => {
-      const queryString = 'query=author%3A+Hamsun'
+      const urlQueryString = 'query=author%3A+Hamsun'
       const queryWant = 'author: Hamsun'
-      expect(buildQuery(queryString).query).toEqual(
+      const q = buildQuery(urlQueryString).query
+      expect(q).toEqual(
         {
           bool: {
             must: [
               {
                 query_string: {
-                  query: queryWant,
-                  default_operator: 'and'
+                  default_operator: 'and',
+                  query: queryWant
+                }
+              }
+            ]
+          }
+        })
+    })
+
+    it('should build an isbn field query from an isbn query string', () => {
+      const urlQueryString = 'query=82-05-30003-8'
+      const q = buildQuery(urlQueryString).query
+      expect(q).toEqual(
+        {
+          bool: {
+            must: [
+              {
+                query_string: {
+                  default_operator: 'or',
+                  query: 'isbn:82-05-30003-8'
                 }
               }
             ]
@@ -108,40 +87,11 @@ describe('searchBuilder', () => {
     })
   })
 
-  describe('filters', () => {
-    it('should parse filters and use in query', () => {
-      const urlQueryString = 'filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske'
-      expect(buildQuery(urlQueryString).query.bool.must).toEqual(
-        [
-
-          {
-            'simple_query_string': {
-              'default_operator': 'and',
-              'fields': defaultFields,
-              'query': 'fiske'
-            }
-          },
-          {
-            'terms': {
-              'audiences': [ 'http://data.deichman.no/audience#juvenile' ]
-            }
-          },
-          {
-            'terms': {
-              'branches': [ 'flam', 'fmaj', 'ftor' ]
-            }
-          }
-        ]
-      )
-    })
-  })
-
   describe('aggregations', () => {
     const urlQueryString = 'filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske&yearFrom=1980&yearTo=1990'
-    const query = buildQuery(urlQueryString)
-
     it('should include activated filters in aggregations, excluding filters of the given aggregation', () => {
-      expect(query.aggs.facets.aggs[ 'audiences' ].filter.bool.must).toEqual(
+      const q = buildQuery(urlQueryString)
+      expect(q.aggs.facets.aggs[ 'audiences' ].filter.bool.must).toEqual(
         [
           {
             'simple_query_string': {
@@ -168,7 +118,8 @@ describe('searchBuilder', () => {
     })
 
     it('should include activated filters in aggregations, excluding filters of the given aggregation II', () => {
-      expect(query.aggs.facets.aggs[ 'branches' ].filter.bool.must).toEqual(
+      const q = buildQuery(urlQueryString)
+      expect(q.aggs.facets.aggs[ 'branches' ].filter.bool.must).toEqual(
         [
           {
             'simple_query_string': {
@@ -195,7 +146,8 @@ describe('searchBuilder', () => {
     })
 
     it('should include publicationYear range filter', () => {
-      expect(query.query.bool.must).toInclude(
+      const q = buildQuery(urlQueryString)
+      expect(q.query.bool.must).toInclude(
         {
           'range': {
             'publicationYear': {
