@@ -1,77 +1,8 @@
-const querystring = require('querystring')
+const QueryParser = require('querystring')
 const Constants = require('../../frontend/constants/Constants')
+const Defaults = require('./queryConstants')
 
-function initCommonQuery () {
-  return {
-    size: 0,
-    aggs: {
-      facets: {
-        global: {},
-        aggs: {}
-      },
-      byWork: {
-        terms: {
-          field: 'workUri',
-          order: { top: 'desc' },
-          size: Constants.maxSearchResults
-        },
-        aggs: {
-          publications: {
-            top_hits: {
-              size: 1
-            }
-          },
-          top: {
-            max: {
-              script: {
-                lang: 'expression',
-                inline: '_score'
-              }
-            }
-          }
-        }
-      },
-      workCount: {
-        cardinality: {
-          field: 'workUri'
-        }
-      }
-    }
-  }
-}
-
-function initSimpleQuery (query) {
-  const defaultFields = [
-    'agents',
-    'author^50',
-    'bio',
-    'compType',
-    'country',
-    'desc',
-    'ean',
-    'format',
-    'genre',
-    'inst',
-    'isbn',
-    'ismn',
-    'language',
-    'litform',
-    'mainTitle^30',
-    'mt',
-    'partNumber',
-    'partTitle',
-    // 'publicationYear',
-    'publishedBy',
-    'recordId',
-    'series^10',
-    'subject^10',
-    'summary',
-    'title^20',
-    'workMainTitle',
-    'workPartNumber',
-    'workPartTitle',
-    'workSubtitle'
-  ]
+function simpleQuery (query) {
   return {
     bool: {
       must: [
@@ -79,7 +10,7 @@ function initSimpleQuery (query) {
           simple_query_string: {
             query: query,
             default_operator: 'and',
-            fields: defaultFields
+            fields: Defaults.defaultFields
           }
         }
       ]
@@ -87,7 +18,7 @@ function initSimpleQuery (query) {
   }
 }
 
-function initAdvancedQuery (query) {
+function advancedQuery (query) {
   return {
     bool: {
       must: [
@@ -95,6 +26,22 @@ function initAdvancedQuery (query) {
           query_string: {
             query: translateFieldTerms(query, Constants.queryFieldTranslations),
             default_operator: 'and'
+          }
+        }
+      ]
+    }
+  }
+}
+
+function fieldQuery (fields, queryString) {
+  const q = fields.map(field => { return `${field}:${queryString}` }).join(' ')
+  return {
+    bool: {
+      must: [
+        {
+          query_string: {
+            query: q,
+            default_operator: 'or'
           }
         }
       ]
@@ -133,20 +80,15 @@ function translateFieldTerms (query, translations) {
   return result += chars.slice(startValue, chars.length).join('')
 }
 
-function isAdvancedQuery (queryString) {
-  return /[:+\-^()"*]/.test(queryString)
-}
-
-function simpleSearchBuilder (queryString) {
-  const query = initCommonQuery()
-  query.query = initSimpleQuery(queryString)
-  return query
-}
-
-function advancedSearchBuilder (queryString) {
-  const query = initCommonQuery()
-  query.query = initAdvancedQuery(queryString)
-  return query
+// parse query string to decide what kind of query we think this is
+function queryStringToQuery (queryString) {
+  if (/^[0-9Xx-]{10,13}$/.test(queryString) || /^[0-9-]{13,17}$/.test(queryString)) {
+    return fieldQuery(['isbn'], queryString)
+  } else if (/[:+\-^()"*]/.test(queryString)) {
+    return advancedQuery(queryString)
+  } else {
+    return simpleQuery(queryString)
+  }
 }
 
 function parseFilters (filtersFromLocationQuery) {
@@ -182,15 +124,25 @@ function createMust (field, terms) {
   }
 }
 
-module.exports.buildQuery = function (urlQueryString) {
-  const params = querystring.parse(urlQueryString)
-  const queryString = params.query
-  let elasticSearchQuery = {}
-  if (isAdvancedQuery(queryString)) {
-    elasticSearchQuery = advancedSearchBuilder(queryString)
-  } else {
-    elasticSearchQuery = simpleSearchBuilder(queryString)
+function yearRangeFilter (yearFrom, yearTo) {
+  const start = yearFrom || 0
+  const end = yearTo || new Date().getFullYear()
+  return {
+    range: {
+      publicationYear: {
+        gte: parseInt(start),
+        lte: parseInt(end)
+      }
+    }
   }
+}
+
+module.exports.buildQuery = function (urlQueryString) {
+  const params = QueryParser.parse(urlQueryString)
+  const elasticSearchQuery = Defaults.queryDefaults
+  elasticSearchQuery.aggs = Defaults.defaultAggregates
+  elasticSearchQuery.query = queryStringToQuery(params.query)
+
   const filters = parseFilters(params.filter || [])
   const musts = {}
   filters.forEach(filter => {
@@ -203,21 +155,13 @@ module.exports.buildQuery = function (urlQueryString) {
     elasticSearchQuery.query.bool.must.push(musts[ aggregation ])
   })
 
-  let yearRangeFilter
+  let yearRange
   if (params.yearFrom || params.yearTo) {
-    const from = params.yearFrom || 0
-    const to = params.yearTo || new Date().getFullYear()
-    yearRangeFilter = {
-      range: {
-        publicationYear: {
-          gte: parseInt(from),
-          lte: parseInt(to)
-        }
-      }
-    }
+    yearRange = yearRangeFilter(params.yearFrom, params.yearTo)
   }
-  if (yearRangeFilter) {
-    elasticSearchQuery.query.bool.must.push(yearRangeFilter)
+
+  if (yearRange) {
+    elasticSearchQuery.query.bool.must.push(yearRange)
   }
 
   Object.keys(Constants.filterableFields).forEach(key => {
@@ -238,8 +182,8 @@ module.exports.buildQuery = function (urlQueryString) {
     }
 
     const aggregationMusts = [elasticSearchQuery.query.bool.must[0]]
-    if (yearRangeFilter) {
-      aggregationMusts.push(yearRangeFilter)
+    if (yearRange) {
+      aggregationMusts.push(yearRange)
     }
     Object.keys(musts).forEach(aggregation => {
       const must = musts[ aggregation ]
@@ -249,7 +193,6 @@ module.exports.buildQuery = function (urlQueryString) {
     })
     elasticSearchQuery.aggs.facets.aggs[ fieldName ].filter.bool.must = aggregationMusts
   })
-
   return elasticSearchQuery
 }
 
