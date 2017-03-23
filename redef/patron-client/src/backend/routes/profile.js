@@ -56,7 +56,7 @@ module.exports = (app) => {
       })
   })
 
-  /* app.get('/api/v1/profile/loans', (request, response) => {
+  /*app.get('/api/v1/profile/loans', (request, response) => {
     Promise.all([ fetchAllCheckouts(request), fetchAllHoldsAndPickups(request) ])
       .then(([checkouts, holdsAndPickups]) => {
         const holds = holdsAndPickups.filter(item => item.status !== 'W')
