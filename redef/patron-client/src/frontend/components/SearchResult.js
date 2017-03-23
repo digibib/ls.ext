@@ -22,6 +22,12 @@ class SearchResult extends React.Component {
     if (this.shouldShowStatus() && !this.props.resources[ id ]) {
       this.props.fetchWorkResource(id)
     }
+
+    const activeFilters = this.getActiveBranchFilters()
+
+    if (activeFilters.length > 0) {
+      this.setBranchOpenFilters(activeFilters)
+    }
   }
 
   scrollToTop () {
@@ -143,11 +149,13 @@ class SearchResult extends React.Component {
     return activeBranches
   }
 
+  setBranchOpenFilters (activeFilters) {
+    activeFilters.forEach(e => {
+      this.handleBranchStatus(e.bucket)
+    })
+  }
+
   renderItems (result) {
-    const activeFilters = this.getActiveBranchFilters()
-
-    // console.log('ACTIVE FILTERS', activeFilters)
-
     let filteredBranches = []
     let unfilteredBranches = []
     let homeBranchPos
@@ -185,18 +193,55 @@ class SearchResult extends React.Component {
 
         return (
           <div className="items-by-branch" key={el.branchcode}>
-            <div className="flex-wrapper">
+            <div className="flex-wrapper branch-header" onClick={() => { this.handleBranchStatus(el.branchcode) }}>
               <div className="flex-item">
                 <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
               </div>
               <div className="flex-item item-icon-button">
-                <button className="flex-item" onClick={() => { this.handleBranchStatus(el.branchcode) }}><span className="is-vishidden"><FormattedMessage {...messages.hideBranchAvailability} /></span><i className="icon-up-open" aria-hidden="true"></i></button>
-              </div>
+                  <button className="flex-item"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    this.handleBranchStatus(el.branchcode)
+                  }}
+                  onKeyDown={() => { this.handleBranchStatusEnter(el.branchcode) }}>
+                    {this.shouldShowBranchStatus(el.branchcode)
+                      ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
+                        <FormattedMessage {...messages.showBranchAvailability} />
+                      </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
+                      : [(<span key={`show-more-content${el.branchcode}`} className="is-vishidden">
+                      <FormattedMessage {...messages.hideBranchAvailability} />
+                      </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
+                    }
+                  </button>
+                </div>
             </div>
-            <Items mediaItems={el.mediaItems} />
+            {this.shouldShowBranchStatus(el.branchcode)
+              ? <Items
+                mediaItems={el.mediaItems}
+                showBranchStatusMedia={this.props.showBranchStatusMedia}
+                branchCode={el.branchcode}
+                locationQuery={this.props.locationQuery}
+              />
+              : null
+            }
           </div>
         )
       })
+
+/*
+      {this.shouldShowStatus()
+        ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
+          <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
+          <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
+        </div>),
+          (<div key="entry-more-content" className="entry-content-more">
+            {this.renderItems(result)}
+          </div>) ]
+        : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
+          <p><a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showStatus} /></a></p>
+          <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
+        </div>)
+        */
 
       /*
       activeFilters.map(filter => {
@@ -246,15 +291,26 @@ class SearchResult extends React.Component {
     }
   }
 
+  handleBranchStatus (code) {
+    this.props.showBranchStatus(code)
+  }
+
+  handleBranchStatusEnter (code) {
+    if (event.keyCode === 32) { // Space code
+      event.preventDefault()
+      this.handleBranchStatus(code)
+    }
+  }
+
+  shouldShowBranchStatus (code) {
+    const { locationQuery: { showBranchStatus } } = this.props
+    return (showBranchStatus && showBranchStatus === code || (Array.isArray(showBranchStatus) && showBranchStatus.includes(code)))
+  }
+
   handleShowStatusClick (event) {
     event.stopPropagation()
     this.props.fetchWorkResource(this.props.result.id)
     this.props.showStatus(this.props.result.id)
-  }
-
-  handleBranchStatus (code) {
-    console.log('SHOWIING BRANCH status', code)
-    this.props.showBranchStatus(code)
   }
 
   handleEnter (event) {

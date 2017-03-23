@@ -18,16 +18,13 @@ class Items extends React.Component {
         transitionLeaveTimeout={500}
         component="div"
         className="items-container">
-        <div className="header">
-          <div role="row" className="flex-wrapper">
-            <div role="columnheader" className="flex-item media-item"><FormattedMessage {...messages.mediaType} /></div>
-            <div role="columnheader" className="flex-item"><FormattedMessage {...messages.language} /></div>
-            <div role="columnheader" className="flex-item"><FormattedMessage {...messages.placement} /></div>
-            <div role="columnheader" className="flex-item"><FormattedMessage {...messages.status} /></div>
-          </div>
-        </div>
           {this.props.mediaItems.map((items, i) => {
-              return <ItemsMedia key={i} itemsByMedia={items} />
+              return <ItemsMedia key={i}
+                                 itemsByMedia={items}
+                                 branchCode={this.props.branchCode}
+                                 showBranchStatusMedia={this.props.showBranchStatusMedia}
+                                 locationQuery={this.props.locationQuery}
+              />
             })
           }
       </NonIETransitionGroup>
@@ -39,6 +36,18 @@ class Items extends React.Component {
       : this.renderEmpty()
   }
 }
+
+/*
+
+ <div className="header">
+ <div role="row" className="flex-wrapper">
+ <div role="columnheader" className="flex-item media-item"><FormattedMessage {...messages.mediaType} /></div>
+ <div role="columnheader" className="flex-item"><FormattedMessage {...messages.language} /></div>
+ <div role="columnheader" className="flex-item"><FormattedMessage {...messages.placement} /></div>
+ <div role="columnheader" className="flex-item"><FormattedMessage {...messages.status} /></div>
+ </div>
+ </div>
+ */
 
 Items.propTypes = {
   mediaItems: PropTypes.array.isRequired

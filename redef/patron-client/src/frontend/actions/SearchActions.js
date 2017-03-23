@@ -71,3 +71,7 @@ export function showStatus (relativeUri) {
 export function showBranchStatus (branchCode) {
   return toggleParameterValue('showBranchStatus', branchCode)
 }
+
+export function showBranchStatusMedia (branchCodeMedia) {
+  return toggleParameterValue('showBranchStatusMedia', branchCodeMedia)
+}
