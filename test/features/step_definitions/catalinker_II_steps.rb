@@ -170,6 +170,12 @@ When(/^jeg skriver verdien "([^"]*)" for "([^"]*)"$/) do |value, parameter_label
   @site.WorkFlow.add_prop(domain, predicate, value)
 end
 
+When(/^jeg skriver i feltet "([^"]*)" teksten$/) do |parameter_label, value|
+  input = @browser.inputs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//*[self::textarea or self::input]").find(&:visible?)
+  domain, predicate = save_value_for_later(input, parameter_label, value)
+  @site.WorkFlow.add_prop(domain, predicate, value, 0, true)
+end
+
 def predicate_from_automation_id(select_id)
   select_id.sub(/^(Work|Publication|Person|WorkRelation)_/, '').sub(/_[0-9]+$/, '')
 end
@@ -762,6 +768,10 @@ When(/^klikker jeg på linken for utvidet redigering$/) do
   @browser.a(:text => 'Utvidet redigering').click
 end
 
+When(/^klikker jeg på linken for masseregistrering$/) do
+  @browser.a(:text => 'Masseregistrering').click
+end
+
 When(/^sjekker jeg at antall relasjoner er ([0-9]*)$/) do |number_of_relations|
   @browser.a(:class => 'toggle-show-sub-items').click
   @browser.lis(:class => 'rel-entry').length.should equal? (number_of_relations.to_i)
@@ -778,4 +788,8 @@ end
 
 When(/^sjekker jeg at teksten "([^"]*)" finnes på siden$/) do |text|
   @browser.element(:text => text).should exist
+end
+
+When(/^skal det vises (\d+) deler i utgivelsen$/) do |arg|
+  @browser.h3s(:class => "accordionHeader").length.should eq arg.to_i
 end

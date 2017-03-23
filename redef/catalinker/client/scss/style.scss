@@ -454,6 +454,15 @@ body {
               top: 15px;
               right: 16px;
             }
+            .sub-field a.open-bulk-edit {
+              float: right;
+              margin-top: 3px;
+            }
+            .sub-field textarea {
+              max-width: 292px;
+              min-width: 292px;
+              white-space: nowrap;
+            }
             padding: 0px 12px 15px 12px;
             background: $input-background;
 
@@ -603,11 +612,47 @@ body {
         }
         .add-new-btn-row {
           padding: 0 13px 23px 8px;
-          a:not(.delete-link), button, span {
+          float: none !important;
+          a:not(.delete-link), button:not(.pagination) {
             float: right;
             width: auto;
           }
-          margin-bottom: 12px;
+          button.pagination {
+            margin-left: 5px;
+            &.saving, &.saving + button {
+              opacity: 1.0;
+              +.save-placeholder {
+                position: static;
+                display: inline-block;
+                margin-left: 13px;
+                margin-right: -44px;
+                margin-bottom: 4px;              }
+            }
+          }
+          span.range-slider {
+            margin-left: 31px;
+            margin-top: 12px;
+            width: 40%;
+            .range-slider-handle {
+              width: auto;
+              height: 1.6em;
+              top: 50%;
+              margin-top: -.8em;
+              text-align: center;
+              font-size: small;
+              padding-left: 6px;
+              padding-right: 6px;
+              padding-top: 2px;
+            }
+            span.range-indicator {
+              margin-left: 37px;
+              margin-top: 7px;
+            }
+          }
+          .save-placeholder.pagination {
+            min-width: 25px;
+            margin-top: 2px;
+            float: none;          }
         }
         .support-panel-expander {
           width: 22px;
@@ -882,10 +927,11 @@ body {
               margin-bottom: -1px;
               .value input[type=checkbox] {
                 width: auto;
-                margin-top: -5px;
+                margin-top: 3px;
               }
               .label {
                 background: inherit;
+                display: inline-block;
               }
               .field {
                 padding: 0;

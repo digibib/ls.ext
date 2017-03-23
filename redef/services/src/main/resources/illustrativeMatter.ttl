@@ -7,8 +7,8 @@ illustrativeMatter:illustrert a duo:IllustrativeMatter ;
   rdfs:label "Illustration"@en .
 illustrativeMatter:kolorerte_illustrasjoner a duo:IllustrativeMatter ;
   duo:code "kol. ill." ;
-  rdfs:label "Kolorerte illustrasjoner"@no ;
-  rdfs:label "Coloured illustrations"@en .
+  rdfs:label "Fargeillustrasjoner"@no ;
+  rdfs:label "Colour illustrations"@en .
 illustrativeMatter:kart a duo:IllustrativeMatter ;
   duo:code "kart" ;
   rdfs:label "Kart"@no ;

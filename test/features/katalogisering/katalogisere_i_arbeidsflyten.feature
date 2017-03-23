@@ -106,6 +106,33 @@ Egenskap: Katalogisere i arbeidsflyt
     Så skriver jeg inn "10" og "20" i intervallfeltene "Sidetall"
     Så krysser jeg av i avkrysningboksen for "Skal ikke inngå i verksliste"
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Og jeg trykker på "Legg til en del til"-knappen
+    Så klikker jeg på linken for masseregistrering
+    Og jeg venter litt
+    Og jeg skriver i feltet "Tittel på del" teksten
+      """
+      Del 1
+      Del 2
+      Del 3
+      Del 4
+      Del 5
+      Del 6
+      Del 7
+      Del 8
+      Del 9
+      Del 10
+      Del 11
+      Del 12
+      """
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Så skal det vises 10 deler i utgivelsen
+    Så trykker jeg på "+10"-knappen
+    Så skal det vises 4 deler i utgivelsen
+    Og jeg venter litt
     Og bekrefter for å gå videre til "Biinnførsler"
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt
@@ -217,6 +244,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg velger rollen "Forfatter"
     Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
     Og jeg venter litt
     Så sjekker jeg at det finnes en hovedinnførsel hvor organisasjonen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så trykker jeg på "Neste steg: Beskrivelse"-knappen
@@ -548,6 +576,11 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
     Så sjekker jeg at teksten "Verket har 0 utgivelser:" finnes på siden
 
   Scenario: Redigere biinførsel
@@ -567,6 +600,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg velger rollen "Forfatter"
     Og velger radioknappen for "Verk" for å velge "Rollen gjelder:"
     Så trykker jeg på knappen for legge til biinnførselen
+    Og jeg venter litt
+    Og jeg venter litt
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Forfatter" knyttet til "verket"
     Så klikker jeg på linken med blyantikon

@@ -206,9 +206,6 @@
             "@id": "http://data.deichman.no/formatAdaption#largePrint"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#largePrint"
-          },
-          {
             "@id": "http://data.deichman.no/formatAdaption#braille"
           },
           {
