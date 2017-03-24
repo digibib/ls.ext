@@ -22,4 +22,10 @@ public interface KohaAdapter {
     Response updateRecord(String id, MarcRecord marcRecord);
 
     void deleteBiblio(String recordId) throws PublicationHasItemsException;
+
+    String getBiblioFromItemNumber(String recordId);
+
+    String getCheckouts(String userId);
+
+    String getHolds(String userId);
 }

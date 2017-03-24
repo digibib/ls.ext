@@ -1,6 +1,17 @@
 package no.deichman.services.entity;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jamonapi.proxy.MonProxyFactory;
+import no.deichman.services.circulation.CirculationObject;
+import no.deichman.services.circulation.CirculationProfile;
+import no.deichman.services.circulation.RawHold;
+import no.deichman.services.circulation.Reservation;
+import no.deichman.services.circulation.HoldsAndPickups;
+import no.deichman.services.circulation.Loan;
+import no.deichman.services.circulation.LoanRecord;
+import no.deichman.services.circulation.Pickup;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
@@ -41,6 +52,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,11 +61,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -75,6 +90,10 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  * Responsibility: TODO.
  */
 public final class EntityServiceImpl implements EntityService {
+    public static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static final String PICKUPS = "pickups";
+    public static final String HOLDS = "holds";
+    public static final String HOLD_IS_FOUND = "W";
     private final Logger log = LoggerFactory.getLogger(EntityServiceImpl.class);
 
     public static final Integer THREE = 3;
@@ -720,6 +739,134 @@ public final class EntityServiceImpl implements EntityService {
         return stream(spliteratorUnknownSize(repository.retrieveResourceRelationships(uri), ORDERED), false)
                 .filter(s -> s.contains("targetUri"))
                 .map(this::targetUri).collect(toSet()).stream().sorted().collect(toList());
+    }
+
+    @Override
+    public CirculationProfile getProfile(String borrowerId) throws Exception {
+        CirculationProfile circulationProfile = new CirculationProfile();
+        circulationProfile.setLoans(getLoans(borrowerId));
+        HoldsAndPickups holdsAndPickups = getHolds(borrowerId);
+        circulationProfile.setPickups(holdsAndPickups.getPickups());
+        circulationProfile.setHolds(holdsAndPickups.getHolds());
+        return circulationProfile;
+    }
+
+    private Function<RawHold, CirculationObject> rawHoldToCirculationObject = new Function<RawHold, CirculationObject>() {
+        public CirculationObject apply(RawHold rawHold) {
+            CirculationObject circulationObject;
+            if (Objects.equals(rawHold.getStatus(), HOLD_IS_FOUND)) {
+                Pickup pickup = new Pickup();
+                pickup.setExpirationDate(rawHold.getWaitingDate());
+                pickup.setPickupNumber(rawHold.getPickupNumber());
+                circulationObject = pickup;
+            } else {
+                Reservation reservation = new Reservation();
+                reservation.setQueuePlace(rawHold.getQueuePlace());
+                reservation.setSuspended(convertBooleanString(rawHold.getSuspended()));
+                reservation.setOrderedDate(rawHold.getReserveDate());
+                reservation.setSuspendUntil(rawHold.getSuspendUntil());
+                circulationObject = reservation;
+            }
+            circulationObject.setId(rawHold.getId());
+            circulationObject.setRecordId(rawHold.getRecordId());
+            circulationObject.setBranchCode(rawHold.getBranchCode());
+
+            return circulationObject;
+        }
+    };
+
+    private boolean convertBooleanString(String string) {
+        boolean returnValue = true;
+        if (string.equals("0")) {
+            returnValue = false;
+        }
+        return returnValue;
+    }
+
+    private HoldsAndPickups getHolds(String borrowerId) throws Exception {
+        HoldsAndPickups holdsAndPickups = new HoldsAndPickups();
+        Type rawHoldsArrayType = new TypeToken<ArrayList<RawHold>>() {
+        }.getType();
+        List<RawHold> rawHolds = GSON.fromJson(kohaAdapter.getHolds(borrowerId), rawHoldsArrayType);
+        List<Pickup> pickupsList = new ArrayList<>();
+        List<Reservation> holdsList = new ArrayList<>();
+
+        for (RawHold rawHold : rawHolds) {
+            CirculationObject circulationObject = rawHoldToCirculationObject.apply(rawHold);
+            if (circulationObject instanceof Reservation) {
+                holdsList.add((Reservation) circulationObject);
+            } else {
+                pickupsList.add((Pickup) circulationObject);
+            }
+            filterPublicationAttributes(circulationObject, getMetadataByRecordId(rawHold.getRecordId()));
+        }
+        holdsAndPickups.setHolds(holdsList);
+        holdsAndPickups.setPickups(pickupsList);
+        return holdsAndPickups;
+    }
+
+    private List<Loan> getLoans(String borrowerId) throws Exception {
+        Type loansArrayType = new TypeToken<ArrayList<Loan>>() {
+        }.getType();
+        List<Loan> loans = GSON.fromJson(kohaAdapter.getCheckouts(borrowerId), loansArrayType);
+        for (Loan loan : loans) {
+            String recordId = getRecordIdFromLoan(loan);
+            loan.setRecordId(recordId);
+            filterPublicationAttributes(loan, getMetadataByRecordId(recordId));
+        }
+        return loans;
+    }
+
+    private String getRecordIdFromLoan(Loan loan) {
+        LoanRecord loanRecord = GSON.fromJson(kohaAdapter.getBiblioFromItemNumber(loan.getItemNumber()),
+                new TypeToken<LoanRecord>() {}.getType());
+        return loanRecord.getRecordId();
+    }
+
+    private Map<String, String> getMetadataByRecordId(String recordId) {
+        return repository.retrievePublicationAndWorkDataByRecordId(recordId);
+    }
+
+    private void filterPublicationAttributes(CirculationObject circulationObject, Map<String, String> publicationData) throws Exception {
+        Map<String, String> contributor = new HashMap<>();
+        publicationData.forEach((key, value) -> {
+            switch (key) {
+                case "agentUri":
+                case "contributorName":
+                case "contributorNationality":
+                case "role":
+                    contributor.put(key, value);
+                    break;
+                case "mainTitle":
+                    circulationObject.setTitle(value);
+                    break;
+                case "mediaType":
+                    circulationObject.setMediaType(value);
+                    break;
+                case "publicationImage":
+                    circulationObject.setPublicationImage(value);
+                    break;
+                case "publicationUri":
+                    circulationObject.setPublicationURI(value);
+                    break;
+                case "publicationYear":
+                    circulationObject.setPublicationYear(value);
+                    break;
+                case "workUri":
+                    circulationObject.setWorkURI(value);
+                    break;
+                default:
+                    break;
+            }
+        });
+        if (circulationObject.getWorkURI() != null && circulationObject.getPublicationURI() != null) {
+            XURI work = new XURI(circulationObject.getWorkURI());
+            XURI publication = new XURI(circulationObject.getPublicationURI());
+            String path = work.getPath()
+                    + publication.getPath();
+            circulationObject.setRelativePublicationPath(path);
+        }
+        circulationObject.setContributor(contributor);
     }
 
     @Override
