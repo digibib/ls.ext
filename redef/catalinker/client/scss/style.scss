@@ -231,6 +231,25 @@ body {
   }
 
   .tab-content {
+    .input-panel {
+      &.drop-target {
+        position: relative;
+        &:before {
+          content: "";
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          border: 5px dashed $lightergray;
+          border-radius: 3px;
+          margin: 4px 5px 9px 5px;
+          position: absolute;
+        }
+      }
+      .ui-draggable-dragging {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      }
+    }
     &.maintenance-inputs {
       .input-panel:first-child .panel-part:first-child {
         border-top: 1px solid lightgrey;
@@ -970,6 +989,8 @@ body {
             float: right;
           }
           .input-wrapper {
+            background: white;
+            max-width: 314px;
             padding-left: 10px;
             display: block;
             border: 1px solid black;

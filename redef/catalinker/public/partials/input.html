@@ -2,11 +2,14 @@
 <span class="input-panel prop-input"
       class-pure-u-1-1="{{!compare}}"
       class-pure-u-1-2="{{compare}}"
-      {{#if !compare}}
-      intro='slideIn'
-      outro='slideOut'
+      {{#if !compareMode}}
+      as-dropZone="{inputIndex, input}"
       {{/if}}
-      {{#if type != 'input-boolean' && !oneLiner}}as-heightAligned{{/if}}
+      {{#if !compare}}
+          intro='slideIn'
+          outro='slideOut'
+      {{/if}}
+      {{#if type != 'input-boolean' && !oneLiner}}as-heightAligned=".updateHeights"{{/if}}
       {{#if inputIndex === 0}}data-support-panel-base-id="support_panel_base_fixed"{{/if}}
 >
 <span class-for-one-liner="{{type === 'input-boolean' || oneLiner}}"
@@ -104,7 +107,7 @@
                 {{/if}}
             </div >
             {{/if}}
-            <span class="input-wrapper">
+            <span class="input-wrapper" {{#if compare && compareMode}}as-draggable="{inputIndex, input:../../../../../subInputs[0].parentInput, inputValueIndex}"{{/if}}>
                 <span class="inputs">
                     {{#each ../../../../../subInputs}}
                         {{#if !(./input.visible === false)}}

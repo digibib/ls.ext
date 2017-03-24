@@ -31,6 +31,8 @@
     require('jquery-ui/dialog')
     require('jquery-ui/accordion')
     require('jquery-ui/slider')
+    require('jquery-ui/draggable')
+    require('jquery-ui/droppable')
     require('jquery.scrollto')
     let etagData = {}
     require('isbn2')
@@ -2444,7 +2446,7 @@
           let waitHandler = ractive.get('waitHandler')
           waitHandler.newWaitable(event.original.target)
           let waiter = waitHandler.thisMayTakeSomTime()
-          const input = ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
+          const input = event.input || ractive.get(parentOf(grandParentOf(grandParentOf(event.keypath))))
           const bulkEntryInputChain = _.chain(ractive.get('inputGroups.4.inputs.0.subInputs'))
             .pluck('input')
             .filter(function (input) { return input.widgetOptions && input.widgetOptions.enableBulkEntry })
@@ -2481,7 +2483,7 @@
               }
             } : {}
 
-          patchObject(input, applicationData, index, op, options).then(function () {
+          return patchObject(input, applicationData, index, op, options).then(function () {
             visitInputs(input, function (input) {
               if (input.isSubInput) {
                 _.each(input.values, function (value, valueIndex) {
@@ -2494,8 +2496,8 @@
             input.allowAddNewButton = true
             var promises = []
             promises.push(ractive.update())
-            var subInputs = grandParentOf(event.keypath)
             if (event.context) {
+              var subInputs = grandParentOf(event.keypath)
               _.each(event.context.subInputs, function (input, subInputIndex) {
                 if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
                   var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
@@ -2982,10 +2984,12 @@
               const rightBottom = rightPanelPart.getBoundingClientRect().bottom
               const diff = rightBottom - leftBottom
               if (diff > 0) {
-                $(leftPanelPart).find('.field').css('margin-bottom', diff)
+                const leftField = $(leftPanelPart).find('.field, .pure-u-1').last()
+                leftField.css('margin-bottom', diff + Number(leftField.css('margin-bottom').replace("px", "")))
               }
               if (diff < 0) {
-                $(rightPanelPart).find('.field').css('margin-bottom', -diff)
+                const rightField = $(rightPanelPart).find('.field, .pure-u-1').last()
+                rightField.css('margin-bottom', -diff + Number(rightField.css('margin-bottom').replace("px", "")))
               }
             }
             return {
@@ -3008,6 +3012,69 @@
                 })
               }
             }
+            return {
+              teardown: function () {}
+            }
+          }
+          const draggable = function (node, args) {
+            setTimeout(function () {
+              const draggedClass = `draggable_${args.inputIndex}`
+              // source
+              $(node).addClass(draggedClass)
+              $(node).draggable({
+                helper: 'clone',
+                appendTo: 'parent'
+              }).data({
+                value: _.chain(deepClone(args.value)).omit('old').defaults({ old: { value: undefined } }).value(),
+                input: args.input,
+                valueIndex: args.inputValueIndex
+              });
+            })
+            return {
+              teardown: function () {}
+            }
+          }
+          const dropZone = function (node, args) {
+            const draggedClass = `draggable_${args.inputIndex}`
+            console.log("dropZOne " + draggedClass)
+            //target
+            $(node).droppable({
+              activeClass: 'drop-target',
+              accept: `.${draggedClass}`,
+              drop: function (event, ui) {
+                if (args.input.subInputs) {
+                  const data = $(ui.draggable).data()
+                  var newValueIndex
+                  _.chain(args.input.subInputs).pluck('input').each(function (input, inputIndex) {
+                    const lastValue =_.last(input.values).current.value
+                    if ([ '', undefined, null].includes(lastValue) || Array.isArray(lastValue) && !lastValue.length) {
+                      input.values.splice(-1, 1, data.input.subInputs[inputIndex].input.compareValues[data.valueIndex])
+                    } else {
+                      input.values.push(data.input.subInputs[inputIndex].input.compareValues[data.valueIndex])
+                    }
+                    newValueIndex = input.values.length - 1
+                  })
+                  ractive.update()
+                  ractive.fire('saveNewObject', {
+                    input: args.input,
+                    original: {
+                      target: node
+                    }
+                  }, newValueIndex)
+                } else {
+                  if ([ '', undefined, null ].includes(_.last(args.input.values).current.value)) {
+                    args.input.values.splice(-1, 1, $(ui.draggable).data().value)
+                  } else {
+                    args.input.values.push($(ui.draggable).data().value)
+                  }
+                  ractive.update()
+                  ractive.fire('patchResource',
+                    { input: args.input, context: $(ui.draggable).data().value, original: { target: node } },
+                    args.input.predicate, unPrefix(args.input.domain))
+                }
+                heightAligned(node.parentNode)
+              }
+            })
             return {
               teardown: function () {}
             }
@@ -3296,7 +3363,9 @@
               repositionSupportPanels,
               rangeSlider,
               heightAligned,
-              authorityEdit
+              authorityEdit,
+              draggable,
+              dropZone
             },
             partials: applicationData.partials,
             transitions: {
@@ -3386,19 +3455,20 @@
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
                 copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
-                ractive.update()
+                ractive.update().then(function () {
+                  heightAligned(document.main.$(event.node).closest('.height-aligned'))
+                })
               },
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, editAuthorityMode) {
                 const inputValue = event.context
-                const input = ractive.get(grandParentOf(event.keypath))
+                const input = event.input || ractive.get(grandParentOf(event.keypath))
                 const proceed = function () {
-                  const datatypeKeypath = grandParentOf(event.keypath) + '.datatypes.0'
                   const subject = ractive.get('targetUri.' + rdfType)
                   if (subject) {
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
-                    Main.patchResourceFromValue(subject, predicate, inputValue, ractive.get(datatypeKeypath), errors, event.keypath)
+                    Main.patchResourceFromValue(subject, predicate, inputValue, input.datatypes[ 0 ], errors, event.keypath)
                     event.context.domain = rdfType
                     input.allowAddNewButton = true
                     waiter.cancel()
@@ -3409,7 +3479,7 @@
                   ractive.set(`${event.keypath}.current.value`, event.context.old.value)
                 }
 
-                if (!input.isSubInput && (event.keypath.indexOf('enableCreateNewResource') === -1)) {
+                if (!input.isSubInput && (!event.keypath || event.keypath.indexOf('enableCreateNewResource') === -1)) {
                   if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '') || inputValue.current.value === inputValue.old.value) {
                     return
                   }
@@ -3427,7 +3497,10 @@
               },
               saveNewObject: function (event, index) {
                 if (!eventShouldBeIgnored(event)) {
-                  saveObject(event, applicationData, index, 'add')
+                  const heightAlignedTarget = $(event.node).closest('.height-aligned')
+                  saveObject(event, applicationData, index, 'add').then(function () {
+                    heightAligned(heightAlignedTarget)
+                  })
                 }
               },
               replaceObject: function (event, index) {
