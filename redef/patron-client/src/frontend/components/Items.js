@@ -37,18 +37,6 @@ class Items extends React.Component {
   }
 }
 
-/*
-
- <div className="header">
- <div role="row" className="flex-wrapper">
- <div role="columnheader" className="flex-item media-item"><FormattedMessage {...messages.mediaType} /></div>
- <div role="columnheader" className="flex-item"><FormattedMessage {...messages.language} /></div>
- <div role="columnheader" className="flex-item"><FormattedMessage {...messages.placement} /></div>
- <div role="columnheader" className="flex-item"><FormattedMessage {...messages.status} /></div>
- </div>
- </div>
- */
-
 Items.propTypes = {
   mediaItems: PropTypes.array.isRequired
 }
