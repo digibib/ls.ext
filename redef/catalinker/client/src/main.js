@@ -4104,9 +4104,12 @@
                         }).then(function (response) {
                           const promises = []
                           _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) { return pair[ 1 ] === true }).map(function (pair) { return pair[ 0 ] }).value(), function (property) {
-                            const input = ractive.get('applicationData.inputMap')[ `${typeFromUri(parentUri)}.http://data.deichman.no/ontology#${property}` ]
+                            const inputRef = event.context.showFieldsOfRelated.filter(item => item.field === property)[0].inputRef
+                            const oldValue = valueOfInputByInputId(inputRef)
                             const newValue = relation.projections[ property ]
-                            promises.push(patchValue(response.headers.location, property, typesFromRange(input.ranges[ 0 ]).rdfType, input.values[ 0 ].current.value || '', newValue || ''))
+                            if (newValue) {
+                              promises.push(patchValue(response.headers.location, property, typesFromRange(input.ranges[ 0 ]).rdfType, oldValue || '', newValue))
+                            }
                           })
                           return Promise.all(promises)
                         }))
