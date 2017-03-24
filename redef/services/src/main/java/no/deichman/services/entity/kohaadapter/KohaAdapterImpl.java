@@ -81,6 +81,17 @@ public final class KohaAdapterImpl implements KohaAdapter {
         return invocationBuilder.get();
     }
 
+    private Response getCheckoutsFromAPI(String userId) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/checkouts?borrowernumber=" + userId);
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.get();
+    }
+
     private Response requestExpandedBiblio(String id) {
         Client client = ClientBuilder.newClient();
         String url = kohaPort + "/api/v1/biblios/" + id + "/expanded";
@@ -168,6 +179,46 @@ public final class KohaAdapterImpl implements KohaAdapter {
         } else {
             throw new PublicationHasItemsException(numberOfItems);
         }
+    }
+
+    @Override
+    public String getBiblioFromItemNumber(String itemNumber) {
+        Response response = getBiblioFromItemNumberFromAPI(itemNumber);
+        return response.readEntity(String.class);
+    }
+
+    private Response getBiblioFromItemNumberFromAPI(String itemNumber) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/items/" + itemNumber + "/biblio");
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.get();
+    }
+
+    @Override
+    public String getCheckouts(String userId) {
+        Response response = getCheckoutsFromAPI(userId);
+        return response.readEntity(String.class);
+    }
+
+    @Override
+    public String getHolds(String userId) {
+        Response response = getHoldsFromAPI(userId);
+        return response.readEntity(String.class);
+    }
+
+    private Response getHoldsFromAPI(String userId) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/holds/?borrowernumber=" + userId);
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.get();
     }
 
     @Override

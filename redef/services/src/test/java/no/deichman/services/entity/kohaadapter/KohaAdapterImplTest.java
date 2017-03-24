@@ -11,8 +11,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class KohaAdapterImplTest {
 
-    private final KohaSvcMock kohaSvcMock = new KohaSvcMock();
-    private final KohaAdapterImpl kohaAdapter = new KohaAdapterImpl("http://localhost:" + kohaSvcMock.getPort());
+    private final KohaAPIMock kohaAPIMock = new KohaAPIMock();
+    private final KohaAdapterImpl kohaAdapter = new KohaAdapterImpl("http://localhost:" + kohaAPIMock.getPort());
 
     @Test
     public void should_have_default_constructor() {
@@ -21,16 +21,16 @@ public class KohaAdapterImplTest {
 
     @Test
     public void should_create_a_new_biblio() throws Exception {
-        kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addGetBiblioExpandedExpectation("626460", stringFromClassPathResource("biblio_expanded.json"));
+        kohaAPIMock.addLoginExpectation();
+        kohaAPIMock.addGetBiblioExpandedExpectation("626460", stringFromClassPathResource("biblio_expanded.json"));
 
         assertNotNull(kohaAdapter.getBiblio("626460"));
     }
 
     @Test
     public void should_return_new_biblio_ID() throws Exception {
-        kohaSvcMock.addLoginExpectation();
-        kohaSvcMock.addCreateNewBiblioExpectation("26");
+        kohaAPIMock.addLoginExpectation();
+        kohaAPIMock.addCreateNewBiblioExpectation("26");
 
         String biblioId = kohaAdapter.createNewBiblio();
         assertEquals("26", biblioId);
@@ -38,9 +38,9 @@ public class KohaAdapterImplTest {
 
     @Test
     public void should_return_raw_marc_xml() throws IOException {
-        kohaSvcMock.addLoginExpectation();
+        kohaAPIMock.addLoginExpectation();
         String expected = stringFromClassPathResource("ragde.marcxml");
-        kohaSvcMock.addGetBiblioExpandedExpectation("626460", expected);
+        kohaAPIMock.addGetBiblioExpandedExpectation("626460", expected);
 
         assertEquals(expected, kohaAdapter.retrieveBiblioExpanded("626460"));
     }

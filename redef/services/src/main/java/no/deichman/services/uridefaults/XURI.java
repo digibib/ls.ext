@@ -28,11 +28,13 @@ public class XURI implements Comparable {
     public final EntityType getTypeAsEntityType() {
         return EntityType.get(type);
     }
-
     public final String getId() {
         return id;
     }
 
+    public final String getPath() {
+        return "/" + type + "/" + id;
+    }
     public final Resource getAsResource() {
         return ResourceFactory.createResource(uri);
     }
