@@ -156,10 +156,9 @@ class SearchResult extends React.Component {
   }
 
   renderItems (result) {
-    let filteredBranches = []
-    let unfilteredBranches = []
     let homeBranchPos
     const work = this.props.resources[ result.id ]
+    const activeFilters = this.getActiveBranchFilters()
 
     if (work) {
       const items = [].concat(...work.publications.map(publication => (this.props.items[ publication.recordId ] || []).items || []).filter(array => array.length > 0))
@@ -204,7 +203,7 @@ class SearchResult extends React.Component {
                     this.handleBranchStatus(el.branchcode)
                   }}
                   onKeyDown={() => { this.handleBranchStatusEnter(el.branchcode) }}>
-                    {this.shouldShowBranchStatus(el.branchcode)
+                    {this.shouldShowBranchStatus(el.branchcode) || homeBranchPos === i
                       ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
                         <FormattedMessage {...messages.showBranchAvailability} />
                       </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
@@ -215,72 +214,19 @@ class SearchResult extends React.Component {
                   </button>
                 </div>
             </div>
-            {this.shouldShowBranchStatus(el.branchcode)
+            {this.shouldShowBranchStatus(el.branchcode) || homeBranchPos === i
               ? <Items
                 mediaItems={el.mediaItems}
                 showBranchStatusMedia={this.props.showBranchStatusMedia}
                 branchCode={el.branchcode}
                 locationQuery={this.props.locationQuery}
+                userBranch={this.props.homeBranch}
               />
               : null
             }
           </div>
         )
       })
-
-/*
-      {this.shouldShowStatus()
-        ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
-          <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
-          <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
-        </div>),
-          (<div key="entry-more-content" className="entry-content-more">
-            {this.renderItems(result)}
-          </div>) ]
-        : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
-          <p><a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showStatus} /></a></p>
-          <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
-        </div>)
-        */
-
-      /*
-      activeFilters.map(filter => {
-        groupedByBranchSortedByMediaType.map(el => {
-          console.log(el.branchcode)
-          if (filter.bucket === el.branchcode) {
-            filteredBranches.push(el)
-          }
-          return el
-        })
-        return filter
-      })
-
-      const byBranch = filteredBranches.map((el, i) => {
-        return (
-          <div className="items-by-branch" key={el.branchcode}>
-            <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
-            <Items mediaItems={el.mediaItems} />
-            <p style={{ clear: 'both' }} />
-          </div>
-        )
-      })
-
-
-      if (activeFilters.length > 0) {
-        activeFilters.map(filter => {
-          if (filter.bucket === el.branchcode) {
-            filteredBranches.push(el)
-            return (
-              <div className="items-by-branch" key={el.branchcode}>
-                <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
-                <Items mediaItems={el.mediaItems} />
-                <p style={{ clear: 'both' }} />
-              </div>
-            )
-          }
-        })
-      }
-      */
 
       if (homeBranchPos) {
         const userBranch = byBranch.splice(homeBranchPos, 1)
