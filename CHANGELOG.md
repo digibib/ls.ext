@@ -12,6 +12,20 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 0.9.0. (2017-03-21)
+
+KOHA: 7933c6de69c171ef9bb394e19c8202a3d5978ec1
+GITREF: 477de94d031f67a74c4d072f4335db0253c50aca
+
+- Catalinker:
+  - DEICH-659: Forenkling av registereing av deler
+  - DEICH-720: Utvidet redigering av autoriteter tar ikke utgangspunkt i valgt autoritet
+  - DEICH-572: Knappen "Beskriv utgivelse" oppretter ny utgivelse, også ved redigering av eksisterende
+  - DEICH-727: Manglende opplysninger fra ekstern kilde
+  - DEICH-722: Verkstype på nytt verk legger seg også på relatert verk
+- Koha:
+  - DEICH-735: Koha API info om res på vei
+
 ## 0.8.99 (2017-03-15)
 
 KOHA: 7933c6de69c171ef9bb394e19c8202a3d5978ec1
