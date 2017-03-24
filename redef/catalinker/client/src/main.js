@@ -4105,7 +4105,7 @@
                           const promises = []
                           _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) { return pair[ 1 ] === true }).map(function (pair) { return pair[ 0 ] }).value(), function (property) {
                             const inputRef = event.context.showFieldsOfRelated.filter(item => item.field === property)[0].inputRef
-                            const input = ractive.get('applicationData.inputMap')[ `${typeFromUri(parentUri)}.http://data.deichman.no/ontology#${property}` ]
+                            const input = ractive.get(`inputLinks.${inputRef}`)
                             const oldValue = valueOfInputByInputId(inputRef) || ''
                             const newValue = relation.projections[ property ]
                             if (newValue) {
