@@ -974,9 +974,18 @@ module.exports = (app) => {
                   qualifier: ' - verk'
                 }
               },
-              { rdfProperty: 'subtitle' },
-              { rdfProperty: 'partTitle' },
-              { rdfProperty: 'partNumber' },
+              {
+                rdfProperty: 'subtitle',
+                id: 'workSubtitle'
+              },
+              {
+                rdfProperty: 'partTitle',
+                id: 'workPartTitle'
+              },
+              {
+                rdfProperty: 'partNumber',
+                id: 'workPartNumber'
+              },
               {
                 rdfProperty: 'publicationYear',
                 label: 'År'
@@ -1123,10 +1132,10 @@ module.exports = (app) => {
                 noInverseRelationsText: 'Verket har ingen utgivelser.',
                 showRelatedTitle: 'Verket har <%=relations.length%> utgivelse<%=relations.length != 1 ? "r" : ""%>:',
                 showFieldsOfRelated: [
-                  { field: 'mainTitle', width: '7-24' }, // there are 23/24th left for field layouts
-                  { field: 'subtitle', width: '7-24' },
-                  { field: 'partNumber', width: '2-24' },
-                  { field: 'partTitle', width: '7-24' }
+                  { inputRef: 'workMainTitle', field: 'mainTitle', width: '7-24' }, // there are 23/24th left for field layouts
+                  { inputRef: 'workSubtitle', field: 'subtitle', width: '7-24' },
+                  { inputRef: 'workPartNumber', field: 'partNumber', width: '2-24' },
+                  { inputRef: 'workPartTitle', field: 'partTitle', width: '7-24' }
                 ],
                 cloneParentButtonExplanation: `
                   Hvis du velger å splitte verket, opprettes det en ny kopi av det for hver utgivelse som er valgt over. Hver utgivelse knyttes
@@ -1433,8 +1442,8 @@ module.exports = (app) => {
                           legend: `
                           Legg inn titler på delene her med et linjeskift mellom hver. Når du trykker på "Legg til",
                           opprettes en utgivelesedel for hver tittel. Tomme linjer blir ignorert. Hver del får også
-                          knyttet til seg samme aktør og rolle hvis det er angitt over. Hvis du ikke vil ha automatisk 
-                          nummerering av deler som opprettes, fjerner du krysset for det valget nedenfor. 
+                          knyttet til seg samme aktør og rolle hvis det er angitt over. Hvis du ikke vil ha automatisk
+                          nummerering av deler som opprettes, fjerner du krysset for det valget nedenfor.
                           `,
                           rows: 10
                         }
