@@ -193,6 +193,9 @@ module.exports.buildQuery = function (urlQueryString) {
     })
     elasticSearchQuery.aggs.facets.aggs[ fieldName ].filter.bool.must = aggregationMusts
   })
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Parsed searchBuilder query: ${JSON.stringify(elasticSearchQuery)}`)
+  }
   return elasticSearchQuery
 }
 

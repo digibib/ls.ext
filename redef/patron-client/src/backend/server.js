@@ -31,3 +31,7 @@ require('./routes')(app)
 app.listen(port, undefined, () => {})
 
 console.log(`Server started on port ${port} with environment ${process.env.NODE_ENV || 'development'}`)
+process.on('SIGUSR2', () => {
+  process.env.NODE_ENV = process.env.NODE_ENV === 'development' ? 'production' : 'development'
+  console.log(`Received SIGUSR2. Toggling debug level to ${process.env.NODE_ENV}`)
+})
