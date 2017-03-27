@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import no.deichman.services.entity.kohaadapter.KohaAPIMock;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
-import no.deichman.services.entity.kohaadapter.MarcRecord;
 import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
@@ -17,7 +16,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,7 +27,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.vocabulary.RDF.type;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.notNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -70,16 +69,12 @@ public class CirculationResourceTest {
         String checkoutData = kohaAPIMock.generateCheckoutsJson(USER_ID, ITEM_NUMBER_1);
         String holdsData = kohaAPIMock.generateHoldsJson(USER_ID, RECORD_ID_2, RECORD_ID_3);
         String record1 = kohaAPIMock.generateBiblioResponseJson(RECORD_ID_1);
-        String record2 = kohaAPIMock.generateBiblioResponseJson(RECORD_ID_2);
-        String record3 = kohaAPIMock.generateBiblioResponseJson(RECORD_ID_3);
 
         when(mockKohaAdapter.getCheckouts(USER_ID)).thenReturn(checkoutData);
         when(mockKohaAdapter.getHolds(USER_ID)).thenReturn(holdsData);
         when(mockKohaAdapter.getBiblioFromItemNumber(ITEM_NUMBER_1)).thenReturn(record1);
-        when(mockKohaAdapter.retrieveBiblioExpanded(RECORD_ID_2)).thenReturn(record2);
-        when(mockKohaAdapter.retrieveBiblioExpanded(RECORD_ID_3)).thenReturn(record3);
 
-        when(mockKohaAdapter.createNewBiblioWithMarcRecord(notNull(MarcRecord.class))).thenReturn(RECORD_ID_1, RECORD_ID_2, RECORD_ID_3);
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(any())).thenReturn(RECORD_ID_1, RECORD_ID_2, RECORD_ID_3);
 
         XURI person = new XURI(preparePerson());
         XURI work = new XURI(prepareWork(person.getUri()));
