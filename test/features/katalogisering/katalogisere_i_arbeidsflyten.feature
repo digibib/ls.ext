@@ -145,6 +145,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret
+    Og jeg venter litt
     Og jeg velger rollen "Fotograf"
     Og velger radioknappen for "Utgivelse" for å velge "hva rollen gjelder"
     Og jeg trykker på "Legg til"-knappen

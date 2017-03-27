@@ -20,7 +20,7 @@
                 {{#each applicationData.inputsForDomainType[rdfType]:inputIndex}}
                 {{#visible}}
                 <span class="height-aligned">
-                {{>input {supportAuthorityComparison:inputIndex==0, supportable:(inputIndex==0 || type === 'searchable-with-result-in-side-panel'), input:.}}}{{#if compare}}{{>input {compareMode:true}}}{{/if}}
+                {{>input {supportAuthorityComparison:inputIndex==0, supportable:(inputIndex==0 || type === 'searchable-with-result-in-side-panel'), input:., allInputs:../}}}{{#if compare}}{{>input {compareMode:true, input:., allInputs:../}}}{{/if}}
                 {{#if (type === 'input-boolean') && !(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) &&
                 (checkShouldInclude(.)) &&!compare}}
                 <span class="prop-input boolean-separator pure-u-1-2 {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}" >

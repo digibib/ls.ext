@@ -91,8 +91,8 @@
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           var realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
-              return subInput.input
-            }) : [ input ]
+            return subInput.input
+          }) : [ input ]
 
           _.each(realInputs, function (input, subInputIndex) {
             var subInputFragment = input.isSubInput ? `subInputs.${subInputIndex}.input.` : ''
@@ -499,8 +499,8 @@
       options = options || {}
       if (values && values.length > 0) {
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
-            return value.id
-          })
+          return value.id
+        })
         if (options.compareValues) {
           input.compareValues = input.compareValues || emptyValues()
         }
@@ -536,9 +536,9 @@
       if (value) {
         input[ options.compareValues ? 'compareValues' : 'values' ][ index ] = {
           old: options.keepOld ? input.values[ index ].old : {
-              value: value.value,
-              lang: value.lang
-            },
+            value: value.value,
+            lang: value.lang
+          },
           current: {
             value: value.value,
             lang: value.lang,
@@ -656,20 +656,27 @@
       }
     }
 
-    function checkShouldInclude (input) {
+    function checkShouldInclude (input, allInputs,) {
       var shouldInclude = true
+      let handleInput = function (includeWhenValues, property) {
+        return function (input) {
+          if (input.fragment === property && !_.contains(includeWhenValues, _.flatten([
+              fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
+                _.flatten([ input.values[ 0 ].current.value ])[ 0 ])
+            ])[ 0 ])) {
+            shouldInclude = false
+            return true
+          }
+        }
+      }
       if (input.includeOnlyWhen) {
         _.each(_.keys(input.includeOnlyWhen), function (property) {
           let includeWhenValues = _.flatten([ input.includeOnlyWhen[ property ] ])
-          forAllGroupInputs(function (input1) {
-            if (input1.fragment === property && !_.contains(includeWhenValues, _.flatten([
-                fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
-                  _.flatten([ input1.values[ 0 ].current.value ])[ 0 ])
-              ])[ 0 ])) {
-              shouldInclude = false
-              return true
-            }
-          })
+          if (allInputs) {
+            _.find(allInputs, handleInput(includeWhenValues, property))
+          } else {
+            forAllGroupInputs(handleInput(includeWhenValues, property))
+          }
         })
       }
       return shouldInclude
@@ -808,29 +815,19 @@
 
     function forAllGroupInputs (handleInput, options) {
       options = options || {}
-      var abort = false
-      _.each(options.inputGroups || ractive.get('inputGroups'), function (group, groupIndex) {
-        _.each(group.inputs, function (input, inputIndex) {
+      _.find(options.inputGroups || ractive.get('inputGroups'), function (group, groupIndex) {
+        return _.find(group.inputs, function (input, inputIndex) {
           if (input.subInputs) {
-            _.each(input.subInputs, function (subInput, subInputIndex) {
-              if (handleInput(subInput.input, groupIndex, inputIndex, subInputIndex)) {
-                abort = true
-              }
-            })
             if (options.handleInputGroups) {
-              if (handleInput(input, groupIndex, inputIndex)) {
-                abort = true
-              }
+              handleInput(input, groupIndex, inputIndex)
             }
+            return _.find(input.subInputs, function (subInput, subInputIndex) {
+              return handleInput(subInput.input, groupIndex, inputIndex, subInputIndex)
+            })
           } else {
-            if (handleInput(input, groupIndex, inputIndex)) {
-              abort = true
-            }
+            return handleInput(input, groupIndex, inputIndex)
           }
         })
-        if (abort) {
-          return
-        }
       })
     }
 
@@ -2464,24 +2461,24 @@
             .pluck('predicate').first().value()
 
           const autoNumberInput = inputFromInputId(bulkEntryInputChain.first().value().widgetOptions.enableBulkEntry.autoNumberInputRef)
-          let nextAutoNumber = autoNumberInput.nextNumber
+          let nextAutoNumber = autoNumberInput ? autoNumberInput.nextNumber : undefined
           var options = bulkEntryData && bulkEntryData.length > 0 ? {
-              bulkMultiply: function (ops) {
-                return _.chain(bulkEntryData).map(function (value) {
-                    var opsClone = deepClone(ops)
-                    _.each(opsClone, function (opSpec) {
-                      opSpec.alternativeValueFor = {
-                        [bulkEntryPredicate]: value
-                      }
-                      if (!Number(nextAutoNumber).isNaN) {
-                        opSpec.alternativeValueFor[ autoNumberInput.predicate ] = nextAutoNumber++
-                      }
-                    })
-                    return opsClone
-                  }
-                ).flatten().value()
-              }
-            } : {}
+            bulkMultiply: function (ops) {
+              return _.chain(bulkEntryData).map(function (value) {
+                  var opsClone = deepClone(ops)
+                  _.each(opsClone, function (opSpec) {
+                    opSpec.alternativeValueFor = {
+                      [bulkEntryPredicate]: value
+                    }
+                    if (!Number(nextAutoNumber).isNaN) {
+                      opSpec.alternativeValueFor[ autoNumberInput.predicate ] = nextAutoNumber++
+                    }
+                  })
+                  return opsClone
+                }
+              ).flatten().value()
+            }
+          } : {}
 
           return patchObject(input, applicationData, index, op, options).then(function () {
             visitInputs(input, function (input) {
@@ -2609,6 +2606,7 @@
             let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
             if (op === 'del' || addedMultivalues > 1) {
               removeInputsForObject(input, index)()
+              ractive.update()
               if (addedMultivalues > 1) {
                 updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
               }
@@ -2958,7 +2956,7 @@
                   original: {
                     target: $node.prev('.save-placeholder').prev()
                   },
-                  context: args.input
+                  context: { input:args.input }
                 }, 'customRange', ui.value - 1, stats.rangeLength)
               }
             })
@@ -2983,13 +2981,13 @@
               const rightPanelPart = panelParts.get(3)
               const rightBottom = rightPanelPart.getBoundingClientRect().bottom
               const diff = rightBottom - leftBottom
+              const leftField = $(leftPanelPart).find('.field, .pure-u-1-1').last().css('margin-bottom', null)
+              const rightField = $(rightPanelPart).find('.field, .pure-u-1-1').last().css('margin-bottom', null)
               if (diff > 0) {
-                const leftField = $(leftPanelPart).find('.field, .pure-u-1').last()
-                leftField.css('margin-bottom', diff + Number(leftField.css('margin-bottom').replace("px", "")))
+                leftField.css('margin-bottom', diff + Number((leftField.css('margin-bottom') || "0").replace("px", "")))
               }
               if (diff < 0) {
-                const rightField = $(rightPanelPart).find('.field, .pure-u-1').last()
-                rightField.css('margin-bottom', -diff + Number(rightField.css('margin-bottom').replace("px", "")))
+                rightField.css('margin-bottom', -diff + Number((rightField.css('margin-bottom') || "0").replace("px", "")))
               }
             }
             return {
@@ -3018,6 +3016,22 @@
           }
           const draggable = function (node, args) {
             setTimeout(function () {
+              // check for duplicates
+              if (args.input && args.input.subInputs) {
+                let valueHashes = []
+                const numberOfValues = _.chain(args.input.subInputs).pluck('input').pluck('values').value().length
+                for (let i = 0; i < numberOfValues; i++) {
+                  valueHashes.push(_.chain(args.input.subInputs).pluck('input').pluck('values').pluck(i).pluck('current').pluck('value').value().reduce(function (memo, val) {return `${memo}|${val}`}))
+                }
+                let compareValueHash = _.chain(args.input.subInputs).pluck('input').pluck('compareValues').pluck(args.inputValueIndex).pluck('current').pluck('value').value().reduce(function (memo, val) {return `${memo}|${val}`})
+                if (valueHashes.includes(compareValueHash)) {
+                  return
+                }
+              } else {
+                if (_.chain(args.values).pluck('current').pluck('value').value().includes(args.compareValue.current.value)) {
+                  return
+                }
+              }
               const draggedClass = `draggable_${args.inputIndex}`
               // source
               $(node).addClass(draggedClass)
@@ -3036,7 +3050,6 @@
           }
           const dropZone = function (node, args) {
             const draggedClass = `draggable_${args.inputIndex}`
-            console.log("dropZOne " + draggedClass)
             //target
             $(node).droppable({
               activeClass: 'drop-target',
@@ -3046,11 +3059,11 @@
                   const data = $(ui.draggable).data()
                   var newValueIndex
                   _.chain(args.input.subInputs).pluck('input').each(function (input, inputIndex) {
-                    const lastValue =_.last(input.values).current.value
-                    if ([ '', undefined, null].includes(lastValue) || Array.isArray(lastValue) && !lastValue.length) {
-                      input.values.splice(-1, 1, data.input.subInputs[inputIndex].input.compareValues[data.valueIndex])
+                    const lastValue = _.last(input.values).current.value
+                    if ([ '', undefined, null ].includes(lastValue) || Array.isArray(lastValue) && !lastValue.length) {
+                      input.values.splice(-1, 1, data.input.subInputs[ inputIndex ].input.compareValues[ data.valueIndex ])
                     } else {
-                      input.values.push(data.input.subInputs[inputIndex].input.compareValues[data.valueIndex])
+                      input.values.push(data.input.subInputs[ inputIndex ].input.compareValues[ data.valueIndex ])
                     }
                     newValueIndex = input.values.length - 1
                   })
@@ -3073,6 +3086,9 @@
                     args.input.predicate, unPrefix(args.input.domain))
                 }
                 heightAligned(node.parentNode)
+                setTimeout(function () {
+                  $(ui.draggable).draggable('destroy')
+                })
               }
             })
             return {
@@ -3410,11 +3426,11 @@
             setTimeout(function () {
               whileUnobserved(function () {
                   if (start !== undefined) {
-                    _.each(_.chain(event.context.subInputs).pluck('input').invoke(direction, start, rangeLength).value(), function (f) {
+                    _.each(_.chain(event.context.input.subInputs).pluck('input').invoke(direction, start, rangeLength).value(), function (f) {
                       f()
                     })
                   } else {
-                    _.chain(event.context.subInputs).pluck('input').invoke(direction, start, rangeLength)
+                    _.chain(event.context.input.subInputs).pluck('input').invoke(direction, start, rangeLength)
                   }
                 }
               )
@@ -3513,7 +3529,11 @@
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
+                const heightAlignedTarget = $(event.node).closest('.height-aligned')
                 patchObject(parentInput, applicationData, index, 'del')
+                  .then(function () {
+                    heightAligned(heightAlignedTarget)
+                  })
                   .then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
@@ -4573,7 +4593,7 @@
                     showingWaiting = true
                     target.addClass('saving')
                     var next = target.nextAll('.save-placeholder')
-                    if (next) {
+                    if (next.length > 0) {
                       next.append(spinner.el)
                     } else {
                       $('#growler').show()

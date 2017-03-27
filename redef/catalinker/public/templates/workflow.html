@@ -42,7 +42,7 @@
                             {{#if !toolMode}}
                             {{#each inputs:inputIndex}}
                             {{#visible}}
-                            {{>input}}
+                            {{>input {input:.}}}
                             {{#if (type === 'input-boolean') && !(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.))}}
                                 <span class="prop-input boolean-separator pure-u-1-2 {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}">
                                     <span class="panel-part boolean-separator pure-u-1-1"> </span>
@@ -53,7 +53,7 @@
                             <div class="pure-u-1-1">
                             {{#nextStep}}
                                 {{#if checkRequiredInputValueForShow(.)}}
-                                    <div class="pure-g">
+                                    <div class="pure-g next-step">
                                         <div class="pure-u-1-2">
                                             <button
                                                     tabindex="{{tabSelected ? '0' : '-1'}}"

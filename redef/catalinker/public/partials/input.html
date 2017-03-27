@@ -1,4 +1,4 @@
-{{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.)))}}
+{{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(input, allInputs)))}}
 <span class="input-panel prop-input"
       class-pure-u-1-1="{{!compare}}"
       class-pure-u-1-2="{{compare}}"
@@ -18,18 +18,18 @@
       class-pure-u-1-1="{{(type === 'input-boolean' || oneLiner) && compare}}"
       class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
       class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
-<span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{./accordionHeader || compare ? '1' : '2'}}{{/if}} label"
+<span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{accordionHeader || compare ? '1' : '2'}}{{/if}} label"
       class-for-one-liner="{{oneLiner == true || type == 'input-boolean'}}"
       class-panel-part="{{type !== 'input-boolean' && !oneLiner}}"
       class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
         data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
 </span>
 <span class-panel-part="{{type != 'input-boolean' && !oneLiner}}"
-      class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner && (./accordionHeader || compare)}}"
-      class-pure-u-1-2="{{type != 'input-boolean' && !oneLiner && (!./accordionHeader || !compare)}}"
+      class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner && (accordionHeader || compare)}}"
+      class-pure-u-1-2="{{type != 'input-boolean' && !oneLiner && (!accordionHeader || !compare)}}"
       class-one-liner="{{type === 'input-boolean' || oneLiner}}"
       class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}"
-      intro={{./accordionHeader && subInputs ? 'accordion' : ''}}>
+      intro={{accordionHeader && subInputs ? 'accordion' : ''}}>
       {{#if compareMode }}
         {{#if !subInputs && (!compareValues || !compareValues.length > 0) }}
             <span class="pure-u-1 field dummy"></span>
@@ -37,7 +37,7 @@
         {{#each compareValues:inputValueIndex}}
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
                 <span class="input" as-disabled>
-                    <span class="field" class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                    <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
                         {{>(readOnly ? "readonly-" : "") + type }}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
@@ -48,7 +48,7 @@
         {{#each values:inputValueIndex}}
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
                 <span class="input">
-                    <span class="field" class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                    <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
                         {{>(readOnly ? "readonly-" : "") + type}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
@@ -194,11 +194,11 @@
     <span class="pure-u-1-1" style="order: 1000;">
         <div class="add-new-btn-row pure-u-1">
         {{#if ! compareMode}}
-            {{#if hasNextRange(.) || hasPrevRange(.)}}
+            {{#if hasNextRange(input) || hasPrevRange(input)}}
                         <button
                                 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                                 class="pure-button pure-button-primary pagination"
-                                {{#if !hasPrevRange(.)}}
+                                {{#if !hasPrevRange(input)}}
                                 disabled="disabled"
                                 {{/if}}
                                 on-click="prevRange"
@@ -206,14 +206,14 @@
                         <button
                                 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                                 class="pure-button pure-button-primary pagination"
-                                {{#if !hasNextRange(.)}}
+                                {{#if !hasNextRange(input)}}
                                 disabled="disabled"
                                 {{/if}}
                                 on-click="nextRange"
                                 on-enter="nextRange">+{{pagination}}</button>
                         <span class="pagination save-placeholder"></span>
 
-                        <span class="pure-u-11-24 pagination range-slider" as-rangeSlider="{rangeStats: subInputs[0].input.rangeStats, input:.}">
+                        <span class="pure-u-11-24 pagination range-slider" as-rangeSlider="{rangeStats: subInputs[0].input.rangeStats, input}">
                                <span class="range-slider-handle ui-slider-handle"/>
                         </span>
             {{/if}}

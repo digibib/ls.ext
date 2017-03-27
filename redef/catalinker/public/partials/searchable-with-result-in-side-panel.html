@@ -32,7 +32,7 @@
                   style="width: 100%;">
                 <span class="select2-selection--multiple">
                     <ul class="select2-selection__rendered">
-                        <li class="select2-selection__choice" {{#if compare && compareMode}}as-draggable="{inputIndex, value:.}"{{/if}}>
+                        <li class="select2-selection__choice" {{#if compare && compareMode}}as-draggable="{inputIndex, value:., compareValue: ../../compareValues[inputValueIndex], values: ../../values}"{{/if}}>
                             {{#if waiting}}
                                 <span class-compareValue={{compareValue}} class="select2-selection__choice__remove spinner"> </span>
                             {{else}}
