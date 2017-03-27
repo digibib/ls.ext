@@ -53,7 +53,6 @@ class ItemsMedia extends React.Component {
   }
 
   handleBranchStatusMedia (code) {
-    console.log(this.props)
     this.props.showBranchStatusMedia(code)
   }
 
@@ -65,9 +64,18 @@ class ItemsMedia extends React.Component {
   }
 
   shouldShowBranchStatusMedia (code) {
+    // const itemLocation = this.props.itemLocation
     const { locationQuery: { showBranchStatusMedia } } = this.props
     return (showBranchStatusMedia && showBranchStatusMedia === code || (Array.isArray(showBranchStatusMedia) && showBranchStatusMedia.includes(code)))
   }
+}
+
+ItemsMedia.propTypes = {
+  showUserBranch: PropTypes.func.isRequired,
+  mediaType: PropTypes.string,
+  branchCode: PropTypes.string.isRequired,
+  itemLocation: PropTypes.number.isRequired,
+  intl: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({
@@ -99,17 +107,3 @@ export const messages = defineMessages({
 })
 
 export default injectIntl(ItemsMedia)
-
-/*
- <div role="row" data-automation-id="work_items" className="flex-wrapper">
- <div role="gridcell" className="flex-item main-row-1">
- <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType ] ]} />
- {mediaType ? intl.formatMessage({ id: mediaType }) : ''}</div>
- <div role="gridcell" className="flex-item main-row-2">
- {this.props.itemsByMedia.items.map((item, i) => {
- return <Item key={i} item={item} />
- })
- }
- </div>
- </div>
- */
