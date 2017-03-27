@@ -22,13 +22,21 @@ class SearchResult extends React.Component {
     if (this.shouldShowStatus() && !this.props.resources[ id ]) {
       this.props.fetchWorkResource(id)
     }
+  }
 
+  componentDidUpdate () {
+    console.log('Component did update')
     const activeFilters = this.getActiveBranchFilters()
 
-    if (activeFilters.length > 0) {
+    console.log('Setting active filters!', activeFilters)
+
+    /*if (activeFilters.length > 0) {
       this.setBranchOpenFilters(activeFilters)
-    }
+      return false
+    }*/
+    return true
   }
+
 
   scrollToTop () {
     window.scrollTo(0, 0)
@@ -203,7 +211,7 @@ class SearchResult extends React.Component {
                     this.handleBranchStatus(el.branchcode)
                   }}
                   onKeyDown={() => { this.handleBranchStatusEnter(el.branchcode) }}>
-                    {this.shouldShowBranchStatus(el.branchcode) || homeBranchPos === i
+                    {this.shouldShowBranchStatus(el.branchcode)
                       ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
                         <FormattedMessage {...messages.showBranchAvailability} />
                       </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
@@ -214,13 +222,14 @@ class SearchResult extends React.Component {
                   </button>
                 </div>
             </div>
-            {this.shouldShowBranchStatus(el.branchcode) || homeBranchPos === i
+            {this.shouldShowBranchStatus(el.branchcode)
               ? <Items
                 mediaItems={el.mediaItems}
                 showBranchStatusMedia={this.props.showBranchStatusMedia}
                 branchCode={el.branchcode}
                 locationQuery={this.props.locationQuery}
                 userBranch={this.props.homeBranch}
+                activeFilters={activeFilters}
               />
               : null
             }

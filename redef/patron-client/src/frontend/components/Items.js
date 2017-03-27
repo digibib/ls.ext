@@ -5,6 +5,18 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import ItemsMedia from './ItemsMedia'
 
 class Items extends React.Component {
+  constructor (props) {
+    super(props)
+    this.showUserBranch = this.showUserBranch.bind(this)
+  }
+
+  showUserBranch (i) {
+    if (i === 0 && this.props.userBranch === this.props.branchCode && this.props.locationQuery.showBranchStatusMedia === undefined) {
+      console.log('RETURNING TRUE')
+      return true
+    } else return false
+  }
+
   renderEmpty () {
     return <p><span data-automation-id="no_items"><FormattedMessage {...messages.noItems} /></span></p>
   }
@@ -24,6 +36,8 @@ class Items extends React.Component {
                                  branchCode={this.props.branchCode}
                                  showBranchStatusMedia={this.props.showBranchStatusMedia}
                                  locationQuery={this.props.locationQuery}
+                                 showUserBranch={this.showUserBranch}
+                                 itemLocation={i}
               />
             })
           }
@@ -38,7 +52,12 @@ class Items extends React.Component {
 }
 
 Items.propTypes = {
-  mediaItems: PropTypes.array.isRequired
+  mediaItems: PropTypes.array.isRequired,
+  locationQuery: PropTypes.object.isRequired,
+  branchCode: PropTypes.string.isRequired,
+  showBranchStatusMedia: PropTypes.func.isRequired,
+  userBranch: PropTypes.string,
+  activeFilters: PropTypes.array.isRequired
 }
 
 export const messages = defineMessages({
