@@ -14,7 +14,7 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 ## 2017.35
 
-KOHA: 580f0aa350ea1ec1247524b930291b7892d261c0
+KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee
 GITREF:
 
 - Catalinker:
