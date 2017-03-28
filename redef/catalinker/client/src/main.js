@@ -2396,7 +2396,8 @@
           'readonly-input-nonNegativeInteger',
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
-          'readonly-searchable-with-result-in-side-panel'
+          'readonly-searchable-with-result-in-side-panel',
+          'links'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.

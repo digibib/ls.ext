@@ -30,6 +30,9 @@
                 </span>
                 {{/visible}}
                 {{/each}}
+                {{#if !compare}}
+                    {{>links}}
+                {{/if}}
             </div >
         </div >
         {{#compare}}

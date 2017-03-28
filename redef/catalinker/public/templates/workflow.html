@@ -110,29 +110,7 @@
                     {{/if}}
                 {{/each}}
             </div>
-            <div class="pure-g links">
-                {{#targetUri.Work}}
-                <div class="pure-u-1">
-                    <a tabindex="0" data-automation-id="work_page_link" target="_blank"
-                       href="{{'http://sok.deichman.no/work' + targetUri.Work.substring(targetUri.Work.lastIndexOf('/'))}}">Vis siden for verket</a>
-                </div>
-                <div class="pure-u-1">
-                    <a tabindex="0" data-automation-id="show_work_rdf" on-click="showRdf:{{targetUri.Work}}" on-enter="showRdf:{{targetUri.Work}}">Vis lenkede data i TURTLE-format for verket</a>
-                </div>
-                {{/}}
-                {{#targetUri.Publication}}
-                <div class="pure-u-1">
-                    <a tabindex="0" data-automation-id="biblio_record_link" target="_blank"
-                       href="https://intra.deichman.no/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
-                       class="link">Vis utgivelsen i Koha</a>
-                </div>
-                <div class="pure-u-1">
-                    <div class="pure-u-1">
-                        <a tabindex="0" data-automation-id="show_work_rdf" on-click="showReport:{{targetUri.Publication}}" on-enter="showReport:{{targetUri.Publication}}">Vis katalogiserte data for utgivelsen</a>
-                    </div>
-                </div>
-                {{/}}
-            </div>
+            {{>links}}
         </div>
     </div>
 </div>
