@@ -24,19 +24,6 @@ class SearchResult extends React.Component {
     }
   }
 
-  componentDidUpdate () {
-    console.log('Component did update')
-    const activeFilters = this.getActiveBranchFilters()
-
-    console.log('Setting active filters!', activeFilters)
-
-    /*if (activeFilters.length > 0) {
-      this.setBranchOpenFilters(activeFilters)
-      return false
-    }*/
-    return true
-  }
-
 
   scrollToTop () {
     window.scrollTo(0, 0)
@@ -155,12 +142,6 @@ class SearchResult extends React.Component {
       return el
     })
     return activeBranches
-  }
-
-  setBranchOpenFilters (activeFilters) {
-    activeFilters.forEach(e => {
-      this.handleBranchStatus(e.bucket)
-    })
   }
 
   renderItems (result) {

@@ -61,6 +61,31 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
   }
 }
 
+export function ensureStatusEntriesOpen (inputLocationQuery) {
+  return (dispatch, getState) => {
+    console.log(getState())
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    let queryParam = locationQuery[ 'showBranchStatus' ] || []
+    if (!Array.isArray(queryParam)) {
+      queryParam = [ queryParam ]
+    }
+    if (queryParam.length > 0) {
+      // There are allready toggled filters, which means this is not an "initial query",
+      // but a refinement of existing query.
+      return
+    }
+    const borrowerNumber = getState().profile.personalInformation.borrowerNumber
+
+    if (borrowerNumber !== undefined) {
+      const homeBranch = getState().profile.personalInformation.homeBranch
+      locationQuery[ 'showBranchStatus' ] = [ homeBranch ]
+    }
+
+    return dispatch(replace({ pathname: pathname, query: locationQuery }))
+  }
+}
+
 export function togglePeriodParamValues (yearFrom, yearTo, years, inputLocationQuery) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
