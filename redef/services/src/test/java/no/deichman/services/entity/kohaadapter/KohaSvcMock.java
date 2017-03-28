@@ -45,7 +45,7 @@ public final class KohaSvcMock {
         clientDriver.addExpectation(
                 onRequestTo("/api/v1/biblios/" + biblioId + "/expanded")
                         .withMethod(ClientDriverRequest.Method.GET)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*koha.session=huh.*")),
                 giveResponse(
                         responseJSON,
                         "application/json; charset=utf8"));
@@ -55,7 +55,7 @@ public final class KohaSvcMock {
         clientDriver.addExpectation(
                 onRequestTo("/api/v1/biblios/" + biblioId)
                         .withMethod(ClientDriverRequest.Method.GET)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*koha.session=huh.*")),
                 giveResponse(
                         responseJSON,
                         "application/json; charset=utf8"));
@@ -85,7 +85,7 @@ public final class KohaSvcMock {
                 onRequestTo("/api/v1/biblios/" + biblioId)
                         .withMethod(PUT)
                         .withBody(Pattern.compile("(?s).*"), MediaType.TEXT_XML)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*koha.session=huh.*")),
                 giveResponse(responseXml, "text/xml; charset=ISO-8859-1")
                         .withStatus(OK.getStatusCode()));
     }
@@ -106,7 +106,7 @@ public final class KohaSvcMock {
                 onRequestTo("/api/v1/biblios")
                         .withMethod(POST)
                         .withBody(expectedPayload, MediaType.TEXT_XML)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*koha.session=huh.*")),
                 giveResponse(responseJSON, "application/json; charset=utf8")
                         .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + returnedBiblioId)
                         .withStatus(CREATED.getStatusCode()));
@@ -123,7 +123,7 @@ public final class KohaSvcMock {
                 onRequestTo("/api/v1/biblios")
                         .withMethod(POST)
                         .withBody(expectedPayload, MediaType.TEXT_XML)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*koha.session=huh.*")),
                 giveResponse(responseJSON, "application/json; charset=utf8")
                         .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + biblioId)
                         .withStatus(CREATED.getStatusCode()));
@@ -133,7 +133,7 @@ public final class KohaSvcMock {
         clientDriver.addExpectation(
                 onRequestTo("api/v1/biblios/" + biblioId)
                         .withMethod(DELETE)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*koha.session=huh.*")),
                 giveEmptyResponse().withStatus(OK.getStatusCode()));
     }
 }

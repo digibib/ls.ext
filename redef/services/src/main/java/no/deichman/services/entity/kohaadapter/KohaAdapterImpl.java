@@ -29,7 +29,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     private static final String KOHA_USER = System.getProperty("KOHA_API_USER", "api");
     private static final String KOHA_PASSWORD = System.getProperty("KOHA_API_PASS", "secret");
-    static final String SESSION_COOKIE_KEY = "CGISESSID";
+    static final String SESSION_COOKIE_KEY = "koha.session";
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final String kohaPort;
