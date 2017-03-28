@@ -106,7 +106,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           reservations: state.loansAndReservations.reservations.map(reservation => {
-            if (reservation.reserveId === action.payload.reserveId) {
+            if (reservation.id === action.payload.reserveId) {
               reservation.branchCode = action.payload.branchCode
             }
             return reservation
@@ -119,7 +119,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           reservations: state.loansAndReservations.reservations.map(reservation => {
-            if (reservation.reserveId === action.payload.reserveId) {
+            if (reservation.id === action.payload.reserveId) {
               reservation.suspended = action.payload.suspended
               reservation.suspendUntil = action.payload.suspendUntil
             }
