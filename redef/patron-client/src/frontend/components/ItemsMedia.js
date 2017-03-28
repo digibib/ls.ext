@@ -5,6 +5,16 @@ import Item from './Item'
 
 
 class ItemsMedia extends React.Component {
+
+  componentWillMount () {
+    const mediaType = this.props.itemsByMedia.mediaTypeURI
+    const branchCode = this.props.branchCode
+
+    if (this.props.itemLocation === 0) {
+      this.handleBranchStatusMedia(`${branchCode}_${mediaType}`)
+    }
+  }
+
   render () {
     const mediaType = this.props.itemsByMedia.mediaTypeURI
     const branchCode = this.props.branchCode
@@ -71,7 +81,6 @@ class ItemsMedia extends React.Component {
 }
 
 ItemsMedia.propTypes = {
-  showUserBranch: PropTypes.func.isRequired,
   mediaType: PropTypes.string,
   branchCode: PropTypes.string.isRequired,
   itemLocation: PropTypes.number.isRequired,
