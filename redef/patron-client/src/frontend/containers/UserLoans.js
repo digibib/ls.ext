@@ -41,7 +41,7 @@ class UserLoans extends React.Component {
                 <div className="flex-col media-type">
                   {item.mediaType !== null
                     ? ([<i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
-                    <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                      <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
                     : null
                   }
                 </div>
