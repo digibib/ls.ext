@@ -1,10 +1,10 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import NonIETransitionGroup from '../components/NonIETransitionGroup'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { injectIntl, defineMessages, FormattedMessage, intlShape } from 'react-intl'
-import { routerActions } from 'react-router-redux'
-import { Link } from 'react-router'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
+import {routerActions} from 'react-router-redux'
+import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
 import isEmpty from '../utils/emptyObject'
 
@@ -13,7 +13,7 @@ import * as ReservationActions from '../actions/ReservationActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
 import ClickableElement from '../components/ClickableElement'
-import { formatDate } from '../utils/dateFormatter'
+import {formatDate} from '../utils/dateFormatter'
 import Libraries from '../components/Libraries'
 import Loading from '../components/Loading'
 import Constants from '../constants/Constants'
@@ -41,7 +41,7 @@ class UserLoans extends React.Component {
                 <div className="flex-col media-type">
                   {item.mediaType !== null
                     ? ([<i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
-                  <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                    <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
                     : null
                   }
                 </div>
@@ -113,7 +113,7 @@ class UserLoans extends React.Component {
               <div className="flex-col media-type">
                 {item.mediaType !== null
                 ? ([<i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
-                <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                  <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
                   : null
                 }
               </div>
