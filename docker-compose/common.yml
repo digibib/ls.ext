@@ -260,7 +260,7 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/sip2proxy:bb443a0e8cf5f0f8752638698e2c2c48b78070bd"
+    image: "digibib/sip2proxy:3891478ccc5dc17abd16004b6780885774cd6d44"
     networks:
       - backend
     ports:
@@ -271,7 +271,6 @@ services:
       - "-to=xkoha:${SIP_PORT:-6001}"
       - "-log-messages=true"
       - "-log-pre-transform=true"
-      - "-log-metrics-every-s=300"
       - "-patron-session=true"
       #- "-ensure-branch=true"
       #- "-strip-barcode=true"
