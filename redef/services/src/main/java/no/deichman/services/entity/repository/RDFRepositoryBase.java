@@ -465,18 +465,12 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final Map<String, String> retrievePublicationAndWorkDataByRecordId(String recordId) {
-        Map<String, String> result = new HashMap<>();
+    public final ResultSet retrievePublicationDataByRecordId(String recordId) {
         try (QueryExecution queryExecution =
                      getQueryExecution(sqb.getPublicationAndWorkContributorURIByRecordId(recordId))) {
             disableCompression(queryExecution);
-            queryExecution.execSelect().forEachRemaining(querySolution -> {
-                querySolution.varNames().forEachRemaining(varName -> {
-                    result.put(varName, querySolution.get(varName).toString());
-                });
-            });
+            return  ResultSetFactory.copyResults(queryExecution.execSelect());
         }
-        return result;
     }
 
     @Override

@@ -36,4 +36,6 @@ public interface CirculationObject {
     void setBranchCode(String branchCode);
 
     void setId(String id);
+
+    void decorateWithPublicationData(Map<String, String> publicationData) throws Exception;
 }

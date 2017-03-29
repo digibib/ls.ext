@@ -67,7 +67,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -751,29 +750,28 @@ public final class EntityServiceImpl implements EntityService {
         return circulationProfile;
     }
 
-    private Function<RawHold, CirculationObject> rawHoldToCirculationObject = new Function<RawHold, CirculationObject>() {
-        public CirculationObject apply(RawHold rawHold) {
-            CirculationObject circulationObject;
-            if (Objects.equals(rawHold.getStatus(), HOLD_IS_FOUND)) {
-                Pickup pickup = new Pickup();
-                pickup.setExpirationDate(rawHold.getWaitingDate());
-                pickup.setPickupNumber(rawHold.getPickupNumber());
-                circulationObject = pickup;
-            } else {
-                Reservation reservation = new Reservation();
-                reservation.setQueuePlace(rawHold.getQueuePlace());
-                reservation.setSuspended(convertBooleanString(rawHold.getSuspended()));
-                reservation.setOrderedDate(rawHold.getReserveDate());
-                reservation.setSuspendUntil(rawHold.getSuspendUntil());
-                circulationObject = reservation;
-            }
-            circulationObject.setId(rawHold.getId());
-            circulationObject.setRecordId(rawHold.getRecordId());
-            circulationObject.setBranchCode(rawHold.getBranchCode());
-
-            return circulationObject;
+    private CirculationObject rawHoldToCirculationObject(RawHold rawHold) {
+        CirculationObject circulationObject;
+        if (Objects.equals(rawHold.getStatus(), HOLD_IS_FOUND)) {
+            Pickup pickup = new Pickup();
+            pickup.setExpirationDate(rawHold.getWaitingDate());
+            pickup.setPickupNumber(rawHold.getPickupNumber());
+            circulationObject = pickup;
+        } else {
+            Reservation reservation = new Reservation();
+            reservation.setQueuePlace(rawHold.getQueuePlace());
+            reservation.setSuspended(convertBooleanString(rawHold.getSuspended()));
+            reservation.setOrderedDate(rawHold.getReserveDate());
+            reservation.setSuspendUntil(rawHold.getSuspendUntil());
+            circulationObject = reservation;
         }
-    };
+        circulationObject.setId(rawHold.getId());
+        circulationObject.setRecordId(rawHold.getRecordId());
+        circulationObject.setBranchCode(rawHold.getBranchCode());
+
+        return circulationObject;
+    }
+
 
     private boolean convertBooleanString(String string) {
         boolean returnValue = true;
@@ -792,13 +790,13 @@ public final class EntityServiceImpl implements EntityService {
         List<Reservation> holdsList = new ArrayList<>();
 
         for (RawHold rawHold : rawHolds) {
-            CirculationObject circulationObject = rawHoldToCirculationObject.apply(rawHold);
+            CirculationObject circulationObject = rawHoldToCirculationObject(rawHold);
             if (circulationObject instanceof Reservation) {
                 holdsList.add((Reservation) circulationObject);
             } else {
                 pickupsList.add((Pickup) circulationObject);
             }
-            filterPublicationAttributes(circulationObject, getMetadataByRecordId(rawHold.getRecordId()));
+            circulationObject.decorateWithPublicationData(getPublicationMetadataByRecordId(rawHold.getRecordId()));
         }
         holdsAndPickups.setHolds(holdsList);
         holdsAndPickups.setPickups(pickupsList);
@@ -812,7 +810,7 @@ public final class EntityServiceImpl implements EntityService {
         for (Loan loan : loans) {
             String recordId = getRecordIdFromLoan(loan);
             loan.setRecordId(recordId);
-            filterPublicationAttributes(loan, getMetadataByRecordId(recordId));
+            loan.decorateWithPublicationData(getPublicationMetadataByRecordId(recordId));
         }
         return loans;
     }
@@ -823,50 +821,14 @@ public final class EntityServiceImpl implements EntityService {
         return loanRecord.getRecordId();
     }
 
-    private Map<String, String> getMetadataByRecordId(String recordId) {
-        return repository.retrievePublicationAndWorkDataByRecordId(recordId);
-    }
-
-    private void filterPublicationAttributes(CirculationObject circulationObject, Map<String, String> publicationData) throws Exception {
-        Map<String, String> contributor = new HashMap<>();
-        publicationData.forEach((key, value) -> {
-            switch (key) {
-                case "agentUri":
-                case "contributorName":
-                case "contributorNationality":
-                case "role":
-                    contributor.put(key, value);
-                    break;
-                case "mainTitle":
-                    circulationObject.setTitle(value);
-                    break;
-                case "mediaType":
-                    circulationObject.setMediaType(value);
-                    break;
-                case "publicationImage":
-                    circulationObject.setPublicationImage(value);
-                    break;
-                case "publicationUri":
-                    circulationObject.setPublicationURI(value);
-                    break;
-                case "publicationYear":
-                    circulationObject.setPublicationYear(value);
-                    break;
-                case "workUri":
-                    circulationObject.setWorkURI(value);
-                    break;
-                default:
-                    break;
-            }
-        });
-        if (circulationObject.getWorkURI() != null && circulationObject.getPublicationURI() != null) {
-            XURI work = new XURI(circulationObject.getWorkURI());
-            XURI publication = new XURI(circulationObject.getPublicationURI());
-            String path = work.getPath()
-                    + publication.getPath();
-            circulationObject.setRelativePublicationPath(path);
-        }
-        circulationObject.setContributor(contributor);
+    private Map<String, String> getPublicationMetadataByRecordId(String recordId) {
+        Map<String, String> publicationMetadata = new HashMap<>();
+        repository.retrievePublicationDataByRecordId(recordId).forEachRemaining(querySolution -> {
+                querySolution.varNames().forEachRemaining(varName -> {
+                    publicationMetadata.put(varName, querySolution.get(varName).toString());
+                });
+            });
+        return publicationMetadata;
     }
 
     @Override

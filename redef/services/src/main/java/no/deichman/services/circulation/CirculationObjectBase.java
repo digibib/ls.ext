@@ -2,6 +2,9 @@ package no.deichman.services.circulation;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import no.deichman.services.uridefaults.XURI;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,7 +24,7 @@ class CirculationObjectBase implements CirculationObject {
     @Expose
     private String publicationImage;
     @Expose
-    private Map<String, String> contributor;
+    private Map<String, String> contributor = new HashMap<>();
     @Expose
     private String mediaType;
     @Expose
@@ -112,4 +115,44 @@ class CirculationObjectBase implements CirculationObject {
         this.id = id;
     }
 
+    @Override
+    public void decorateWithPublicationData(Map<String, String> publicationData) throws Exception {
+        publicationData.forEach((key, value) -> {
+            switch (key) {
+                case "agentUri":
+                case "contributorName":
+                case "contributorNationality":
+                case "role":
+                    contributor.put(key, value);
+                    break;
+                case "mainTitle":
+                    setTitle(value);
+                    break;
+                case "mediaType":
+                    setMediaType(value);
+                    break;
+                case "publicationImage":
+                    setPublicationImage(value);
+                    break;
+                case "publicationUri":
+                    setPublicationURI(value);
+                    break;
+                case "publicationYear":
+                    setPublicationYear(value);
+                    break;
+                case "workUri":
+                    setWorkURI(value);
+                    break;
+                default:
+                    break;
+            }
+        });
+        if (getWorkURI() != null && getPublicationURI() != null) {
+            XURI work = new XURI(getWorkURI());
+            XURI publication = new XURI(getPublicationURI());
+            String path = work.getPath()
+                    + publication.getPath();
+            setRelativePublicationPath(path);
+        }
+    }
 }

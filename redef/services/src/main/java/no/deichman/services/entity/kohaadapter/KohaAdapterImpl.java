@@ -183,11 +183,6 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     @Override
     public String getBiblioFromItemNumber(String itemNumber) {
-        Response response = getBiblioFromItemNumberFromAPI(itemNumber);
-        return response.readEntity(String.class);
-    }
-
-    private Response getBiblioFromItemNumberFromAPI(String itemNumber) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(kohaPort + "/api/v1/items/" + itemNumber + "/biblio");
         if (sessionCookie == null) {
@@ -195,7 +190,8 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.get();
+        Response response = invocationBuilder.get();
+        return response.readEntity(String.class);
     }
 
     @Override
