@@ -192,9 +192,9 @@ class UserLoans extends React.Component {
           ? <Loading />
           : (
           <ClickableElement onClickAction={this.props.reservationActions.suspendReservation}
-                            onClickArguments={[ item.id, !item.suspended ]}>
-            <button className={item.suspended ? 'black-btn red-btn' : 'black-btn'}
-                    disabled={this.props.isRequestingChangeReservationSuspension !== false || item.queuePlace === '0'}
+                            onClickArguments={[ item.reserveId, !item.suspended ]}>
+            <button className={`${item.suspended ? 'black-btn red-btn' : 'black-btn'} ${item.queuePlace === '0' ? 'is-hidden' : ''}`}
+                    disabled={this.props.isRequestingChangeReservationSuspension !== false}
                     data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
               {item.suspended
                 ? <span><span className="btn-icon"><i className="icon-play" aria-hidden="true" /></span><FormattedMessage {...messages.resumeReservation} /></span>

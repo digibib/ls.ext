@@ -14,8 +14,8 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 ## 2017.35
 
-KOHA: 580f0aa350ea1ec1247524b930291b7892d261c0
-GITREF:
+KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee
+GITREF: cc01beb6b3420576083d74d642d5a111c1a313d1
 
 - Catalinker:
   - DEICH-740: Manglende opplysninger fra ekstern kilde II
