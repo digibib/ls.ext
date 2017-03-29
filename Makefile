@@ -75,24 +75,21 @@ rebuild=$(DOCKER_COMPOSE) stop $(1) || true &&\
 rebuild_services: docker_cleanup			## Force rebuilds services
 	@echo "======= FORCE RECREATING SERVICES ======\n"
 ifeq ($(LSDEVMODE),ci)
-	cd $(LSEXTPATH)/docker-compose &&\
-	  $(DOCKER_COMPOSE) stop build_services || true &&\
-	  $(DOCKER_COMPOSE) rm -f build_services || true &&\
-	  $(DOCKER_COMPOSE) build build_services &&\
-	  $(DOCKER_COMPOSE) run build_services &&\
-	  cd $(LSEXTPATH) &&\
-	  docker run --rm \
+	$(DOCKER_COMPOSE) stop build_services || true &&\
+	$(DOCKER_COMPOSE) rm -f build_services || true &&\
+	$(DOCKER_COMPOSE) build build_services &&\
+	$(DOCKER_COMPOSE) run build_services &&\
+	&& docker run --rm \
 		   -v dockercompose_services_build:/from \
 		   -v $(LSEXTPATH):/to \
-				alpine ash -c 'cp /from/build/libs/services-1.0-SNAPSHOT-standalone.jar /to/'
+			alpine ash -c 'cp /from/build/libs/services-1.0-SNAPSHOT-standalone.jar /to/'
 	mkdir -p redef/services/build/libs
 	cp services-1.0-SNAPSHOT-standalone.jar redef/services/build/libs/
 else
-	cd $(LSEXTPATH)/docker-compose &&\
-	  $(DOCKER_COMPOSE) stop build_services || true &&\
-	  $(DOCKER_COMPOSE) rm -f build_services || true &&\
-	  $(DOCKER_COMPOSE) build build_services &&\
-	  $(DOCKER_COMPOSE) run build_services
+	$(DOCKER_COMPOSE) stop build_services || true &&\
+	$(DOCKER_COMPOSE) rm -f build_services || true &&\
+	$(DOCKER_COMPOSE) build build_services &&\
+	$(DOCKER_COMPOSE) run build_services
 endif
 	$(call rebuild,services)
 
@@ -103,11 +100,10 @@ rebuild_catalinker:					## Force rebuilds catalinker
 rebuild_patron_client:					## Force rebuilds patron-client
 	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
 ifeq ($(LSDEVMODE),ci)
-	cd $(LSEXTPATH)/docker-compose &&\
-	  $(DOCKER_COMPOSE) stop build_patron_client || true &&\
-	  $(DOCKER_COMPOSE) rm -f build_patron_client || true &&\
-	  $(DOCKER_COMPOSE) build --no-cache build_patron_client &&\
-	  $(DOCKER_COMPOSE) run build_patron_client
+	$(DOCKER_COMPOSE) stop build_patron_client || true &&\
+	$(DOCKER_COMPOSE) rm -f build_patron_client || true &&\
+	$(DOCKER_COMPOSE) build --no-cache build_patron_client &&\
+	$(DOCKER_COMPOSE) run build_patron_client
 endif
 	$(call rebuild,patron_client)
 
