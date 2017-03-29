@@ -1,4 +1,8 @@
 export default function fieldQueryLink (field, query) {
-  const escapedQuery = encodeURIComponent(`${field}:"${query}"`)
+  let template = `${field}:${query}`
+  if (query.includes(' ')) {
+    template = `${field}:"${query}"`
+  }
+  const escapedQuery = encodeURIComponent(template)
   return `/search?query=${escapedQuery}`
 }

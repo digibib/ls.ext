@@ -654,7 +654,8 @@ public class EntityResourceTest {
         Model cloneModel = RDFModelUtil.modelFrom(cloneContent.replace(cloneId, xuri.getId()), Lang.JSONLD);
         long numberOfStatementsInCloneModelBefore = cloneModel.size();
         cloneModel.removeAll(null, ResourceFactory.createProperty(BaseURI.ontology("created")), null);
+        cloneModel.removeAll(null, ResourceFactory.createProperty("http://migration.deichman.no/clonedFrom"), null);
         assertTrue(originalModel.isIsomorphicWith(cloneModel));
-        assertThat(cloneModel.size(), is(numberOfStatementsInCloneModelBefore - 1));
+        assertThat(cloneModel.size(), is(numberOfStatementsInCloneModelBefore - 2));
     }
 }

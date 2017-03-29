@@ -192,6 +192,18 @@ public class InMemoryRepositoryTest {
         assertFalse(data.toString().contains("80001"));
     }
 
+    @Test
+    public void shouldReturnPublicationByParsedCoreISBN() throws Exception {
+        repository = repositoryWithDataFrom("work_w87654.ttl");
+        Model pub1 = repository.describePublicationFromParsedCoreISBNQuery("978-82-02-48040-0");
+        Model pub2 = repository.describePublicationFromParsedCoreISBNQuery("9-7-88-2-02-4804-0-4");
+        Model pub3 = repository.describePublicationFromParsedCoreISBNQuery("82-02-48040-X");
+        Model pub4 = repository.describePublicationFromParsedCoreISBNQuery("123-555-6767");
+        assertTrue(pub1.toString().equals(pub2.toString()));
+        assertTrue(pub2.toString().equals(pub3.toString()));
+        assertFalse(pub1.toString().equals(pub4.toString()));
+    }
+
     public static InMemoryRepository repositoryWithDataFrom(String fileName) {
         final InMemoryRepository repository = new InMemoryRepository();
         Model testDataModel = ModelFactory.createDefaultModel();

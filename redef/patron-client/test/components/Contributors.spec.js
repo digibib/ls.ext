@@ -56,7 +56,7 @@ describe('components', () => {
 
       const link = node.querySelector("[data-automation-id='work_contributor_link']")
       expect(link.textContent).toBe('name')
-      expect(link.getAttribute('href')).toBe('/search?query=akt%C3%B8r%3A%22name%22')
+      expect(link.getAttribute('href')).toBe('/search?query=akt%C3%B8r%3Aname')
     })
 
     it('should render multiple contributors', () => {

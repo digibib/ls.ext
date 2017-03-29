@@ -72,8 +72,8 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:hasMediaType")
     private ExternalDataObject mediaType;
 
-    @SerializedName("deichman:formatAdaption")
-    private List<ExternalDataObject> formatAdaption;
+    @SerializedName("deichman:hasFormatAdaptation")
+    private List<ExternalDataObject> formatAdaptation;
 
     @SerializedName("deichman:ageLimit")
     private Integer ageLimit;
@@ -184,10 +184,10 @@ public class Publication extends BibliographicObjectExternal {
     }
 
     public void addFormatAdaption(ExternalDataObject formatAdaption) {
-        if (this.formatAdaption == null) {
-            this.formatAdaption = new ArrayList<>();
+        if (this.formatAdaptation == null) {
+            this.formatAdaptation = new ArrayList<>();
         }
-        this.formatAdaption.add(formatAdaption);
+        this.formatAdaptation.add(formatAdaption);
     }
 
     public void setAgeLimit(String ageLimit) {

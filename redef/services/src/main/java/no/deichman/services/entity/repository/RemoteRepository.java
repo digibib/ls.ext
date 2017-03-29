@@ -53,7 +53,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
 
                 // Execution
                 String reqStr = this.getUpdateRequest().toString();
-                HttpOp.execHttpPost(endpoint, WebContent.contentTypeSPARQLUpdate, reqStr, httpClient, getHttpContext(), getAuthenticator());
+                HttpOp.execHttpPost(endpoint, WebContent.contentTypeSPARQLUpdate, reqStr, httpClient, getHttpContext());
             }
         };
         updateProcessRemote.execute();

@@ -420,6 +420,14 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
+    @Path("/isbn/{isbn: [0-9Xx-]+}")
+    @Produces(LD_JSON)
+    public Response describePublicationFromParsedCoreISBNQuery(@PathParam("isbn") String isbn) throws Exception {
+        Model model = getEntityService().describePublicationFromParsedCoreISBNQuery(isbn);
+        return ok().entity(getJsonldCreator().asJSONLD(model)).build();
+    }
+
+    @GET
     @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/relations")
     @Produces(JSON)
     public Response retriveResourceParticipations(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
@@ -481,10 +489,15 @@ public final class EntityResource extends ResourceBase {
     public Response cloneResource(@PathParam("type") String type,
                                   @PathParam("id") String id){
         try {
-            final Model model = getEntityService().retrieveById(new XURI(BaseURI.root(), type, id));
+            XURI xuri = new XURI(BaseURI.root(), type, id);
+            final Model model = getEntityService().retrieveById(xuri);
             if (model.isEmpty()) {
                 throw new NotFoundException();
             }
+            model.add(ResourceFactory.createStatement(
+                    ResourceFactory.createResource(xuri.getUri()),
+                    ResourceFactory.createProperty("http://migration.deichman.no/clonedFrom"),
+                    ResourceFactory.createResource(xuri.getUri())));
             return created(URI.create(getEntityService().create(EntityType.get(type), model))).build();
         } catch (Exception e) {
             throw new BadRequestException(e);

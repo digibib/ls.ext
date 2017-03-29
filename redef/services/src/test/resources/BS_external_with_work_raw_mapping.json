@@ -112,12 +112,12 @@
         "deichman:biography": {
           "@id": "http://data.deichman.no/biography#biographicalContent"
         },
-        "deichman:contentAdaption": [
+        "deichman:hasContentAdaptation": [
           {
-            "@id": "http://data.deichman.no/contentAdaption#easyLanguage"
+            "@id": "http://data.deichman.no/contentAdaptation#easyLanguage"
           },
           {
-            "@id": "http://data.deichman.no/contentAdaption#easyContent"
+            "@id": "http://data.deichman.no/contentAdaptation#easyContent"
           }
         ],
         "deichman:hasClassification": [
@@ -201,21 +201,21 @@
         "deichman:hasMediaType": {
           "@id": "http://data.deichman.no/mediaType#Book"
         },
-        "deichman:formatAdaption": [
+        "deichman:hasFormatAdaptation": [
           {
-            "@id": "http://data.deichman.no/formatAdaption#largePrint"
+            "@id": "http://data.deichman.no/formatAdaptation#largePrint"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#braille"
+            "@id": "http://data.deichman.no/formatAdaptation#braille"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#signLanguage"
+            "@id": "http://data.deichman.no/formatAdaptation#signLanguage"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#tactile"
+            "@id": "http://data.deichman.no/formatAdaptation#tactile"
           },
           {
-            "@id": "http://data.deichman.no/formatAdaption#capitalLetters"
+            "@id": "http://data.deichman.no/formatAdaptation#capitalLetters"
           }
         ],
         "deichman:ageLimit": 18,
@@ -488,7 +488,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#basedOn"
+          "@id": "http://data.deichman.no/relationType#relatedWork"
         },
         "@id": "_:0000000",
         "deichman:work": {
@@ -505,7 +505,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#basedOn"
+          "@id": "http://data.deichman.no/relationType#relatedWork"
         },
         "@id": "_:0000000",
         "deichman:work": {
@@ -526,7 +526,7 @@
       {
         "@type": "deichman:WorkRelation",
         "deichman:hasRelationType": {
-          "@id": "http://data.deichman.no/relationType#basedOn"
+          "@id": "http://data.deichman.no/relationType#relatedWork"
         },
         "@id": "_:0000000",
         "deichman:work": {

@@ -402,6 +402,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final Model describePublicationFromParsedCoreISBNQuery(String isbn) {
+        log.debug("Looking up publication by isbn: " + isbn);
+        try (QueryExecution qexec = getQueryExecution(sqb.describePublicationFromParsedCoreISBNQuery(isbn))) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
     public final String createWorkSeries(Model inputModel) throws Exception {
         String type = "WorkSeries";
         return createResource(inputModel, type);
@@ -474,8 +483,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     private void disableCompression(QueryExecution qexec) {
         if (qexec instanceof QueryEngineHTTP) {
-            ((QueryEngineHTTP) qexec).setAllowGZip(false);
-            ((QueryEngineHTTP) qexec).setAllowDeflate(false);
+            ((QueryEngineHTTP) qexec).setAllowCompression(false);
         }
     }
 }

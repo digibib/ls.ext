@@ -31,6 +31,11 @@
           "deichman:biography": {
             "@id": "http://data.deichman.no/biography#biographicalContent"
           },
+          "deichman:hasContentAdaptation": [
+            {
+              "@id": "http://data.deichman.no/contentAdaptation#easyLanguage"
+            }
+          ],
           "deichman:hasClassification": [
             {
               "@id": "_:0000000"
@@ -71,6 +76,11 @@
           "deichman:hasMediaType": {
             "@id": "http://data.deichman.no/mediaType#Book"
           },
+          "deichman:hasFormatAdaptation": [
+            {
+              "@id": "http://data.deichman.no/formatAdaptation#capitalLetters"
+            }
+          ],
           "deichman:contributor": [
             {
               "@id": "_:0000000"

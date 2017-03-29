@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  * Responsibility: TODO.
  */
 public interface EntityService {
-    
+
     void updateWork(String work);
     Model retrieveById(XURI xuri);
     Model retrieveWorkWithLinkedResources(XURI xuri);
@@ -50,6 +50,8 @@ public interface EntityService {
 
     Model retrieveResourceByQuery(EntityType entityType, Map<String, String> queryParameters, Collection<String> projection);
 
+    Model describePublicationFromParsedCoreISBNQuery(String isbn);
+
     Model retrieveEventWithLinkedResources(XURI eventUri);
 
     Model retrieveSerialWithLinkedResources(XURI serialUri);
@@ -62,7 +64,7 @@ public interface EntityService {
 
     void addIndexedName(EntityType type, String name, String uri);
 
-    StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... predicates);
+    StmtIterator statementsInModelAbout(XURI xuri, Model indexModel, String... predicates);
 
     void mergeResource(XURI xuri, XURI replaceeUri);
 

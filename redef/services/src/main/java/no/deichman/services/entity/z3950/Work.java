@@ -37,8 +37,8 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:biography")
     private ExternalDataObject biography;
 
-    @SerializedName("deichman:contentAdaption")
-    private List<Map<String, String>> contentAdaption;
+    @SerializedName("deichman:hasContentAdaptation")
+    private List<Map<String, String>> contentAdaptation;
 
     @SerializedName("deichman:hasClassification")
     private List<Map<String, String>> classifications;
@@ -115,11 +115,11 @@ public class Work extends BibliographicObjectExternal {
         this.biography = biography;
     }
 
-    public void addContentAdaption(ExternalDataObject contentAdaption) {
-        if (this.contentAdaption == null) {
-            this.contentAdaption = new ArrayList<>();
+    public void addContentAdaption(ExternalDataObject contentAdaptation) {
+        if (this.contentAdaptation == null) {
+            this.contentAdaptation = new ArrayList<>();
         }
-        this.contentAdaption.add(of("@id", contentAdaption.getId()));
+        this.contentAdaptation.add(of("@id", contentAdaptation.getId()));
     }
 
     public void addClassification(Classification classification) {

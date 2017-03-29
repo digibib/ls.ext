@@ -12,6 +12,43 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.35
+
+KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee
+GITREF:
+
+- Catalinker:
+  - DEICH-740: Manglende opplysninger fra ekstern kilde II
+  - DEICH-535: Manglende varsel om duplikat katalogisering
+  - DEICH-564: Sjekk på ISBN må kontrollere både ISBN-10 og ISBN-13
+  - DEICH-743: Hindre doble og blanke opplysninger etter splitting av verk
+- Koha:
+  - add behindExpiditedUser to biblio expanded
+  - biblio expanded: treat damaged items as anavailable (DEICH-715)
+- Patron-client:
+  - DEICH-731: Fritekstsøk på isbn uten skilletegn feiler
+  - DEICH-737: Klikk på emne fra verksside gir feil søk
+  - DEICH-715: Feil status i søket
+  - DEICH-734: Vise bare den hovedansvarliges navn bak «Av:» på verksside
+  - DEICH-585: Søk prøver å vise deler på utgivelser som ikke har deler
+  - DEICH-717: Fjern hermetegn
+  - DEICH-733: Søk på samme term med og uten stor forbokstav gir ulike trefflister
+  - DEICH-728: Ikke sett på vent når status er "På vei"
+
+## 0.9.0. (2017-03-21)
+
+KOHA: 7933c6de69c171ef9bb394e19c8202a3d5978ec1
+GITREF: 477de94d031f67a74c4d072f4335db0253c50aca
+
+- Catalinker:
+  - DEICH-659: Forenkling av registereing av deler
+  - DEICH-720: Utvidet redigering av autoriteter tar ikke utgangspunkt i valgt autoritet
+  - DEICH-572: Knappen "Beskriv utgivelse" oppretter ny utgivelse, også ved redigering av eksisterende
+  - DEICH-727: Manglende opplysninger fra ekstern kilde
+  - DEICH-722: Verkstype på nytt verk legger seg også på relatert verk
+- Koha:
+  - DEICH-735: Koha API info om res på vei
+
 ## 0.8.99 (2017-03-15)
 
 KOHA: 7933c6de69c171ef9bb394e19c8202a3d5978ec1

@@ -793,7 +793,7 @@ public class AppTest {
                 testData = "<http://data.deichman.no/writingSystem#cyrillic> <http://www.w3.org/2000/01/rdf-schema#label> \"Cyrillic\"@en .";
                 break;
             case RELATION_TYPE:
-                testData = "<http://data.deichman.no/relationType#basedOn> <http://www.w3.org/2000/01/rdf-schema#label> \"Based on\"@en .";
+                testData = "<http://data.deichman.no/relationType#relatedWork> <http://www.w3.org/2000/01/rdf-schema#label> \"Related to work\"@en .";
                 break;
             case DEWEY_EDITION:
                 testData = "<http://data.deichman.no/classificationSource#ddk5> <http://www.w3.org/2000/01/rdf-schema#label> \"DDK 5\"@en .";

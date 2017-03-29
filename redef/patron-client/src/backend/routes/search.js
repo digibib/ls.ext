@@ -5,9 +5,6 @@ module.exports = (app) => {
   app.get('/q', (request, response) => {
     const queryString = request.originalUrl.substr(request.originalUrl.indexOf('?') + 1)
     fetch('http://elasticsearch:9200/search/publication/_search', {
-
-    // fetch('http://10.172.2.3:9200/search/publication/_search', {
-    // fetch('http://10.172.2.160:9200/search/publication/_search', {
       method: 'POST',
       body: JSON.stringify(searchBuilder.buildQuery(queryString))
     }).then(res => {

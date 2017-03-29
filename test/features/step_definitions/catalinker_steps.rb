@@ -456,10 +456,7 @@ When(/^jeg kan legge inn stedsnavn og land$/) do
   @site.RegPlace.add_prop("http://data.deichman.no/ontology#specification", @context[:placeofpublication_country])
 end
 
-When(/^jeg kan legge inn tittel og nasjonalitet for personen$/) do
-  @context[:person_title] = generateRandomString
-  @site.RegPerson.add_prop("http://data.deichman.no/ontology#personTitle", @context[:person_title])
-
+When(/^jeg kan legge inn nasjonalitet for personen$/) do
   @context[:person_nationality] = ['Norge', 'England', 'Færøyene'].sample
   @site.RegPerson.select_prop("http://data.deichman.no/ontology#nationality", @context[:person_nationality])
 end
@@ -483,7 +480,7 @@ When(/^at jeg har lagt til en person$/) do
     Gitt at jeg er i personregistergrensesnittet
     Så leverer systemet en ny ID for den nye personen
     Og jeg kan legge inn navn fødselsår og dødsår for personen
-    Og jeg kan legge inn tittel og nasjonalitet for personen
+    Og jeg kan legge inn nasjonalitet for personen
   }
 end
 

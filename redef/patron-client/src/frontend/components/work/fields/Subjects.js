@@ -31,12 +31,15 @@ class Subjects extends React.Component {
 
   render () {
     if (this.props.subjects.length > 0) {
-      const subjects = this.props.subjects
+      // filter out empty subjects, only containing id,
+      // This happens when work has the subject which is the work itself
+      // TODO fix this properly, see DEICH-581
+      const subjects = this.props.subjects.filter(subj => Object.keys(subj).length > 1)
       return (
         <aside className="work-subjects">
           <h2><FormattedMessage {...messages.subjects} /></h2>
           <ul data-automation-id="work_subjects">
-            {subjects.map(subject => <li key={subject.id}><Link to={fieldQueryLink('emne', subject.prefLabel || subject.name || subject.mainTitle)}>{this.renderLabel(subject)}</Link></li>)}
+            {subjects.map(subject => <li key={subject.id}><Link to={fieldQueryLink('emne', this.renderLabel(subject))}>{this.renderLabel(subject)}</Link></li>)}
           </ul>
         </aside>
       )

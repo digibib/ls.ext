@@ -734,7 +734,7 @@
       var queryParameters = URI.parseQuery(oldUri.query)
       for (let param in queryParameters) {
         if (!keep.includes(param)) {
-          delete queryParameters[param]
+          delete queryParameters[ param ]
         }
       }
       oldUri.query = URI.buildQuery(queryParameters)
@@ -2564,7 +2564,7 @@
               ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
               ractive.update('lastRoots')
             })
-            let addedMultivalues = _.select(opSpecs, function(spec){return spec.operation === 'add'}).length
+            let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
             if (op === 'del' || addedMultivalues > 1) {
               removeInputsForObject(input, index)()
               if (addedMultivalues > 1) {
@@ -3395,7 +3395,7 @@
                   task: editWith.descriptionKey || `edit${event.context.rdfType}`,
                   template: editWith.template
                 }
-                updateBrowserLocationClearAllExcept(['openTab'])
+                updateBrowserLocationClearAllExcept([ 'openTab' ])
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
                   if (input.type === 'hidden-url-query-value' &&
@@ -3837,9 +3837,7 @@
                 }
               },
               checkExistingResource: function (queryValue, spec, proceed) {
-                var searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
-                  return memo + '&@return=' + fieldName
-                }, '')}`)
+                var searchUrl = proxyToServices(`${spec.url}${queryValue}`)
                 axios.get(searchUrl, { headers: { 'x-apicache-bypass': true } }).then(function (response) {
                   let parsed = ldGraph.parse(response.data)
                   let existingResources = parsed.byType(spec.type)
@@ -4104,9 +4102,13 @@
                         }).then(function (response) {
                           const promises = []
                           _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) { return pair[ 1 ] === true }).map(function (pair) { return pair[ 0 ] }).value(), function (property) {
+                            const inputRef = event.context.showFieldsOfRelated.filter(item => item.field === property)[0].inputRef
                             const input = ractive.get('applicationData.inputMap')[ `${typeFromUri(parentUri)}.http://data.deichman.no/ontology#${property}` ]
+                            const oldValue = valueOfInputByInputId(inputRef) || ''
                             const newValue = relation.projections[ property ]
-                            promises.push(patchValue(response.headers.location, property, typesFromRange(input.ranges[ 0 ]).rdfType, input.values[ 0 ].current.value || '', newValue || ''))
+                            if (newValue) {
+                              promises.push(patchValue(response.headers.location, property, typesFromRange(input.ranges[ 0 ]).rdfType, oldValue, newValue))
+                            }
                           })
                           return Promise.all(promises)
                         }))
