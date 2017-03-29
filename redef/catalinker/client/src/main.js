@@ -3837,7 +3837,14 @@
                 }
               },
               checkExistingResource: function (queryValue, spec, proceed) {
-                var searchUrl = proxyToServices(`${spec.url}${queryValue}`)
+                let searchUrl = ''
+                if (spec.queryParameter === 'hasEan') { // TODO : hasEAN should probably have separate route
+                  searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
+                    return memo + '&@return=' + fieldName
+                  }, '')}`)
+                } else {
+                  searchUrl = proxyToServices(`${spec.url}/${queryValue}`)
+                }
                 axios.get(searchUrl, { headers: { 'x-apicache-bypass': true } }).then(function (response) {
                   let parsed = ldGraph.parse(response.data)
                   let existingResources = parsed.byType(spec.type)
