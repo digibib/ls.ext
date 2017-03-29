@@ -33,19 +33,19 @@ class UserLoans extends React.Component {
       return (
         <section className="pickup">
           <h1><FormattedMessage {...messages.canBePickedUp} /></h1>
-            {this.props.loansAndReservations.pickups.map(item => (
-              <article key={item.id}
+          {this.props.loansAndReservations.pickups.map(item => (
+            <article key={item.id}
                        className="single-entry"
                        data-automation-id="UserLoans_pickup"
                        data-recordid={item.recordId}>
-                <div className="flex-col media-type">
-                  {item.mediaType !== null
-                    ? ([<i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
-                      <span data-automation-id="UserLoans_pickup_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
-                    : null
-                  }
-                </div>
-                <div className="flex-col entry-details">
+              <div className="flex-col media-type">
+                {item.mediaType !== null
+                  ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                    <span key="item-text" data-automation-id="UserLoans_pickup_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                  : null
+                }
+              </div>
+              <div className="flex-col entry-details">
                   <Link to={item.relativePublicationPath} data-automation-id="UserLoans_pickup_title">
                     {item.title}
                   </Link>
@@ -112,8 +112,8 @@ class UserLoans extends React.Component {
 
               <div className="flex-col media-type">
                 {item.mediaType !== null
-                ? ([<i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
-                  <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                  <span key="item-text" data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
                   : null
                 }
               </div>
@@ -231,8 +231,8 @@ class UserLoans extends React.Component {
                      data-recordid={item.recordId}>
               <div className="flex-col media-type">
                 {item.mediaType !== null
-                  ? ([<i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
-                    <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}
+                  ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                    <span key="item-text" data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}
                     </span>])
                   : null
                 }
