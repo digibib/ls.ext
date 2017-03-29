@@ -118,7 +118,7 @@ rebuild_cuke_tests:					## Force rebuilds cuke_tests
 cuke_test:						## Run Cucumber tests
 	@$(XHOST_ADD)
 	rm -rf $(LSEXTPATH)/test/report/*.* && \
-	  cd $(LSEXTPATH)/docker-compose && $(DOCKER_COMPOSE) run --rm $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
+	  $(DOCKER_COMPOSE) run --rm $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
 		bash -c 'ruby /tests/sanity-check.rb && \
 		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
 		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)'
