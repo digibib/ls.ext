@@ -599,6 +599,11 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void cacheNameIndex(XURI xuri, Model indexModel) {
+        if (xuri.getTypeAsEntityType() == EntityType.PUBLICATION || xuri.getTypeAsEntityType() == EntityType.WORK){
+            // We don't want to keep in-memory indexes of Publication & Work resources,
+            // as Catalinker has no need for them.
+            return;
+        }
         entityService.statementsInModelAbout(xuri, indexModel, LOCAL_INDEX_SEARCH_FIELDS)
                 .forEachRemaining(statement -> {
                     entityService.addIndexedName(
