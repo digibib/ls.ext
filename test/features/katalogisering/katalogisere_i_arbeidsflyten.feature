@@ -145,6 +145,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret
+    Og jeg venter litt
+    Og jeg venter litt
     Og jeg velger rollen "Fotograf"
     Og velger radioknappen for "Utgivelse" for å velge "hva rollen gjelder"
     Og jeg trykker på "Legg til"-knappen
@@ -616,4 +618,36 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
     Så sjekker jeg at det er "1" biinnførsler totalt
+
+  Scenario: Slå sammen to verk i katalogisering
+    Gitt at jeg vil slå sammen to verk
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tittelen på verk nr 1 i feltet "Verk" og trykker enter
+    Og jeg venter litt
+    Så velger jeg et verk fra treffliste fra verksindeksen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Så klikker jeg på fanen "Emneopplysninger"
+    Så jeg velger emnetype "Verk" emne
+    Og at jeg skriver inn tittelen på verk nr 2 i feltet "Emne" og trykker enter
+    Så velger jeg et verk fra treffliste fra verksindeksen
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tittelen på verk nr 1 i feltet "Verk" og trykker enter
+    Så velger jeg et verk fra treffliste fra verksindeksen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg trykker på "Utvidet redigering"-knappen
+    Og jeg venter litt
+    Og jeg venter litt
+    Og at jeg skriver inn tittelen på verk nr 2 i feltet "Søk etter duplikater" og trykker enter
+    Så velger jeg et verk fra treffliste fra verksindeksen
+    Og jeg venter litt
+    Så sjekker jeg at det er "1" biinnførsler totalt
+    Så drar jeg et element fra "Biinnførsel" på høyre side til venstre side
+    Så trykker jeg på knappen for å slå sammen to autoriteter
+    Så trykker jeg på "Fortsett"-knappen i dialogen
+    Så sjekker jeg at antall relasjoner er 1
+    Så sjekker jeg at det er "2" biinnførsler totalt
 

@@ -49,7 +49,7 @@ $mintgreen: #DCFC9F;
 //}
 
 #growler {
-  position: absolute;
+  position: fixed;
   width: 300px;
   height: 200px;
   background: white;
@@ -231,6 +231,28 @@ body {
   }
 
   .tab-content {
+    .input-panel {
+      &.drop-target {
+        position: relative;
+        &:before {
+          content: "";
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          border: 5px dashed $lightergray;
+          border-radius: 3px;
+          margin: 4px 5px 9px 5px;
+          position: absolute;
+        }
+      }
+      .ui-draggable {
+        cursor: move;
+      }
+      .ui-draggable-dragging {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      }
+    }
     &.maintenance-inputs {
       .input-panel:first-child .panel-part:first-child {
         border-top: 1px solid lightgrey;
@@ -259,6 +281,9 @@ body {
         }
       }
       min-height: 550px;
+      .next-step {
+        margin-bottom: 25px;
+      }
       .next-step-button {
         horiz-align: center;
         margin-left: auto;
@@ -342,7 +367,6 @@ body {
           &:last-child:not(.last-one):after, &.boolean-separator:not(last-one):after {
             display: block;
             height: 2px;
-            //            width: 100%;
             background: lightgrey;
             content: "";
             margin: 0 12px 2px 12px;
@@ -392,6 +416,7 @@ body {
               .support-panel-content:before {
                 display: none !important;
               }
+              z-index: 50 !important;
             }
             .prop-search-result {
               height: 300px;
@@ -613,6 +638,7 @@ body {
         .add-new-btn-row {
           padding: 0 13px 23px 8px;
           float: none !important;
+          min-height: 54px;
           a:not(.delete-link), button:not(.pagination) {
             float: right;
             width: auto;
@@ -969,9 +995,12 @@ body {
             float: right;
           }
           .input-wrapper {
+            background: white;
+            max-width: 314px;
             padding-left: 10px;
             display: block;
             border: 1px solid black;
+            min-height: 70px;
             .inputs {
               text-align: center;
               padding-right: 24px;

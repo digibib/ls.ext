@@ -83,7 +83,15 @@ class WorkFlow < CatalinkerPage
     @browser.elements(:xpath => "//*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//span[contains(concat(' ',normalize-space(@class),' '),' select2-selection__choice__remove ')]").select(&:visible?).first
   end
 
-  def   get_checkbox_from_label(label)
+  def get_draggable_from_label(label)
+    @browser.elements(:xpath => "//*[./preceding-sibling::*[@data-uri-escaped-label='#{URI::escape(label)}']]//span[contains(concat(' ',normalize-space(@class),' '), ' ui-draggable ')]").select(&:visible?).first
+  end
+
+  def get_dropzone_from_label(label)
+    @browser.elements(:xpath => "//span[.//@data-uri-escaped-label='#{URI::escape(label)}' and contains(concat(' ',normalize-space(@class),' '), ' ui-droppable ')]").select(&:visible?).first
+  end
+
+  def get_checkbox_from_label(label)
     @browser.checkboxes(:xpath => "//*[./preceding-sibling::*[contains(concat(' ',normalize-space(@class),' '),' label ')][@data-uri-escaped-label='#{URI::escape(label)}']]//input[@type='checkbox']").select(&:visible?).first
   end
 
