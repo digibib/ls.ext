@@ -6,12 +6,12 @@ import com.google.gson.reflect.TypeToken;
 import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.circulation.CirculationObject;
 import no.deichman.services.circulation.CirculationProfile;
-import no.deichman.services.circulation.RawHold;
-import no.deichman.services.circulation.Reservation;
 import no.deichman.services.circulation.HoldsAndPickups;
 import no.deichman.services.circulation.Loan;
 import no.deichman.services.circulation.LoanRecord;
 import no.deichman.services.circulation.Pickup;
+import no.deichman.services.circulation.RawHold;
+import no.deichman.services.circulation.Reservation;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
@@ -54,7 +54,6 @@ import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,8 +63,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -174,12 +171,6 @@ public final class EntityServiceImpl implements EntityService {
         locationDeweyProperty = createProperty(ontology("locationDewey"));
         locationSignatureProperty = createProperty(ontology("locationSignature"));
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Arrays.stream(EntityType.values()).forEach(type -> getNameIndexer(type));
-            }
-        }, 0);
     }
 
     private static Set<Resource> objectsOfProperty(Property property, Model inputModel) {
