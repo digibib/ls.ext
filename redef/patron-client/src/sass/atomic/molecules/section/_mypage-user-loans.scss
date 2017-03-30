@@ -242,7 +242,7 @@
 
     .single-entry {
       .flex-col {
-        margin-bottom: 0.4em;
+        margin-bottom: 0.7em;
       }
 
       .media-type {
@@ -320,7 +320,11 @@
 
       .resume-suspend-button {
         width: span(2);
-        /*min-width: 10em;*/
+
+        .red-btn {
+          padding: 0.626em;
+        }
+
       }
 
       .reserve-cancel-button {
