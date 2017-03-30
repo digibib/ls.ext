@@ -656,7 +656,7 @@
       }
     }
 
-    function checkShouldInclude (input, allInputs,) {
+    function checkShouldInclude (input, allInputs) {
       var shouldInclude = true
       let handleInput = function (includeWhenValues, property) {
         return function (input) {
@@ -2957,7 +2957,7 @@
                   original: {
                     target: $node.prev('.save-placeholder').prev()
                   },
-                  context: { input:args.input }
+                  context: { input: args.input }
                 }, 'customRange', ui.value - 1, stats.rangeLength)
               }
             })
@@ -2985,10 +2985,10 @@
               const leftField = $(leftPanelPart).find('.field, .pure-u-1-1').last().css('margin-bottom', null)
               const rightField = $(rightPanelPart).find('.field, .pure-u-1-1').last().css('margin-bottom', null)
               if (diff > 0) {
-                leftField.css('margin-bottom', diff + Number((leftField.css('margin-bottom') || "0").replace("px", "")))
+                leftField.css('margin-bottom', diff + Number((leftField.css('margin-bottom') || '0').replace('px', '')))
               }
-              if (diff < 0) {
-                rightField.css('margin-bottom', -diff + Number((rightField.css('margin-bottom') || "0").replace("px", "")))
+              if (diff >= 0) {} else {
+                rightField.css('margin-bottom', -diff + Number((rightField.css('margin-bottom') || '0').replace('px', '')))
               }
             }
             return {
@@ -3022,9 +3022,9 @@
                 let valueHashes = []
                 const numberOfValues = _.chain(args.input.subInputs).pluck('input').pluck('values').value().length
                 for (let i = 0; i < numberOfValues; i++) {
-                  valueHashes.push(_.chain(args.input.subInputs).pluck('input').pluck('values').pluck(i).pluck('current').pluck('value').value().reduce(function (memo, val) {return `${memo}|${val}`}))
+                  valueHashes.push(_.chain(args.input.subInputs).pluck('input').pluck('values').pluck(i).pluck('current').pluck('value').value().reduce(function (memo, val) { return `${memo}|${val}` }))
                 }
-                let compareValueHash = _.chain(args.input.subInputs).pluck('input').pluck('compareValues').pluck(args.inputValueIndex).pluck('current').pluck('value').value().reduce(function (memo, val) {return `${memo}|${val}`})
+                let compareValueHash = _.chain(args.input.subInputs).pluck('input').pluck('compareValues').pluck(args.inputValueIndex).pluck('current').pluck('value').value().reduce(function (memo, val) { return `${memo}|${val}` })
                 if (valueHashes.includes(compareValueHash)) {
                   return
                 }
@@ -3043,7 +3043,7 @@
                 value: _.chain(deepClone(args.value)).omit('old').defaults({ old: { value: undefined } }).value(),
                 input: args.input,
                 valueIndex: args.inputValueIndex
-              });
+              })
             })
             return {
               teardown: function () {}
@@ -3051,7 +3051,6 @@
           }
           const dropZone = function (node, args) {
             const draggedClass = `draggable_${args.inputIndex}`
-            //target
             $(node).droppable({
               activeClass: 'drop-target',
               accept: `.${draggedClass}`,
@@ -4287,7 +4286,7 @@
                         }).then(function (response) {
                           const promises = []
                           _.each(_.chain(event.context.transferFieldsToParent).pairs().filter(function (pair) { return pair[ 1 ] === true }).map(function (pair) { return pair[ 0 ] }).value(), function (property) {
-                            const inputRef = event.context.showFieldsOfRelated.filter(item => item.field === property)[0].inputRef
+                            const inputRef = event.context.showFieldsOfRelated.filter(item => item.field === property)[ 0 ].inputRef
                             const input = ractive.get('applicationData.inputMap')[ `${typeFromUri(parentUri)}.http://data.deichman.no/ontology#${property}` ]
                             const oldValue = valueOfInputByInputId(inputRef) || ''
                             const newValue = relation.projections[ property ]
