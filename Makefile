@@ -177,8 +177,8 @@ indexcounts:						## Count number of documents in each index
 	@for index in $(INDEXES); do $(CMD) -c "sudo docker exec elasticsearch curl -s 'localhost:9200/search/$$index/_count'" | grep -oP "(?<=count\":)(\d+)" | xargs echo "$$index: " ; done
 
 reindex_all:						## Reindex all resources
-	@$(CMD) -c "sudo docker exec services curl -s -XPOST 'localhost:8005/search/reindex_all'"
+	sudo docker exec services curl -s -XPOST 'localhost:8005/search/reindex_all'
 
 clear_indexes_and_reindex_all:				## Re-create index-mappings and reindex all resources
-	@$(CMD) -c "sudo docker exec services curl -s -XPOST 'localhost:8005/search/clear_index'"
-	@$(CMD) -c "sudo docker exec services curl -s -XPOST 'localhost:8005/search/reindex_all'"
+	sudo docker exec services curl -s -XPOST 'localhost:8005/search/clear_index'
+	sudo docker exec services curl -s -XPOST 'localhost:8005/search/reindex_all'
