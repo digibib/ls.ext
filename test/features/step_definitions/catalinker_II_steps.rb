@@ -252,6 +252,16 @@ When(/^at jeg skriver inn person nr ([0-9]) i feltet "([^"]*)" og trykker enter$
   field.send_keys :enter
 end
 
+When(/^at jeg skriver inn tittelen på verk nr ([0-9]) i feltet "([^"]*)" og trykker enter$/) do |index, label|
+  # TODO: remove @context[:random_migrate_person_names][index.to_i]
+  work = @context[:services].works[index.to_i-1]
+  workTitle = @context[:services].get_value(work, 'mainTitle')
+  field = @site.WorkFlow.get_text_field_from_label(label)
+  field.click
+  field.send_keys (workTitle)
+  field.send_keys :enter
+end
+
 When(/^skriver jeg inn samme (tilfeldige |)(.*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
   field = @site.WorkFlow.get_text_field_from_label(label)
   field.click
@@ -333,7 +343,7 @@ When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisa
 end
 
 When(/^sjekker jeg at det er "([^"]*)" biinnførsler totalt$/) do |number_of_additional_entries|
-  @browser.divs(:xpath => "//div[@data-issue-association]").length.should equal?(number_of_additional_entries.to_i)
+  @browser.divs(:xpath => "//span[@class='height-aligned']/span[1]//*[./preceding-sibling::*[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//span[contains(concat(' ',normalize-space(@class),' '), ' subject-type-association ')]").length.should equal(number_of_additional_entries.to_i)
 end
 
 When(/^fjerner jeg den første biinførselen$/) do
@@ -518,6 +528,14 @@ When(/^at jeg vil slå sammen to personer$/) do
   s = TestSetup::Services.new()
   2.times do
     s.add_work_with_publications_and_contributors(0,2)
+  end
+  @context[:services] = s
+end
+
+When(/^at jeg vil slå sammen to verk$/) do
+  s = TestSetup::Services.new()
+  2.times do
+    s.add_work_with_publications_and_contributors(1,2)
   end
   @context[:services] = s
 end
@@ -792,4 +810,16 @@ end
 
 When(/^skal det vises (\d+) deler i utgivelsen$/) do |arg|
   @browser.h3s(:class => "accordionHeader").length.should eq arg.to_i
+end
+
+When(/^drar jeg et element fra "([^"]*)" på høyre side til venstre side$/) do |label|
+  draggable = @site.WorkFlow.get_draggable_from_label(label)
+  drop_zone = @site.WorkFlow.get_dropzone_from_label(label)
+  draggable.fire_event("onmousedown")
+  driver=@browser.driver
+  driver.action.click_and_hold(draggable.wd).perform
+  sleep 2
+  driver.action.move_to(drop_zone.wd).perform
+  sleep 2
+  drop_zone.fire_event("onmouseup")
 end
