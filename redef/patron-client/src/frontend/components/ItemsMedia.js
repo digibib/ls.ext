@@ -11,7 +11,7 @@ class ItemsMedia extends React.Component {
     const branchCode = this.props.branchCode
 
     if (this.props.itemLocation === 0) {
-      this.handleBranchStatusMedia(`${branchCode}_${mediaType}`)
+      this.handleBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
     }
   }
 
@@ -28,9 +28,9 @@ class ItemsMedia extends React.Component {
           </div>
           <div className="flex-item item-icon-button">
             <button
-              onClick={() => { this.handleBranchStatusMedia(`${branchCode}_${mediaType}`) }}
-              onKeyDown={() => { this.handleBranchStatusMediaEnter(`${branchCode}_${mediaType}`) }}>
-              {this.shouldShowBranchStatusMedia(`${branchCode}_${mediaType}`)
+              onClick={() => { this.handleBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`) }}
+              onKeyDown={() => { this.handleBranchStatusMediaEnter(`${branchCode}_${this.splitMediaType(mediaType)}`) }}>
+              {this.shouldShowBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
                 ? [(<span key={`show-less-content-media${branchCode}`} className="is-vishidden">
                         <FormattedMessage {...messages.showBranchAvailabilityMedia} />
                       </span>), (<i key={`show-less-content-media-icon${branchCode}`} className="icon-minus" aria-hidden="true" />)]
@@ -42,7 +42,7 @@ class ItemsMedia extends React.Component {
           </div>
         </div>
 
-        {this.shouldShowBranchStatusMedia(`${branchCode}_${mediaType}`)
+        {this.shouldShowBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
         ? (<div className="media-type-items">
             <div className="header">
               <div role="row" className="flex-wrapper">
@@ -74,9 +74,12 @@ class ItemsMedia extends React.Component {
   }
 
   shouldShowBranchStatusMedia (code) {
-    // const itemLocation = this.props.itemLocation
     const { locationQuery: { showBranchStatusMedia } } = this.props
     return (showBranchStatusMedia && showBranchStatusMedia === code || (Array.isArray(showBranchStatusMedia) && showBranchStatusMedia.includes(code)))
+  }
+
+  splitMediaType (code) {
+    return code.split('mediaType').pop()
   }
 }
 

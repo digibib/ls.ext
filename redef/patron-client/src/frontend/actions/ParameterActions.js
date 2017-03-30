@@ -63,7 +63,6 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
 
 export function ensureStatusEntriesOpen (inputLocationQuery) {
   return (dispatch, getState) => {
-    console.log(getState())
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     let queryParam = locationQuery[ 'showBranchStatus' ] || []
@@ -83,6 +82,41 @@ export function ensureStatusEntriesOpen (inputLocationQuery) {
     }
 
     return dispatch(replace({ pathname: pathname, query: locationQuery }))
+  }
+}
+
+export function deleteStatusEntriesParams (inputLocationQuery) {
+  const queryParamName = 'showBranchStatus'
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+
+    const queryParam = locationQuery[ queryParamName ] || []
+
+    console.log('locationQ', locationQuery)
+
+    delete locationQuery[ queryParamName ]
+
+    console.log('Location query after delete', locationQuery)
+
+    // return dispatch(push({ pathname: pathname, query: locationQuery }))
+
+    /* if (shouldRemoveInBackString) {
+      let replacedParams
+      replacedParams = queryParam.replace(`${yearFrom}=${years.yearFrom}&`, '')
+      replacedParams = replacedParams.replace(`${yearTo}=${years.yearTo}`, '')
+      locationQuery[ queryParamName ] = replacedParams
+    } else {
+      if (years.yearFrom) {
+        delete locationQuery[ yearFrom ]
+      }
+      if (years.yearTo) {
+        delete locationQuery[ yearTo ]
+      }
+    }
+
+    return dispatch(push({ pathname: pathname, query: locationQuery }))
+    */
   }
 }
 

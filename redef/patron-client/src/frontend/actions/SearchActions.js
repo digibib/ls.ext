@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import { processSearchResponse } from '../utils/searchResponseParser'
-import { toggleParameterValue, ensureDefinedFiltersOpen, ensureStatusEntriesOpen } from './ParameterActions'
+import { toggleParameterValue, ensureDefinedFiltersOpen, ensureStatusEntriesOpen, deleteStatusEntriesParams } from './ParameterActions'
 
 export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
