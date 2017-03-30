@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import { processSearchResponse } from '../utils/searchResponseParser'
-import { toggleParameterValue, ensureDefinedFiltersOpen, ensureStatusEntriesOpen, deleteStatusEntriesParams } from './ParameterActions'
+import { toggleParameterValue, ensureDefinedFiltersOpen } from './ParameterActions'
 
 export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
@@ -58,7 +58,6 @@ export function search () {
         } else {
           dispatch(ensureDefinedFiltersOpen(locationQuery))
           dispatch(receiveSearch(processedResponse))
-          dispatch(ensureStatusEntriesOpen(locationQuery))
         }
       })
       .catch(error => dispatch(searchFailure(error)))

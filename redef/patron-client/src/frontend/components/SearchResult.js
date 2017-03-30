@@ -155,6 +155,7 @@ class SearchResult extends React.Component {
       const groupedByBranchSortedByMediaType = groupByBranch(items)
 
       groupedByBranchSortedByMediaType.map(el => {
+        el.realName = this.props.intl.formatMessage({ id: el.branchcode })
         el.items.forEach(e => {
           e.mediaType = this.props.intl.formatMessage({ id: e.mediaTypes[0] })
           e.mediaTypeURI = e.mediaTypes[0]
@@ -166,7 +167,14 @@ class SearchResult extends React.Component {
 
           return 0
         })
+
         return el
+      })
+
+      groupedByBranchSortedByMediaType.sort((a, b) => {
+        if (a.realName < b.realName) return -1
+        if (a.realName > b.realName) return 1
+        return 0
       })
 
       const groupedByBranchAndMedia = groupedByBranchSortedByMediaType.map(el => {
@@ -216,6 +224,15 @@ class SearchResult extends React.Component {
             }
           </div>
         )
+      })
+
+      byBranch.map((el, i) => {
+        activeFilters.forEach(a => {
+          if (el.key === a.bucket) {
+            let activeBranch = byBranch.splice(i, 1)
+            byBranch.unshift(activeBranch)
+          }
+        })
       })
 
       if (homeBranchPos) {

@@ -36,7 +36,27 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
         locationQuery[ queryParamName ] = queryParam
       }
     }
-    return dispatch(push({ pathname: pathname, query: locationQuery }))
+
+    if (queryParamName === 'showBranchStatusMedia') {
+      if (!Array.isArray(locationQuery[ queryParamName ])) {
+        locationQuery[ queryParamName ] = [ value ]
+      }
+      const branchValue = value.split('_')[0]
+      const activeBranchFilters = getActiveBranchFilters(locationQuery)
+      activeBranchFilters.map(el => {
+        if (el === branchValue) {
+          locationQuery [ queryParamName ].push(value)
+        }
+      })
+    }
+    
+    if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
+      const homeBranch = getState().profile.personalInformation.homeBranch
+      const locationQueryWithBranches = ensureBranchStatus(locationQuery, homeBranch)
+      return dispatch(push({ pathname: pathname, query: locationQueryWithBranches }))
+    } else {
+      return dispatch(push({ pathname: pathname, query: locationQuery }))
+    }
   }
 }
 
@@ -61,63 +81,43 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
   }
 }
 
-export function ensureStatusEntriesOpen (inputLocationQuery) {
-  return (dispatch, getState) => {
-    const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
-    let queryParam = locationQuery[ 'showBranchStatus' ] || []
-    if (!Array.isArray(queryParam)) {
-      queryParam = [ queryParam ]
-    }
-    if (queryParam.length > 0) {
-      // There are allready toggled filters, which means this is not an "initial query",
-      // but a refinement of existing query.
-      return
-    }
-    const borrowerNumber = getState().profile.personalInformation.borrowerNumber
+function ensureBranchStatus (locationQuery, homeBranch) {
+  const activeBranchFilters = getActiveBranchFilters(locationQuery)
 
-    if (borrowerNumber !== undefined) {
-      const homeBranch = getState().profile.personalInformation.homeBranch
+  if (activeBranchFilters.length === 0 ) {
+    delete locationQuery[ 'showBranchStatus' ]
+    if (homeBranch !== undefined) {
       locationQuery[ 'showBranchStatus' ] = [ homeBranch ]
     }
-
-    return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
+
+  activeBranchFilters.map((el, i) => {
+    if (i === 0) {
+      locationQuery[ 'showBranchStatus' ] = [ el.split('branch_').pop() ]
+
+    } else {
+      locationQuery[ 'showBranchStatus' ].push(el.split('branch_').pop())
+    }
+  })
+  return locationQuery
 }
 
-export function deleteStatusEntriesParams (inputLocationQuery) {
-  const queryParamName = 'showBranchStatus'
-  return (dispatch, getState) => {
-    const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
-
-    const queryParam = locationQuery[ queryParamName ] || []
-
-    console.log('locationQ', locationQuery)
-
-    delete locationQuery[ queryParamName ]
-
-    console.log('Location query after delete', locationQuery)
-
-    // return dispatch(push({ pathname: pathname, query: locationQuery }))
-
-    /* if (shouldRemoveInBackString) {
-      let replacedParams
-      replacedParams = queryParam.replace(`${yearFrom}=${years.yearFrom}&`, '')
-      replacedParams = replacedParams.replace(`${yearTo}=${years.yearTo}`, '')
-      locationQuery[ queryParamName ] = replacedParams
-    } else {
-      if (years.yearFrom) {
-        delete locationQuery[ yearFrom ]
-      }
-      if (years.yearTo) {
-        delete locationQuery[ yearTo ]
-      }
+function getActiveBranchFilters (locationQuery) {
+  let activeBranchFilters = []
+  if (locationQuery.filter) {
+    if (!Array.isArray(locationQuery.filter) && locationQuery.filter.includes('branch')) {
+      activeBranchFilters.push(locationQuery.filter)
+      return activeBranchFilters
     }
-
-    return dispatch(push({ pathname: pathname, query: locationQuery }))
-    */
+    if (Array.isArray(locationQuery.filter)) {
+      locationQuery.filter.map(e => {
+        if (e.includes('branch')) {
+          activeBranchFilters.push(e)
+        }
+      })
+    }
   }
+  return activeBranchFilters
 }
 
 export function togglePeriodParamValues (yearFrom, yearTo, years, inputLocationQuery) {
