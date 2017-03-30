@@ -398,7 +398,7 @@ public final class SPARQLQueryBuilder {
                 + "                          :agent ?agentUri ;\n"
                 + "                          :role ?role .\n"
                 + "             ?agentUri :name ?contributorName .\n"
-                + "             OPTIONAL { ?agent :nationality ?contributorNationality }\n"
+                + "             OPTIONAL { ?agentUri :nationality ?contributorNationality }\n"
                 + "   }\n"
                 + "   OPTIONAL { ?publicationUri :hasImage ?publicationImage }\n"
                 + "}", BaseURI.ontology(), recordId);
