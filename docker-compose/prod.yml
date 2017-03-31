@@ -143,3 +143,17 @@ services:
   overview:
     logging:
       driver: "journald"
+
+  search_metrics:
+    container_name: search_metrics
+    image: digibib/search_metrics:0ef9ab2b5569df60b11a4c7f1f40c4ec88f1c730
+    networks:
+      - backend
+    extra_hosts:
+      - "metrics:10.172.2.97"
+      - "sok.deichman.no:10.172.2.6"
+    environment:
+      METRICS_INTERVAL: 600
+      GRAPH_HOST: metrics
+    volumes:
+      - "overview_data:/app/html"
