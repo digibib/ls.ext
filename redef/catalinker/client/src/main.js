@@ -2629,6 +2629,14 @@
             .then(function (response) {
               // successfully patched resource
               ractive.set('save_status', 'alle endringer er lagret')
+              if (input.subInputs) {
+                _.each(input.subInputs, function (subInput) {
+                  subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                })
+              } else {
+                input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
+              }
+              ractive.update()
               return response
             })
           // .catch(function (response) {
@@ -4398,6 +4406,7 @@
           ractive.set('observers', [
             ractive.observe(`${inputsKeypath}.*.subInputs.0.input.values.*.subjectType`, function (newValue, oldValue, keypath) {
               checkRequiredSubjectTypeSelection(keypath, newValue)
+              ractive.set(`${parentOf(keypath)}.oldSubjectType`, oldValue)
             }, { init: false }),
 
             ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, function (newValue, oldValue, keypath) {
