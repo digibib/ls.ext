@@ -44,7 +44,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og at jeg skriver inn sted i feltet for utgivelsessted og trykker enter
-    Så debugger jeg
     Så velger jeg et sted fra treffliste fra stedregisteret
     Så skriver jeg inn "12" som utgivelsens nummer i serien
     Så jeg venter litt
@@ -130,6 +129,8 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så skal det vises 10 deler i utgivelsen
     Så trykker jeg på "+10"-knappen
+    Så debugger jeg
+    Og jeg venter litt
     Så skal det vises 4 deler i utgivelsen
     Og jeg venter litt
     Og bekrefter for å gå videre til "Biinnførsler"
@@ -141,12 +142,14 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på knappen for legge til biinnførselen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Komponist" knyttet til "verket"
+    Og debugger jeg
     Så så trykker jeg på Legg til ny biinnførsel-knappen
     Og jeg legger inn navn på en person som skal knyttes til biinnførsel
     Og jeg venter litt
     Så velger jeg en person fra treffliste fra personregisteret
     Og jeg venter litt
     Og jeg venter litt
+    Og debugger jeg
     Og jeg velger rollen "Fotograf"
     Og velger radioknappen for "Utgivelse" for å velge "hva rollen gjelder"
     Og jeg trykker på "Legg til"-knappen
@@ -154,6 +157,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
     Så sjekker jeg at det er "2" biinnførsler totalt
     Så fjerner jeg den første biinførselen
+    Og jeg venter litt
     Så sjekker jeg at det er "1" biinnførsler totalt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
     Og jeg venter litt
@@ -644,10 +648,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Og at jeg skriver inn tittelen på verk nr 2 i feltet "Søk etter duplikater" og trykker enter
     Så velger jeg et verk fra treffliste fra verksindeksen
     Og jeg venter litt
-    Så sjekker jeg at det er "1" biinnførsler totalt
+    Så sjekker jeg at det er "1" biinnførsler på venstre side
     Så drar jeg et element fra "Biinnførsel" på høyre side til venstre side
     Så trykker jeg på knappen for å slå sammen to autoriteter
     Så trykker jeg på "Fortsett"-knappen i dialogen
     Så sjekker jeg at antall relasjoner er 1
-    Så sjekker jeg at det er "2" biinnførsler totalt
+    Så sjekker jeg at det er "2" biinnførsler på venstre side
 

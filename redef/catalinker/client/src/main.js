@@ -2934,43 +2934,47 @@
           }
           const rangeSlider = function (node, args) {
             const stats = args.rangeStats
-            const input = args.input
-            const $node = $(node)
-            const handle = $node.find('.range-slider-handle')
-            $node.slider({
-              value: stats.start,
-              min: 1,
-              max: stats.numberOfObjects,
-              step: stats.rangeLength,
-              create: function () {
-                const sliderPos = $(this).slider('value')
-                handle.text(`${sliderPos}/${stats.numberOfObjects}`)
-              },
-              slide: function (event, ui) {
-                handle.text(`${ui.value}/${stats.numberOfObjects}`)
-              },
-              change: function (event, ui) {
-                handle.text(`${ui.value}/${stats.numberOfObjects}`)
-              },
-              stop: function (event, ui) {
-                handleRangeShift({
-                  original: {
-                    target: $node.prev('.save-placeholder').prev()
-                  },
-                  context: { input: args.input }
-                }, 'customRange', ui.value - 1, stats.rangeLength)
-              }
-            })
-            const observer = ractive.observe(`${input.keypath}.subInputs.0.input.rangeStats`, function (stats, oldVal, keypath) {
-              $node.slider('option', {
+            let observer
+            if (stats) {
+              const input = args.input
+              const $node = $(node)
+              const handle = $node.find('.range-slider-handle')
+              $node.slider({
                 value: stats.start,
-                max: stats.numberOfObjects
+                min: 1,
+                max: stats.numberOfObjects,
+                step: stats.rangeLength,
+                create: function () {
+                  const sliderPos = $(this).slider('value')
+                  handle.text(`${sliderPos}/${stats.numberOfObjects}`)
+                },
+                slide: function (event, ui) {
+                  handle.text(`${ui.value}/${stats.numberOfObjects}`)
+                },
+                change: function (event, ui) {
+                  handle.text(`${ui.value}/${stats.numberOfObjects}`)
+                },
+                stop: function (event, ui) {
+                  handleRangeShift({
+                    original: {
+                      target: $node.prev('.save-placeholder').prev()
+                    },
+                    context: { input: args.input }
+                  }, 'customRange', ui.value - 1, stats.rangeLength)
+                }
               })
-            }, { init: false })
-
+              observer = ractive.observe(`${input.keypath}.subInputs.0.input.rangeStats`, function (stats, oldVal, keypath) {
+                $node.slider('option', {
+                  value: stats.start,
+                  max: stats.numberOfObjects
+                })
+              }, { init: false })
+            }
             return {
               teardown: function () {
-                observer.cancel()
+                if (observer) {
+                  observer.cancel()
+                }
               }
             }
           }

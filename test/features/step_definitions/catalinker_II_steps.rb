@@ -343,6 +343,10 @@ When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisa
 end
 
 When(/^sjekker jeg at det er "([^"]*)" biinnførsler totalt$/) do |number_of_additional_entries|
+  @browser.divs(:xpath => "//span[./preceding-sibling::*[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//span[contains(concat(' ',normalize-space(@class),' '), ' subject-type-association ')]").length.should equal(number_of_additional_entries.to_i)
+end
+
+When(/^sjekker jeg at det er "([^"]*)" biinnførsler på venstre side$/) do |number_of_additional_entries|
   @browser.divs(:xpath => "//span[@class='height-aligned']/span[1]//*[./preceding-sibling::*[@data-uri-escaped-label='Biinnf%C3%B8rsel']]//span[contains(concat(' ',normalize-space(@class),' '), ' subject-type-association ')]").length.should equal(number_of_additional_entries.to_i)
 end
 
