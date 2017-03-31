@@ -45,11 +45,10 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
       const activeBranchFilters = getActiveBranchFilters(locationQuery)
       activeBranchFilters.map(el => {
         if (el === branchValue) {
-          locationQuery [ queryParamName ].push(value)
+          locationQuery[ queryParamName ].push(value)
         }
       })
     }
-    
     if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
       const homeBranch = getState().profile.personalInformation.homeBranch
       const locationQueryWithBranches = ensureBranchStatus(locationQuery, homeBranch)
@@ -84,7 +83,7 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
 function ensureBranchStatus (locationQuery, homeBranch) {
   const activeBranchFilters = getActiveBranchFilters(locationQuery)
 
-  if (activeBranchFilters.length === 0 ) {
+  if (activeBranchFilters.length === 0) {
     delete locationQuery[ 'showBranchStatus' ]
     if (homeBranch !== undefined) {
       locationQuery[ 'showBranchStatus' ] = [ homeBranch ]
@@ -94,7 +93,6 @@ function ensureBranchStatus (locationQuery, homeBranch) {
   activeBranchFilters.map((el, i) => {
     if (i === 0) {
       locationQuery[ 'showBranchStatus' ] = [ el.split('branch_').pop() ]
-
     } else {
       locationQuery[ 'showBranchStatus' ].push(el.split('branch_').pop())
     }
@@ -103,7 +101,7 @@ function ensureBranchStatus (locationQuery, homeBranch) {
 }
 
 function getActiveBranchFilters (locationQuery) {
-  let activeBranchFilters = []
+  const activeBranchFilters = []
   if (locationQuery.filter) {
     if (!Array.isArray(locationQuery.filter) && locationQuery.filter.includes('branch')) {
       activeBranchFilters.push(locationQuery.filter)

@@ -10,11 +10,14 @@ import { groupByBranch, groupByMediaType } from '../utils/sorting'
 import fieldQueryLink from '../utils/link'
 import { connect } from 'react-redux'
 
+import ClickableElement from '../components/ClickableElement'
+
 class SearchResult extends React.Component {
   constructor (props) {
     super(props)
     this.handleShowStatusClick = this.handleShowStatusClick.bind(this)
     this.handleEnter = this.handleEnter.bind(this)
+    this.handleBranchStatus = this.handleBranchStatus.bind(this)
   }
 
   componentWillMount () {
@@ -23,7 +26,6 @@ class SearchResult extends React.Component {
       this.props.fetchWorkResource(id)
     }
   }
-
 
   scrollToTop () {
     window.scrollTo(0, 0)
@@ -134,7 +136,7 @@ class SearchResult extends React.Component {
   }
 
   getActiveBranchFilters () {
-    let activeBranches = []
+    const activeBranches = []
     this.props.filters.map(el => {
       if (el.id.includes('branch') && el.active) {
         activeBranches.push(el)
@@ -189,17 +191,14 @@ class SearchResult extends React.Component {
 
         return (
           <div className="items-by-branch" key={el.branchcode}>
-            <div className="flex-wrapper branch-header" onClick={() => { this.handleBranchStatus(el.branchcode) }}>
-              <div className="flex-item">
-                <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
-              </div>
-              <div className="flex-item item-icon-button">
-                  <button className="flex-item"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    this.handleBranchStatus(el.branchcode)
-                  }}
-                  onKeyDown={() => { this.handleBranchStatusEnter(el.branchcode) }}>
+            <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
+              <div className="flex-wrapper branch-header">
+                <div className="flex-item">
+                  <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
+                </div>
+                <div className="flex-item item-icon-button">
+                <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
+                  <button className="flex-item">
                     {this.shouldShowBranchStatus(el.branchcode)
                       ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
                         <FormattedMessage {...messages.showBranchAvailability} />
@@ -209,8 +208,10 @@ class SearchResult extends React.Component {
                       </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
                     }
                   </button>
+                </ClickableElement>
                 </div>
             </div>
+            </ClickableElement>
             {this.shouldShowBranchStatus(el.branchcode)
               ? <Items
                 mediaItems={el.mediaItems}
@@ -229,7 +230,7 @@ class SearchResult extends React.Component {
       byBranch.map((el, i) => {
         activeFilters.forEach(a => {
           if (el.key === a.bucket) {
-            let activeBranch = byBranch.splice(i, 1)
+            const activeBranch = byBranch.splice(i, 1)
             byBranch.unshift(activeBranch)
           }
         })
@@ -246,13 +247,6 @@ class SearchResult extends React.Component {
 
   handleBranchStatus (code) {
     this.props.showBranchStatus(code)
-  }
-
-  handleBranchStatusEnter (code) {
-    if (event.keyCode === 32) { // Space code
-      event.preventDefault()
-      this.handleBranchStatus(code)
-    }
   }
 
   shouldShowBranchStatus (code) {
@@ -364,7 +358,10 @@ SearchResult.propTypes = {
   fetchWorkResource: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  homeBranch: PropTypes.string
+  homeBranch: PropTypes.string,
+  filters: PropTypes.array.isRequired,
+  showBranchStatusMedia: PropTypes.func.isRequired,
+  showBranchStatus: PropTypes.func.isRequired
 }
 
 export const messages = defineMessages({

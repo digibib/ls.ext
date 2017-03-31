@@ -19,14 +19,14 @@ class Items extends React.Component {
         component="div"
         className="items-container">
           {this.props.mediaItems.map((items, i) => {
-              return <ItemsMedia key={i}
-                                 itemsByMedia={items}
-                                 branchCode={this.props.branchCode}
-                                 showBranchStatusMedia={this.props.showBranchStatusMedia}
-                                 locationQuery={this.props.locationQuery}
-                                 itemLocation={i}
-              />
-            })
+            return <ItemsMedia key={i}
+                               itemsByMedia={items}
+                               branchCode={this.props.branchCode}
+                               showBranchStatusMedia={this.props.showBranchStatusMedia}
+                               locationQuery={this.props.locationQuery}
+                               itemLocation={i}
+            />
+          })
           }
       </NonIETransitionGroup>
     )

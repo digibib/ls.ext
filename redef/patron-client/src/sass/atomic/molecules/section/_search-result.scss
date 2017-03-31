@@ -169,6 +169,10 @@
 }
 
 .items-by-branch {
+  .media-type-branches {
+    border: 4px solid #e8e8e8;
+  }
+
   /* border: 1px solid #767676; */
   margin-bottom: 0.5em;
 
@@ -192,7 +196,7 @@
   }
 
   .header {
-    background-color: #e8e8e8;
+    background-color: #ccc;
     font-weight: 700;
     text-transform: capitalize;
 

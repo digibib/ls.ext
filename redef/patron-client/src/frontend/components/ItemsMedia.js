@@ -3,8 +3,12 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import Constants from '../constants/Constants'
 import Item from './Item'
 
-
 class ItemsMedia extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleBranchStatusMedia = this.handleBranchStatusMedia.bind(this)
+    this.handleBranchStatusMediaEnter = this.handleBranchStatusMediaEnter.bind(this)
+  }
 
   componentWillMount () {
     const mediaType = this.props.itemsByMedia.mediaTypeURI
@@ -28,8 +32,8 @@ class ItemsMedia extends React.Component {
           </div>
           <div className="flex-item item-icon-button">
             <button
-              onClick={() => { this.handleBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`) }}
-              onKeyDown={() => { this.handleBranchStatusMediaEnter(`${branchCode}_${this.splitMediaType(mediaType)}`) }}>
+              onClick={this.handleBranchStatusMedia}
+              onKeyDown={this.handleBranchStatusMediaEnter}>
               {this.shouldShowBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
                 ? [(<span key={`show-less-content-media${branchCode}`} className="is-vishidden">
                         <FormattedMessage {...messages.showBranchAvailabilityMedia} />
@@ -62,14 +66,16 @@ class ItemsMedia extends React.Component {
     )
   }
 
-  handleBranchStatusMedia (code) {
-    this.props.showBranchStatusMedia(code)
+  handleBranchStatusMedia () {
+    const mediaType = this.props.itemsByMedia.mediaTypeURI
+    const branchCode = this.props.branchCode
+    this.props.showBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
   }
 
-  handleBranchStatusMediaEnter (code) {
+  handleBranchStatusMediaEnter (event) {
     if (event.keyCode === 32) { // Space code
       event.preventDefault()
-      this.handleBranchStatusMedia(code)
+      this.handleBranchStatusMedia()
     }
   }
 
@@ -87,7 +93,10 @@ ItemsMedia.propTypes = {
   mediaType: PropTypes.string,
   branchCode: PropTypes.string.isRequired,
   itemLocation: PropTypes.number.isRequired,
-  intl: PropTypes.object.isRequired
+  intl: PropTypes.object.isRequired,
+  itemsByMedia: PropTypes.object.isRequired,
+  showBranchStatusMedia: PropTypes.func.isRequired,
+  locationQuery: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({
