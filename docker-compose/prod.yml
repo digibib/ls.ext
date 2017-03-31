@@ -155,5 +155,8 @@ services:
     environment:
       METRICS_INTERVAL: 600
       GRAPH_HOST: metrics
+      METRICS_HOST: "${METRICS_HOST:-localhost}"
+      METRICS_DOCKER: "${METRICS_DOCKER:-search_metrics}"
+      METRICS_ENV: "${METRICS_ENV:-dev}"
     volumes:
       - "overview_data:/app/html"
