@@ -79,7 +79,7 @@ ifeq ($(LSDEVMODE),ci)
 	$(DOCKER_COMPOSE) rm -f build_services || true &&\
 	$(DOCKER_COMPOSE) build build_services &&\
 	$(DOCKER_COMPOSE) run build_services &&\
-	&& docker run --rm \
+	docker run --rm \
 		   -v dockercompose_services_build:/from \
 		   -v $(LSEXTPATH):/to \
 			alpine ash -c 'cp /from/build/libs/services-1.0-SNAPSHOT-standalone.jar /to/'
