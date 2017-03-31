@@ -116,7 +116,7 @@ When(/^jeg finner riktig treff og trykker på det$/) do
     element = @browser.element(data_automation_id: 'work-title')
     element.present? && element.text.include?(title)
   }
-  @browser.link(data_automation_id: 'work-link').click
+  @browser.element(data_automation_id: 'work-title').click
 end
 
 When(/^skal jeg se "([^"]*)" utgivelser$/) do |count|
