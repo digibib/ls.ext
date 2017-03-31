@@ -28,7 +28,7 @@ module.exports = {
               // values to tweak:
               //   0.5 = gain (weight factor)
               //   100 = scale (in days since catalogued)
-              inline: "if (doc.created.value != null) { return _score * (1 + (0.5*100)/(100+(System.currentTimeMillis()-doc.created.date.getMillis())/86400000)); } return _score;"
+              inline: 'if (doc.created.value != null) { return _score * (1 + (0.5*100)/(100+(System.currentTimeMillis()-doc.created.date.getMillis())/86400000)); } return _score;'
             }
           }
         }
