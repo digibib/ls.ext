@@ -5,6 +5,9 @@ import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
 import SearchResult, { __RewireAPI__ as DefaultExportSearchResultRewireApi } from '../../src/frontend/components/SearchResult'
+import {Provider} from 'react-redux'
+import rootReducer from '../../src/frontend/reducers'
+import {createStore} from 'redux'
 
 function setup (resultPropOverrides) {
   const props = {
@@ -29,8 +32,12 @@ function setup (resultPropOverrides) {
     },
     resources: {},
     items: {},
+    showBranchStatusMedia: () => {},
+    showBranchStatus: () => {},
     fetchWorkResource: () => {}
   }
+
+  const store = createStore(rootReducer, { modal: props })
 
   const messages = {
     format_1: 'format_1',
@@ -40,9 +47,11 @@ function setup (resultPropOverrides) {
     illustrator: 'illustrator'
   }
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale="en" messages={messages}>
-      <SearchResult {...props} />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale="en" messages={messages}>
+        <SearchResult {...props} />
+      </IntlProvider>
+    </Provider>
   )
 
   return {

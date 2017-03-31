@@ -185,7 +185,6 @@ class UserLoans extends React.Component {
   }
 
   renderResumeSuspendReservationButton (item) {
-    console.log('Change reserve', this.props.isRequestingChangeReservationSuspension)
     return (
       <div>
         {this.props.isRequestingChangeReservationSuspension === item.id
