@@ -11,6 +11,7 @@ volumes:
   koha_mysql_data: {}
   elasticsearch_data: {}
   fuseki_data: {}
+  overview_data: {}
 
 services:
   koha:
@@ -223,6 +224,8 @@ services:
       KOHA_VERSION: "${KOHA_IMAGE_TAG:-0}"
       GITREF: "${GITREF:-0}"
       BUILD_TAG: "${BUILD_TAG:-0}"
+    volumes:
+      - "overview_data:/etc/nginx/html/shared"
     logging:
       driver: "json-file"
       options:
