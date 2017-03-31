@@ -331,6 +331,9 @@
       },
       "workPartTitle": {
         "type": "text"
+      },
+      "created": {
+        "type": "date"
       }
     }
   }
