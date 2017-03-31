@@ -1147,6 +1147,9 @@ body {
           margin: auto;
           text-align: center;
         }
+        .row .field {
+          overflow-wrap: break-word;
+        }
       }
       .select-all {
         height: 37px;
