@@ -539,10 +539,13 @@ public final class EntityServiceImpl implements EntityService {
             return marcRecord;
         }
 
-        MarcField field245 = MarcRecord.newDataField(MarcConstants.FIELD_245);
         MarcField field260 = MarcRecord.newDataField(MarcConstants.FIELD_260);
         MarcField field041 = MarcRecord.newDataField(MarcConstants.FIELD_041);
         MarcField field090 = MarcRecord.newDataField(MarcConstants.FIELD_090);
+        String mainTitle = "";
+        String subtitle = "";
+        String partNumber = "";
+        String partTitle = "";
 
         Query query = new SPARQLQueryBuilder().constructInformationForMARC(publication);
         try (QueryExecution qexec = QueryExecutionFactory.create(query, work)) {
@@ -564,13 +567,13 @@ public final class EntityServiceImpl implements EntityService {
                 } else if (pred.equals(isbnProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_020, MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 } else if (pred.equals(mainTitleProperty)) {
-                    field245.addSubfield(MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                    mainTitle = stmt.getLiteral().getString();
                 } else if (pred.equals(subtitleProperty)) {
-                    field245.addSubfield(MarcConstants.SUBFIELD_B, stmt.getLiteral().getString());
+                    subtitle = stmt.getLiteral().getString();
                 } else if (pred.equals(partTitleProperty)) {
-                    field245.addSubfield(MarcConstants.SUBFIELD_P, stmt.getLiteral().getString());
+                    partTitle = stmt.getLiteral().getString();
                 } else if (pred.equals(partNumberProperty)) {
-                    field245.addSubfield(MarcConstants.SUBFIELD_N, stmt.getLiteral().getString());
+                    partNumber = stmt.getLiteral().getString();
                 } else if (pred.equals(ageLimitProperty)) {
                     marcRecord.addMarcField(MarcConstants.FIELD_521, MarcConstants.SUBFIELD_A, String.format("Aldersgrense %s", stmt.getLiteral().getString()));
                 } else if (pred.equals(subjectProperty)) {
@@ -618,7 +621,19 @@ public final class EntityServiceImpl implements EntityService {
             }
         }
 
-        if (field245.size() > 0) {
+        String title = mainTitle;
+        if (subtitle != "") {
+            title += " : " + subtitle;
+        }
+        if (partNumber != "") {
+            title += ". " + partNumber;
+        }
+        if (partTitle != "") {
+            title += ". " + partTitle;
+        }
+        if (title != "") {
+            MarcField field245 = MarcRecord.newDataField(MarcConstants.FIELD_245);
+            field245.addSubfield(MarcConstants.SUBFIELD_A, title);
             marcRecord.addMarcField(field245);
         }
 

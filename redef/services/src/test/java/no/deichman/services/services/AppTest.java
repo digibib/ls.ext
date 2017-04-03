@@ -1061,7 +1061,7 @@ public class AppTest {
         String isbn = "978-3-16-148410-0";
         String publicationYear = "2016";
 
-        setupExpectationForMarcXmlSentToKoha(creator, publicationTitle, partTitle, partNumber, isbn, publicationYear);
+        setupExpectationForMarcXmlSentToKoha(creator, "Sult. Part 1. Svolten", isbn, publicationYear);
         kohaAPIMock.addLoginExpectation();
 
         String personUri = createPersonInRdfStore(creator, BaseURI.ontology());
@@ -1109,7 +1109,7 @@ public class AppTest {
         return getLocation(createSubjectResponse);
     }
 
-    private void setupExpectationForMarcXmlSentToKoha(String creator, String publicationTitle, String partTitle, String partNumber, String isbn, String publicationYear) {
+    private void setupExpectationForMarcXmlSentToKoha(String creator, String title, String isbn, String publicationYear) {
         // TODO MARC XML can end up in any order, need a better comparison method for expected MARC XML
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
@@ -1119,9 +1119,7 @@ public class AppTest {
                 + "<marcxml:datafield tag=\"020\" ind1=\" \" ind2=\" \">"
                 + "<marcxml:subfield code=\"a\">" + isbn + "</marcxml:subfield></marcxml:datafield>"
                 + "<marcxml:datafield tag=\"245\" ind1=\" \" ind2=\" \">"
-                + "<marcxml:subfield code=\"n\">" + partNumber + "</marcxml:subfield>"
-                + "<marcxml:subfield code=\"p\">" + partTitle + "</marcxml:subfield>"
-                + "<marcxml:subfield code=\"a\">" + publicationTitle + "</marcxml:subfield></marcxml:datafield>"
+                + "<marcxml:subfield code=\"a\">" + title + "</marcxml:subfield></marcxml:datafield>"
                 + "<marcxml:datafield tag=\"260\" ind1=\" \" ind2=\" \">"
                 + "<marcxml:subfield code=\"c\">" + publicationYear + "</marcxml:subfield></marcxml:datafield>"
                 + "</marcxml:record></marcxml:collection>\n";
@@ -1209,7 +1207,7 @@ public class AppTest {
         String publicationYear = "2016";
 
         kohaAPIMock.addLoginExpectation();
-        setupExpectationForMarcXmlSentToKoha(creator, publicationTitle, partTitle, partNumber, isbn, publicationYear);
+        setupExpectationForMarcXmlSentToKoha(creator, "Sult. Part 1. Svolten", isbn, publicationYear);
 
         String personUri = createPersonInRdfStore(creator, BaseURI.ontology());
         String workUri = createWorkInRdfStore(workTitle, BaseURI.ontology(), personUri);
