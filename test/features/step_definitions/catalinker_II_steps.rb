@@ -544,6 +544,14 @@ When(/^at jeg vil slå sammen to verk$/) do
   @context[:services] = s
 end
 
+When(/^at jeg vil slette et verk som er relatert til et annet$/) do
+  s = TestSetup::Services.new()
+  2.times do
+    s.add_work_with_publications_and_contributors(1,2)
+  end
+  @context[:services] = s
+end
+
 When(/^trykker jeg på knappen for å slå sammen to autoriteter$/) do
   @browser.button(:data_automation_id => 'merge_authorities').wait_until_present(timeout: BROWSER_WAIT_TIMEOUT*5)
   @browser.button(:data_automation_id => 'merge_authorities').click
@@ -826,4 +834,8 @@ When(/^drar jeg et element fra "([^"]*)" på høyre side til venstre side$/) do 
   driver.action.move_to(drop_zone.wd).perform
   sleep 2
   drop_zone.fire_event("onmouseup")
+end
+
+When(/^dialogen viser at verket ikke kan slettes$/) do
+  @browser.span(:data_automation_id => 'undeleteable-work').should exist
 end

@@ -621,6 +621,48 @@ public class EntityResourceTest {
     }
 
     @Test
+    public void should_return_related_to_work() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_with_incoming_relations.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://data.deichman.no/work/w245846040007");
+        Response result = entityResource.retriveResourceParticipations(xuri.getType(), xuri.getId());
+        assertEquals("[\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "        \"mainTitle\": \"Oomph\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w328159667858\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/ontology#publicationOf\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/ontology#publicationOf\",\n"
+                + "        \"mainTitle\": \"Slümp\",\n"
+                + "        \"targetType\": \"Publication\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/publication/p869363145190\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/relationType#continuedIn\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/relationType#continuedIn\",\n"
+                + "        \"mainTitle\": \"Oomph\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w328159667858\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  }\n"
+                + "]", result.getEntity());
+    }
+
+    @Test
     public void should_return_publication_as_inversely_related() throws Exception {
         entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w87654.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
         XURI xuri = new XURI("http://deichman.no/work/w87654");

@@ -1152,6 +1152,7 @@ module.exports = (app) => {
             },
             deleteResource: {
               buttonLabel: 'Slett verket',
+              preventDeleteIfReferred: true,
               rdfType: 'Work',
               dialogKeypath: 'deleteWorkDialog',
               dialogId: 'delete-work-dialog',
@@ -1890,6 +1891,10 @@ module.exports = (app) => {
         abbreviations: {
           'Del nummer': 'Delnr.',
           'Utgivelsesår': 'Utg.år'
+        },
+        inverseLabels: {
+          'Emne': 'Som emne',
+          'Utgivelse av': 'Har utgivelse'
         }
       }
     response.json(config)

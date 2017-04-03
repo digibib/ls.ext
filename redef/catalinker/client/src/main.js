@@ -206,6 +206,7 @@
         ractive.update()
       }
       deleteConfig.dialogId = deleteConfig.dialogId || 'delete-resource-dialog'
+      ractive.set(`${deleteConfig.dialogKeypath}.uri`, uri)
       axios.get(proxyToServices(`${uri}/references`)).then(function (response) {
         var totalNumberOfReferences = 0
         _.each(_.values(response.data), function (referenceCountForType) {
@@ -271,6 +272,9 @@
           ],
           open: function () {
             $(`#${idPrefix}-ok-del`).hide()
+            if (totalNumberOfReferences > 0 && deleteConfig.preventDeleteIfReferred) {
+              $(`#${idPrefix}-do-del`).hide()
+            }
             $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
           }
         })
@@ -3356,6 +3360,9 @@
               checkShouldInclude: checkShouldInclude,
               abbreviate: function (label) {
                 return applicationData.config.abbreviations[ label ] || label
+              },
+              invert: function (label) {
+                return applicationData.config.inverseLabels[ label ] || label
               },
               hasNextOrPrevRange: function (input) {
                 return _.some(input.subInputs, function (subInput) {

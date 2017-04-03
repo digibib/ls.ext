@@ -1093,29 +1093,6 @@ body {
         margin-top: -22px;
       }
     }
-    .relations {
-      div.type {
-        background: $lightergray;
-        padding: 0 0 0 5px;
-      }
-      ul {
-        margin: 0px;
-        padding: 0;
-        list-style-type: none;
-        li {
-          max-height: 350px;
-          overflow: scroll;
-          ul {
-            li {
-              padding: 0 5px 0 15px;
-              &:nth-child(even) {
-                background: $lightestgray;
-              }
-            }
-          }
-        }
-      }
-    }
     .inverse-relations-title {
       margin-top: 20px;
       font-weight: bold;
@@ -1328,4 +1305,34 @@ body {
       padding-left: 20px;
     }
   }
+  #delete-work-dialog {
+    .relations {
+      height: 138px;
+      overflow: scroll;
+    }
+  }
+  .relations {
+    div.type {
+      background: $lightergray;
+      padding: 0 0 0 5px;
+    }
+    ul {
+      margin: 0px;
+      padding: 0;
+      list-style-type: none;
+      li {
+        max-height: 350px;
+        overflow: scroll;
+        ul {
+          li {
+            padding: 0 5px 0 15px;
+            &:nth-child(even) {
+              background: $lightestgray;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
