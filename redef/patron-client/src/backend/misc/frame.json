@@ -363,7 +363,8 @@
       "@container": "@set"
     },
     "isPartOfWorkSeries": {
-      "@id": "deichman:isPartOfWorkSeries"
+      "@id": "deichman:isPartOfWorkSeries",
+      "@container": "@set"
     },
     "WorkSeriesPart": {
       "@id": "deichman:WorkSeriesPart"

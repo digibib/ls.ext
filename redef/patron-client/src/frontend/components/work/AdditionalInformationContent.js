@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import NonIETransitionGroup from '../NonIETransitionGroup'
 import TargetAudience from './fields/TargetAudience'
-import WorkSerie from './fields/WorkSerie'
+import WorkSeries from './fields/WorkSeries'
 import DeweyNumber from './fields/DeweyNumber'
 import Subjects from './fields/Subjects'
 import Genres from './fields/Genres'
@@ -25,7 +25,7 @@ const AdditionalInformationContent = ({ work }) => (
     component="div"
     className="additional-info">
       <TargetAudience audiences={work.audiences} />
-      <WorkSerie workserie={work.workSeries} />
+      <WorkSeries workSeries={work.workSeries} />
       <WorkRelations workRelations={work.workRelations} />
       <ContentAdaptations contentAdaptations={work.contentAdaptations} />
         {/* this.renderPartOfSeries(work) */}

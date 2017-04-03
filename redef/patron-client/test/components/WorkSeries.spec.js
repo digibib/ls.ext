@@ -5,7 +5,7 @@ import React, { PropTypes } from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import { IntlProvider } from 'react-intl'
-import WorkSerie, { __RewireAPI__ as DefaultExportWorkRelationsRewireApi } from '../../src/frontend/components/work/fields/WorkSerie'
+import WorkSeries, { __RewireAPI__ as DefaultExportWorkRelationsRewireApi } from '../../src/frontend/components/work/fields/WorkSeries'
 
 function setup (propOverrides) {
   const props = { ...propOverrides }
@@ -20,7 +20,7 @@ function setup (propOverrides) {
 
   const output = TestUtils.renderIntoDocument(
     <IntlProvider locale="en" messages={messages}>
-      <WorkSerie {...props} />
+      <WorkSeries {...props} />
     </IntlProvider>
   )
 
@@ -32,7 +32,7 @@ function setup (propOverrides) {
 }
 
 describe('components', () => {
-  describe('WorkSerie', () => {
+  describe('WorkSeries', () => {
     before(() => {
       DefaultExportWorkRelationsRewireApi.__Rewire__('Link', React.createClass({
         propTypes: {
@@ -53,10 +53,11 @@ describe('components', () => {
 
     it('should render one work serie', () => {
       const { node } = setup({
-        workserie: {
+        workSeries: [{
+          id: '123',
           mainTitle: 'mainTitle',
           relativeUri: 'relativeUri'
-        }
+        }]
       })
 
       const link = node.querySelector("[data-automation-id='work_series_link']")

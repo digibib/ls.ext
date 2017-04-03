@@ -41,6 +41,7 @@ const WorkRelations = ({ workRelations, intl }) => {
             <span className="meta-label">{intl.formatMessage({ id: relationType })}</span>:&nbsp;
             {workRelations[ relationType ].map(relation =>
               <span className="content" key={relation.relativeUri + relationType}>
+                <br/>
                 <Link
                   data-automation-id="work_relation_link"
                   to={relation.relativeUri}>
