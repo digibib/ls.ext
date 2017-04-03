@@ -26,6 +26,7 @@ export default function (store) {
       <Route path="work/:workId" component={Work} />
       <Route path="work/:workId/publication/:publicationId" component={Work} />
       <Route path="person/:personId" component={Person} />
+      <Route path="register" component={Search} />
       <Route path="profile" component={MyPage} onEnter={requireLogin}>
         <IndexRoute component={UserLoans} />
         <Route path="loans" component={UserLoans} />
