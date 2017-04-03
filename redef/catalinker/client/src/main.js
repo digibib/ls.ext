@@ -2564,7 +2564,7 @@
               if (!(subInput.input.visible === false)) {
                 var value = spec.alternativeValueFor && spec.alternativeValueFor[ subInput.input.predicate ]
                   ? spec.alternativeValueFor[ subInput.input.predicate ]
-                  : subInput.input.values[ index ] ? subInput.input.values[ index ][ spec.useValue ].value : undefined
+                  : subInput.input.values[ index ] ? (subInput.input.values[ index ][ spec.useValue ] || {}).value : undefined
                 if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
                   patch.push({
                     op: spec.operation,
@@ -3069,16 +3069,20 @@
               drop: function (event, ui) {
                 if (args.input.subInputs) {
                   const data = $(ui.draggable).data()
-                  var newValueIndex
-                  _.chain(args.input.subInputs).pluck('input').each(function (input, inputIndex) {
-                    const lastValue = _.last(input.values).current.value
-                    if ([ '', undefined, null ].includes(lastValue) || Array.isArray(lastValue) && !lastValue.length) {
-                      input.values.splice(-1, 1, data.input.subInputs[ inputIndex ].input.compareValues[ data.valueIndex ])
-                    } else {
-                      input.values.push(data.input.subInputs[ inputIndex ].input.compareValues[ data.valueIndex ])
-                    }
-                    newValueIndex = input.values.length - 1
+                  // calculate target value index
+                  var highestValueIndex = -1
+                  _.each(_.chain(args.input.subInputs).pluck('input').pluck('values').value(), function (value) {
+                    _.each(value, function (value, index) {
+                      if ((!Array.isArray(value.current.value) && value.current.value) || (Array.isArray(value.current.value) && value.current.value[ 0 ])) {
+                        highestValueIndex = Math.max(highestValueIndex, index)
+                      }
+                    })
                   })
+                  let newValueIndex = highestValueIndex + 1
+                  _.chain(args.input.subInputs).pluck('input').each(function (input, inputIndex) {
+                    input.values[ newValueIndex ] = deepClone(data.input.subInputs[ inputIndex ].input.compareValues[ data.valueIndex ])
+                  })
+
                   ractive.update()
                   ractive.fire('saveNewObject', {
                     input: args.input,
