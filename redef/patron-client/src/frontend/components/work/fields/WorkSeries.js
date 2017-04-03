@@ -2,17 +2,16 @@ import React, { PropTypes } from 'react'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import { Link } from 'react-router'
 import MetaItem from '../../MetaItem'
-import isEmpty from '../../../utils/emptyObject'
 import title from '../../../utils/title'
 import fieldQueryLink from '../../../utils/link'
 
 const WorkSeries = ({ workSeries }) => {
-  if (workSeries.length > 0 ) {
+  if (workSeries.length > 0) {
     return (
         <MetaItem label={messages.labelWorkSerie} data-automation-id="work_work_serie">
           {workSeries.map(serie =>
             <span key={serie.id}>
-              <br/>
+              <br />
               <Link
                 data-automation-id="work_series_link"
                 to={fieldQueryLink('serie', serie.mainTitle)}>
@@ -22,7 +21,7 @@ const WorkSeries = ({ workSeries }) => {
             </span>
           )}
         </MetaItem>
-      )
+    )
   }
   return null
 }
