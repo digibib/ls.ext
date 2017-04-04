@@ -167,6 +167,7 @@ class Search extends React.Component {
 }
 
 Search.propTypes = {
+  registrationActions: PropTypes.object,
   searchActions: PropTypes.object.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
   searchResults: PropTypes.array.isRequired,
