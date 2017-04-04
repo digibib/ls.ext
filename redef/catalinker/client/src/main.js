@@ -4806,21 +4806,23 @@
               .then(positionSupportPanels)
               .then(Main.repositionSupportPanelsHorizontally)
           }
-          forAllGroupInputs(function (input) {
+          const alternativeKeypathMap = {}
+          const handleVisibility = function (input, alternativeKeypath) {
             if (input.showOnlyWhen) {
               if (!input.id) {
                 throw new Error(`Input "${input.label}" should have its own id attribute in order to handle dependency of input with id "${input.showOnlyWhen.inputId}"`)
               }
-              let inputKeypath = applicationData.inputLinks[ input.showOnlyWhen.inputId ]
+              let inputKeypath = alternativeKeypathMap[applicationData.inputLinks[ input.showOnlyWhen.inputId ]] || applicationData.inputLinks[ input.showOnlyWhen.inputId ]
+              const inputLink = alternativeKeypath || applicationData.inputLinks[ input.id ]
               if (input.showOnlyWhen.valueAsStringMatches) {
-                ractive.observe(`${inputKeypath}.values.*.current.value`, function (newValue, oldValue, keypath) {
+                ractive.observe(`${inputKeypath}.values.*.current.value`, function (newValue, oldValue) {
                   if (newValue !== oldValue) {
-                    setInputVisibility(applicationData.inputLinks[ input.id ], `${_.isArray(newValue) ? newValue[ 0 ] : newValue}`.match(input.showOnlyWhen.valueAsStringMatches) !== null)
+                    setInputVisibility(inputLink, `${_.isArray(newValue) ? newValue[ 0 ] : newValue}`.match(input.showOnlyWhen.valueAsStringMatches) !== null)
                   }
                 }, { init: false })
               }
               if (input.showOnlyWhen.initial && input.showOnlyWhen.initial === 'hide') {
-                setInputVisibility(applicationData.inputLinks[ input.id ], false)
+                setInputVisibility(inputLink, false)
               }
             }
             _.each(input.dependentResourceTypes, function (type) {
@@ -4837,7 +4839,29 @@
                 }
               }, { init: false })
             })
-          }, { handleInputGroups: true })
+          }
+          forAllGroupInputs(handleVisibility, { handleInputGroups: true })
+          _.chain(ractive.get('applicationData.inputsForDomainType')).pairs().each(function (pair) {
+            let type = pair[0]
+            let inputs = pair[1]
+            _.each(inputs, function (input, inputIndex) {
+              if (input.keypath || input.subInputs) {
+                if (input.subInputs) {
+                  _.each(input.subInputs, function (subInput, subInputIndex) {
+                    const inputKeypath = subInput.input.keypath.replace(
+                      /^inputGroups\.[0-9]+\.inputs\.[0-9]+\.subInputs\.[0-9]+\.input/,
+                      `applicationData.inputsForDomainType.${input.rdfType}.${inputIndex}.subInputs.${subInputIndex}.input`)
+                    alternativeKeypathMap[subInput.input.keypath] = inputKeypath
+                    handleVisibility(subInput.input, inputKeypath)
+                  })
+                } else {
+                  const inputKeypath = input.keypath.replace(/^inputGroups\.[0-9]+\.inputs\.[0-9]+/, `applicationData.inputsForDomainType.${type}.${inputIndex}`)
+                  alternativeKeypathMap[input.keypath] = inputKeypath
+                  handleVisibility(input, inputKeypath)
+                }
+              }
+            })
+          })
           return applicationData
         }
 

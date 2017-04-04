@@ -110,7 +110,7 @@
             <span class="input-wrapper" {{#if compare && compareMode}}as-draggable="{inputIndex, input:../../../../../subInputs[0].parentInput, inputValueIndex}"{{/if}}>
                 <span class="inputs">
                     {{#each ../../../../../subInputs}}
-                        {{#if !(./input.visible === false)}}
+                        {{#if !(./input.visible === false) || nonEditable}}
                             <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
                                 <span class="label"
                                       class-pure-u-3-4="{{!nonEditable && !suggested}}"
