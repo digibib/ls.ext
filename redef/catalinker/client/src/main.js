@@ -2275,13 +2275,11 @@
       ractive.set('duplicateSearchTerm', undefined)
       _.each(ractive.get(`applicationData.flattenedInputsForDomainType.${type}`), function (input) {
         delete input.compareValues
-        _.each(input.subInputs, function (subInput) {
+        _.chain(input.subInputs).compact().each(function (subInput) {
           delete subInput.input.compareValues
         })
       })
       ractive.update()
-      // ractive.set(`applicationData.inputsForDomainType.${type}.*.subInputs.*.input.compareValues`, [ { nonEditable: true } ])
-      // ractive.set(`applicationData.inputsForDomainType.${type}.*.compareValues`, [ { nonEditable: true } ])
       setTaskDescription(`edit${type}`)
       updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
       // hack to make things not look uncool

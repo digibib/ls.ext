@@ -55,7 +55,7 @@ on-escape="cancelEdit">
                                    title="Velg"><span/></a>
                             {{/if}}
                         </div>
-                        <div class="pure-u-5-6">
+                        <div class="pure-u-21-24">
                             {{#if config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri}}
                             <a class="search-result-item-label"
                                href="{{getLinkfromUri(., config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri)}}"
@@ -70,7 +70,7 @@ on-escape="cancelEdit">
                             <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemDetailsLabelProperties)}}</p>
                         </div>
 
-                        <div class="pure-u-1-12">
+                        <div class="pure-u-1-24">
                             {{#subItems.length || loadWorksAsSubjectOfItem}}
                             <a id="{{'sel-item-' + itemIndex + '-details-toggle'}}" tabindex="0"
                                class="toggle-show-sub-items"
