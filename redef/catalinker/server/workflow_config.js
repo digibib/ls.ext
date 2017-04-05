@@ -998,6 +998,7 @@ module.exports = (app) => {
               { rdfProperty: 'language', multiple: true },
               {
                 rdfProperty: 'hasWorkType',
+                type: 'hidden-url-query-value',
                 id: 'workTypeInput',
                 widgetOptions: {
                   queryParameter: 'hasWorkType',

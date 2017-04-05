@@ -4805,7 +4805,7 @@
               .then(Main.repositionSupportPanelsHorizontally)
           }
           const alternativeKeypathMap = {}
-          const handleVisibility = function (input, alternativeKeypath) {
+          const handleVisibility = function (input, groupIndex, inputIndex, subInputIndex, alternativeKeypath) {
             if (input.showOnlyWhen) {
               if (!input.id) {
                 throw new Error(`Input "${input.label}" should have its own id attribute in order to handle dependency of input with id "${input.showOnlyWhen.inputId}"`)
@@ -4850,12 +4850,12 @@
                       /^inputGroups\.[0-9]+\.inputs\.[0-9]+\.subInputs\.[0-9]+\.input/,
                       `applicationData.inputsForDomainType.${input.rdfType}.${inputIndex}.subInputs.${subInputIndex}.input`)
                     alternativeKeypathMap[subInput.input.keypath] = inputKeypath
-                    handleVisibility(subInput.input, inputKeypath)
+                    handleVisibility(subInput.input, undefined, undefined, undefined, inputKeypath)
                   })
                 } else {
                   const inputKeypath = input.keypath.replace(/^inputGroups\.[0-9]+\.inputs\.[0-9]+/, `applicationData.inputsForDomainType.${type}.${inputIndex}`)
                   alternativeKeypathMap[input.keypath] = inputKeypath
-                  handleVisibility(input, inputKeypath)
+                  handleVisibility(input, undefined, undefined, undefined, inputKeypath)
                 }
               }
             })
