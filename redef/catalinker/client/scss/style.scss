@@ -1007,8 +1007,10 @@ body {
               float: right;
             }
             .input-wrapper {
+              &.ui-draggable {
+                width: 455px;
+              }
               background: white;
-              max-width: 314px;
               padding-left: 10px;
               display: block;
               border: 1px solid black;
