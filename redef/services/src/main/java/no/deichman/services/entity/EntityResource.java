@@ -270,6 +270,9 @@ public final class EntityResource extends ResourceBase {
             getEntityService().delete(model);
             getSearchService().delete(xuri);
         }
+
+        getSearchService().delete(xuri);
+
         return noContent().build();
     }
 
