@@ -10,6 +10,10 @@ import {
   REQUEST_PROFILE_SETTINGS,
   RECEIVE_PROFILE_SETTINGS,
   PROFILE_SETTINGS_FAILURE,
+  CONTACT_DETAILS_NEED_VERIFICATION,
+  CHANGE_CONTACT_DETAILS_SUCCESS,
+  CHANGE_CONTACT_DETAILS_FAILURE,
+  POST_PROFILE_INFO_SUCCESS,
   REQUEST_CHANGE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
@@ -39,7 +43,9 @@ const initialState = {
   settings: {},
   isRequestingChangePassword: false,
   changePasswordError: null,
-  changePasswordSuccess: false
+  changePasswordSuccess: false,
+  contactDetailsNeedVerification: false,
+  contactDetailsVerificationError: null
 }
 
 export default function profile (state = initialState, action) {
@@ -72,6 +78,14 @@ export default function profile (state = initialState, action) {
       return { ...state, settings: action.payload.settings, settingsError: null, isRequestingSettings: false }
     case PROFILE_SETTINGS_FAILURE:
       return { ...state, settingsError: action.payload, isRequestingSettings: false }
+    case POST_PROFILE_INFO_SUCCESS:
+      return { ...state, contactDetailsNeedVerification: false, contactDetailsVerificationError: null }
+    case CONTACT_DETAILS_NEED_VERIFICATION:
+      return { ...state, contactDetailsNeedVerification: true, contactDetailsVerificationError: null }
+    case CHANGE_CONTACT_DETAILS_FAILURE:
+      return { ...state, contactDetailsNeedVerification: true, contactDetailsVerificationError: action.payload }
+    case CHANGE_CONTACT_DETAILS_SUCCESS:
+      return { ...state, contactDetailsNeedVerification: false, contactDetailsVerificationError: null }
     case REQUEST_CHANGE_PASSWORD:
       return {
         ...state, /* changePasswordError: null, */

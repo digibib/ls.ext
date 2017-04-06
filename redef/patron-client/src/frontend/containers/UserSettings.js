@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
 import ChangePin from './forms/ChangePinForm'
+import ContactDetails from './forms/ContactDetailsForm'
 
 class UserSettings extends React.Component {
   constructor (props) {
@@ -16,6 +17,13 @@ class UserSettings extends React.Component {
     this.handleKeyReminderOfPickupEmail = this.handleKeyReminderOfPickupEmail.bind(this)
     this.handleKeyReceiptOnLoansEmail = this.handleKeyReceiptOnLoansEmail.bind(this)
     this.handleKeyReceiptOnReturnsEmail = this.handleKeyReceiptOnReturnsEmail.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange (event) {
+    if (event.target.checked) {
+      this.props.profileActions.contactDetailsNeedVerification()
+    }
   }
 
   handleSaveClick (event) {
@@ -40,7 +48,12 @@ class UserSettings extends React.Component {
         }
       }
     }
-    this.props.profileActions.postProfileSettings(profileSettings)
+    if (this.props.contactDetailsNeedVerification === true) {
+      this.props.profileActions.postContactDetailsFromForm()
+      this.props.profileActions.postProfileSettings(profileSettings)
+    } else {
+      this.props.profileActions.postProfileSettings(profileSettings)
+    }
   }
 
   handleKeyReminderOfDueDateSms (event) {
@@ -115,6 +128,7 @@ class UserSettings extends React.Component {
                    name="user-settings-sms-reminder"
                    id="user-settings-sms-reminder"
                    ref={e => this.reminderOfDueDateSmsCheckbox = e}
+                   onChange={this.handleChange}
                    defaultChecked={settings.alerts.reminderOfDueDate.sms} />
             <label htmlFor="user-settings-sms-reminder" onKeyDown={this.handleKeyReminderOfDueDateSms}>
               <span className="checkbox-wrapper">
@@ -131,6 +145,7 @@ class UserSettings extends React.Component {
                    name="user-settings-reminder-email"
                    id="user-settings-reminder-email"
                    ref={e => this.reminderOfDueDateEmailCheckbox = e}
+                   onChange={this.handleChange}
                    defaultChecked={settings.alerts.reminderOfDueDate.email} />
 
             <label htmlFor="user-settings-reminder-email" onKeyDown={this.handleKeyReminderOfDueDateEmail}>
@@ -162,6 +177,7 @@ class UserSettings extends React.Component {
                    name="user-settings-delivery-reminder-sms"
                    id="user-settings-delivery-reminder-sms"
                    ref={e => this.reminderOfPickupSmsCheckbox = e}
+                   onChange={this.handleChange}
                    defaultChecked={settings.alerts.reminderOfPickup.sms} />
             <label htmlFor="user-settings-delivery-reminder-sms" onKeyDown={this.handleKeyReminderOfPickupSms}>
               <span className="checkbox-wrapper">
@@ -176,6 +192,7 @@ class UserSettings extends React.Component {
                    type="checkbox" name="user-settings-delivery-reminder-email"
                    id="user-settings-delivery-reminder-email"
                    ref={e => this.reminderOfPickupEmailCheckbox = e}
+                   onChange={this.handleChange}
                    defaultChecked={settings.alerts.reminderOfPickup.email} />
             <label htmlFor="user-settings-delivery-reminder-email" onKeyDown={this.handleKeyReminderOfPickupEmail}>
               <span className="checkbox-wrapper">
@@ -195,6 +212,7 @@ class UserSettings extends React.Component {
                    name="receipt-loans-email"
                    id="receipt-loans-email"
                    ref={e => this.receiptOnLoansEmailCheckbox = e}
+                   onChange={this.handleChange}
                    defaultChecked={settings.receipts.loans.email} />
             <label htmlFor="receipt-loans-email" onKeyDown={this.handleKeyReceiptOnLoansEmail}>
               <span className="checkbox-wrapper">
@@ -211,6 +229,7 @@ class UserSettings extends React.Component {
                    name="receipt-returns-email"
                    id="receipt-returns-email"
                    ref={e => this.receiptOnReturnsEmailCheckbox = e}
+                   onChange={this.handleChange}
                    defaultChecked={settings.receipts.returns.email} />
             <label htmlFor="receipt-returns-email" onKeyDown={this.handleKeyReceiptOnReturnsEmail}>
               <span className="checkbox-wrapper">
@@ -223,9 +242,14 @@ class UserSettings extends React.Component {
 
         </div>
 
+        { this.props.contactDetailsNeedVerification
+          ? <ContactDetails error={this.props.contactDetailsVerificationError} />
+          : '' }
+
         <footer>
           <button className="black-btn"
                   type="button"
+                  disabled={this.props.contactDetailsVerificationError}
                   data-automation-id="UserSettings_saveButton"
                   onClick={this.handleSaveClick}>
             <FormattedMessage {...messages.save} />
@@ -247,7 +271,10 @@ UserSettings.propTypes = {
   profileActions: PropTypes.object.isRequired,
   isRequestingSettings: PropTypes.bool.isRequired,
   settings: PropTypes.object.isRequired,
-  settingsError: PropTypes.object
+  personalInformation: PropTypes.object.isRequired,
+  settingsError: PropTypes.object,
+  contactDetailsNeedVerification: PropTypes.bool,
+  contactDetailsVerificationError: PropTypes.object
 }
 
 export const messages = defineMessages({
@@ -317,7 +344,10 @@ function mapStateToProps (state) {
   return {
     settingsError: state.profile.settingsError,
     isRequestingSettings: state.profile.isRequestingSettings,
-    settings: state.profile.settings
+    settings: state.profile.settings,
+    personalInformation: state.profile.personalInformation,
+    contactDetailsNeedVerification: state.profile.contactDetailsNeedVerification,
+    contactDetailsVerificationError: state.profile.contactDetailsVerificationError
   }
 }
 

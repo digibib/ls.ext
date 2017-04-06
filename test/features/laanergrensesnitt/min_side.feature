@@ -41,10 +41,21 @@ Egenskap: Min Side
     Og jeg logger inn med nytt passord
     Så skal jeg se at jeg er logget inn
 
+  Scenario: Bytte kontaktinfo
+    Når jeg logger inn
+    Og jeg går til innstillinger
+    Og jeg huker av for påminnelse om forfall på sms
+    Så skal jeg se skjema for å validere kontaktopplysninger
+    Når jeg endrer kontaktopplysninger
+    Og jeg trykker lagre inne på innstillinger
+    Så skal skjemaet for å validere kontaktopplysninger forsvinne
+    Når jeg trykker på personopplysninger
+    Så skal jeg se personopplysningene mine
+
   Scenario: Låner endrer personlige innstillinger
     Når jeg logger inn
     Og jeg går til innstillinger
-    Når slår på alle avkrysningsboksene inne på innstillinger
+    Når jeg slår på alle avkrysningsboksene inne på innstillinger
     Og jeg trykker lagre inne på innstillinger
     Og jeg trykker oppfrisk i nettleseren
     Så skal alle avkrysningsboksene være skrudd på inne på innstillinger
