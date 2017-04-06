@@ -27,6 +27,15 @@ class SearchResult extends React.Component {
     }
   }
 
+  componentDidMount () {
+    console.log('Component mounted')
+    const items = this.getResultItems()
+    if (items.length > 0) {
+      console.log('ITEMS', items[0])
+      this.handleBranchStatus(items[0].branchcode)
+    }
+  }
+
   scrollToTop () {
     window.scrollTo(0, 0)
   }
@@ -127,6 +136,48 @@ class SearchResult extends React.Component {
      */
   }
 
+  getResultItems () {
+    let groupedByBranchAndMedia = []
+    const { result } = this.props
+    const work = this.props.resources[ result.id ]
+
+    if (work) {
+      const items = [].concat(...work.publications.map(publication => (this.props.items[ publication.recordId ] || []).items || []).filter(array => array.length > 0))
+      const groupedByBranchSortedByMediaType = groupByBranch(items)
+
+      groupedByBranchSortedByMediaType.map(el => {
+        el.workId = result.id
+        el.realName = this.props.intl.formatMessage({ id: el.branchcode })
+        el.items.forEach(e => {
+          e.mediaType = this.props.intl.formatMessage({ id: e.mediaTypes[ 0 ] })
+          e.mediaTypeURI = e.mediaTypes[ 0 ]
+        })
+
+        el.items.sort((a, b) => {
+          if (a.mediaType < b.mediaType) return -1
+          if (a.mediaType > b.mediaType) return 1
+
+          return 0
+        })
+
+        return el
+      })
+
+      groupedByBranchSortedByMediaType.sort((a, b) => {
+        if (a.realName < b.realName) return -1
+        if (a.realName > b.realName) return 1
+        return 0
+      })
+
+      groupedByBranchAndMedia = groupedByBranchSortedByMediaType.map(el => {
+        el.mediaItems = groupByMediaType(el.items)
+        return el
+      })
+    }
+
+    return groupedByBranchAndMedia
+  }
+
   getResultUrl (result) {
     const { pathname, search, hash } = window.location
     return createPath({
@@ -146,49 +197,17 @@ class SearchResult extends React.Component {
     return activeBranches
   }
 
-  renderItems (result) {
+  renderItems () {
     let homeBranchPos
-    const work = this.props.resources[ result.id ]
     const activeFilters = this.getActiveBranchFilters()
 
-    if (work) {
-      const items = [].concat(...work.publications.map(publication => (this.props.items[ publication.recordId ] || []).items || []).filter(array => array.length > 0))
+    const groupedByBranchAndMedia = this.getResultItems()
 
-      const groupedByBranchSortedByMediaType = groupByBranch(items)
-
-      groupedByBranchSortedByMediaType.map(el => {
-        el.realName = this.props.intl.formatMessage({ id: el.branchcode })
-        el.items.forEach(e => {
-          e.mediaType = this.props.intl.formatMessage({ id: e.mediaTypes[0] })
-          e.mediaTypeURI = e.mediaTypes[0]
-        })
-
-        el.items.sort((a, b) => {
-          if (a.mediaType < b.mediaType) return -1
-          if (a.mediaType > b.mediaType) return 1
-
-          return 0
-        })
-
-        return el
-      })
-
-      groupedByBranchSortedByMediaType.sort((a, b) => {
-        if (a.realName < b.realName) return -1
-        if (a.realName > b.realName) return 1
-        return 0
-      })
-
-      const groupedByBranchAndMedia = groupedByBranchSortedByMediaType.map(el => {
-        el.mediaItems = groupByMediaType(el.items)
-        return el
-      })
-
+    if (groupedByBranchAndMedia.length > 0) {
       const byBranch = groupedByBranchAndMedia.map((el, i) => {
         if (this.props.homeBranch && this.props.homeBranch === el.branchcode && activeFilters.length === 0) {
           homeBranchPos = i
         }
-
         return (
           <div className="items-by-branch" key={el.branchcode}>
             <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>

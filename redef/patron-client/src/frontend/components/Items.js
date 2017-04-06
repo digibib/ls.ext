@@ -9,6 +9,46 @@ class Items extends React.Component {
     return <p><span data-automation-id="no_items"><FormattedMessage {...messages.noItems} /></span></p>
   }
   renderItems () {
+    const itemsMediaLanSorted = this.props.mediaItems.map(item => {
+      item.items.sort((a, b) => {
+        if (a.languages[0] < b.languages[0]) return -1
+        if (a.languages[0] > b.languages[0]) return 1
+        return 0
+      })
+
+      const itemToSort = item
+
+      if (item.items.length > 1) {
+        item.items.forEach((a, i) => {
+          if (a.languages[ 0 ].includes('swe')) {
+            const priLan = itemToSort.items.splice(i, 1)
+            itemToSort.items.unshift(priLan[0])
+          }
+        })
+
+        item.items.forEach((a, i) => {
+          if (a.languages[ 0 ].includes('nob') || a.languages[ 0 ].includes('nno') || a.languages[ 0 ].includes('nor')) {
+            const priLan = itemToSort.items.splice(i, 1)
+            itemToSort.items.unshift(priLan[0])
+          }
+        })
+      }
+
+      return itemToSort
+    })
+
+    const itemsMedia = itemsMediaLanSorted.map((item, i) => {
+      return (
+        <ItemsMedia key={i}
+                    itemsByMedia={item}
+                    branchCode={this.props.branchCode}
+                    showBranchStatusMedia={this.props.showBranchStatusMedia}
+                    locationQuery={this.props.locationQuery}
+                    itemLocation={i}
+        />
+      )
+    })
+
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -18,16 +58,7 @@ class Items extends React.Component {
         transitionLeaveTimeout={500}
         component="div"
         className="items-container">
-          {this.props.mediaItems.map((items, i) => {
-            return <ItemsMedia key={i}
-                               itemsByMedia={items}
-                               branchCode={this.props.branchCode}
-                               showBranchStatusMedia={this.props.showBranchStatusMedia}
-                               locationQuery={this.props.locationQuery}
-                               itemLocation={i}
-            />
-          })
-          }
+        {itemsMedia}
       </NonIETransitionGroup>
     )
   }
