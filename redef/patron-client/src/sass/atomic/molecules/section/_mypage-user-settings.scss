@@ -86,6 +86,32 @@
 
   }
 
+  .change-contact-details {
+    @include span(12);
+    margin-top: rhythm(4);
+
+    h2 {
+      color: $redColor;
+    }
+    .form-item {
+      margin-top: rhythm(2);
+      @include container;
+    }
+    label {
+      @include span(2);
+      margin-top: rhythm(2);
+    }
+    input {
+      @include span(4);
+      margin-top: rhythm(2);
+    }
+    .feedback {
+      @include span(12);
+      color: $redColor;
+      font-size: rhythm(2.5);
+    }
+  }
+
   .change-pin-fields {
     @include span(12);
     @include container;
