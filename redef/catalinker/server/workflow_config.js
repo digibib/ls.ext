@@ -1139,8 +1139,8 @@ module.exports = (app) => {
                   { field: 'mainTitle', width: '6-24', inputRef: 'workMainTitle' }, // there are 23/24th left for field layouts
                   { field: 'subtitle', width: '5-24', inputRef: 'workSubtitle' },
                   { field: 'partNumber', width: '2-24', inputRef: 'workPartNumber' },
-                  { field: 'partTitle', width: '6-24', inputRef: 'workPartTitle' },
-                  { field: 'recordId', width: '2-24' },
+                  { field: 'partTitle', width: '5-24', inputRef: 'workPartTitle' },
+                  { field: 'recordId', width: '3-24' },
                   { field: 'publicationYear', width: '2-24', inputRef: 'workPublicationYear' }
                 ],
                 cloneParentButtonExplanation: `

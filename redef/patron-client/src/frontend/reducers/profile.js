@@ -133,7 +133,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           loans: state.loansAndReservations.loans.map(loan => {
-            if (loan.checkoutId === action.payload.checkoutId) {
+            if (loan.id === action.payload.checkoutId) {
               loan.renewalStatus = action.payload.message
               loan.dueDate = action.payload.newDueDate
             }
@@ -147,7 +147,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           loans: state.loansAndReservations.loans.map(loan => {
-            if (loan.checkoutId === action.payload.checkoutId) {
+            if (loan.id === action.payload.checkoutId) {
               loan.renewalStatus = action.payload.message
             }
             return loan

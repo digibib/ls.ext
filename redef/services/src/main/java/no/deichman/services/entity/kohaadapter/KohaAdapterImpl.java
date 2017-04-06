@@ -191,6 +191,15 @@ public final class KohaAdapterImpl implements KohaAdapter {
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.cookie(sessionCookie.toCookie());
         Response response = invocationBuilder.get();
+
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            return getBiblioFromItemNumber(itemNumber);
+        }
+        if (OK.getStatusCode() != response.getStatus()) {
+            throw new RuntimeException("Unexpected response when requesting biblio from api: http status: " + response.getStatusInfo()); // FIXME !!
+        }
         return response.readEntity(String.class);
     }
 
@@ -214,7 +223,18 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.get();
+        Response response = invocationBuilder.get();
+
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = getHoldsFromAPI(userId);
+        }
+        if (OK.getStatusCode() != response.getStatus()) {
+            throw new RuntimeException("Unexpected response when requesting holds from api: http status: " + response.getStatusInfo()); // FIXME !!
+        }
+
+        return response;
     }
 
     @Override
