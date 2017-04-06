@@ -166,38 +166,55 @@
       }
     }
 
-    var unloadResourceForDomain = function (domainType) {
-      _.each(allInputs(), function (input) {
-        if (input.domain && domainType === unPrefix(input.domain)) {
-          let subjectType = input.values[ 0 ].subjectType
-          input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
-          input.values[ 0 ].subjectType = subjectType
-          input.values[ 0 ].oldSubjectType = subjectType
-        } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
-          var valuesToRemove = []
+    var unloadResourceForDomain = function (domainType, excludeInputs) {
+      excludeInputs = excludeInputs || []
+      const subjectTypesOfInputValue = {}
+      // determine subject type for value indexes for comound inputs
+      forAllGroupInputs(function (input) {
+        if (!excludeInputs.includes(input.id) && input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
           _.each(input.values, function (value, index) {
-            if (value.subjectType === domainType) {
-              valuesToRemove.push(index)
-            }
-          })
-          var promises = []
-          _.each(valuesToRemove.reverse(), function (index) {
-            promises.push(ractive.splice(`${input.keypath}.values`, index, 1))
-          })
-          Promise.all(promises).then(function () {
-            let values = ractive.get(`${input.keypath}.values`)
-            if (values.length === 0) {
-              ractive.set(`${input.keypath}.values.0`, emptyValues(input.searchable))
-              if (input.parentInput.subjectTypes.length === 1) {
-                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
-              }
+            const detectedSubjectType = (_.chain(input.parentInput.subInputs).pluck('input').pluck('values').find(function (values) {
+              return (values[ index ] && values[ index ].subjectType) ? values[ index ].subjectType : undefined
+            }).first().value() || {}).subjectType
+            if (detectedSubjectType) {
+              subjectTypesOfInputValue[ input.parentInput ] = subjectTypesOfInputValue[ input.parentInput ] || []
+              subjectTypesOfInputValue[ input.parentInput ][ index ] = detectedSubjectType
             }
           })
         }
       })
-      ractive.update()
-      ractive.set(`targetUri.${domainType}`, undefined)
+      forAllGroupInputs(function (input) {
+        if (!excludeInputs.includes(input.id)) {
+          if (input.domain && domainType === unPrefix(input.domain)) {
+            let subjectType = input.values[ 0 ].subjectType
+            input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
+            input.values[ 0 ].subjectType = subjectType
+            input.values[ 0 ].oldSubjectType = subjectType
+          } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
+            var valuesToRemove = []
+            _.each(input.values, function (value, index) {
+              if (subjectTypesOfInputValue[input.parentInput][index] === domainType) {
+                valuesToRemove.push(index)
+              }
+            })
+            var promises = []
+            _.each(valuesToRemove.reverse(), function (index) {
+              promises.push(ractive.splice(`${input.keypath}.values`, index, 1))
+            })
+            Promise.all(promises).then(function () {
+              let values = ractive.get(`${input.keypath}.values`)
+              if (values.length === 0) {
+                ractive.set(`${input.keypath}.values`, emptyValues(input.type === 'select-predefined-value', input.searchable))
+                if (input.parentInput.subjectTypes.length === 1) {
+                  ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
+                }
+              }
+            })
+          }
+        }
+      })
       updateBrowserLocationWithUri(domainType, undefined)
+      return ractive.set(`targetUri.${domainType}`, undefined).then(ractive.update())
     }
 
     var deleteResource = function (uri, deleteConfig, success) {
@@ -3926,6 +3943,7 @@
                 let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                 let wait = ractive.get('waitHandler').newWaitable(originTarget)
                 if (useAfterCreation) {
+                  unloadResourceForDomain(event.context.rdfType, useAfterCreation.excludeInputRefs)
                   setCreatedResourceValuesInMainInputs()
                 }
                 saveInputs((!maintenance && ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`)) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
@@ -4810,7 +4828,7 @@
               if (!input.id) {
                 throw new Error(`Input "${input.label}" should have its own id attribute in order to handle dependency of input with id "${input.showOnlyWhen.inputId}"`)
               }
-              let inputKeypath = alternativeKeypathMap[applicationData.inputLinks[ input.showOnlyWhen.inputId ]] || applicationData.inputLinks[ input.showOnlyWhen.inputId ]
+              let inputKeypath = alternativeKeypathMap[ applicationData.inputLinks[ input.showOnlyWhen.inputId ] ] || applicationData.inputLinks[ input.showOnlyWhen.inputId ]
               const inputLink = alternativeKeypath || applicationData.inputLinks[ input.id ]
               if (input.showOnlyWhen.valueAsStringMatches) {
                 ractive.observe(`${inputKeypath}.values.*.current.value`, function (newValue, oldValue) {
@@ -4840,8 +4858,8 @@
           }
           forAllGroupInputs(handleVisibility, { handleInputGroups: true })
           _.chain(ractive.get('applicationData.inputsForDomainType')).pairs().each(function (pair) {
-            let type = pair[0]
-            let inputs = pair[1]
+            let type = pair[ 0 ]
+            let inputs = pair[ 1 ]
             _.each(inputs, function (input, inputIndex) {
               if (input.keypath || input.subInputs) {
                 if (input.subInputs) {
@@ -4849,12 +4867,12 @@
                     const inputKeypath = subInput.input.keypath.replace(
                       /^inputGroups\.[0-9]+\.inputs\.[0-9]+\.subInputs\.[0-9]+\.input/,
                       `applicationData.inputsForDomainType.${input.rdfType}.${inputIndex}.subInputs.${subInputIndex}.input`)
-                    alternativeKeypathMap[subInput.input.keypath] = inputKeypath
+                    alternativeKeypathMap[ subInput.input.keypath ] = inputKeypath
                     handleVisibility(subInput.input, undefined, undefined, undefined, inputKeypath)
                   })
                 } else {
                   const inputKeypath = input.keypath.replace(/^inputGroups\.[0-9]+\.inputs\.[0-9]+/, `applicationData.inputsForDomainType.${type}.${inputIndex}`)
-                  alternativeKeypathMap[input.keypath] = inputKeypath
+                  alternativeKeypathMap[ input.keypath ] = inputKeypath
                   handleVisibility(input, undefined, undefined, undefined, inputKeypath)
                 }
               }

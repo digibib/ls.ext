@@ -656,7 +656,9 @@ module.exports = (app) => {
                       formId: 'create-main-work-form',
                       targetType: 'work'
                     } ],
-                    useAfterCreation: true
+                    useAfterCreation: {
+                      excludeInputRefs: [ 'mainEntryPersonInput', 'mainEntryRoleInput' ]
+                    }
                   },
                   filter: {
                     inputRef: 'mainEntryPersonInput',
@@ -928,7 +930,8 @@ module.exports = (app) => {
                     formRefs: [ {
                       formId: 'create-work-form',
                       targetType: 'work'
-                    } ]
+                    } ],
+                    useAfterCreation: true
                   }
                 }
               },
