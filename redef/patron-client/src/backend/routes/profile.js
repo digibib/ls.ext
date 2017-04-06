@@ -56,7 +56,7 @@ module.exports = (app) => {
       })
   })
 
-  app.get('/api/v1/profile/loans', (request, response) => {
+  /* app.get('/api/v1/profile/loans', (request, response) => {
     Promise.all([ fetchAllCheckouts(request), fetchAllHoldsAndPickups(request) ])
       .then(([checkouts, holdsAndPickups]) => {
         const holds = holdsAndPickups.filter(item => item.status !== 'W')
@@ -66,6 +66,20 @@ module.exports = (app) => {
           reservations: holds,
           pickups: pickups
         })
+      })
+  })
+  */
+
+  app.get('/api/v1/profile/loans', (request, response) => {
+    fetch(`http://services:8005/circulation/${request.session.borrowerNumber}`)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw Error(res.statusText)
+        }
+      }).then(json => {
+        response.send(json)
       })
   })
 

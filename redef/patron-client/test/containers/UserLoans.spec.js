@@ -31,57 +31,67 @@ function setup (propOverrides) {
   const loansAndReservations = {
     pickups: [
       {
-        itype: 'FILM',
-        reserveId: 'reserveId_1',
+        mediaType: 'http://data.deichman.no/mediaType#Film',
+        id: 'reserveId_1',
         recordId: 'recordId_1',
         title: 'title_1',
-        author: 'author_1',
+        contributor: {
+          contributorName: 'author_1'
+        },
         publicationYear: 'publicationYear_1',
-        expiry: '01/10/2016',
+        expirationDate: '01/10/2016',
         pickupNumber: 'pickupNumber_1',
         branchCode: 'branchCode_1'
       },
       {
-        itype: 'FILM',
-        reserveId: 'reserveId_2',
+        mediaType: 'http://data.deichman.no/mediaType#Film',
+        id: 'reserveId_2',
         recordId: 'recordId_2',
         title: 'title_2',
-        author: 'author_2',
+        contributor: {
+          contributorName: 'author_2'
+        },
         publicationYear: 'publicationYear_1',
-        expiry: '02/10/2016',
+        expirationDate: '02/10/2016',
         pickupNumber: 'pickupNumber_2',
         branchCode: 'branchCode_2'
       }
     ],
     reservations: [
       {
-        itype: 'FILM',
-        reserveId: 'reserveId_1',
+        mediaType: 'http://data.deichman.no/mediaType#Film',
+        id: 'reserveId_1',
         recordId: 'recordId_1',
         title: 'title_1',
-        author: 'author_1',
+        contributor: {
+          contributorName: 'author_1'
+        },
         queuePlace: '1',
         expected: '1–2',
         expectedTestData: '(approx. 1–2 weeks)',
         branchCode: 'branchCode_1'
       },
       {
-        itype: 'FILM',
-        reserveId: 'reserveId_2',
+        mediaType: 'http://data.deichman.no/mediaType#Film',
+        id: 'reserveId_2',
         recordId: 'recordId_2',
         title: 'title_2',
-        author: 'author_2',
+        contributor: {
+          contributorName: 'author_2'
+        },
         queuePlace: '6',
         expected: '12',
         expectedTestData: '(more than 12 weeks)',
         branchCode: 'branchCode_2'
       },
       {
-        itype: 'FILM',
-        reserveId: 'reserveId_3',
+        mediaType: 'http://data.deichman.no/mediaType#Film',
+        id: 'reserveId_3',
         recordId: 'recordId_3',
         title: 'title_3',
-        author: 'author_3',
+        contributor: {
+          contributorName: 'author_3'
+        },
         queuePlace: '3',
         expected: 'unknown',
         expectedTestData: '(Unknown waiting period)',
@@ -90,19 +100,25 @@ function setup (propOverrides) {
     ],
     loans: [
       {
-        itype: 'FILM',
+        mediaType: 'http://data.deichman.no/mediaType#Film',
+        id: 'loansId_1',
         recordId: 'recordId_1',
         title: 'title_1',
-        author: 'author_1',
+        contributor: {
+          contributorName: 'author_1'
+        },
         publicationYear: 'publicationYear_1',
         dueDate: '2017-01-01',
         checkoutId: 'checkoutId_1'
       },
       {
-        itype: 'FILM',
+        mediaType: 'http://data.deichman.no/mediaType#Film',
+        id: 'loansId_2',
         recordId: 'recordId_2',
         title: 'title_2',
-        author: 'author_2',
+        contributor: {
+          contributorName: 'author_2'
+        },
         publicationYear: 'publicationYear_2',
         dueDate: '2016-12-12',
         checkoutId: 'checkoutId_2'
@@ -143,17 +159,17 @@ describe('containers', () => {
       const pickups = node.querySelectorAll("[data-automation-id='UserLoans_pickup']")
       expect(pickups.length).toEqual(2)
       Array.prototype.forEach.call(pickups, (pickup, index) => {
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_type']").textContent).toEqual(loansAndReservations.pickups[ index ].itype)
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_type']").textContent).toEqual(messages[loansAndReservations.pickups[ index ].mediaType])
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_title']").textContent).toEqual(loansAndReservations.pickups[ index ].title)
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].author)
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(formatDate(loansAndReservations.pickups[ index ].expiry))
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_author']").textContent).toEqual(loansAndReservations.pickups[ index ].contributor.contributorName)
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(formatDate(new Date(Date.parse(loansAndReservations.pickups[ index ].expirationDate) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ]))
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_pickupNumber']").textContent).toEqual(loansAndReservations.pickups[ index ].pickupNumber)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(messages[ loansAndReservations.pickups[ index ].branchCode ])
       })
     })
 
     it('should display reservations', () => {
-      const { node, store } = setup()
+      const { node, store, messages } = setup()
       const { loansAndReservations } = store.getState().profile
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
@@ -166,9 +182,9 @@ describe('containers', () => {
       }
       Array.prototype.forEach.call(reservations, (reservation, index) => {
         const queuePlace = (reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).trim()
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(loansAndReservations.reservations[ index ].itype)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(messages[loansAndReservations.reservations[ index ].mediaType])
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].contributor.contributorName)
         expect(queuePlace).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
         // TODO: Uncomment below line when enabling estimates again
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
@@ -178,7 +194,7 @@ describe('containers', () => {
     })
 
     it('should display reservations on smaller screens', () => {
-      const { node, store } = setup({ mediaQueryValues: { width: 991 } })
+      const { node, store, messages } = setup({ mediaQueryValues: { width: 991 } })
       const { loansAndReservations } = store.getState().profile
       const { libraries } = store.getState().application
       const reservations = node.querySelectorAll("[data-automation-id='UserLoans_reservation']")
@@ -192,9 +208,9 @@ describe('containers', () => {
       Array.prototype.forEach.call(reservations, (reservation, index) => {
         const queuePlace = (reservation.querySelector("[data-automation-id='UserLoans_reservation_queue_place']").textContent).trim()
 
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(loansAndReservations.reservations[ index ].itype)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(messages[loansAndReservations.reservations[ index ].mediaType])
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
-        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].author)
+        expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].contributor.contributorName)
         expect(queuePlace).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].queuePlace)
         // TODO: Uncomment below line when enabling estimates again
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
@@ -215,7 +231,7 @@ describe('containers', () => {
       }
       Array.prototype.forEach.call(loans, (loan, index) => {
         expect(loan.querySelector("[data-automation-id='UserLoans_loan_title']").textContent).toEqual(loansAndReservations.loans[ indexMap[ index ] ].title)
-        expect(loan.querySelector("[data-automation-id='UserLoans_loan_author']").textContent).toEqual(loansAndReservations.loans[ indexMap[ index ] ].author)
+        expect(loan.querySelector("[data-automation-id='UserLoans_loan_author']").textContent).toEqual(loansAndReservations.loans[ indexMap[ index ] ].contributor.contributorName)
         expect(loan.querySelector("[data-automation-id='UserLoans_loan_publicationYear']").textContent).toEqual(loansAndReservations.loans[ indexMap[ index ] ].publicationYear)
         expect(loan.querySelector("[data-automation-id='UserLoans_loan_dueDate']").textContent).toEqual(formatDate(loansAndReservations.loans[ indexMap[ index ] ].dueDate))
       })

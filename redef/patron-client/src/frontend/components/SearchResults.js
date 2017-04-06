@@ -32,9 +32,12 @@ class SearchResults extends React.Component {
                           result={result}
                           locationQuery={this.props.locationQuery}
                           showStatus={this.props.searchActions.showStatus}
+                          showBranchStatus={this.props.searchActions.showBranchStatus}
+                          showBranchStatusMedia={this.props.searchActions.showBranchStatusMedia}
                           fetchWorkResource={this.props.fetchWorkResource}
                           resources={this.props.resources}
                           items={this.props.items}
+                          homeBranch={this.props.homeBranch}
             />
           )) : null}
         </div>
@@ -52,7 +55,8 @@ SearchResults.propTypes = {
   resources: PropTypes.object.isRequired,
   fetchWorkResource: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
-  page: PropTypes.number.isRequired
+  page: PropTypes.number.isRequired,
+  homeBranch: PropTypes.string
 }
 
 export const messages = defineMessages({

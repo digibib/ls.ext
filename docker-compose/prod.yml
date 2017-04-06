@@ -85,7 +85,7 @@ services:
 
   tagvision_sip_proxy:
     container_name: tagvision_sip_proxy
-    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
+    image: "digibib/sip2proxy:3891478ccc5dc17abd16004b6780885774cd6d44"
     networks:
       - backend
     restart: always
@@ -98,7 +98,6 @@ services:
       - "-log-messages=true"
       - "-strip-barcode=true"
       - "-extend-barcode=true"
-      - "-log-metrics-every-s=300"
       - "-ensure-branch=true"
       - "-gelf=udp://10.172.2.16:12201"
       - "-no-alert-if-same-branch=true"
@@ -108,7 +107,7 @@ services:
 
   bibliotheca_sip_proxy:
     container_name: bibliotheca_sip_proxy
-    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
+    image: "digibib/sip2proxy:3891478ccc5dc17abd16004b6780885774cd6d44"
     networks:
       - backend
     restart: always
@@ -120,7 +119,6 @@ services:
       - "-to=xkoha:${SIP_PORT:-6001}"
       - "-strip-barcode=true"
       - "-log-messages=true"
-      - "-log-metrics-every-s=300"
       - "-gelf=udp://10.172.2.16:12201"
     hostname: sputnik/sip/axiell
     logging:
@@ -128,14 +126,13 @@ services:
 
   sip_proxy:
     container_name: sip_proxy
-    image: "digibib/sip2proxy:6c69720880e5b8e3a19b4cef86e62e0219dbf40c"
+    image: "digibib/sip2proxy:3891478ccc5dc17abd16004b6780885774cd6d44"
     command:
       - "/sip2proxy"
       - "-from=:9999"
       - "-to=xkoha:${SIP_PORT:-6001}"
       - "-log-messages=true"
       - "-strip-barcode=true"
-      - "-log-metrics-every-s=300"
       - "-ensure-branch=true"
       - "-gelf=udp://10.172.2.16:12201"
       - "-extended-id=false"
@@ -146,3 +143,20 @@ services:
   overview:
     logging:
       driver: "journald"
+
+  search_metrics:
+    container_name: search_metrics
+    image: digibib/search_metrics:0ef9ab2b5569df60b11a4c7f1f40c4ec88f1c730
+    networks:
+      - backend
+    extra_hosts:
+      - "metrics:10.172.2.97"
+      - "sok.deichman.no:10.172.2.6"
+    environment:
+      METRICS_INTERVAL: 600
+      GRAPH_HOST: metrics
+      METRICS_HOST: "${METRICS_HOST:-localhost}"
+      METRICS_DOCKER: "${METRICS_DOCKER:-search_metrics}"
+      METRICS_ENV: "${METRICS_ENV:-dev}"
+    volumes:
+      - "overview_data:/app/html"

@@ -510,7 +510,7 @@ module.exports = (app) => {
                     name: 'Biblioteksentralen'
                   },
                   checkExistingResource: {
-                    url: 'services/publication/isbn/',
+                    url: 'services/publication/isbn',
                     queryParameter: 'isbn',
                     type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
@@ -987,7 +987,8 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'publicationYear',
-                label: 'År'
+                label: 'År',
+                id: 'workPublicationYear'
               },
               {
                 rdfProperty: 'nationality',
@@ -1131,10 +1132,12 @@ module.exports = (app) => {
                 noInverseRelationsText: 'Verket har ingen utgivelser.',
                 showRelatedTitle: 'Verket har <%=relations.length%> utgivelse<%=relations.length != 1 ? "r" : ""%>:',
                 showFieldsOfRelated: [
-                  { inputRef: 'workMainTitle', field: 'mainTitle', width: '7-24' }, // there are 23/24th left for field layouts
-                  { inputRef: 'workSubtitle', field: 'subtitle', width: '7-24' },
-                  { inputRef: 'workPartNumber', field: 'partNumber', width: '2-24' },
-                  { inputRef: 'workPartTitle', field: 'partTitle', width: '7-24' }
+                  { field: 'mainTitle', width: '6-24', inputRef: 'workMainTitle' }, // there are 23/24th left for field layouts
+                  { field: 'subtitle', width: '5-24', inputRef: 'workSubtitle' },
+                  { field: 'partNumber', width: '2-24', inputRef: 'workPartNumber' },
+                  { field: 'partTitle', width: '5-24', inputRef: 'workPartTitle' },
+                  { field: 'recordId', width: '3-24' },
+                  { field: 'publicationYear', width: '2-24', inputRef: 'workPublicationYear' }
                 ],
                 cloneParentButtonExplanation: `
                   Hvis du velger å splitte verket, opprettes det en ny kopi av det for hver utgivelse som er valgt over. Hver utgivelse knyttes
@@ -1836,6 +1839,7 @@ module.exports = (app) => {
           compareWorkSeries: 'Sammenlikne og slå sammen verksserie',
           compareInstrument: 'Sammenlikne og slå sammen instrumentautoritet',
           compareCompositionType: 'Sammenlikne og slå sammen komposjonstype',
+          compareWork: 'Sammenlikne og slå sammen verk',
         },
         translations: {
           Work: {
@@ -1884,7 +1888,8 @@ module.exports = (app) => {
           }
         },
         abbreviations: {
-          'Del nummer': 'Delnr.'
+          'Del nummer': 'Delnr.',
+          'Utgivelsesår': 'Utg.år'
         }
       }
     response.json(config)

@@ -136,7 +136,7 @@
             <a class="bg-yellow" href="http://${HOST}:${KOHA_INTRA_PORT}/cgi-bin/koha/circ/returns.pl"><h3>Skranke innlevering</h3></a>
         </div>
         <div class="col panel bg-grey">
-            <a class="bg-yellow"  href="http://${HOST}:${KOHA_INTRA_PORT}/cgi-bin/koha/members/members-home.pl"><h3>Finn bruker</h3></a>
+            <a class="bg-yellow" href="http://${HOST}:${KOHA_INTRA_PORT}/cgi-bin/koha/members/members-home.pl"><h3>Finn bruker</h3></a>
         </div>
         <div class="col panel bg-grey">
             <h3>Prege (TODO)</h3>
@@ -161,6 +161,12 @@
             <a class="bg-grey" href="http://wiki.deichman.no/index.php/Bibliotekfaglige_lenker"><h3>Bibliotekfaglige lenker</h3></a>
         </div>
     </div>
+    <div class="row">
+        <div class="col panel bg-pink">
+            <a class="bg-grey" href="shared/results.html"><h3>Resultat søketester</h3></a>
+        </div>
+    </div>
+    <div class="row"><h1>Nyttige verktøy</h1></div>
     <h2>Versjonsinformasjon</h2>
     <p><strong>GITREF:</strong> ${GITREF}</p>
 </div>

@@ -332,15 +332,6 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final Model retrievePublicationsByWork(XURI xuri) {
-        log.debug("Attempting to retrieve: " + xuri.getUri());
-        try (QueryExecution qexec = getQueryExecution(sqb.describeLinkedPublications(xuri))) {
-            disableCompression(qexec);
-            return qexec.execDescribe();
-        }
-    }
-
-    @Override
     public final void findAllUrisOfType(String type, Consumer<String> consumer) {
         log.debug("Attempting to retrieve all " + type + " uris: ");
         try (QueryExecution qexec = getQueryExecution(sqb.selectAllUrisOfType(type))) {
@@ -471,6 +462,15 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         log.debug("Replacing instances of <" + replaceeURI + "> with <" + xuri + ">");
         UpdateRequest updateRequest = UpdateFactory.create(sqb.mergeNodes(xuri, replaceeURI));
         executeUpdate(updateRequest);
+    }
+
+    @Override
+    public final ResultSet retrievePublicationDataByRecordId(String recordId) {
+        try (QueryExecution queryExecution =
+                     getQueryExecution(sqb.getPublicationAndWorkContributorURIByRecordId(recordId))) {
+            disableCompression(queryExecution);
+            return  ResultSetFactory.copyResults(queryExecution.execSelect());
+        }
     }
 
     @Override

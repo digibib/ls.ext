@@ -4,6 +4,7 @@ const session = require('express-session')
 const uuid = require('node-uuid')
 const port = process.env.PORT || 8000
 const app = express()
+const staticGzip = require('express-static-gzip')
 
 app.use(session({
   genid: req => uuid.v4(),
@@ -24,7 +25,7 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('HMR activated')
 }
 
-app.use(express.static(`${__dirname}/../../public`))
+app.use('/', staticGzip(`${__dirname}/../../public`))
 
 require('./routes')(app)
 

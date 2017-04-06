@@ -82,9 +82,9 @@ function translateFieldTerms (query, translations) {
 
 // parse query string to decide what kind of query we think this is
 function queryStringToQuery (queryString) {
-  const isbn10 = new RegExp("^[0-9Xx-]{10,13}$")
-  const isbn13 = new RegExp("^[0-9-]{13,17}$")
-  const advTriggers = new RegExp("[:+\-^()\"*]|AND|OR|NOT|TO")
+  const isbn10 = new RegExp('^[0-9Xx-]{10,13}$')
+  const isbn13 = new RegExp('^[0-9-]{13,17}$')
+  const advTriggers = new RegExp('[:+/-^()"*]|AND|OR|NOT|TO')
 
   if (isbn10.test(queryString) || isbn13.test(queryString)) {
     return fieldQuery(['isbn'], queryString)

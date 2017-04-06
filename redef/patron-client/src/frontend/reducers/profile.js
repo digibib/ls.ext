@@ -106,7 +106,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           reservations: state.loansAndReservations.reservations.map(reservation => {
-            if (reservation.reserveId === action.payload.reserveId) {
+            if (reservation.id === action.payload.reserveId) {
               reservation.branchCode = action.payload.branchCode
             }
             return reservation
@@ -119,7 +119,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           reservations: state.loansAndReservations.reservations.map(reservation => {
-            if (reservation.reserveId === action.payload.reserveId) {
+            if (reservation.id === action.payload.reserveId) {
               reservation.suspended = action.payload.suspended
               reservation.suspendUntil = action.payload.suspendUntil
             }
@@ -133,7 +133,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           loans: state.loansAndReservations.loans.map(loan => {
-            if (loan.checkoutId === action.payload.checkoutId) {
+            if (loan.id === action.payload.checkoutId) {
               loan.renewalStatus = action.payload.message
               loan.dueDate = action.payload.newDueDate
             }
@@ -147,7 +147,7 @@ export default function profile (state = initialState, action) {
         loansAndReservations: {
           ...state.loansAndReservations,
           loans: state.loansAndReservations.loans.map(loan => {
-            if (loan.checkoutId === action.payload.checkoutId) {
+            if (loan.id === action.payload.checkoutId) {
               loan.renewalStatus = action.payload.message
             }
             return loan

@@ -1,10 +1,5 @@
 all: build
-ifdef NOVAGRANT
 CLPATH=$(shell pwd)
-else
-CMD=vagrant ssh $(SHIP)
-CLPATH=/vagrant/redef/catalinker
-endif
 
 GITREF=$(shell git rev-parse HEAD)
 IMAGE=digibib/redef-catalinker
@@ -17,9 +12,6 @@ HOST_VOLUME_BINDINGS=-v $(CLPATH)/client:/usr/src/app/client \
 
 run-dev:
 	sudo docker run -it $(HOST_VOLUME_BINDINGS) -p 8010:8010 --name dockercompose_catalinker $(IMAGE):$(GITREF) npm run-script start-dev
-
-build:
-	sudo docker build --tag $(IMAGE) /vagrant/redef/catalinker
 
 stop:
 	sudo docker stop $(CONTAINER) || true

@@ -374,6 +374,36 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
+    Query getPublicationAndWorkContributorURIByRecordId(String recordId) {
+        String query = format(""
+                + "PREFIX : <%s>\n"
+                + "SELECT ?publicationUri\n"
+                + "       ?workUri\n"
+                + "       ?agentUri\n"
+                + "       ?contributorName\n"
+                + "       ?contributorNationality\n"
+                + "       ?mainTitle\n"
+                + "       ?publicationImage\n"
+                + "       (str(?year) AS ?publicationYear)\n"
+                + "       ?mediaType\n"
+                + "       ?role\n"
+                + "WHERE {\n"
+                + "  ?publicationUri :recordId \"%s\" ;\n"
+                + "                  :publicationOf ?workUri .\n"
+                + "  OPTIONAL { ?publicationUri :mainTitle ?mainTitle }\n"
+                + "  OPTIONAL { ?publicationUri :publicationYear ?year }\n"
+                + "  OPTIONAL { ?publicationUri :hasMediaType ?mediaType }\n"
+                + "  OPTIONAL { ?workUri :contributor ?contribution .\n"
+                + "             ?contribution a :MainEntry, :Contribution ;\n"
+                + "                          :agent ?agentUri ;\n"
+                + "                          :role ?role .\n"
+                + "             ?agentUri :name ?contributorName .\n"
+                + "             OPTIONAL { ?agentUri :nationality ?contributorNationality }\n"
+                + "   }\n"
+                + "   OPTIONAL { ?publicationUri :hasImage ?publicationImage }\n"
+                + "}", BaseURI.ontology(), recordId);
+        return QueryFactory.create(query);
+    }
 
     public Query selectWorksByAgent(XURI agent) {
         String q = format(""

@@ -1,47 +1,30 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import NonIETransitionGroup from '../components/NonIETransitionGroup'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { injectIntl, defineMessages, FormattedMessage, intlShape } from 'react-intl'
-import { routerActions } from 'react-router-redux'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
+import {routerActions} from 'react-router-redux'
+import {Link} from 'react-router'
+import fieldQueryLink from '../utils/link'
+import isEmpty from '../utils/emptyObject'
 
 import * as LoanActions from '../actions/LoanActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import Tabs from '../components/Tabs'
 import ClickableElement from '../components/ClickableElement'
-import { formatDate } from '../utils/dateFormatter'
+import {formatDate} from '../utils/dateFormatter'
 import Libraries from '../components/Libraries'
 import Loading from '../components/Loading'
 import Constants from '../constants/Constants'
 
 class UserLoans extends React.Component {
-
-  renderType (itype) {
-    if (itype === 'FILM') {
-      return 'http://data.deichman.no/mediaType#Film'
-    } else if (itype === 'BOK') {
-      return 'http://data.deichman.no/mediaType#Book'
-    } else if (itype === 'LYDBOK') {
-      return 'http://data.deichman.no/mediaType#Audiobook'
-    } else if (itype === 'SPRAAKKURS') {
-      return 'http://data.deichman.no/mediaType#LanguageCourse'
-    } else if (itype === 'MUSIKK') {
-      return 'http://data.deichman.no/mediaType#MusicRecording'
-    } else if (itype === 'NOTER') {
-      return 'http://data.deichman.no/mediaType#SheetMusic'
-    } else if (itype === 'SPILL') {
-      return 'http://data.deichman.no/mediaType#Game'
-    } else if (itype === 'KART') {
-      return 'http://data.deichman.no/mediaType#Map'
-    } else if (itype === 'COMICBOOK') {
-      return 'http://data.deichman.no/mediaType#ComicBook'
-    } else if (itype === 'PERIODIKA') {
-      return 'http://data.deichman.no/mediaType#Periodical'
-    } else if (itype === 'SETT' || itype === 'TOUKESLAAN' || itype === 'UKESLAAN' || itype === 'DAGSLAAN' || itype === 'EBOK') {
-      return 'http://data.deichman.no/mediaType#Book'
+  // NB: this is a hack, permanent solution comes later
+  addWeek (date) {
+    if (date) {
+      return new Date(Date.parse(`${date}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ]
     } else {
-      return '?'
+      return 'ukjent'
     }
   }
 
@@ -50,22 +33,40 @@ class UserLoans extends React.Component {
       return (
         <section className="pickup">
           <h1><FormattedMessage {...messages.canBePickedUp} /></h1>
-            {this.props.loansAndReservations.pickups.map(item => (
-              <article key={item.reserveId}
+          {this.props.loansAndReservations.pickups.map(item => (
+            <article key={item.id}
                        className="single-entry"
                        data-automation-id="UserLoans_pickup"
                        data-recordid={item.recordId}>
-                <div className="flex-col media-type">
-                  <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ this.renderType(item.itype) ] ]} aria-hidden="true" />
-                  <span data-automation-id="UserLoans_pickup_type">{this.props.intl.formatMessage({ id: this.renderType(item.itype) })}</span>
-                </div>
-                <div className="flex-col entry-details">
-                  <h1 data-automation-id="UserLoans_pickup_title">{item.title}</h1>
+              <div className="flex-col media-type">
+                {item.mediaType !== null
+                  ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                    <span key="item-text" data-automation-id="UserLoans_pickup_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                  : null
+                }
+              </div>
+              <div className="flex-col entry-details">
+                  <Link to={item.relativePublicationPath} data-automation-id="UserLoans_pickup_title">
+                    {item.title}
+                  </Link>
+                  <h2>
+                  {!isEmpty(item.contributor)
+                    ? (<Link
+                      data-automation-id="UserLoans_pickup_author"
+                      to={fieldQueryLink('aktør', item.contributor.contributorName)}>
+                      {item.contributor.contributorName}
+                      </Link>)
+                    : null
+                  }
+                  </h2>
                   <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
                 </div>
                 <div className="flex-col loan-expire">
                   <h2><FormattedMessage {...messages.expiry} />:</h2>
-                  <p data-automation-id="UserLoans_pickup_expiry">{formatDate(item.expiry)}</p>
+                  {item.expirationDate
+                    ? (<p data-automation-id="UserLoans_pickup_expiry">{formatDate(this.addWeek(item.expirationDate))}</p>)
+                    : (<p data-automation-id="UserLoans_pickup_expiry">?</p>)
+                    }
                 </div>
                 <div className="flex-col loan-pickup-number">
                   <h2><FormattedMessage {...messages.pickupNumber} />:</h2>
@@ -79,7 +80,7 @@ class UserLoans extends React.Component {
                 <div className="flex-col placeholder-column" />
                 <div className="flex-col cancel-button">
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
-                                    onClickArguments={item.reserveId}>
+                                    onClickArguments={item.id}>
                     <button className="black-btn" data-automation-id="cancel_reservation_button">
                       <FormattedMessage {...messages.cancelReservation} />
                     </button>
@@ -104,18 +105,32 @@ class UserLoans extends React.Component {
           className="reserve">
           <h1><FormattedMessage {...messages.reservations} /></h1>
           {[ ...this.props.loansAndReservations.reservations ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
-            <article key={item.reserveId}
+            <article key={item.id}
                      className="single-entry"
                      data-automation-id="UserLoans_reservation"
                      data-recordid={item.recordId}>
 
               <div className="flex-col media-type">
-                <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ this.renderType(item.itype) ] ]} aria-hidden="true" />
-                <span data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: this.renderType(item.itype) })}</span>
+                {item.mediaType !== null
+                ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                  <span key="item-text" data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                  : null
+                }
               </div>
               <div className="flex-col entry-details">
-                <h1 data-automation-id="UserLoans_reservation_title">{item.title}</h1>
-                <h2 data-automation-id="UserLoans_reservation_author" className="contributors">{item.author}</h2>
+                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_reservation_title">
+                  {item.title}
+                </Link>
+                <h2>
+                  {!isEmpty(item.contributor)
+                    ? (<Link
+                      data-automation-id="UserLoans_reservation_author"
+                      to={fieldQueryLink('aktør', item.contributor.contributorName)}>
+                      {item.contributor.contributorName}
+                    </Link>)
+                    : null
+                  }
+                </h2>
               </div>
               <div className="flex-col pickup-location">
                 <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
@@ -139,7 +154,7 @@ class UserLoans extends React.Component {
               </div>
               <div className="flex-col reserve-cancel-button">
                 <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
-                                    onClickArguments={item.reserveId}>
+                                    onClickArguments={item.id}>
                   <button className="black-btn" data-automation-id="cancel_reservation_button">
                     <FormattedMessage {...messages.cancelReservation} />
                   </button>
@@ -155,7 +170,7 @@ class UserLoans extends React.Component {
   renderLibrarySelect (item) {
     return (
       <div className="select-branch">
-        {this.props.isRequestingChangePickupLocation === item.reserveId
+        {this.props.isRequestingChangePickupLocation === item.id
           ? <Loading />
           : (
           <div className="select-container" data-automation-id="UserLoans_reservation_library">
@@ -163,7 +178,7 @@ class UserLoans extends React.Component {
                        selectedBranchCode={item.branchCode}
                        disabled={(this.props.isRequestingChangePickupLocation !== false || item.itype === 'REALIA')}
                        onChangeAction={this.props.reservationActions.changePickupLocation}
-                       reserveId={item.reserveId} />
+                       reserveId={item.id} />
           </div>
         )}
       </div>)
@@ -172,11 +187,11 @@ class UserLoans extends React.Component {
   renderResumeSuspendReservationButton (item) {
     return (
       <div>
-        {this.props.isRequestingChangeReservationSuspension === item.reserveId
+        {this.props.isRequestingChangeReservationSuspension === item.id
           ? <Loading />
           : (
           <ClickableElement onClickAction={this.props.reservationActions.suspendReservation}
-                            onClickArguments={[ item.reserveId, !item.suspended ]}>
+                            onClickArguments={[ item.id, !item.suspended ]}>
             <button className={`${item.suspended ? 'black-btn red-btn' : 'black-btn'} ${item.queuePlace === '0' ? 'is-hidden' : ''}`}
                     disabled={this.props.isRequestingChangeReservationSuspension !== false}
                     data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
@@ -210,17 +225,32 @@ class UserLoans extends React.Component {
             {this.renderRenewAllButton()}
           </div>
           {[ ...this.props.loansAndReservations.loans ].sort((a, b) => a.dueDate > b.dueDate).map(item => (
-            <article key={item.checkoutId}
+            <article key={item.id}
                      className="single-entry"
                      data-automation-id="UserLoans_loan"
                      data-recordid={item.recordId}>
               <div className="flex-col media-type">
-                <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ this.renderType(item.itype) ] ]} aria-hidden="true" />
-                {this.props.intl.formatMessage({ id: this.renderType(item.itype) })}
+                {item.mediaType !== null
+                  ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                    <span key="item-text" data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}
+                    </span>])
+                  : null
+                }
               </div>
               <div className="flex-col entry-details">
-                <h1 data-automation-id="UserLoans_loan_title">{item.title}</h1>
-                <h2 data-automation-id="UserLoans_loan_author" className="contributors">{item.author}</h2>
+                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
+                  {item.title}
+                </Link>
+                <h2>
+                  {!isEmpty(item.contributor)
+                    ? (<Link
+                      data-automation-id="UserLoans_loan_author"
+                      to={fieldQueryLink('aktør', item.contributor.contributorName)}>
+                      {item.contributor.contributorName}
+                    </Link>)
+                    : null
+                  }
+                </h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col due-date">
@@ -234,7 +264,7 @@ class UserLoans extends React.Component {
               <div className="flex-col placeholder-column" />
               <div className="flex-col renew-button">
                 <ClickableElement onClickAction={this.props.loanActions.startExtendLoan}
-                                  onClickArguments={item.checkoutId}>
+                                  onClickArguments={item.id}>
                   <button className="black-btn" disabled={item.renewalStatus}>
                     <FormattedMessage {...messages.extendLoan} />
                   </button>

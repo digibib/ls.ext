@@ -12,10 +12,27 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.36
+
+KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee (uforandret)
+GITREF: TODO
+
+- Services:
+  - DEICH-667: Sirkulasjon i services
+- Catalinker:
+  - DEICH-100: Koble duplikate verk
+- Patron-client:
+  - DEICH-713: Feil medietype på mine sider
+  - DEICH-669: Lenker på mine sider
+  - DEICH-654: Styling + Filter på filial + medietype visning på resultatliste
+  - DEICH-749: Relevans: nyeste utgivelser først
+- Annet
+  - DEICH-748: Relevans: testområde
+
 ## 2017.35
 
 KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee
-GITREF:
+GITREF: cc01beb6b3420576083d74d642d5a111c1a313d1
 
 - Catalinker:
   - DEICH-740: Manglende opplysninger fra ekstern kilde II

@@ -6,14 +6,18 @@ import Items from '../components/Items'
 import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
-import {groupByBranch} from '../utils/sorting'
+import { groupByBranch, groupByMediaType } from '../utils/sorting'
 import fieldQueryLink from '../utils/link'
+import { connect } from 'react-redux'
+
+import ClickableElement from '../components/ClickableElement'
 
 class SearchResult extends React.Component {
   constructor (props) {
     super(props)
     this.handleShowStatusClick = this.handleShowStatusClick.bind(this)
     this.handleEnter = this.handleEnter.bind(this)
+    this.handleBranchStatus = this.handleBranchStatus.bind(this)
   }
 
   componentWillMount () {
@@ -131,30 +135,123 @@ class SearchResult extends React.Component {
     })
   }
 
-  /*
-   renderItems (result) {
-   const work = this.props.resources[ result.id ]
-   if (work) {
-   const items = [].concat.apply([], work.publications.map(publication => this.props.items[ publication.recordId ] || []).filter(array => array.length > 0))
-   return <Items items={items} />
-   }
-   }
-   */
+  getActiveBranchFilters () {
+    const activeBranches = []
+    this.props.filters.map(el => {
+      if (el.id.includes('branch') && el.active) {
+        activeBranches.push(el)
+      }
+      return el
+    })
+    return activeBranches
+  }
 
   renderItems (result) {
+    let homeBranchPos
     const work = this.props.resources[ result.id ]
+    const activeFilters = this.getActiveBranchFilters()
+
     if (work) {
       const items = [].concat(...work.publications.map(publication => (this.props.items[ publication.recordId ] || []).items || []).filter(array => array.length > 0))
-      return groupByBranch(items).map(el => {
+
+      const groupedByBranchSortedByMediaType = groupByBranch(items)
+
+      groupedByBranchSortedByMediaType.map(el => {
+        el.realName = this.props.intl.formatMessage({ id: el.branchcode })
+        el.items.forEach(e => {
+          e.mediaType = this.props.intl.formatMessage({ id: e.mediaTypes[0] })
+          e.mediaTypeURI = e.mediaTypes[0]
+        })
+
+        el.items.sort((a, b) => {
+          if (a.mediaType < b.mediaType) return -1
+          if (a.mediaType > b.mediaType) return 1
+
+          return 0
+        })
+
+        return el
+      })
+
+      groupedByBranchSortedByMediaType.sort((a, b) => {
+        if (a.realName < b.realName) return -1
+        if (a.realName > b.realName) return 1
+        return 0
+      })
+
+      const groupedByBranchAndMedia = groupedByBranchSortedByMediaType.map(el => {
+        el.mediaItems = groupByMediaType(el.items)
+        return el
+      })
+
+      const byBranch = groupedByBranchAndMedia.map((el, i) => {
+        if (this.props.homeBranch && this.props.homeBranch === el.branchcode && activeFilters.length === 0) {
+          homeBranchPos = i
+        }
+
         return (
           <div className="items-by-branch" key={el.branchcode}>
-            <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
-            <Items items={el.items} />
-            <p style={{ clear: 'both' }} />
+            <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
+              <div className="flex-wrapper branch-header">
+                <div className="flex-item">
+                  <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
+                </div>
+                <div className="flex-item item-icon-button">
+                <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
+                  <button className="flex-item">
+                    {this.shouldShowBranchStatus(el.branchcode)
+                      ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
+                        <FormattedMessage {...messages.showBranchAvailability} />
+                      </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
+                      : [(<span key={`show-more-content${el.branchcode}`} className="is-vishidden">
+                      <FormattedMessage {...messages.hideBranchAvailability} />
+                      </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
+                    }
+                  </button>
+                </ClickableElement>
+                </div>
+            </div>
+            </ClickableElement>
+            {this.shouldShowBranchStatus(el.branchcode)
+              ? <Items
+                mediaItems={el.mediaItems}
+                showBranchStatusMedia={this.props.showBranchStatusMedia}
+                branchCode={el.branchcode}
+                locationQuery={this.props.locationQuery}
+                userBranch={this.props.homeBranch}
+                activeFilters={activeFilters}
+              />
+              : null
+            }
           </div>
         )
       })
+
+      byBranch.map((el, i) => {
+        activeFilters.forEach(a => {
+          if (el.key === a.bucket) {
+            const activeBranch = byBranch.splice(i, 1)
+            byBranch.unshift(activeBranch)
+          }
+        })
+      })
+
+      if (homeBranchPos) {
+        const userBranch = byBranch.splice(homeBranchPos, 1)
+        byBranch.unshift(userBranch)
+      }
+
+      return byBranch
     }
+  }
+
+  handleBranchStatus (code) {
+    this.props.showBranchStatus(code)
+  }
+
+  shouldShowBranchStatus (code) {
+    const { locationQuery: { showBranchStatus } } = this.props
+    return (showBranchStatus && showBranchStatus === code || (Array.isArray(showBranchStatus) && showBranchStatus.includes(code)))
   }
 
   handleShowStatusClick (event) {
@@ -260,10 +357,24 @@ SearchResult.propTypes = {
   resources: PropTypes.object.isRequired,
   fetchWorkResource: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  homeBranch: PropTypes.string,
+  filters: PropTypes.array.isRequired,
+  showBranchStatusMedia: PropTypes.func.isRequired,
+  showBranchStatus: PropTypes.func.isRequired
 }
 
 export const messages = defineMessages({
+  showBranchAvailability: {
+    id: 'SearchResult.showBranchAvailability',
+    description: 'Label for icon button showing availability info in branch',
+    defaultMessage: 'Show branch availability'
+  },
+  hideBranchAvailability: {
+    id: 'SearchResult.hideBranchAvailability',
+    description: 'Label for icon button collapsing availability info in branch',
+    defaultMessage: 'Hide branch availability'
+  },
   originalTitle: {
     id: 'SearchResult.originalTitle',
     description: 'The label for the original title',
@@ -321,4 +432,20 @@ export const messages = defineMessages({
   }
 })
 
-export default injectIntl(SearchResult)
+function mapStateToProps (state) {
+  return {
+    filters: state.search.filters
+  }
+}
+
+let intlSearchResult = injectIntl(SearchResult)
+
+intlSearchResult = connect(
+  mapStateToProps
+)(intlSearchResult)
+
+export { intlSearchResult as SearchResult }
+
+export default intlSearchResult
+
+// export default injectIntl(SearchResult)

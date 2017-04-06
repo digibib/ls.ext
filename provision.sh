@@ -52,12 +52,6 @@ source docker-compose.env
 
 export OVERVIEW_BUILD_DIR="$LSEXTPATH/redef/overview"
 
-if [ "$LSEXTPATH" = "/vagrant" ]; then
-  export MOUNTPATH="/mnt"
-else
-  export MOUNTPATH=$LSEXTPATH
-fi
-
 CMD="sudo KOHA_IMAGE_TAG=${KOHA_IMAGE_TAG} GITREF=${GITREF} docker-compose -f common.yml"
 $CMD stop overview && $CMD rm -f overview
 

@@ -36,7 +36,26 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
         locationQuery[ queryParamName ] = queryParam
       }
     }
-    return dispatch(push({ pathname: pathname, query: locationQuery }))
+
+    if (queryParamName === 'showBranchStatusMedia') {
+      if (!Array.isArray(locationQuery[ queryParamName ])) {
+        locationQuery[ queryParamName ] = [ value ]
+      }
+      const branchValue = value.split('_')[0]
+      const activeBranchFilters = getActiveBranchFilters(locationQuery)
+      activeBranchFilters.map(el => {
+        if (el === branchValue) {
+          locationQuery[ queryParamName ].push(value)
+        }
+      })
+    }
+    if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
+      const homeBranch = getState().profile.personalInformation.homeBranch
+      const locationQueryWithBranches = ensureBranchStatus(locationQuery, homeBranch)
+      return dispatch(push({ pathname: pathname, query: locationQueryWithBranches }))
+    } else {
+      return dispatch(push({ pathname: pathname, query: locationQuery }))
+    }
   }
 }
 
@@ -59,6 +78,44 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
 
     return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
+}
+
+function ensureBranchStatus (locationQuery, homeBranch) {
+  const activeBranchFilters = getActiveBranchFilters(locationQuery)
+
+  if (activeBranchFilters.length === 0) {
+    delete locationQuery[ 'showBranchStatus' ]
+    if (homeBranch !== undefined) {
+      locationQuery[ 'showBranchStatus' ] = [ homeBranch ]
+    }
+  }
+
+  activeBranchFilters.map((el, i) => {
+    if (i === 0) {
+      locationQuery[ 'showBranchStatus' ] = [ el.split('branch_').pop() ]
+    } else {
+      locationQuery[ 'showBranchStatus' ].push(el.split('branch_').pop())
+    }
+  })
+  return locationQuery
+}
+
+function getActiveBranchFilters (locationQuery) {
+  const activeBranchFilters = []
+  if (locationQuery.filter) {
+    if (!Array.isArray(locationQuery.filter) && locationQuery.filter.includes('branch')) {
+      activeBranchFilters.push(locationQuery.filter)
+      return activeBranchFilters
+    }
+    if (Array.isArray(locationQuery.filter)) {
+      locationQuery.filter.map(e => {
+        if (e.includes('branch')) {
+          activeBranchFilters.push(e)
+        }
+      })
+    }
+  }
+  return activeBranchFilters
 }
 
 export function togglePeriodParamValues (yearFrom, yearTo, years, inputLocationQuery) {

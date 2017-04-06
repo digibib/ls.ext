@@ -67,7 +67,8 @@ CONSTRUCT {
                deich:contentAdaptation ?contentAdaptationCode ;
                deich:workSubtitle ?workSubtitle ;
                deich:workPartNumber ?workPartNumber ;
-               deich:workPartTitle ?workPartTitle .
+               deich:workPartTitle ?workPartTitle ;
+               deich:created ?created .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
@@ -97,6 +98,7 @@ WHERE {
           BIND(str(?mtNoLang) AS ?mtNo)
           FILTER(lang(?mtNoLang) = "no")
           BIND(str(?mturi) AS ?pubMediaType) }
+  UNION { <__PUBLICATIONURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
   UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }

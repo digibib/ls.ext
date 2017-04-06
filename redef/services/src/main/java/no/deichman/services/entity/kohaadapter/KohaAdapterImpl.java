@@ -81,6 +81,17 @@ public final class KohaAdapterImpl implements KohaAdapter {
         return invocationBuilder.get();
     }
 
+    private Response getCheckoutsFromAPI(String userId) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/checkouts?borrowernumber=" + userId);
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        return invocationBuilder.get();
+    }
+
     private Response requestExpandedBiblio(String id) {
         Client client = ClientBuilder.newClient();
         String url = kohaPort + "/api/v1/biblios/" + id + "/expanded";
@@ -168,6 +179,62 @@ public final class KohaAdapterImpl implements KohaAdapter {
         } else {
             throw new PublicationHasItemsException(numberOfItems);
         }
+    }
+
+    @Override
+    public String getBiblioFromItemNumber(String itemNumber) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/items/" + itemNumber + "/biblio");
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        Response response = invocationBuilder.get();
+
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            return getBiblioFromItemNumber(itemNumber);
+        }
+        if (OK.getStatusCode() != response.getStatus()) {
+            throw new RuntimeException("Unexpected response when requesting biblio from api: http status: " + response.getStatusInfo()); // FIXME !!
+        }
+        return response.readEntity(String.class);
+    }
+
+    @Override
+    public String getCheckouts(String userId) {
+        Response response = getCheckoutsFromAPI(userId);
+        return response.readEntity(String.class);
+    }
+
+    @Override
+    public String getHolds(String userId) {
+        Response response = getHoldsFromAPI(userId);
+        return response.readEntity(String.class);
+    }
+
+    private Response getHoldsFromAPI(String userId) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/holds/?borrowernumber=" + userId);
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        Response response = invocationBuilder.get();
+
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = getHoldsFromAPI(userId);
+        }
+        if (OK.getStatusCode() != response.getStatus()) {
+            throw new RuntimeException("Unexpected response when requesting holds from api: http status: " + response.getStatusInfo()); // FIXME !!
+        }
+
+        return response;
     }
 
     @Override

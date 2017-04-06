@@ -2,13 +2,12 @@ import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-import Item from './Item'
+import ItemsMedia from './ItemsMedia'
 
 class Items extends React.Component {
   renderEmpty () {
     return <p><span data-automation-id="no_items"><FormattedMessage {...messages.noItems} /></span></p>
   }
-
   renderItems () {
     return (
       <NonIETransitionGroup
@@ -17,31 +16,35 @@ class Items extends React.Component {
         transitionAppearTimeout={500}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
-        component="table">
-        <thead>
-        <tr>
-          <th><FormattedMessage {...messages.mediaType} /></th>
-          <th><FormattedMessage {...messages.language} /></th>
-          <th><FormattedMessage {...messages.placement} /></th>
-          <th><FormattedMessage {...messages.status} /></th>
-        </tr>
-        </thead>
-        <tbody data-automation-id="work_items">
-        {this.props.items.map(item => <Item key={item.barcode} item={item} />)}
-        </tbody>
+        component="div"
+        className="items-container">
+          {this.props.mediaItems.map((items, i) => {
+            return <ItemsMedia key={i}
+                               itemsByMedia={items}
+                               branchCode={this.props.branchCode}
+                               showBranchStatusMedia={this.props.showBranchStatusMedia}
+                               locationQuery={this.props.locationQuery}
+                               itemLocation={i}
+            />
+          })
+          }
       </NonIETransitionGroup>
     )
   }
-
   render () {
-    return this.props.items.length > 0
+    return this.props.mediaItems.length > 0
       ? this.renderItems()
       : this.renderEmpty()
   }
 }
 
 Items.propTypes = {
-  items: PropTypes.array.isRequired
+  mediaItems: PropTypes.array.isRequired,
+  locationQuery: PropTypes.object.isRequired,
+  branchCode: PropTypes.string.isRequired,
+  showBranchStatusMedia: PropTypes.func.isRequired,
+  userBranch: PropTypes.string,
+  activeFilters: PropTypes.array.isRequired
 }
 
 export const messages = defineMessages({

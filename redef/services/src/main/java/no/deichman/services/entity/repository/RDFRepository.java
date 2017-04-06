@@ -68,8 +68,6 @@ public interface RDFRepository {
 
     Model retrieveWorksByCreator(XURI xuri);
 
-    Model retrievePublicationsByWork(XURI xuri);
-
     void findAllUrisOfType(String type, Consumer<String> uriConsumer);
 
     Optional<String> getResourceURIByBibliofilId(String id, String type);
@@ -98,5 +96,6 @@ public interface RDFRepository {
 
     void mergeResource(XURI xuri, XURI replaceeUri);
 
+    ResultSet retrievePublicationDataByRecordId(String recordId);
     Model retrieveInverseRelations(XURI xuri, String predicate);
 }

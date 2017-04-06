@@ -2,12 +2,7 @@ GITREF=$(shell git rev-parse HEAD)
 IMAGE=digibib/redef-patron-client
 CONTAINER=patron_client
 
-ifdef NOVAGRANT
 PCPATH=$(shell pwd)
-else
-CMD=vagrant ssh $(SHIP)
-PCPATH=/vagrant/redef/patron-client
-endif
 
 HOST_VOLUME_BINDINGS=-v $(PCPATH)/src:/usr/src/app/src \
 	-v $(PCPATH)/test:/usr/src/app/test

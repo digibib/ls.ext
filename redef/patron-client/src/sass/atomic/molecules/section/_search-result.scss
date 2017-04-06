@@ -164,20 +164,120 @@
 }
 
 .entry-content-more {
-  background-color: #eee;
-  padding: 1em;
+  /* padding: 1em; */
   clear: both;
 }
 
 .items-by-branch {
+  .media-type-items {
+    border: 10px solid #F7F7F7;
+    border-top: none;
+  }
+
+  .media-type-items:not(last-child) {
+    margin-bottom: 2px;
+  }
+
+  /* border: 1px solid #767676; */
+  margin-bottom: 0.5em;
+
+  .branch-header {
+    background-color: #e8e8e8;
+  }
+
+  .media-header {
+    background-color: #F7F7F7;
+  }
+
   h1 {
     @include regularFont;
     font-weight: normal;
+    margin: 0.2em 1em 0.2em 0;
+    font-size: 1.2em;
   }
 
-  table {
-    th { background-color: #eee; }
+  .entry-content-icon-single {
+    font-weight: normal;
   }
+
+  .header {
+    font-size: 0.88em;
+    background-color: #F7F7F7;
+    font-weight: 700;
+    text-transform: capitalize;
+
+    .flex-item {
+      width: 25%;
+      padding-top: 0;
+    }
+
+    .media-item {
+      display: none;
+    }
+  }
+
+  .flex-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .sub-wrapper {
+    padding: 0;
+    font-size: 0.88em;
+  }
+
+  .sub-wrapper:nth-child(even) {
+    background: $white;
+  }
+
+  .sub-wrapper:nth-child(odd) {
+    background: #e8e8e8;
+  }
+
+  .sub-wrapper:first-child {
+    padding-bottom: 0.5em;
+  }
+
+  .flex-item {
+    flex: 1 1 auto;
+    padding: 0.5em 0.5em 0.5em 1.1em;
+  }
+
+  .item-icon-button {
+    text-align: right;
+    align-self: center;
+
+    button {
+      font-size: 1.2em;
+      padding: 0;
+      margin: 0;
+    }
+
+    .icon-plus, .icon-minus {
+      border: 1px solid #212121;
+      padding: 4px;
+      border-radius: 50%;
+      font-size: 0.6em;
+    }
+  }
+
+  .main-row-2 {
+    padding: 0.5em 0 0.5em 0;
+  }
+
+  .main-row-1 {
+    width: 100%;
+  }
+
+  .main-row-2 {
+    width: 75%;
+  }
+
+  .sub-row {
+    width: 33.33%;
+  }
+
 }
 
 @include breakpoint($small) {
@@ -203,6 +303,22 @@
 
     .subjects, .genres {
       margin-top: rhythm(0);
+    }
+
+  }
+
+  .items-by-branch {
+
+    .main-row-1 {
+      width: 25%;
+      margin-bottom: 0;
+      margin-top: 0.5em;
+    }
+
+    .header {
+      .media-item {
+        display: block;
+      }
     }
 
   }

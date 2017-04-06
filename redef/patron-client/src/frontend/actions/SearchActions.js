@@ -67,3 +67,11 @@ export function search () {
 export function showStatus (relativeUri) {
   return toggleParameterValue('showStatus', relativeUri)
 }
+
+export function showBranchStatus (branchCode) {
+  return toggleParameterValue('showBranchStatus', branchCode)
+}
+
+export function showBranchStatusMedia (branchCodeMedia) {
+  return toggleParameterValue('showBranchStatusMedia', branchCodeMedia)
+}

@@ -10,7 +10,7 @@ import * as ProfileActions from './ProfileActions'
 import { action, errorAction } from './GenericActions'
 
 export function changePickupLocation (reserveId, branchCode) {
-  const url = '/api/v1/holds/'
+  const url = '/api/v1/holds'
   return dispatch => {
     dispatch(requestChangePickupLocation(reserveId, branchCode))
     return fetch(url, {
@@ -64,7 +64,7 @@ export function changeReservationSuspension (reserveId, suspended, date) {
     suspendUntil = null
   }
 
-  const url = '/api/v1/holds/'
+  const url = '/api/v1/holds'
   return dispatch => {
     dispatch(requestChangeReservationSuspension(reserveId, suspended, suspendUntil))
     return fetch(url, {

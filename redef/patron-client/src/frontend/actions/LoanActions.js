@@ -11,7 +11,7 @@ export function startExtendAllLoans (checkouts) {
   return dispatch => {
     requireLoginBeforeAction(dispatch(requestExtendAllLoans()))
     checkouts.forEach(checkout => {
-      dispatch(extendLoan(checkout.checkoutId))
+      dispatch(extendLoan(checkout.id))
     })
   }
 }
