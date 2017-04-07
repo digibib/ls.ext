@@ -33,6 +33,7 @@ class SearchResults extends React.Component {
                           locationQuery={this.props.locationQuery}
                           showStatus={this.props.searchActions.showStatus}
                           showBranchStatus={this.props.searchActions.showBranchStatus}
+                          showInitBranchStatus={this.props.searchActions.showInitBranchStatus}
                           showBranchStatusMedia={this.props.searchActions.showBranchStatusMedia}
                           fetchWorkResource={this.props.fetchWorkResource}
                           resources={this.props.resources}

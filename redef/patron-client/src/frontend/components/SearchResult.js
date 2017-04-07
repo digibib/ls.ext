@@ -18,6 +18,7 @@ class SearchResult extends React.Component {
     this.handleShowStatusClick = this.handleShowStatusClick.bind(this)
     this.handleEnter = this.handleEnter.bind(this)
     this.handleBranchStatus = this.handleBranchStatus.bind(this)
+    this.handleInitBranchStatus = this.handleInitBranchStatus.bind(this)
   }
 
   componentWillMount () {
@@ -32,7 +33,7 @@ class SearchResult extends React.Component {
     const items = this.getResultItems()
     if (items.length > 0) {
       console.log('ITEMS', items[0])
-      this.handleBranchStatus(items[0].branchcode)
+      this.handleInitBranchStatus(items[0].branchcode)
     }
   }
 
@@ -266,6 +267,10 @@ class SearchResult extends React.Component {
 
   handleBranchStatus (code) {
     this.props.showBranchStatus(code)
+  }
+
+  handleInitBranchStatus (code) {
+    this.props.showInitBranchStatus(code)
   }
 
   shouldShowBranchStatus (code) {
