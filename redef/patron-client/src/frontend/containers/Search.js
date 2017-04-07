@@ -42,7 +42,7 @@ class Search extends React.Component {
 
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'yearFrom', 'yearTo' ].includes(key)).forEach(key => {
+    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'yearFrom', 'yearTo' , 'excludeUnavailable'].includes(key)).forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
@@ -144,6 +144,7 @@ class Search extends React.Component {
                              toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
                              toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
                              togglePeriod={this.props.searchFilterActions.togglePeriod}
+                             toggleAvailability={this.props.searchFilterActions.toggleAvailability}
                              scrollTargetNode={this}
                              isSearching={this.props.isSearching}
                              windowWidth={this.props.windowWidth}

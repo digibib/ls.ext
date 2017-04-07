@@ -42,9 +42,14 @@ function setup (propOverrides) {
 
   const store = createStore(rootReducer)
 
+  const messages = {
+    'AvailableFilter.availability': 'Tilgjengelighet',
+    'AvailableFilter.availabilityLabel': 'Inkludér kun tilgjengelige'
+  }
+
   const output = TestUtils.renderIntoDocument(
     <Provider store={store}>
-      <IntlProvider locale="en">
+      <IntlProvider locale="en" messages={messages}>
         <Search {...props} />
       </IntlProvider>
     </Provider>

@@ -6,6 +6,7 @@ import SearchFilter from './SearchFilter'
 import Constants from '../constants/Constants'
 
 import DataRangeFilter from '../components/DateRangeFilter'
+import AvailableFilter from '../components/AvailableFilter'
 
 class SearchFilters extends React.Component {
   constructor (props) {
@@ -91,6 +92,13 @@ class SearchFilters extends React.Component {
                 togglePeriod={this.props.togglePeriod}
               />
             }
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <AvailableFilter
+                toggleAvailability={this.props.toggleAvailability}
+                isChecked={this.props.locationQuery.hasOwnProperty('excludeUnavailable')}
+              />
+            }
             {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {
               const filtersByAggregation = groupedFilters[ aggregation ]
               return (
@@ -123,6 +131,7 @@ SearchFilters.propTypes = {
   toggleFilterVisibility: PropTypes.func.isRequired,
   toggleAllFiltersVisibility: PropTypes.func.isRequired,
   toggleCollapseFilter: PropTypes.func.isRequired,
+  toggleAvailability: PropTypes.func.isRequired,
   scrollTargetNode: PropTypes.object.isRequired,
   isSearching: PropTypes.bool,
   windowWidth: PropTypes.number.isRequired,

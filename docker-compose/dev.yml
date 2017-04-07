@@ -122,3 +122,7 @@ services:
         - MYSQL_PASSWORD=${KOHA_ADMINPASS:-secret}
     networks:
       - backend
+
+  koha_indexer:
+    ports:
+      - "8009:8009"

@@ -95,7 +95,7 @@ function queryStringToQuery (queryString) {
   }
 }
 
-function parseFilters (filtersFromLocationQuery) {
+function parseFilters (excludeUnavailable, filtersFromLocationQuery) {
   const filterableFields = Constants.filterableFields
   const filterBuckets = {}
   if (!Array.isArray(filtersFromLocationQuery)) {
@@ -146,11 +146,17 @@ module.exports.buildQuery = function (urlQueryString) {
   const elasticSearchQuery = Defaults.queryDefaults
   elasticSearchQuery.aggs = Defaults.defaultAggregates
   elasticSearchQuery.query = queryStringToQuery(params.query)
-
-  const filters = parseFilters(params.filter || [])
+  const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
+  const filters = parseFilters(excludeUnavailable, params.filter || [])
   const musts = {}
   filters.forEach(filter => {
-    const aggregation = filter.aggregation
+    let aggregation = filter.aggregation
+    if (aggregation === 'branches') {
+      aggregation = 'homeBranches'
+      if (excludeUnavailable) {
+        aggregation = 'availableBranches'
+      }
+    }
     const must = createMust(aggregation, filter.bucket)
     musts[ aggregation ] = must
   })
@@ -168,9 +174,27 @@ module.exports.buildQuery = function (urlQueryString) {
     elasticSearchQuery.query.bool.must.push(yearRange)
   }
 
+  if (excludeUnavailable) {
+    elasticSearchQuery.query.bool.must.push({
+      exists: {
+        field: 'availableBranches'
+      }
+    })
+  }
+
   Object.keys(Constants.filterableFields).forEach(key => {
-    const field = Constants.filterableFields[ key ]
-    const fieldName = field.name
+    let field
+    let fieldName
+    if (key === 'branch') {
+      fieldName = 'branches'
+      field = 'homeBranches'
+      if (excludeUnavailable) {
+        field = 'availableBranches'
+      }
+    } else {
+      field = Constants.filterableFields[ key ].name
+      fieldName = field
+    }
     elasticSearchQuery.aggs.facets.aggs[ fieldName ] = {
       filter: {
         bool: Object.assign({}, elasticSearchQuery.query.bool)
@@ -178,7 +202,7 @@ module.exports.buildQuery = function (urlQueryString) {
       aggs: {
         [fieldName]: {
           terms: {
-            field: fieldName,
+            field: field,
             size: 1000
           }
         }
@@ -189,8 +213,20 @@ module.exports.buildQuery = function (urlQueryString) {
     if (yearRange) {
       aggregationMusts.push(yearRange)
     }
+    if (excludeUnavailable) {
+      aggregationMusts.push({
+        exists: {
+          field: 'availableBranches'
+        }
+      })
+    }
     Object.keys(musts).forEach(aggregation => {
       const must = musts[ aggregation ]
+      if (fieldName === 'branches') {
+        if (aggregation === 'homeBranches' || aggregation === 'availableBranches') {
+          return
+        }
+      }
       if (aggregation !== fieldName) {
         aggregationMusts.push(must)
       }

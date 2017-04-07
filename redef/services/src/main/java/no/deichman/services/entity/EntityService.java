@@ -25,7 +25,7 @@ public interface EntityService {
 
     Model retrieveCorporationWithLinkedResources(XURI xuri);
 
-    XURI updateHoldingBranches(String recordId, String branches) throws Exception;
+    XURI updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems) throws Exception;
 
     Model retrieveWorkItemsByURI(XURI xuri);
 

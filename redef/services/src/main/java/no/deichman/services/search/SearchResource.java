@@ -10,6 +10,7 @@ import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -153,19 +154,22 @@ public class SearchResource extends ResourceBase {
 
 
     @POST
-    @Path("work/reindex")
-    public final Response reIndexWorkByRecordId(
-            @QueryParam("recordId") final String recordId,
-            @QueryParam("branches") final String branches) throws Exception {
+    @Path("publication/reindex")
+    public final Response reIndexPublicationByRecordId(
+            @FormParam("recordId") final String recordId,
+            @FormParam("homeBranches") final String homeBranches,
+            @FormParam("availableBranches") final String availableBranches,
+            @FormParam("numItems") final int numItems) throws Exception {
 
-        if (recordId == null || branches == null) {
-            throw new BadRequestException("missing one or more of required queryparameters: recordId, branches");
+        if (recordId == null) {
+            throw new BadRequestException("missing required queryparameter: recordId");
         }
 
-        XURI workUri = getEntityService().updateHoldingBranches(recordId, branches);
+        XURI pubUri = getEntityService().
+                updateAvailabilityData(recordId, homeBranches, availableBranches, numItems);
 
         try {
-            getSearchService().index(workUri);
+            getSearchService().indexOnly(pubUri);
         } catch (Exception e) {
             e.printStackTrace();
         }

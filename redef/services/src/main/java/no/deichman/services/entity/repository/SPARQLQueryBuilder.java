@@ -354,22 +354,33 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public String updateHoldingBranches(String recordId, String branches) {
+    public String updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems) {
+        List<String> inserts = newArrayList();
+        if (homeBranches != null && homeBranches != "") {
+            inserts.add("?pub :hasHomeBranch \"" + StringUtils.join(homeBranches.split(","), "\",\"") + "\"");
+        }
+        if (availableBranches != null && availableBranches!= "") {
+            inserts.add("?pub :hasAvailableBranch \"" + StringUtils.join(availableBranches.split(","), "\",\"")  + "\"");
+        }
+        inserts.add("?pub :hasNumItems " + numItems);
         String q = format(""
                         + "PREFIX : <%s>\n"
-                        + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
-                        + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
-                        + "WHERE { ?pub :recordId \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
-                BaseURI.ontology(), StringUtils.join(branches.split(","), "\",\""), recordId);
+                        + "DELETE { ?pub :hasHomeBranch ?homeBranch ; :hasAvailableBranch ?availBranch ; :hasNumItems ?numItems }\n"
+                        + "INSERT { %s }\n"
+                        + "WHERE  { ?pub :recordId \"%s\" .\n"
+                        + "         OPTIONAL { ?pub :hasNumItems ?numItems }\n"
+                        + "         OPTIONAL { ?pub :hasHomeBranch ?homeBranch }\n"
+                        + "         OPTIONAL { ?pub :hasAvailableBranch ?availBranch }\n"
+                        + "}\n",
+                BaseURI.ontology(), StringUtils.join(inserts, " .\n"), recordId);
         return q;
     }
 
-    public Query getWorkByRecordId(String recordId) {
+    public Query getPublicationByRecordId(String recordId) {
         String q = format(""
                         + "PREFIX : <%s>\n"
-                        + "SELECT ?work\n"
-                        + "WHERE { ?pub :recordId \"%s\" .\n"
-                        + "        ?pub :publicationOf ?work }\n",
+                        + "SELECT ?pub\n"
+                        + "WHERE { ?pub :recordId \"%s\" . }\n",
                 BaseURI.ontology(), recordId);
         return QueryFactory.create(q);
     }

@@ -304,3 +304,25 @@ services:
       options:
         max-size: "1m"
         max-file: "2"
+
+  koha_indexer:
+    container_name: koha_indexer
+    image: "digibib/koha-indexer:a23c9042247e8fe588c18d550de8c4a1627b707c"
+    networks:
+      - backend
+    command:
+      - "/koha-indexer"
+      - "-dsn=${KOHA_ADMINUSER:-admin}:${KOHA_ADMINPASS:-secret}@tcp(koha_mysql:3306)/koha_${KOHA_INSTANCE:-name}"
+      - "-db=/var/lib/state/koharecords.db"
+      - "-sparql=http://fuseki:3030/ds/update"
+      - "-freq=15m"
+      - "-update"
+      - "-initial-import"
+      - "-services=http://services:8005/search/publication/reindex"
+    volumes:
+      - "koha_state:/var/lib/state"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"

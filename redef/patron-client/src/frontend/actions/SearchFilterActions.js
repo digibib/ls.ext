@@ -45,6 +45,17 @@ export function togglePeriod (years) {
   }
 }
 
+export function toggleAvailability () {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+
+    // Toggling a filter implies a new search, so we discard any pagination parameter
+    delete locationQuery.page
+
+    dispatch(toggleParameter('excludeUnavailable'))
+  }
+}
+
 export function removePeriod (years) {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }

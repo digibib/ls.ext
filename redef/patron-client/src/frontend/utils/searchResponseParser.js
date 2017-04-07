@@ -125,10 +125,18 @@ export function processAggregationsToFilters (response, locationQuery, filteredL
   const filterParameters = locationQuery[ 'filter' ] instanceof Array ? locationQuery[ 'filter' ] : [ locationQuery[ 'filter' ] ]
 
   const facets = response.aggregations.facets
+  const excludeUnavailable = locationQuery.hasOwnProperty('excludeUnavailable')
+
   Object.keys(Constants.filterableFields).forEach(fieldShortName => {
+    if (excludeUnavailable && fieldShortName === 'homeBranch') {
+      return
+    }
+    if (!excludeUnavailable && fieldShortName === 'availBranch') {
+      return
+    }
     const field = Constants.filterableFields[ fieldShortName ]
     const fieldName = field.name
-    const aggregation = facets[ fieldName ][ fieldName ]
+    const aggregation = facets[ fieldName ] ? facets[ fieldName ] [ fieldName ] : null
     if (aggregation) {
       aggregation.buckets.forEach(bucket => {
         const filterId = `${fieldShortName}_${bucket.key.substring(field.prefix.length)}`
@@ -141,6 +149,7 @@ export function processAggregationsToFilters (response, locationQuery, filteredL
       })
     }
   })
+
 
   return filters
 }

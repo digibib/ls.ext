@@ -23,6 +23,7 @@ function setup (propOverrides) {
     toggleAllFiltersVisibility: () => {},
     toggleCollapseFilter: () => {},
     togglePeriod: () => {},
+    toggleAvailability: () => {},
     scrollTargetNode: {},
     windowWidth: 1000,
     ...propOverrides
@@ -30,9 +31,14 @@ function setup (propOverrides) {
 
   const store = createStore(rootReducer)
 
+  const messages = {
+    'AvailableFilter.availability': 'Tilgjengelighet',
+    'AvailableFilter.availabilityLabel': 'Inkludér kun tilgjengelige'
+  }
+
   const output = TestUtils.renderIntoDocument(
     <Provider store={store}>
-      <IntlProvider locale="en">
+      <IntlProvider locale="en" messages={messages}>
         <SearchFilters {...props} />
       </IntlProvider>
     </Provider>
@@ -75,12 +81,12 @@ describe('components', () => {
         locationQuery: { query: 'test_query' },
         setFilter: () => {}
       })
-      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(2)
+      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(3) // range and availability counts for 2
     })
 
     it('should render filters in groups', () => {
       const { node } = setup({ locationQuery: { query: 'test_query' } })
-      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(3)
+      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(4) // range and availability counts for 2
     })
   })
 })

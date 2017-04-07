@@ -1198,38 +1198,6 @@ public class AppTest {
         doSearchForSubject("Hekling");
     }
 
-    @Test
-    public void work_is_reindexed_by_publication_recordid() throws Exception {
-        String creator = "Knut Hamsun";
-        String workTitle = "Hunger";
-        String publicationTitle = "Sult";
-        String partTitle = "Svolten";
-        String partNumber = "Part 1";
-        String isbn = "978-3-16-148410-0";
-        String publicationYear = "2016";
-
-        kohaAPIMock.addLoginExpectation();
-        setupExpectationForMarcXmlSentToKoha(creator, "Sult. Part 1. Svolten", isbn, publicationYear);
-
-        String personUri = createPersonInRdfStore(creator, BaseURI.ontology());
-        String workUri = createWorkInRdfStore(workTitle, BaseURI.ontology(), personUri);
-        String publicationTriples = ""
-                + "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + BaseURI.ontology("Publication") + "> .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("mainTitle") + "> \"" + publicationTitle + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partTitle") + "> \"" + partTitle + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationOf") + "> <" + workUri + "> .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partNumber") + "> \"" + partNumber + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("isbn") + "> \"" + isbn + "\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("hasHoldingBranch") + "> \"hutl\" .\n"
-                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationYear") + "> \"" + publicationYear + "\" .\n";
-
-        HttpResponse<JsonNode> createPublicationResponse = buildCreateRequestNtriples(appURI + "publication", publicationTriples).asJson();
-        assertResponse(CREATED, createPublicationResponse);
-
-        HttpResponse<String> stringHttpResponse = Unirest.put(appURI + resolveLocally(workUri) + "/index").asString();
-        assertNotNull(stringHttpResponse);
-
-    }
 
     @Test
     public void resources_are_reindexed_when_themself_or_connected_resources_are_changed() throws Exception {
