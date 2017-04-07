@@ -12,10 +12,32 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
-## 2017.36
+## 2017.37
 
 KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee (uforandret)
 GITREF: TODO
+
+- Services:
+  - DEICH-752: write all title parts to MARC 245a
+- Catalinker:
+  - DEICH-752: refuse to delete work with incoming relations
+  - DEICH-762: make catalinker wider, adjust width of additonal entries frame
+  - DEICH-765: remove unwanted worktype label
+  - DEICH-503: old stale contributions when changing work
+  - DEICH-644: refuse to delete work with incoming relations
+  - DEICH-719: when deleting resources also remove triples referring to deleted resource
+- Patron-client:
+  - DEICH-741: Handle multiple work series
+  - DEICH-756: url to self register
+  - DEICH-750: boost score of certain languages
+- Other:
+  - DEICH-685: tool for splitting works III
+
+
+## 2017.36
+
+KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee (uforandret)
+GITREF: efe3f9b7d6dfd9cf54933c0fef6e3f43887cb76e
 
 - Services:
   - DEICH-667: Sirkulasjon i services
