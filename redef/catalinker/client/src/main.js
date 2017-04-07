@@ -3827,7 +3827,7 @@
               deleteResource: function (event) {
                 var uriToDelete = ractive.get(`targetUri.${event.context.rdfType}`)
                 deleteResource(uriToDelete, event.context, function () {
-                  unloadResourceForDomain(event.context.resourceType)
+                  unloadResourceForDomain(event.context.rdfType)
                   if (event.context.afterSuccess) {
                     if (event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri) {
                       var targetUri = ractive.get(`targetUri.${event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri}`)
