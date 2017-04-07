@@ -776,6 +776,27 @@ public final class SPARQLQueryBuilder {
         return queryString;
     }
 
+    public String deleteIncomingRelations(XURI xuri) {
+        String queryString = format(""
+                + "DELETE {\n"
+                + "    ?a ?b <%1$s> .\n" // direct relations e.g. from work to subject
+                + "    ?bn ?c <%1$s> .\n" // triple in blank node pointing to related resource
+                + "    ?bn ?d ?e .\n" // blank node's other triples
+                + "    ?f ?g ?bn .\n" //
+                + "} WHERE {\n"
+                + "  {\n"
+                + "    ?a ?b <%1$s> .\n"
+                + "  } UNION { \n"
+                + "    ?bn ?c <%1$s> .\n"
+                + "    ?bn ?d ?e .\n"
+                + "    ?f ?g ?bn .\n"
+                + "    filter(isBlank(?bn)) .\n"
+                + "  }\n"
+                + "}\n"
+                + "\n", xuri.getUri());
+        return queryString;
+    }
+
     public Query getGetInverselyRelatedResourceByPredicate(String id, String predicate) {
         String queryString = format("prefix deich: <http://data.deichman.no/ontology#>\n"
                 + "describe ?related \n"

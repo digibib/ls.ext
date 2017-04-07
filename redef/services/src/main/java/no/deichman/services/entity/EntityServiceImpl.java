@@ -855,6 +855,11 @@ public final class EntityServiceImpl implements EntityService {
         return retVal;
     }
 
+    @Override
+    public void deleteIncomingRelations(XURI xuri) {
+        repository.deleteIncomingRelations(xuri);
+    }
+
     private Relationship getRelationship(QuerySolution querySolution) {
         Relationship relationship = new Relationship();
         relationship.setRelationshipType(querySolution.getResource("relation"));

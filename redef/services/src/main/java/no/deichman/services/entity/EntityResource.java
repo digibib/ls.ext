@@ -256,7 +256,10 @@ public final class EntityResource extends ResourceBase {
             String recordId = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordId"))).next().asLiteral().getString();
             getKohaAdapter().deleteBiblio(recordId);
             getEntityService().delete(model);
+            Set<String> connectedResources = getEntityService().retrieveResourcesConnectedTo(xuri);
+            getEntityService().deleteIncomingRelations(xuri);
             getSearchService().delete(xuri);
+            getSearchService().enqueueIndexing(connectedResources, xuri);
             Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("publicationOf")));
             while (sourceIterator.hasNext()) {
                 String publicationOf = sourceIterator.next().asResource().getURI();
@@ -268,7 +271,10 @@ public final class EntityResource extends ResourceBase {
             }
         } else {
             getEntityService().delete(model);
+            Set<String> connectedResources = getEntityService().retrieveResourcesConnectedTo(xuri);
+            getEntityService().deleteIncomingRelations(xuri);
             getSearchService().delete(xuri);
+            getSearchService().enqueueIndexing(connectedResources, xuri);
         }
 
         getSearchService().delete(xuri);

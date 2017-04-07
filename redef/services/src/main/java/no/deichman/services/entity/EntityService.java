@@ -76,4 +76,6 @@ public interface EntityService {
     CirculationProfile getProfile(String borrowerId) throws Exception;
 
     List<ResourceSummary> retrieveInverseRelations(XURI xuri, String predicate, List<String> projections);
+
+    void deleteIncomingRelations(XURI xuri);
 }
