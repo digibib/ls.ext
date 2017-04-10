@@ -50,8 +50,14 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
       })
     }
     if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
+      let branchToShow
       const homeBranch = getState().profile.personalInformation.homeBranch
-      const locationQueryWithBranches = ensureBranchStatus(locationQuery, homeBranch)
+      if (homeBranch) {
+        branchToShow = homeBranch
+      } else {
+        branchToShow = 'hutl'
+      }
+      const locationQueryWithBranches = ensureBranchStatus(locationQuery, branchToShow)
       return dispatch(push({ pathname: pathname, query: locationQueryWithBranches }))
     } else {
       return dispatch(push({ pathname: pathname, query: locationQuery }))
@@ -81,6 +87,16 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
 }
 
 export function initialBranchStatus (queryParamName, value, inputLocationQuery) {
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    console.log('locationQuery', locationQuery)
+    return dispatch(replace({ pathname: pathname, query: locationQuery }))
+  }
+}
+
+
+export function initialStatus (queryParamName, value, inputLocationQuery) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }

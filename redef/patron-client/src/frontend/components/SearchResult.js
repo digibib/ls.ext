@@ -28,14 +28,14 @@ class SearchResult extends React.Component {
     }
   }
 
-  componentDidMount () {
+  /* componentDidMount () {
     console.log('Component mounted')
     const items = this.getResultItems()
     if (items.length > 0) {
       console.log('ITEMS', items[0])
-      this.handleInitBranchStatus(items[0].branchcode)
+      this.handleInitBranchStatus('showBranchStatus', items[0].branchcode)
     }
-  }
+  } */
 
   scrollToTop () {
     window.scrollTo(0, 0)
@@ -200,6 +200,7 @@ class SearchResult extends React.Component {
 
   renderItems () {
     let homeBranchPos
+    let defaultBranchPos
     const activeFilters = this.getActiveBranchFilters()
 
     const groupedByBranchAndMedia = this.getResultItems()
@@ -209,6 +210,9 @@ class SearchResult extends React.Component {
         if (this.props.homeBranch && this.props.homeBranch === el.branchcode && activeFilters.length === 0) {
           homeBranchPos = i
         }
+        if (el.branchcode === 'hutl' && activeFilters.length === 0) {
+          defaultBranchPos = i
+        }
         return (
           <div className="items-by-branch" key={el.branchcode}>
             <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
@@ -217,20 +221,20 @@ class SearchResult extends React.Component {
                   <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
                 </div>
                 <div className="flex-item item-icon-button">
-                <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
-                  <button className="flex-item">
-                    {this.shouldShowBranchStatus(el.branchcode)
-                      ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
-                        <FormattedMessage {...messages.showBranchAvailability} />
-                      </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
-                      : [(<span key={`show-more-content${el.branchcode}`} className="is-vishidden">
-                      <FormattedMessage {...messages.hideBranchAvailability} />
-                      </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
-                    }
-                  </button>
-                </ClickableElement>
+                  <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
+                    <button className="flex-item">
+                      {this.shouldShowBranchStatus(el.branchcode)
+                        ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
+                          <FormattedMessage {...messages.showBranchAvailability} />
+                        </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
+                        : [(<span key={`show-more-content${el.branchcode}`} className="is-vishidden">
+                        <FormattedMessage {...messages.hideBranchAvailability} />
+                        </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
+                      }
+                    </button>
+                  </ClickableElement>
                 </div>
-            </div>
+              </div>
             </ClickableElement>
             {this.shouldShowBranchStatus(el.branchcode)
               ? <Items
@@ -261,6 +265,11 @@ class SearchResult extends React.Component {
         byBranch.unshift(userBranch)
       }
 
+      if (defaultBranchPos) {
+        const defaultBranch = byBranch.splice(defaultBranchPos, 1)
+        byBranch.unshift(defaultBranch)
+      }
+
       return byBranch
     }
   }
@@ -269,8 +278,8 @@ class SearchResult extends React.Component {
     this.props.showBranchStatus(code)
   }
 
-  handleInitBranchStatus (code) {
-    this.props.showInitBranchStatus(code)
+  handleInitBranchStatus (param, code) {
+    this.props.showInitBranchStatus(param, code)
   }
 
   shouldShowBranchStatus (code) {

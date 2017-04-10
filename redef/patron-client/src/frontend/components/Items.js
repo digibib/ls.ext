@@ -44,7 +44,6 @@ class Items extends React.Component {
                     branchCode={this.props.branchCode}
                     showBranchStatusMedia={this.props.showBranchStatusMedia}
                     locationQuery={this.props.locationQuery}
-                    itemLocation={i}
         />
       )
     })

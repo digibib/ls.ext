@@ -14,9 +14,7 @@ class ItemsMedia extends React.Component {
     const mediaType = this.props.itemsByMedia.mediaTypeURI
     const branchCode = this.props.branchCode
 
-    if (this.props.itemLocation === 0) {
-      this.handleBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
-    }
+    this.handleBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
   }
 
   render () {
@@ -92,7 +90,6 @@ class ItemsMedia extends React.Component {
 ItemsMedia.propTypes = {
   mediaType: PropTypes.string,
   branchCode: PropTypes.string.isRequired,
-  itemLocation: PropTypes.number.isRequired,
   intl: PropTypes.object.isRequired,
   itemsByMedia: PropTypes.object.isRequired,
   showBranchStatusMedia: PropTypes.func.isRequired,
