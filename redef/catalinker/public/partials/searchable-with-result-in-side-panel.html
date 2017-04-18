@@ -7,7 +7,7 @@
             {{#if ./current.accepted.selectedIndexType}}
             <select tabindex="{{tabSelected ? '0' : '-1'}}" value="{{./current.accepted.selectedIndexType}}">
                 {{#with widgetOptions.selectIndexTypeLegend}}
-                    <option disabled selected>{{.}}</option>
+                    <option disabled selected>{{>.}}</option>
                 {{/with}}
                 {{#each ../../indexTypes}}
                 <option value="{{.}}">{{config.search[.].selectIndexLabel}}</option>
@@ -16,10 +16,10 @@
             {{else}}
             <select tabindex="{{tabSelected ? '0' : '-1'}}" value="{{../../selectedIndexType}}">
                 {{#with widgetOptions.selectIndexTypeLegend}}
-                    <option disabled selected>{{.}}</option>
+                    <option disabled selected>{{>.}}</option>
                 {{/with}}
                 {{#each ../../indexTypes}}
-                <option value="{{.}}">{{config.search[.].selectIndexLabel}}</option>
+                <option value="{{.}}">{{>config.search[.].selectIndexLabel}}</option>
                 {{/each}}
             </select>
             {{/if}}
@@ -101,11 +101,10 @@
             <span class="legend">
                 {{#if isAdvancedQuery(./current.displayValue)}}
                     <span class="advanced-search-legend pure-u-7-24">
-                        <span class="ui-icon ui-icon-info"/>Du bruker nå <span class="more-info"
-                                                                               title="Søk som inneholder et av disse tegnene {{advancedSearchCharacters()}}. Du kan også bruke AND, OR og NOT.">avansert søk</span>. Trykk Enter for å søke.</span>
+                        <span class="ui-icon ui-icon-info"/>{{>advancedSearchLegend}}</span>
                 {{else}}
                     {{#if config.search[./current.accepted.selectedIndexType || ../../selectedIndexType].legend}}
-                            <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{config.search[../../selectedIndexType].legend}}</span>
+                            <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>{{>config.search[../../selectedIndexType].legend}}</span>
                     {{/if}}
                 {{/if}}
             </span>

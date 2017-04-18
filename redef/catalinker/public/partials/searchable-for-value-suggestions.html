@@ -21,7 +21,7 @@ as-formatter="format: {{searchForValueSuggestions.formatter}}"
     {{#each searchForValueSuggestions.hitsFromPreferredSource}}
     <span intro="slideIn">
         <div class="external-source">
-            Treff i ekstern kilde - {{../../preferredSource.name}}
+            {{>hitsFromExternalSource}}
         </div>
         <ul>
             {{#each items}}
@@ -30,7 +30,7 @@ as-formatter="format: {{searchForValueSuggestions.formatter}}"
                     <div class="main-line">{{main}}</div>
                     <div class="details-line">{{details}}</div>
                 </span>
-                <button {{#if primarySuggestionAccepted}}style="opacity:0;" title="Forslag fra ekstern hovedkilde er allerede hentet inn"{{else}} title="Bruk verdiene fra denne"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">Bruk forslag</button>
+                <button {{#if primarySuggestionAccepted}}style="opacity:0;" title="{{>externalSuggestionsAlreadyUsed}}"{{else}} title="{{>useValuesFromThis}}"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">{{>useSuggestion}}</button>
                 <span class="save-placeholder"></span>
             </li>
             {{/each}}
@@ -41,6 +41,6 @@ as-formatter="format: {{searchForValueSuggestions.formatter}}"
 
 <div style="display: none;">
     <div id="search-suggestion-result-dialog">
-        <h3>Ingen treff i eksterne kilder</h3>
+        <h3>{{>noHitsInExternalSource}}</h3>
     </div>
 </div>

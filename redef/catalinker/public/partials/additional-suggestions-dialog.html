@@ -1,12 +1,12 @@
 <div id="additional-suggestions-dialog">
     {{#with additionalSuggestionsDialog}}
-    <p>Vil du bruke verdiene fra disse feltene:</p>
+    <p>{{>useValuesFromTheseFields}}</p>
     <ul>
         {{#each sources}}
         <li>{{.}}</li>
         {{/each}}
     </ul>
-    <p>...til å fylle inn tomme felter for disse: </p>
+    <p>{{>andFillTheEmptyFields}}</p>
     <ul>
         {{#each targets}}
         <li>{{.}}</li>
@@ -16,7 +16,6 @@
         <div class="allow-partial-checkbox"><input type="checkbox" checked="{{allowPartialSuggestions}}"></div>
         <p class="warn-when-partial-suggestions">{{warnWhenCopyingSubset.message}}</p>
     {{/if}}
-    <p>Klikk <b>Bruk forslag</b> for å fylle inn {{allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup}}
-        verdi{{#if (allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup) > 1}}er{{/if}}.</p>
+    {{>additionalSuggestionsLegend}}
     {{/with}}
 </div>
