@@ -1035,7 +1035,10 @@ body {
               .subject-type-association {
                 display: block;
                 text-align: left;
-                &:before {
+                &:lang(en):before {
+                  content: "The role is associated with ";
+                }
+                &:lang(no):before {
                   content: "Rollen er knyttet til ";
                 }
               }

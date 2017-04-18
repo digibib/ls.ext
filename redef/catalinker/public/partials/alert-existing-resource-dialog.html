@@ -1,5 +1,5 @@
 <div id="alert-existing-resource-dialog">
-    <p>{{existingResourcesDialog.legend}}</p>
+    <p>{{>existingResourcesDialog.legend {numberOfResources: existingResourcesDialog.existingResources.length}}}</p>
     {{#if existingResourcesDialog.existingResources}}
         <div class="search-result">
         {{#each existingResourcesDialog.existingResources}}

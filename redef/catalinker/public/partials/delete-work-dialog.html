@@ -1,26 +1,24 @@
 {{#deleteWorkDialog}}
-<div id="delete-work-dialog" title="Slett verk">
+<div id="delete-work-dialog" title="{{>deleteWorkDialogTitle}}">
     {{#if references > 0}}
     <span data-automation-id="undeleteable-work">
-        Dette verket kan ikke slettes fordi det inngår i {{references}} sammenhenger:
+        {{>cannotDeleteWorkForReferences {references}}}
         {{>relations}}
     </span>
     {{else}}
     {{#if !error}}
         {{#if ! deleted}}
-            <h3>Bekreft sletting av verk</h3>
-            <p>Ja, jeg vil gjerne slette dette verket:</p>
-            <p><b>{{title}}</b> av <b>{{creator}}</b></p>
+            <h3>{{>confirmDeleteWork}}</h3>
+            <p>{{>confirmDeleteWorkDetail}}</p>
+            <p><b>{{title}}</b> {{>by}} <b>{{creator}}</b></p>
         {{else}}
-            <p>Verket {{title}} er slettet</p>
+            <p>{{>workDeleted {title}}}</p>
         {{/if}}
     {{/if}}
     {{#error}}
-            <h3>Kunne ikke slette verket</h3>
+            <h3>{{>workDeleteFailed}}</h3>
             {{#publicationsLeft}}
-            <p>Det er {{numberOfPublicationsLeft}} utgivelser knyttet til det.</p>
-
-
+                <p>{{>workDeleteFailedPublicationsLeft {numberOfPublicationsLeft}}}</p>
             {{/publicationsLeft}}
             {{#with message}}
                 <p>{{.}}</p>

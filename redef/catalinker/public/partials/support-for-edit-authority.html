@@ -1,9 +1,9 @@
 {{#if !compare}}
 <div class="support-panel-content" as-repositionSupportPanel >
     <div class="search-result pure-u-1">
-    <h4>Verk og utgivelser knyttet til {{config.translations[rdfType].det}}:</h4>
+    <h4>{{>worksAndPubsRelatedToAuthority}}</h4>
     {{>relations}}
-    <h4 data-uri-escaped-label="S%C3%B8k%20etter%20duplikater">Søk etter duplikater</h4>
+    <h4 data-uri-escaped-label="S%C3%B8k%20etter%20duplikater">{{>searchForDuplicates}}</h4>
         <div>
             <span class="field">
                 <input class="pure-u-1"
@@ -46,9 +46,9 @@
                                     {{#if !(uri===targetUri[rdfType])}}
                                            on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
                                            on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
-                                           title="Velg"
+                                           title="{{>selectThis}}"
                                     {{else}}
-                                           title="Du kan ikke slå sammen med samme {{config.translations[rdfType].det}} som du redigerer."
+                                           title="{{>cannotMergeWithSelf}}"
                                     {{/if}}
                                    on-downarrow="focusNextItem"
                                    on-uparrow="focusPrevItem"
@@ -102,7 +102,7 @@
          {{else}}
             <div class="search-result pure-g">
                 <div class="pure-u-1">
-                    Ingen treff
+                    {{>noHits}}
                 </div>
             </div>
         {{/if}}

@@ -5,7 +5,7 @@
      data-person-uri="{{targetUri.Person}}"
      as-clickOutsideSupportPanelDetector
      as-unload>
-    <h2 data-automation-id="page-heading">{{currentTaskDescription}}</h2>
+    <h2 data-automation-id="page-heading">{{>currentTaskDescription}}</h2>
     <h3 class="headline" data-automation-id="headline">
         {{#each applicationData.headlineParts}}
         {{#headlinePart(.)}}
@@ -29,7 +29,7 @@
                            id="{{tabId}}-tab"
                            data-toggle="tab" role="tab"
                             on-click="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}"
-                        on-enter="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}">{{tabLabel}}</a>
+                        on-enter="{{#tabEnabled(tabSelected,domain)}}activateTab{{/}}">{{>tabLabel}}</a>
                     </li>
                 {{/if}}
             {{/each}}
@@ -59,7 +59,7 @@
                                                     tabindex="{{tabSelected ? '0' : '-1'}}"
                                                     class="pure-button pure-button-primary next-step-button"
                                                     {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled"
-                                                    title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="nextStep:{{.}}">{{buttonLabel}}
+                                                    title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="nextStep:{{.}}">{{>buttonLabel}}
                                             </button>
                                         </div>
                                     </div>
@@ -72,7 +72,7 @@
                                             tabindex="-1"
                                             class="pure-button pure-button-primary next-step-button"
                                             {{#if disabledUnless && checkDisabledNextStep(disabledUnless)}}disabled="disabled"
-                                            title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="deleteResource:{{.}}">{{buttonLabel}}
+                                            title="{{disabledUnless.disabledTooltip}}"{{/if}} on-click="deleteResource:{{.}}">{{>buttonLabel}}
                                     </button>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                                             tabindex="-1"
                                             class="pure-button pure-button-primary next-step-button"
                                             title="{{./buttonLabel}}"
-                                            on-click="enableSpecialInput:{{./inputId}}">{{buttonLabel}}
+                                            on-click="enableSpecialInput:{{./inputId}}">{{>buttonLabel}}
                                     </button>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                                 class="pure-button pure-button-primary next-step-button"
                                                 title="{{./buttonLabel}}"
                                                 on-click="editResource:{template:'edit_authority', descriptionKey: 'compareWork', inputsKeypath: 'applicationData.inputsForDomainType.Work'},{{targetUri.Work}}"
-                                        >Utvidet redigering</button>
+                                        >{{>extendedEdit}}</button>
                                     </div>
                                 </div>
                             </div>
