@@ -307,18 +307,21 @@ services:
 
   koha_indexer:
     container_name: koha_indexer
-    image: "digibib/koha-indexer:a23c9042247e8fe588c18d550de8c4a1627b707c"
+    image: "digibib/koha-indexer:d4d4e5e581319d6a2e7cd5cf6e0aec7fce213951"
     networks:
       - backend
     command:
       - "/koha-indexer"
-      - "-dsn=${KOHA_ADMINUSER:-admin}:${KOHA_ADMINPASS:-secret}@tcp(koha_mysql:3306)/koha_${KOHA_INSTANCE:-name}"
       - "-db=/var/lib/state/koharecords.db"
       - "-sparql=http://fuseki:3030/ds/update"
       - "-freq=15m"
       - "-update"
       - "-initial-import"
       - "-services=http://services:8005/search/publication/reindex"
+    environment:
+      KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
     volumes:
       - "koha_state:/var/lib/state"
     logging:
