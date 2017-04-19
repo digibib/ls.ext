@@ -3,6 +3,8 @@ package no.deichman.services.entity.z3950;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.utils.ResourceReader;
+import org.apache.jena.system.JenaSystem;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.co.datumedge.hamcrest.json.SameJSONAs;
 
@@ -16,6 +18,10 @@ import static org.junit.Assert.assertThat;
  * Responsibility: test that marc is mapped as expected.
  */
 public class MARCMapperTest extends MappingTester {
+    @BeforeClass
+    public static void setupJena() {
+        JenaSystem.init(); // Needed to counter sporadic nullpointerexceptions because of context is not initialized.
+    }
 
     @Test
     public void it_has_constructor() {
