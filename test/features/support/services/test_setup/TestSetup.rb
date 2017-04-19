@@ -11,7 +11,7 @@ require 'bcrypt'
 module TestSetup
 
   class Koha
-    attr_accessor :api, :basedir, :apiuser, :apipass, :sipuser, :sippass, :http, :headers, :patrons, :biblio, :holds
+    attr_accessor :dbversion, :api, :basedir, :apiuser, :apipass, :sipuser, :sippass, :http, :headers, :patrons, :biblio, :holds
 
     def initialize(host="localhost",apiuser="api",apipass="secret",sipuser="autohb",sippass="autopass",basedir="./features/support/services/test_setup")
       @api = URI.parse("http://#{host}:8081/api/v1/")
@@ -28,10 +28,10 @@ module TestSetup
     end
 
     # make sure koha is populated with neccessary tables and api user and sip user in place
-    def setup_db(dbversion="16.1104000")
+    def setup_db(dbversion="16.1106000")
       apipassenc = BCrypt::Password.create(@apipass, cost: 8)
       sippassenc = BCrypt::Password.create(@sippass, cost: 8)
-
+      @dbversion = dbversion
       STDOUT.puts "Pre-populating koha db..."
       mysqlcmd = "mysql --local-infile=1 --default-character-set=utf8 --init-command=\"SET SESSION FOREIGN_KEY_CHECKS=0;\" -h koha_mysql -u\$MYSQL_USER -p\$MYSQL_PASSWORD koha_name"
       `sed -e "s/__KOHA_DBVERSION__/#{dbversion}/" #{@basedir}/deich_koha_base.sql | sudo docker exec -i koha_mysql bash -c '#{mysqlcmd}' > /dev/null 2>&1`
