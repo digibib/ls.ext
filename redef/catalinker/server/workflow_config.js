@@ -1194,7 +1194,7 @@ module.exports = (app) => {
                       }
                     },
                     {
-                      label: 'numberOfPerformarsLabel',
+                      label: 'numberOfPerformersLabel',
                       rdfProperty: 'hasNumberOfPerformers',
                       widgetOptions: {
                         short: true
