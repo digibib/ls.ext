@@ -123,6 +123,30 @@
         "deichman:hasClassification": [
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:fictionNonfiction": {
@@ -318,11 +342,19 @@
         }
       },
       {
+        "deichman:hasClassificationNumber": "839.823",
+        "@id": "_:0000000"
+      },
+      {
         "@type": [
           "deichman:Subject"
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Fortellinger"
+      },
+      {
+        "deichman:hasClassificationNumber": "948.104092",
+        "@id": "_:0000000"
       },
       {
         "deichman:contributor": [
@@ -334,6 +366,10 @@
         "@type": [
           "Work"
         ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:hasClassificationNumber": "123.332",
         "@id": "_:0000000"
       },
       {
@@ -361,6 +397,10 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Alaska"
+      },
+      {
+        "deichman:hasClassificationNumber": "332.443",
+        "@id": "_:0000000"
       },
       {
         "@type": [
@@ -397,6 +437,10 @@
         "deichman:prefLabel": "FIFA World Cup"
       },
       {
+        "deichman:hasClassificationNumber": "332.443",
+        "@id": "_:0000000"
+      },
+      {
         "deichman:publicationYear": "1858",
         "deichman:partNumber": "1",
         "deichman:partTitle": "NT",
@@ -422,6 +466,10 @@
         "deichman:prefLabel": "Judea"
       },
       {
+        "deichman:hasClassificationNumber": "443.223",
+        "@id": "_:0000000"
+      },
+      {
         "@type": [
           "deichman:Subject"
         ],
@@ -435,6 +483,10 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Røros"
+      },
+      {
+        "deichman:hasClassificationNumber": "332.776",
+        "@id": "_:0000000"
       },
       {
         "@type": [
@@ -463,6 +515,10 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Åstjønna"
+      },
+      {
+        "deichman:hasClassificationNumber": "948.414",
+        "@id": "_:0000000"
       },
       {
         "@type": [

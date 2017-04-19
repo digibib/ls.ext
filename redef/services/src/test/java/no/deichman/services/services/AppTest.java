@@ -102,7 +102,7 @@ public class AppTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        JenaSystem.init();
+        JenaSystem.init(); // Needed to counter sporadic nullpointerexceptions because of context is not initialized.
         appPort = PortSelector.randomFree();
         int jamonAppPort = PortSelector.randomFree();
         kohaAPIMock = new KohaAPIMock();
