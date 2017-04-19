@@ -16,7 +16,7 @@
     close: 'Close',
     cancel: 'Cancel',
     proceed: 'Proceed',
-    ignire: 'Ignore',
+    ignore: 'Ignore',
     create: 'Create',
     done: 'Done',
     part: 'Part',
@@ -56,47 +56,42 @@
     mainEntryLabel: 'Main entry', // Hovedinnførsel
     ISBNLabel: 'ISBN',
     EANLabel: 'EAN',
-    missingMainEntryLabel: 'Work has no main contributor', // Verket har ikke hovedansvarlig
-    mainContributorLabel: 'Main contributor', // Hovedansvarlig
-    agentLabel: 'Agent', // Aktør
-    improperWorkLabel: 'Not part of list of works', // Skal ikke inngå i verksliste
-    searchWorkAsMainResourceLabel: 'Search for existing work', // Søk etter eksisterende verk
-    publicationTabLabel: 'Describe publication', // Beskriv utgivelse
-    seriesLabel: 'Series', // Serie
-    seriesTitleLabel: 'Series title', // Serietittel
-    seriesPartNumber: 'Series part number', // Nummer på delserie
-    issueNumberLabel: 'Number in series', // Nummer i serien
-    subSeriesTitle: 'Sub-series title', // Tittel på delserie,
-    workTabLabel: 'Describe work', // Beskriv verk
+    missingMainEntryLabel: 'Work has no main contributor',
+    mainContributorLabel: 'Main contributor',
+    agentLabel: 'Agent',
+    improperWorkLabel: 'Not part of list of works',
+    searchWorkAsMainResourceLabel: 'Search for existing work',
+    publicationTabLabel: 'Describe publication',
+    seriesLabel: 'Series',
+    seriesTitleLabel: 'Series title',
+    seriesPartNumber: 'Series part number',
+    issueNumberLabel: 'Number in series',
+    subSeriesTitle: 'Sub-series title',
+    workTabLabel: 'Describe work',
     workSeriesWorkLabel: 'Work',
     relationTypeLabel: 'Relation type',
-    publishedByLabel: 'Publisher', // Utgiver,
-    publicationYearLabel: 'Year', // År
-    originCountryLabel: 'Country of origin',  // Opprinnelsesland
-    subjectsTabLabel: 'Subjects', // Emneopplysninger
-    instrumentationLabel: 'Intrumentation', // Besetning
+    publishedByLabel: 'Publisher',
+    publicationYearLabel: 'Year',
+    originCountryLabel: 'Country of origin',
+    subjectsTabLabel: 'Subjects',
+    instrumentationLabel: 'Intrumentation',
     selectSubjectType: 'Select subject type',
     selectActorType: 'Select agent type',
-    numberOfPerformarsLabel: 'Number of performers', // Antall utøvere
-    classificationLabel: 'Classification', // Klassifikasjon
-    classificationSourceLabel: 'Classification source', // Utgave
-    publicationPartsTabLabel: 'Describe parts', // Beskriv deler
-    publicationPartsLabel: 'Parts', // Deler som inngår i samling
-    pubPartMainTitleLabel: 'Part title', // Tittel på del
+    numberOfPerformersLabel: 'Number of performers',
+    classificationLabel: 'Classification',
+    classificationSourceLabel: 'Classification source',
+    publicationPartsTabLabel: 'Describe parts',
+    publicationPartsLabel: 'Parts',
+    pubPartMainTitleLabel: 'Part title',
     bulkEntryLinkLabel: 'Add multiple titles',
-    bulkEntryLinkToolTip: 'Add multiple parts in one operation', // Åpne mulighet for å legge inn flere titler på én gang'
+    bulkEntryLinkToolTip: 'Add multiple parts in one operation',
     enableBulkEntryLegend: `Enter each part-title on a new line. Clicking "Add", creates one publication part
                             for each title (empty lines are ignored). Every part is also associated with same agent
                             and role if provided above. If you do not want auto-numbering of parts, uncheck below 
                             `,
-//                          Legg inn titler på delene her med et linjeskift mellom hver. Når du trykker på "Legg til",
-//                          opprettes en utgivelesedel for hver tittel. Tomme linjer blir ignorert. Hver del får også
-//                          knyttet til seg samme aktør og rolle hvis det er angitt over. Hvis du ikke vil ha automatisk
-//                          nummerering deler som opprettes, fjerner du krysset for det valget nedenfor.
-
     additionalEntriesTabLabel: 'Additional entries',
     additionalEntryLabel: 'Additional entry',
-    workRelationLabel: 'Relation to other work', // Relasjon til annet verk'
+    workRelationLabel: 'Relation to other work',
 
     // index type labels
     personLabel: 'Person',
@@ -169,17 +164,17 @@
     maintWorkLabelPlur: 'Works',
 
     // create resource buttons
-    createNewWorkLabel: 'Create new work', // Opprett nytt verk
-    createNewWorkSeriesLabel: 'Create new work series', // Opprett ny verksserie
-    createNewPlaceLabel: 'Create new place', // Opprett nytt sted
-    createNewEventLabel: 'Create new event', // Opprett ny hendelse
-    createNewSeriesLabel: 'Create new series', // Opprett ny serie
-    createNewInstrumentLabel: 'Create new instruent', // Opprett nytt musikkinstrument
-    createNewCompositionTypeLabel: 'Create new composition type', // Opprett ny komposisjonstype
-    createNewPersonLabel: 'Create new person', // Opprett ny person
+    createNewWorkLabel: 'Create new work',
+    createNewWorkSeriesLabel: 'Create new work series',
+    createNewPlaceLabel: 'Create new place',
+    createNewEventLabel: 'Create new event',
+    createNewSeriesLabel: 'Create new series',
+    createNewInstrumentLabel: 'Create new instruent',
+    createNewCompositionTypeLabel: 'Create new composition type',
+    createNewPersonLabel: 'Create new person',
     createNewCorporationLabel: 'Create new corporation',
     createNewGenreLabel: 'Create new genre',
-    createNewSubjectLabel: 'Create new subject', // Opprett nytt generelt emne
+    createNewSubjectLabel: 'Create new subject',
 
     // next step buttons
     nextStepDescription: 'Next step: Description',
@@ -193,7 +188,7 @@
     deletePublication: 'Delete this publication',
     deleteWork: 'Delete this work',
     changeWorkOfPublication: 'Move publication to another work',
-    confirmChangeWorkOfPublication: 'Are you sure you wish to move this publication to another work?', // Er du sikker på at du vil endre verksknytningen for denne utgivelsen?
+    confirmChangeWorkOfPublication: 'Are you sure you wish to move this publication to another work?',
     extendedEdit: 'Extended editing',
 
     // dialogs
@@ -208,11 +203,6 @@
                href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
                class="link">items in Koha</a> before continuing.
     `,
-
-    // merge authorities
-    mergeResourcesDialogTitle: 'Merge authorities',
-    useValuesFromTheseFields: 'Use values from these fields:', // Vil du bruke verdiene fra disse feltene:
-    andFillTheEmptyFields: '...to fill the empty fields for these:', // ...til å fylle inn tomme felter for disse:
 
     // delete authority
     deleteAuthorityDialogTitle: 'Delete authority',
@@ -281,6 +271,8 @@
     alreadyRegisteredISBNSingular: 'There is already a registered a publication with the same ISBN number. Do you want to open that one, continue registering a new one or cancel?',
     alreadyRegisteredISBNPlural: 'There are already registered {{numberOfResources}} publications with the same ISBN number. Do you want to open one of these, continue registering a new one or cancel?',
     suggestedPrefilledValues: 'Suggestions for pre-populated values',
+    useValuesFromTheseFields: 'Use values from these fields:',
+    andFillTheEmptyFields: '...to fill the empty fields for these:',
 
     // extended editing
     worksAndPubsRelatedToAuthority: 'Works and publications associated with {{applicationData.translations[applicationData.language][rdfType + \'LabelDet\']}}:',
@@ -296,6 +288,7 @@
                     <b>before</b> merging the two {{applicationData.translations[applicationData.language][rdfType + 'LabelPlur']}}.
 `,//
     mergeAuthButtonLabel: 'Merge these two {{applicationData.translations[applicationData.language][rdfType + \'LabelPlur\']}}',
+    mergeResourcesDialogTitle: 'Merge authorities',
 
     // split work
     showPublicationsAndSplitWork: 'Show publications/split work',

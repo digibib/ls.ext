@@ -77,7 +77,7 @@
     instrumentationLabel: 'Besetning',
     selectSubjectType: 'Velg emnetype',
     selectActorType: 'Velg type aktør',
-    numberOfPerformarsLabel: 'Antall utøvere',
+    numberOfPerformersLabel: 'Antall utøvere',
     classificationLabel: 'Klassifikasjon',
     classificationSourceLabel: 'Utgave',
     publicationPartsTabLabel: 'Beskriv deler',
@@ -206,11 +206,6 @@
                class="link">utgivelsen der</a> og fjern eksemplarene først.
     `,
 
-    // merge authorities
-    mergeResourcesDialogTitle: 'Slå sammen autoriteter',
-    useValuesFromTheseFields: 'Vil du bruke verdiene fra disse feltene:',
-    andFillTheEmptyFields: '...til å fylle inn tomme felter for disse:',
-
     // delete authority
     deleteAuthorityDialogTitle: 'Slett autoritet',
     deleteAuthorityLegend: 'Bekreft sletting av autoritet',
@@ -279,6 +274,8 @@
     alreadyRegisteredISBNSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
     alreadyRegisteredISBNPlural: 'Det finnes allerede {{numberOfResources}} registrerte utgivelser med samme ISBN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
     suggestedPrefilledValues: 'Forslag til forhåndsfylte verdier',
+    useValuesFromTheseFields: 'Vil du bruke verdiene fra disse feltene:',
+    andFillTheEmptyFields: '...til å fylle inn tomme felter for disse:',
 
     // extended editing
     worksAndPubsRelatedToAuthority: 'Verk og utgivelser knyttet til {{applicationData.translations[applicationData.language][rdfType + \'LabelDet\']}}:',
@@ -293,6 +290,7 @@
                     er overført til {{applicationData.translations[applicationData.language][rdfType + 'LabelDet']}} til <b>venstre før</b> du slår dem sammen.
 `,//
     mergeAuthButtonLabel: 'Slå sammen disse to {{applicationData.translations[applicationData.language][rdfType + \'LabelPlur\']}}',
+    mergeResourcesDialogTitle: 'Slå sammen autoriteter',
 
     // split work
     showPublicationsAndSplitWork: 'Vis utgivelser/splitte verk',
