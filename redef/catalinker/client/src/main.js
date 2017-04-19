@@ -3903,7 +3903,7 @@
                 }
                 let patchMotherResource = function (resourceUri) {
                   let targetInput = ractive.get(grandParentOf(origin))
-                  if (!useAfterCreation && !targetInput.isSubInput) {
+                  if (useAfterCreation && !targetInput.isSubInput) {
                     Main.patchResourceFromValue(ractive.get(`targetUri.${targetInput.rdfType}`), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                   }
                   return resourceUri
