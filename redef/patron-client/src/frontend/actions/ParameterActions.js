@@ -1,14 +1,18 @@
 import { push, replace } from 'react-router-redux'
 
-export function toggleParameter (queryParamName, inputLocationQuery) {
+export function toggleParameter (queryParamName, inputLocationQuery, shouldRemoveInBackString = false) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     const queryParam = locationQuery[ queryParamName ]
-    if (queryParam !== undefined) {
-      delete locationQuery[ queryParamName ]
+    if (shouldRemoveInBackString) {
+      locationQuery[ 'back' ] = locationQuery[ 'back' ].replace(`${queryParamName}&`, '')
     } else {
-      locationQuery[ queryParamName ] = null // null enables the parameter
+      if (queryParam !== undefined) {
+        delete locationQuery[ queryParamName ]
+      } else {
+        locationQuery[ queryParamName ] = null // null enables the parameter
+      }
     }
     return dispatch(push({ pathname: pathname, query: locationQuery }))
   }

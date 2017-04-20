@@ -202,6 +202,8 @@ export default {
   'Search.paginationLabel': 'Hopp til side',
   'Search.paginationNext': 'Neste',
   'Search.paginationPrevious': 'Forrige',
+  'SearchFilterAvailabilityBoxItem.label': 'Vis kun ledige',
+  'SearchFilterAvailabilityBoxItem.title.filter': 'Tilgjengelighetsfilter på',
   'SearchFilter.collapseGroup': 'Skjul filtergruppen:',
   'SearchFilter.expandGroup': 'Vis filtergruppen:',
   'SearchFilter.filter[work.publications.audiences]': 'Målgruppe',

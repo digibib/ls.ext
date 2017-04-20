@@ -119,7 +119,8 @@ class Search extends React.Component {
           </div>
           <SearchFilterBox query={this.props.locationQuery}
                            toggleFilter={this.props.searchFilterActions.toggleFilter}
-                           removePeriod={this.props.searchFilterActions.removePeriod} />
+                           removePeriod={this.props.searchFilterActions.removePeriod}
+                           toggleAvailability={this.props.searchFilterActions.toggleAvailability} />
           {this.props.totalHits > 0
             ? (<div className="search-sorting patron-placeholder">
             <p>Sorter treff på</p>

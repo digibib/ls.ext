@@ -49,6 +49,9 @@ class SearchFilter extends React.Component {
         if (!this.shouldShowMore() && index >= Constants.maxVisibleFilterItems) {
           return
         }
+        if (!filter.bucket || filter.bucket === "") {
+          return
+        }
         return (
           <SearchFilterItem key={filter.id}
                             filter={filter}
@@ -127,7 +130,7 @@ SearchFilter.propTypes = {
   locationQuery: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   scrollTargetNode: PropTypes.object.isRequired,
-  first: PropTypes.boolean
+  first: PropTypes.bool
 }
 
 export const messages = defineMessages({

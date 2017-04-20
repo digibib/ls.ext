@@ -3,10 +3,11 @@ import NonIETransitionGroup from './NonIETransitionGroup'
 
 import SearchFilterBoxItem from '../components/SearchFilterBoxItem'
 import SearchFilterDateRangeBoxItem from '../components/SearchFilterDateRangeBoxItem'
+import SearchFilterAvailabilityBoxItem from '../components/SearchFilterAvailabilityBoxItem'
 import { getFiltersFromQuery, getDateRange } from '../utils/filterParser'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-const SearchFilterBox = ({ toggleFilter, removePeriod, query }) => {
+const SearchFilterBox = ({ toggleFilter, removePeriod, query, toggleAvailability }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
     : <FormattedMessage {...messages.titleSearch} />
   const filters = getFiltersFromQuery(query).filter(f => {
@@ -25,7 +26,9 @@ const SearchFilterBox = ({ toggleFilter, removePeriod, query }) => {
     dateRange.push({ yearTo: getDateRange(query, 'yearTo') })
   }
 
-  if (filters.length > 0 || dateRange.length > 0) {
+  const availability = query.hasOwnProperty('excludeUnavailable') || (query.back && query.back.includes('excludeUnavailable'))
+
+  if (filters.length > 0 || dateRange.length > 0 || availability) {
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -41,6 +44,10 @@ const SearchFilterBox = ({ toggleFilter, removePeriod, query }) => {
             key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
           { dateRange.length > 0
             ? <SearchFilterDateRangeBoxItem dateRange={dateRange} removePeriod={removePeriod} />
+            : null
+          }
+          { availability
+            ? <SearchFilterAvailabilityBoxItem toggleAvailability={toggleAvailability} />
             : null
           }
         </ul>
@@ -67,7 +74,8 @@ export const messages = defineMessages({
 SearchFilterBox.propTypes = {
   toggleFilter: PropTypes.func.isRequired,
   query: PropTypes.object.isRequired,
-  removePeriod: PropTypes.func.isRequired
+  removePeriod: PropTypes.func.isRequired,
+  toggleAvailability: PropTypes.func.isRequired
 }
 
 export default SearchFilterBox
