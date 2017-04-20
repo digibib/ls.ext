@@ -12,7 +12,6 @@ const Item = ({ item, intl }) => {
         : <div data-automation-id="item_status" className="flex-item sub-row">{item.available} ledige
           av {item.total}</div>
       }
-
     </div>
   )
 }

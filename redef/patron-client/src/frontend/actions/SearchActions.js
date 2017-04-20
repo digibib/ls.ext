@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import { processSearchResponse } from '../utils/searchResponseParser'
-import { toggleParameterValue, ensureDefinedFiltersOpen, initialBranchStatus, initialStatus } from './ParameterActions'
+import { toggleParameterValue, ensureDefinedFiltersOpen } from './ParameterActions'
 
 export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
@@ -68,16 +68,8 @@ export function showStatus (relativeUri) {
   return toggleParameterValue('showStatus', relativeUri)
 }
 
-/* export function showInitBranchStatus (branchCode) {
-  return initialBranchStatus('showBranchStatus', branchCode)
-} */
-
 export function showBranchStatus (branchCode) {
   return toggleParameterValue('showBranchStatus', branchCode)
-}
-
-export function showInitBranchStatus (param, branchCode) {
-  return initialStatus(param, branchCode)
 }
 
 export function showBranchStatusMedia (branchCodeMedia) {

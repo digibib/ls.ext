@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
+import constants from '../constants/Constants'
 import ItemsMedia from './ItemsMedia'
 
 class Items extends React.Component {
@@ -9,6 +10,7 @@ class Items extends React.Component {
     return <p><span data-automation-id="no_items"><FormattedMessage {...messages.noItems} /></span></p>
   }
   renderItems () {
+    /* Sort languages alphabetically */
     const itemsMediaLanSorted = this.props.mediaItems.map(item => {
       item.items.sort((a, b) => {
         if (a.languages[0] < b.languages[0]) return -1
@@ -18,22 +20,17 @@ class Items extends React.Component {
 
       const itemToSort = item
 
+      /* Place the preferred languages defined in Constants on top */
       if (item.items.length > 1) {
         item.items.forEach((a, i) => {
-          if (a.languages[ 0 ].includes('swe')) {
-            const priLan = itemToSort.items.splice(i, 1)
-            itemToSort.items.unshift(priLan[0])
-          }
-        })
-
-        item.items.forEach((a, i) => {
-          if (a.languages[ 0 ].includes('nob') || a.languages[ 0 ].includes('nno') || a.languages[ 0 ].includes('nor')) {
-            const priLan = itemToSort.items.splice(i, 1)
-            itemToSort.items.unshift(priLan[0])
-          }
+          constants.preferredLanguages.reverse().forEach((l) => {
+            if (a.languages[ 0 ].includes(l.substr(l.lastIndexOf('/') + 1))) {
+              const priLan = itemToSort.items.splice(i, 1)
+              itemToSort.items.unshift(priLan[0])
+            }
+          })
         })
       }
-
       return itemToSort
     })
 

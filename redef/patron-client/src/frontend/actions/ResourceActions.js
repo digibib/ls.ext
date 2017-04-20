@@ -67,7 +67,6 @@ export const receiveItems = (workId, items) => action(types.RECEIVE_ITEMS, { wor
 export const itemsFailure = error => errorAction(types.ITEMS_FAILURE, error)
 
 export function fetchWorkItems (workId) {
-  console.log('FETCHING WORK ITEMS...')
   return (dispatch, getState) => {
     const url = `/api/v1/resources/work/${workId}/items`
     dispatch(requestItems(workId))

@@ -86,25 +86,6 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
   }
 }
 
-export function initialBranchStatus (queryParamName, value, inputLocationQuery) {
-  return (dispatch, getState) => {
-    const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
-    console.log('locationQuery', locationQuery)
-    return dispatch(replace({ pathname: pathname, query: locationQuery }))
-  }
-}
-
-
-export function initialStatus (queryParamName, value, inputLocationQuery) {
-  return (dispatch, getState) => {
-    const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
-    console.log('locationQuery', locationQuery)
-    return dispatch(replace({ pathname: pathname, query: locationQuery }))
-  }
-}
-
 function ensureBranchStatus (locationQuery, homeBranch) {
   const activeBranchFilters = getActiveBranchFilters(locationQuery)
 

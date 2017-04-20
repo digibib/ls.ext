@@ -18,24 +18,15 @@ class SearchResult extends React.Component {
     this.handleShowStatusClick = this.handleShowStatusClick.bind(this)
     this.handleEnter = this.handleEnter.bind(this)
     this.handleBranchStatus = this.handleBranchStatus.bind(this)
-    this.handleInitBranchStatus = this.handleInitBranchStatus.bind(this)
   }
 
   componentWillMount () {
     const { id } = this.props.result
     if (this.shouldShowStatus() && !this.props.resources[ id ]) {
+      // NB: Not in use?
       this.props.fetchWorkResource(id)
     }
   }
-
-  /* componentDidMount () {
-    console.log('Component mounted')
-    const items = this.getResultItems()
-    if (items.length > 0) {
-      console.log('ITEMS', items[0])
-      this.handleInitBranchStatus('showBranchStatus', items[0].branchcode)
-    }
-  } */
 
   scrollToTop () {
     window.scrollTo(0, 0)
@@ -175,8 +166,72 @@ class SearchResult extends React.Component {
         return el
       })
     }
+    const groupedByBranchAndMediaLangFiltered = this.extractBranchesByLang(groupedByBranchAndMedia)
+    const groupedByBranchAndMediaMediaFiltered = this.extractBranchesByMedia(groupedByBranchAndMedia)
 
-    return groupedByBranchAndMedia
+    if (groupedByBranchAndMediaLangFiltered > 0 && groupedByBranchAndMediaMediaFiltered > 0) {
+      const mediaAndLangFiltered = this.extractBranchesByMedia(groupedByBranchAndMediaLangFiltered)
+      return mediaAndLangFiltered
+    } else if (groupedByBranchAndMediaLangFiltered.length > 0) {
+      return groupedByBranchAndMediaLangFiltered
+    } else if (groupedByBranchAndMediaMediaFiltered.length > 0) {
+      return groupedByBranchAndMediaMediaFiltered
+    } else {
+      return groupedByBranchAndMedia
+    }
+  }
+
+  extractBranchesByMedia (groupedByBranchAndMedia) {
+    const activeMediaFilters = this.getActiveFilters('mediatype')
+    const groupedByBranchAndMediaFiltered = []
+
+    /* If media filter is set, than filter out branches which do not contain selected media */
+    if (activeMediaFilters.length > 0) {
+      groupedByBranchAndMedia.map(el => {
+        el.mediaItems.map(mEl => {
+          activeMediaFilters.forEach(mf => {
+            if (mEl.mediaTypeURI === mf.bucket) {
+              groupedByBranchAndMediaFiltered.push(el)
+            }
+          })
+          return mEl
+        })
+        return el
+      })
+    }
+    return groupedByBranchAndMediaFiltered
+  }
+
+  extractBranchesByLang (groupedByBranchAndMedia) {
+    const activeLangFilters = this.getActiveFilters('language')
+    const groupedByBranchAndMediaFiltered = []
+
+    /* If lang filter is set, than filter out branches which do not contain selected lang */
+    if (activeLangFilters.length > 0) {
+      groupedByBranchAndMedia.map(el => {
+        el.mediaItems.map(mEl => {
+          mEl.items.map(i => {
+            activeLangFilters.forEach(l => {
+              if (i.languages[ 0 ] === l.bucket) {
+                let repBranchCode = false
+                groupedByBranchAndMediaFiltered.forEach(arrayEl => {
+                  if (arrayEl.branchcode === el.branchcode) {
+                    repBranchCode = true
+                  }
+                })
+                if (!repBranchCode) {
+                  groupedByBranchAndMediaFiltered.push(el)
+                }
+              }
+            })
+            return i
+          })
+          return mEl
+        })
+        return el
+      })
+    }
+    return groupedByBranchAndMediaFiltered
   }
 
   getResultUrl (result) {
@@ -187,29 +242,31 @@ class SearchResult extends React.Component {
     })
   }
 
-  getActiveBranchFilters () {
-    const activeBranches = []
+  getActiveFilters (filterKey) {
+    const activeFilters = []
     this.props.filters.map(el => {
-      if (el.id.includes('branch') && el.active) {
-        activeBranches.push(el)
+      if (el.id.includes(filterKey) && el.active) {
+        activeFilters.push(el)
       }
       return el
     })
-    return activeBranches
+    return activeFilters
   }
 
   renderItems () {
     let homeBranchPos
     let defaultBranchPos
-    const activeFilters = this.getActiveBranchFilters()
+    const activeFilters = this.getActiveFilters('branch')
 
     const groupedByBranchAndMedia = this.getResultItems()
 
     if (groupedByBranchAndMedia.length > 0) {
       const byBranch = groupedByBranchAndMedia.map((el, i) => {
+        /* Check if any branch filters selected and if user has homeBranch and remember position of homeBranch */
         if (this.props.homeBranch && this.props.homeBranch === el.branchcode && activeFilters.length === 0) {
           homeBranchPos = i
         }
+        /* Check if any branch filters selected and remember position of main branch */
         if (el.branchcode === 'hutl' && activeFilters.length === 0) {
           defaultBranchPos = i
         }
@@ -265,7 +322,7 @@ class SearchResult extends React.Component {
         byBranch.unshift(userBranch)
       }
 
-      if (defaultBranchPos) {
+      if (defaultBranchPos && !homeBranchPos) {
         const defaultBranch = byBranch.splice(defaultBranchPos, 1)
         byBranch.unshift(defaultBranch)
       }
@@ -276,10 +333,6 @@ class SearchResult extends React.Component {
 
   handleBranchStatus (code) {
     this.props.showBranchStatus(code)
-  }
-
-  handleInitBranchStatus (param, code) {
-    this.props.showInitBranchStatus(param, code)
   }
 
   shouldShowBranchStatus (code) {
