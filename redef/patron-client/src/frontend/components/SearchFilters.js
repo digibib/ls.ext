@@ -62,6 +62,8 @@ class SearchFilters extends React.Component {
         groupedFilters[ aggregation ] = groupedFilters[ aggregation ] || []
         groupedFilters[ aggregation ].push(filter)
       })
+      const branchFilter = groupedFilters[ 'branch' ]
+      delete groupedFilters[ 'branch' ]
 
       return (
         <NonIETransitionGroup
@@ -88,15 +90,30 @@ class SearchFilters extends React.Component {
                    data-automation-id="search_filters">
             {this.props.locationQuery.hideFilters === Constants.enabledParameter
               ? null
-              : <DataRangeFilter
-                togglePeriod={this.props.togglePeriod}
+              : <AvailableFilter
+                toggleAvailability={this.props.toggleAvailability}
+                isChecked={this.props.locationQuery.hasOwnProperty('excludeUnavailable')}
               />
             }
             {this.props.locationQuery.hideFilters === Constants.enabledParameter
               ? null
-              : <AvailableFilter
-                toggleAvailability={this.props.toggleAvailability}
-                isChecked={this.props.locationQuery.hasOwnProperty('excludeUnavailable')}
+              : <SearchFilter
+                  key="branch"
+                  aggregation="branch"
+                  filters={branchFilter}
+                  locationQuery={this.props.locationQuery}
+                  toggleFilter={this.props.toggleFilter}
+                  toggleFilterVisibility={this.props.toggleFilterVisibility}
+                  toggleAllFilters={this.toggleFilterVisibility}
+                  toggleCollapseFilter={this.props.toggleCollapseFilter}
+                  scrollTargetNode={this.props.scrollTargetNode}
+                  first={true}
+                />
+            }
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <DataRangeFilter
+                togglePeriod={this.props.togglePeriod}
               />
             }
             {this.props.locationQuery.hideFilters === Constants.enabledParameter ? null : Object.keys(groupedFilters).map(aggregation => {

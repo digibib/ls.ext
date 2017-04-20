@@ -97,7 +97,7 @@ class SearchFilter extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
-        className="filter-group"
+        className={this.props.first ? "filter-group-first" : "filter-group"}
         data-automation-id={`filter_${this.props.aggregation}`}>
         <header className="filterTitle" onClick={this.handleCollapse}>
           <h1>{this.renderTitle()}</h1>
@@ -126,7 +126,8 @@ SearchFilter.propTypes = {
   toggleAllFilters: PropTypes.func,
   locationQuery: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  scrollTargetNode: PropTypes.object.isRequired
+  scrollTargetNode: PropTypes.object.isRequired,
+  first: PropTypes.boolean
 }
 
 export const messages = defineMessages({
@@ -178,7 +179,7 @@ export const messages = defineMessages({
   branch: {
     id: 'SearchFilter.filter[work.publications.branches]',
     description: 'Label of the branches filter',
-    defaultMessage: 'Department'
+    defaultMessage: 'Choose department'
   }
 })
 
