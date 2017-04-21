@@ -1,22 +1,20 @@
 {{#deletePublicationDialog}}
-<div id="delete-publication-dialog" title="Slett utgivelse">
+<div id="delete-publication-dialog" title="{{>deletePublicationDialogTitle}}">
     {{#if !error}}
         {{#if ! deleted}}
-            <h3>Bekreft sletting av utgivelse</h3>
-            <p>Ja, jeg vil gjerne slette denne utgivelsen:</p>
-            <p><b>{{title}}</b> av <b>{{creator}}</b></p>
+            <h3>{{>confirmDeletePublication}}</h3>
+            <p>{{>confirmDeletePublicationDetail}}</p>
+            <p><b>{{title}}</b> {{>by}} <b>{{creator}}</b></p>
         {{else}}
-            <p>Utgivelsen {{title}} av verket {{work}} er slettet</p>
+            <p>{{>publicationDeleted {title, work}}}</p>
         {{/if}}
     {{/if}}
     {{#error}}
-            <h3>Kunne ikke slette utgivelsen</h3>
+            <h3>{{>deletePublicationFailed}}</h3>
             {{#itemsLeft}}
-            <p>Det er {{numberOfItemsLeft}} eksemplarer knyttet til den i Koha.</p>
+            <p>{{>itemsLeftMessage {numberOfItemsLeft}}} </p>
 
-            <p>Gå til <a data-automation-id="biblio_record_link" target="_blank"
-               href="{{config.kohaIntraUri}}/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
-               class="link">utgivelsen der</a> og fjern eksemplarene først.
+            <p>{{>gotoKohaForDeleteLink}}
             </p>
             {{/itemsLeft}}
             {{#with message}}

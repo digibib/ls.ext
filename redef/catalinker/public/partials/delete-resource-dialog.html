@@ -1,20 +1,20 @@
 {{#deleteResourceDialog}}
-<div id="delete-resource-dialog" title="Slett autoritet">
+<div id="delete-resource-dialog" title="{{>deleteAuthorityDialogTitle}}">
     {{#if !error}}
         {{#if ! deleted}}
-            <h3>Bekreft sletting av autoritet</h3>
+            <h3>{{>deleteAuthorityLegend}}</h3>
             {{#references}}
             <span class="ui-icon ui-icon-alert"/>
-            <strong>Denne autoriteten er referert i {{references}} sammenheng{{#references > 1}}er{{/}}.</strong>
+            <strong>{{>authorityNumberOfReferences {references}}}</strong>
             {{/}}
-            <p>Ja, jeg vil gjerne slette denne autoriteten.</p>
+            <p>{{>confirmDeleteAuthority}}</p>
             <p><b>{{title}}</b></p>
         {{else}}
-            <p>Autoriteten er slettet</p>
+            <p>{{>authorityDeleted}}</p>
         {{/if}}
     {{/if}}
     {{#error}}
-            <h3>Kunne ikke slette autoriteten</h3>
+            <h3>{{>deleteAuthorityFailed}}</h3>
             {{#with message}}
                 <p>{{.}}</p>
             {{/with}}

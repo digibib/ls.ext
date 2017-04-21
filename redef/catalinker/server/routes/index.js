@@ -6,7 +6,11 @@ module.exports = (app) => {
   require('./services')(app)
 
   app.get('/', (req, res) => {
-    res.redirect('/cataloguing')
+    var base = '/cataloguing'
+    if (req.query.language) {
+      base += `?language=${req.query.language}`
+    }
+    res.redirect(base)
   })
 
   app.get('/cataloguing_old/*', (req, res, next) => {

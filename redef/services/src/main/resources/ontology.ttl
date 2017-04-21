@@ -404,7 +404,7 @@ duo:Biography a rdfs:Class ;
 
 # ToDo: Erstattes med :hasPartTitle
 :partTitle a rdfs:Property ;
-  rdfs:label "Part mainTitle"@no ;
+  rdfs:label "Part main title"@en ;
   rdfs:label "Deltittel"@no ;
   rdfs:domain :Publication, :Work, :Serial, :WorkSeries  ;
   rdfs:range xsd:string .
