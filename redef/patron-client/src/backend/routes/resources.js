@@ -299,18 +299,19 @@ function transformWorkRelations (input) {
 
 function transformWorkSeries (input) {
   try {
-    if (input) {
-      const workSeries = input.workSeries
-      workSeries.uri = workSeries.id
-      workSeries.id = getId(workSeries.id)
-      workSeries.relativeUri = relativeUri(workSeries.uri)
-      workSeries.numberInSeries = input.partNumber
-      return workSeries
-    }
-    return {}
+    const workSeries = []
+    input.forEach(input => {
+      const serie = input.workSeries
+      serie.uri = serie.id
+      serie.id = getId(serie.id)
+      serie.relativeUri = relativeUri(serie.uri)
+      serie.numberInSeries = input.partNumber
+      workSeries.push(serie)
+    })
+    return workSeries
   } catch (error) {
     console.log(error)
-    return {}
+    return []
   }
 }
 

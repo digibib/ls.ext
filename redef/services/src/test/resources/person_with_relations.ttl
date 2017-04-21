@@ -41,5 +41,23 @@
 <http://data.deichman.no/person/p2> a :Person ;
   :name "Olle Bertilsson" .
 
+<http://data.deichman.no/person/p3> a :Person ;
+  :name "Caliban" .
+
+<http://data.deichman.no/person/p4> a :Person ;
+  :name "Askevold, Jan Petter" .
+
+<http://data.deichman.no/work/w3> a :Work ;
+  :mainTitle "The life of Olle Bertilsson" ;
+  :subject <http://data.deichman.no/person/p2>, <http://data.deichman.no/person/p3>.
+
+<http://data.deichman.no/work/w4> a :Work ;
+  :mainTitle "De kaller meg Benny Bankboks" ;
+  :contributor [
+    a :Contribution, :MainEntry ;
+    :agent <http://data.deichman.no/person/p4> ;
+    :role role:author
+  ] .
+
 
 

@@ -465,6 +465,13 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
+    public final void deleteIncomingRelations(XURI xuri) {
+        log.debug("Removing incoming relations to <" + xuri + ">");
+        UpdateRequest updateRequest = UpdateFactory.create(sqb.deleteIncomingRelations(xuri));
+        executeUpdate(updateRequest);
+    }
+
+    @Override
     public final ResultSet retrievePublicationDataByRecordId(String recordId) {
         try (QueryExecution queryExecution =
                      getQueryExecution(sqb.getPublicationAndWorkContributorURIByRecordId(recordId))) {

@@ -1,5 +1,11 @@
 {{#deleteWorkDialog}}
-<div id="delete-work-dialog" title="Slett utgivelse">
+<div id="delete-work-dialog" title="Slett verk">
+    {{#if references > 0}}
+    <span data-automation-id="undeleteable-work">
+        Dette verket kan ikke slettes fordi det inngår i {{references}} sammenhenger:
+        {{>relations}}
+    </span>
+    {{else}}
     {{#if !error}}
         {{#if ! deleted}}
             <h3>Bekreft sletting av verk</h3>
@@ -20,5 +26,6 @@
                 <p>{{.}}</p>
             {{/with}}
     {{/}}
+    {{/if}}
 </div>
 {{/deleteWorkDialog}}

@@ -145,8 +145,8 @@
         })
       })
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
-        if (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableCreateNewResource.showInputs') !== undefined ||
-          ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enableEditResource.showInputs') !== undefined) {
+        if (ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enableCreateNewResource.showInputs`) !== undefined ||
+          ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enableEditResource.showInputs`) !== undefined) {
           if (input.widgetOptions) {
             _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
@@ -166,38 +166,55 @@
       }
     }
 
-    var unloadResourceForDomain = function (domainType) {
-      _.each(allInputs(), function (input) {
-        if (input.domain && domainType === unPrefix(input.domain)) {
-          let subjectType = input.values[ 0 ].subjectType
-          input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
-          input.values[ 0 ].subjectType = subjectType
-          input.values[ 0 ].oldSubjectType = subjectType
-        } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
-          var valuesToRemove = []
+    var unloadResourceForDomain = function (domainType, excludeInputs) {
+      excludeInputs = excludeInputs || []
+      const subjectTypesOfInputValue = {}
+      // determine subject type for value indexes for comound inputs
+      forAllGroupInputs(function (input) {
+        if (!excludeInputs.includes(input.id) && input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
           _.each(input.values, function (value, index) {
-            if (value.subjectType === domainType) {
-              valuesToRemove.push(index)
-            }
-          })
-          var promises = []
-          _.each(valuesToRemove.reverse(), function (index) {
-            promises.push(ractive.splice(`${input.keypath}.values`, index, 1))
-          })
-          Promise.all(promises).then(function () {
-            let values = ractive.get(`${input.keypath}.values`)
-            if (values.length === 0) {
-              ractive.set(`${input.keypath}.values.0`, emptyValues(input.searchable))
-              if (input.parentInput.subjectTypes.length === 1) {
-                ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
-              }
+            const detectedSubjectType = (_.chain(input.parentInput.subInputs).pluck('input').pluck('values').find(function (values) {
+              return (values[ index ] && values[ index ].subjectType) ? values[ index ].subjectType : undefined
+            }).first().value() || {}).subjectType
+            if (detectedSubjectType) {
+              subjectTypesOfInputValue[ input.parentInput ] = subjectTypesOfInputValue[ input.parentInput ] || []
+              subjectTypesOfInputValue[ input.parentInput ][ index ] = detectedSubjectType
             }
           })
         }
       })
-      ractive.update()
-      ractive.set('targetUri.' + domainType, undefined)
+      forAllGroupInputs(function (input) {
+        if (!excludeInputs.includes(input.id)) {
+          if (input.domain && domainType === unPrefix(input.domain)) {
+            let subjectType = input.values[ 0 ].subjectType
+            input.values = emptyValues(input.type === 'select-predefined-value', input.searchable)
+            input.values[ 0 ].subjectType = subjectType
+            input.values[ 0 ].oldSubjectType = subjectType
+          } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
+            var valuesToRemove = []
+            _.each(input.values, function (value, index) {
+              if (subjectTypesOfInputValue[ input.parentInput ][ index ] === domainType) {
+                valuesToRemove.push(index)
+              }
+            })
+            var promises = []
+            _.each(valuesToRemove.reverse(), function (index) {
+              promises.push(ractive.splice(`${input.keypath}.values`, index, 1))
+            })
+            Promise.all(promises).then(function () {
+              let values = ractive.get(`${input.keypath}.values`)
+              if (values.length === 0) {
+                ractive.set(`${input.keypath}.values`, emptyValues(input.type === 'select-predefined-value', input.searchable))
+                if (input.parentInput.subjectTypes.length === 1) {
+                  ractive.set(`${input.keypath}.values.0.subjectType`, input.parentInput.subjectTypes[ 0 ])
+                }
+              }
+            })
+          }
+        }
+      })
       updateBrowserLocationWithUri(domainType, undefined)
+      return ractive.set(`targetUri.${domainType}`, undefined).then(ractive.update())
     }
 
     var deleteResource = function (uri, deleteConfig, success) {
@@ -206,6 +223,7 @@
         ractive.update()
       }
       deleteConfig.dialogId = deleteConfig.dialogId || 'delete-resource-dialog'
+      ractive.set(`${deleteConfig.dialogKeypath}.uri`, uri)
       axios.get(proxyToServices(`${uri}/references`)).then(function (response) {
         var totalNumberOfReferences = 0
         _.each(_.values(response.data), function (referenceCountForType) {
@@ -271,6 +289,9 @@
           ],
           open: function () {
             $(`#${idPrefix}-ok-del`).hide()
+            if (totalNumberOfReferences > 0 && deleteConfig.preventDeleteIfReferred) {
+              $(`#${idPrefix}-do-del`).hide()
+            }
             $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
           }
         })
@@ -767,9 +788,9 @@
 
             _.each(names, function (nameParts) {
               var label = nameParts.join(' - ')
-              ractive.set('authorityLabels.' + uri.replace(/[:\/\.]/g, '_'), label)
+              ractive.set(`authorityLabels.${uri.replace(/[:\/\.]/g, '_')}`, label)
               input.values[ index ].current.displayName = label
-              $('#sel_' + input.values[ index ].uniqueId).trigger('change')
+              $(`#sel_${input.values[ index ].uniqueId}`).trigger('change')
             })
           }
 
@@ -852,7 +873,7 @@
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
         inputs.push(input)
         _.each([ 'Edit', 'CreateNew' ], function (action) {
-          var forms = (ractive.get('applicationData.maintenanceInputs.' + index + '.widgetOptions.enable' + action + 'Resource.forms'))
+          var forms = (ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enable${action}Resource.forms`))
           if (forms) {
             _.each(forms, function (form) {
               inputs = inputs.concat(form.inputs)
@@ -1238,7 +1259,7 @@
           if (!(options || {}).compareValues) {
             ractive.set(`targetUri.${type}`, resourceUri)
           }
-          updateBrowserLocationWithUri((options.compareValues ? 'compare_with_' : '') + type, resourceUri)
+          updateBrowserLocationWithUri(`${options.compareValues ? 'compare_with_' : ''}${type}`, resourceUri)
         }
       })
     }
@@ -1325,7 +1346,7 @@
       })
 
       saveInputs(inputsToSave, resourceType).then(function (resourceUri) {
-        ractive.set('targetUri.' + resourceType, resourceUri)
+        ractive.set(`targetUri.${resourceType}`, resourceUri)
         updateBrowserLocationWithUri(resourceType, resourceUri)
       })
     }
@@ -1502,7 +1523,7 @@
           inputType = 'input-string'
           break
         default:
-          throw new Error('Don\'t know which input-type to assign to range: ' + range)
+          throw new Error(`Don't know which input-type to assign to range: ${range}`)
       }
       return {
         inputType: inputType,
@@ -1567,7 +1588,7 @@
             domain: domain,
             allowAddNewButton: false,
             values: emptyValues(predefined),
-            dataAutomationId: unPrefix(domain) + '_' + predicate + '_0',
+            dataAutomationId: `${unPrefix(domain)}_${predicate}_0`,
             visible: true
           }
 
@@ -1578,7 +1599,7 @@
             assignInputTypeFromRange(input)
           }
           inputs.push(input)
-          inputMap[ unPrefix(domain) + '.' + input.predicate ] = input
+          inputMap[ `${unPrefix(domain)}.${input.predicate}` ] = input
           inputsForDomainType[ unPrefix(domain) ] = inputsForDomainType[ unPrefix(domain) ] || []
           inputsForDomainType[ unPrefix(domain) ].push(input)
         })
@@ -1676,7 +1697,7 @@
                 }))
                 _.each(resourceForm.inputs, function (formInput) {
                   var predicate = ontologyUri + formInput.rdfProperty
-                  var ontologyInput = inputMap[ resourceForm.rdfType + '.' + predicate ]
+                  var ontologyInput = inputMap[ `${resourceForm.rdfType}.${predicate}` ]
                   _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', formInput.label ? 'label' : ''))
                   formInput[ 'values' ] = emptyValues(false)
                   formInput[ 'rdfType' ] = resourceForm.rdfType
@@ -1749,7 +1770,7 @@
           } else {
             input.inputIndex = index
             if (input.rdfProperty) {
-              ontologyInput = inputMap[ inputGroup.rdfType + '.' + ontologyUri + input.rdfProperty ]
+              ontologyInput = inputMap[ `${inputGroup.rdfType}.${ontologyUri}${input.rdfProperty}` ]
               ontologyInput.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput.suggestedValuesForNewResource = []
 
@@ -1955,7 +1976,7 @@
     }
 
     function loadWorksAsSubject (target) {
-      axios.get(proxyToServices(target.uri + '/asSubjectOfWorks'), {
+      axios.get(proxyToServices(`${target.uri}/asSubjectOfWorks`), {
           headers: {
             Accept: 'application/ld+json'
           }
@@ -2025,7 +2046,7 @@
         var creatorAgent = author.agent
         contributionTarget.creator = creatorAgent.name
         if (creatorAgent.birthYear) {
-          contributionTarget.creator += ', ' + creatorAgent.birthYear + '–'
+          contributionTarget.creator += `, ${creatorAgent.birthYear}–`
           if (creatorAgent.deathYear) {
             contributionTarget.creator += creatorAgent.deathYear
           }
@@ -2051,8 +2072,8 @@
       searchString = stripHtml(searchString).trim()
 
       if (!searchString) {
-        if (ractive.get(event.keypath + '.searchResult.')) {
-          ractive.set(event.keypath + '.searchResult.', null)
+        if (ractive.get(`${event.keypath}.searchResult.`)) {
+          ractive.set(`${event.keypath}.searchResult.`, null)
         }
         return
       }
@@ -2084,7 +2105,7 @@
 
         // Determine if we are doing a mainEntry constrained search
         var inputkeyPath = grandParentOf(event.keypath)
-        var filterArgInputRef = ractive.get(inputkeyPath + '.widgetOptions.filter.inputRef')
+        var filterArgInputRef = ractive.get(`${inputkeyPath}.widgetOptions.filter.inputRef`)
         var mainEntry
         if (filterArgInputRef) {
           mainEntry = _.find(allInputs(), function (input) {
@@ -2133,7 +2154,7 @@
             items[ highestScoreIndex ].exactMatch = true
             exactMatchWasFound = true
           }
-          ractive.set(event.keypath + '.searchResult', {
+          ractive.set(`${event.keypath}.searchResult`, {
             items: items,
             origin: event.keypath,
             searchTerm: searchString,
@@ -2190,10 +2211,10 @@
 
           // keep the value in current.old - so we can do create delete triple patches later
           if (keypath) {
-            var cur = ractive.get(keypath + '.current')
+            var cur = ractive.get(`${keypath}.current`)
             if (cur) {
-              ractive.set(keypath + '.old.value', cur.value || '')
-              ractive.set(keypath + '.old.lang', cur.lang)
+              ractive.set(`${keypath}.old.value`, cur.value || '')
+              ractive.set(`${keypath}.old.lang`, cur.lang)
             }
           }
           ractive.set('save_status', 'alle endringer er lagret')
@@ -2271,17 +2292,15 @@
       ractive.set('duplicateSearchTerm', undefined)
       _.each(ractive.get(`applicationData.flattenedInputsForDomainType.${type}`), function (input) {
         delete input.compareValues
-        _.each(input.subInputs, function (subInput) {
+        _.chain(input.subInputs).compact().each(function (subInput) {
           delete subInput.input.compareValues
         })
       })
       ractive.update()
-      // ractive.set(`applicationData.inputsForDomainType.${type}.*.subInputs.*.input.compareValues`, [ { nonEditable: true } ])
-      // ractive.set(`applicationData.inputsForDomainType.${type}.*.compareValues`, [ { nonEditable: true } ])
       setTaskDescription(`edit${type}`)
       updateBrowserLocationWithQueryParameter(`compare_with_${type}`, undefined)
       // hack to make things not look uncool
-      $('.inner-content').addClass('dummy_' + _.uniqueId())
+      $('.inner-content').addClass(`dummy_${_.uniqueId()}`)
       positionSupportPanels()
     }
 
@@ -2306,7 +2325,7 @@
           personItem.subItemType = 'work'
           personItem.lifeSpan = ''
           if (personItem.birthYear) {
-            personItem.lifeSpan += '(' + personItem.birthYear + '–'
+            personItem.lifeSpan += `(${personItem.birthYear}–`
             if (personItem.deathYear) {
               personItem.lifeSpan += personItem.deathYear
             }
@@ -2335,7 +2354,7 @@
         }
       },
       predefinedLabelValue: function (type, uri) {
-        return i18nLabelValue(_.find(ractive.get('predefinedValues.' + type), function (predefinedValue) {
+        return i18nLabelValue(_.find(ractive.get(`predefinedValues.${type}`), function (predefinedValue) {
           return predefinedValue[ '@id' ] === uri
         })[ 'label' ])
       },
@@ -2423,7 +2442,7 @@
 
         var loadPartials = function (applicationData) {
           return Promise.all(_.map(partials, function (partial) {
-            return axios.get('/partials/' + partial + '.html').then(
+            return axios.get(`/partials/${partial}.html`).then(
               function (response) {
                 applicationData.partials = applicationData.partials || {}
                 applicationData.partials[ partial ] = response.data
@@ -2498,7 +2517,7 @@
               var subInputs = grandParentOf(event.keypath)
               _.each(event.context.subInputs, function (input, subInputIndex) {
                 if (_.contains([ 'select-authorized-value', 'entity', 'searchable-authority-dropdown' ], input.input.type)) {
-                  var valuesKeypath = subInputs + '.' + subInputIndex + '.input.values.' + index + '.current.value.0'
+                  var valuesKeypath = `${subInputs}.${subInputIndex}.input.values.${index}.current.value.0`
                   promises = promises.concat(loadLabelsForAuthorizedValues([ ractive.get(valuesKeypath) ], input.input, index))
                 }
               })
@@ -2536,8 +2555,8 @@
           var patch = []
           var actualSubjectType = _.first(input.subInputs).input.values[ index ].subjectType || input.subjectType || input.rdfType
           var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
-          var mainSubject = ractive.get('targetUri.' + actualSubjectType)
-          var deleteSubject = ractive.get('targetUri.' + deleteSubjectType)
+          var mainSubject = ractive.get(`targetUri.${actualSubjectType}`)
+          var deleteSubject = ractive.get(`targetUri.${deleteSubjectType}`)
           const opSpecs = options.bulkMultiply(opSpec[ op ])
           _.each(opSpecs, function (spec, opIndex) {
             patch.push({
@@ -2660,11 +2679,13 @@
         function tabIndexForNode (node) {
           let nodeInfo = Ractive.getNodeInfo(node)
           let tabSelectedKeypath = `inputGroups.${nodeInfo.index.groupIndex}.tabSelected`
-          ractive.observe(tabSelectedKeypath, function (newValue, oldvalue) {
-            if (!$(node).is('select.select2-hidden-accessible')) {
-              $(node).attr('tabindex', newValue ? '0' : '-1')
-            }
-            $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
+          ractive.observe(tabSelectedKeypath, function (newValue) {
+            setTimeout(function () {
+              if (!$(node).is('select.select2-hidden-accessible')) {
+                $(node).attr('tabindex', newValue ? '0' : '-1')
+              }
+              $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
+            })
           }, { init: true })
         }
 
@@ -2698,7 +2719,7 @@
                 maximumSelectionLength: 1,
                 minimumInputLength: 3,
                 ajax: {
-                  url: config.resourceApiUri + 'search/' + indexType + '/_search',
+                  url: `${config.resourceApiUri}search/${indexType}/_search`,
                   dataType: 'json',
                   delay: 250,
                   id: function (item) {
@@ -2706,7 +2727,7 @@
                   },
                   data: function (params) {
                     return {
-                      q: params.term + '*', // search term
+                      q: `${params.term}*`, // search term
                       page: params.page
                     }
                   },
@@ -2731,7 +2752,7 @@
                   cache: true
                 },
                 templateSelection: function (data) {
-                  return data.text === '' ? ractive.get('authorityLabels[' + data.id + ']') : data.text
+                  return data.text === '' ? ractive.get(`authorityLabels[${data.id}]`) : data.text
                 }
               })
             } else {
@@ -2749,9 +2770,9 @@
                 enableChange = false
                 var inputValue = Ractive.getNodeInfo(e.target)
                 var keypath = inputValue.keypath
-                ractive.set(keypath + '.current.value', $(e.target).val() || [])
+                ractive.set(`${keypath}.current.value`, $(e.target).val() || [])
                 var inputNode = ractive.get(grandParentOf(keypath))
-                let target = ractive.get('targetUri.' + unPrefix(inputNode.domain))
+                let target = ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
                 if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') !== -1)) {
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
@@ -2760,7 +2781,7 @@
               }
             })
 
-            let keypath = this.getNodeInfo(node).resolve() + '.current.value'
+            let keypath = `${this.getNodeInfo(node).resolve()}.current.value`
             var observer = ractive.observe(keypath, function (newvalue, oldValue) {
               if (!setting && (newvalue || [])[ 0 ] !== (oldValue || [])[ 0 ]) {
                 setting = true
@@ -2814,8 +2835,8 @@
 
           const handleAddNewBySelect2 = function (node) {
             const inputKeyPath = grandParentOf(Ractive.getNodeInfo(node).keypath)
-            ractive.set(inputKeyPath + '.allowAddNewButton', false)
-            ractive.set(inputKeyPath + '.addNewHandledBySelect2', true)
+            ractive.set(`${inputKeyPath}.allowAddNewButton`, false)
+            ractive.set(`${inputKeyPath}.addNewHandledBySelect2`, true)
             return {
               teardown: function () {}
             }
@@ -3163,7 +3184,7 @@
 
                 const handleInput = function (input, groupIndex, inputIndex, subInputIndex) {
                   result[ groupIndex ] = result[ groupIndex ] || { first: 100, last: 0 }
-                  let showIt = (input.visible && checkShouldInclude(input) && !(typeof ractive.get('targetUri.' + input.showOnlyWhenEmpty) !== 'undefined'))
+                  let showIt = (input.visible && checkShouldInclude(input) && !(typeof ractive.get(`targetUri.${input.showOnlyWhenEmpty}`) !== 'undefined'))
                   if (showIt && inputIndex < result[ groupIndex ].first) {
                     result[ groupIndex ].first = inputIndex
                   }
@@ -3205,7 +3226,7 @@
               checkDisabledNextStep (disabledUnlessSpec) {
                 var enabled = true
                 if (disabledUnlessSpec.presentTargetUri) {
-                  enabled &= typeof ractive.get('targetUri.' + disabledUnlessSpec.presentTargetUri) !== 'undefined'
+                  enabled &= typeof ractive.get(`targetUri.${disabledUnlessSpec.presentTargetUri}`) !== 'undefined'
                 }
                 if (disabledUnlessSpec.inputIsNonEditable) {
                   var keypath = ractive.get(`inputLinks.${disabledUnlessSpec.inputIsNonEditable}`)
@@ -3231,7 +3252,7 @@
                 return i18nLabelValue(label)
               },
               tabEnabled: function (tabSelected, domainType) {
-                return tabSelected === true || (typeof ractive.get('targetUri.' + domainType) === 'string')
+                return tabSelected === true || (typeof ractive.get(`targetUri.${domainType}`) === 'string')
               },
               spy: function (node, nmode2) {
                 console.dir(node)
@@ -3300,7 +3321,7 @@
                 }
               },
               resourceIsLoaded: function (type) {
-                return typeof ractive.get('targetUri.' + type) !== 'undefined'
+                return typeof ractive.get(`targetUri.${type}`) !== 'undefined'
               },
               getSearchResultItemLabel: function (item, itemLabelProperties) {
                 let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
@@ -3360,6 +3381,9 @@
               checkShouldInclude: checkShouldInclude,
               abbreviate: function (label) {
                 return applicationData.config.abbreviations[ label ] || label
+              },
+              invert: function (label) {
+                return applicationData.config.inverseLabels[ label ] || label
               },
               hasNextOrPrevRange: function (input) {
                 return _.some(input.subInputs, function (subInput) {
@@ -3457,7 +3481,7 @@
           ractive.on({
               toggle: function (event) {
                 if (eventShouldBeIgnored(event)) return
-                this.toggle(event.keypath + '.expanded')
+                this.toggle(`${event.keypath}.expanded`)
               },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)
@@ -3483,7 +3507,7 @@
                   }
                 })
                 sequentialPromiseResolver(promises)
-                ractive.set(event.keypath + '.allowAddNewButton', false)
+                ractive.set(`${event.keypath}.allowAddNewButton`, false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels()
                 copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
@@ -3497,7 +3521,7 @@
                 const inputValue = event.context
                 const input = event.input || ractive.get(grandParentOf(event.keypath))
                 const proceed = function () {
-                  const subject = ractive.get('targetUri.' + rdfType)
+                  const subject = ractive.get(`targetUri.${rdfType}`)
                   if (subject) {
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, input.datatypes[ 0 ], errors, event.keypath)
@@ -3568,10 +3592,10 @@
               },
               searchResourceFromSuggestion: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
                 if (eventShouldBeIgnored(event)) return
-                ractive.fire('searchResource', { keypath: grandParentOf(event.keypath) + '.values.0' }, searchString, indexType, loadWorksAsSubjectOfItem)
+                ractive.fire('searchResource', { keypath: `${grandParentOf(event.keypath)}.values.0` }, searchString, indexType, loadWorksAsSubjectOfItem)
               },
               toggleSubItem: function (event, findWorksAsSubjectOfType, origin) {
-                var keypath = event.keypath + '.toggleSubItem'
+                var keypath = `${event.keypath}.toggleSubItem`
                 ractive.get(keypath) !== true ? ractive.set(keypath, true) : ractive.set(keypath, false)
                 if (findWorksAsSubjectOfType && !origin.subItems) {
                   loadWorksAsSubject(origin)
@@ -3674,41 +3698,41 @@
                   ractive.set(grandParentOf(event.keypath), undefined)
                   return
                 }
-                ractive.set(origin + '.searchResult', null)
+                ractive.set(`${origin}.searchResult`, null)
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
                 var uri = context.uri
-                var editWithTemplateSpec = ractive.get(inputKeyPath + '.widgetOptions.editWithTemplate')
+                var editWithTemplateSpec = ractive.get(`${inputKeyPath}.widgetOptions.editWithTemplate`)
                 if (editWithTemplateSpec) {
                   ractive.fire('editResource', null, editWithTemplateSpec, uri)
-                } else if (ractive.get(inputKeyPath + '.widgetOptions.enableInPlaceEditing')) {
-                  var indexType = ractive.get(inputKeyPath + '.indexTypes.0')
-                  var rdfType = ractive.get(inputKeyPath + '.widgetOptions.enableEditResource.forms.' + indexType).rdfType
+                } else if (ractive.get(`${inputKeyPath}.widgetOptions.enableInPlaceEditing`)) {
+                  var indexType = ractive.get(`${inputKeyPath}.indexTypes.0`)
+                  var rdfType = ractive.get(`${inputKeyPath}.widgetOptions.enableEditResource.forms.${indexType}`).rdfType
                   unloadResourceForDomain(rdfType)
                   fetchExistingResource(uri)
-                  ractive.set(inputKeyPath + '.widgetOptions.enableEditResource.showInputs', Number.parseInt(_.last(origin.split('.'))))
+                  ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.showInputs`, Number.parseInt(_.last(origin.split('.'))))
                 } else if (input.isMainEntry || options.subItem) {
                   fetchExistingResource(uri)
                     .then(function () {
                       updateInputsForDependentResources(typeFromUri(uri), uri)
                     })
                 } else {
-                  ractive.set(origin + '.old.value', ractive.get(origin + '.current.value'))
-                  ractive.set(origin + '.current.value', uri)
-                  ractive.set(origin + '.current.displayValue', displayValue)
-                  ractive.set(origin + '.deletable', true)
-                  ractive.set(origin + '.searchable', false)
+                  ractive.set(`${origin}.old.value`, ractive.get(`${origin}.current.value`))
+                  ractive.set(`${origin}.current.value`, uri)
+                  ractive.set(`${origin}.current.displayValue`, displayValue)
+                  ractive.set(`${origin}.deletable`, true)
+                  ractive.set(`${origin}.searchable`, false)
                   _.each(input.dependentResourceTypes, function (resourceType) {
                     unloadResourceForDomain(resourceType)
                   })
-                  if (!input.isSubInput && ractive.get('targetUri.' + unPrefix(input.domain))) {
+                  if (!input.isSubInput && ractive.get(`targetUri.${unPrefix(input.domain)}`)) {
                     let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                     ractive.fire('patchResource',
                       { keypath: origin, context: ractive.get(origin), original: { target: originTarget } },
                       ractive.get(grandParentOf(origin)).predicate,
                       unPrefix(input.domain))
                   }
-                  ractive.set(origin + '.searchResult', null)
+                  ractive.set(`${origin}.searchResult`, null)
                 }
                 event.original.preventDefault()
               },
@@ -3717,11 +3741,11 @@
               },
               unselectEntity: function (event) {
                 const closest = $(event.node).closest('span[data-support-panel-base-id^=support_panel_base_]')
-                ractive.set(event.keypath + '.searchResult', null)
-                ractive.set(event.keypath + '.current.value', '')
-                ractive.set(event.keypath + '.current.displayValue', '')
-                ractive.set(event.keypath + '.deletable', false)
-                ractive.set(event.keypath + '.searchable', true)
+                ractive.set(`${event.keypath}.searchResult`, null)
+                ractive.set(`${event.keypath}.current.value`, '')
+                ractive.set(`${event.keypath}.current.displayValue`, '')
+                ractive.set(`${event.keypath}.deletable`, false)
+                ractive.set(`${event.keypath}.searchable`, true)
                 var input = ractive.get(grandParentOf(event.keypath))
                 if (!input.isSubInput) {
                   ractive.fire('patchResource', event, input.predicate, input.rdfType)
@@ -3738,8 +3762,8 @@
               },
               activateTab: function (event) {
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
-                  var keyPath = 'inputGroups.' + groupIndex
-                  ractive.set(keyPath + '.tabSelected', keyPath === event.keypath)
+                  var keyPath = `inputGroups.${groupIndex}`
+                  ractive.set(`${keyPath}.tabSelected`, keyPath === event.keypath)
                 })
                 positionSupportPanels()
               },
@@ -3750,7 +3774,7 @@
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 var newResourceType = event.context.createNewResource
-                if (newResourceType && (!ractive.get('targetUri.' + newResourceType.type))) {
+                if (newResourceType && (!ractive.get(`targetUri.${newResourceType.type}`))) {
                   var inputs = allInputs()
                   _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
                     _.each(newResourceType.prefillValuesFromResource[ copyFromType ], function (fragment) {
@@ -3790,22 +3814,22 @@
                 }
                 var foundSelectedTab = false
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
-                  var keyPath = 'inputGroups.' + groupIndex
+                  var keyPath = `inputGroups.${groupIndex}`
                   if (foundSelectedTab) {
-                    ractive.set(keyPath + '.tabSelected', true)
+                    ractive.set(`${keyPath}.tabSelected`, true)
                     foundSelectedTab = false
                   } else {
-                    if (ractive.get(keyPath + '.tabSelected')) {
+                    if (ractive.get(`${keyPath}.tabSelected`)) {
                       foundSelectedTab = true
                     }
-                    ractive.set(keyPath + '.tabSelected', false)
+                    ractive.set(`${keyPath}.tabSelected`, false)
                   }
                 })
               },
               deleteResource: function (event) {
                 var uriToDelete = ractive.get(`targetUri.${event.context.rdfType}`)
                 deleteResource(uriToDelete, event.context, function () {
-                  unloadResourceForDomain(event.context.resourceType)
+                  unloadResourceForDomain(event.context.rdfType)
                   if (event.context.afterSuccess) {
                     if (event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri) {
                       var targetUri = ractive.get(`targetUri.${event.context.afterSuccess.setResourceInDocumentUrlFromTargetUri}`)
@@ -3817,7 +3841,7 @@
                       Main.restart()
                     }
                     if (event.context.afterSuccess.gotoTab !== undefined) {
-                      ractive.fire('activateTab', { keypath: 'inputGroups.' + (event.context.afterSuccess.gotoTab) })
+                      ractive.fire('activateTab', { keypath: `inputGroups.${event.context.afterSuccess.gotoTab}` })
                     }
                   }
                 })
@@ -3827,7 +3851,7 @@
                 if (!event.context.prefillFromAcceptedSource) {
                   _.each(event.context.inputs, function (input, index) {
                     if (input.type !== 'hidden-url-query-value') {
-                      ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
+                      ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
                     }
                   })
                 }
@@ -3860,29 +3884,29 @@
                 })
                 let searchOriginInput = ractive.get(grandParentOf(event.keypath))
                 let useAfterCreation = searchOriginInput.useAfterCreation
+                let targetInput = ractive.get(grandParentOf(origin))
 
                 let setCreatedResourceUriInSearchInput = function (resourceUri) {
                   if (!maintenance) {
-                    ractive.set(origin + '.current.value', resourceUri)
+                    ractive.set(`${origin}.current.value`, resourceUri)
                     if (displayValueInput) {
-                      ractive.set(origin + '.current.displayValue', displayValueInput.values[ 0 ].current.value)
+                      ractive.set(`${origin}.current.displayValue`, displayValueInput.values[ 0 ].current.value)
                     }
-                    ractive.set(origin + '.deletable', true)
-                    ractive.set(origin + '.searchable', false)
-                    ractive.set(event.keypath + '.visible', null)
+                    ractive.set(`${origin}.deletable`, true)
+                    ractive.set(`${origin}.searchable`, false)
+                    ractive.set(`${event.keypath}.visible`, null)
                   } else {
-                    ractive.set(origin + '.current.value', null)
+                    ractive.set(`${origin}.current.value`, null)
                     if (displayValueInput) {
-                      ractive.set(origin + '.current.displayValue', null)
+                      ractive.set(`${origin}.current.displayValue`, null)
                     }
                   }
-                  ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
+                  ractive.set(`${grandParentOf(event.keypath)}.showInputs`, null)
                   return resourceUri
                 }
                 let patchMotherResource = function (resourceUri) {
-                  let targetInput = ractive.get(grandParentOf(origin))
-                  if (!useAfterCreation && !targetInput.isSubInput) {
-                    Main.patchResourceFromValue(ractive.get('targetUri.' + targetInput.rdfType), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
+                  if (useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
+                    Main.patchResourceFromValue(ractive.get(`targetUri.${targetInput.rdfType}`), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                   }
                   return resourceUri
                 }
@@ -3902,7 +3926,7 @@
 
                 let setTargetUri = function (resourceUri) {
                   if (useAfterCreation) {
-                    ractive.set('targetUri.' + event.context.rdfType, resourceUri)
+                    ractive.set(`targetUri.${event.context.rdfType}`, resourceUri)
                     updateInputsForDependentResources(event.context.rdfType, resourceUri)
                     ractive.update()
                     updateBrowserLocationWithUri(event.context.rdfType, resourceUri)
@@ -3910,14 +3934,14 @@
                   return resourceUri
                 }
                 let clearInputsAndSearchResult = function () {
-                  if (ractive.get(origin + '.searchResult')) {
-                    ractive.set(origin + '.searchResult', null)
+                  if (ractive.get(`${origin}.searchResult`)) {
+                    ractive.set(`${origin}.searchResult`, null)
                   }
                   _.each(event.context.inputs, function (input, index) {
-                    ractive.set(event.keypath + '.inputs.' + index + '.values', emptyValues(false, true))
+                    ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
                   })
-                  ractive.set(event.keypath + '.showInputs', false)
-                  ractive.set(grandParentOf(origin) + '.allowAddNewButton', true)
+                  ractive.set(`${event.keypath}.showInputs`, false)
+                  ractive.set(`${grandParentOf(origin)}.allowAddNewButton`, true)
                 }
                 let nop = function (uri) {
                   return uri
@@ -3925,9 +3949,12 @@
                 let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                 let wait = ractive.get('waitHandler').newWaitable(originTarget)
                 if (useAfterCreation) {
+                  if (!targetInput.searchMainResource) {
+                    unloadResourceForDomain(event.context.rdfType, useAfterCreation.excludeInputRefs)
+                  }
                   setCreatedResourceValuesInMainInputs()
                 }
-                saveInputs((!maintenance && ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`)) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
+                saveInputs((!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
                   .then(setCreatedResourceUriInSearchInput)
                   .then(!maintenance ? patchMotherResource : nop)
                   .then(!maintenance ? setTargetUri : nop)
@@ -3937,7 +3964,7 @@
               cancelEdit: function (event) {
                 $(event.node).closest('.panel-part').find('span[contenteditable=true]').focus()
                 clearSupportPanels()
-                ractive.set(grandParentOf(event.keypath) + '.showInputs', null)
+                ractive.set(`${grandParentOf(event.keypath)}.showInputs`, null)
               },
               fetchValueSuggestions: function (event) {
                 ractive.get('waitHandler').newWaitable(event.original.target)
@@ -4071,7 +4098,7 @@
                 }
                 ractive.update()
                 ractive.fire('patchResource',
-                  { keypath: grandParentOf(event.keypath) + '.values.0', context: input.values[ 0 ] },
+                  { keypath: `${grandParentOf(event.keypath)}.values.0`, context: input.values[ 0 ] },
                   input.predicate,
                   unPrefix(input.domain))
               },
@@ -4087,7 +4114,7 @@
                 var valueIndex = oldValues ? oldValues.length - 1 : 0
                 ractive.fire('patchResource',
                   {
-                    keypath: grandParentOf(event.keypath) + '.values.' + (valueIndex),
+                    keypath: `${grandParentOf(event.keypath)}.values.${valueIndex}`,
                     context: input.values[ valueIndex ]
                   },
                   input.predicate,
@@ -4225,7 +4252,7 @@
                 enableSpecialInput(event.context)
               },
               showRdf: function (event, resourceUri) {
-                showTurtle(proxyToServices(resourceUri) + '?format=TURTLE')
+                showTurtle(`${proxyToServices(resourceUri)}?format=TURTLE`)
               },
               showReport: function (event, resourceUri) {
                 let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`
@@ -4374,7 +4401,7 @@
           let inputsKeypath = altInputsKeypath || options.inputsKeypath || 'inputGroups.*.inputs'
 
           function castVetoForRequiredSubInput (inputGroupKeypath, valueIndex, voter, veto) {
-            var vetoesKeyPath = inputGroupKeypath + '.inputGroupRequiredVetoes.' + valueIndex
+            var vetoesKeyPath = `${inputGroupKeypath}.inputGroupRequiredVetoes.${valueIndex}`
             var inputGroupRequiredVetoes = (ractive.get(vetoesKeyPath) || '').split('')
             if (veto) {
               inputGroupRequiredVetoes = _.union(inputGroupRequiredVetoes, [ voter ])
@@ -4443,7 +4470,7 @@
             ractive.observe(`${inputsKeypath}.*.values.*`, function (newValue, oldValue, keypath) {
               if (newValue && newValue.current) {
                 if (!newValue.current.value) {
-                  ractive.set(keypath + '.error', false)
+                  ractive.set(`${keypath}.error`, false)
                   return
                 }
                 var parent = grandParentOf(keypath)
@@ -4455,9 +4482,9 @@
                   return
                 }
                 if (valid) {
-                  ractive.set(keypath + '.error', false)
+                  ractive.set(`${keypath}.error`, false)
                 } else {
-                  ractive.set(keypath + '.error', 'ugyldig input')
+                  ractive.set(`${keypath}.error`, 'ugyldig input')
                 }
               }
             }, { init: false }),
@@ -4535,7 +4562,7 @@
             inputTooLong: function (args) {
               var overChars = args.input.length - args.maximum
 
-              return 'Vennligst fjern ' + overChars + ' tegn'
+              return `Vennligst fjern ${overChars} tegn`
             },
             inputTooShort: function (args) {
               var remainingChars = args.minimum - args.input.length
@@ -4554,7 +4581,7 @@
               if (args.maximum === 1) {
                 return 'Du kan bare velge én verdi her'
               } else {
-                return 'Du kan velge maks ' + args.maximum + ' verdier her'
+                return `Du kan velge maks ${args.maximum} verdier her`
               }
             },
             noResults: function () {
@@ -4803,21 +4830,23 @@
               .then(positionSupportPanels)
               .then(Main.repositionSupportPanelsHorizontally)
           }
-          forAllGroupInputs(function (input) {
+          const alternativeKeypathMap = {}
+          const handleVisibility = function (input, groupIndex, inputIndex, subInputIndex, alternativeKeypath) {
             if (input.showOnlyWhen) {
               if (!input.id) {
                 throw new Error(`Input "${input.label}" should have its own id attribute in order to handle dependency of input with id "${input.showOnlyWhen.inputId}"`)
               }
-              let inputKeypath = applicationData.inputLinks[ input.showOnlyWhen.inputId ]
+              let inputKeypath = alternativeKeypathMap[ applicationData.inputLinks[ input.showOnlyWhen.inputId ] ] || applicationData.inputLinks[ input.showOnlyWhen.inputId ]
+              const inputLink = alternativeKeypath || applicationData.inputLinks[ input.id ]
               if (input.showOnlyWhen.valueAsStringMatches) {
-                ractive.observe(`${inputKeypath}.values.*.current.value`, function (newValue, oldValue, keypath) {
+                ractive.observe(`${inputKeypath}.values.*.current.value`, function (newValue, oldValue) {
                   if (newValue !== oldValue) {
-                    setInputVisibility(applicationData.inputLinks[ input.id ], `${_.isArray(newValue) ? newValue[ 0 ] : newValue}`.match(input.showOnlyWhen.valueAsStringMatches) !== null)
+                    setInputVisibility(inputLink, `${_.isArray(newValue) ? newValue[ 0 ] : newValue}`.match(input.showOnlyWhen.valueAsStringMatches) !== null)
                   }
                 }, { init: false })
               }
               if (input.showOnlyWhen.initial && input.showOnlyWhen.initial === 'hide') {
-                setInputVisibility(applicationData.inputLinks[ input.id ], false)
+                setInputVisibility(inputLink, false)
               }
             }
             _.each(input.dependentResourceTypes, function (type) {
@@ -4834,7 +4863,29 @@
                 }
               }, { init: false })
             })
-          }, { handleInputGroups: true })
+          }
+          forAllGroupInputs(handleVisibility, { handleInputGroups: true })
+          _.chain(ractive.get('applicationData.inputsForDomainType')).pairs().each(function (pair) {
+            let type = pair[ 0 ]
+            let inputs = pair[ 1 ]
+            _.each(inputs, function (input, inputIndex) {
+              if (input.keypath || input.subInputs) {
+                if (input.subInputs) {
+                  _.each(input.subInputs, function (subInput, subInputIndex) {
+                    const inputKeypath = subInput.input.keypath.replace(
+                      /^inputGroups\.[0-9]+\.inputs\.[0-9]+\.subInputs\.[0-9]+\.input/,
+                      `applicationData.inputsForDomainType.${input.rdfType}.${inputIndex}.subInputs.${subInputIndex}.input`)
+                    alternativeKeypathMap[ subInput.input.keypath ] = inputKeypath
+                    handleVisibility(subInput.input, undefined, undefined, undefined, inputKeypath)
+                  })
+                } else {
+                  const inputKeypath = input.keypath.replace(/^inputGroups\.[0-9]+\.inputs\.[0-9]+/, `applicationData.inputsForDomainType.${type}.${inputIndex}`)
+                  alternativeKeypathMap[ input.keypath ] = inputKeypath
+                  handleVisibility(input, undefined, undefined, undefined, inputKeypath)
+                }
+              }
+            })
+          })
           return applicationData
         }
 

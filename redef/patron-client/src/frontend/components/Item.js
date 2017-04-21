@@ -7,7 +7,12 @@ const Item = ({ item, intl }) => {
     <div role="row" className="flex-wrapper sub-wrapper">
       <div data-automation-id="item_languages" className="flex-item sub-row">{languages.join(', ')}</div>
       <div data-automation-id="item_shelfmark" className="flex-item sub-row">{item.shelfmark}</div>
-      <div data-automation-id="item_status" className="flex-item sub-row">{item.available} ledige av {item.total}</div>
+      {window.innerWidth < 668
+        ? <div data-automation-id="item_status" className="flex-item sub-row">{item.available} / {item.total}</div>
+        : <div data-automation-id="item_status" className="flex-item sub-row">{item.available} ledige
+          av {item.total}</div>
+      }
+
     </div>
   )
 }

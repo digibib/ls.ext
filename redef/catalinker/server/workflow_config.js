@@ -656,7 +656,9 @@ module.exports = (app) => {
                       formId: 'create-main-work-form',
                       targetType: 'work'
                     } ],
-                    useAfterCreation: true
+                    useAfterCreation: {
+                      excludeInputRefs: [ 'mainEntryPersonInput', 'mainEntryRoleInput' ]
+                    }
                   },
                   filter: {
                     inputRef: 'mainEntryPersonInput',
@@ -928,7 +930,8 @@ module.exports = (app) => {
                     formRefs: [ {
                       formId: 'create-work-form',
                       targetType: 'work'
-                    } ]
+                    } ],
+                    useAfterCreation: true
                   }
                 }
               },
@@ -998,6 +1001,7 @@ module.exports = (app) => {
               { rdfProperty: 'language', multiple: true },
               {
                 rdfProperty: 'hasWorkType',
+                type: 'hidden-url-query-value',
                 id: 'workTypeInput',
                 widgetOptions: {
                   queryParameter: 'hasWorkType',
@@ -1152,6 +1156,7 @@ module.exports = (app) => {
             },
             deleteResource: {
               buttonLabel: 'Slett verket',
+              preventDeleteIfReferred: true,
               rdfType: 'Work',
               dialogKeypath: 'deleteWorkDialog',
               dialogId: 'delete-work-dialog',
@@ -1890,6 +1895,10 @@ module.exports = (app) => {
         abbreviations: {
           'Del nummer': 'Delnr.',
           'Utgivelsesår': 'Utg.år'
+        },
+        inverseLabels: {
+          'Emne': 'Som emne',
+          'Utgivelse av': 'Har utgivelse'
         }
       }
     response.json(config)

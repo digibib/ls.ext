@@ -13,6 +13,7 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -43,8 +44,10 @@ import static no.deichman.services.entity.EntityType.SUBJECT;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFromString;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
+import static org.apache.jena.query.QueryExecutionFactory.create;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -512,7 +515,7 @@ public class EntityResourceTest {
         String person2 = new ResourceReader().readFile("merging_persons_replacement_person.ttl");
         Model testData = RDFModelUtil.modelFrom(
                 work1.replace("__REPLACE__", replacee), Lang.TURTLE).add(
-                        RDFModelUtil.modelFrom(work2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
+                RDFModelUtil.modelFrom(work2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
         ).add(
                 RDFModelUtil.modelFrom(work3.replace("__REPLACE__", replacee), Lang.TURTLE)
         ).add(
@@ -520,7 +523,6 @@ public class EntityResourceTest {
         ).add(
                 RDFModelUtil.modelFrom(person2.replace("__REPLACE__", replacement.getUri()), Lang.TURTLE)
         );
-
 
 
         final InMemoryRepository repo = new InMemoryRepository();
@@ -544,6 +546,63 @@ public class EntityResourceTest {
         Mockito.verify(mockSearchService).delete(new XURI(replacee));
         Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w1"));
         Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w3"));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void should_delete_incoming_direct_references() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("person_with_relations.ttl"), null), mockSearchService, mockKohaAdapter);
+        final Response workWithPersonAsSubject = entityResource.get(EntityType.WORK.getPath(), "w3");
+        final Model workWithPersonAsSubjectModel = RDFModelUtil.modelFrom(workWithPersonAsSubject.getEntity().toString(), Lang.JSONLD);
+        final Model query = workWithPersonAsSubjectModel.query(new SimpleSelector(ResourceFactory.createResource("http://data.deichman.no/work/w3"), ResourceFactory.createProperty("http://data.deichman.no/ontology#subject"), (String) null));
+
+        assertTrue(query.isIsomorphicWith(RDFModelUtil.modelFrom(
+                "<http://data.deichman.no/work/w3> <http://data.deichman.no/ontology#subject> <http://data.deichman.no/person/p3>, <http://data.deichman.no/person/p2> .\n", Lang.TURTLE)));
+
+        entityResource.delete(EntityType.PERSON.getPath(), "p2");
+
+        final Response workWithPersonAsSubjectAfterDeletedP2 = entityResource.get(EntityType.WORK.getPath(), "w3");
+        final Model workWithPersonAsSubjecModelAfterDeleteP2 = RDFModelUtil.modelFrom(workWithPersonAsSubjectAfterDeletedP2.getEntity().toString(), Lang.JSONLD);
+
+        final Model queryAfterRemoveReferences = workWithPersonAsSubjecModelAfterDeleteP2.query(new SimpleSelector(ResourceFactory.createResource("http://data.deichman.no/work/w3"), ResourceFactory.createProperty("http://data.deichman.no/ontology#subject"), (String) null));
+        assertTrue(queryAfterRemoveReferences.isIsomorphicWith(RDFModelUtil.modelFrom(
+                "<http://data.deichman.no/work/w3> <http://data.deichman.no/ontology#subject> <http://data.deichman.no/person/p3> .\n", Lang.TURTLE)));
+        entityResource.get("person", "p2");
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void should_delete_incoming_references_via_blank_nodes() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("person_with_relations.ttl"), null), mockSearchService, mockKohaAdapter);
+        assertFalse(RDFModelUtil.modelFrom(entityResource.get("person", "p4").getEntity().toString(), Lang.JSONLD).isEmpty());
+        final Response workWithPersonAsAuthor = entityResource.get(EntityType.WORK.getPath(), "w4");
+        final Model workWithPersonAsAuthorModel = RDFModelUtil.modelFrom(workWithPersonAsAuthor.getEntity().toString(), Lang.JSONLD);
+        Model query = create("describe <http://data.deichman.no/work/w4>", workWithPersonAsAuthorModel).execDescribe();
+
+        assertTrue(query.isIsomorphicWith(RDFModelUtil.modelFrom(
+                "@prefix deichman: <http://data.deichman.no/ontology#> .\n"
+                        + "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n"
+                        + "\n"
+                        + "<http://data.deichman.no/work/w4>\n"
+                        + "        a                     deichman:Work ;\n"
+                        + "        deichman:contributor  [ a               deichman:Contribution , deichman:MainEntry ;\n"
+                        + "                                deichman:agent  <http://data.deichman.no/person/p4> ;\n"
+                        + "                                deichman:role   <http://data.deichman.no/role#author>\n"
+                        + "                              ] ;\n"
+                        + "        deichman:mainTitle    \"De kaller meg Benny Bankboks\" .", Lang.TURTLE)));
+
+        entityResource.delete(EntityType.PERSON.getPath(), "p4");
+
+        final Response workWithPersonAsAuthorAfterDeletedP4 = entityResource.get(EntityType.WORK.getPath(), "w4");
+        final Model workWithPersonAsAuthorModelAfterDeleteP4 = RDFModelUtil.modelFrom(workWithPersonAsAuthorAfterDeletedP4.getEntity().toString(), Lang.JSONLD);
+
+        final Model queryAfterRemoveReferences = create("describe <http://data.deichman.no/work/w4>", workWithPersonAsAuthorModelAfterDeleteP4).execDescribe();
+        assertTrue(queryAfterRemoveReferences.isIsomorphicWith(RDFModelUtil.modelFrom(
+                "@prefix deichman: <http://data.deichman.no/ontology#> .\n"
+                        + "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n"
+                        + "\n"
+                        + "<http://data.deichman.no/work/w4>\n"
+                        + "        a                   deichman:Work ;\n"
+                        + "        deichman:mainTitle  \"De kaller meg Benny Bankboks\" .\n", Lang.TURTLE)));
+        entityResource.get("person", "p4");
     }
 
     @Test(expected = NotFoundException.class)
@@ -614,6 +673,48 @@ public class EntityResourceTest {
                 + "        \"mainTitle\": \"Much ado about nothing\",\n"
                 + "        \"targetType\": \"Work\",\n"
                 + "        \"targetUri\": \"http://data.deichman.no/work/w1\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  }\n"
+                + "]", result.getEntity());
+    }
+
+    @Test
+    public void should_return_related_to_work() throws Exception {
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_with_incoming_relations.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI xuri = new XURI("http://data.deichman.no/work/w245846040007");
+        Response result = entityResource.retriveResourceParticipations(xuri.getType(), xuri.getId());
+        assertEquals("[\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/ontology#subject\",\n"
+                + "        \"mainTitle\": \"Oomph\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w328159667858\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/ontology#publicationOf\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/ontology#publicationOf\",\n"
+                + "        \"mainTitle\": \"Slümp\",\n"
+                + "        \"targetType\": \"Publication\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/publication/p869363145190\"\n"
+                + "      }\n"
+                + "    ]\n"
+                + "  },\n"
+                + "  {\n"
+                + "    \"relationshipType\": \"http://data.deichman.no/relationType#continuedIn\",\n"
+                + "    \"relationships\": [\n"
+                + "      {\n"
+                + "        \"relationshipType\": \"http://data.deichman.no/relationType#continuedIn\",\n"
+                + "        \"mainTitle\": \"Oomph\",\n"
+                + "        \"targetType\": \"Work\",\n"
+                + "        \"targetUri\": \"http://data.deichman.no/work/w328159667858\"\n"
                 + "      }\n"
                 + "    ]\n"
                 + "  }\n"

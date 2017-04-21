@@ -663,6 +663,20 @@ public final class SPARQLQueryBuilder {
                 + "select distinct ?relation ?targetUri ?mainTitle ?subtitle ?partTitle ?partNumber ?publicationYear ?type "
                 + "where {\n"
                 + "  {\n"
+                + "    ?publication     deich:publicationOf       <%3$s> ;\n"
+                + "                     deich:mainTitle          ?mainTitle ;\n"
+                + "                     a                        ?type .                      \n"
+                + "    optional {    ?publication deich:subtitle           ?subtitle . \n"
+                + "    } \n"
+                + "    optional {    ?publication deich:partTitle          ?partTitle . \n"
+                + "    } \n"
+                + "    optional {    ?publication deich:partNumber         ?partNumber . \n"
+                + "    } \n"
+                + "    optional {    ?publication deich:publicationYear    ?publicationYear . \n"
+                + "    } \n"
+                + "    \t\t\t\tbind(iri(deich:publicationOf) as ?relation) .\n"
+                + "                     bind(?publication as ?targetUri) . \n"
+                + "  } union {\n"
                 + "    ?contribution    deich:agent              <%3$s> ;\n"
                 + "                     deich:role               ?relation .\n"
                 + "    ?withContributor deich:contributor        ?contribution ;\n"
@@ -681,6 +695,25 @@ public final class SPARQLQueryBuilder {
                 + "    ?withContributor deich:publicationYear    ?publicationYear . \n"
                 + "    } \n"
                 + "                     bind(?withContributor as ?targetUri) . \n"
+                + "  } union {\n"
+                + "    ?workRelation    deich:work               <%3$s> ;\n"
+                + "                     deich:hasRelationType    ?relation .\n"
+                + "    ?withRelation    deich:isRelatedTo        ?workRelation ;\n"
+                + "                     a                        ?type ;\n"
+                + "                     deich:mainTitle          ?mainTitle .\n"
+                + "    optional {"
+                + "    ?withRelation    deich:subtitle           ?subtitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?withRelation    deich:partTitle          ?partTitle . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?withRelation    deich:partNumber         ?partNumber . \n"
+                + "    } \n"
+                + "    optional {"
+                + "    ?withRelation    deich:publicationYear    ?publicationYear . \n"
+                + "    } \n"
+                + "                     bind(?withRelation as ?targetUri) . \n"
                 + "  } union {\n"
                 + "    ?pubPart         deich:agent              <%3$s> ;\n"
                 + "                     deich:role               ?relation .\n"
@@ -740,6 +773,27 @@ public final class SPARQLQueryBuilder {
                 + "    ?c ?d <%1$s> .\n"
                 + "}\n"
                 + "\n", replaceeURI, xuri.getUri());
+        return queryString;
+    }
+
+    public String deleteIncomingRelations(XURI xuri) {
+        String queryString = format(""
+                + "DELETE {\n"
+                + "    ?a ?b <%1$s> .\n" // direct relations e.g. from work to subject
+                + "    ?bn ?c <%1$s> .\n" // triple in blank node pointing to related resource
+                + "    ?bn ?d ?e .\n" // blank node's other triples
+                + "    ?f ?g ?bn .\n" //
+                + "} WHERE {\n"
+                + "  {\n"
+                + "    ?a ?b <%1$s> .\n"
+                + "  } UNION { \n"
+                + "    ?bn ?c <%1$s> .\n"
+                + "    ?bn ?d ?e .\n"
+                + "    ?f ?g ?bn .\n"
+                + "    filter(isBlank(?bn)) .\n"
+                + "  }\n"
+                + "}\n"
+                + "\n", xuri.getUri());
         return queryString;
     }
 

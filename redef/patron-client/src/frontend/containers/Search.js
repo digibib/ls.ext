@@ -11,6 +11,7 @@ import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
 import * as ResourceActions from '../actions/ResourceActions'
+import * as RegistrationActions from '../actions/RegistrationActions'
 import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
@@ -25,6 +26,12 @@ class Search extends React.Component {
 
   componentWillMount () {
     this.props.searchActions.search()
+  }
+
+  componentDidMount () {
+    if (this.props.location.pathname === '/register') {
+      this.props.registrationActions.startRegistration()
+    }
   }
 
   componentDidUpdate (prevProps) {
@@ -160,6 +167,7 @@ class Search extends React.Component {
 }
 
 Search.propTypes = {
+  registrationActions: PropTypes.object,
   searchActions: PropTypes.object.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
   searchResults: PropTypes.array.isRequired,
@@ -204,6 +212,7 @@ function mapDispatchToProps (dispatch) {
     searchActions: bindActionCreators(SearchActions, dispatch),
     searchFilterActions: bindActionCreators(SearchFilterActions, dispatch),
     resourceActions: bindActionCreators(ResourceActions, dispatch),
+    registrationActions: bindActionCreators(RegistrationActions, dispatch),
     dispatch: dispatch
   }
 }

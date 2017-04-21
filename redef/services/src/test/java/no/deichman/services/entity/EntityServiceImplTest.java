@@ -738,6 +738,7 @@ public class EntityServiceImplTest {
                 + "    ns2:hasImage \"http://static.deichman.no/626460/kr/1_thumb.jpg\" ;\n"
                 + "    ns2:hasHoldingBranch \"hutl\", \"fgry\" ;"
                 + "    ns2:subtitle \"roman\" ;\n"
+                + "    ns2:partNumber \"3\" ;\n"
                 + "    ns2:ageLimit \"75\" ;\n"
                 + "    ns2:hasSummary \"abc\";\n"
                 + "    ns2:hasPlaceOfPublication <http://deichman.no/place/p1> ;"
@@ -805,9 +806,7 @@ public class EntityServiceImplTest {
         want.addMarcField(field);
         // Tittelopplysninger:
         field = MarcRecord.newDataField("245");
-        field.addSubfield('a', "Berlinerpoplene");
-        field.addSubfield('b', "roman");
-        field.addSubfield('p', "deltittel");
+        field.addSubfield('a', "Berlinerpoplene : roman. 3. deltittel");
         want.addMarcField(field);
         // ISBN:
         field = MarcRecord.newDataField("020");
@@ -957,16 +956,18 @@ public class EntityServiceImplTest {
             marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, name);
         }
         MarcField field = MarcRecord.newDataField(MarcConstants.FIELD_245);
+        String title = "";
         if (mainTitle != null) {
-            field.addSubfield(MarcConstants.SUBFIELD_A, mainTitle);
-        }
-        if (partTitle != null) {
-            field.addSubfield(MarcConstants.SUBFIELD_P, partTitle);
+            title = mainTitle;
         }
         if (partNumber != null) {
-            field.addSubfield(MarcConstants.SUBFIELD_N, partNumber);
+            title += ". " + partNumber;
         }
-        if (field.size() > 0) {
+        if (partTitle != null) {
+            title += ". " + partTitle;
+        }
+        if (title != "") {
+            field.addSubfield(MarcConstants.SUBFIELD_A, title);
             marcRecord.addMarcField(field);
         }
         if (isbn != null) {

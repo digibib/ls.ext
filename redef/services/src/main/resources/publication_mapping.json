@@ -177,7 +177,8 @@
       },
       "language": {
         "type": "text",
-        "analyzer": "language_analyzer"
+        "analyzer": "language_analyzer",
+        "fielddata": true
       },
       "languages": {
         "type": "keyword"

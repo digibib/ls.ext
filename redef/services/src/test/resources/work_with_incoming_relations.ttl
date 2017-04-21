@@ -1,0 +1,55 @@
+@prefix :      <http://data.deichman.no/ontology#> .
+@prefix relationType: <http://data.deichman.no/relationType#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix workType: <http://data.deichman.no/workType#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix mediaType: <http://data.deichman.no/mediaType#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix duo:   <http://data.deichman.no/utility#> .
+
+<http://data.deichman.no/work/w328159667858>
+        a                  :Work ;
+        :created           "2017-04-03T10:33:01.852Z"^^xsd:dateTime ;
+        :hasPublication    <http://data.deichman.no/publication/p869363145190> ;
+        :hasWorkType       workType:Literature ;
+        :isRelatedTo       [ a                 :WorkRelation ;
+                             :hasRelationType  relationType:continuedIn ;
+                             :work             <http://data.deichman.no/work/w245846040007>
+                           ] ;
+        :mainTitle         "Oomph" ;
+        :missingMainEntry  true ;
+        :modified          "2017-04-03T12:56:18.457Z"^^xsd:dateTime ;
+        :subject           <http://data.deichman.no/work/w245846040007> .
+
+mediaType:Book  a   duo:MediaType ;
+        rdfs:label  "Bok"@no , "Book"@en .
+
+<http://data.deichman.no/publication/p869363145190>
+        a               :Publication ;
+        :created        "2017-04-03T12:56:47.592Z"^^xsd:dateTime ;
+        :hasMediaType   mediaType:Book ;
+        :mainTitle      "Slümp" ;
+        :modified       "2017-04-03T12:56:57.007Z"^^xsd:dateTime ;
+        :publicationOf  <http://data.deichman.no/work/w245846040007> ;
+        :recordId       "7663" .
+
+
+<http://data.deichman.no/publication/p869363145112>
+        a               :Publication ;
+        :created        "2017-04-03T12:56:47.592Z"^^xsd:dateTime ;
+        :hasMediaType   mediaType:Book ;
+        :mainTitle      "Slümp" ;
+        :modified       "2017-04-03T12:56:57.007Z"^^xsd:dateTime ;
+        :publicationOf  <http://data.deichman.no/work/w328159667858> ;
+        :recordId       "7663" .
+
+workType:Literature  a  duo:WorkType ;
+        rdfs:label  "Litteratur"@no , "Literature"@en .
+
+<http://data.deichman.no/work/w245846040007>
+        a                  :Work ;
+        :created           "2017-04-03T08:48:15.765Z"^^xsd:dateTime ;
+        :hasWorkType       workType:Literature ;
+        :mainTitle         "Slump" ;
+        :missingMainEntry  true ;
+        :modified          "2017-04-03T08:48:23.588Z"^^xsd:dateTime .
