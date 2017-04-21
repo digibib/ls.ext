@@ -3,7 +3,9 @@ const jsonParser = bodyParser.json()
 const userSettingsMapper = require('../utils/userSettingsMapper')
 const bcrypt = require('bcrypt-nodejs')
 const userInfoForm = require('../../common/forms/userInfoForm')
-const extendedValidator = require('../utils/extendedValidator')(userInfoForm)
+const contactDetailsForm = require('../../common/forms/contactDetailsForm')
+const extendedValidatorUserInfo = require('../utils/extendedValidator')(userInfoForm)
+const extendedValidatorContactDetails = require('../utils/extendedValidator')(contactDetailsForm)
 
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
@@ -24,7 +26,7 @@ module.exports = (app) => {
   })
 
   app.post('/api/v1/profile/info', jsonParser, (request, response) => {
-    const errors = extendedValidator(request.body)
+    const errors = extendedValidatorUserInfo(request.body)
     if (Object.keys(errors).length > 0) {
       response.status(400).send({ errors: errors })
       return
@@ -56,6 +58,34 @@ module.exports = (app) => {
       })
   })
 
+  app.post('/api/v1/profile/contactdetails', jsonParser, (request, response) => {
+    const errors = extendedValidatorContactDetails(request.body)
+    if (Object.keys(errors).length > 0) {
+      response.status(400).send({ errors: errors })
+      return
+    }
+
+    const contactDetails = {
+      smsalertnumber: request.body.mobile,
+      email: request.body.email
+    }
+
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+      method: 'PUT',
+      body: JSON.stringify(contactDetails)
+    }).then(res => {
+      if (res.status === 200 || res.status === 204) {
+        res.json().then(json => response.status(res.status).send(parsePatron(json)))
+      } else {
+        response.status(res.status).send(res.body)
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
+
   /* app.get('/api/v1/profile/loans', (request, response) => {
     Promise.all([ fetchAllCheckouts(request), fetchAllHoldsAndPickups(request) ])
       .then(([checkouts, holdsAndPickups]) => {
@@ -80,6 +110,10 @@ module.exports = (app) => {
         }
       }).then(json => {
         response.send(json)
+      })
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
       })
   })
 
@@ -312,7 +346,6 @@ module.exports = (app) => {
         },
         body: JSON.stringify({ password: request.body.newPassword })
       }).then(res => {
-        console.log(res.status)
         if (res.status === 200) {
           request.session.passwordHash = bcrypt.hashSync(request.body.newPassword)
           response.sendStatus(200)

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
+import constants from '../constants/Constants'
 import ItemsMedia from './ItemsMedia'
 
 class Items extends React.Component {
@@ -9,6 +10,41 @@ class Items extends React.Component {
     return <p><span data-automation-id="no_items"><FormattedMessage {...messages.noItems} /></span></p>
   }
   renderItems () {
+    /* Sort languages alphabetically */
+    const itemsMediaLanSorted = this.props.mediaItems.map(item => {
+      item.items.sort((a, b) => {
+        if (a.languages[0] < b.languages[0]) return -1
+        if (a.languages[0] > b.languages[0]) return 1
+        return 0
+      })
+
+      const itemToSort = item
+
+      /* Place the preferred languages defined in Constants on top */
+      if (item.items.length > 1) {
+        item.items.forEach((a, i) => {
+          constants.preferredLanguages.reverse().forEach((l) => {
+            if (a.languages[ 0 ].includes(l.substr(l.lastIndexOf('/') + 1))) {
+              const priLan = itemToSort.items.splice(i, 1)
+              itemToSort.items.unshift(priLan[0])
+            }
+          })
+        })
+      }
+      return itemToSort
+    })
+
+    const itemsMedia = itemsMediaLanSorted.map((item, i) => {
+      return (
+        <ItemsMedia key={i}
+                    itemsByMedia={item}
+                    branchCode={this.props.branchCode}
+                    showBranchStatusMedia={this.props.showBranchStatusMedia}
+                    locationQuery={this.props.locationQuery}
+        />
+      )
+    })
+
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -18,16 +54,7 @@ class Items extends React.Component {
         transitionLeaveTimeout={500}
         component="div"
         className="items-container">
-          {this.props.mediaItems.map((items, i) => {
-            return <ItemsMedia key={i}
-                               itemsByMedia={items}
-                               branchCode={this.props.branchCode}
-                               showBranchStatusMedia={this.props.showBranchStatusMedia}
-                               locationQuery={this.props.locationQuery}
-                               itemLocation={i}
-            />
-          })
-          }
+        {itemsMedia}
       </NonIETransitionGroup>
     )
   }

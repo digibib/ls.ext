@@ -14,9 +14,7 @@ class ItemsMedia extends React.Component {
     const mediaType = this.props.itemsByMedia.mediaTypeURI
     const branchCode = this.props.branchCode
 
-    if (this.props.itemLocation === 0) {
-      this.handleBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
-    }
+    this.handleBranchStatusMediaInit(`${branchCode}_${this.splitMediaType(mediaType)}`)
   }
 
   render () {
@@ -66,10 +64,31 @@ class ItemsMedia extends React.Component {
     )
   }
 
+  // NB: Not in use
+  checkLangFilter (lang) {
+    const { locationQuery: { filter } } = this.props
+    if (filter && filter.includes('language')) {
+      return lang.includes(filter.split('_').pop())
+    }
+    return true
+  }
+
   handleBranchStatusMedia () {
     const mediaType = this.props.itemsByMedia.mediaTypeURI
     const branchCode = this.props.branchCode
     this.props.showBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
+  }
+
+  handleBranchStatusMediaInit () {
+    const mediaType = this.props.itemsByMedia.mediaTypeURI
+    const branchCode = this.props.branchCode
+    const { locationQuery: { showBranchStatusMedia } } = this.props
+    const code = `${branchCode}_${this.splitMediaType(mediaType)}`
+    if (showBranchStatusMedia && showBranchStatusMedia === code || (Array.isArray(showBranchStatusMedia) && showBranchStatusMedia.includes(code))) {
+      return
+    } else {
+      this.props.showBranchStatusMedia(code)
+    }
   }
 
   handleBranchStatusMediaEnter (event) {
@@ -92,7 +111,6 @@ class ItemsMedia extends React.Component {
 ItemsMedia.propTypes = {
   mediaType: PropTypes.string,
   branchCode: PropTypes.string.isRequired,
-  itemLocation: PropTypes.number.isRequired,
   intl: PropTypes.object.isRequired,
   itemsByMedia: PropTypes.object.isRequired,
   showBranchStatusMedia: PropTypes.func.isRequired,

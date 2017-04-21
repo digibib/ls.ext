@@ -46,7 +46,6 @@ export function postRegistrationSuccess (username, password, categoryCode) {
 }
 
 export function checkForExistingUser () {
-  console.log('checkforexistinguser')
   const url = '/api/v1/checkforexistinguser'
   return (dispatch, getState) => {
     const { registrationPartOne: { values: { firstName, lastName, day, month, year, ssn } } } = getState().form
@@ -68,7 +67,6 @@ export function checkForExistingUser () {
       body: JSON.stringify(registrationInfo)
     })
       .then(response => {
-        console.log('status', response.status)
         if (response.status === 200) {
           return response.json()
         } else if (response.status === 403) {
@@ -78,7 +76,6 @@ export function checkForExistingUser () {
         }
       })
       .then(json => {
-        console.log('json', json)
         if (json.localdb) {
           dispatch(checkForExistingUserFailure({ error: 'userExistsInLocalDB' }))
         } else if (json.centraldb) {

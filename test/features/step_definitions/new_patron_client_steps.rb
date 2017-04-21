@@ -314,7 +314,7 @@ When(/^jeg går til innstillinger$/) do
   @browser.element(data_automation_id: 'tabs').element(text: 'Innstillinger').click
 end
 
-When(/^slår på alle avkrysningsboksene inne på innstillinger$/) do
+When(/^jeg slår på alle avkrysningsboksene inne på innstillinger$/) do
   @browser.checkboxes(data_automation_id: /^UserSettings_/).each do |checkbox|
     CheckboxHelper.new(@browser).set(checkbox.attribute_value('data-automation-id'))
   end
@@ -490,10 +490,10 @@ When(/^skal jeg se personopplysningene mine$/) do
   wait_for {
     @browser.element(data_automation_id: 'change_profile_info_button').present?
   }
-  @browser.element(data_automation_id: 'UserInfo_address').text.should eq patron["address"]
-  @browser.element(data_automation_id: 'UserInfo_zipcode').text.should eq patron["zipcode"]
-  @browser.element(data_automation_id: 'UserInfo_mobile').text.should eq patron["mobile"]
-  @browser.element(data_automation_id: 'UserInfo_email').text.should eq patron["email"]
+  @browser.element(data_automation_id: 'UserInfo_address').text.should eq patron["address"].to_s
+  @browser.element(data_automation_id: 'UserInfo_zipcode').text.should eq patron["zipcode"].to_s
+  @browser.element(data_automation_id: 'UserInfo_mobile').text.should eq patron["smsalertnumber"].to_s
+  @browser.element(data_automation_id: 'UserInfo_email').text.should eq patron["email"].to_s
 end
 
 When(/^jeg trykker på endre personopplysninger$/) do
@@ -506,8 +506,8 @@ When(/^jeg fyller ut personopplysningene mine riktig$/) do
     @context[:koha].patrons[0]
   patron["email"] = "#{generateRandomString}@#{generateRandomString}.dot"
   @browser.text_field(name: 'email').set patron["email"]
-  patron["mobile"] = '%08d' % rand(10**8)
-  @browser.text_field(name: 'mobile').set patron["mobile"]
+  patron["smsalertnumber"] = '%08d' % rand(10**8)
+  @browser.text_field(name: 'mobile').set patron["smsalertnumber"]
   patron["address"] = generateRandomString
   @browser.text_field(name: 'address').set patron["address"]
   patron["zipcode"] = '%04d' % rand(10000)
@@ -599,4 +599,27 @@ end
 When(/^jeg søker etter forfatter av del med tittel "([^"]*)"$/) do |title|
   @site.SearchPatronClient.search_with_text "author:#{@context[:random_migrate_part_creator_names]['prefix0' + @context[:random_migrate_id]]} title:#{title}"
   @context[:prefix] = 'prefix0'
+end
+
+When(/^jeg huker av for påminnelse om forfall på sms$/) do
+  checkbox = @browser.checkbox(data_automation_id: 'UserSettings_reminderOfDueDateSms')
+  CheckboxHelper.new(@browser).set(checkbox.attribute_value('data-automation-id'), true)
+end
+
+Then(/^skal jeg se skjema for å validere kontaktopplysninger$/) do
+  wait_for { @browser.element(class: 'change-contact-details').present? }
+end
+
+When(/^jeg endrer kontaktopplysninger$/) do
+  newSms = '12345678'
+  newMail = 'test@test.me'
+  wait_for { @browser.element(class: 'contact-verification-fields').present? }
+  @browser.text_field(data_automation_id: 'contactDetails_mobile').set(newSms)
+  @browser.text_field(data_automation_id: 'contactDetails_email').set(newMail)
+  @context[:koha].patrons[0]["smsalertnumber"] = newSms
+  @context[:koha].patrons[0]["email"] = newMail
+end
+
+Then(/^skal skjemaet for å validere kontaktopplysninger forsvinne$/) do
+  wait_for { not @browser.element(class: 'change-contact-details').present? }
 end
