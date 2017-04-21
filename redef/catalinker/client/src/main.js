@@ -197,7 +197,7 @@
           } else if (input.isSubInput && input.parentInput.domain && domainType === unPrefix(input.parentInput.domain)) {
             var valuesToRemove = []
             _.each(input.values, function (value, index) {
-              if (subjectTypesOfInputValue[input.parentInput][index] === domainType) {
+              if (subjectTypesOfInputValue[ input.parentInput ][ index ] === domainType) {
                 valuesToRemove.push(index)
               }
             })
@@ -2697,11 +2697,13 @@
         function tabIndexForNode (node) {
           let nodeInfo = Ractive.getNodeInfo(node)
           let tabSelectedKeypath = `inputGroups.${nodeInfo.index.groupIndex}.tabSelected`
-          ractive.observe(tabSelectedKeypath, function (newValue, oldvalue) {
-            if (!$(node).is('select.select2-hidden-accessible')) {
-              $(node).attr('tabindex', newValue ? '0' : '-1')
-            }
-            $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
+          ractive.observe(tabSelectedKeypath, function (newValue) {
+            setTimeout(function () {
+              if (!$(node).is('select.select2-hidden-accessible')) {
+                $(node).attr('tabindex', newValue ? '0' : '-1')
+              }
+              $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
+            })
           }, { init: true })
         }
 
@@ -3896,6 +3898,7 @@
                 })
                 let searchOriginInput = ractive.get(grandParentOf(event.keypath))
                 let useAfterCreation = searchOriginInput.useAfterCreation
+                let targetInput = ractive.get(grandParentOf(origin))
 
                 let setCreatedResourceUriInSearchInput = function (resourceUri) {
                   if (!maintenance) {
@@ -3916,8 +3919,7 @@
                   return resourceUri
                 }
                 let patchMotherResource = function (resourceUri) {
-                  let targetInput = ractive.get(grandParentOf(origin))
-                  if (!useAfterCreation && !targetInput.isSubInput) {
+                  if (useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
                     Main.patchResourceFromValue(ractive.get(`targetUri.${targetInput.rdfType}`), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                   }
                   return resourceUri
@@ -3961,10 +3963,12 @@
                 let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                 let wait = ractive.get('waitHandler').newWaitable(originTarget)
                 if (useAfterCreation) {
-                  unloadResourceForDomain(event.context.rdfType, useAfterCreation.excludeInputRefs)
+                  if (!targetInput.searchMainResource) {
+                    unloadResourceForDomain(event.context.rdfType, useAfterCreation.excludeInputRefs)
+                  }
                   setCreatedResourceValuesInMainInputs()
                 }
-                saveInputs((!maintenance && ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.searchMainResource`)) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
+                saveInputs((!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
                   .then(setCreatedResourceUriInSearchInput)
                   .then(!maintenance ? patchMotherResource : nop)
                   .then(!maintenance ? setTargetUri : nop)
