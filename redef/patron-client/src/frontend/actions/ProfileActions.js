@@ -146,7 +146,7 @@ export function postContactDetails (mobile, email, successAction) {
       body: JSON.stringify({mobile: mobile, email: email})
     })
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 204) {
           dispatch(changeContactDetailsSuccess())
           dispatch(fetchProfileInfo())
           if (successAction) {
