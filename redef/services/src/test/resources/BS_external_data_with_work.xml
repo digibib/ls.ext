@@ -200,6 +200,11 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
         </datafield>
+        <!-- should result in an anonymous labeled value -->
+        <datafield tag="655" ind1=" " ind2="2">
+            <subfield code="a">Spillefilm</subfield>
+            <subfield code="z">USA</subfield>
+        </datafield>
         <!-- should result in Jimson Jimson as person and contribution eith role illustrator -->
         <datafield tag="700" ind1=" " ind2="0">
             <subfield code="a">Jimson Jimson</subfield>

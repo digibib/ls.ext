@@ -41,6 +41,7 @@ public class MARCMapper {
     private static final String SERIAL_ISSUE_TYPE = "deichman:SerialIssue";
     private static final String CORPORATION_TYPE = "deichman:Corporation";
     private static final String TOP_BANANA_TYPE = "deichman:TopBanana";
+    private static final String NATIONALITY_TYPE = "duo:Nationality";
     private static final int THIRTY_FOUR = 34;
     private static final int THIRTY_FIVE = 35;
     private static final int THIRTY_SEVEN = 37;
@@ -297,6 +298,9 @@ public class MARCMapper {
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
                         addExternalObject(graphList, a, GENRE_TYPE, work::addGenre);
                     });
+                    getSubfieldValue(dataField, 'z').ifPresent(z -> {
+                        addLabeledValue(graphList, "no", z, NATIONALITY_TYPE, work::addNationality);
+                    });
                     break;
                 case "700":
                 case "710":
@@ -495,6 +499,14 @@ public class MARCMapper {
         addObjectFunction.accept(named);
         graphList.add(named);
         return named;
+    }
+
+    private LabeledValue addLabeledValue(Collection<Object> graphList, String language, String label, String type, Consumer<LabeledValue> addObjectFunction) {
+        String objectId = newBlankNodeId();
+        LabeledValue labeledValue = new LabeledValue(objectId, type, language, label);
+        addObjectFunction.accept(labeledValue);
+        graphList.add(labeledValue);
+        return labeledValue;
     }
 
     private Titled addMainTitled(Collection<Object> graphList, String mainTitle, String type, Consumer<ExternalDataObject> addObjectFunction) {
