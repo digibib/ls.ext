@@ -90,6 +90,9 @@
         "deichman:genre": [
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:isRelatedTo": [
@@ -152,6 +155,11 @@
         "deichman:fictionNonfiction": {
           "@id": "http://data.deichman.no/fictionNonfiction#fiction"
         },
+        "deichman:nationality": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
         "deichman:contributor": [
           {
             "@id": "_:0000000"
@@ -535,6 +543,23 @@
         "deichman:prefLabel": "Biografisk"
       },
       {
+        "@type": [
+          "deichman:Genre"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Spillefilm"
+      },
+      {
+        "@id": "_:0000000",
+        "@type": "duo:Nationality",
+        "rdfs:label": [
+          {
+            "@language": "no",
+            "@value": "USA"
+          }
+        ]
+      },
+      {
         "deichman:mainTitle": "Den originale julefortelling",
         "@type": [
           "Work"
@@ -888,7 +913,8 @@
     ],
     "@context": {
       "deichman": "http://deichman.no/ontology#",
-      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "duo": "http://deichman.no/utility#"
     }
   }
 ]

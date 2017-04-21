@@ -273,6 +273,10 @@
     suggestedPrefilledValues: 'Suggestions for pre-populated values',
     useValuesFromTheseFields: 'Use values from these fields:',
     andFillTheEmptyFields: '...to fill the empty fields for these:',
+    unknownPredefinedValuesMessage: `Value from {{unknownPredefinedValues.sourceLabel}}, "{{unknownPredefinedValues.values.join(',')}}",
+                is not among the predefined values applicable to <b>{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}</b >.<br/>
+                Please select most suitable value from the dropdown list.
+    `,
 
     // extended editing
     worksAndPubsRelatedToAuthority: 'Works and publications associated with {{applicationData.translations[applicationData.language][rdfType + \'LabelDet\']}}:',

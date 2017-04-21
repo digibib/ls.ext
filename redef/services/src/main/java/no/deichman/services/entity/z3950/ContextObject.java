@@ -16,6 +16,7 @@ public class ContextObject {
     ContextObject() {
         context = new HashMap<String, Object>();
         context.put("deichman", "http://deichman.no/ontology#");
+        context.put("duo", "http://deichman.no/utility#");
         context.put("rdfs", RDF.getURI());
     }
 
