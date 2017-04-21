@@ -2,6 +2,7 @@ package no.deichman.services.circulation;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import no.deichman.services.entity.Estimation;
 
 /**
  * Responsibility: Manage holds from library system.
@@ -27,7 +28,9 @@ public class Reservation extends CirculationObjectBase {
     private String suspendUntil;
     @SerializedName(value = "status", alternate = "found")
     private String status;
-
+    @Expose
+    @SerializedName("estimatedWait")
+    private Estimation estimation;
 
     public final String getStatus() {
         return this.status;
@@ -49,9 +52,11 @@ public class Reservation extends CirculationObjectBase {
         this.suspendUntil = suspendUntil;
     }
 
-    public final int estimateWait() {
-        int estimate = 0;
+    public final void setEstimatedWait(Estimation estimation) {
+        this.estimation = estimation;
+    }
 
-        return estimate;
+    public final int getQueuePlace() {
+        return Integer.valueOf(queuePlace);
     }
 }

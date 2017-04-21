@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.String.format;
+import static no.deichman.services.entity.ExpectationTest.BOK;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
@@ -69,12 +70,14 @@ public class CirculationResourceTest {
         String checkoutData = kohaAPIMock.generateCheckoutsJson(USER_ID, ITEM_NUMBER_1);
         String holdsData = kohaAPIMock.generateHoldsJson(USER_ID, RECORD_ID_2, RECORD_ID_3);
         String record1 = kohaAPIMock.generateBiblioResponseJson(RECORD_ID_1);
+        String recordExpanded1 = kohaAPIMock.generateBiblioExpanded(RECORD_ID_2, BOK, false, 2, 2);
 
         when(mockKohaAdapter.getCheckouts(USER_ID)).thenReturn(checkoutData);
         when(mockKohaAdapter.getHolds(USER_ID)).thenReturn(holdsData);
         when(mockKohaAdapter.getBiblioFromItemNumber(ITEM_NUMBER_1)).thenReturn(record1);
 
         when(mockKohaAdapter.createNewBiblioWithMarcRecord(any())).thenReturn(RECORD_ID_1, RECORD_ID_2, RECORD_ID_3);
+        when(mockKohaAdapter.retrieveBiblioExpanded(RECORD_ID_2)).thenReturn(recordExpanded1);
 
         XURI person = new XURI(preparePerson());
         XURI work = new XURI(prepareWork(person.getUri()));
@@ -111,6 +114,11 @@ public class CirculationResourceTest {
                 + "      \"queuePlace\": \"1\",\n"
                 + "      \"orderedDate\": \"IT_DOES_NOT_MATTER\",\n"
                 + "      \"suspendUntil\": null,\n"
+                + "      \"estimatedWait\": {"
+                + "        \"pending\": false,"
+                + "        \"estimate\": 5,"
+                + "        \"error\": null"
+                + "      },"
                 + "      \"recordId\": \"99232\",\n"
                 + "      \"workURI\": \"http://data.deichman.no/work/%5$s\",\n"
                 + "      \"publicationURI\": \"http://data.deichman.no/publication/%2$s\",\n"

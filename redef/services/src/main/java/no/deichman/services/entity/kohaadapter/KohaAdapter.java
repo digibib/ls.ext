@@ -25,6 +25,8 @@ public interface KohaAdapter {
 
     String getBiblioFromItemNumber(String recordId);
 
+    String getExpandedRecordFromItemNumber(String recordId);
+
     String getCheckouts(String userId);
 
     String getHolds(String userId);

@@ -142,6 +142,7 @@ class UserLoans extends React.Component {
                 <p data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
                   ? item.queuePlace
                   : <FormattedMessage {...messages.enRoute} />}
+                  &nbsp;{!item.estimatedWait.pending ? this.renderWaitingPeriod(item.estimatedWait) : ''}
                   &nbsp;{item.suspendUntil
                     ? <span className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
                     : ''
@@ -205,11 +206,13 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderWaitingPeriod (expected = 'unknown') {
-    if (expected === 'unknown') {
+  renderWaitingPeriod (expected) {
+    if (expected.error != null) {
       return <FormattedMessage {...messages.unknown} />
     } else {
-      return <span>({this.renderExpectedEstimationPrefix(expected)} {expected} <FormattedMessage {...messages.weeks} />)</span>
+
+      const estimate = (expected.estimate < 11) ? `${expected.estimate}–${expected.estimate + 2}` : 11
+      return <span>({this.renderExpectedEstimationPrefix(estimate)} {estimate} <FormattedMessage {...messages.weeks} />)</span>
     }
   }
   // <FormattedMessage {...messages.name} values={{ name: this.props.borrowerName }} />

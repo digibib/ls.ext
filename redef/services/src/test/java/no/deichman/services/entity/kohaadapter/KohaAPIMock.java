@@ -2,7 +2,15 @@ package no.deichman.services.entity.kohaadapter;
 
 import com.github.restdriver.clientdriver.ClientDriverRequest;
 import com.github.restdriver.clientdriver.ClientDriverRule;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import no.deichman.services.circulation.ExpandedRecord;
+import no.deichman.services.circulation.Item;
+import no.deichman.services.circulation.Record;
 import no.deichman.services.testutil.PortSelector;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Rule;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -10,8 +18,10 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
@@ -37,6 +47,7 @@ public final class KohaAPIMock {
     private final int clientdriverPort = PortSelector.randomFree();
     private static final DateFormat KOHA_DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final DateFormat KOHA_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
     @Rule
     private final ClientDriverRule clientDriver = new ClientDriverRule(clientdriverPort);
@@ -252,6 +263,7 @@ public final class KohaAPIMock {
                 recordNumber,
                 KOHA_DATE_FORMAT.format(getDate(0)));
     }
+
     private Date getDate(int addDays) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now().toDate());
@@ -306,5 +318,36 @@ public final class KohaAPIMock {
                 + "  \"biblionumber\": \"%4$s\"\n"
                 + "}]"
                 + "", userId, generateRandomID(), recordId1, recordId2);
+    }
+
+    public String generateBiblioExpanded(String recordNumber, String type, boolean zeroUser, int numberOfItems, int numberOfHolds) throws Exception {
+        Record record = RandomRecord.populateRandom(recordNumber, zeroUser, numberOfHolds);
+        ExpandedRecord apiResponse = new ExpandedRecord();
+        apiResponse.setLoanRecord(record);
+        List<Item> items = new ArrayList<>();
+        items.addAll(createItemsList(numberOfHolds, recordNumber, true, type));
+        int extraItems = numberOfItems - numberOfHolds;
+        if (extraItems > 0) {
+            items.addAll(createItemsList(extraItems, recordNumber, false, type));
+        } else if (extraItems < 0) {
+            throw new Exception("You have specified more holds than there are items");
+        }
+        apiResponse.setItems(items);
+        return GSON.toJson(apiResponse);
+    }
+
+    private List<Item> createItemsList(int numberOfItems, String recordNumber, boolean onLoan, String type) {
+
+        String returnDate = null;
+        if (onLoan) {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+            returnDate = dateTimeFormatter.print(new DateTime().plusDays(28));
+        }
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < numberOfItems; i++) {
+            Item item = ItemStubber.generateRandom(recordNumber, type, returnDate, 1);
+            items.add(item);
+        }
+        return items;
     }
 }

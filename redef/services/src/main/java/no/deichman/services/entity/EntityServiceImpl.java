@@ -6,11 +6,13 @@ import com.google.gson.reflect.TypeToken;
 import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.circulation.CirculationObject;
 import no.deichman.services.circulation.CirculationProfile;
+import no.deichman.services.circulation.ExpandedRecord;
 import no.deichman.services.circulation.HoldsAndPickups;
 import no.deichman.services.circulation.Loan;
 import no.deichman.services.circulation.LoanRecord;
 import no.deichman.services.circulation.Pickup;
 import no.deichman.services.circulation.RawHold;
+import no.deichman.services.circulation.Record;
 import no.deichman.services.circulation.Reservation;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
@@ -87,8 +89,6 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  */
 public final class EntityServiceImpl implements EntityService {
     public static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    private static final String PICKUPS = "pickups";
-    public static final String HOLDS = "holds";
     public static final String HOLD_IS_FOUND = "W";
     private final Logger log = LoggerFactory.getLogger(EntityServiceImpl.class);
 
@@ -779,6 +779,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private CirculationObject rawHoldToCirculationObject(RawHold rawHold) {
         CirculationObject circulationObject;
+        Expectation expectation = new Expectation();
         if (Objects.equals(rawHold.getStatus(), HOLD_IS_FOUND)) {
             Pickup pickup = new Pickup();
             pickup.setExpirationDate(rawHold.getWaitingDate());
@@ -786,6 +787,15 @@ public final class EntityServiceImpl implements EntityService {
             circulationObject = pickup;
         } else {
             Reservation reservation = new Reservation();
+            ExpandedRecord expandedRecord = GSON.fromJson(
+                    kohaAdapter.retrieveBiblioExpanded(rawHold.getRecordId()),
+                    new TypeToken<ExpandedRecord>() {}.getType());
+            Record record = expandedRecord.getRecord();
+            reservation.setEstimatedWait(
+                    expectation.estimate(
+                            Integer.parseInt(rawHold.getQueuePlace()),
+                            expandedRecord.getItems(),
+                            record.getBehindExpiditedUserAsBoolean()));
             reservation.setQueuePlace(rawHold.getQueuePlace());
             reservation.setSuspended(convertBooleanString(rawHold.getSuspended()));
             reservation.setOrderedDate(rawHold.getReserveDate());
@@ -835,19 +845,19 @@ public final class EntityServiceImpl implements EntityService {
         }.getType();
         List<Loan> loans = GSON.fromJson(kohaAdapter.getCheckouts(borrowerId), loansArrayType);
         for (Loan loan : loans) {
-            String recordId = getRecordIdFromLoan(loan);
+            String recordId = getRecordIdFromLoan(loan).getRecordId();
             loan.setRecordId(recordId);
             loan.decorateWithPublicationData(getPublicationMetadataByRecordId(recordId));
         }
         return loans;
     }
 
-    private String getRecordIdFromLoan(Loan loan) {
+    private LoanRecord getRecordIdFromLoan(Loan loan) {
         LoanRecord loanRecord = GSON.fromJson(kohaAdapter.getBiblioFromItemNumber(loan.getItemNumber()),
-                new TypeToken<LoanRecord>() {
-                }.getType());
-        return loanRecord.getRecordId();
+                new TypeToken<LoanRecord>() {}.getType());
+        return loanRecord;
     }
+
 
     private Map<String, String> getPublicationMetadataByRecordId(String recordId) {
         Map<String, String> publicationMetadata = new HashMap<>();

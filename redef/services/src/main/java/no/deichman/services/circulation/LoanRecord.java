@@ -2,6 +2,8 @@ package no.deichman.services.circulation;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Responsibility: Provide a container object for library system manifestation records.
  */
@@ -165,6 +167,20 @@ public class LoanRecord extends CirculationObjectBase {
     private String enumChron;
     @SerializedName("booksellerid")
     private String booksellerId;
+    @SerializedName("items")
+    private List<Item> items;
+    @SerializedName(value = "pendingExpidition", alternate = "behindExpiditedUser")
+    private String pendingExpidition;
 
+    public final List<Item> getItems() {
+        return items;
+    }
 
+    public final boolean getPendingExpidition() {
+        boolean returnValue = true;
+        if (pendingExpidition.equals("0")) {
+            returnValue = false;
+        }
+        return returnValue;
+    }
 }
