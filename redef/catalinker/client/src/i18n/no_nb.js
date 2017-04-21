@@ -278,7 +278,7 @@
     useValuesFromTheseFields: 'Vil du bruke verdiene fra disse feltene:',
     andFillTheEmptyFields: '...til å fylle inn tomme felter for disse:',
     unknownPredefinedValuesMessage: `Verdien fra {{unknownPredefinedValues.sourceLabel}}, "{{unknownPredefinedValues.values.join(',')}}",
-                finnes ikke blant de faste verdiene for <b>{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}</b >.<br/>
+                finnes ikke blant de mulige verdiene for <b>{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}</b >.<br/>
                 Velg det som passer best fra verdiene i nedtrekkslisten.
     `,
 
