@@ -37,7 +37,7 @@ module.exports = (app) => {
                     }
                   ],
                   'deichman:hasMediaType': {
-                    '@id': 'http://data.deichman.no/mediaType#Book'
+                    '@id': '_:b100'
                   },
                   'deichman:isbn': request.params[1],
                   'deichman:language': {
@@ -132,12 +132,14 @@ module.exports = (app) => {
                       '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/literaryForm#novel' : 'http://data.deichman.no/literaryForm#pointingBook'
                     }
                   ],
-                  'deichman:mainTitle': randomName()
+                  'deichman:mainTitle': randomName(),
+                  'deichman:nationality': {
+                    '@id': '_:b100'
+                  }
                 },
                 {
                   '@id': 'http://data.deichman.no/format#Book',
                   '@type': 'http://data.deichman.no/utility#Format',
-                  'http://data.deichman.no/utility#code': 'l',
                   'rdfs:label': [
                     {
                       '@language': 'no',
@@ -146,6 +148,16 @@ module.exports = (app) => {
                     {
                       '@language': 'en',
                       '@value': 'Book'
+                    }
+                  ]
+                },
+                {
+                  '@id': '_:b100',
+                  '@type': 'http://data.deichman.no/utility#nationality',
+                  'rdfs:label': [
+                    {
+                      '@language': 'no',
+                      '@value': 'Slaraffenland'
                     }
                   ]
                 },

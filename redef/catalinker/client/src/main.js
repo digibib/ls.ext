@@ -90,8 +90,10 @@
     }
 
     function saveSuggestionData () {
-      var suggestionData = []
-      var acceptedData = []
+      let suggestionData = []
+      let acceptedData = []
+      let unknownPredefinedValues = []
+      let supportableInputs = []
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           var realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
@@ -116,11 +118,25 @@
                 value: input.searchForValueSuggestions.hitsFromPreferredSource
               })
             }
+            if (input.unknownPredefinedValues) {
+              unknownPredefinedValues.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.unknownPredefinedValues`,
+                value: input.unknownPredefinedValues
+              })
+            }
+            if (input.supportable) {
+              supportableInputs.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.supportable`,
+                value: true
+              })
+            }
           })
         })
       })
       window.sessionStorage.setItem('suggestionData', JSON.stringify(suggestionData))
       window.sessionStorage.setItem('acceptedData', JSON.stringify(acceptedData))
+      window.sessionStorage.setItem('unknownPredefinedValues', JSON.stringify(unknownPredefinedValues))
+      window.sessionStorage.setItem('supportableInputs', JSON.stringify(supportableInputs))
       let suggestedValueSearchInput = getSuggestedValuesSearchInput()
       if (suggestedValueSearchInput) {
         window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
@@ -532,6 +548,23 @@
       options = options || {}
       if (values && values.length > 0) {
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
+          if (isBlankNodeUri(value.id)) {
+            let valuesForInput = ractive.get(`applicationData.predefinedValues.${input.fragment}`)
+            let matchedPredefValue = _.find(valuesForInput, function (predefValue) {
+              return _.some(predefValue.label, function (label) {
+                return label[ '@language' ] === value.get('label').lang && label[ '@value' ] === value.get('label').value
+              })
+            })
+            if (matchedPredefValue) {
+              return matchedPredefValue[ '@id' ]
+            } else {
+              input.supportable = true
+              input.unknownPredefinedValues = input.unknownPredefinedValues || {}
+              input.unknownPredefinedValues.values = input.unknownPredefinedValues.values || []
+              input.unknownPredefinedValues.values.push((value.get('label') || {}).value)
+              input.unknownPredefinedValues.sourceLabel = input.unknownPredefinedValues.sourceLabel || options.sourceLabel
+            }
+          }
           return value.id
         })
         if (options.compareValues) {
@@ -1973,7 +2006,9 @@
           var offset = 15
           if (supportPanelBase.length === 0) {
             supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}]`)
-            offset = 0
+            if (supportPanelBase.length > 0) {
+              offset = Math.max(0, (80 - supportPanelBase.height()) / 2)
+            }
           }
           if (supportPanelBase.length > 0) {
             $(panel).css({
@@ -2001,7 +2036,7 @@
       })
     }
 
-    function externalSourceHitDescription (graph, source) {
+    function externalSourceHitDescription (graph, source, sourceLabel) {
       var workGraph = graph.byType('Work')[ 0 ]
       if (!workGraph) {
         throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om verket.`)
@@ -2028,8 +2063,9 @@
       return {
         main: mainHitLine.join(' - '),
         details: detailsHitLine.join(' - '),
-        graph: graph,
-        source: source
+        graph,
+        source,
+        sourceLabel
       }
     }
 
@@ -2390,6 +2426,7 @@
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
+          'support-for-select-predefined-value',
           'support-for-input-string',
           'support-for-edit-authority',
           'searchable-authority-dropdown',
@@ -4011,7 +4048,7 @@
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
                         if (fromPreferredSource) {
-                          hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
+                          hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source, searchExternalSourceInput.searchForValueSuggestions.preferredSource.name))
                           resultStat.itemsFromPreferredSource++
                         } else {
                           var options = {
@@ -4162,6 +4199,7 @@
                           updateInputsForResource({ data: {} }, null, {
                             keepDocumentUrl: true,
                             source: event.context.source,
+                            sourceLabel: event.context.sourceLabel,
                             wrapperObject: wrapperObject,
                             wrappedIn: wrappedIn,
                             deferUpdate: true
@@ -4782,6 +4820,14 @@
                 _.each(acceptedData, function (ractiveData) {
                   ractive.set(ractiveData.keypath, ractiveData.value)
                 })
+                var unknownPredefinedValues = JSON.parse(window.sessionStorage.unknownPredefinedValues)
+                _.each(unknownPredefinedValues, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.value)
+                })
+                var supportableInputs = JSON.parse(window.sessionStorage.supportableInputs)
+                _.each(supportableInputs, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.value)
+                })
                 ractive.set('primarySuggestionAccepted', true)
               }
               suggestValueInput.values = [ {
@@ -5060,6 +5106,7 @@
                 closePreview()
               }
             })
+            setTimeout(positionSupportPanels)
             return applicationData
           })
           .then(function (applicationData) {

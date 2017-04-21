@@ -46,6 +46,9 @@ public class Work extends BibliographicObjectExternal {
     @SerializedName("deichman:fictionNonfiction")
     private ExternalDataObject fictionNonfiction;
 
+    @SerializedName("deichman:nationality")
+    private List<Map<String, String>> nationalities;
+
     public Work(String workId) {
         super(workId);
     }
@@ -131,5 +134,12 @@ public class Work extends BibliographicObjectExternal {
 
     public final void setFictionNonfiction(ExternalDataObject fictionNonfiction) {
         this.fictionNonfiction = fictionNonfiction;
+    }
+
+    public void addNationality(LabeledValue nationality) {
+        if (this.nationalities == null) {
+            nationalities = new ArrayList<>();
+        }
+        nationalities.add(of("@id", nationality.getId()));
     }
 }
