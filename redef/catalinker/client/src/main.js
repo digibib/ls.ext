@@ -1232,22 +1232,23 @@
                       }
                     })
                     input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input[ valuesField ], 'current'), 'value'))).length
-
-                    ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
-                    ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
-                    ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
-                    ractive.set(`${input.keypath}.customRange`, loadForRangeOfInputs)
-                    if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
-                      ractive.set(`${input.keypath}.rangeStats`, {
-                        start: startIndex + 1,
-                        end: Math.min(actualRoots.length, startIndex + rangeLength),
-                        numberOfObjects: actualRoots.length,
-                        rangeLength
-                      })
-                    }
-                    if (actualRoots.length > rangeLength && input.parentInput && input.parentInput.pagination) {
-                      const fromEnd = actualRoots.length - startIndex
-                      ractive.splice(`${input.keypath}.${valuesField}`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
+                    if (input.parentInput && input.parentInput.pagination) {
+                      ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
+                      ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
+                      ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
+                      ractive.set(`${input.keypath}.customRange`, loadForRangeOfInputs)
+                      if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
+                        ractive.set(`${input.keypath}.rangeStats`, {
+                          start: startIndex + 1,
+                          end: Math.min(actualRoots.length, startIndex + rangeLength),
+                          numberOfObjects: actualRoots.length,
+                          rangeLength
+                        })
+                      }
+                      if (actualRoots.length > rangeLength) {
+                        const fromEnd = actualRoots.length - startIndex
+                        ractive.splice(`${input.keypath}.${valuesField}`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
+                      }
                     }
                     return true
                   }
