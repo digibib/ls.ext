@@ -7,7 +7,7 @@ export LSENV=$1
 export LSEXTPATH=$2
 export HOST=$3
 echo -e "\n Provisioning for $LSENV env, LSENV=$LSENV, LSEXTPATH=$LSEXTPATH, HOST=$HOST\n"
-if [[ `uname -s` == 'Linux' && "$LSENV" != 'prod' ]]; then
+if [[ `uname -s` == 'Linux' ]]; then
   echo -e "\n1) Installing Docker\n"
   VERSION="17.03.0~ce-0~ubuntu-$(lsb_release -c -s)"
   INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
@@ -59,17 +59,11 @@ case "$LSENV" in
   'build')
   $CMD -f dev-common.yml -f ci.yml up -d
   ;;
-  'prod')
-  $CMD -f prod.yml up -d
-  ;;
   *)
   $CMD -f dev-common.yml -f dev.yml up -d
   ;;
 esac
 
-if [ "$LSENV" == "prod" ]; then
-  exit 0
-fi
 
 echo -e "\n6) Attempting to set up Elasticsearch indices and mappings"
 for i in {1..10}; do
