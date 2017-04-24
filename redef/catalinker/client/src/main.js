@@ -1711,7 +1711,10 @@
                 _.each(resourceForm.inputs, function (formInput) {
                   var predicate = ontologyUri + formInput.rdfProperty
                   var ontologyInput = inputMap[ `${resourceForm.rdfType}.${predicate}` ]
-                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', formInput.label ? 'label' : ''))
+                  if (formInput.label) {
+                    formInput.labelkey = formInput.label
+                  }
+                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
                   formInput[ 'values' ] = emptyValues(false)
                   formInput[ 'rdfType' ] = resourceForm.rdfType
                   if (targetResourceIsMainEntry) {
@@ -3780,7 +3783,7 @@
                   var keyPath = `inputGroups.${groupIndex}`
                   ractive.set(`${keyPath}.tabSelected`, keyPath === event.keypath)
                 })
-                positionSupportPanels()
+                setTimeout(positionSupportPanels)
               },
               nextStep: function (event) {
                 if (event.context.restart) {
