@@ -9,7 +9,7 @@ HOST ?= localhost
 DOCKER_GW=172.19.0.1
 
 DOCKER_COMPOSE_INIT=. docker-compose/docker-compose.env && cd docker-compose
-DOCKER_COMPOSE=docker-compose -f common.yml -f dev-common.yml -f ${LSDEVMODE}.yml
+DOCKER_COMPOSE=docker-compose -f common.yml -f ${LSDEVMODE}.yml
 DOCKER_COMPOSE_FULL=$(DOCKER_COMPOSE_INIT) && $(DOCKER_COMPOSE)
 
 all: provision                       					# Provision the system

@@ -57,10 +57,10 @@ $CMD stop overview && $CMD rm -f overview
 
 case "$LSENV" in
   'build')
-  $CMD -f dev-common.yml -f ci.yml up -d
+  $CMD -f ci.yml up -d
   ;;
   *)
-  $CMD -f dev-common.yml -f dev.yml up -d
+  $CMD -f dev.yml up -d
   ;;
 esac
 

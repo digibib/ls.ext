@@ -22,6 +22,11 @@ services:
       - build_services
       - fuseki
       - koha
+    environment:
+      KOHA_MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_MYSQL_PASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_MYSQL_DB: "koha_${KOHA_INSTANCE:-name}"
+      KOHA_API_PASS_ENCRYPTED: "$$2a$$08$$7WnfE3Fyh5W0C28Xp2SWH.NfgqLEZzw9oZI4qZ3MHf.lQS8yvv6hC"
 
   build_patron_client:
     container_name: build_patron_client
