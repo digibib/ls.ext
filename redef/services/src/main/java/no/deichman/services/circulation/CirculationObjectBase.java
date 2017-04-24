@@ -125,7 +125,7 @@ class CirculationObjectBase implements CirculationObject {
                 case "role":
                     contributor.put(key, value);
                     break;
-                case "mainTitle":
+                case "title":
                     setTitle(value);
                     break;
                 case "mediaType":

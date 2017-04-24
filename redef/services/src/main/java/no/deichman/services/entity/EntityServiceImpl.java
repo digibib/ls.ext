@@ -834,6 +834,21 @@ public final class EntityServiceImpl implements EntityService {
                     publicationMetadata.put(varName, querySolution.get(varName).toString());
                 });
             });
+        String title = publicationMetadata.get("mainTitle");
+        publicationMetadata.remove("mainTitle");
+        if (publicationMetadata.get("subtitle") != null) {
+            title += " : " + publicationMetadata.get("subtitle");
+            publicationMetadata.remove("subtitle");
+        }
+        if (publicationMetadata.get("partNumber") != null) {
+            title += ". " + publicationMetadata.get("partNumber");
+            publicationMetadata.remove("partNumber");
+        }
+        if (publicationMetadata.get("partTitle") != null) {
+            title += ". " + publicationMetadata.get("partTitle");
+            publicationMetadata.remove("partTitle");
+        }
+        publicationMetadata.put("title", title);
         return publicationMetadata;
     }
 
