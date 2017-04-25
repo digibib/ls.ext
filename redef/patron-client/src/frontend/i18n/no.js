@@ -244,6 +244,8 @@ export default {
   'SearchResult.partOfSeries': 'Inngår i serie: ',
   'SearchResult.showBranchAvailability': 'Vis avdelingsstatus',
   'SearchResult.showStatus': 'Hvor finnes denne?',
+  'SearchResult.hideRestOfBranches': 'Skjul andre avdelinger',
+  'SearchResult.restOfBranches': 'Vis andre avdelinger',
   'SearchResult.subjects': 'Emner:',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultsText.searchForWork': 'Søk etter verk',

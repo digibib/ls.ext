@@ -68,6 +68,10 @@ export function showStatus (relativeUri) {
   return toggleParameterValue('showStatus', relativeUri)
 }
 
+export function showUnfilteredStatus (relativeUri) {
+  return toggleParameterValue('showUnfilteredStatus', relativeUri)
+}
+
 export function showBranchStatus (branchCode) {
   return toggleParameterValue('showBranchStatus', branchCode)
 }

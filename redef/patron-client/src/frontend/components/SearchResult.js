@@ -16,6 +16,7 @@ class SearchResult extends React.Component {
   constructor (props) {
     super(props)
     this.handleShowStatusClick = this.handleShowStatusClick.bind(this)
+    this.handleShowUnfilteredStatusClick = this.handleShowUnfilteredStatusClick.bind(this)
     this.handleEnter = this.handleEnter.bind(this)
     this.handleBranchStatus = this.handleBranchStatus.bind(this)
   }
@@ -37,7 +38,6 @@ class SearchResult extends React.Component {
       return (
         <p data-automation-id="work_contributors">{contributors.map(contribution => (
           <span key={contribution.agent.relativeUri}>
-            {/* <strong>{this.props.intl.formatMessage({ id: contribution.role })}</strong> */}
             <strong>Av</strong>
             <Link to={fieldQueryLink('aktør', contribution.agent.name)}> {contribution.agent.name} </Link>
           </span>
@@ -166,19 +166,32 @@ class SearchResult extends React.Component {
         return el
       })
     }
+
+    let remainingBranches = []
     const groupedByBranchAndMediaLangFiltered = this.extractBranchesByLang(groupedByBranchAndMedia)
     const groupedByBranchAndMediaMediaFiltered = this.extractBranchesByMedia(groupedByBranchAndMedia)
 
-    if (groupedByBranchAndMediaLangFiltered > 0 && groupedByBranchAndMediaMediaFiltered > 0) {
+    if (groupedByBranchAndMediaLangFiltered.length > 0 && groupedByBranchAndMediaMediaFiltered.length > 0) {
       const mediaAndLangFiltered = this.extractBranchesByMedia(groupedByBranchAndMediaLangFiltered)
-      return mediaAndLangFiltered
+      remainingBranches = this.extractRemainingBranches(groupedByBranchAndMedia, mediaAndLangFiltered)
+      return [mediaAndLangFiltered, remainingBranches]
     } else if (groupedByBranchAndMediaLangFiltered.length > 0) {
-      return groupedByBranchAndMediaLangFiltered
+      remainingBranches = this.extractRemainingBranches(groupedByBranchAndMedia, groupedByBranchAndMediaLangFiltered)
+      return [groupedByBranchAndMediaLangFiltered, remainingBranches]
     } else if (groupedByBranchAndMediaMediaFiltered.length > 0) {
-      return groupedByBranchAndMediaMediaFiltered
+      remainingBranches = this.extractRemainingBranches(groupedByBranchAndMedia, groupedByBranchAndMediaMediaFiltered)
+      return [groupedByBranchAndMediaMediaFiltered, remainingBranches]
     } else {
-      return groupedByBranchAndMedia
+      return [groupedByBranchAndMedia, []]
     }
+  }
+
+  extractRemainingBranches (groupedByBranchAndMedia, filtered) {
+    return groupedByBranchAndMedia.filter((current) => {
+      return filtered.filter((current_b) => {
+          return current_b.branchcode === current.branchcode
+        }).length === 0
+    })
   }
 
   extractBranchesByMedia (groupedByBranchAndMedia) {
@@ -191,7 +204,15 @@ class SearchResult extends React.Component {
         el.mediaItems.map(mEl => {
           activeMediaFilters.forEach(mf => {
             if (mEl.mediaTypeURI === mf.bucket) {
-              groupedByBranchAndMediaFiltered.push(el)
+              let repBranchCode = false
+              groupedByBranchAndMediaFiltered.forEach(arrayEl => {
+                if (arrayEl.branchcode === el.branchcode) {
+                  repBranchCode = true
+                }
+              })
+              if (!repBranchCode) {
+                groupedByBranchAndMediaFiltered.push(el)
+              }
             }
           })
           return mEl
@@ -253,12 +274,10 @@ class SearchResult extends React.Component {
     return activeFilters
   }
 
-  renderItems () {
+  renderItems (groupedByBranchAndMedia) {
     let homeBranchPos
     let defaultBranchPos
     const activeFilters = this.getActiveFilters('branch')
-
-    const groupedByBranchAndMedia = this.getResultItems()
 
     if (groupedByBranchAndMedia.length > 0) {
       const byBranch = groupedByBranchAndMedia.map((el, i) => {
@@ -346,6 +365,11 @@ class SearchResult extends React.Component {
     this.props.showStatus(this.props.result.id)
   }
 
+  handleShowUnfilteredStatusClick (event) {
+    event.stopPropagation()
+    this.props.showUnfilteredStatus(this.props.result.id)
+  }
+
   handleEnter (event) {
     if (event.keyCode === 32) { // Space code
       event.preventDefault()
@@ -356,6 +380,11 @@ class SearchResult extends React.Component {
   shouldShowStatus () {
     const { locationQuery: { showStatus }, result: { id } } = this.props
     return (showStatus && showStatus === id || (Array.isArray(showStatus) && showStatus.includes(id)))
+  }
+
+  shouldShowUnfilteredStatus () {
+    const { locationQuery: { showUnfilteredStatus }, result: { id } } = this.props
+    return (showUnfilteredStatus && showUnfilteredStatus === id || (Array.isArray(showUnfilteredStatus) && showUnfilteredStatus.includes(id)))
   }
 
   bookCoverText (result) {
@@ -377,6 +406,10 @@ class SearchResult extends React.Component {
     const coverAltText = this.props.intl.formatMessage(messages.coverImageOf, { title: result.titleLine1 })
     const missingCoverAltText = this.props.intl.formatMessage(messages.missingCoverImageOf, { title: result.displayTitle })
     const mediaTypeURI = result.mediaTypes[ 0 ] ? result.mediaTypes[ 0 ].uri : ''
+
+    // Contains two arrays: one array for filtered branches and one array for branches excluded from filter criteria
+    const groupedByBranchAndMedia = this.getResultItems()
+
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -417,18 +450,38 @@ class SearchResult extends React.Component {
           {this.renderGenres(result.publication)}
         </article>
 
-        {this.shouldShowStatus()
+        {this.shouldShowStatus()  //handleShowUnfilteredStatusClick
           ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
-            <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
-          <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
-        </div>),
-          (<div key="entry-more-content" className="entry-content-more">
-            {this.renderItems(result)}
-          </div>) ]
+                <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
+                <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
+              </div>),
+              (<div key="entry-more-content" className="entry-content-more">
+                {this.renderItems(groupedByBranchAndMedia[0])}
+              </div>),
+              (<span key="entry-more-content-unfiltered-wrapper">{groupedByBranchAndMedia[ 1 ].length
+                  ? (<div key="entry-more-content-unfiltered" onClick={this.handleShowUnfilteredStatusClick} onKeyDown={this.handleEnter}>
+                    {this.shouldShowUnfilteredStatus()
+                      ? [ (<div key="show-more-unfiltered-content" className="show-more-content">
+                        <p><a role="button" tabIndex="0"
+                              aria-expanded="true"><FormattedMessage {...messages.hideRestOfBranches} /></a></p>
+                        <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
+                      </div>),
+                        (<div key="show-more-unfiltered-content-items"
+                              className="entry-content-more">{this.renderItems(groupedByBranchAndMedia[ 1 ])}</div>) ]
+                      : (<div className="show-more-content" onClick={this.handleShowUnfilteredStatusClick} onKeyDown={this.handleEnter}>
+                        <p><a role="button" tabIndex="0"
+                              aria-expanded="false"><FormattedMessage {...messages.restOfBranches} /></a></p>
+                        <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
+                      </div>)
+                    }
+                </div>)
+                  : null
+              }</span>)
+            ]
           : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
-            <p><a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showStatus} /></a></p>
-          <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
-        </div>)
+              <p><a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showStatus} /></a></p>
+              <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
+            </div>)
         }
 
       </NonIETransitionGroup>
@@ -490,6 +543,16 @@ export const messages = defineMessages({
     id: 'SearchResult.showStatus',
     description: 'Shown when the status is hidden',
     defaultMessage: 'Where can you find this'
+  },
+  hideRestOfBranches: {
+    id: 'SearchResult.hideRestOfBranches',
+    description: 'Hide the rest of branches which do not meet filter criteria',
+    defaultMessage: 'Hide other branches'
+  },
+  restOfBranches: {
+    id: 'SearchResult.restOfBranches',
+    description: 'Shown the rest of branches which do not meet filter criteria',
+    defaultMessage: 'Show other branches'
   },
   hideStatus: {
     id: 'SearchResult.hideStatus',

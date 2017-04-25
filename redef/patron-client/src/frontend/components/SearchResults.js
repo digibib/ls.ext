@@ -32,6 +32,7 @@ class SearchResults extends React.Component {
                           result={result}
                           locationQuery={this.props.locationQuery}
                           showStatus={this.props.searchActions.showStatus}
+                          showUnfilteredStatus={this.props.searchActions.showUnfilteredStatus}
                           showBranchStatus={this.props.searchActions.showBranchStatus}
                           showBranchStatusMedia={this.props.searchActions.showBranchStatusMedia}
                           fetchWorkResource={this.props.fetchWorkResource}

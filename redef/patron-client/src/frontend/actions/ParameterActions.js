@@ -53,15 +53,11 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
         }
       })
     }
-    if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
-      let branchToShow
-      const homeBranch = getState().profile.personalInformation.homeBranch
-      if (homeBranch) {
-        branchToShow = homeBranch
-      } else {
-        branchToShow = 'hutl'
-      }
-      const locationQueryWithBranches = ensureBranchStatus(locationQuery, branchToShow)
+
+    const homeBranch = getState().profile.personalInformation.homeBranch
+
+    if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia' && homeBranch) {
+      const locationQueryWithBranches = ensureBranchStatus(locationQuery, homeBranch)
       return dispatch(push({ pathname: pathname, query: locationQueryWithBranches }))
     } else {
       return dispatch(push({ pathname: pathname, query: locationQuery }))
