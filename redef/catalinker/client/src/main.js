@@ -222,7 +222,7 @@
     }
 
     const translate = _.memoize(function (msgKey) {
-      return ractive.get('applicationData.translations')[ractive.get('applicationData.language')][msgKey]
+      return ractive.get('applicationData.translations')[ ractive.get('applicationData.language') ][ msgKey ]
     })
 
     var deleteResource = function (uri, deleteConfig, success) {
@@ -1202,10 +1202,6 @@
                               }
                             })
                           }
-                        } else if (input.type === 'hidden-url-query-value') {
-                          _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                            setIdValue(value.id, input, 0, valuesField)
-                          })
                         } else {
                           _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
                             if (!options.onlyValueSuggestions) {
@@ -1423,7 +1419,7 @@
       if (prop.type) {
         input.type = prop.type
       }
-      input.visible = (prop.type !== 'entity' && prop.type !== 'hidden-url-query-value' && !prop.initiallyHidden)
+      input.visible = (prop.type !== 'entity' && !prop.initiallyHidden)
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
       }
@@ -2363,6 +2359,7 @@
         }
       },
       predefinedLabelValue: function (type, uri) {
+        uri = _.flatten([ uri ])[ 0 ]
         return i18nLabelValue(_.find(ractive.get(`predefinedValues.${type}`), function (predefinedValue) {
           return predefinedValue[ '@id' ] === uri
         })[ 'label' ])
@@ -2425,7 +2422,8 @@
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
           'readonly-searchable-with-result-in-side-panel',
-          'links'
+          'links',
+          'conditional-input-type'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
@@ -2472,7 +2470,7 @@
           applicationData.translations = translations
           const language = (URI.parseQuery(URI.parse(document.location.href).query).language || 'no')
           applicationData.partials = applicationData.partials || {}
-          applicationData.partials = _.extend(applicationData.partials, translations[language])
+          applicationData.partials = _.extend(applicationData.partials, translations[ language ])
           applicationData.language = language
           return applicationData
         }
@@ -3150,6 +3148,15 @@
               teardown: function () {}
             }
           }
+          const setGlobalFlag = function (node, args) {
+            const ractive = this
+            _.chain(args).keys().each(function (key) {
+              ractive.set(key, true)
+            })
+            return {
+              teardown: function () {}
+            }
+          }
           titleRactive = new Ractive({
             el: 'title',
             template: '{{title.1 || title.2 || title.3 || "Katalogisering"}}',
@@ -3435,7 +3442,8 @@
               heightAligned,
               authorityEdit,
               draggable,
-              dropZone
+              dropZone,
+              setGlobalFlag
             },
             partials: applicationData.partials,
             transitions: {
@@ -3629,7 +3637,7 @@
                 updateBrowserLocationClearAllExcept([ 'openTab', 'language' ])
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
-                  if (input.type === 'hidden-url-query-value' &&
+                  if (input.hiddenUrlQueryValue &&
                     typeof input.values[ 0 ].current.value === 'string' &&
                     input.values[ 0 ].current.value !== '') {
                     let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
@@ -3864,7 +3872,7 @@
                 if (eventShouldBeIgnored(event)) return
                 if (!event.context.prefillFromAcceptedSource) {
                   _.each(event.context.inputs, function (input, index) {
-                    if (input.type !== 'hidden-url-query-value') {
+                    if (input.hiddenUrlQueryValue) {
                       ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
                     }
                   })

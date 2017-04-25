@@ -971,11 +971,22 @@ module.exports = (app) => {
               { rdfProperty: 'language', multiple: true },
               {
                 rdfProperty: 'hasWorkType',
-                type: 'hidden-url-query-value',
+                type: 'select-predefined-value',
+                hiddenUrlQueryValue: true,
                 id: 'workTypeInput',
                 widgetOptions: {
                   queryParameter: 'hasWorkType',
-                  prefix: 'http://data.deichman.no/workType#'
+                  prefix: 'http://data.deichman.no/workType#',
+                  conditionalInputType: [
+                    {
+                      when: 'inWorkflow',
+                      replaceType: 'readonly-hidden-url-query-value'
+                    },
+                    {
+                      when: 'editingAuthority',
+                      replaceType: 'select-predefined-value'
+                    }
+                  ]
                 }
               },
               {
