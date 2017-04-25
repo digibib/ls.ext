@@ -113,6 +113,30 @@ public class ExpectationTest {
     }
 
     @Test
+    public void test_large_waiting_list_with_many_items() {
+        boolean zeroBorrower = false;
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < 40; i++) {
+            items.add(createItem(0, BOK));
+        }
+        Expectation expectation = new Expectation();
+        assertEquals(getExpectedWaitInWeeks(0, zeroBorrower), expectation.estimate(1, items, zeroBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(28, zeroBorrower), expectation.estimate(56, items, zeroBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(84, zeroBorrower), expectation.estimate(800, items, zeroBorrower).getEstimatedWait());
+    }
+
+    @Test
+    public void test_three_items_seven_users() {
+        boolean zeroBorrower = false;
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            items.add(createItem(0, BOK));
+        }
+        Expectation expectation = new Expectation();
+        assertEquals(getExpectedWaitInWeeks(1, zeroBorrower), expectation.estimate(1, items, zeroBorrower).getEstimatedWait());
+    }
+
+    @Test
     public void test_queue_seven_three_items() {
         int queuePlace = 7;
         boolean zeroBorrower = false;

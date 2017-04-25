@@ -77,7 +77,8 @@ public final class Expectation {
         int relevantItem;
         int numberOfItems = items.size();
         if (numberOfItems < queuePlace) {
-            relevantItem = (int) (numberOfItems - (Math.ceil(queuePlace / numberOfItems) % queuePlace));
+//            relevantItem = (int) (numberOfItems - (Math.ceil(queuePlace / numberOfItems) % queuePlace));
+            relevantItem = queuePlace % numberOfItems;
         } else if (numberOfItems == queuePlace) {
             relevantItem = queuePlace - 1;
         } else {
