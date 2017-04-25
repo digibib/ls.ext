@@ -78,7 +78,7 @@ class ItemsMedia extends React.Component {
       if (merged.length === 0) {
         merged.push(el)
       }
-      merged.forEach((i) => {
+      merged.forEach(i => {
         if (i.shelfmark === el.shelfmark) {
           wasMerged = true
           if (i.barcode !== el.barcode) {

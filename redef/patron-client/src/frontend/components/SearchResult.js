@@ -188,9 +188,9 @@ class SearchResult extends React.Component {
 
   extractRemainingBranches (groupedByBranchAndMedia, filtered) {
     return groupedByBranchAndMedia.filter((current) => {
-      return filtered.filter((current_b) => {
-          return current_b.branchcode === current.branchcode
-        }).length === 0
+      return filtered.filter((currentB) => {
+        return currentB.branchcode === current.branchcode
+      }).length === 0
     })
   }
 
@@ -450,7 +450,7 @@ class SearchResult extends React.Component {
           {this.renderGenres(result.publication)}
         </article>
 
-        {this.shouldShowStatus()  //handleShowUnfilteredStatusClick
+        {this.shouldShowStatus()
           ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
                 <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
                 <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
@@ -477,7 +477,7 @@ class SearchResult extends React.Component {
                 </div>)
                   : null
               }</span>)
-            ]
+          ]
           : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
               <p><a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showStatus} /></a></p>
               <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
@@ -500,7 +500,8 @@ SearchResult.propTypes = {
   homeBranch: PropTypes.string,
   filters: PropTypes.array.isRequired,
   showBranchStatusMedia: PropTypes.func.isRequired,
-  showBranchStatus: PropTypes.func.isRequired
+  showBranchStatus: PropTypes.func.isRequired,
+  showUnfilteredStatus: PropTypes.func.isRequired
 }
 
 export const messages = defineMessages({
