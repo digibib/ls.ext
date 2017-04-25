@@ -140,9 +140,8 @@ class UserLoans extends React.Component {
               <div className="flex-col place-in-queue">
                 <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
                 <p data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                  ? item.queuePlace
+                  ? <span>{item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}</span>
                   : <FormattedMessage {...messages.enRoute} />}
-                  &nbsp;{!item.queuePlace === 0 ? this.renderWaitingPeriod(item.estimatedWait) : ''}
                   &nbsp;{item.suspendUntil
                     ? <span className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
                     : ''
