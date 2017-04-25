@@ -107,7 +107,7 @@ export function postProfileInfo (successAction) {
       body: JSON.stringify(profileInfo)
     })
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 204) {
           dispatch(postProfileInfoSuccess())
           dispatch(fetchProfileInfo())
           if (successAction) {
