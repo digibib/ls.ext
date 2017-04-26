@@ -12,7 +12,6 @@ function setup (propOverrides) {
     startReservation: () => {},
     toggleFilter: () => {},
     toggleParameterValue: () => {},
-    toggleAvailability: () => {},
     removePeriod: () => {},
     locationQuery: {},
     audiences: [],
@@ -57,8 +56,8 @@ function setup (propOverrides) {
     searchFilterActions: {
       removePeriod: () => {},
       removeFilterInBackUrl: () => {},
-      removePeriodInBackUrl: () => {}
-
+      removePeriodInBackUrl: () => {},
+      toggleAvailability: () => {}
     },
     query: {},
     workLanguage: '',
