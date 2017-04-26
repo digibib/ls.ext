@@ -831,7 +831,11 @@ public final class EntityServiceImpl implements EntityService {
         Map<String, String> publicationMetadata = new HashMap<>();
         repository.retrievePublicationDataByRecordId(recordId).forEachRemaining(querySolution -> {
                 querySolution.varNames().forEachRemaining(varName -> {
-                    publicationMetadata.put(varName, querySolution.get(varName).toString());
+                    if (querySolution.get(varName).isLiteral()) {
+                        publicationMetadata.put(varName, querySolution.get(varName).asLiteral().getString());
+                    } else {
+                        publicationMetadata.put(varName, querySolution.get(varName).toString());
+                    }
                 });
             });
         String title = publicationMetadata.get("mainTitle");
