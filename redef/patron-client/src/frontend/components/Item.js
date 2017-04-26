@@ -6,7 +6,12 @@ const Item = ({ item, intl }) => {
   return (
     <div role="row" className="flex-wrapper sub-wrapper">
       <div data-automation-id="item_languages" className="flex-item sub-row">{languages.join(', ')}</div>
-      <div data-automation-id="item_shelfmark" className="flex-item sub-row">{item.shelfmark}</div>
+      <div data-automation-id="item_shelfmark" className="flex-item sub-row">{item.shelfmark}
+        {item.location.length
+          ? <span>{renderLocation(item)}</span>
+          : null
+        }
+      </div>
       {window.innerWidth < 668
         ? <div data-automation-id="item_status" className="flex-item sub-row">
           {item.available === 0
@@ -23,6 +28,17 @@ const Item = ({ item, intl }) => {
       }
     </div>
   )
+}
+
+const renderLocation = (item) => {
+  if (!Array.isArray(item.location)) {
+    return <span className="location-item">{item.location}</span>
+  } else {
+    const itemLocation = item.location.map((el, i) => {
+      return <span key={i} className="location-item">{el}</span>
+    })
+    return itemLocation
+  }
 }
 
 Item.propTypes = {

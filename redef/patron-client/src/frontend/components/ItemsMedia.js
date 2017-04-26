@@ -84,6 +84,12 @@ class ItemsMedia extends React.Component {
           if (i.barcode !== el.barcode) {
             i.total = i.total + el.total
             i.available = i.available + el.available
+            const loc = i.location
+            i.location = []
+            i.location.push(loc)
+            if (el.location.length && el.location.toLowerCase() !== i.location.toLowerCase()) {
+              i.location.push(el.location)
+            }
           }
         }
         if (!wasMerged) {

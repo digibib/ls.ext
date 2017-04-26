@@ -287,6 +287,14 @@
     width: 25%;
   }
 
+  .location-item {
+    background-color: #ddd;
+    padding: 0 0.5em;
+    border-radius: 0.2em;
+    margin: 0 0.3em 0 0.3em;
+    text-transform: uppercase;
+  }
+
 }
 
 @include breakpoint($small) {
