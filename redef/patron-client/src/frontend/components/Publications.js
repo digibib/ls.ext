@@ -165,6 +165,7 @@ class Publications extends React.Component {
                 <FormattedMessage {...messages.hideRestOfPublications} values={{ mediaType: mediaTypeOutput }} />
             }
             output.push(<ShowFilteredPublicationsLabel
+              key={new Date().getTime()}
               open={showAll.includes(mediaType)}
               showingRestLabel={showingRestLabel} mediaType={mediaType}
               toggleParameterValue={this.props.toggleParameterValue} />)
