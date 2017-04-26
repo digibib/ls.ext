@@ -1,6 +1,8 @@
 package no.deichman.services.entity;
 
 import no.deichman.services.circulation.Item;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
@@ -13,16 +15,16 @@ import java.util.stream.Collectors;
 /**
  * Responsibility: provides an estimate for expected availability dates.
  */
-public final class Expectation {
+final class Expectation {
 
-    public static final int ONE_WEEK_IN_DAYS = 7;
-    public static final int ONE_PLACE_ADJUSTMENT = 1;
-    public static final int HANDLING_TIME = 1;
-    public static final int TWO_WEEKS = 2;
-    public static final int FOUR_WEEKS = 4;
-    public static final int CUTTOFF = 12;
+    private static final int ONE_WEEK_IN_DAYS = 7;
+    private static final int ONE_PLACE_ADJUSTMENT = 1;
+    private static final int HANDLING_TIME = 1;
+    private static final int TWO_WEEKS = 2;
+    private static final int FOUR_WEEKS = 4;
+    private static final int CUTOFF = 12;
 
-    public Estimation estimate(int queuePlace, List<Item> items, boolean precedingZeroUser) {
+    Estimation estimate(int queuePlace, List<Item> items, boolean precedingZeroUser) {
         Estimation estimation = new Estimation();
         List<Item> reservableItems = reservableOf(items);
         int availableItems = availableOf(reservableItems).size();
@@ -44,56 +46,18 @@ public final class Expectation {
             return estimation;
         }
 
+        int estimate = guess(queuePlace, reservableItems, precedingZeroUser);
 
-
-        Item item = getRelevantItem(items, adjustedQueuePlace);
-        Optional<String> itemType = Optional.of(item.getType());
-        int loanPeriod = getLoanPeriod(itemType.orElse("BOK"));
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-
-        double initialOffset = 0;
-        if (item.getReturnDate() != null) {
-            initialOffset = getOffset(dateTimeFormatter.parseDateTime(item.getReturnDate()));
-        }
-        int estimate = ((int) ((loanPeriod * getDistributedQueuePosition(adjustedQueuePlace, items.size()))
-                + initialOffset)) + HANDLING_TIME;
-        estimation.setEstimatedWait((estimate < CUTTOFF) ? estimate : CUTTOFF);
+        estimation.setEstimatedWait((estimate < CUTOFF) ? estimate : CUTOFF);
 
         return estimation;
     }
 
-    private int getDistributedQueuePosition(int queuePlace, int items) {
-        int queueRow;
-        if (items > 1 && items < queuePlace) {
-            queueRow = (int) ((Math.ceil(queuePlace / items) % queuePlace));
-        } else {
-            queueRow = queuePlace;
-        }
-        return queueRow;
-    }
-
-    private Item getRelevantItem(List<Item> items, int queuePlace) {
-        int relevantItem;
-        int numberOfItems = items.size();
-        if (numberOfItems < queuePlace) {
-//            relevantItem = (int) (numberOfItems - (Math.ceil(queuePlace / numberOfItems) % queuePlace));
-            relevantItem = queuePlace % numberOfItems;
-        } else if (numberOfItems == queuePlace) {
-            relevantItem = queuePlace - 1;
-        } else {
-            relevantItem = queuePlace;
-        }
-
-        if (relevantItem > items.size() - 1) {
-            relevantItem = items.size() - 1;
-        }
-        return items.get(relevantItem);
-    }
-
-    private double getOffset(DateTime onloan) {
+    private int getOffset(String onLoan) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         DateTime now = new DateTime();
-        return Math.ceil(Days.daysBetween(now.toLocalDate(), onloan.toLocalDate()).getDays() / ONE_WEEK_IN_DAYS);
+        int daysBetween = Days.daysBetween(now.toLocalDate(), dateTimeFormatter.parseDateTime(onLoan).toLocalDate()).getDays();
+        return (daysBetween < 1) ? 0 : (int) (Math.ceil(daysBetween / ONE_WEEK_IN_DAYS));
     }
 
     private int getLoanPeriod(String itemType) {
@@ -118,15 +82,42 @@ public final class Expectation {
         return period;
     }
 
-    private boolean inTransit(int queuePlace) {
-        return (queuePlace == 0);
-    }
-
     private List<Item> reservableOf(List<Item> items) {
-        return items.stream().filter(item -> item.isReservable()).collect(Collectors.toList());
+        return items.stream().filter(Item::isReservable).collect(Collectors.toList());
     }
 
     private List<Item> availableOf(List<Item> items) {
         return items.stream().filter(item -> item.getReturnDate() == null).collect(Collectors.toList());
     }
+
+    private int guess(int queuePlace, List<Item> items, boolean zeroUser) {
+        int loanPeriod = getLoanPeriod(Optional.of(items.get(0).getType()).orElse("BOK"));
+        int adjustedQueuePlace = (zeroUser) ? queuePlace + 1 : queuePlace;
+        Pair queueRowAndItem = getMatrixPosition(adjustedQueuePlace, items.size());
+        int queueRow = (int) queueRowAndItem.getLeft();
+        int relevantItem = (int) queueRowAndItem.getRight();
+        int weeksUntilNextRelevantStatusChange = getOffset(items.get(relevantItem).getReturnDate());
+        int adjustedQueueRow = (queueRow == 0) ? 0 : queueRow - 1;
+        int estimate = (queueRow == 1) ? weeksUntilNextRelevantStatusChange : (loanPeriod * adjustedQueueRow) + weeksUntilNextRelevantStatusChange;
+        return estimate + HANDLING_TIME;
+    }
+
+    private Pair getMatrixPosition(int queuePlace, int items) {
+        Pair<Integer, Integer> returnValue = null;
+        int b = (queuePlace + (items - (queuePlace % items))) / items;
+        int[][] matrix = new int[b][items];
+        int increment = 1;
+        for (int left = 0; left < b; left++) {
+            for (int right = 0; right < items; right++) {
+                matrix[left][right] = increment;
+                if (increment == queuePlace) {
+                    returnValue = new ImmutablePair<>(left, right);
+                    break;
+                }
+                increment++;
+            }
+        }
+        return returnValue;
+    }
+
 }

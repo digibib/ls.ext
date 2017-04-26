@@ -102,27 +102,32 @@ public class ExpectationTest {
     @Test
     public void test_three_waiting_for_one_unloaned() {
         boolean zerorBorrower = false;
-        Item item = createItem(0, BOK);
-        List<Item> items = Collections.singletonList(item);
+        List<Item> items1 = Collections.singletonList(createItem(0, BOK));
+
         Expectation expectation = new Expectation();
-        assertEquals(getExpectedWaitInWeeks(0, zerorBorrower), expectation.estimate(1, items, zerorBorrower).getEstimatedWait());
-        assertEquals(getExpectedWaitInWeeks(28, zerorBorrower), expectation.estimate(2, items, zerorBorrower).getEstimatedWait());
-        assertEquals(getExpectedWaitInWeeks(56, zerorBorrower), expectation.estimate(3, items, zerorBorrower).getEstimatedWait());
-        assertEquals(getExpectedWaitInWeeks(84, zerorBorrower), expectation.estimate(4, items, zerorBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(0, zerorBorrower), expectation.estimate(1, items1, zerorBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(28, zerorBorrower), expectation.estimate(2, items1, zerorBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(56, zerorBorrower), expectation.estimate(3, items1, zerorBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(84, zerorBorrower), expectation.estimate(4, items1, zerorBorrower).getEstimatedWait());
 
     }
 
     @Test
     public void test_large_waiting_list_with_many_items() {
         boolean zeroBorrower = false;
-        List<Item> items = new ArrayList<>();
+        List<Item> items1 = new ArrayList<>();
         for (int i = 0; i < 40; i++) {
-            items.add(createItem(0, BOK));
+            items1.add(createItem(0, BOK));
+        }
+
+        List<Item> items2 = new ArrayList<>();
+        for (int i = 0; i < 40; i++) {
+            items2.add(createItem(28, BOK));
         }
         Expectation expectation = new Expectation();
-        assertEquals(getExpectedWaitInWeeks(0, zeroBorrower), expectation.estimate(1, items, zeroBorrower).getEstimatedWait());
-        assertEquals(getExpectedWaitInWeeks(28, zeroBorrower), expectation.estimate(56, items, zeroBorrower).getEstimatedWait());
-        assertEquals(getExpectedWaitInWeeks(84, zeroBorrower), expectation.estimate(800, items, zeroBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(0, zeroBorrower), expectation.estimate(1, items1, zeroBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(28, zeroBorrower), expectation.estimate(56, items2, zeroBorrower).getEstimatedWait());
+        assertEquals(getExpectedWaitInWeeks(84, zeroBorrower), expectation.estimate(800, items2, zeroBorrower).getEstimatedWait());
     }
 
     @Test
@@ -137,12 +142,24 @@ public class ExpectationTest {
     }
 
     @Test
+    public void test_thirteen_items_queue_place_seven() {
+        boolean zeroBorrower = false;
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < 13; i++) {
+            items.add(createItem(0, BOK));
+        }
+        Expectation expectation = new Expectation();
+        assertEquals(getExpectedWaitInWeeks(1, zeroBorrower), expectation.estimate(2, items, zeroBorrower).getEstimatedWait());
+
+    }
+
+    @Test
     public void test_queue_seven_three_items() {
         int queuePlace = 7;
         boolean zeroBorrower = false;
         List<Item> items = Arrays.asList(createItem(FOUR_WEEKS_IN_DAYS, BOK), createItem(FOUR_WEEKS_IN_DAYS, BOK), createItem(FOUR_WEEKS_IN_DAYS, BOK));
         Expectation expectation = new Expectation();
-        int expected = getExpectedWaitInWeeks(84, zeroBorrower);
+        int expected = getExpectedWaitInWeeks(56, zeroBorrower);
         assertEquals(expected, expectation.estimate(queuePlace, items, zeroBorrower).getEstimatedWait());
     }
     @Test
@@ -151,7 +168,7 @@ public class ExpectationTest {
         boolean zeroBorrower = false;
         List<Item> items = Arrays.asList(createItem(14, BOK), createItem(14, BOK), createItem(14, BOK));
         Expectation expectation = new Expectation();
-        int expected = getExpectedWaitInWeeks(70, zeroBorrower);
+        int expected = getExpectedWaitInWeeks(42, zeroBorrower);
         assertEquals(expected, expectation.estimate(queuePlace, items, zeroBorrower).getEstimatedWait());
     }
 
@@ -184,7 +201,7 @@ public class ExpectationTest {
     @Test
     public void test_queue_with_spread_of_dates() {
         int queuePlace = 1;
-        boolean zeroBorrower = true;
+        boolean zeroBorrower = false;
         Expectation expectation = new Expectation();
         List<Item> items;
         for (int i = 0; i < 57; i++) {
