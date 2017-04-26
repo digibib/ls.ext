@@ -3154,7 +3154,11 @@
               ractive.set(key, true)
             })
             return {
-              teardown: function () {}
+              teardown: function () {
+                _.chain(args).keys().each(function (key) {
+                  ractive.set(key, null)
+                })
+              }
             }
           }
           titleRactive = new Ractive({
