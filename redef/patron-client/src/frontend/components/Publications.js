@@ -304,7 +304,7 @@ class Publications extends React.Component {
           {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
           <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
                            removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
-                           toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                           toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
                            query={this.props.query} />
         </header>
         {
