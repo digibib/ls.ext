@@ -3922,7 +3922,7 @@
                   return resourceUri
                 }
                 let patchMotherResource = function (resourceUri) {
-                  if (useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
+                  if (!useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
                     Main.patchResourceFromValue(ractive.get(`targetUri.${targetInput.rdfType}`), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                   }
                   return resourceUri
@@ -5080,13 +5080,16 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        supportPanelLeftEdge = $('#right-dummy-panel').position().left
-        supportPanelWidth = $('#right-dummy-panel').width()
+        const rightDummyPanel = $('#right-dummy-panel')
+        if (rightDummyPanel.length > 0) {
+          supportPanelLeftEdge = rightDummyPanel.position().left
+          supportPanelWidth = rightDummyPanel.width()
 
-        if (supportPanelLeftEdge > 0) {
-          $('.support-panel').each(function (index, panel) {
-            $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
-          })
+          if (supportPanelLeftEdge > 0) {
+            $('.support-panel').each(function (index, panel) {
+              $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
+            })
+          }
         }
       },
       getRactive: function () {
