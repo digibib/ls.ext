@@ -54,10 +54,14 @@ final class Expectation {
     }
 
     private int getOffset(String onLoan) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        DateTime now = new DateTime();
-        int daysBetween = Days.daysBetween(now.toLocalDate(), dateTimeFormatter.parseDateTime(onLoan).toLocalDate()).getDays();
-        return (daysBetween < 1) ? 0 : (int) (Math.ceil(daysBetween / ONE_WEEK_IN_DAYS));
+        int offset = 0;
+        if (onLoan != null) {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+            DateTime now = new DateTime();
+            int daysBetween = Days.daysBetween(now.toLocalDate(), dateTimeFormatter.parseDateTime(onLoan).toLocalDate()).getDays();
+            offset = (daysBetween < 1) ? 0 : (int) (Math.ceil(daysBetween / ONE_WEEK_IN_DAYS));
+        }
+        return offset;
     }
 
     private int getLoanPeriod(String itemType) {
