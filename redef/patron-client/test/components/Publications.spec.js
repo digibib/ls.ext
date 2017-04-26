@@ -57,6 +57,7 @@ function setup (propOverrides) {
       removePeriod: () => {},
       removeFilterInBackUrl: () => {},
       removePeriodInBackUrl: () => {},
+      removeAvailabilityInBackUrl: () => {},
       toggleAvailability: () => {}
     },
     query: {},
