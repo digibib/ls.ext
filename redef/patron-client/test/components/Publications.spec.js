@@ -12,6 +12,7 @@ function setup (propOverrides) {
     startReservation: () => {},
     toggleFilter: () => {},
     toggleParameterValue: () => {},
+    toggleAvailability: () => {},
     removePeriod: () => {},
     locationQuery: {},
     audiences: [],

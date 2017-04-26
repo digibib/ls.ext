@@ -81,12 +81,12 @@ describe('components', () => {
         locationQuery: { query: 'test_query' },
         setFilter: () => {}
       })
-      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(3) // range and availability counts for 2
+      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(4) // range and availability counts for 2
     })
 
     it('should render filters in groups', () => {
       const { node } = setup({ locationQuery: { query: 'test_query' } })
-      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(4) // range and availability counts for 2
+      expect(node.querySelector("[data-automation-id='search_filters']").childNodes.length).toBe(5) // range and availability counts for 2
     })
   })
 })

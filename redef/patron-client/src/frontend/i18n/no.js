@@ -3,7 +3,6 @@ export default {
   'AdditionalInformation.additionalInfoToggleMore': 'Mer om dette verket',
   'AgeLimit.ageLimit': 'Aldersgrense',
   'Author.labelBy': 'Av',
-  'AvailableFilter.availability': 'Tilgjengelighet',
   'AvailableFilter.availabilityLabel': 'Vis kun ledige',
   'BiblioNumber.biblioNumber': 'Tittelnummer',
   'Binding.labelBinding': 'Innbinding',

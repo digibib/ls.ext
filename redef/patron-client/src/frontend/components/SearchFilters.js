@@ -93,6 +93,7 @@ class SearchFilters extends React.Component {
               : <AvailableFilter
                 toggleAvailability={this.props.toggleAvailability}
                 isChecked={this.props.locationQuery.hasOwnProperty('excludeUnavailable')}
+                scrollTargetNode={this.props.scrollTargetNode}
               />
             }
             {this.props.locationQuery.hideFilters === Constants.enabledParameter
@@ -107,7 +108,7 @@ class SearchFilters extends React.Component {
                   toggleAllFilters={this.toggleFilterVisibility}
                   toggleCollapseFilter={this.props.toggleCollapseFilter}
                   scrollTargetNode={this.props.scrollTargetNode}
-                  first={true}
+                  first
                 />
             }
             {this.props.locationQuery.hideFilters === Constants.enabledParameter

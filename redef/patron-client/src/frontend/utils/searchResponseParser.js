@@ -136,7 +136,7 @@ export function processAggregationsToFilters (response, locationQuery, filteredL
     }
     const field = Constants.filterableFields[ fieldShortName ]
     const fieldName = field.name
-    const aggregation = facets[ fieldName ] ? facets[ fieldName ] [ fieldName ] : null
+    const aggregation = facets[ fieldName ] ? facets[ fieldName ][ fieldName ] : null
     if (aggregation) {
       aggregation.buckets.forEach(bucket => {
         const filterId = `${fieldShortName}_${bucket.key.substring(field.prefix.length)}`
@@ -149,7 +149,6 @@ export function processAggregationsToFilters (response, locationQuery, filteredL
       })
     }
   })
-
 
   return filters
 }

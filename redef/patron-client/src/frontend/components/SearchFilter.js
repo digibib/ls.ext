@@ -49,7 +49,7 @@ class SearchFilter extends React.Component {
         if (!this.shouldShowMore() && index >= Constants.maxVisibleFilterItems) {
           return
         }
-        if (!filter.bucket || filter.bucket === "") {
+        if (!filter.bucket || filter.bucket === '') {
           return
         }
         return (
@@ -100,15 +100,15 @@ class SearchFilter extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
-        className={this.props.first ? "filter-group-first" : "filter-group"}
+        className={this.props.first ? 'filter-group-first' : 'filter-group'}
         data-automation-id={`filter_${this.props.aggregation}`}>
         <header className="filterTitle" onClick={this.handleCollapse}>
           <h1>{this.renderTitle()}</h1>
           <button className="single-filter-close" type="button"
                   aria-label={buttonAriaLabel} aria-expanded={!this.isCollapsed()}>
             {this.isCollapsed()
-              ? <i className="icon-plus" aria-hidden="true" />
-              : <i className="icon-minus" aria-hidden="true" />}
+              ? <i className="icon-plus" aria-hidden />
+              : <i className="icon-minus" aria-hidden />}
           </button>
         </header>
         {this.isCollapsed() ? null

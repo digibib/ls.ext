@@ -26,6 +26,7 @@ function setup (propOverrides) {
       toggleFilter: () => {},
       toggleFilterVisibility: () => {},
       toggleAllFiltersVisibility: () => {},
+      toggleAvailability: () => {},
       toggleCollapseFilter: () => {},
       removePeriod: () => {},
       togglePeriod: () => {}

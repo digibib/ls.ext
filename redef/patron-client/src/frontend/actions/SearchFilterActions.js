@@ -63,7 +63,6 @@ export function removeAvailabilityInBackUrl () {
   }
 }
 
-
 export function removePeriod (years) {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
