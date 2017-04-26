@@ -2,7 +2,7 @@
 <span class="pure-u-1-1" intro='slideIn'>
     <span class="pure-g">
         {{#if ! reportFormat.topLevel}}
-            <span class="pure-u-1-2 label" data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
+            <span class="pure-u-1-2 label" data-uri-escaped-label="{{encodeURI(label)}}">{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}</span>
         {{/if}}
         <span class-pure-u-1-1="{{reportFormat.topLevel}}" class-pure-u-1-2="{{!reportFormat.topLevel}}" class="multi-value">
                 {{#each values:inputValueIndex}}
@@ -33,7 +33,7 @@
                                     {{else}}
                                     {{#each ../../../../../subInputs}}
                                                 <span class="pure-u-1-2 label"
-                                                      data-uri-escaped-label="{{encodeURI(label)}}">{{input.widgetOptions.reportLabel || label}}</span>
+                                                      data-uri-escaped-label="{{encodeURI(label)}}">{{>(input.widgetOptions.reportLabel || label)}}</span>
                                                 {{#with input.values[inputValueIndex]}}
                                                     <span class="pure-u-1-2">
                                                         {{>"readonly-" + ../../../input.type}}

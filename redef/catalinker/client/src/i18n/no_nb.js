@@ -313,6 +313,9 @@
     // status messages
     statusOpenedExistingResource: 'åpnet eksisterende ressurs',
     statusWorking: 'arbeider...',
-    statusSaved: 'alle endringer er lagret'
+    statusSaved: 'alle endringer er lagret',
+
+    // misc
+    partsLabel: 'Deler'
   }
 }))

@@ -661,7 +661,7 @@ module.exports = (app) => {
             id: 'describe-publication',
             rdfType: 'Publication',
             label: 'publicationTabLabel',
-            reportLabel: 'Utgivelse',
+            reportLabel: 'workLabel',
             inputs: [
               {
                 rdfProperty: 'mainTitle',
@@ -936,7 +936,7 @@ module.exports = (app) => {
             id: 'describe-work',
             rdfType: 'Work',
             label: 'workTabLabel',
-            reportLabel: 'Verk',
+            reportLabel: 'workLabel',
             inputs: [
               {
                 id: 'workMainTitle',
@@ -1139,7 +1139,7 @@ module.exports = (app) => {
             id: 'subjects',
             rdfType: 'Work',
             label: 'subjectsTabLabel',
-            reportLabel: 'Emner',
+            reportLabel: 'maintGeneralSubjectLabelPlur',
             inputs: [
               {
                 includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
@@ -1342,7 +1342,7 @@ module.exports = (app) => {
             id: 'collection-of-works',
             rdfType: 'Publication',
             label: 'publicationPartsTabLabel',
-            reportLabel: 'Deler',
+            reportLabel: 'partsLabel',
             inputs: [
               {
                 label: 'publicationPartsLabel',
