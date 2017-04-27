@@ -87,7 +87,7 @@ class ItemsMedia extends React.Component {
             const loc = i.location
             i.location = []
             i.location.push(loc)
-            if (el.location.length && el.location.toLowerCase() !== i.location.toLowerCase()) {
+            if (el.location.length && el.location.toLowerCase() !== loc.toLowerCase()) {
               i.location.push(el.location)
             }
           }

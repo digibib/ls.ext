@@ -279,6 +279,10 @@ class SearchResult extends React.Component {
     let defaultBranchPos
     const activeFilters = this.getActiveFilters('branch')
 
+    if (groupedByBranchAndMedia.length === 1) {
+      // this.handleBranchStatus(groupedByBranchAndMedia[0].branchcode)
+    }
+
     if (groupedByBranchAndMedia.length > 0) {
       const byBranch = groupedByBranchAndMedia.map((el, i) => {
         /* Check if any branch filters selected and if user has homeBranch and remember position of homeBranch */

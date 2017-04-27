@@ -53,7 +53,6 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
         }
       })
     }
-
     const homeBranch = getState().profile.personalInformation.homeBranch
 
     if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
@@ -62,6 +61,35 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
     } else {
       return dispatch(push({ pathname: pathname, query: locationQuery }))
     }
+  }
+}
+
+export function ensureOneBranchOpen (inputLocationQuery) {
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    const searchResults = getState().search.searchResults
+    let queryParam = locationQuery[ 'showBranchStatus' ] || []
+    if (!Array.isArray(queryParam)) {
+      queryParam = [ queryParam ]
+    }
+    if (queryParam.length > 0) {
+      // There are allready toggled filters, which means this is not an "initial query",
+      // but a refinement of existing query.
+      return
+    }
+
+    searchResults.forEach((el, i) => {
+      if (el.publication.availableBranches.length === 1 && i === 0) {
+        locationQuery[ 'showBranchStatus' ] = [ el.publication.availableBranches[0] ]
+      }
+
+      if (el.publication.availableBranches.length === 1 && i > 0) {
+        locationQuery[ 'showBranchStatus' ].push([ el.publication.availableBranches[0] ])
+      }
+    })
+
+    return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
 }
 
@@ -88,9 +116,8 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
 
 function ensureBranchStatus (locationQuery, homeBranch) {
   const activeBranchFilters = getActiveBranchFilters(locationQuery)
-
   if (activeBranchFilters.length === 0) {
-    delete locationQuery[ 'showBranchStatus' ]
+    // delete locationQuery[ 'showBranchStatus' ]
     if (homeBranch !== undefined) {
       locationQuery[ 'showBranchStatus' ] = [ homeBranch ]
     }
