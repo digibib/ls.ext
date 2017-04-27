@@ -49,6 +49,7 @@
     addAnotherGenre: 'Legg til en sjanger til',
     addAnotherPart: 'Legg til en del til',
     addAnotherAdditionalEntry: 'Legg til ny biinnførsel',
+    addAnotherVariantTitle: 'Legg til en alternativ tittel til',
     suggestionFromOtherSources: 'Forslag fra andre eksterne kilder',
     missingRequiredValuesOfBlankMode: 'Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi.',
     cannotSelectRelationBeforeResourceTypeIsLoaded: 'Denne knytningen kan ikke velges før tilhørende ressurstype er lastet',

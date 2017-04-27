@@ -112,6 +112,7 @@
     "title": "deichman:title",
     "litform": "deichman:litform",
     "subtitle": "deichman:subtitle",
+    "variantTitle": "deichman:variantTitle",
     "subtitles": "deichman:subtitles",
     "isbn": "deichman:isbn",
     "ismn": "deichman:ismn",

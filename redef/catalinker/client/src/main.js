@@ -1213,6 +1213,8 @@
                                 input[ valuesField ][ valueIndex ].nonEditable = true
                                 ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
                                 input.parentInput.allowAddNewButton = true
+                              } else if (input.multiple) {
+                                input.allowAddNewButton = true
                               }
                             } else {
                               input.suggestedValues = input.suggestedValues || []

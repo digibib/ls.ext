@@ -94,6 +94,7 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['format'] = [:random, :select_prop]
   data['language'] = [:random, :select_prop]
   data['partTitle'] = [generateRandomString, :add_prop]
+  data['variantTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
   data['edition'] = [generateRandomString, :add_prop]
   data['numberOfPages'] = [rand(999).to_s, :add_prop]
