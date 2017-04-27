@@ -661,7 +661,7 @@ module.exports = (app) => {
             id: 'describe-publication',
             rdfType: 'Publication',
             label: 'publicationTabLabel',
-            reportLabel: 'workLabel',
+            reportLabel: 'publicationLabel',
             inputs: [
               {
                 rdfProperty: 'mainTitle',
@@ -688,6 +688,11 @@ module.exports = (app) => {
                   order: 40,
                   styleClass: 'title'
                 }
+              },
+              {
+                rdfProperty: 'variantTitle',
+                multiple: true,
+                addAnotherLabel: 'addAnotherVariantTitle',
               },
               { rdfProperty: 'partNumber' },
               { rdfProperty: 'edition' },

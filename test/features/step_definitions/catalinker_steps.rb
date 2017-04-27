@@ -537,6 +537,7 @@ When(/^jeg verifiserer opplysningene om utgivelsen$/) do
   data['publicationYear'] = :get_prop_from_span
   data['format'] = :get_prop_from_span
   data['partTitle'] = :get_prop_from_span
+  data['variantTitle'] = :get_prop_from_span
   data['partNumber'] = :get_prop_from_span
   data['edition'] = :get_prop_from_span
   data['numberOfPages'] = :get_prop_from_span
