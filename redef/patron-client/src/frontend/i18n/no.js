@@ -334,6 +334,7 @@ export default {
   'UserSettings.returnReceipt': 'Motta kvittering for innlevering på epost',
   'UserSettings.save': 'Lagre innstillinger',
   'UserSettings.settingsError': 'Noe gikk galt ved henting av brukerinnstillinger.',
+  'UserSettings.saveSuccess': 'Lagret!',
   'ValidationMessage.emailOrMobileRequired': 'Enten epost eller mobilnummer må fylles ut',
   'ValidationMessage.genericFieldError': 'Feltet inneholder feil',
   'ValidationMessage.illegalCharacters': 'Feltet inneholder ulovlige karakterer',

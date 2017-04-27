@@ -166,6 +166,8 @@ export const postProfileSettingsFailure = (error) => errorAction(types.POST_PROF
 
 export const postProfileSettingsSuccess = () => action(types.POST_PROFILE_SETTINGS_SUCCESS)
 
+export const resetProfileSettingsSuccess = () => action(types.RESET_PROFILE_SETTINGS_SUCCESS)
+
 export function postProfileSettings (profileSettings, successAction) {
   const url = '/api/v1/profile/settings'
   return dispatch => {
