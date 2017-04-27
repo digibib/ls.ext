@@ -34,6 +34,10 @@
     require('jquery-ui/draggable')
     require('jquery-ui/droppable')
     require('jquery.scrollto')
+    const translations = {
+      no: require('./i18n/no_nb'),
+      en: require('./i18n/en')
+    }
     let etagData = {}
     require('isbn2')
     ISBN = ISBN || window.ISBN // I think this was needed because of extra parameter 'dialog' in init above
@@ -217,6 +221,10 @@
       return ractive.set(`targetUri.${domainType}`, undefined).then(ractive.update())
     }
 
+    const translate = _.memoize(function (msgKey) {
+      return ractive.get('applicationData.translations')[ractive.get('applicationData.language')][msgKey]
+    })
+
     var deleteResource = function (uri, deleteConfig, success) {
       if (!deleteConfig.dialogKeypath) {
         deleteConfig.dialogKeypath = 'deleteResourceDialog'
@@ -243,7 +251,7 @@
           width: 450,
           buttons: [
             {
-              text: 'Slett',
+              text: translate('delete'),
               id: `${idPrefix}-do-del`,
               click: function () {
                 ractive.set(`${deleteConfig.dialogKeypath}.error`, null)
@@ -267,7 +275,7 @@
               }
             },
             {
-              text: 'Avbryt',
+              text: translate('cancel'),
               id: `${idPrefix}-cancel-del`,
               class: 'default',
               click: function () {
@@ -305,17 +313,17 @@
         resizable: false,
         modal: true,
         width: 450,
-        title: enableSpecialInputSpec.buttonLabel,
+        title: translate(enableSpecialInputSpec.buttonLabel),
         buttons: [
           {
-            text: 'Fortsett',
+            text: translate('proceed'),
             click: function () {
               ractive.set(`${keypath}.visible`, true)
               $(this).dialog('close')
             }
           },
           {
-            text: 'Avbryt',
+            text: translate('cancel'),
             click: function () {
               $(this).dialog('close')
             }
@@ -337,17 +345,17 @@
           resizable: false,
           modal: true,
           width: 450,
-          title: 'Slå sammen autoriteter',
+          title: translate('mergeResourcesDialogTitle'),
           buttons: [
             {
-              text: 'Fortsett',
+              text: translate('proceed'),
               click: function () {
                 $(this).dialog('close')
                 proceed()
               }
             },
             {
-              text: 'Avbryt',
+              text: translate('cancel'),
               class: 'default',
               click: function () {
                 $(this).dialog('close')
@@ -366,17 +374,17 @@
         resizable: false,
         modal: true,
         width: 450,
-        title: cloneParentSpec.cloneParentDialogTitle,
+        title: translate(cloneParentSpec.cloneParentDialogTitle),
         buttons: [
           {
-            text: 'Fortsett',
+            text: translate('proceed'),
             click: function () {
               $(this).dialog('close')
               proceed()
             }
           },
           {
-            text: 'Avbryt',
+            text: translate('cancel'),
             class: 'default',
             click: function () {
               $(this).dialog('close')
@@ -398,14 +406,14 @@
         title: `Endre ${editResourcesSpec.fieldLabel}?`,
         buttons: [
           {
-            text: 'Fortsett',
+            text: translate('proceed'),
             click: function () {
               $(this).dialog('close')
               editResourcesSpec.proceed()
             }
           },
           {
-            text: 'Avbryt',
+            text: translate('cancel'),
             class: 'default',
             click: function () {
               editResourcesSpec.revert()
@@ -421,24 +429,24 @@
 
     var alertAboutExistingResource = function (spec, existingResources, proceed) {
       ractive.set('existingResourcesDialog.existingResources', existingResources)
-      ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural.replace('${numberOfResources}', existingResources.length) : spec.legendSingular)
+      ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural : spec.legendSingular)
       ractive.set('existingResourcesDialog.editResourceConfig', spec.editWithTemplate)
       $('#alert-existing-resource-dialog').dialog({
         resizable: false,
         modal: true,
         width: 550,
-        title: 'Denne utgivelsen finnes fra før',
+        title: translate('thisPublicationIsAlreadyRegistered'),
         class: 'existing-resources-dialog',
         buttons: [
           {
-            text: 'Fortsett',
+            text: translate('proceed'),
             click: function () {
               $(this).dialog('close')
               proceed()
             }
           },
           {
-            text: 'Avbryt',
+            text: translate('cancel'),
             class: 'default',
             click: function () {
               $(this).dialog('close')
@@ -461,11 +469,11 @@
         resizable: false,
         modal: true,
         width: 550,
-        title: 'Forslag til forhåndsfylte verdier',
+        title: translate('suggestedPrefilledValues'),
         class: 'additionl-suggestions-dialog',
         buttons: [
           {
-            text: 'Bruk forslag',
+            text: translate('useSuggestion'),
             class: 'default',
             click: function () {
               $(this).dialog('close')
@@ -473,7 +481,7 @@
             }
           },
           {
-            text: 'Ignorer',
+            text: translate('ignore'),
             click: function () {
               $(this).dialog('close')
             }
@@ -488,10 +496,14 @@
       })
     }
 
-    function i18nLabelValue (label) {
+    function i18nLabelValue (label, lang) {
+      lang = lang || 'no'
+      if (ractive) {
+        lang = ractive.get('applicationData.language') || lang
+      }
       if (Array.isArray(label)) {
         return _.find(label, function (labelValue) {
-          return (labelValue[ '@language' ] === 'no')
+          return (labelValue[ '@language' ] === lang)
         })[ '@value' ]
       } else {
         return label[ '@value' ]
@@ -1206,7 +1218,6 @@
                                 ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
                                 input.parentInput.allowAddNewButton = true
                               }
-                              ractive.set(`${input.keypath}.allowAddNewButton`, true)
                             } else {
                               input.suggestedValues = input.suggestedValues || []
                               input.suggestedValues.push({
@@ -1220,22 +1231,23 @@
                       }
                     })
                     input.offset[ type ] = _.flatten(_.compact(_.pluck(_.pluck(input[ valuesField ], 'current'), 'value'))).length
-
-                    ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
-                    ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
-                    ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
-                    ractive.set(`${input.keypath}.customRange`, loadForRangeOfInputs)
-                    if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
-                      ractive.set(`${input.keypath}.rangeStats`, {
-                        start: startIndex + 1,
-                        end: Math.min(actualRoots.length, startIndex + rangeLength),
-                        numberOfObjects: actualRoots.length,
-                        rangeLength
-                      })
-                    }
-                    if (actualRoots.length > rangeLength && input.parentInput && input.parentInput.pagination) {
-                      const fromEnd = actualRoots.length - startIndex
-                      ractive.splice(`${input.keypath}.${valuesField}`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
+                    if (input.parentInput && input.parentInput.pagination) {
+                      ractive.set(`${input.keypath}.nextRange`, actualRoots.length > startIndex + rangeLength ? loadForRangeOfInputs(startIndex + rangeLength, rangeLength) : null)
+                      ractive.set(`${input.keypath}.prevRange`, startIndex > 0 ? loadForRangeOfInputs(Math.max(startIndex - rangeLength, 0), rangeLength) : null)
+                      ractive.set(`${input.keypath}.thisRange`, loadForRangeOfInputs(startIndex, rangeLength))
+                      ractive.set(`${input.keypath}.customRange`, loadForRangeOfInputs)
+                      if (input.parentInput && input.parentInput.pagination && input.keypath.endsWith('0.input')) {
+                        ractive.set(`${input.keypath}.rangeStats`, {
+                          start: startIndex + 1,
+                          end: Math.min(actualRoots.length, startIndex + rangeLength),
+                          numberOfObjects: actualRoots.length,
+                          rangeLength
+                        })
+                      }
+                      if (actualRoots.length > rangeLength) {
+                        const fromEnd = actualRoots.length - startIndex
+                        ractive.splice(`${input.keypath}.${valuesField}`, fromEnd, Math.max(input.parentInput.pagination - fromEnd, 0))
+                      }
                     }
                     return true
                   }
@@ -1255,7 +1267,7 @@
           ractive.update()
         }
         if (!(options.keepDocumentUrl)) {
-          ractive.set('save_status', 'åpnet eksisterende ressurs')
+          ractive.set('save_status', translate('statusOpenedExistingResource'))
           if (!(options || {}).compareValues) {
             ractive.set(`targetUri.${type}`, resourceUri)
           }
@@ -1575,7 +1587,7 @@
           }
           var predefined = valuesFrom
           var fragment = predicate.substring(predicate.lastIndexOf('#') + 1)
-          let label = i18nLabelValue(props[ i ][ 'rdfs:label' ])
+          let label = i18nLabelValue(props[ i ][ 'rdfs:label' ], applicationData.language)
           applicationData.propertyLabels[ fragment ] = label
           var input = {
             disabled: disabled,
@@ -1610,7 +1622,7 @@
       var createInputForCompoundInput = function (compoundInput, tab, ontologyUri, inputMap) {
         var currentInput = {
           type: 'compound',
-          label: compoundInput.label,
+          labelKey: compoundInput.label,
           domain: tab.rdfType,
           subjectTypes: compoundInput.subjects,
           allowAddNewButton: false,
@@ -1645,8 +1657,8 @@
           var indexTypes = _.isArray(subInput.indexTypes) ? subInput.indexTypes : [ subInput.indexTypes ]
           var type = subInput.type || inputFromOntology.type
           var newSubInput = {
-            label: subInput.label,
             input: _.extend(_.clone(inputFromOntology), {
+              labelKey: subInput.label,
               type: type,
               isSubInput: true,
               parentInput: currentInput,
@@ -1698,7 +1710,10 @@
                 _.each(resourceForm.inputs, function (formInput) {
                   var predicate = ontologyUri + formInput.rdfProperty
                   var ontologyInput = inputMap[ `${resourceForm.rdfType}.${predicate}` ]
-                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', formInput.label ? 'label' : ''))
+                  if (formInput.label) {
+                    formInput.labelkey = formInput.label
+                  }
+                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
                   formInput[ 'values' ] = emptyValues(false)
                   formInput[ 'rdfType' ] = resourceForm.rdfType
                   if (targetResourceIsMainEntry) {
@@ -1731,7 +1746,7 @@
           var ontologyInput
           if (input.searchMainResource) {
             groupInputs.push({
-              label: input.searchMainResource.label,
+              labelKey: input.searchMainResource.label,
               values: emptyValues(false, true),
               type: 'searchable-with-result-in-side-panel',
               visible: true,
@@ -1752,7 +1767,7 @@
             })
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
-              label: input.searchForValueSuggestions.label,
+              labelKey: input.searchForValueSuggestions.label,
               values: emptyValues(false, true),
               type: 'searchable-for-value-suggestions',
               visible: true,
@@ -1818,7 +1833,7 @@
               ontologyInput.oneLiner = input.oneLiner
             }
             if (input.label) {
-              ontologyInput.label = input.label
+              ontologyInput.labelKey = input.label
             }
             if (input.showOnlyWhenInputHasValue) {
               ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
@@ -1925,7 +1940,7 @@
           if (predefinedValue) {
             applicationData.predefinedValues[ unPrefix(predefinedValue.property) ] = predefinedValue.values
             _.each(predefinedValue.values, function (predefVal) {
-              applicationData.allLabels[ predefVal[ '@id' ] ] = i18nLabelValue(predefVal.label)
+              applicationData.allLabels[ predefVal[ '@id' ] ] = i18nLabelValue(predefVal.label, applicationData.language)
             })
           }
         })
@@ -2180,7 +2195,7 @@
 
     function executePatch (subject, patches, keypath, errors) {
       let waiter = ractive.get('waitHandler').thisMayTakeSomTime()
-      ractive.set('save_status', 'arbeider...')
+      ractive.set('save_status', translate('statusWorking'))
       // strip empty blank nodes
       let emptyBlankNodeIndexes = []
       _.each(patches, function (patch, index) {
@@ -2217,7 +2232,7 @@
               ractive.set(`${keypath}.old.lang`, cur.lang)
             }
           }
-          ractive.set('save_status', 'alle endringer er lagret')
+          ractive.set('save_status', translate('statusSaved'))
           ractive.update().then(function () {
             if (waiter) {
               waiter.done()
@@ -2236,10 +2251,7 @@
     }
 
     function setTaskDescription (taskDescriptionKey) {
-      let taskDescription = ractive.get(`applicationData.config.taskDescriptions.${taskDescriptionKey}`)
-      if (taskDescription) {
-        ractive.set('currentTaskDescription', taskDescription)
-      }
+      ractive.set('currentTaskDescription', taskDescriptionKey)
     }
 
     let closePreview = function () {
@@ -2440,7 +2452,7 @@
             })
         }
 
-        var loadPartials = function (applicationData) {
+        const loadPartials = function (applicationData) {
           return Promise.all(_.map(partials, function (partial) {
             return axios.get(`/partials/${partial}.html`).then(
               function (response) {
@@ -2455,8 +2467,17 @@
           })
         }
 
-        var extractConfig = function (response) {
+        const extractConfig = function (response) {
           return { config: ensureJSON(response.data) }
+        }
+
+        const initTranslations = function (applicationData) {
+          applicationData.translations = translations
+          const language = (URI.parseQuery(URI.parse(document.location.href).query).language || 'no')
+          applicationData.partials = applicationData.partials || {}
+          applicationData.partials = _.extend(applicationData.partials, translations[language])
+          applicationData.language = language
+          return applicationData
         }
 
         function saveObject (event, applicationData, index, op) {
@@ -3212,7 +3233,7 @@
               resource_label: '',
               ontology: null,
               config: applicationData.config,
-              save_status: 'ny ressurs',
+              save_status: '',
               authorityLabels: {},
               compare: false,
               compareValues: {},
@@ -3302,7 +3323,7 @@
                 }
               },
               subjectTypeLabel: function (subject) {
-                var resourceLabel = Ontology.resourceLabel(applicationData.ontology, subject, 'no')
+                var resourceLabel = Ontology.resourceLabel(applicationData.ontology, subject, ractive.get('applicationData.language'))
                 return resourceLabel || ''
               },
               getExplanation: function (explanations, value) {
@@ -3311,14 +3332,7 @@
                 }).explanation
               },
               subjectTypeLabelDet: function (subjectType) {
-                switch (subjectType) {
-                  case 'Work':
-                    return 'verket'
-                  case 'Publication':
-                    return 'utgivelsen'
-                  default:
-                    return subjectType
-                }
+                return translate(`${subjectType}LabelDet`)
               },
               resourceIsLoaded: function (type) {
                 return typeof ractive.get(`targetUri.${type}`) !== 'undefined'
@@ -3399,6 +3413,9 @@
                 return _.some(input.subInputs, function (subInput) {
                   return ractive.get(`${subInput.input.keypath}.nextRange`)
                 })
+              },
+              translate (msgKey) {
+                return translate(msgKey)
               }
             },
             decorators: {
@@ -3612,7 +3629,7 @@
                   template: editWith.template,
                   inputsKeypath: editWith.inputsKeypath
                 }
-                updateBrowserLocationClearAllExcept([ 'openTab' ])
+                updateBrowserLocationClearAllExcept([ 'openTab', 'language' ])
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
                   if (input.type === 'hidden-url-query-value' &&
@@ -3765,7 +3782,7 @@
                   var keyPath = `inputGroups.${groupIndex}`
                   ractive.set(`${keyPath}.tabSelected`, keyPath === event.keypath)
                 })
-                positionSupportPanels()
+                setTimeout(positionSupportPanels)
               },
               nextStep: function (event) {
                 if (event.context.restart) {
@@ -3905,7 +3922,7 @@
                   return resourceUri
                 }
                 let patchMotherResource = function (resourceUri) {
-                  if (useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
+                  if (!useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
                     Main.patchResourceFromValue(ractive.get(`targetUri.${targetInput.rdfType}`), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
                   }
                   return resourceUri
@@ -4613,9 +4630,17 @@
           return applicationData
         }
 
+        function initLanguages (applicationData) {
+          $('#close-preview-button').text(applicationData.partials.close)
+          $('#home').attr('href', `/?language=${applicationData.language || 'no'}`)
+          $('html').attr('lang', applicationData.language || 'no')
+          return applicationData
+        }
+
         function showGrowler (applicationData) {
-          applicationData = applicationData || {}
+          applicationData = applicationData || ractive.get('applicationData') || {}
           var query = URI.parseQuery(URI.parse(document.location.href).query)
+          $('#growlerMessage').text(applicationData.partials.pleaseWait)
           if (!query.noStartGrowl) {
             $('#growler').show()
           } else {
@@ -5006,9 +5031,11 @@
         })
 
         return axios.get('/config')
-          .then(showGrowler)
           .then(extractConfig)
           .then(loadTemplate)
+          .then(initTranslations)
+          .then(initLanguages)
+          .then(showGrowler)
           .then(loadPartials)
           .then(loadOntology)
           .then(createInputGroups)
@@ -5053,13 +5080,16 @@
         // })
       },
       repositionSupportPanelsHorizontally: function () {
-        supportPanelLeftEdge = $('#right-dummy-panel').position().left
-        supportPanelWidth = $('#right-dummy-panel').width()
+        const rightDummyPanel = $('#right-dummy-panel')
+        if (rightDummyPanel.length > 0) {
+          supportPanelLeftEdge = rightDummyPanel.position().left
+          supportPanelWidth = rightDummyPanel.width()
 
-        if (supportPanelLeftEdge > 0) {
-          $('.support-panel').each(function (index, panel) {
-            $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
-          })
+          if (supportPanelLeftEdge > 0) {
+            $('.support-panel').each(function (index, panel) {
+              $(panel).css({ left: supportPanelLeftEdge, width: supportPanelWidth })
+            })
+          }
         }
       },
       getRactive: function () {

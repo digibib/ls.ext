@@ -12,10 +12,24 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.38
+
+KOHA: b5bf35b150b04ec084ea8f61a0888ac3dbecccfc
+GITREF: TODO
+
+- Koha:
+  - DEICH-778: opgradert fra 16.11.04 til 16.06.11
+- Catalinker:
+  - DEICH-773: engelsk versjon av catalinker
+- Patron-client:
+  - DEICH-754: Sjekk mot og utfylling av sms/e-post ved endringen av inntsillinger på min side
+  - DEICH-779: Safari - resultatlisten faller under filtre
+  - DEICH-766: bufikser/forbedringer for "Hvor finnes denne?"
+
 ## 2017.37
 
 KOHA: 240ac269571360b3d61e50be80c9f58a9cdd35ee (uforandret)
-GITREF: TODO
+GITREF: d43935f65baf513ba9f2115b54cc54c05312e42e
 
 - Services:
   - DEICH-752: write all title parts to MARC 245a
@@ -30,8 +44,6 @@ GITREF: TODO
   - DEICH-741: Handle multiple work series
   - DEICH-756: url to self register
   - DEICH-750: boost score of certain languages
-- Other:
-  - DEICH-685: tool for splitting works III
 
 
 ## 2017.36

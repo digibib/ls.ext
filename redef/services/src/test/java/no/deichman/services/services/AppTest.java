@@ -31,6 +31,7 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
+import org.apache.jena.system.JenaSystem;
 import org.apache.jena.vocabulary.RDFS;
 import org.json.JSONObject;
 import org.junit.AfterClass;
@@ -101,6 +102,7 @@ public class AppTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
+        JenaSystem.init();
         appPort = PortSelector.randomFree();
         int jamonAppPort = PortSelector.randomFree();
         kohaAPIMock = new KohaAPIMock();

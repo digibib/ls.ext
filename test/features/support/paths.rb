@@ -92,13 +92,13 @@ module Paths
         :work => "/work",
         :publication => "/publication",
         :person => "/person",
-        :workflow => "/cataloguing?template=workflow&hasMediaType=Book&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true",
+        :workflow => "/cataloguing?template=workflow&hasMediaType=Book&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no",
         :place => "/place",
         :serial => "/serial",
         :work_series=> "/workSeries",
         :corporation => "/corporation",
         :subject => "/subject",
-        :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true"
+        :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{ENV['CATALINKER_HOST'] || 'catalinker'}:#{port(:catalinker)}#{paths[path.to_sym]}"

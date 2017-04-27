@@ -22,7 +22,12 @@
       class-for-one-liner="{{oneLiner == true || type == 'input-boolean'}}"
       class-panel-part="{{type !== 'input-boolean' && !oneLiner}}"
       class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
-        data-uri-escaped-label="{{encodeURI(label)}}">{{label}}
+      {{#if labelKey}}
+      data-uri-escaped-label="{{encodeURI(translate(labelKey))}}"
+      {{else}}
+      data-uri-escaped-label="{{encodeURI(label)}}"
+      {{/if}}
+>{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}
 </span>
 <span class-panel-part="{{type != 'input-boolean' && !oneLiner}}"
       class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner && (accordionHeader || compare)}}"
@@ -72,7 +77,7 @@
     {{#if subInputs}}
     {{#if unacceptedSuggestions(input)}}
     <div class="pure-u-1-1 label" style="order: 99;">
-        Forslag fra andre eksterne kilder
+        {{>"suggestionFromOtherSources"}}
     </div>
     {{/if}}
     {{#if !./unFinished}}
@@ -93,13 +98,13 @@
             <div class="pure-u-1" >
                 {{#if ! compareMode}}
                 <div class="pure-u-23-24 delete" >
-                    <a class="delete" title="Slett oppføring"
+                    <a class="delete" title="{{>'deletEntry'}}"
                        on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" ></a >
                 </div>
                 <div class="pure-u-1-24 edit" >
                     <a class="edit"
                        tabindex="{{tabSelected ? '0' : '-1'}}"
-                       title="Rediger oppføring"
+                       title="{{>'editEntry'}}"
                        on-click="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
                        on-enter="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
                     ></a >
@@ -115,7 +120,7 @@
                                 <span class="label"
                                       class-pure-u-3-4="{{!nonEditable && !suggested}}"
                                       class-for-one-liner="{{input.type === 'input-boolean' || oneLiner == true}}"
-                                      data-uri-escaped-label="{{encodeURI(label)}}">{{label}}</span>
+                                      data-uri-escaped-label="{{encodeURI(input.labelKey? translate(input.labelKey) : input.label)}}">{{#if input.labelKey}}{{>input.labelKey}}{{else}}{{input.label}}{{/if}}</span>
                                 {{#with input[compareMode ? 'compareValues' :'values'][inputValueIndex]}}
                                     <span class="value sub-field" data-support-panel-base-id="support_panel_base_{{./uniqueId}}">
                                         {{>../../../input.type}}
@@ -146,7 +151,7 @@
                                     {{#if (subjectTypes.length > 1)}}
                                     <span class="subject-type-select">
                                         <input tabindex="{{tabSelected ? '0' : '-1'}}"type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
-                                               {{# !targetUri[../../../../../../../subjectTypes[index]]}}title='Denne knytningen kan ikke velges før tilhørende ressurstype er lastet'
+                                               {{# !targetUri[../../../../../../../subjectTypes[index]]}}title="{{>'cannotSelectRelationBeforeResourceTypeIsLoaded'}}"
                                                disabled='disabled' {{/}}/>
                                         <label tabindex="-1">{{subjectTypeLabel(subjectTypes[index])}}</label>
                                     </span>
@@ -161,14 +166,14 @@
                         <button class="pure-button pure-button-primary add-item-button"
                                 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                                 {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
-                          title="Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi."{{/if}}
+                          title="{{>missingRequiredValuesOfBlankMode}}"{{/if}}
                         {{#if edit}}
                            on-click="replaceObject:{{inputValueIndex}}"
                         {{else}}
                            on-click="saveNewObject:{{inputValueIndex}}"
                         {{/if}}
                         >
-                        {{#if edit}}Lagre{{else}}Legg til{{/if}}
+                        {{#if edit}}{{>"save"}}{{else}}{{>"defaultAddAnotherLabel"}}{{/if}}
                         </button>
                         <span class="save-placeholder"></span>
                         {{/if}}
@@ -181,7 +186,7 @@
                         <button
                                 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                                 on-click="useSuggestion"
-                                class="pure-button pure-button-primary">Bruk forslag</button>
+                                class="pure-button pure-button-primary">{{>"useSuggestion"}}</button>
                     </span>
                 </div>
                 {{/if}}
@@ -220,8 +225,7 @@
             <button
                     tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                     class="pure-button pure-button-primary add-button"
-                    on-click="addValue"
-                    on-keyup="addValue">{{addAnotherLabel || 'Legg til ny'}}</button>
+                    on-click="addValue">{{>(addAnotherLabel || "defaultAddAnotherLabel")}}</button>
         {{/if}}
         </div>
     </span>

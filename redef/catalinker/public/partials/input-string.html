@@ -26,11 +26,11 @@ value="{{./current.value}}" />
 {{/if}}
 <span class="save-placeholder"></span>
 {{#if input.widgetOptions.enableBulkEntry && !multiline}}
-<a class="open-bulk-edit" on-click="openBulkEdit:{{valueIndex}}" title="{{input.widgetOptions.enableBulkEntry.activationLinkToolTip}}">{{input.widgetOptions.enableBulkEntry.activationLinkLabel}}</a>
+<a class="open-bulk-edit" on-click="openBulkEdit:{{valueIndex}}" title="{{>bulkEntryLinkToolTip}}">{{>bulkEntryLinkLabel}}</a>
 {{/if}}
 {{#if showAutonumber}}
     <span class="pure-u-1">
-        <span class="pure-u-3-4 label for-one-liner">Automatisk nummerering</span>
+        <span class="pure-u-3-4 label for-one-liner">{{>autoNumber}}</span>
         <span class="sub-field"><input type="checkbox" checked="{{autoNumber}}"/></span>
     </span>
 {{/if}}

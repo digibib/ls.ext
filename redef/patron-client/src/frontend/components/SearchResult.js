@@ -23,6 +23,7 @@ class SearchResult extends React.Component {
   componentWillMount () {
     const { id } = this.props.result
     if (this.shouldShowStatus() && !this.props.resources[ id ]) {
+      // NB: Not in use?
       this.props.fetchWorkResource(id)
     }
   }
@@ -127,40 +128,21 @@ class SearchResult extends React.Component {
      */
   }
 
-  getResultUrl (result) {
-    const { pathname, search, hash } = window.location
-    return createPath({
-      pathname: result.relativePublicationUri || result.relativeUri,
-      query: { back: `${pathname}${search}${hash}` }
-    })
-  }
-
-  getActiveBranchFilters () {
-    const activeBranches = []
-    this.props.filters.map(el => {
-      if (el.id.includes('branch') && el.active) {
-        activeBranches.push(el)
-      }
-      return el
-    })
-    return activeBranches
-  }
-
-  renderItems (result) {
-    let homeBranchPos
+  getResultItems () {
+    let groupedByBranchAndMedia = []
+    const { result } = this.props
     const work = this.props.resources[ result.id ]
-    const activeFilters = this.getActiveBranchFilters()
 
     if (work) {
       const items = [].concat(...work.publications.map(publication => (this.props.items[ publication.recordId ] || []).items || []).filter(array => array.length > 0))
-
       const groupedByBranchSortedByMediaType = groupByBranch(items)
 
       groupedByBranchSortedByMediaType.map(el => {
+        el.workId = result.id
         el.realName = this.props.intl.formatMessage({ id: el.branchcode })
         el.items.forEach(e => {
-          e.mediaType = this.props.intl.formatMessage({ id: e.mediaTypes[0] })
-          e.mediaTypeURI = e.mediaTypes[0]
+          e.mediaType = this.props.intl.formatMessage({ id: e.mediaTypes[ 0 ] })
+          e.mediaTypeURI = e.mediaTypes[ 0 ]
         })
 
         el.items.sort((a, b) => {
@@ -179,16 +161,115 @@ class SearchResult extends React.Component {
         return 0
       })
 
-      const groupedByBranchAndMedia = groupedByBranchSortedByMediaType.map(el => {
+      groupedByBranchAndMedia = groupedByBranchSortedByMediaType.map(el => {
         el.mediaItems = groupByMediaType(el.items)
         return el
       })
+    }
+    const groupedByBranchAndMediaLangFiltered = this.extractBranchesByLang(groupedByBranchAndMedia)
+    const groupedByBranchAndMediaMediaFiltered = this.extractBranchesByMedia(groupedByBranchAndMedia)
 
+    if (groupedByBranchAndMediaLangFiltered > 0 && groupedByBranchAndMediaMediaFiltered > 0) {
+      const mediaAndLangFiltered = this.extractBranchesByMedia(groupedByBranchAndMediaLangFiltered)
+      return mediaAndLangFiltered
+    } else if (groupedByBranchAndMediaLangFiltered.length > 0) {
+      return groupedByBranchAndMediaLangFiltered
+    } else if (groupedByBranchAndMediaMediaFiltered.length > 0) {
+      return groupedByBranchAndMediaMediaFiltered
+    } else {
+      return groupedByBranchAndMedia
+    }
+  }
+
+  extractBranchesByMedia (groupedByBranchAndMedia) {
+    const activeMediaFilters = this.getActiveFilters('mediatype')
+    const groupedByBranchAndMediaFiltered = []
+
+    /* If media filter is set, than filter out branches which do not contain selected media */
+    if (activeMediaFilters.length > 0) {
+      groupedByBranchAndMedia.map(el => {
+        el.mediaItems.map(mEl => {
+          activeMediaFilters.forEach(mf => {
+            if (mEl.mediaTypeURI === mf.bucket) {
+              groupedByBranchAndMediaFiltered.push(el)
+            }
+          })
+          return mEl
+        })
+        return el
+      })
+    }
+    return groupedByBranchAndMediaFiltered
+  }
+
+  extractBranchesByLang (groupedByBranchAndMedia) {
+    const activeLangFilters = this.getActiveFilters('language')
+    const groupedByBranchAndMediaFiltered = []
+
+    /* If lang filter is set, than filter out branches which do not contain selected lang */
+    if (activeLangFilters.length > 0) {
+      groupedByBranchAndMedia.map(el => {
+        el.mediaItems.map(mEl => {
+          mEl.items.map(i => {
+            activeLangFilters.forEach(l => {
+              if (i.languages[ 0 ] === l.bucket) {
+                let repBranchCode = false
+                groupedByBranchAndMediaFiltered.forEach(arrayEl => {
+                  if (arrayEl.branchcode === el.branchcode) {
+                    repBranchCode = true
+                  }
+                })
+                if (!repBranchCode) {
+                  groupedByBranchAndMediaFiltered.push(el)
+                }
+              }
+            })
+            return i
+          })
+          return mEl
+        })
+        return el
+      })
+    }
+    return groupedByBranchAndMediaFiltered
+  }
+
+  getResultUrl (result) {
+    const { pathname, search, hash } = window.location
+    return createPath({
+      pathname: result.relativePublicationUri || result.relativeUri,
+      query: { back: `${pathname}${search}${hash}` }
+    })
+  }
+
+  getActiveFilters (filterKey) {
+    const activeFilters = []
+    this.props.filters.map(el => {
+      if (el.id.includes(filterKey) && el.active) {
+        activeFilters.push(el)
+      }
+      return el
+    })
+    return activeFilters
+  }
+
+  renderItems () {
+    let homeBranchPos
+    let defaultBranchPos
+    const activeFilters = this.getActiveFilters('branch')
+
+    const groupedByBranchAndMedia = this.getResultItems()
+
+    if (groupedByBranchAndMedia.length > 0) {
       const byBranch = groupedByBranchAndMedia.map((el, i) => {
+        /* Check if any branch filters selected and if user has homeBranch and remember position of homeBranch */
         if (this.props.homeBranch && this.props.homeBranch === el.branchcode && activeFilters.length === 0) {
           homeBranchPos = i
         }
-
+        /* Check if any branch filters selected and remember position of main branch */
+        if (el.branchcode === 'hutl' && activeFilters.length === 0) {
+          defaultBranchPos = i
+        }
         return (
           <div className="items-by-branch" key={el.branchcode}>
             <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
@@ -197,20 +278,20 @@ class SearchResult extends React.Component {
                   <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
                 </div>
                 <div className="flex-item item-icon-button">
-                <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
-                  <button className="flex-item">
-                    {this.shouldShowBranchStatus(el.branchcode)
-                      ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
-                        <FormattedMessage {...messages.showBranchAvailability} />
-                      </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
-                      : [(<span key={`show-more-content${el.branchcode}`} className="is-vishidden">
-                      <FormattedMessage {...messages.hideBranchAvailability} />
-                      </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
-                    }
-                  </button>
-                </ClickableElement>
+                  <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
+                    <button className="flex-item">
+                      {this.shouldShowBranchStatus(el.branchcode)
+                        ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
+                          <FormattedMessage {...messages.showBranchAvailability} />
+                        </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
+                        : [(<span key={`show-more-content${el.branchcode}`} className="is-vishidden">
+                        <FormattedMessage {...messages.hideBranchAvailability} />
+                        </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
+                      }
+                    </button>
+                  </ClickableElement>
                 </div>
-            </div>
+              </div>
             </ClickableElement>
             {this.shouldShowBranchStatus(el.branchcode)
               ? <Items
@@ -239,6 +320,11 @@ class SearchResult extends React.Component {
       if (homeBranchPos) {
         const userBranch = byBranch.splice(homeBranchPos, 1)
         byBranch.unshift(userBranch)
+      }
+
+      if (defaultBranchPos && !homeBranchPos) {
+        const defaultBranch = byBranch.splice(defaultBranchPos, 1)
+        byBranch.unshift(defaultBranch)
       }
 
       return byBranch

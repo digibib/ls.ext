@@ -121,6 +121,45 @@ export function postProfileInfo (successAction) {
   }
 }
 
+export const contactDetailsNeedVerification = () => action(types.CONTACT_DETAILS_NEED_VERIFICATION)
+export const requestPostContactDetails = () => action(types.REQUEST_POST_CONTACT_DETAILS)
+export const changeContactDetailsFailure = (error) => errorAction(types.CHANGE_CONTACT_DETAILS_FAILURE, error)
+export const changeContactDetailsSuccess = () => action(types.CHANGE_CONTACT_DETAILS_SUCCESS)
+
+export function postContactDetailsFromForm (successAction) {
+  return (dispatch, getState) => {
+    const { contactDetails: { values: { mobile, email } } } = getState().form
+    dispatch(postContactDetails(mobile, email, successAction))
+  }
+}
+
+export function postContactDetails (mobile, email, successAction) {
+  const url = '/api/v1/profile/contactdetails'
+  return (dispatch) => {
+    dispatch(requestPostContactDetails())
+    return fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({mobile: mobile, email: email})
+    })
+      .then(response => {
+        if (response.status === 200 || response.status === 204) {
+          dispatch(changeContactDetailsSuccess())
+          dispatch(fetchProfileInfo())
+          if (successAction) {
+            dispatch(successAction)
+          }
+        } else {
+          throw Error('Unexpected status code')
+        }
+      })
+      .catch(error => dispatch(changeContactDetailsFailure(error)))
+  }
+}
+
 export const requestPostProfileSettings = () => action(types.REQUEST_POST_PROFILE_SETTINGS)
 
 export const postProfileSettingsFailure = (error) => errorAction(types.POST_PROFILE_SETTINGS_FAILURE, error)

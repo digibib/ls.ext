@@ -1,6 +1,6 @@
 <div class="content"
      decorator="clickOutsideSupportPanelDetector">
-    <h2 data-automation-id="page-heading">Katalogisering og vedlikehold av samlingen</h2>
+    <h2 data-automation-id="page-heading">{{>menuHeading}}</h2>
 
     <div class="grid-input">
         <ul class="grid-tabs">
@@ -14,37 +14,25 @@
                        on-click="updateBrowserLocationWithTab:0"
                        on-enter="updateBrowserLocationWithTab:0"
                        for="tab0"
-                       class="grid-tab-link">Nytt materiale</label>
+                       class="grid-tab-link">{{>newMaterial}}</label>
                 <div id="tab-content0" class="tab-content grid-content">
                     <div class="inner-content">
                         <div class="grid-panel grid-panel-selected pure-g media-type-menu">
+                            {{#each [
+                                {workType: 'Literature', mediaType: 'Book', task: 'bookPub'},
+                                {workType: 'Literature', mediaType: 'E-book', task: 'eBookPub'},
+                                {workType: 'Literature', mediaType: 'Audiobook', task: 'aBookPub'},
+                                {workType: 'Literature', mediaType: 'ComicBook', task: 'comicPub'},
+                                {workType: 'Film', mediaType: 'Film', task: 'filmPub'},
+                                {workType: 'Music', mediaType: 'MusicRecording', task: 'musRecPub'},
+                                {workType: 'Music', mediaType: 'SheetMusic', task: 'sheetMusPub'},
+                                {workType: 'Game', mediaType: 'Game', task: 'gamePub'},
+                                {workType: 'Other', mediaType: 'LanguageCourse', task: 'langCourse'}
+                            ]:index}}
                             <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="3" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Book&task=bookPub">Bok</a>
-                            </div>                                                    
-                            <div class="pure-u-1-1">                                  
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="4" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=E-book&task=eBookPub">E-bok</a>
+                                <a class="pure-u-5-24 pure-button pure-button-primary" tabindex="{{index + 3}}" href="/cataloguing?template=workflow&hasWorkType={{workType}}&hasMediaType={{mediaType}}&task={{task}}&language={{applicationData.language || 'no'}}">{{applicationData.allLabels['http://data.deichman.no/mediaType#' + mediaType]}}</a>
                             </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="5" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Audiobook&task=aBookPub">Lydbok</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="6" href="/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=ComicBook&task=comicPub">Tegneserie</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="7" href="/cataloguing?template=workflow&hasWorkType=Film&hasMediaType=Film&task=filmPub">Film</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="8" href="/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=MusicRecording&task=musRecPub">Musikkopptak</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="9" href="/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=SheetMusic&task=sheetMusPub">Musikknoter</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="10" href="/cataloguing?template=workflow&hasWorkType=Game&hasMediaType=Game&task=gamePub">Spill</a>
-                            </div>
-                            <div class="pure-u-1-1">
-                                <a class="pure-u-1-6 pure-button pure-button-primary" tabindex="11" href="/cataloguing?template=workflow&hasWorkType=Other&hasMediaType=LanguageCourse&task=langCourse">Språkkurs</a>
-                            </div>
+                            {{/each}}
                         </div>
                     </div>
             </li>
@@ -54,7 +42,7 @@
                        on-click="updateBrowserLocationWithTab:1"
                        on-enter="updateBrowserLocationWithTab:1"
                        for="tab1"
-                       class="grid-tab-link">Vedlikehold av autoriteter</label>
+                       class="grid-tab-link">{{>authorityMaintenance}}</label>
                 <div id="tab-content1" class="tab-content grid-content maintenance-inputs">
                     <div class="pure-g" style="height: 0px;">
                         <div class="pure-u-1-2" id="left-dummy-panel"/>

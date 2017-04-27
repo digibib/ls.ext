@@ -1,6 +1,6 @@
 {{#if targetUri[domain]}}
 {{#if toolMode}}
-<div class="pure-u-1 inverse-relations-title" ><span>{{format(., 'showRelatedTitle')}}</span><a class="close" title="Lukk" on-click="unloadInverseRelated">×</a></div>
+<div class="pure-u-1 inverse-relations-title" ><span>{{>showRelatedTitle {numberOfRelations:relations.length}}}</span><a class="close" title="Lukk" on-click="unloadInverseRelated">×</a></div>
 <div class="pure-u-1-1 inverse-relations" >
     <div class="pure-g head">
         <div class="pure-u-1-24"></div>
@@ -23,26 +23,26 @@
         </div>
         {{/each}}
         {{#if relations.length === 0}}
-        <span class="empty-relations pure-u-1">{{noInverseRelationsText}}</span>
+        <span class="empty-relations pure-u-1">{{>noInverseRelationsText}}</span>
         {{/if}}
     </div>
     <div class="pure-g select-all">
-        <span class="pure-u-1-24"><input type="checkbox" on-change="toggleAllEnableRelation" checked="{{selectAll}}" title="Velg alle"/></span><span class="pure-u-22-24 label">Velg alle</span>
+        <span class="pure-u-1-24"><input type="checkbox" on-change="toggleAllEnableRelation" checked="{{selectAll}}" title="{{>selectAll}}"/></span><span class="pure-u-22-24 label">{{>selectAll}}</span>
     </div>
 </div>
 <div class="pure-u-1">
     <div class="pure-g" id="merge-authorities">
         <div class="pure-u-1-24"><span class="ui-icon ui-icon-alert "></span></div>
         <div class="pure-u-23-24">
-            {{{cloneParentButtonExplanation}}}
+            {{>cloneParentButtonExplanation}}
             <button
                     data-automation-id="merge_authorities"
                     tabindex="-1"
                     class="pure-button pure-button-primary next-step-button"
-                    title="{{cloneParentButtonTooltip}}"
+                    title="{{>cloneParentButtonTooltip}}"
                     on-click="cloneParentForEachChild:{{targetUri[domain]}}"
                     disabled="{{relations.length === 0 || !oneOrMoreEnabled(relations)}}"
-            >{{cloneParentButtonLabel}}
+            >{{>cloneParentButtonLabel}}
             </button>
         </div>
     </div>
@@ -55,8 +55,8 @@
             <button
                     tabindex="-1"
                     class="pure-button pure-button-primary next-step-button"
-                    title="{{showRelatedButtonLabel}}"
-                    on-click="loadInverseRelated:{{targetUri[domain]}}">{{showRelatedButtonLabel}}
+                    title="{{>showRelatedButtonLabel}}"
+                    on-click="loadInverseRelated:{{targetUri[domain]}}">{{>showRelatedButtonLabel}}
             </button>
         </div>
     </div>
@@ -65,7 +65,7 @@
 {{/if}}
 <span style="display: none;">
     <div id="clone-parent-dialog" class="pure-g">
-        <p class="pure-u-1">{{cloneParentDialogLegend}}</p>
+        <p class="pure-u-1">{{>cloneParentDialogLegend}}</p>
         {{#each showFieldsOfRelated}}
             {{#if inputRef}}
                 <div class="pure-u-1">
