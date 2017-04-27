@@ -656,7 +656,7 @@
         function getValues (onlyFirstField) {
           return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
             .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
+            .join(' ').replace(/[,\\.]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
         }
 
         var values = getValues(options.onlyFirstField)
