@@ -132,6 +132,7 @@
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
             <subfield code="z">Oslo</subfield>
+            <subfield code="1">123.332</subfield>
         </datafield>
         <!-- shoudl result in Exxon Subject as subject -->
         <datafield tag="610" ind1=" " ind2="2">
@@ -142,7 +143,7 @@
             <subfield code="x">Oil spill</subfield>
             <subfield code="z">North America</subfield>
             <subfield code="0">miljøforurensing</subfield>
-            <subfield code="2">BS</subfield>
+            <subfield code="1">332.443</subfield>
             <subfield code="2">BS</subfield>
             <subfield code="9">nob</subfield>
         </datafield>
@@ -153,6 +154,7 @@
             <subfield code="d">1982</subfield>
             <subfield code="n">2</subfield>
             <subfield code="q">VM i fotball</subfield>
+            <subfield code="1">332.443</subfield>
         </datafield>
         <!-- should result in a work (Bibelen), a place (Judea) and a general subject (Kristendom) as subjects -->
         <datafield tag="630" ind1=" " ind2="0">
@@ -164,6 +166,7 @@
             <subfield code="p">NT</subfield>
             <subfield code="x">Kristendom</subfield>
             <subfield code="z">Judea</subfield>
+            <subfield code="1">443.223</subfield>
         </datafield>
         <!-- should result in subjects Kulturminnevern and Røros -->
         <datafield tag="650" ind1=" " ind2="1">
@@ -173,6 +176,7 @@
             <subfield code="2">BS</subfield>
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
+            <subfield code="1">332.776</subfield>
         </datafield>
         <!-- should result in subjects Kulturhistorie and Røros -->
         <datafield tag="651" ind1=" " ind2="2">
@@ -195,6 +199,11 @@
             <subfield code="a">Biografisk</subfield>
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
+        </datafield>
+        <!-- should result in an anonymous labeled value -->
+        <datafield tag="655" ind1=" " ind2="2">
+            <subfield code="a">Spillefilm</subfield>
+            <subfield code="z">USA</subfield>
         </datafield>
         <!-- should result in Jimson Jimson as person and contribution eith role illustrator -->
         <datafield tag="700" ind1=" " ind2="0">

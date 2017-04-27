@@ -41,6 +41,7 @@ public class MARCMapper {
     private static final String SERIAL_ISSUE_TYPE = "deichman:SerialIssue";
     private static final String CORPORATION_TYPE = "deichman:Corporation";
     private static final String TOP_BANANA_TYPE = "deichman:TopBanana";
+    private static final String NATIONALITY_TYPE = "duo:Nationality";
     private static final int THIRTY_FOUR = 34;
     private static final int THIRTY_FIVE = 35;
     private static final int THIRTY_SEVEN = 37;
@@ -128,12 +129,7 @@ public class MARCMapper {
                     setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
                     break;
                 case "082":
-                    getSubfieldValue(dataField, 'a').ifPresent(classificationNumber -> {
-                        Classification classification = new Classification(newBlankNodeId(), classificationNumber);
-                        setUriObject(dataField, '2', "classificationSource", ClassificationSource::translate, classification::setClassificationSource);
-                        work.addClassification(classification);
-                        graphList.add(classification);
-                    });
+                    getSubfieldValue(dataField, 'a').ifPresent(extractClassificationAndSource(work, graphList, dataField));
                     break;
                 case "090":
                     getSubfieldValue(dataField, 'b').ifPresent(publication::locationFormat);
@@ -242,12 +238,8 @@ public class MARCMapper {
                         } else {
                             work.addSubject(person1);
                         }
-                        getSubfieldValue(dataField, 'x').ifPresent(subject -> {
-                            addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
-                        });
-                        getSubfieldValue(dataField, 'z').ifPresent(place -> {
-                            addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
-                        });
+                        getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
+                        extractGeographicSubject(work, graphList, dataField);
                     });
                     break;
                 case "610":
@@ -260,13 +252,9 @@ public class MARCMapper {
                             addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
                         });
                         work.addSubject(corporation1);
+                        getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                     });
-                    getSubfieldValue(dataField, 'x').ifPresent(subject -> {
-                        addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
-                    });
-                    getSubfieldValue(dataField, 'z').ifPresent(place -> {
-                        addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
-                    });
+                    extractGeographicSubject(work, graphList, dataField);
                     break;
                 case "611":
                     getSubfieldValue(dataField, 'a').ifPresent(prefLabel -> {
@@ -280,13 +268,9 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 'q').ifPresent(event::setSpecification);
                         graphList.add(event);
                         work.addSubject(event);
+                        getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                     });
-                    getSubfieldValue(dataField, 'x').ifPresent(subject -> {
-                        addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
-                    });
-                    getSubfieldValue(dataField, 'z').ifPresent(place -> {
-                        addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
-                    });
+                    extractGeographicSubject(work, graphList, dataField);
                     break;
                 case "630":
                     String workAsSubjectId = newBlankNodeId();
@@ -294,18 +278,16 @@ public class MARCMapper {
                     setBibliographicDataFromDataField(dataField, work1);
                     work.addSubject(work1);
                     graphList.add(work1);
-                    getSubfieldValue(dataField, 'x').ifPresent(subject -> {
-                        addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
-                    });
-                    getSubfieldValue(dataField, 'z').ifPresent(place -> {
-                        addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
-                    });
+                    extractGeographicSubject(work, graphList, dataField);
+                    getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                     break;
                 case "650":
                     mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE);
+                    getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                     break;
                 case "651":
                     mapPrimaryAndSubDivisionSubject(work, graphList, dataField, PLACE_TYPE);
+                    getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                     break;
                 case "653":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
@@ -315,6 +297,9 @@ public class MARCMapper {
                 case "655":
                     getSubfieldValue(dataField, 'a').ifPresent(a -> {
                         addExternalObject(graphList, a, GENRE_TYPE, work::addGenre);
+                    });
+                    getSubfieldValue(dataField, 'z').ifPresent(z -> {
+                        addLabeledValue(graphList, "no", z, NATIONALITY_TYPE, work::addNationality);
                     });
                     break;
                 case "700":
@@ -415,6 +400,34 @@ public class MARCMapper {
         return topLevelMap;
     }
 
+    private Consumer<String> extractClassification(Work work, List<Object> graphList, DataField dataField) {
+        return extractClassification(work, graphList, dataField, false);
+    }
+
+    private Consumer<String> extractClassificationAndSource(Work work, List<Object> graphList, DataField dataField) {
+        return extractClassification(work, graphList, dataField, true);
+    }
+
+    private Consumer<String> extractClassification(Work work, List<Object> graphList, DataField dataField, boolean setSource) {
+        return classificationNumber -> {
+            Classification classification = new Classification(newBlankNodeId(), classificationNumber);
+            if (setSource) {
+                setUriObject(dataField, '2', "classificationSource", ClassificationSource::translate, classification::setClassificationSource);
+            }
+            work.addClassification(classification);
+            graphList.add(classification);
+        };
+    }
+
+    private void extractGeographicSubject(Work work, List<Object> graphList, DataField dataField) {
+        getSubfieldValue(dataField, 'x').ifPresent(subject -> {
+            addExternalObject(graphList, subject, SUBJECT_TYPE, work::addSubject);
+        });
+        getSubfieldValue(dataField, 'z').ifPresent(place -> {
+            addExternalObject(graphList, place, PLACE_TYPE, work::addSubject);
+        });
+    }
+
     private boolean thisIsContribution(DataField dataField) {
         return !getSubfieldValue(dataField, 't').isPresent();
     }
@@ -486,6 +499,14 @@ public class MARCMapper {
         addObjectFunction.accept(named);
         graphList.add(named);
         return named;
+    }
+
+    private LabeledValue addLabeledValue(Collection<Object> graphList, String language, String label, String type, Consumer<LabeledValue> addObjectFunction) {
+        String objectId = newBlankNodeId();
+        LabeledValue labeledValue = new LabeledValue(objectId, type, language, label);
+        addObjectFunction.accept(labeledValue);
+        graphList.add(labeledValue);
+        return labeledValue;
     }
 
     private Titled addMainTitled(Collection<Object> graphList, String mainTitle, String type, Consumer<ExternalDataObject> addObjectFunction) {
