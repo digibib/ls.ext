@@ -311,6 +311,9 @@
     // status messages
     statusOpenedExistingResource: 'opened resource',
     statusWorking: 'working...',
-    statusSaved: 'saved'
+    statusSaved: 'saved',
+
+    // misc
+    partsLabel: 'Parts'
   }
 }));

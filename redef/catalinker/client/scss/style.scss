@@ -526,7 +526,7 @@ body {
                     padding-left: 25px;
                     padding-right: 25px;
                     & + .save-placeholder {
-                      left: 251px;
+                      left: 380px;
                     }
                   }
                   span {
@@ -1175,7 +1175,36 @@ body {
       min-height: 30%;
       text-align: right;
     }
-
+  }
+  .footer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    #errors {
+      float: right;
+      position: relative;
+      width: 100%;
+      background: #F77F00;
+      color: #fff;
+      font-weight: bold;
+      p {
+        padding: 4px;
+      }
+    }
+    #save-stat {
+      float: right;
+      text-align: center;
+      color: #888;
+      margin: 0 4px;
+      display: block;
+      width: 200px;
+      &:before {
+        content: "status: "
+      }
+    }
+  }
+  .report-content {
+    padding: 16px;
     .report {
       h2 {
         border-top: 2px solid black;
@@ -1216,36 +1245,6 @@ body {
         }
       }
     }
-  }
-  .footer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    #errors {
-      float: right;
-      position: relative;
-      width: 100%;
-      background: #F77F00;
-      color: #fff;
-      font-weight: bold;
-      p {
-        padding: 4px;
-      }
-    }
-    #save-stat {
-      float: right;
-      text-align: center;
-      color: #888;
-      margin: 0 4px;
-      display: block;
-      width: 200px;
-      &:before {
-        content: "status: "
-      }
-    }
-  }
-  .report-content {
-    padding: 16px;
   }
 
   #iframecontainer {
