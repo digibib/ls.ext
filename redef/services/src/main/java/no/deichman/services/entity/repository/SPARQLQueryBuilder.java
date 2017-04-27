@@ -356,10 +356,10 @@ public final class SPARQLQueryBuilder {
 
     public String updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems) {
         List<String> inserts = newArrayList();
-        if (homeBranches != null && homeBranches != "") {
+        if (homeBranches != null && !homeBranches.equals("")) {
             inserts.add("?pub :hasHomeBranch \"" + StringUtils.join(homeBranches.split(","), "\",\"") + "\"");
         }
-        if (availableBranches != null && availableBranches!= "") {
+        if (availableBranches != null && !availableBranches.equals("")) {
             inserts.add("?pub :hasAvailableBranch \"" + StringUtils.join(availableBranches.split(","), "\",\"")  + "\"");
         }
         inserts.add("?pub :hasNumItems " + numItems);
