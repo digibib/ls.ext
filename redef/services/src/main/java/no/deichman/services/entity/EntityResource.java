@@ -470,6 +470,7 @@ public final class EntityResource extends ResourceBase {
                 searchService.delete(outgoing);
                 relatedUris.forEach(searchService::index);
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new InternalServerErrorException(e);
             }
         }
