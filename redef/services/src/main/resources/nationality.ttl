@@ -579,8 +579,8 @@ nationality:portug a duo:Nationality ;
 	rdfs:label	"Portugal"@en .
 
 nationality:puert a duo:Nationality ;
-	rdfs:label	"Puerto Rica"@no ;
-	rdfs:label	"Puerto Rica"@en .
+	rdfs:label	"Puerto Rico"@no ;
+	rdfs:label	"Puerto Rico"@en .
 
 nationality:qat a duo:Nationality ;
 	rdfs:label	"Qatar"@no ;
@@ -805,3 +805,19 @@ nationality:øst a duo:Nationality ;
 nationality:storbr a duo:Nationality ;
 	rdfs:label	"Storbritannia"@no ;
 	rdfs:label	"United Kingdom"@en .
+
+nationality:cshh a duo:Nationality ;
+	rdfs:label	"Tsjekkoslovakia"@no ;
+	rdfs:label	"Czechoslovakia"@en .
+
+nationality:yucs a duo:Nationality ;
+	rdfs:label	"Jugoslavia"@no ;
+	rdfs:label	"Yugoslavia"@en .
+
+nationality:suhh a duo:Nationality ;
+	rdfs:label	"Sovjetunionen"@no ;
+	rdfs:label	"Soviet Union"@en .
+
+nationality:ddde a duo:Nationality ;
+	rdfs:label	"Øst-Tyskland (DDR)"@no ;
+	rdfs:label	"East Germany (GDR)"@en .
