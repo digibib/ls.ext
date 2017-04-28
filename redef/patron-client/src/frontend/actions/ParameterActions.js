@@ -74,7 +74,7 @@ export function ensureOneBranchOpen (inputLocationQuery) {
       return
     }
     searchResults.forEach((el, i) => {
-      if  (el.publication.homeBranches && el.publication.homeBranches.length === 1) {
+      if (el.publication.homeBranches && el.publication.homeBranches.length === 1) {
         locationQuery[ 'showBranchStatus' ].push([ el.publication.homeBranches[0] ])
       }
     })
