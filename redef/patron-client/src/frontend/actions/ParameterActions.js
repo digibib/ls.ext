@@ -69,23 +69,13 @@ export function ensureOneBranchOpen (inputLocationQuery) {
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     const searchResults = getState().search.searchResults
-    let queryParam = locationQuery[ 'showBranchStatus' ] || []
-    if (!Array.isArray(queryParam)) {
-      queryParam = [ queryParam ]
-    }
-    if (queryParam.length > 0) {
-      // There are allready toggled filters, which means this is not an "initial query",
-      // but a refinement of existing query.
+    locationQuery[ 'showBranchStatus' ] = locationQuery[ 'showBranchStatus' ] || []
+    if (locationQuery[ 'showBranchStatus' ].length > 0) {
       return
     }
-
     searchResults.forEach((el, i) => {
-      if (el.publication.availableBranches.length === 1 && i === 0) {
-        locationQuery[ 'showBranchStatus' ] = [ el.publication.availableBranches[0] ]
-      }
-
-      if (el.publication.availableBranches.length === 1 && i > 0) {
-        locationQuery[ 'showBranchStatus' ].push([ el.publication.availableBranches[0] ])
+      if  (el.publication.homeBranches && el.publication.homeBranches.length === 1) {
+        locationQuery[ 'showBranchStatus' ].push([ el.publication.homeBranches[0] ])
       }
     })
 

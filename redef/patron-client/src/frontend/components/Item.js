@@ -7,7 +7,7 @@ const Item = ({ item, intl }) => {
     <div role="row" className="flex-wrapper sub-wrapper">
       <div data-automation-id="item_languages" className="flex-item sub-row">{languages.join(', ')}</div>
       <div data-automation-id="item_shelfmark" className="flex-item sub-row">{item.shelfmark}
-        {item.location.length
+        {item.location
           ? <span>{renderLocation(item)}</span>
           : null
         }

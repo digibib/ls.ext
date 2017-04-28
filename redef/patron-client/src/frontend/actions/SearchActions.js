@@ -56,10 +56,9 @@ export function search () {
         if (processedResponse.error) {
           throw Error(processedResponse)
         } else {
-          console.log('processesResponse', processedResponse)
           dispatch(ensureDefinedFiltersOpen(locationQuery))
           dispatch(receiveSearch(processedResponse))
-          dispatch(ensureOneBranchOpen(locationQuery))
+          //dispatch(ensureOneBranchOpen(locationQuery))
         }
       })
       .catch(error => dispatch(searchFailure(error)))
