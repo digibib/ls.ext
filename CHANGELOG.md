@@ -12,10 +12,32 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.39
+
+KOHA: 3e191782ac52e7041730d54b786ccce4c4123c04
+GITREF: TODO
+
+- Koha
+  - DEICH-112: Lagt til ekstra felt i REST biblio for tilgjengelighet
+  - DEICH-777: Lagt til Koha plugin for purring av klasselånere
+- Services:
+  - DEICH-685: Splitte verk del III
+- Patron-client:
+  - DEICH-772: Hele tittelen på mine sider
+  - DEICH-781: Fiks på 'hvor finnes denne'
+  - DEICH-784: Justering av relevans
+  - DEICH-445: Antatt ventetid på mine sider
+- Catalinker:
+  - DEICH-721: Hente flere opplysninger fra Biblioteksentralen
+  - DEICH-763: Verkstype mangler i skjema
+  - DEICH-511: Nytt felt på utgivelse - alternativ tittel
+- Annet:
+  - DEICH-112: koha_indexer - komponent som henter sirkulasjonsdata fra Koha for indeksering
+
 ## 2017.38
 
 KOHA: b5bf35b150b04ec084ea8f61a0888ac3dbecccfc
-GITREF: TODO
+GITREF: df6ba57130a9149e4a2a01cb587739ffce50ade7
 
 - Koha:
   - DEICH-778: opgradert fra 16.11.04 til 16.06.11
