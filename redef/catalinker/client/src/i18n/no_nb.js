@@ -137,6 +137,7 @@
     InstrumentLabel: 'instrument',
     WorkSeriesLabel: 'verksserie',
     CompositionTypeLabel: 'komposisjonstype',
+    PublicationPartLabel: 'del av utgivelse',
 
     // pluralis
     PersonLabelPlur: 'personene',

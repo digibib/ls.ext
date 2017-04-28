@@ -468,7 +468,7 @@ public final class EntityResource extends ResourceBase {
                 getEntityService().removeFromLocalIndex(outgoing);
                 final SearchService searchService = getSearchService();
                 searchService.delete(outgoing);
-                relatedUris.forEach(searchService::index);
+                newHashSet(relatedUris).forEach(searchService::index);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new InternalServerErrorException(e);
@@ -497,7 +497,7 @@ public final class EntityResource extends ResourceBase {
     @POST
     @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/clone")
     public Response cloneResource(@PathParam("type") String type,
-                                  @PathParam("id") String id){
+                                  @PathParam("id") String id) {
         try {
             XURI xuri = new XURI(BaseURI.root(), type, id);
             final Model model = getEntityService().retrieveById(xuri);

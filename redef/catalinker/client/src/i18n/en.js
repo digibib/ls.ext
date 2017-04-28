@@ -135,6 +135,7 @@
     InstrumentLabel: 'instrument',
     WorkSeriesLabel: 'work series',
     CompositionTypeLabel: 'composition type',
+    PublicationPartLabel: 'part of publication',
 
     // pluralis
     PersonLabelPlur: 'persons',

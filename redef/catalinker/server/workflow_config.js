@@ -1839,7 +1839,11 @@ module.exports = (app) => {
         },
         inverseLabels: {
           'Emne': 'Som emne',
-          'Utgivelse av': 'Har utgivelse'
+          'Utgivelse av': 'Har utgivelse',
+          'Har delutgivelse': 'Utgitt som del',
+          'Subject': 'As subject',
+          'Publication of': 'Published',
+          'Has publication part': 'Published as part'
         }
       }
     response.json(config)
