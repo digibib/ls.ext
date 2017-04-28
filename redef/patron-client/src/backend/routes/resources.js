@@ -39,8 +39,7 @@ module.exports = (app) => {
         } else {
           return Promise.resolve(undefined)
         }
-      })))
-      .then(itemResponses => {
+      }))).then(itemResponses => {
         const itemsByRecordId = {}
         const holdsByRecordId = {}
         itemResponses.filter(itemResponse => itemResponse).forEach(itemResponse => {
