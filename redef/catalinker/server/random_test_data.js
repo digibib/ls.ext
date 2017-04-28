@@ -37,7 +37,7 @@ module.exports = (app) => {
                     }
                   ],
                   'deichman:hasMediaType': {
-                    '@id': '_:b100'
+                    '@id': 'http://data.deichman.no/mediaType#Book'
                   },
                   'deichman:isbn': request.params[1],
                   'deichman:language': {
@@ -48,7 +48,7 @@ module.exports = (app) => {
                       '@id': 'http://data.deichman.no/literaryForm#novel'
                     },
                     {
-                      '@id': 'http://data.deichman.no/literaryForm#fiction'
+                      '@id': 'http://data.deichman.no/literaryForm#shortProse'
                     }
                   ],
                   'deichman:mainTitle': randomName(),
@@ -126,7 +126,7 @@ module.exports = (app) => {
                   },
                   'deichman:literaryForm': [
                     {
-                      '@id': request.params[0] === 'bibbi' ? 'http://data.deichman.no/literaryForm#fiction' : 'http://data.deichman.no/literaryForm#drama'
+                      '@id': request.params[0] === 'bibbi' ? 'http://data.deichman.no/literaryForm#shortProse' : 'http://data.deichman.no/literaryForm#drama'
                     },
                     {
                       '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/literaryForm#novel' : 'http://data.deichman.no/literaryForm#pointingBook'

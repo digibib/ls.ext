@@ -2400,10 +2400,16 @@
         }
       },
       predefinedLabelValue: function (type, uri) {
-        uri = _.flatten([ uri ])[ 0 ]
-        return i18nLabelValue(_.find(ractive.get(`predefinedValues.${type}`), function (predefinedValue) {
-          return predefinedValue[ '@id' ] === uri
-        })[ 'label' ])
+        if (uri && uri.length > 0) {
+          uri = _.flatten([ uri ])[ 0 ]
+          if (!isBlankNodeUri(uri)) {
+            return i18nLabelValue(_.find(ractive.get(`predefinedValues.${type}`), function (predefinedValue) {
+              return predefinedValue[ '@id' ] === uri
+            })[ 'label' ])
+          }
+        } else {
+          return ''
+        }
       },
 
       restart: function () {
