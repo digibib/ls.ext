@@ -743,7 +743,9 @@ public final class EntityServiceImpl implements EntityService {
     public List<XURI> retrieveResourceRelationshipsUris(XURI uri) {
         return stream(spliteratorUnknownSize(repository.retrieveResourceRelationships(uri), ORDERED), false)
                 .filter(s -> s.contains("targetUri"))
-                .map(this::targetUri).collect(toSet()).stream().sorted().collect(toList());
+                .map(this::targetUri)
+                .filter(Objects::nonNull)
+                .collect(toSet()).stream().sorted().collect(toList());
     }
 
     @Override
@@ -823,21 +825,22 @@ public final class EntityServiceImpl implements EntityService {
 
     private String getRecordIdFromLoan(Loan loan) {
         LoanRecord loanRecord = GSON.fromJson(kohaAdapter.getBiblioFromItemNumber(loan.getItemNumber()),
-                new TypeToken<LoanRecord>() {}.getType());
+                new TypeToken<LoanRecord>() {
+                }.getType());
         return loanRecord.getRecordId();
     }
 
     private Map<String, String> getPublicationMetadataByRecordId(String recordId) {
         Map<String, String> publicationMetadata = new HashMap<>();
         repository.retrievePublicationDataByRecordId(recordId).forEachRemaining(querySolution -> {
-                querySolution.varNames().forEachRemaining(varName -> {
-                    if (querySolution.get(varName).isLiteral()) {
-                        publicationMetadata.put(varName, querySolution.get(varName).asLiteral().getString());
-                    } else {
-                        publicationMetadata.put(varName, querySolution.get(varName).toString());
-                    }
-                });
+            querySolution.varNames().forEachRemaining(varName -> {
+                if (querySolution.get(varName).isLiteral()) {
+                    publicationMetadata.put(varName, querySolution.get(varName).asLiteral().getString());
+                } else {
+                    publicationMetadata.put(varName, querySolution.get(varName).toString());
+                }
             });
+        });
         String title = publicationMetadata.get("mainTitle");
         if (publicationMetadata.get("subtitle") != null) {
             title += " : " + publicationMetadata.get("subtitle");
@@ -890,9 +893,10 @@ public final class EntityServiceImpl implements EntityService {
         return relationship;
     }
 
-    private XURI targetUri(QuerySolution querySolution)  {
+    private XURI targetUri(QuerySolution querySolution) {
         try {
-            return new XURI(querySolution.getResource("targetUri").getURI());
+            final Resource targetUri = querySolution.getResource("targetUri");
+            return targetUri != null ? new XURI(targetUri.getURI()) : null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
