@@ -155,4 +155,36 @@ class CirculationObjectBase implements CirculationObject {
             setRelativePublicationPath(path);
         }
     }
+
+    public String getRelativePublicationPath() {
+        return relativePublicationPath;
+    }
+
+    public String getPublicationImage() {
+        return publicationImage;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public String getBorrowerNumber() {
+        return borrowerNumber;
+    }
+
+    public void setBorrowerNumber(String borrowerNumber) {
+        this.borrowerNumber = borrowerNumber;
+    }
+
+    public Map<String, String> getContributor() {
+        return contributor;
+    }
+
+    public String getId() {
+        return id;
+    }
 }

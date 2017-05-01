@@ -1,7 +1,7 @@
 package no.deichman.services.entity.kohaadapter;
 
 import no.deichman.services.circulation.Item;
-import no.deichman.services.testUtils.RandomDate;
+import no.deichman.services.testutil.RandomisedData;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
@@ -20,7 +20,7 @@ public final class ItemStubber {
             booleanReservable = true;
         }
 
-        RandomDate randomDate = new RandomDate();
+        RandomisedData randomDate = new RandomisedData();
         item.setBarcode(RandomStringUtils.randomNumeric(14));
         item.setSecondaryRecordId(recordId);
         item.setRecordId(recordId);
