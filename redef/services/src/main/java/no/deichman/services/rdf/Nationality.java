@@ -214,4 +214,9 @@ public final class Nationality {
     public static final Resource ZIMB = createResource(NAMESPACE + "zimb");
     public static final Resource OEST = createResource(NAMESPACE + "øst");
     public static final Resource STORBR = createResource(NAMESPACE + "storbr");
+    public static final Resource SUHH = createResource(NAMESPACE + "suhh");
+    public static final Resource YUCS = createResource(NAMESPACE + "yucs");
+    public static final Resource CSHH = createResource(NAMESPACE + "cshh");
+    public static final Resource DDDE = createResource(NAMESPACE + "ddde");
+
 }
