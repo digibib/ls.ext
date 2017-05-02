@@ -28,7 +28,7 @@ public final class CirculationResource extends ResourceBase {
     @Context
     private ServletConfig servletConfig;
 
-    CirculationResource() {}
+    public CirculationResource() {}
 
     CirculationResource(EntityService entityService, SearchService searchService, KohaAdapter kohaAdapter) {
         super(entityService, searchService, kohaAdapter);
