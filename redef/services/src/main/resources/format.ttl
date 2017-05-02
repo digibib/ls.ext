@@ -92,6 +92,11 @@ format:NintendoWiiGame a duo:Format ;
   rdfs:label "Nintendo Wii-spill"@no ;
   rdfs:label "Nintendo Wii game"@en .
 
+format:NintendoSwitchGame a duo:Format ;
+  duo:code "ms" ;
+  rdfs:label "Nintendo Switch-spill"@no ;
+  rdfs:label "Nintendo Switch game"@en .
+
 format:PersonalComputerGame a duo:Format ;
   duo:code "ma" ;
   rdfs:label "PC-spill"@no ;
