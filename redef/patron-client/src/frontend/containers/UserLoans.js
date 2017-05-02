@@ -224,7 +224,7 @@ class UserLoans extends React.Component {
             </h1>
             {this.renderRenewAllButton()}
           </div>
-          {[ ...this.props.loansAndReservations.loans ].sort((a, b) => a.dueDate > b.dueDate).map(item => (
+          {[ ...this.props.loansAndReservations.loans ].sort((a, b) => new Date (a.dueDate) > new Date (b.dueDate)).map(item => (
             <article key={item.id}
                      className="single-entry"
                      data-automation-id="UserLoans_loan"
