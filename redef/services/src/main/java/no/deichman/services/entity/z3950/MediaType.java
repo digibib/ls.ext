@@ -30,6 +30,7 @@ public final class MediaType {
             .put("mk", "Game")
             .put("mn", "Game")
             .put("mo", "Game")
+            .put("ms", "Game")
             .put("fd", "Other")
             .build();
 
