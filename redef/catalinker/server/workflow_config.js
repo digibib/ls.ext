@@ -682,6 +682,7 @@ module.exports = (app) => {
                   styleClass: 'title'
                 }
               },
+              { rdfProperty: 'partNumber' },
               {
                 rdfProperty: 'partTitle',
                 headlinePart: {
@@ -694,7 +695,6 @@ module.exports = (app) => {
                 multiple: true,
                 addAnotherLabel: 'addAnotherVariantTitle',
               },
-              { rdfProperty: 'partNumber' },
               { rdfProperty: 'edition' },
               {
                 rdfProperty: 'publicationYear',
