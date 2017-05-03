@@ -31,6 +31,10 @@ const Item = ({ item, intl }) => {
 }
 
 const renderLocation = (item) => {
+  return <span className="location-item">{item.location}</span>
+}
+
+/* const renderLocation = (item) => {
   if (!Array.isArray(item.location)) {
     return <span className="location-item">{item.location}</span>
   } else {
@@ -39,7 +43,7 @@ const renderLocation = (item) => {
     })
     return itemLocation
   }
-}
+} */
 
 Item.propTypes = {
   item: PropTypes.object.isRequired,

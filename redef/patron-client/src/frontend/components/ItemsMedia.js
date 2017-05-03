@@ -79,18 +79,24 @@ class ItemsMedia extends React.Component {
         merged.push(el)
       }
       merged.forEach(i => {
-        if (i.shelfmark === el.shelfmark) {
+        const locationI = i.location === null ? null : i.location.toLowerCase()
+        const locationEl = el.location === null ? null : el.location.toLowerCase()
+
+        if (i.shelfmark.toLowerCase() === el.shelfmark.toLowerCase() &&
+          locationI === locationEl &&
+          i.languages.join() === el.languages.join()) {
           wasMerged = true
           if (i.barcode !== el.barcode) {
             i.total = i.total + el.total
             i.available = i.available + el.available
-            if (i.location && !Array.isArray(i.location)) {
+
+            /* if (i.location && !Array.isArray(i.location)) {
               i.location = [i.location]
             }
             i.location = i.location || []
             if (el.location && !i.location.includes(el.location)) {
               i.location.push(el.location)
-            }
+            } */
           }
         }
       })
