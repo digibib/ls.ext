@@ -102,7 +102,7 @@ module.exports = {
   },
   backendUri: '/services',
   maxVisibleFilterItems: 3,
-  maxSearchResults: 100,
+  maxSearchResults: 200,
   maxSearchResultsPerPage: 20,
   filterableFields: {
     branch: {
