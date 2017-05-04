@@ -1,0 +1,19 @@
+@prefix cs: <http://data.deichman.no/cataloguingSource#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+
+cs:Deichman a duo:CataloguingSource ;
+  rdfs:label "Deichman"@no ;
+  rdfs:label "Deichman"@en .
+
+cs:BS a duo:CataloguingSource ;
+  rdfs:label "Biblioteksentralen"@no ;
+  rdfs:label "Biblioteksentralen"@en .
+
+cs:DFB a duo:CataloguingSource ;
+  rdfs:label "DFB"@no ;
+  rdfs:label "DFB"@en .
+
+cs:Bokbasen a duo:CataloguingSource ;
+  rdfs:label "Bokbasen"@no ;
+  rdfs:label "Bokbasen"@en .

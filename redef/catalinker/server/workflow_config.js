@@ -663,6 +663,8 @@ module.exports = (app) => {
             label: 'publicationTabLabel',
             reportLabel: 'publicationLabel',
             inputs: [
+              { rdfProperty: 'hasPrimaryCataloguingSource', initiallyHidden: true },
+              { rdfProperty: 'hasIdentifierInPrimaryCataloguingSource', initiallyHidden: true },
               {
                 rdfProperty: 'mainTitle',
                 id: 'publicationMainTitle',

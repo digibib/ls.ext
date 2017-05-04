@@ -27,7 +27,8 @@ public enum AuthorizedValue {
     DEWEY_EDITION("classificationSource"),
     MUSICAL_KEY("key"),
     WORK_TYPE("workType"),
-    FICTION_NONFICTION("fictionNonfiction");
+    FICTION_NONFICTION("fictionNonfiction"),
+    CATALOGUING_SOURCE("cataloguingSource");
 
     public static final String ALL_TYPES_PATTERN = "("
             + "language|"
@@ -47,7 +48,8 @@ public enum AuthorizedValue {
             + "classificationSource|"
             + "key|"
             + "workType|"
-            + "fictionNonfiction)";
+            + "fictionNonfiction|"
+            + "cataloguingSource)";
 
     private final String path;
 

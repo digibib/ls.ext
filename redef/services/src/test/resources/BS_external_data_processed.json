@@ -84,6 +84,10 @@
               "@id": "http://data.deichman.no/formatAdaptation#capitalLetters"
             }
           ],
+          "deichman:hasPrimaryCataloguingSource": {
+            "@id": "http://data.deichman.no/cataloguingSource#BS"
+          },
+          "deichman:hasIdentifierInPrimaryCataloguingSource": "0250080",
           "deichman:contributor": [
             {
               "@id": "_:0000000"
