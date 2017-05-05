@@ -3218,8 +3218,8 @@
             return ractive.get(`${keyPath}.values.${valueIndex}.current.displayValue`)
           }
 
-          const shouldExecPatchImmediately = function  (keypath){
-            return ractive.get(`${(keypath.match(/(^.*enableEditResource).*$/) || [undefined, {mode:undefined}])[ 1 ]}.mode` === 'edit')
+          const shouldExecPatchImmediately = function (keypath) {
+            return ractive.get(`${(keypath.match(/(^.*enableEditResource).*$/) || [undefined, {mode: undefined}])[ 1 ]}.mode` === 'edit')
           }
 
           // Initialize ractive component from template
@@ -3731,7 +3731,6 @@
                 }
               },
               focusDetailsToggle: function (event, itemIndex) {
-                const itemId = $(event.node).attr('id')
                 $(event.node).blur()
                 $(`#item-${itemIndex}-details-toggle`).focus()
               },
@@ -3740,7 +3739,7 @@
                 $(event.node).blur()
                 for (var i = 0; i < actions.length; i++) {
                   if ($(`#${actions[ i ]}-item-${itemIndex}`).focus().length > 0) {
-                    break;
+                    break
                   }
                 }
               },
