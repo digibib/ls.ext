@@ -2907,9 +2907,9 @@
             }
           }
           const clickOutsideSupportPanelDetector = function (node) {
-            const rightDummyPanel = $('#right-dummy-panel')
             $(document).click(function (event) {
               if (!event.isDefaultPrevented()) {
+                const rightDummyPanel = $('#right-dummy-panel')
                 const supportPanelLeftEdge = rightDummyPanel.offset().left
                 const supportPanelWidth = rightDummyPanel.width()
                 const outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
