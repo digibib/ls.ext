@@ -43,7 +43,7 @@
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
                 <span class="input" as-disabled>
                     <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                        {{>(readOnly ? "readonly-" : "") + type }}
+                        {{>conditional-input-type}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
                 </span>
@@ -54,7 +54,7 @@
             {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
                 <span class="input">
                     <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                        {{>(readOnly ? "readonly-" : "") + type}}
+                        {{>conditional-input-type}}
                         <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
                     </span>
                     {{#if supportable}}

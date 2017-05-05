@@ -48,7 +48,7 @@ public interface RDFRepository {
 
     void updateResource(String query);
 
-    XURI retrieveWorkByRecordId(String recordId) throws Exception;
+    XURI retrievePublicationXURIByRecordId(String recordId) throws Exception;
 
     Model retrieveWorkAndLinkedResourcesByURI(XURI xuri);
 

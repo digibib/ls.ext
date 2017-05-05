@@ -1,5 +1,5 @@
 ---
-version: '2.1'
+version: '3'
 
 networks:
   backend:
@@ -299,6 +299,31 @@ services:
       BS_DB: "${BS_DB:-replaceme}"
       BS_USER: "${BS_USER:-replaceme}"
       BS_PASS: "${BS_PASS:-replaceme}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
+  koha_indexer:
+    container_name: koha_indexer
+    image: "digibib/koha-indexer:d4d4e5e581319d6a2e7cd5cf6e0aec7fce213951"
+    networks:
+      - backend
+    command:
+      - "/koha-indexer"
+      - "-db=/var/lib/state/koharecords.db"
+      - "-sparql=http://fuseki:3030/ds/update"
+      - "-freq=15m"
+      - "-update"
+      - "-initial-import"
+      - "-services=http://services:8005/search/publication/reindex"
+    environment:
+      KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
+    volumes:
+      - "koha_state:/var/lib/state"
     logging:
       driver: "json-file"
       options:

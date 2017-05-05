@@ -45,6 +45,24 @@ export function togglePeriod (years) {
   }
 }
 
+export function toggleAvailability () {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+
+    // Toggling a filter implies a new search, so we discard any pagination parameter
+    delete locationQuery.page
+
+    dispatch(toggleParameter('excludeUnavailable'))
+  }
+}
+
+export function removeAvailabilityInBackUrl () {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    dispatch(toggleParameter('excludeUnavailable', locationQuery, true))
+  }
+}
+
 export function removePeriod (years) {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }

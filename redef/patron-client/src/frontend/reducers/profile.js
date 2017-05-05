@@ -14,6 +14,9 @@ import {
   CHANGE_CONTACT_DETAILS_SUCCESS,
   CHANGE_CONTACT_DETAILS_FAILURE,
   POST_PROFILE_INFO_SUCCESS,
+  POST_PROFILE_SETTINGS_SUCCESS,
+  POST_PROFILE_SETTINGS_FAILURE,
+  RESET_PROFILE_SETTINGS_SUCCESS,
   REQUEST_CHANGE_PASSWORD,
   CHANGE_PASSWORD_SUCCESS,
   CHANGE_PASSWORD_FAILURE,
@@ -45,7 +48,9 @@ const initialState = {
   changePasswordError: null,
   changePasswordSuccess: false,
   contactDetailsNeedVerification: false,
-  contactDetailsVerificationError: null
+  contactDetailsVerificationError: null,
+  postProfileSettingsSuccess: false,
+  postProfileSettingsFailure: false
 }
 
 export default function profile (state = initialState, action) {
@@ -80,6 +85,12 @@ export default function profile (state = initialState, action) {
       return { ...state, settingsError: action.payload, isRequestingSettings: false }
     case POST_PROFILE_INFO_SUCCESS:
       return { ...state, contactDetailsNeedVerification: false, contactDetailsVerificationError: null }
+    case POST_PROFILE_SETTINGS_SUCCESS:
+      return { ...state, postProfileSettingsSuccess: true, postProfileSettingsFailure: false }
+    case RESET_PROFILE_SETTINGS_SUCCESS:
+      return { ...state, postProfileSettingsSuccess: false }
+    case POST_PROFILE_SETTINGS_FAILURE:
+      return { ...state, postProfileSettingsSuccess: false, postProfileSettingsFailure: true }
     case CONTACT_DETAILS_NEED_VERIFICATION:
       return { ...state, contactDetailsNeedVerification: true, contactDetailsVerificationError: null }
     case CHANGE_CONTACT_DETAILS_FAILURE:

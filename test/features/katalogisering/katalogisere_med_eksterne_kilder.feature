@@ -14,7 +14,6 @@ Egenskap: katalogisere med eksterne kilder
     Så trykker jeg på "Bruk forslag"-knappen
     Og jeg venter litt
     Så åpner jeg listen med eksterne forslag fra andre kilder for agent som skal knyttes til bidrag og velger det første forslaget
-    Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
     Og husker navnet på _personen jeg nettopp opprettet
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
@@ -23,7 +22,6 @@ Egenskap: katalogisere med eksterne kilder
     Så åpner jeg listen med eksterne forslag fra andre kilder for rolle som skal knyttes til bidrag og velger det første forslaget
     Og jeg venter litt
     Så setter jeg markøren i søkefelt for verk og trykker enter
-    Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
@@ -87,7 +85,6 @@ Egenskap: katalogisere med eksterne kilder
     Så trykker jeg på "Bruk forslag"-knappen
     Og jeg venter litt
     Så åpner jeg listen med eksterne forslag fra andre kilder for agent som skal knyttes til bidrag og velger det første forslaget
-    Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
     Og husker navnet på _personen jeg nettopp opprettet
     Så legger jeg inn fødselsår og dødsår og velger "Norge" som nasjonalitet
@@ -96,7 +93,6 @@ Egenskap: katalogisere med eksterne kilder
     Så åpner jeg listen med eksterne forslag fra andre kilder for rolle som skal knyttes til bidrag og velger det første forslaget
     Og jeg venter litt
     Så setter jeg markøren i søkefelt for verk og trykker enter
-    Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt

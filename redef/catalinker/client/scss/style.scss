@@ -12,7 +12,7 @@ $mintgreen: #DCFC9F;
 @mixin source-logo-bibbi {
   background-image: url('/images/logos/bibbi.png');
   background-repeat: no-repeat;
-  background-size: auto 20px;
+  background-size: auto 17px;
 
 }
 
@@ -107,13 +107,13 @@ body {
         padding: 1px 5px !important;
       }
       li {
-        margin-bottom: -3px;
+        margin-bottom: -2px;
       }
       background-image: url("/images/arrow_down_solid.svg");
       background-repeat: no-repeat;
       background-position: 99% 6px;
       padding-top: 1px;
-      margin: -3px 1px !important;
+      margin: -2px 1px !important;
       padding: 0px 0px 1px 5px !important;
       ul {
         li {
@@ -425,6 +425,7 @@ body {
               }
               .support-panel-content {
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+                background: white;
                 &:before {
                   content: "";
                   position: absolute;
@@ -486,8 +487,7 @@ body {
                 margin-top: 3px;
               }
               .sub-field textarea {
-                max-width: 292px;
-                min-width: 292px;
+                max-width: 431px;
                 white-space: nowrap;
               }
               padding: 0px 12px 15px 12px;
@@ -769,7 +769,7 @@ body {
           }
           .suggestion-source-bibbi {
             @include source-logo-bibbi;
-            background-position: 90% 7px;
+            background-position: 94% 0;
           }
           .suggestion-source-loc {
             @include source-logo-loc;

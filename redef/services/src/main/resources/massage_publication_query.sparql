@@ -17,7 +17,9 @@ CONSTRUCT {
                deich:publicationYear ?pubPublicationYear ;
                deich:firstPublicationYear ?workPublicationYear ;
                deich:audience ?audience ;
-               deich:hasHoldingBranch ?branch ;
+               deich:homeBranches ?homeBranch ;
+               deich:availableBranches ?availBranch ;
+               deich:numItems ?numItems ;
                deich:contributor ?contrib ;
                deich:hasImage ?img ;
                deich:mediaType ?pubMediaType ;
@@ -45,6 +47,7 @@ CONSTRUCT {
                deich:title ?pubSubtitle ;
                deich:title ?pubPartNumber ;
                deich:title ?pubPartMainTitle ;
+               deich:title ?pubVarTitle ;
                deich:litform ?litform ;
                deich:subtitles ?subtitles ;
                deich:subtitle ?pubSubtitle ;
@@ -72,6 +75,7 @@ CONSTRUCT {
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
                 deich:subtitle ?anySt ;
+                deich:variantTitle ?anyVt ;
                 deich:partNumber ?anyPn ;
                 deich:partTitle ?anyPt ;
                 deich:hasImage ?anyImage ;
@@ -102,8 +106,11 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
   UNION { <__PUBLICATIONURI__> deich:partTitle ?pubPartTitle }
   UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }
+  UNION { <__PUBLICATIONURI__> deich:variantTitle ?pubVarTitle }
   UNION { <__PUBLICATIONURI__> deich:partNumber ?pubPartNumber }
-  UNION { <__PUBLICATIONURI__> deich:hasHoldingBranch ?branch }
+  UNION { <__PUBLICATIONURI__> deich:hasHomeBranch ?homeBranch }
+  UNION { <__PUBLICATIONURI__> deich:hasAvailableBranch ?availBranch }
+  UNION { <__PUBLICATIONURI__> deich:hasNumItems ?numItems }
   UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
   UNION { <__PUBLICATIONURI__> deich:ismn ?ismn }
   UNION { <__PUBLICATIONURI__> deich:ean ?ean }
@@ -150,6 +157,7 @@ WHERE {
       deich:mainTitle ?anyMt .
     OPTIONAL { ?anyP deich:subtitle ?anySt }
     OPTIONAL { ?anyP deich:partTitle ?anyPt }
+    OPTIONAL { ?anyP deich:variantTitle ?anyVt }
     OPTIONAL { ?anyP deich:partNumber ?anyPn }
     OPTIONAL { ?anyP deich:hasImage ?anyImage }
     BIND(str(?anyP) AS ?anyPub)

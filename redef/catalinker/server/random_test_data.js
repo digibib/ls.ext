@@ -48,7 +48,7 @@ module.exports = (app) => {
                       '@id': 'http://data.deichman.no/literaryForm#novel'
                     },
                     {
-                      '@id': 'http://data.deichman.no/literaryForm#fiction'
+                      '@id': 'http://data.deichman.no/literaryForm#shortProse'
                     }
                   ],
                   'deichman:mainTitle': randomName(),
@@ -126,18 +126,20 @@ module.exports = (app) => {
                   },
                   'deichman:literaryForm': [
                     {
-                      '@id': request.params[0] === 'bibbi' ? 'http://data.deichman.no/literaryForm#fiction' : 'http://data.deichman.no/literaryForm#drama'
+                      '@id': request.params[0] === 'bibbi' ? 'http://data.deichman.no/literaryForm#shortProse' : 'http://data.deichman.no/literaryForm#drama'
                     },
                     {
                       '@id': request.params[0] === 'bibbi' ?  'http://data.deichman.no/literaryForm#novel' : 'http://data.deichman.no/literaryForm#pointingBook'
                     }
                   ],
-                  'deichman:mainTitle': randomName()
+                  'deichman:mainTitle': randomName(),
+                  'deichman:nationality': {
+                    '@id': '_:b100'
+                  }
                 },
                 {
                   '@id': 'http://data.deichman.no/format#Book',
                   '@type': 'http://data.deichman.no/utility#Format',
-                  'http://data.deichman.no/utility#code': 'l',
                   'rdfs:label': [
                     {
                       '@language': 'no',
@@ -146,6 +148,16 @@ module.exports = (app) => {
                     {
                       '@language': 'en',
                       '@value': 'Book'
+                    }
+                  ]
+                },
+                {
+                  '@id': '_:b100',
+                  '@type': 'http://data.deichman.no/utility#nationality',
+                  'rdfs:label': [
+                    {
+                      '@language': 'no',
+                      '@value': 'Slaraffenland'
                     }
                   ]
                 },

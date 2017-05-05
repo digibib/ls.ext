@@ -90,6 +90,9 @@
         "deichman:genre": [
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:isRelatedTo": [
@@ -123,11 +126,40 @@
         "deichman:hasClassification": [
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:fictionNonfiction": {
           "@id": "http://data.deichman.no/fictionNonfiction#fiction"
         },
+        "deichman:nationality": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
         "deichman:contributor": [
           {
             "@id": "_:0000000"
@@ -318,11 +350,19 @@
         }
       },
       {
+        "deichman:hasClassificationNumber": "839.823",
+        "@id": "_:0000000"
+      },
+      {
         "@type": [
           "deichman:Subject"
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Fortellinger"
+      },
+      {
+        "deichman:hasClassificationNumber": "948.104092",
+        "@id": "_:0000000"
       },
       {
         "deichman:contributor": [
@@ -334,6 +374,10 @@
         "@type": [
           "Work"
         ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:hasClassificationNumber": "123.332",
         "@id": "_:0000000"
       },
       {
@@ -361,6 +405,10 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Alaska"
+      },
+      {
+        "deichman:hasClassificationNumber": "332.443",
+        "@id": "_:0000000"
       },
       {
         "@type": [
@@ -397,6 +445,10 @@
         "deichman:prefLabel": "FIFA World Cup"
       },
       {
+        "deichman:hasClassificationNumber": "332.443",
+        "@id": "_:0000000"
+      },
+      {
         "deichman:publicationYear": "1858",
         "deichman:partNumber": "1",
         "deichman:partTitle": "NT",
@@ -422,6 +474,10 @@
         "deichman:prefLabel": "Judea"
       },
       {
+        "deichman:hasClassificationNumber": "443.223",
+        "@id": "_:0000000"
+      },
+      {
         "@type": [
           "deichman:Subject"
         ],
@@ -435,6 +491,10 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Røros"
+      },
+      {
+        "deichman:hasClassificationNumber": "332.776",
+        "@id": "_:0000000"
       },
       {
         "@type": [
@@ -465,6 +525,10 @@
         "deichman:prefLabel": "Åstjønna"
       },
       {
+        "deichman:hasClassificationNumber": "948.414",
+        "@id": "_:0000000"
+      },
+      {
         "@type": [
           "deichman:Subject"
         ],
@@ -477,6 +541,23 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Biografisk"
+      },
+      {
+        "@type": [
+          "deichman:Genre"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Spillefilm"
+      },
+      {
+        "@id": "_:0000000",
+        "@type": "duo:Nationality",
+        "rdfs:label": [
+          {
+            "@language": "no",
+            "@value": "USA"
+          }
+        ]
       },
       {
         "deichman:mainTitle": "Den originale julefortelling",
@@ -832,7 +913,8 @@
     ],
     "@context": {
       "deichman": "http://deichman.no/ontology#",
-      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "duo": "http://deichman.no/utility#"
     }
   }
 ]

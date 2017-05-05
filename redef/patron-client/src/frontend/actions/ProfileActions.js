@@ -107,7 +107,7 @@ export function postProfileInfo (successAction) {
       body: JSON.stringify(profileInfo)
     })
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 204) {
           dispatch(postProfileInfoSuccess())
           dispatch(fetchProfileInfo())
           if (successAction) {
@@ -165,6 +165,8 @@ export const requestPostProfileSettings = () => action(types.REQUEST_POST_PROFIL
 export const postProfileSettingsFailure = (error) => errorAction(types.POST_PROFILE_SETTINGS_FAILURE, error)
 
 export const postProfileSettingsSuccess = () => action(types.POST_PROFILE_SETTINGS_SUCCESS)
+
+export const resetProfileSettingsSuccess = () => action(types.RESET_PROFILE_SETTINGS_SUCCESS)
 
 export function postProfileSettings (profileSettings, successAction) {
   const url = '/api/v1/profile/settings'

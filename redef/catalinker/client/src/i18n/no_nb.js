@@ -49,6 +49,7 @@
     addAnotherGenre: 'Legg til en sjanger til',
     addAnotherPart: 'Legg til en del til',
     addAnotherAdditionalEntry: 'Legg til ny biinnførsel',
+    addAnotherVariantTitle: 'Legg til en alternativ tittel til',
     suggestionFromOtherSources: 'Forslag fra andre eksterne kilder',
     missingRequiredValuesOfBlankMode: 'Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi.',
     cannotSelectRelationBeforeResourceTypeIsLoaded: 'Denne knytningen kan ikke velges før tilhørende ressurstype er lastet',
@@ -136,6 +137,7 @@
     InstrumentLabel: 'instrument',
     WorkSeriesLabel: 'verksserie',
     CompositionTypeLabel: 'komposisjonstype',
+    PublicationPartLabel: 'del av utgivelse',
 
     // pluralis
     PersonLabelPlur: 'personene',
@@ -276,6 +278,10 @@
     suggestedPrefilledValues: 'Forslag til forhåndsfylte verdier',
     useValuesFromTheseFields: 'Vil du bruke verdiene fra disse feltene:',
     andFillTheEmptyFields: '...til å fylle inn tomme felter for disse:',
+    unknownPredefinedValuesMessage: `Verdien fra {{unknownPredefinedValues.sourceLabel}}, "{{unknownPredefinedValues.values.join(',')}}",
+                finnes ikke blant de mulige verdiene for <b>{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}</b >.<br/>
+                Velg det som passer best fra verdiene i nedtrekkslisten.
+    `,
 
     // extended editing
     worksAndPubsRelatedToAuthority: 'Verk og utgivelser knyttet til {{applicationData.translations[applicationData.language][rdfType + \'LabelDet\']}}:',

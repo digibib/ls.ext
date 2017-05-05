@@ -1,0 +1,16 @@
+{{#unless widgetOptions.conditionalInputType}}
+    {{>(readOnly ? "readonly-" : "") + type}}
+{{/unless}}
+{{#each widgetOptions.conditionalInputType}}
+    {{#if ~/[when]}}
+        {{#if compareMode}}
+            {{#with ../../../compareValues.0}}
+                {{>replaceType}}
+            {{/with}}
+        {{else}}
+            {{#with ../../../values.0}}
+                {{>replaceType}}
+            {{/with}}
+        {{/if}}
+    {{/if}}
+{{/each}}

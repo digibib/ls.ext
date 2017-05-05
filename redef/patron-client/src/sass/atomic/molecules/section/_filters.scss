@@ -54,6 +54,26 @@
 
     }
 
+    .filter-group-first {
+      @include span(12);
+      @include container;
+
+      header {
+        @include span(12);
+        border-top: none;
+        padding-top: 0;
+      }
+
+      section {
+        @include span(12);
+      }
+
+      footer {
+        @include span(12);
+      }
+
+    }
+
   }
 
   .limit-filters-header {

@@ -39,6 +39,9 @@
           "deichman:hasClassification": [
             {
               "@id": "_:0000000"
+            },
+            {
+              "@id": "_:0000000"
             }
           ],
           "deichman:fictionNonfiction": {
@@ -122,6 +125,10 @@
           "@type": [
             "deichman:Corporation"
           ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:hasClassificationNumber": "839.823",
           "@id": "_:0000000"
         },
         {
@@ -218,7 +225,8 @@
       ],
       "@context": {
         "deichman": "http://deichman.no/ontology#",
-        "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "duo": "http://deichman.no/utility#"
       }
     }
   ]

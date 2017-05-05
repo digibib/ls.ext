@@ -33,6 +33,7 @@ function setup (resultPropOverrides) {
     resources: {},
     items: {},
     showBranchStatusMedia: () => {},
+    showUnfilteredStatus: () => {},
     showBranchStatus: () => {},
     fetchWorkResource: () => {}
   }

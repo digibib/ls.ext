@@ -138,8 +138,14 @@
       "audiences": {
         "type": "keyword"
       },
-      "branches": {
+      "homeBranches": {
         "type": "keyword"
+      },
+      "availableBranches": {
+        "type": "keyword"
+      },
+      "numItems": {
+        "type": "short"
       },
       "image": {
         "type": "text",

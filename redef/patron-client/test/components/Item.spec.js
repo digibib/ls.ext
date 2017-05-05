@@ -50,13 +50,14 @@ describe('components', () => {
           total: 1,
           available: 0,
           languages: [],
-          mediaTypes: ['test_media_type']
+          mediaTypes: ['test_media_type'],
+          location: 'TEST_LOCATION'
         }
       })
 
       // expect(node.querySelector("[data-automation-id='item_media_type']").textContent).toBe('test_media_type_english')
       expect(node.querySelector("[data-automation-id='item_languages']").textContent).toBe('')
-      expect(node.querySelector("[data-automation-id='item_shelfmark']").textContent).toBe(props.item.shelfmark)
+      expect(node.querySelector("[data-automation-id='item_shelfmark']").textContent).toBe(`${props.item.shelfmark}${props.item.location}`)
       expect(node.querySelector("[data-automation-id='item_status']").textContent).toBe('0 ledige av 1')
     })
   })

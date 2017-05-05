@@ -6,6 +6,7 @@ import SearchFilter from './SearchFilter'
 import Constants from '../constants/Constants'
 
 import DataRangeFilter from '../components/DateRangeFilter'
+import AvailableFilter from '../components/AvailableFilter'
 
 class SearchFilters extends React.Component {
   constructor (props) {
@@ -61,6 +62,8 @@ class SearchFilters extends React.Component {
         groupedFilters[ aggregation ] = groupedFilters[ aggregation ] || []
         groupedFilters[ aggregation ].push(filter)
       })
+      const branchFilter = groupedFilters[ 'branch' ]
+      delete groupedFilters[ 'branch' ]
 
       return (
         <NonIETransitionGroup
@@ -85,6 +88,29 @@ class SearchFilters extends React.Component {
 
           <section className="filter-wrapper"
                    data-automation-id="search_filters">
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <AvailableFilter
+                toggleAvailability={this.props.toggleAvailability}
+                isChecked={this.props.locationQuery.hasOwnProperty('excludeUnavailable')}
+                scrollTargetNode={this.props.scrollTargetNode}
+              />
+            }
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <SearchFilter
+                  key="branch"
+                  aggregation="branch"
+                  filters={branchFilter}
+                  locationQuery={this.props.locationQuery}
+                  toggleFilter={this.props.toggleFilter}
+                  toggleFilterVisibility={this.props.toggleFilterVisibility}
+                  toggleAllFilters={this.toggleFilterVisibility}
+                  toggleCollapseFilter={this.props.toggleCollapseFilter}
+                  scrollTargetNode={this.props.scrollTargetNode}
+                  first
+                />
+            }
             {this.props.locationQuery.hideFilters === Constants.enabledParameter
               ? null
               : <DataRangeFilter
@@ -123,6 +149,7 @@ SearchFilters.propTypes = {
   toggleFilterVisibility: PropTypes.func.isRequired,
   toggleAllFiltersVisibility: PropTypes.func.isRequired,
   toggleCollapseFilter: PropTypes.func.isRequired,
+  toggleAvailability: PropTypes.func.isRequired,
   scrollTargetNode: PropTypes.object.isRequired,
   isSearching: PropTypes.bool,
   windowWidth: PropTypes.number.isRequired,

@@ -58,6 +58,7 @@ export function search () {
         } else {
           dispatch(ensureDefinedFiltersOpen(locationQuery))
           dispatch(receiveSearch(processedResponse))
+          // dispatch(ensureOneBranchOpen(locationQuery))
         }
       })
       .catch(error => dispatch(searchFailure(error)))
@@ -66,6 +67,10 @@ export function search () {
 
 export function showStatus (relativeUri) {
   return toggleParameterValue('showStatus', relativeUri)
+}
+
+export function showUnfilteredStatus (relativeUri) {
+  return toggleParameterValue('showUnfilteredStatus', relativeUri)
 }
 
 export function showBranchStatus (branchCode) {

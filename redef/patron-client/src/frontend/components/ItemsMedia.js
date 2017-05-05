@@ -8,12 +8,12 @@ class ItemsMedia extends React.Component {
     super(props)
     this.handleBranchStatusMedia = this.handleBranchStatusMedia.bind(this)
     this.handleBranchStatusMediaEnter = this.handleBranchStatusMediaEnter.bind(this)
+    this.mergeItems = this.mergeItems.bind(this)
   }
 
   componentWillMount () {
     const mediaType = this.props.itemsByMedia.mediaTypeURI
     const branchCode = this.props.branchCode
-
     this.handleBranchStatusMediaInit(`${branchCode}_${this.splitMediaType(mediaType)}`)
   }
 
@@ -21,6 +21,7 @@ class ItemsMedia extends React.Component {
     const mediaType = this.props.itemsByMedia.mediaTypeURI
     const branchCode = this.props.branchCode
     const intl = this.props.intl
+    const mergedItems = this.mergeItems()
     return (
       <div data-automation-id="work_items">
         <div className="flex-wrapper media-header">
@@ -53,7 +54,7 @@ class ItemsMedia extends React.Component {
               <div role="columnheader" className="flex-item"><FormattedMessage {...messages.status} /></div>
               </div>
             </div>
-            {this.props.itemsByMedia.items.map((item, i) => {
+            {mergedItems.map((item, i) => {
               return <Item key={i} item={item} />
             })
             }
@@ -64,13 +65,46 @@ class ItemsMedia extends React.Component {
     )
   }
 
-  // NB: Not in use
-  checkLangFilter (lang) {
-    const { locationQuery: { filter } } = this.props
-    if (filter && filter.includes('language')) {
-      return lang.includes(filter.split('_').pop())
+  // Merge book items which have the same shelf mark
+  mergeItems () {
+    if (!this.props.itemsByMedia.items && this.props.itemsByMedia.items.length === 0) {
+      return
     }
-    return true
+    // Deep copy original items array
+    const itemsCopy = JSON.parse(JSON.stringify(this.props.itemsByMedia.items))
+    const merged = []
+    itemsCopy.forEach(el => {
+      let wasMerged = false
+      if (merged.length === 0) {
+        merged.push(el)
+      }
+      merged.forEach(i => {
+        const locationI = i.location === null ? null : i.location.toLowerCase()
+        const locationEl = el.location === null ? null : el.location.toLowerCase()
+
+        if (i.shelfmark.toLowerCase() === el.shelfmark.toLowerCase() &&
+          locationI === locationEl &&
+          i.languages.join() === el.languages.join()) {
+          wasMerged = true
+          if (i.barcode !== el.barcode) {
+            i.total = i.total + el.total
+            i.available = i.available + el.available
+
+            /* if (i.location && !Array.isArray(i.location)) {
+              i.location = [i.location]
+            }
+            i.location = i.location || []
+            if (el.location && !i.location.includes(el.location)) {
+              i.location.push(el.location)
+            } */
+          }
+        }
+      })
+      if (!wasMerged) {
+        merged.push(el)
+      }
+    })
+    return merged
   }
 
   handleBranchStatusMedia () {

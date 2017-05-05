@@ -96,6 +96,7 @@ class Publications extends React.Component {
     const filteredPublicationsRest = []
     const filters = getCategorizedFilters(this.props.locationQuery)
     const dateRange = []
+    const availabilityFilterOn = this.props.query.back && this.props.query.back.includes('excludeUnavailable')
 
     if (getDateRange(this.props.locationQuery, 'yearFrom') !== null) {
       dateRange.push({ yearFrom: getDateRange(this.props.locationQuery, 'yearFrom') })
@@ -105,7 +106,7 @@ class Publications extends React.Component {
       dateRange.push({ yearTo: getDateRange(this.props.locationQuery, 'yearTo') })
     }
 
-    if (filters.branch || filters.language || filters.format || filters.mediatype || dateRange.length !== 0) {
+    if (filters.branch || filters.language || filters.format || filters.mediatype || dateRange.length !== 0 || availabilityFilterOn) {
       publicationsCopy.forEach(publication => {
         const withinDateRange = this.checkIfWithinDateRange(dateRange, publication.publicationYear)
         const formats = filters.format
@@ -125,7 +126,8 @@ class Publications extends React.Component {
           (mediatypes ? this.isArraysIntersecting(mediatypes, publication.mediaTypes) : true) &&
           (languages ? this.isArraysIntersecting(languages, publication.languages) : true) &&
           (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true)) &&
-          withinDateRange
+          withinDateRange &&
+          (availabilityFilterOn ? publication.available : true)
           ? filteredPublications.push(publication) : filteredPublicationsRest.push(publication)
       })
     } else {
@@ -163,6 +165,7 @@ class Publications extends React.Component {
                 <FormattedMessage {...messages.hideRestOfPublications} values={{ mediaType: mediaTypeOutput }} />
             }
             output.push(<ShowFilteredPublicationsLabel
+              key={new Date().getTime()}
               open={showAll.includes(mediaType)}
               showingRestLabel={showingRestLabel} mediaType={mediaType}
               toggleParameterValue={this.props.toggleParameterValue} />)
@@ -301,6 +304,7 @@ class Publications extends React.Component {
           {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
           <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
                            removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
+                           toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
                            query={this.props.query} />
         </header>
         {

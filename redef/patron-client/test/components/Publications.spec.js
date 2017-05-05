@@ -56,8 +56,9 @@ function setup (propOverrides) {
     searchFilterActions: {
       removePeriod: () => {},
       removeFilterInBackUrl: () => {},
-      removePeriodInBackUrl: () => {}
-
+      removePeriodInBackUrl: () => {},
+      removeAvailabilityInBackUrl: () => {},
+      toggleAvailability: () => {}
     },
     query: {},
     workLanguage: '',

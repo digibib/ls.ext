@@ -20,6 +20,10 @@ class UserSettings extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
+  componentWillMount () {
+    this.props.profileActions.resetProfileSettingsSuccess()
+  }
+
   handleChange (event) {
     if (event.target.checked) {
       this.props.profileActions.contactDetailsNeedVerification()
@@ -254,6 +258,12 @@ class UserSettings extends React.Component {
                   onClick={this.handleSaveClick}>
             <FormattedMessage {...messages.save} />
           </button>
+          {this.props.postProfileSettingsSuccess
+            ? (<span className="disclaimer">
+                  <FormattedMessage {...messages.saveSuccess} />
+                </span>)
+            : null
+          }
           <div className="disclaimer">
             <FormattedMessage {...messages.disclaimer} />
           </div>
@@ -274,10 +284,16 @@ UserSettings.propTypes = {
   personalInformation: PropTypes.object.isRequired,
   settingsError: PropTypes.object,
   contactDetailsNeedVerification: PropTypes.bool,
-  contactDetailsVerificationError: PropTypes.object
+  contactDetailsVerificationError: PropTypes.object,
+  postProfileSettingsSuccess: PropTypes.object
 }
 
 export const messages = defineMessages({
+  saveSuccess: {
+    id: 'UserSettings.saveSuccess',
+    description: 'Success notification when settings are saved',
+    defaultMessage: 'Changes are saved!'
+  },
   alerts: {
     id: 'UserSettings.alerts',
     description: 'The alerts header',
@@ -347,7 +363,8 @@ function mapStateToProps (state) {
     settings: state.profile.settings,
     personalInformation: state.profile.personalInformation,
     contactDetailsNeedVerification: state.profile.contactDetailsNeedVerification,
-    contactDetailsVerificationError: state.profile.contactDetailsVerificationError
+    contactDetailsVerificationError: state.profile.contactDetailsVerificationError,
+    postProfileSettingsSuccess: state.profile.postProfileSettingsSuccess
   }
 }
 

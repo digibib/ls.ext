@@ -90,8 +90,10 @@
     }
 
     function saveSuggestionData () {
-      var suggestionData = []
-      var acceptedData = []
+      let suggestionData = []
+      let acceptedData = []
+      let unknownPredefinedValues = []
+      let supportableInputs = []
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           var realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
@@ -116,11 +118,25 @@
                 value: input.searchForValueSuggestions.hitsFromPreferredSource
               })
             }
+            if (input.unknownPredefinedValues) {
+              unknownPredefinedValues.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.unknownPredefinedValues`,
+                value: input.unknownPredefinedValues
+              })
+            }
+            if (input.supportable) {
+              supportableInputs.push({
+                keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.supportable`,
+                value: true
+              })
+            }
           })
         })
       })
       window.sessionStorage.setItem('suggestionData', JSON.stringify(suggestionData))
       window.sessionStorage.setItem('acceptedData', JSON.stringify(acceptedData))
+      window.sessionStorage.setItem('unknownPredefinedValues', JSON.stringify(unknownPredefinedValues))
+      window.sessionStorage.setItem('supportableInputs', JSON.stringify(supportableInputs))
       let suggestedValueSearchInput = getSuggestedValuesSearchInput()
       if (suggestedValueSearchInput) {
         window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
@@ -222,7 +238,7 @@
     }
 
     const translate = _.memoize(function (msgKey) {
-      return ractive.get('applicationData.translations')[ractive.get('applicationData.language')][msgKey]
+      return ractive.get('applicationData.translations')[ ractive.get('applicationData.language') ][ msgKey ]
     })
 
     var deleteResource = function (uri, deleteConfig, success) {
@@ -532,6 +548,23 @@
       options = options || {}
       if (values && values.length > 0) {
         var valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
+          if (isBlankNodeUri(value.id)) {
+            let valuesForInput = ractive.get(`applicationData.predefinedValues.${input.fragment}`)
+            let matchedPredefValue = _.find(valuesForInput, function (predefValue) {
+              return _.some(predefValue.label, function (label) {
+                return label[ '@language' ] === value.get('label').lang && label[ '@value' ] === value.get('label').value
+              })
+            })
+            if (matchedPredefValue) {
+              return matchedPredefValue[ '@id' ]
+            } else {
+              input.supportable = true
+              input.unknownPredefinedValues = input.unknownPredefinedValues || {}
+              input.unknownPredefinedValues.values = input.unknownPredefinedValues.values || []
+              input.unknownPredefinedValues.values.push((value.get('label') || {}).value)
+              input.unknownPredefinedValues.sourceLabel = input.unknownPredefinedValues.sourceLabel || options.sourceLabel
+            }
+          }
           return value.id
         })
         if (options.compareValues) {
@@ -623,7 +656,7 @@
         function getValues (onlyFirstField) {
           return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
             .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
+            .join(' ').replace(/[,\\.]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
         }
 
         var values = getValues(options.onlyFirstField)
@@ -1202,10 +1235,6 @@
                               }
                             })
                           }
-                        } else if (input.type === 'hidden-url-query-value') {
-                          _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                            setIdValue(value.id, input, 0, valuesField)
-                          })
                         } else {
                           _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
                             if (!options.onlyValueSuggestions) {
@@ -1217,6 +1246,8 @@
                                 input[ valuesField ][ valueIndex ].nonEditable = true
                                 ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
                                 input.parentInput.allowAddNewButton = true
+                              } else if (input.multiple) {
+                                input.allowAddNewButton = true
                               }
                             } else {
                               input.suggestedValues = input.suggestedValues || []
@@ -1423,7 +1454,7 @@
       if (prop.type) {
         input.type = prop.type
       }
-      input.visible = (prop.type !== 'entity' && prop.type !== 'hidden-url-query-value' && !prop.initiallyHidden)
+      input.visible = (prop.type !== 'entity' && !prop.initiallyHidden)
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
       }
@@ -1975,7 +2006,9 @@
           var offset = 15
           if (supportPanelBase.length === 0) {
             supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}]`)
-            offset = 0
+            if (supportPanelBase.length > 0) {
+              offset = Math.max(0, (80 - supportPanelBase.height()) / 2)
+            }
           }
           if (supportPanelBase.length > 0) {
             $(panel).css({
@@ -2003,7 +2036,7 @@
       })
     }
 
-    function externalSourceHitDescription (graph, source) {
+    function externalSourceHitDescription (graph, source, sourceLabel) {
       var workGraph = graph.byType('Work')[ 0 ]
       if (!workGraph) {
         throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om verket.`)
@@ -2030,8 +2063,9 @@
       return {
         main: mainHitLine.join(' - '),
         details: detailsHitLine.join(' - '),
-        graph: graph,
-        source: source
+        graph,
+        source,
+        sourceLabel
       }
     }
 
@@ -2366,9 +2400,16 @@
         }
       },
       predefinedLabelValue: function (type, uri) {
-        return i18nLabelValue(_.find(ractive.get(`predefinedValues.${type}`), function (predefinedValue) {
-          return predefinedValue[ '@id' ] === uri
-        })[ 'label' ])
+        if (uri && uri.length > 0) {
+          uri = _.flatten([ uri ])[ 0 ]
+          if (!isBlankNodeUri(uri)) {
+            return i18nLabelValue(_.find(ractive.get(`predefinedValues.${type}`), function (predefinedValue) {
+              return predefinedValue[ '@id' ] === uri
+            })[ 'label' ])
+          }
+        } else {
+          return ''
+        }
       },
 
       restart: function () {
@@ -2392,6 +2433,7 @@
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
+          'support-for-select-predefined-value',
           'support-for-input-string',
           'support-for-edit-authority',
           'searchable-authority-dropdown',
@@ -2428,7 +2470,8 @@
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
           'readonly-searchable-with-result-in-side-panel',
-          'links'
+          'links',
+          'conditional-input-type'
         ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
@@ -2475,7 +2518,7 @@
           applicationData.translations = translations
           const language = (URI.parseQuery(URI.parse(document.location.href).query).language || 'no')
           applicationData.partials = applicationData.partials || {}
-          applicationData.partials = _.extend(applicationData.partials, translations[language])
+          applicationData.partials = _.extend(applicationData.partials, translations[ language ])
           applicationData.language = language
           return applicationData
         }
@@ -2863,9 +2906,9 @@
             }
           }
           const clickOutsideSupportPanelDetector = function (node) {
-            const rightDummyPanel = $('#right-dummy-panel')
             $(document).click(function (event) {
               if (!event.isDefaultPrevented()) {
+                const rightDummyPanel = $('#right-dummy-panel')
                 const supportPanelLeftEdge = rightDummyPanel.offset().left
                 const supportPanelWidth = rightDummyPanel.width()
                 const outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
@@ -3153,6 +3196,19 @@
               teardown: function () {}
             }
           }
+          const setGlobalFlag = function (node, args) {
+            const ractive = this
+            _.chain(args).keys().each(function (key) {
+              ractive.set(key, true)
+            })
+            return {
+              teardown: function () {
+                _.chain(args).keys().each(function (key) {
+                  ractive.set(key, null)
+                })
+              }
+            }
+          }
           titleRactive = new Ractive({
             el: 'title',
             template: '{{title.1 || title.2 || title.3 || "Katalogisering"}}',
@@ -3438,7 +3494,8 @@
               heightAligned,
               authorityEdit,
               draggable,
-              dropZone
+              dropZone,
+              setGlobalFlag
             },
             partials: applicationData.partials,
             transitions: {
@@ -3632,7 +3689,7 @@
                 updateBrowserLocationClearAllExcept([ 'openTab', 'language' ])
                 updateBrowserLocationWithUri(typeFromUri(uri), uri)
                 forAllGroupInputs(function (input) {
-                  if (input.type === 'hidden-url-query-value' &&
+                  if (input.hiddenUrlQueryValue &&
                     typeof input.values[ 0 ].current.value === 'string' &&
                     input.values[ 0 ].current.value !== '') {
                     let shortValue = input.values[ 0 ].current.value.replace(input.widgetOptions.prefix, '')
@@ -3867,7 +3924,7 @@
                 if (eventShouldBeIgnored(event)) return
                 if (!event.context.prefillFromAcceptedSource) {
                   _.each(event.context.inputs, function (input, index) {
-                    if (input.type !== 'hidden-url-query-value') {
+                    if (input.hiddenUrlQueryValue) {
                       ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
                     }
                   })
@@ -4013,7 +4070,7 @@
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
                         if (fromPreferredSource) {
-                          hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source))
+                          hitsFromPreferredSource.items.push(externalSourceHitDescription(graph, response.data.source, searchExternalSourceInput.searchForValueSuggestions.preferredSource.name))
                           resultStat.itemsFromPreferredSource++
                         } else {
                           var options = {
@@ -4164,6 +4221,7 @@
                           updateInputsForResource({ data: {} }, null, {
                             keepDocumentUrl: true,
                             source: event.context.source,
+                            sourceLabel: event.context.sourceLabel,
                             wrapperObject: wrapperObject,
                             wrappedIn: wrappedIn,
                             deferUpdate: true
@@ -4784,6 +4842,14 @@
                 _.each(acceptedData, function (ractiveData) {
                   ractive.set(ractiveData.keypath, ractiveData.value)
                 })
+                var unknownPredefinedValues = JSON.parse(window.sessionStorage.unknownPredefinedValues)
+                _.each(unknownPredefinedValues, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.value)
+                })
+                var supportableInputs = JSON.parse(window.sessionStorage.supportableInputs)
+                _.each(supportableInputs, function (ractiveData) {
+                  ractive.set(ractiveData.keypath, ractiveData.value)
+                })
                 ractive.set('primarySuggestionAccepted', true)
               }
               suggestValueInput.values = [ {
@@ -5062,6 +5128,7 @@
                 closePreview()
               }
             })
+            setTimeout(positionSupportPanels)
             return applicationData
           })
           .then(function (applicationData) {

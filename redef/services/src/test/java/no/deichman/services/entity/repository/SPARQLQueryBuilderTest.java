@@ -4,7 +4,7 @@ import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
@@ -365,14 +365,21 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_update_branches_query() throws Exception {
         String recordId = "378";
-        String branches = "hutl,fmaj,fgry";
-        String quotedBranches = StringUtils.join(branches.split(","),"\",\"");
+        String homeBranches = "hutl,fmaj,fgry";
+        String availableBranches = "fgry,fmaj";
+        int numItems = 8;
         String expected = "PREFIX : <" + BaseURI.ontology() + ">\n"
-                + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
-                + "INSERT { ?pub :hasHoldingBranch \"" + quotedBranches + "\" . }\n"
-                + "WHERE { ?pub :recordId \"" + recordId + "\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n";
+                + "DELETE { ?pub :hasHomeBranch ?homeBranch ; :hasAvailableBranch ?availBranch ; :hasNumItems ?numItems }\n"
+                + "INSERT { ?pub :hasHomeBranch \"" + StringUtils.join(homeBranches.split(","), "\",\"") + "\" .\n"
+                + "?pub :hasAvailableBranch \"" + StringUtils.join(availableBranches.split(","), "\",\"") + "\" .\n"
+                + "?pub :hasNumItems " + numItems + " }\n"
+                + "WHERE  { ?pub :recordId \"" + recordId + "\" .\n"
+                + "         OPTIONAL { ?pub :hasNumItems ?numItems }\n"
+                + "         OPTIONAL { ?pub :hasHomeBranch ?homeBranch }\n"
+                + "         OPTIONAL { ?pub :hasAvailableBranch ?availBranch }\n"
+                + "}\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String query = sqb.updateHoldingBranches(recordId, branches);
+        String query = sqb.updateAvailabilityData(recordId, homeBranches, availableBranches, numItems);
         assertEquals(expected, query);
     }
 

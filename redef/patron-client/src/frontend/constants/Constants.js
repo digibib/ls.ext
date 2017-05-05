@@ -105,21 +105,21 @@ module.exports = {
   maxSearchResults: 100,
   maxSearchResultsPerPage: 10,
   filterableFields: {
-    language: {
-      name: 'languages',
-      prefix: 'http://lexvo.org/id/iso639-3/'
+    branch: {
+      name: 'branches',
+      prefix: ''
     },
     mediatype: {
       name: 'mediatype',
       prefix: 'http://data.deichman.no/mediaType#'
     },
-    branch: {
-      name: 'branches',
-      prefix: ''
-    },
     format: {
       name: 'formats',
       prefix: 'http://data.deichman.no/format#'
+    },
+    language: {
+      name: 'languages',
+      prefix: 'http://lexvo.org/id/iso639-3/'
     },
     audience: {
       name: 'audiences',

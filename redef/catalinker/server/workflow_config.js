@@ -661,7 +661,7 @@ module.exports = (app) => {
             id: 'describe-publication',
             rdfType: 'Publication',
             label: 'publicationTabLabel',
-            reportLabel: 'workLabel',
+            reportLabel: 'publicationLabel',
             inputs: [
               {
                 rdfProperty: 'mainTitle',
@@ -682,6 +682,7 @@ module.exports = (app) => {
                   styleClass: 'title'
                 }
               },
+              { rdfProperty: 'partNumber' },
               {
                 rdfProperty: 'partTitle',
                 headlinePart: {
@@ -689,7 +690,11 @@ module.exports = (app) => {
                   styleClass: 'title'
                 }
               },
-              { rdfProperty: 'partNumber' },
+              {
+                rdfProperty: 'variantTitle',
+                multiple: true,
+                addAnotherLabel: 'addAnotherVariantTitle',
+              },
               { rdfProperty: 'edition' },
               {
                 rdfProperty: 'publicationYear',
@@ -971,11 +976,22 @@ module.exports = (app) => {
               { rdfProperty: 'language', multiple: true },
               {
                 rdfProperty: 'hasWorkType',
-                type: 'hidden-url-query-value',
+                type: 'select-predefined-value',
+                hiddenUrlQueryValue: true,
                 id: 'workTypeInput',
                 widgetOptions: {
                   queryParameter: 'hasWorkType',
-                  prefix: 'http://data.deichman.no/workType#'
+                  prefix: 'http://data.deichman.no/workType#',
+                  conditionalInputType: [
+                    {
+                      when: 'inWorkflow',
+                      replaceType: 'readonly-hidden-url-query-value'
+                    },
+                    {
+                      when: 'editingAuthority',
+                      replaceType: 'select-predefined-value'
+                    }
+                  ]
                 }
               },
               {
@@ -1823,7 +1839,11 @@ module.exports = (app) => {
         },
         inverseLabels: {
           'Emne': 'Som emne',
-          'Utgivelse av': 'Har utgivelse'
+          'Utgivelse av': 'Har utgivelse',
+          'Har delutgivelse': 'Utgitt som del',
+          'Subject': 'As subject',
+          'Publication of': 'Published',
+          'Has publication part': 'Published as part'
         }
       }
     response.json(config)

@@ -354,22 +354,33 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
-    public String updateHoldingBranches(String recordId, String branches) {
+    public String updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems) {
+        List<String> inserts = newArrayList();
+        if (homeBranches != null && !homeBranches.equals("")) {
+            inserts.add("?pub :hasHomeBranch \"" + StringUtils.join(homeBranches.split(","), "\",\"") + "\"");
+        }
+        if (availableBranches != null && !availableBranches.equals("")) {
+            inserts.add("?pub :hasAvailableBranch \"" + StringUtils.join(availableBranches.split(","), "\",\"")  + "\"");
+        }
+        inserts.add("?pub :hasNumItems " + numItems);
         String q = format(""
                         + "PREFIX : <%s>\n"
-                        + "DELETE { ?pub :hasHoldingBranch ?branch }\n"
-                        + "INSERT { ?pub :hasHoldingBranch \"%s\" . }\n"
-                        + "WHERE { ?pub :recordId \"%s\" OPTIONAL { ?pub :hasHoldingBranch ?branch } }\n",
-                BaseURI.ontology(), StringUtils.join(branches.split(","), "\",\""), recordId);
+                        + "DELETE { ?pub :hasHomeBranch ?homeBranch ; :hasAvailableBranch ?availBranch ; :hasNumItems ?numItems }\n"
+                        + "INSERT { %s }\n"
+                        + "WHERE  { ?pub :recordId \"%s\" .\n"
+                        + "         OPTIONAL { ?pub :hasNumItems ?numItems }\n"
+                        + "         OPTIONAL { ?pub :hasHomeBranch ?homeBranch }\n"
+                        + "         OPTIONAL { ?pub :hasAvailableBranch ?availBranch }\n"
+                        + "}\n",
+                BaseURI.ontology(), StringUtils.join(inserts, " .\n"), recordId);
         return q;
     }
 
-    public Query getWorkByRecordId(String recordId) {
+    public Query getPublicationByRecordId(String recordId) {
         String q = format(""
                         + "PREFIX : <%s>\n"
-                        + "SELECT ?work\n"
-                        + "WHERE { ?pub :recordId \"%s\" .\n"
-                        + "        ?pub :publicationOf ?work }\n",
+                        + "SELECT ?pub\n"
+                        + "WHERE { ?pub :recordId \"%s\" . }\n",
                 BaseURI.ontology(), recordId);
         return QueryFactory.create(q);
     }
@@ -383,6 +394,9 @@ public final class SPARQLQueryBuilder {
                 + "       ?contributorName\n"
                 + "       ?contributorNationality\n"
                 + "       ?mainTitle\n"
+                + "       ?partTitle\n"
+                + "       ?partNumber\n"
+                + "       ?subtitle\n"
                 + "       ?publicationImage\n"
                 + "       (str(?year) AS ?publicationYear)\n"
                 + "       ?mediaType\n"
@@ -391,6 +405,9 @@ public final class SPARQLQueryBuilder {
                 + "  ?publicationUri :recordId \"%s\" ;\n"
                 + "                  :publicationOf ?workUri .\n"
                 + "  OPTIONAL { ?publicationUri :mainTitle ?mainTitle }\n"
+                + "  OPTIONAL { ?publicationUri :partTitle ?partTitle }\n"
+                + "  OPTIONAL { ?publicationUri :partNumber ?partNumber }\n"
+                + "  OPTIONAL { ?publicationUri :subtitle ?subtitle }\n"
                 + "  OPTIONAL { ?publicationUri :publicationYear ?year }\n"
                 + "  OPTIONAL { ?publicationUri :hasMediaType ?mediaType }\n"
                 + "  OPTIONAL { ?workUri :contributor ?contribution .\n"
@@ -720,6 +737,15 @@ public final class SPARQLQueryBuilder {
                 + "    ?withPubPart     deich:hasPublicationPart ?pubPart .\n"
                 + "    ?pubPart         a                        ?type ;\n"
                 + "                     deich:mainTitle          ?mainTitle ; \n"
+                + "                     bind(?withPubPart    as ?targetUri) . \n"
+                + "  } union {\n"
+                + "    ?pubPart         deich:publicationOf      <%3$s> .\n"
+                + "    ?withPubPart     deich:hasPublicationPart ?pubPart ;\n"
+                + "                     deich:mainTitle          ?mainTitle . \n"
+                + "    ?pubPart         a                        deich:PublicationPart ;\n"
+                + "                     bind(iri(deich:hasPublicationPart) as ?relation) .\n"
+                + "                     bind(?withPubPart    as ?targetUri) . \n"
+                + "                     bind(iri(deich:Publication) as ?type) . \n"
                 + "  } union {\n"
                 + "    ?workWithSubj    deich:subject            <%3$s> ;\n"
                 + "                     a                        ?type ;\n"

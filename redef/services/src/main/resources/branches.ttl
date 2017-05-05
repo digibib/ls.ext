@@ -25,3 +25,4 @@
 <ftor>   rdfs:label "Torshov"@no, "Torshov"@en .
 <hsko>   rdfs:label "Skoletjenesten"@no, "Skoletjenesten"@en .
 <ukjent> rdfs:label "Ukjent avdeling"@no, "Ukjent avdeling"@en .
+<hlsf>   rdfs:label "Lesefrø"@no, "Lesefrø"@en .

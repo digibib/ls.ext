@@ -416,6 +416,12 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Publication, :Work, :PublicationPart, :Serial, :WorkSeries ;
   rdfs:range xsd:string .
 
+:variantTitle a rdfs:Property ;
+  rdfs:label "Variant title"@en ;
+  rdfs:label "Alternativ tittel"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
+
 # ToDo: Erstattes med :hasPartNumber
 :partNumber a rdfs:Property ;
   rdfs:label "Part number"@en ;

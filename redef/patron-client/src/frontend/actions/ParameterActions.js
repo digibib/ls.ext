@@ -1,14 +1,18 @@
 import { push, replace } from 'react-router-redux'
 
-export function toggleParameter (queryParamName, inputLocationQuery) {
+export function toggleParameter (queryParamName, inputLocationQuery, shouldRemoveInBackString = false) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     const queryParam = locationQuery[ queryParamName ]
-    if (queryParam !== undefined) {
-      delete locationQuery[ queryParamName ]
+    if (shouldRemoveInBackString) {
+      locationQuery[ 'back' ] = locationQuery[ 'back' ].replace(`${queryParamName}&`, '')
     } else {
-      locationQuery[ queryParamName ] = null // null enables the parameter
+      if (queryParam !== undefined) {
+        delete locationQuery[ queryParamName ]
+      } else {
+        locationQuery[ queryParamName ] = null // null enables the parameter
+      }
     }
     return dispatch(push({ pathname: pathname, query: locationQuery }))
   }
@@ -49,19 +53,33 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
         }
       })
     }
+    const homeBranch = getState().profile.personalInformation.homeBranch
+
     if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
-      let branchToShow
-      const homeBranch = getState().profile.personalInformation.homeBranch
-      if (homeBranch) {
-        branchToShow = homeBranch
-      } else {
-        branchToShow = 'hutl'
-      }
-      const locationQueryWithBranches = ensureBranchStatus(locationQuery, branchToShow)
+      const locationQueryWithBranches = ensureBranchStatus(locationQuery, homeBranch)
       return dispatch(push({ pathname: pathname, query: locationQueryWithBranches }))
     } else {
       return dispatch(push({ pathname: pathname, query: locationQuery }))
     }
+  }
+}
+
+export function ensureOneBranchOpen (inputLocationQuery) {
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    const searchResults = getState().search.searchResults
+    locationQuery[ 'showBranchStatus' ] = locationQuery[ 'showBranchStatus' ] || []
+    if (locationQuery[ 'showBranchStatus' ].length > 0) {
+      return
+    }
+    searchResults.forEach((el, i) => {
+      if (el.publication.homeBranches && el.publication.homeBranches.length === 1) {
+        locationQuery[ 'showBranchStatus' ].push([ el.publication.homeBranches[0] ])
+      }
+    })
+
+    return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }
 }
 
@@ -88,9 +106,8 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
 
 function ensureBranchStatus (locationQuery, homeBranch) {
   const activeBranchFilters = getActiveBranchFilters(locationQuery)
-
   if (activeBranchFilters.length === 0) {
-    delete locationQuery[ 'showBranchStatus' ]
+    // delete locationQuery[ 'showBranchStatus' ]
     if (homeBranch !== undefined) {
       locationQuery[ 'showBranchStatus' ] = [ homeBranch ]
     }

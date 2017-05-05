@@ -88,7 +88,7 @@ describe('searchBuilder', () => {
   })
 
   describe('aggregations', () => {
-    const urlQueryString = 'filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske&yearFrom=1980&yearTo=1990'
+    const urlQueryString = 'excludeUnavailable&filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske&yearFrom=1980&yearTo=1990'
     it('should include activated filters in aggregations, excluding filters of the given aggregation', () => {
       const q = buildQuery(urlQueryString)
       expect(q.aggs.facets.aggs[ 'audiences' ].filter.bool.must).toEqual(
@@ -109,8 +109,13 @@ describe('searchBuilder', () => {
             }
           },
           {
+            'exists': {
+              'field': 'availableBranches'
+            }
+          },
+          {
             'terms': {
-              'branches': [ 'flam', 'fmaj', 'ftor' ]
+              'availableBranches': [ 'flam', 'fmaj', 'ftor' ]
             }
           }
         ]
@@ -134,6 +139,11 @@ describe('searchBuilder', () => {
                 'gte': 1980,
                 'lte': 1990
               }
+            }
+          },
+          {
+            'exists': {
+              'field': 'availableBranches'
             }
           },
           {
