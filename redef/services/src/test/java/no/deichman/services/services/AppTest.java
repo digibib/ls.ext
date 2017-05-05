@@ -809,6 +809,9 @@ public class AppTest {
             case FICTION_NONFICTION:
                 testData = "<http://data.deichman.no/fictionNonfiction#nonfiction> <http://www.w3.org/2000/01/rdf-schema#label> \"Fag\"@no .";
                 break;
+            case CATALOGUING_SOURCE:
+                testData = "<http://data.deichman.no/cataloguingSource#BS> <http://www.w3.org/2000/01/rdf-schema#label> \"Biblioteksentralen\"@no .";
+                break;
             default:
                 throw new Exception("Couldn't find test data for authorized value: " + authorizedValue.getPath());
         }

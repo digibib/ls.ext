@@ -90,6 +90,12 @@ public class Publication extends BibliographicObjectExternal {
     @SerializedName("deichman:locationFormat")
     private String locationFormat;
 
+    @SerializedName("deichman:hasPrimaryCataloguingSource")
+    private ExternalDataObject cataloguingSource;
+
+    @SerializedName("deichman:hasIdentifierInPrimaryCataloguingSource")
+    private String cataloguingSourceIdentifier;
+
     private transient Extent extentType;
 
     public final String getIsbn() {
@@ -148,6 +154,14 @@ public class Publication extends BibliographicObjectExternal {
 
     final void setPublicationOf(Work work) {
         this.publicationOf = of("@id", work.getId());
+    }
+
+    final void setCataloguingSource(ExternalDataObject cs) {
+        this.cataloguingSource = cs;
+    }
+
+    final void setCataloguingSourceIdentifier(String identifier) {
+        this.cataloguingSourceIdentifier = identifier;
     }
 
     public final void setFormat(ExternalDataObject format) {

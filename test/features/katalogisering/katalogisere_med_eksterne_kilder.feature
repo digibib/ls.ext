@@ -76,6 +76,9 @@ Egenskap: katalogisere med eksterne kilder
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så sjekker jeg at det finnes en biinnførsel hvor organisasjonen jeg valgte har rollen "Komponist" knyttet til "utgivelsen"
+    Så trykker jeg på knappen for å avslutte
+    Så jeg åpner utgivelsen i gammelt katalogiseringsgrensesnitt
+    Og sjekker at hovedkatalogiseringskilde og identifikator er lagret
 
   Scenario: Legge inn et ISBN-nummer som finnes fra før
     Gitt at jeg har en bok

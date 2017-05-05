@@ -106,6 +106,7 @@ public final class EntityServiceImpl implements EntityService {
     private static final String FORMATADAPTATION_TTL_FILE = "formatAdaptation.ttl";
     private static final String WRITINGSYSTEM_TTL_FILE = "writingSystem.ttl";
     private static final String BIOGRAPHY_TTL_FILE = "biography.ttl";
+    private static final String CATALOGUINGSOURCE_TTL_FILE = "cataloguingSource.ttl";
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final Property mainTitleProperty;
@@ -135,6 +136,8 @@ public final class EntityServiceImpl implements EntityService {
     private final Property locationFormatProperty;
     private final Property locationDeweyProperty;
     private final Property locationSignatureProperty;
+    private final Property cataloguingSourceLabel;
+    private final Property cataloguingSourceIdentifier;
 
     private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
     private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
@@ -170,6 +173,8 @@ public final class EntityServiceImpl implements EntityService {
         locationFormatProperty = createProperty(ontology("locationFormat"));
         locationDeweyProperty = createProperty(ontology("locationDewey"));
         locationSignatureProperty = createProperty(ontology("locationSignature"));
+        cataloguingSourceLabel = createProperty(ontology("cataloguingSourceLabel"));
+        cataloguingSourceIdentifier = createProperty(ontology("cataloguingSourceIdentifier"));
 
     }
 
@@ -246,6 +251,10 @@ public final class EntityServiceImpl implements EntityService {
         return getLinkedResource(input, "role", ROLE_TTL_FILE);
     }
 
+    private Model getLinkedCataloguingSourceSystemResource(Model input) {
+        return getLinkedResource(input, "cataloguingSource", CATALOGUINGSOURCE_TTL_FILE);
+    }
+
     private Model getLinkedResource(Model input, String path, String filename) {
         NodeIterator objects = input.listObjects();
         if (objects.hasNext()) {
@@ -300,6 +309,7 @@ public final class EntityServiceImpl implements EntityService {
         m = getLinkedRoleResource(m);
         m = getLinkedWritingSystemResource(m);
         m = getLinkedBiographySystemResource(m);
+        m = getLinkedCataloguingSourceSystemResource(m);
         return m;
     }
 
@@ -539,6 +549,7 @@ public final class EntityServiceImpl implements EntityService {
             return marcRecord;
         }
 
+        MarcField field015 = MarcRecord.newDataField(MarcConstants.FIELD_015);
         MarcField field260 = MarcRecord.newDataField(MarcConstants.FIELD_260);
         MarcField field041 = MarcRecord.newDataField(MarcConstants.FIELD_041);
         MarcField field090 = MarcRecord.newDataField(MarcConstants.FIELD_090);
@@ -617,6 +628,10 @@ public final class EntityServiceImpl implements EntityService {
                     field090.addSubfield(MarcConstants.SUBFIELD_C, stmt.getLiteral().getString());
                 } else if (pred.equals(locationSignatureProperty)) {
                     field090.addSubfield(MarcConstants.SUBFIELD_D, stmt.getLiteral().getString());
+                } else if (pred.equals(cataloguingSourceLabel)) {
+                    field015.addSubfield(MarcConstants.SUBFIELD_B, stmt.getLiteral().getString());
+                } else if (pred.equals(cataloguingSourceIdentifier)) {
+                    field015.addSubfield(MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
                 }
             }
         }
@@ -635,6 +650,10 @@ public final class EntityServiceImpl implements EntityService {
             MarcField field245 = MarcRecord.newDataField(MarcConstants.FIELD_245);
             field245.addSubfield(MarcConstants.SUBFIELD_A, title);
             marcRecord.addMarcField(field245);
+        }
+
+        if (field015.size() > 0) {
+            marcRecord.addMarcField(field015);
         }
 
         if (field260.size() > 0) {

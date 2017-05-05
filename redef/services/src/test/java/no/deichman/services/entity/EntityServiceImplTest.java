@@ -744,7 +744,10 @@ public class EntityServiceImplTest {
                 + "    ns2:hasPlaceOfPublication <http://deichman.no/place/p1> ;"
                 + "    ns2:locationSignature \"Rag\" ;\n"
                 + "    ns4:publicationHistory \"Forts. i: Eremittkrepsene\" ;\n"
-                + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" .\n"
+                + "    ns4:statementOfResponsibility \"Anne Birkefeldt Ragde\" ;\n"
+                + "    ns2:hasPrimaryCataloguingSource [ rdf:type ns2:CatalogingSource ;\n"
+                + "       ns2:hasCataloguingSource <http://data.deichman.no/cataloguingSource#BS> ;"
+                + "       ns2:hasIdentifier \"123456\" ] .\n"
                 + "<http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> rdf:type ns2:Work ;\n"
                 + "    ns2:audience <http://data.deichman.no/audience#adult> ;\n"
                 + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
@@ -786,14 +789,20 @@ public class EntityServiceImplTest {
                 + "<http://data.deichman.no/format#EBokBib> rdfs:label \"eBokBib\"@no, \"eBokBib\"@en .\n"
                 + "<http://data.deichman.no/formatAdaptation#largePrint> rdfs:label \"Storskrift\"@no, \"Large print\"@en .\n"
                 + "<http://data.deichman.no/contentAdaptation#easyLanguage> rdfs:label \"Lettlest, enkelt språk\"@no, \"Easy to read, easy language\"@en .\n"
-                + "<http://data.deichman.no/audience#adult> rdfs:label \"Adult\"@en, \"Voksne\"@no .\n";
+                + "<http://data.deichman.no/audience#adult> rdfs:label \"Adult\"@en, \"Voksne\"@no .\n"
+                + "<http://data.deichman.no/cataloguingSource#BS> rdfs:label \"Biblioteksentralen\"@en, \"Biblioteksentralen\"@no .";
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         XURI pub = new XURI("http://data.deichman.no/publication/p735933031021");
         MarcRecord want = new MarcRecord();
         // fag/fiksjon:
         want.addControlField(MarcConstants.FIELD_008, MarcConstants.FIELD_008_FICTION);
+        // Katalogiseringskilde:
+        MarcField field = MarcRecord.newDataField("015");
+        field.addSubfield('a', "123456");
+        field.addSubfield('b', "Biblioteksentralen");
+        want.addMarcField(field);
         // Språk
-        MarcField field = MarcRecord.newDataField("041");
+        field = MarcRecord.newDataField("041");
         field.addSubfield('a', "nob");
         want.addMarcField(field);
         // Plasseringsinfo

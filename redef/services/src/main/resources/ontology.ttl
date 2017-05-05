@@ -714,3 +714,15 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Serial ;
   rdfs:range xsd:string .
 
+:hasPrimaryCataloguingSource a rdfs:Property ;
+  rdfs:label "Primary cataloguing source"@en ;
+  rdfs:label "Hovedkatalogiseringskilde"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range duo:CataloguingSource ;
+  duo:valuesFrom values:cataloguingSource .
+
+:hasIdentifierInPrimaryCataloguingSource a rdfs:Property ;
+  rdfs:label "Identifier in primary cataloguing source"@en ;
+  rdfs:label "Identifikator i hovedkatalogiseringskilde"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .

@@ -158,6 +158,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at det er "2" biinnførsler totalt
     Så fjerner jeg den første biinførselen
     Og jeg venter litt
+    Og jeg venter litt
     Så sjekker jeg at det er "1" biinnførsler totalt
     Så sjekker jeg at det finnes en biinnførsel hvor personen jeg valgte har rollen "Fotograf" knyttet til "utgivelsen"
     Og jeg venter litt

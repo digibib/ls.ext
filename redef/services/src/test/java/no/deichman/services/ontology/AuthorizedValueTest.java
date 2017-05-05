@@ -30,7 +30,8 @@ public class AuthorizedValueTest {
             "classificationSource",
             "key",
             "workType",
-            "fictionNonfiction"));
+            "fictionNonfiction",
+            "cataloguingSource"));
 
     @Test
     public void test_all_types_pattern_is_available() {

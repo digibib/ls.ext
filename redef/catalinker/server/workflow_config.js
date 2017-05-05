@@ -11,12 +11,6 @@ function maintenanceInputs (label, type) {
     widgetOptions: {
       maintenance: true,
       // make it possible to create a work resource if necessary,
-      enableCreateNewResource: {
-        formRefs: [ {
-          formId: 'create-' + type + '-form',
-          targetType: type
-        } ]
-      },
       enableEditResource: {
         formRefs: [ {
           formId: 'create-' + type + '-form',
@@ -232,11 +226,11 @@ module.exports = (app) => {
               },
               {
                 type: 'input-string',
-                rdfProperty: 'partTitle'
+                rdfProperty: 'partNumber'
               },
               {
                 type: 'input-string',
-                rdfProperty: 'partNumber'
+                rdfProperty: 'partTitle'
               },
               {
                 rdfProperty: 'hasWorkType',
@@ -566,7 +560,7 @@ module.exports = (app) => {
                       id: 'mainEntryPersonInput',
                       widgetOptions: {
                         showSelectItem: true, // show and enable select work radio button
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-person-form',
@@ -578,7 +572,8 @@ module.exports = (app) => {
                             }
                           ],
                           useAfterCreation: false
-                        }
+                        },
+                        enableInPlaceEditing: true
                       },
                       headlinePart: {
                         order: 10
@@ -622,7 +617,7 @@ module.exports = (app) => {
                 // this is used to control how the search result in the support panel behaves
                 widgetOptions: {
                   // make it possible to create a work resource if necessary,
-                  enableCreateNewResource: {
+                  enableEditResource: {
                     formRefs: [ {
                       formId: 'create-main-work-form',
                       targetType: 'work'
@@ -663,6 +658,8 @@ module.exports = (app) => {
             label: 'publicationTabLabel',
             reportLabel: 'publicationLabel',
             inputs: [
+              { rdfProperty: 'hasPrimaryCataloguingSource', initiallyHidden: true },
+              { rdfProperty: 'hasIdentifierInPrimaryCataloguingSource', initiallyHidden: true },
               {
                 rdfProperty: 'mainTitle',
                 id: 'publicationMainTitle',
@@ -682,6 +679,7 @@ module.exports = (app) => {
                   styleClass: 'title'
                 }
               },
+              { rdfProperty: 'partNumber' },
               {
                 rdfProperty: 'partTitle',
                 headlinePart: {
@@ -694,7 +692,6 @@ module.exports = (app) => {
                 multiple: true,
                 addAnotherLabel: 'addAnotherVariantTitle',
               },
-              { rdfProperty: 'partNumber' },
               { rdfProperty: 'edition' },
               {
                 rdfProperty: 'publicationYear',
@@ -811,7 +808,7 @@ module.exports = (app) => {
                 type: 'searchable-with-result-in-side-panel',
                 widgetOptions: {
                   selectIndexTypeLegend: 'selectActorType',
-                  enableCreateNewResource: {
+                  enableEditResource: {
                     formRefs: [
                       {
                         formId: 'create-corporation-form',
@@ -822,7 +819,8 @@ module.exports = (app) => {
                         targetType: 'person'
                       }
                     ]
-                  }
+                  },
+                  enableInPlaceEditing: true
                 },
                 headlinePart: {
                   order: 50
@@ -837,12 +835,13 @@ module.exports = (app) => {
                 // the labels for authority select list are concatenated
                 type: 'searchable-with-result-in-side-panel',
                 widgetOptions: {
-                  enableCreateNewResource: {
+                  enableEditResource: {
                     formRefs: [ {
                       formId: 'create-place-form',
                       targetType: 'place'
                     } ]
-                  }
+                  },
+                  enableInPlaceEditing: true
                 }
               },
               {
@@ -866,13 +865,14 @@ module.exports = (app) => {
                       type: 'searchable-with-result-in-side-panel',
                       widgetOptions: {
                         showSelectItem: false, // show and enable select work radio button
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [ {
                             formId: 'create-serial-form',
                             targetType: 'serial'
                           } ],
                           useAfterCreation: false
-                        }
+                        },
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -901,7 +901,7 @@ module.exports = (app) => {
                 dependentResourceTypes: [ 'Work' ], // unload work if this is cleared
                 widgetOptions: {
                   // make it possible to create a work resource if necessary,
-                  enableCreateNewResource: {
+                  enableEditResource: {
                     formRefs: [ {
                       formId: 'create-work-form',
                       targetType: 'work'
@@ -956,12 +956,12 @@ module.exports = (app) => {
                 id: 'workSubtitle'
               },
               {
-                rdfProperty: 'partTitle',
-                id: 'workPartTitle'
-              },
-              {
                 rdfProperty: 'partNumber',
                 id: 'workPartNumber'
+              },
+              {
+                rdfProperty: 'partTitle',
+                id: 'workPartTitle'
               },
               {
                 rdfProperty: 'publicationYear',
@@ -1033,7 +1033,7 @@ module.exports = (app) => {
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
                       widgetOptions: {
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-work-form',
@@ -1041,7 +1041,8 @@ module.exports = (app) => {
                             }
                           ],
                           useAfterCreation: false
-                        }
+                        },
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1083,7 +1084,7 @@ module.exports = (app) => {
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ 'mainTitle', 'subtitle', 'partNumber' ],
                       widgetOptions: {
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-workseries-form',
@@ -1091,7 +1092,8 @@ module.exports = (app) => {
                             }
                           ],
                           useAfterCreation: false
-                        }
+                        },
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1168,14 +1170,15 @@ module.exports = (app) => {
                 indexTypes: [ 'compositiontype' ],
                 labelForCreateButton: 'createNewCompositionType',
                 widgetOptions: {
-                  enableCreateNewResource: {
+                  enableEditResource: {
                     formRefs: [
                       {
                         formId: 'create-compositiontype-form',
                         targetType: 'compositiontype'
                       }
                     ]
-                  }
+                  },
+                  enableInPlaceEditing: true
                 }
               },
               {
@@ -1199,14 +1202,15 @@ module.exports = (app) => {
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ 'prefLabel' ],
                       widgetOptions: {
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-instrument-form',
                               targetType: 'instrument'
                             }
                           ]
-                        }
+                        },
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1268,11 +1272,12 @@ module.exports = (app) => {
                 indexTypes: [ 'subject', 'person', 'corporation', 'workUnstructured', 'place', 'event' ],
                 widgetOptions: {
                   selectIndexTypeLegend: 'selectSubjectType',
-                  enableCreateNewResource: {
-                    formRefs: [ {
-                      formId: 'create-subject-form',
-                      targetType: 'subject' // these are matched against index types, hence lower case
-                    },
+                  enableEditResource: {
+                    formRefs: [
+                      {
+                        formId: 'create-subject-form',
+                        targetType: 'subject' // these are matched against index types, hence lower case
+                      },
                       {
                         formId: 'create-work-form',
                         targetType: 'workUnstructured'
@@ -1292,8 +1297,10 @@ module.exports = (app) => {
                       {
                         formId: 'create-event-form',
                         targetType: 'event'
-                      } ]
+                      }
+                    ]
                   },
+                  enableInPlaceEditing: true,
                   explanations: {
                     patterns: [
                       { match: '^.*\\/subject\\/.*$', explanation: '(Generelt emne)' },
@@ -1340,12 +1347,13 @@ module.exports = (app) => {
                 nameProperties: [ 'prefLabel', '(specification)' ],
                 indexTypes: [ 'genre' ],
                 widgetOptions: {
-                  enableCreateNewResource: {
+                  enableEditResource: {
                     formRefs: [ {
                       formId: 'create-genre-form',
                       targetType: 'genre'
                     } ]
-                  }
+                  },
+                  enableInPlaceEditing: true
                 }
               }
             ],
@@ -1386,7 +1394,7 @@ module.exports = (app) => {
                       type: 'searchable-with-result-in-side-panel',
                       id: 'publicationPartActorInput',
                       widgetOptions: {
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-person-form',
@@ -1399,6 +1407,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
+                        enableInPlaceEditing: true,
                         whenEmptyExternalSuggestionCopyValueFrom: {
                           inputRef: 'mainEntryPersonInput'
                         }
@@ -1435,12 +1444,13 @@ module.exports = (app) => {
                       nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
                       indexTypes: [ 'workUnstructured' ], // this is the name of the elasticsearch index type from which authorities are searched within
                       widgetOptions: {
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [ {
                             formId: 'create-work-form',
                             targetType: 'workUnstructured' // these are matched against index types, hence lower case
                           } ]
-                        }
+                        },
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1507,7 +1517,7 @@ module.exports = (app) => {
                       type: 'searchable-with-result-in-side-panel',
                       widgetOptions: {
                         showSelectItem: false, // show and enable select work radio button
-                        enableCreateNewResource: {
+                        enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-person-form',
@@ -1519,7 +1529,8 @@ module.exports = (app) => {
                             }
                           ],
                           useAfterCreation: false
-                        }
+                        },
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1736,13 +1747,13 @@ module.exports = (app) => {
             resourceType: 'Person',
             wrappedIn: 'Contribution',
             predicate: 'agent',
-            enableCreateNewResource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Person',
             wrappedIn: 'PublicationPart',
             predicate: 'agent',
-            enableCreateNewResource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Serial',
@@ -1754,37 +1765,37 @@ module.exports = (app) => {
             resourceType: 'Person',
             wrappedIn: '/Work',
             predicate: 'subject',
-            enableCreateNewResource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Place',
             wrappedIn: '/Work',
             predicate: 'subject',
-            enableCreateNewResource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Event',
             wrappedIn: '/Work',
             predicate: 'subject',
-            enableCreateNewResource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Work',
             wrappedIn: '/Work',
             predicate: 'subject',
-            enableCreateNewResource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Subject',
             wrappedIn: '/Work',
             predicate: 'subject',
-            enableCreateNewResource: true
+            enableEditResource: true
           },
           {
             resourceType: '/Work',
             wrappedIn: 'PublicationPart',
             predicate: 'publicationOf',
-            enableCreateNewResource: true
+            enableEditResource: true
           }
         ],
         translations: {

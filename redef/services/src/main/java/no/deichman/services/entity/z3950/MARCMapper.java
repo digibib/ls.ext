@@ -103,6 +103,10 @@ public class MARCMapper {
         for (DataField dataField : r.getDataFields()) {
             String tag = dataField.getTag();
             switch (tag) {
+                case "015":
+                    setUriObject(dataField, 'b', "cataloguingSource", CataloguingSource::translate, publication::setCataloguingSource);
+                    getSubfieldValue(dataField, 'a').ifPresent(publication::setCataloguingSourceIdentifier);
+                    break;
                 case "019":
                     setUriObject(dataField, 'a', "audience", Audience::translate, work::setAudience);
                     setUriObject(dataField, 'b', "format", Format::translate, publication::setFormat);

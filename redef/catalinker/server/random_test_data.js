@@ -86,7 +86,11 @@ module.exports = (app) => {
                   'http://migration.deichman.no/publisher': 'Gyldendal',
                   'http://migration.deichman.no/subjectAuthority': {
                     '@id': 'http://koha1.deichman.no:8005/bsSubjectAuthority/kjaerlighet_fortellinger'
-                  }
+                  },
+                  "deichman:hasPrimaryCataloguingSource": {
+                    "@id": "http://data.deichman.no/cataloguingSource#BS"
+                  },
+                  "deichman:hasIdentifierInPrimaryCataloguingSource": "0506642"
                 },
                 {
                   '@id': '_:Nfa97dd73eff64195a220cdea3a16afde',

@@ -24,38 +24,43 @@ on-escape="cancelEdit">
                 </script>
                 {{/if}}
                 <div class="pure-u-1">
-                    <div class="pure-g">
-                        <div class="pure-u-1-12">
-                            {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
-                                <a id="{{'sel-item-' + itemIndex}}"
-                                   data-prev-sel-item="{{'sel-item-' + (itemIndex - 1)}}"
-                                   data-next-sel-item="{{'sel-item-' + (itemIndex + 1)}}"
+                    {{#if !widgetOptions.maintenance}}
+                            <span id="{{'sel-item-' + itemIndex}}"
+                                data-prev-sel-item="{{'sel-item-' + (itemIndex - 1)}}"
+                                data-next-sel-item="{{'sel-item-' + (itemIndex + 1)}}"
+                                tabindex="0"
+                                class="pure-u-1-24 search-result-item select-result-item" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
+                                on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'select'}"
+                                on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'select'}"
+                                on-downarrow="focusNextItem:'sel'"
+                                on-uparrow="focusPrevItem:'sel'"
+                                {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
+                                on-rightarrow="focusEditItem:{{itemIndex}}"
+                                {{else}}
+                                on-rightarrow="focusDetailsToggle:{{itemIndex}}"
+                                {{/if}}
+                                on-tab="handleTabForSearchResultItem:{{widgetOptions}}"
+                                title="Velg">
+                            </span>
+                    {{/if}}
+                            {{#if widgetOptions.editWithTemplate || (widgetOptions.enableEditResource && widgetOptions.enableInPlaceEditing)}}
+                                <span id="{{'ed-item-' + itemIndex}}"
+                                   data-prev-ed-item="{{'ed-item-' + (itemIndex - 1)}}"
+                                   data-next-ed-item="{{'ed-item-' + (itemIndex + 1)}}"
                                    tabindex="0"
-                                   class="search-result-item edit-resource" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
+                                   class="pure-u-1-24 search-result-item edit-resource" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
                                    as-tabIndex="{{tabSelected}}"
-                                   on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
-                                   on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
-                                   on-downarrow="focusNextItem"
-                                   on-uparrow="focusPrevItem"
-                                   on-rightarrow="focusDetailsToggle"
+                                   on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'edit'}"
+                                   on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'edit'}"
+                                   on-downarrow="focusNextItem:'ed'"
+                                   on-uparrow="focusPrevItem:'ed'"
+                                   on-rightarrow="focusDetailsToggle:{{itemIndex}}"
+                                   on-leftarrow="focusSelectItem:{{itemIndex}}"
                                    on-tab="handleTabForSearchResultItem:{{widgetOptions}}"
                                    title="Rediger"/>
-                            {{else}}
-                                <a id="{{'sel-item-' + itemIndex}}"
-                                   data-prev-sel-item="{{'sel-item-' + (itemIndex - 1)}}"
-                                   data-next-sel-item="{{'sel-item-' + (itemIndex + 1)}}"
-                                   tabindex="0"
-                                   class="search-result-item select-result-item" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
-                                   on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
-                                   on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}"
-                                   on-downarrow="focusNextItem"
-                                   on-uparrow="focusPrevItem"
-                                   on-rightarrow="focusDetailsToggle"
-                                   on-tab="handleTabForSearchResultItem:{{widgetOptions}}"
-                                   title="Velg"><span/></a>
                             {{/if}}
-                        </div>
-                        <div class="pure-u-21-24">
+
+                        <span class-pure-u-20-24="{{widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}" class-pure-u-21-24="{{!(widgetOptions.editWithTemplate || widgetOptions.enableEditResource)}}">
                             {{#if config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri}}
                             <a class="search-result-item-label"
                                href="{{getLinkfromUri(., config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri)}}"
@@ -68,11 +73,11 @@ on-escape="cancelEdit">
                             {{/if}}
                             <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties2)}}</p>
                             <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemDetailsLabelProperties)}}</p>
-                        </div>
+                        </span>
 
                         <div class="pure-u-1-24">
                             {{#subItems.length || loadWorksAsSubjectOfItem}}
-                            <a id="{{'sel-item-' + itemIndex + '-details-toggle'}}" tabindex="0"
+                            <a id="{{'item-' + itemIndex + '-details-toggle'}}" tabindex="0"
                                class="toggle-show-sub-items"
                                data-next-sub-item="sub-item-{{itemIndex}}-0"
                                {{#config.search[selectedIndexType].subItemsExpandTooltip}}title="{{config.search[selectedIndexType].subItemsExpandTooltip}}"{{/}}
@@ -83,7 +88,7 @@ on-escape="cancelEdit">
                                {{else}}
                                     on-downarrow="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
                                {{/toggleSubItem}}
-                               on-leftarrow="focusItem:{{'sel-item-' + itemIndex}}"
+                               on-leftarrow="focusItem:{{itemIndex}},{{['ed','sel']}}"
                                on-uparrow="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}">
                             {{#toggleSubItem}}&#x25B2;{{else}}&#x25BC;{{/toggleSubItem}}</a>
                             {{/}}
@@ -111,7 +116,6 @@ on-escape="cancelEdit">
                             {{/work}}
                         </div>
                         {{/toggleSubItem}}
-                    </div>
                 </div>
                 {{/each}}
             </div>
@@ -123,7 +127,7 @@ on-escape="cancelEdit">
                 </div>
             </div>
         {{/if}}
-            {{#../../../widgetOptions.enableCreateNewResource.forms[(current.accepted.selectedIndexType || suggested.selectedIndexType || ../../../selectedIndexType)]}}
+            {{#../../../widgetOptions.enableEditResource.forms[(current.accepted.selectedIndexType || suggested.selectedIndexType || ../../../selectedIndexType)]}}
             <div class="search-result pure-u-1-1">
                         <div class="add-new-btn-row">
                             <div class="pure-u-1-3"></div>
@@ -154,7 +158,7 @@ on-escape="cancelEdit">
                 </div>
             {{/if}}
         {{/each}}
-        {{#if widgetOptions.enableCreateNewResource.showInputs === (inputValueIndex || 0)}}
+        {{#if !(widgetOptions.enableEditResource.mode === 'edit')}}
             <span class="pure-u-1-1">
                 <div class="add-new-btn-row">
                     <div class="pure-u-2-3"><a on-click="cancelEdit">{{>cancel}}</a></div>
@@ -172,7 +176,7 @@ on-escape="cancelEdit">
                     <button
                             tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                             class="pure-button pure-button-primary"
-                            on-click="cancelEdit">{{>done}}</button>
+                            on-click="cancelEdit:{{searchResultHidden.origin}}">{{>done}}</button>
                 </div>
             </span>
         {{/if}}
