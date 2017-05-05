@@ -68,7 +68,9 @@ class Publication extends React.Component {
               <span data-automation-id="publication_record_id">{publication.recordId}</span>
             </div>
           </div>
-          {(publication.items.length > 0 && publication.items.filter(item => item.reservable).length > 0) ? (
+          {(publication.items.length > 0 &&
+            publication.items.filter(item => item.reservable).length > 0) &&
+            !publication.mediaTypes.includes('http://data.deichman.no/mediaType#Periodical') ? (
             <div className="reserve-button">
               <ClickableElement onClickAction={startReservation} onClickArguments={publication}>
                 <button className="red-btn" type="button"
