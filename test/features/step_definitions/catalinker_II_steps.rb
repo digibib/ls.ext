@@ -294,6 +294,7 @@ When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
 end
 
 When(/^trykker jeg på knappen for å avslutte$/) do
+  @context[:publication_identifier] = @site.WorkFlow.get_publication_uri || @context[:publication_identifier]
   @site.WorkFlow.finish
 end
 
