@@ -956,12 +956,12 @@ module.exports = (app) => {
                 id: 'workSubtitle'
               },
               {
-                rdfProperty: 'partTitle',
-                id: 'workPartTitle'
-              },
-              {
                 rdfProperty: 'partNumber',
                 id: 'workPartNumber'
+              },
+              {
+                rdfProperty: 'partTitle',
+                id: 'workPartTitle'
               },
               {
                 rdfProperty: 'publicationYear',
