@@ -1449,7 +1449,8 @@ module.exports = (app) => {
                             formId: 'create-work-form',
                             targetType: 'workUnstructured' // these are matched against index types, hence lower case
                           } ]
-                        }
+                        },
+                        enableInPlaceEditing: true
                       }
                     },
                     {
