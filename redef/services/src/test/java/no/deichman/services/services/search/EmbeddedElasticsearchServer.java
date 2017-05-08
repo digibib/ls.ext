@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static java.lang.ClassLoader.getSystemResourceAsStream;
+import static java.lang.System.getenv;
 
 /**
  * Responsibility: An embedded elasticsearch server for test purposes.
@@ -35,7 +36,7 @@ public final class EmbeddedElasticsearchServer {
                 .withSetting("path.home", ".")
                 .withSetting("path.data", dataDirectory)
                 .withEsJavaOpts("-Xms512m -Xmx512m")
-                .withPlugin("analysis-icu")
+                .withPlugin(getenv().getOrDefault("ES_ICU_PLUGIN_URL", "analysis-icu"))
                 .withIndex("search", IndexSettings.builder()
                         .withSettings(getSystemResourceAsStream("search_index.json"))
                         .withType("person", getSystemResourceAsStream("person_mapping.json"))
