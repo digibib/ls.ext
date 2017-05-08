@@ -1,5 +1,6 @@
 package no.deichman.services.testutil;
 
+import no.deichman.services.circulation.Item;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.rdf.MediaType;
 import no.deichman.services.rdf.Nationality;
@@ -9,11 +10,12 @@ import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom;
-
 
 /**
  * Responsibility: provide random dates.
@@ -167,5 +169,26 @@ public final class RandomisedData {
 
     public static String randomString(int length) {
         return RandomStringUtils.random(length);
+    }
+
+    public static Item randomItem(String itemNumber, String recordNumber, DateTime dueDate, String itemType, boolean reservable) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        Item item = new Item();
+        item.setId(itemNumber);
+        item.setRecordId(recordNumber);
+        item.setType(itemType);
+        item.setReservable(reservable);
+        String returnDate = (dueDate == null) ? "" : dateTimeFormatter.print(dueDate);
+        item.setReturnDate(returnDate);
+        return item;
+    }
+
+    public static Item randomBorrowedItem(String itemNumber, String recordNumber, int dueInDays) {
+        DateTime dateTime = new DateTime().plusDays(dueInDays);
+        return randomItem(itemNumber, recordNumber, dateTime, "BOK", true);
+    }
+
+    public static Item randomAvailableItem(String itemNumber, String recordNumber) {
+        return randomItem(itemNumber, recordNumber, null, "BOK", true);
     }
 }

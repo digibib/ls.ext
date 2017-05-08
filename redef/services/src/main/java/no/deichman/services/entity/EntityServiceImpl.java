@@ -9,9 +9,9 @@ import no.deichman.services.circulation.CirculationProfile;
 import no.deichman.services.circulation.ExpandedRecord;
 import no.deichman.services.circulation.HoldsAndPickups;
 import no.deichman.services.circulation.Loan;
-import no.deichman.services.circulation.LoanRecord;
 import no.deichman.services.circulation.Pickup;
 import no.deichman.services.circulation.RawHold;
+import no.deichman.services.circulation.RawLoan;
 import no.deichman.services.circulation.Record;
 import no.deichman.services.circulation.Reservation;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
@@ -88,7 +88,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createResource;
  * Responsibility: TODO.
  */
 public final class EntityServiceImpl implements EntityService {
-    public static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    public static final Gson GSON = new GsonBuilder().create();
     public static final String HOLD_IS_FOUND = "W";
     private final Logger log = LoggerFactory.getLogger(EntityServiceImpl.class);
 
@@ -797,9 +797,9 @@ public final class EntityServiceImpl implements EntityService {
                             expandedRecord.getItems(),
                             record.getBehindExpiditedUserAsBoolean()));
             reservation.setQueuePlace(rawHold.getQueuePlace());
-            reservation.setSuspended(convertBooleanString(rawHold.getSuspended()));
-            reservation.setOrderedDate(rawHold.getReserveDate());
-            reservation.setSuspendUntil(rawHold.getSuspendUntil());
+            reservation.setSuspended(convertBooleanString(Optional.ofNullable(rawHold.getSuspended()).orElse("0")));
+            reservation.setOrderedDate(Optional.ofNullable(rawHold.getReserveDate()).orElse(null));
+            reservation.setSuspendUntil(Optional.ofNullable(rawHold.getSuspendUntil()).orElse(null));
             circulationObject = reservation;
         }
         circulationObject.setId(rawHold.getId());
@@ -841,21 +841,33 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     private List<Loan> getLoans(String borrowerId) throws Exception {
-        Type loansArrayType = new TypeToken<ArrayList<Loan>>() {
-        }.getType();
-        List<Loan> loans = GSON.fromJson(kohaAdapter.getCheckouts(borrowerId), loansArrayType);
-        for (Loan loan : loans) {
-            String recordId = getRecordIdFromLoan(loan).getRecordId();
+        String checkouts = kohaAdapter.getCheckouts(borrowerId);
+        RawLoan[] rawLoans = GSON.fromJson(checkouts, RawLoan[].class);
+        List<Loan> loans = new ArrayList<>();
+        for (RawLoan rawLoan : rawLoans) {
+            Loan loan = new Loan();
+            loan.setId(rawLoan.getId());
+            loan.setItemNumber(rawLoan.getItemNumber());
+            loan.setBranchCode(rawLoan.getBranchCode());
+            loan.setBorrowerNumber(rawLoan.getBorrowerId());
+            loan.setDueDate(rawLoan.getDueDate());
+            loan.setItemNumber(rawLoan.getItemNumber());
+            Record loanRecord = getRecordIdFromLoan(loan);
+            String recordId = loanRecord.getId();
             loan.setRecordId(recordId);
             loan.decorateWithPublicationData(getPublicationMetadataByRecordId(recordId));
+            if (loan.getTitle() == null) {
+                loan.setTitle(Optional.of(loanRecord.getTitle()).orElse("No title/Uten tittel"));
+            }
+            loans.add(loan);
         }
         return loans;
     }
 
-    private LoanRecord getRecordIdFromLoan(Loan loan) {
-        LoanRecord loanRecord = GSON.fromJson(kohaAdapter.getBiblioFromItemNumber(loan.getItemNumber()),
-                new TypeToken<LoanRecord>() {}.getType());
-        return loanRecord;
+    private Record getRecordIdFromLoan(Loan loan) {
+        String data = kohaAdapter.getBiblioFromItemNumber(loan.getItemNumber());
+        ExpandedRecord loanRecord = GSON.fromJson(data, ExpandedRecord.class);
+        return loanRecord.getLoanRecord();
     }
 
 

@@ -69,13 +69,12 @@ public class CirculationResourceTest {
         KohaAPIMock kohaAPIMock = new KohaAPIMock();
         String checkoutData = kohaAPIMock.generateCheckoutsJson(USER_ID, ITEM_NUMBER_1);
         String holdsData = kohaAPIMock.generateHoldsJson(USER_ID, RECORD_ID_2, RECORD_ID_3);
-        String record1 = kohaAPIMock.generateBiblioResponseJson(RECORD_ID_1);
+        String record1 = kohaAPIMock.generateBiblioExpanded(RECORD_ID_1, BOK, false, 2, 2);
         String recordExpanded1 = kohaAPIMock.generateBiblioExpanded(RECORD_ID_2, BOK, false, 2, 2);
 
         when(mockKohaAdapter.getCheckouts(USER_ID)).thenReturn(checkoutData);
         when(mockKohaAdapter.getHolds(USER_ID)).thenReturn(holdsData);
         when(mockKohaAdapter.getBiblioFromItemNumber(ITEM_NUMBER_1)).thenReturn(record1);
-
         when(mockKohaAdapter.createNewBiblioWithMarcRecord(any())).thenReturn(RECORD_ID_1, RECORD_ID_2, RECORD_ID_3);
         when(mockKohaAdapter.retrieveBiblioExpanded(RECORD_ID_2)).thenReturn(recordExpanded1);
 

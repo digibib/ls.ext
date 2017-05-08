@@ -95,7 +95,8 @@ final class Expectation {
     }
 
     private int guess(int queuePlace, List<Item> items, boolean zeroUser) {
-        int loanPeriod = getLoanPeriod(Optional.of(items.get(0).getType()).orElse("BOK"));
+        Item itemZero = items.get(0);
+        int loanPeriod = getLoanPeriod(Optional.ofNullable(itemZero.getType()).orElse("BOK"));
         int adjustedQueuePlace = (zeroUser) ? queuePlace + 1 : queuePlace;
         Pair queueRowAndItem = getMatrixPosition(adjustedQueuePlace, items.size());
         int queueRow = (int) queueRowAndItem.getLeft();

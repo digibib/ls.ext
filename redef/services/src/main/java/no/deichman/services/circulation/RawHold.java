@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Responsibility: receives raw holds format.
  */
-public class RawHold {
+public final class RawHold {
     @Expose
     @SerializedName(value = "borrowerId", alternate = "borrowernumber")
     private String borrowerId;
@@ -66,43 +66,163 @@ public class RawHold {
     @SerializedName(value = "recordId", alternate = "biblionumber")
     private String recordId;
 
-    public final String getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public final String getRecordId() {
+    public String getRecordId() {
         return recordId;
     }
 
-    public final String getQueuePlace() {
+    public String getQueuePlace() {
         return queuePlace;
     }
 
-    public final String getBranchCode() {
+    public String getBranchCode() {
         return branchCode;
     }
 
-    public final String getId() {
+    public String getId() {
         return id;
     }
 
-    public final String getSuspended() {
+    public String getSuspended() {
         return suspended;
     }
 
-    public final String getReserveDate() {
+    public String getReserveDate() {
         return reserveDate;
     }
 
-    public final String getSuspendUntil() {
+    public String getSuspendUntil() {
         return suspendUntil;
     }
 
-    public final String getPickupNumber() {
+    public String getPickupNumber() {
         return pickupNumber;
     }
 
-    public final String getWaitingDate() {
+    public String getWaitingDate() {
         return waitingDate;
+    }
+
+    public String getBorrowerId() {
+        return borrowerId;
+    }
+
+    public void setBorrowerId(String borrowerId) {
+        this.borrowerId = borrowerId;
+    }
+
+    public void setSuspended(String suspended) {
+        this.suspended = suspended;
+    }
+
+    public void setQueuePlace(String queuePlace) {
+        this.queuePlace = queuePlace;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public void setReserveDate(String reserveDate) {
+        this.reserveDate = reserveDate;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getLowestPriority() {
+        return lowestPriority;
+    }
+
+    public void setLowestPriority(String lowestPriority) {
+        this.lowestPriority = lowestPriority;
+    }
+
+    public void setBranchCode(String branchCode) {
+        this.branchCode = branchCode;
+    }
+
+    public void setSuspendUntil(String suspendUntil) {
+        this.suspendUntil = suspendUntil;
+    }
+
+    public void setWaitingDate(String waitingDate) {
+        this.waitingDate = waitingDate;
+    }
+
+    public void setPickupNumber(String pickupNumber) {
+        this.pickupNumber = pickupNumber;
+    }
+
+    public String getItemNumber() {
+        return itemNumber;
+    }
+
+    public void setItemNumber(String itemNumber) {
+        this.itemNumber = itemNumber;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getReminderDate() {
+        return reminderDate;
+    }
+
+    public void setReminderDate(String reminderDate) {
+        this.reminderDate = reminderDate;
+    }
+
+    public String getNotificationDate() {
+        return notificationDate;
+    }
+
+    public void setNotificationDate(String notificationDate) {
+        this.notificationDate = notificationDate;
+    }
+
+    public String getCancellationDate() {
+        return cancellationDate;
+    }
+
+    public void setCancellationDate(String cancellationDate) {
+        this.cancellationDate = cancellationDate;
+    }
+
+    public String getReserveNotes() {
+        return reserveNotes;
+    }
+
+    public void setReserveNotes(String reserveNotes) {
+        this.reserveNotes = reserveNotes;
+    }
+
+    public void setRecordId(String recordId) {
+        this.recordId = recordId;
     }
 }

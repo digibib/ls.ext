@@ -31,4 +31,8 @@ public final class ExpandedRecord {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
+    public Record getLoanRecord() {
+        return loanRecord;
+    }
 }

@@ -349,4 +349,8 @@ public final class Item {
     public void setBarcode(String barcode) {
         this.barcode = barcode;
     }
+
+    public String getHomeBranch() {
+        return homeBranch;
+    }
 }

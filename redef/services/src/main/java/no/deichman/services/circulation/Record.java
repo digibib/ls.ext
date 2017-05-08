@@ -113,4 +113,16 @@ public final class Record {
         }
         return returnValue;
     }
+
+    public void setBehindExpiditedUser(boolean expiditedUser) {
+        this.behindExpiditedUser = (expiditedUser) ? 1 : 0;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 }

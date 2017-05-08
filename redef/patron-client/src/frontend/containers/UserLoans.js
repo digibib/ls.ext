@@ -209,7 +209,6 @@ class UserLoans extends React.Component {
     if (expected.error != null) {
       return <FormattedMessage {...messages.unknown} />
     } else {
-
       const estimate = (expected.estimate < 11) ? `${expected.estimate}–${expected.estimate + 2}` : '11'
       return <span>({this.renderExpectedEstimationPrefix(estimate)} {estimate} <FormattedMessage {...messages.weeks} />)</span>
     }

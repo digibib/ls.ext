@@ -230,7 +230,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     private Response getHoldsFromAPI(String userId) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(kohaPort + "/api/v1/holds/?borrowernumber=" + userId);
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/holds?borrowernumber=" + userId);
         if (sessionCookie == null) {
             login();
         }
