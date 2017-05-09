@@ -4,10 +4,11 @@ import NonIETransitionGroup from './NonIETransitionGroup'
 import SearchFilterBoxItem from '../components/SearchFilterBoxItem'
 import SearchFilterDateRangeBoxItem from '../components/SearchFilterDateRangeBoxItem'
 import SearchFilterAvailabilityBoxItem from '../components/SearchFilterAvailabilityBoxItem'
+import SearchFilterBoxesRemoveAllItem from '../components/SearchFilterBoxesRemoveAllItem'
 import { getFiltersFromQuery, getDateRange } from '../utils/filterParser'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-const SearchFilterBox = ({ toggleFilter, removePeriod, query, toggleAvailability }) => {
+const SearchFilterBox = ({ toggleFilter, removePeriod, query, toggleAvailability, removeAllFilters }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
     : <FormattedMessage {...messages.titleSearch} />
   const filters = getFiltersFromQuery(query).filter(f => {
@@ -50,6 +51,7 @@ const SearchFilterBox = ({ toggleFilter, removePeriod, query, toggleAvailability
             ? <SearchFilterAvailabilityBoxItem toggleAvailability={toggleAvailability} />
             : null
           }
+          <SearchFilterBoxesRemoveAllItem removeAllFilters={removeAllFilters} />
         </ul>
       </NonIETransitionGroup>
     )

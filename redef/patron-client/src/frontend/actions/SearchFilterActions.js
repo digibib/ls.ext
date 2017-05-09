@@ -77,3 +77,7 @@ export function removePeriodInBackUrl (years) {
   }
 }
 
+export function removeAllFilters() {
+
+}
+
