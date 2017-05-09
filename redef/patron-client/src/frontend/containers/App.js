@@ -6,6 +6,7 @@ import * as LanguageActions from '../actions/LanguageActions'
 import * as LibraryActions from '../actions/LibraryActions'
 import * as MobileNavigationActions from '../actions/MobileNavigationActions'
 import * as WindowActions from '../actions/WindowActions'
+import * as SearchActions from '../actions/SearchActions'
 
 import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
@@ -49,6 +50,7 @@ class App extends React.Component {
                       showMobileNavigation={this.props.showMobileNavigation}
                       mobileNavigationActions={this.props.mobileNavigationActions}
                       borrowerName={this.props.borrowerName}
+                      searchActions={this.props.searchActions}
         />
         {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
@@ -93,7 +95,8 @@ function mapDispatchToProps (dispatch) {
     libraryActions: bindActionCreators(LibraryActions, dispatch),
     registrationActions: bindActionCreators(RegistrationActions, dispatch),
     mobileNavigationActions: bindActionCreators(MobileNavigationActions, dispatch),
-    windowActions: bindActionCreators(WindowActions, dispatch)
+    windowActions: bindActionCreators(WindowActions, dispatch),
+    searchActions: bindActionCreators(SearchActions, dispatch)
   }
 }
 

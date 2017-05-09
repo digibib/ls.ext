@@ -43,7 +43,6 @@ export function search () {
 
     const inputQuery = locationQuery.query
     dispatch(requestSearch(inputQuery))
-    console.log('DISPATCHING SEARCH...', locationQuery)
     return fetch(`/q${getState().routing.locationBeforeTransitions.search}`, {
       method: 'GET',
       headers: {
@@ -56,7 +55,6 @@ export function search () {
         if (processedResponse.error) {
           throw Error(processedResponse)
         } else {
-          console.log('Prosessed locationQuery', locationQuery)
           dispatch(ensureDefinedFiltersOpen(locationQuery))
           dispatch(receiveSearch(processedResponse))
           dispatch(ensureOneBranchOpen(locationQuery))
