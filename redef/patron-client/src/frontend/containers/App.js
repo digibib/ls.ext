@@ -51,6 +51,7 @@ class App extends React.Component {
                       mobileNavigationActions={this.props.mobileNavigationActions}
                       borrowerName={this.props.borrowerName}
                       searchActions={this.props.searchActions}
+                      isSearching={this.props.isSearching}
         />
         {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
@@ -83,7 +84,8 @@ function mapStateToProps (state) {
     locale: state.application.locale,
     isLoggedIn: state.application.isLoggedIn,
     showMobileNavigation: state.mobileNavigation.visible,
-    borrowerName: state.profile.borrowerName
+    borrowerName: state.profile.borrowerName,
+    isSearching: state.search.isSearching
   }
 }
 

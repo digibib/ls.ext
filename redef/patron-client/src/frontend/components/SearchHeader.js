@@ -219,7 +219,12 @@ class SearchHeader extends React.Component {
                 <div className="search-button">
                   <button onClick={this.handleSearch} type="button" className="search-submit"
                           data-automation-id="search_button">
-                    <FormattedMessage {...messages.search} />
+                    {!this.props.isSearching
+                      ? <FormattedMessage {...messages.search} />
+                      : <span data-automation-id="is_searching" className="loading-spinner">
+                          <i className="icon-spin4 animate-spin" style={{color: '#fff'}} />
+                        </span>
+                    }
                   </button>
                 </div>
               </div>

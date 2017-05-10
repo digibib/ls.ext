@@ -7,14 +7,14 @@ class SearchResultsText extends React.Component {
   render () {
     if (!this.props.locationQuery.query) {
       return null
-    } else if (this.props.isSearching) {
+      /* } else if (this.props.isSearching) {
       return (
         <div className="search-results-number">
           <span data-automation-id="is_searching" className="loading-spinner">
             <i className="icon-spin4 animate-spin" /> <FormattedMessage {...messages.searching} />
           </span>
         </div>
-      )
+      ) */
     } else {
       return (
         <NonIETransitionGroup
@@ -46,10 +46,10 @@ class SearchResultsText extends React.Component {
 }
 
 SearchResultsText.propTypes = {
-  isSearching: PropTypes.bool.isRequired,
+  // isSearching: PropTypes.bool.isRequired,
   locationQuery: PropTypes.object,
   totalHits: PropTypes.number.isRequired,
-  totalHitsPublications: PropTypes.number.isRequired,
+  // totalHitsPublications: PropTypes.number.isRequired,
   mediaQueryValues: PropTypes.object
 }
 

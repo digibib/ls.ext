@@ -106,17 +106,19 @@ class Search extends React.Component {
           ? (<div className="search-results-header">
             <a href="#main-search-content" className="is-vishidden focusable">{this.props.intl.formatMessage(messages.jumpToMainContent)}</a>
           <div className="search-results-summary">
-            <SearchResultsText totalHits={this.props.totalHits}
+            {/* <SearchResultsText totalHits={this.props.totalHits}
                                totalHitsPublications={this.props.totalHitsPublications}
                                locationQuery={this.props.locationQuery}
-                               isSearching={this.props.isSearching} />
+                               isSearching={this.props.isSearching} /> */}
             {this.props.totalHitsPublications === 0
              ? <div className="search-no-hits">
-                <SearchFilterBox query={this.props.locationQuery}
-                                 toggleFilter={this.props.searchFilterActions.toggleFilter}
-                                 removePeriod={this.props.searchFilterActions.removePeriod}
-                                 toggleAvailability={this.props.searchFilterActions.toggleAvailability}
-                                 removeAllFilters={this.removeAllFilters} />
+                <SearchFilterBox
+                  path={this.props.location.pathname}
+                  query={this.props.locationQuery}
+                  toggleFilter={this.props.searchFilterActions.toggleFilter}
+                  removePeriod={this.props.searchFilterActions.removePeriod}
+                  toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                  removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
                 <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
                 <p>{this.props.intl.formatMessage(messages.noHitsTry)}</p>
                 <ul>
@@ -129,11 +131,13 @@ class Search extends React.Component {
               : null }
           </div>
             {this.props.totalHits > 0
-              ? <SearchFilterBox query={this.props.locationQuery}
-                                 toggleFilter={this.props.searchFilterActions.toggleFilter}
-                                 removePeriod={this.props.searchFilterActions.removePeriod}
-                                 toggleAvailability={this.props.searchFilterActions.toggleAvailability}
-                                 removeAllFilters={this.removeAllFilters} />
+              ? <SearchFilterBox
+                path={this.props.location.pathname}
+                query={this.props.locationQuery}
+                toggleFilter={this.props.searchFilterActions.toggleFilter}
+                removePeriod={this.props.searchFilterActions.removePeriod}
+                toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
               : null}
           {this.props.totalHits > 0
             ? (<div className="search-sorting patron-placeholder">

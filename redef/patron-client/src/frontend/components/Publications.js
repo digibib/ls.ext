@@ -302,10 +302,13 @@ class Publications extends React.Component {
         <header>
           <h2>Gå til</h2>
           {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
-          <SearchFilterBox toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
-                           removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
-                           toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
-                           query={this.props.query} />
+          <SearchFilterBox
+            path={this.props.path}
+            toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+            removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
+            toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
+            removeAllFilters={this.props.searchFilterActions.removeAllFilters}
+            query={this.props.query} />
         </header>
         {
           Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
@@ -359,7 +362,8 @@ Publications.propTypes = {
   libraries: PropTypes.object,
   audiences: PropTypes.array.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
-  query: PropTypes.object.isRequired
+  query: PropTypes.object.isRequired,
+  path: PropTypes.string.isRequired
 }
 
 export const messages = defineMessages({
