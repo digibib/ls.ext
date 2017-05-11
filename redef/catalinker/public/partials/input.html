@@ -165,7 +165,7 @@
                         {{else}}
                         <button class="pure-button pure-button-primary add-item-button"
                                 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                                {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
+                                {{#if emptySubInputs(subInputs) || typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
                           title="{{>missingRequiredValuesOfBlankMode}}"{{/if}}
                         {{#if edit}}
                            on-click="replaceObject:{{inputValueIndex}}"
