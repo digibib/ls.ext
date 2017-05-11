@@ -33,7 +33,6 @@ module.exports = (app) => {
                   }
                 }
               })
-              searchResult.aggregations = aggregationResult.aggregations
               return searchResult
             })
           })
