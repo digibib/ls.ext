@@ -3391,7 +3391,7 @@
                 return typeof ractive.get(`targetUri.${type}`) !== 'undefined'
               },
               emptySubInputs: function (subInputs) {
-                return subInputs.filter(function(i) { return i.input.values[0].current.value && i.input.values[0].current.value.length > 0 }).length == 0
+                return subInputs.filter(function (i) { return i.input.values[0].current.value && i.input.values[0].current.value.length > 0 }).length === 0
               },
               getSearchResultItemLabel: function (item, itemLabelProperties) {
                 let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
