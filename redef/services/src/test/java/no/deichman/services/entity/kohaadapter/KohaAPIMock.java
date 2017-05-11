@@ -8,7 +8,6 @@ import no.deichman.services.circulation.ExpandedRecord;
 import no.deichman.services.circulation.Item;
 import no.deichman.services.circulation.Record;
 import no.deichman.services.testutil.PortSelector;
-import no.deichman.services.testutil.RandomisedData;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -153,7 +152,7 @@ public final class KohaAPIMock {
 
     public void addGetBiblioFromItemNumberExpectation(String itemNumber, String recordNumber, String title) {
         String[] items = {itemNumber};
-        String responseJson = generateBiblioResponseJson(recordNumber, items, title, false);
+        String responseJson = generateBiblioResponseJson(recordNumber, title, false);
         clientDriver.addExpectation(onRequestTo("/api/v1/items/" + itemNumber + "/biblio")
                         .withMethod(GET)
                         .withHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
@@ -189,22 +188,13 @@ public final class KohaAPIMock {
         return String.valueOf(ThreadLocalRandom.current().nextInt(ORIGIN, BOUND));
     }
 
-    public String generateBiblioResponseJson(String recordNumber, String[] itemNumbers, String title, boolean expiditedUser) {
+    public String generateBiblioResponseJson(String recordNumber, String title, boolean expiditedUser) {
         Record record = new Record();
         record.setTitle(title);
         record.setId(recordNumber);
         record.setBehindExpiditedUser(expiditedUser);
 
-        List<Item> items = new ArrayList<>();
-        for (String itemNumber : itemNumbers) {
-            Item item = RandomisedData.randomBorrowedItem(itemNumber, recordNumber, 28);
-        }
-
-        ExpandedRecord expandedRecord = new ExpandedRecord();
-        expandedRecord.setLoanRecord(record);
-        expandedRecord.setItems(items);
-
-        return GSON.toJson(expandedRecord, ExpandedRecord.class);
+        return GSON.toJson(record, Record.class);
 
     }
 
@@ -351,6 +341,10 @@ public final class KohaAPIMock {
                 + "  \"biblionumber\": \"%4$s\"\n"
                 + "}]"
                 + "", userId, generateRandomID(), recordId1, recordId2);
+    }
+
+    public String generateBiblio(String recordNumber, String type) {
+        return GSON.toJson(RandomRecord.populateRandom(recordNumber, false, 1));
     }
 
     public String generateBiblioExpanded(String recordNumber, String type, boolean zeroUser, int numberOfItems, int numberOfHolds, boolean oneLoanedToMe) throws Exception {

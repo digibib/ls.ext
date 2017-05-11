@@ -89,7 +89,13 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.get();
+        Response response = invocationBuilder.get();
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = invocationBuilder.get();
+        }
+        return response;
     }
 
     private Response requestExpandedBiblio(String id) {

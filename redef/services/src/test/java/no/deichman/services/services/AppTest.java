@@ -1581,6 +1581,7 @@ public class AppTest {
                 + "        \"estimate\": 12,\n"
                 + "        \"error\": null\n"
                 + "      },\n"
+                + "      \"pickupNumber\": null,\n"
                 + "      \"recordId\": \"" + recordId + "\",\n"
                 + "      \"workURI\": \"" + workUri + "\",\n"
                 + "      \"publicationURI\": \"" + publicationUri + "\",\n"

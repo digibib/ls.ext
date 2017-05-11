@@ -26,4 +26,8 @@ class PatronClientLoansAndReservationsPage < PageRoot
   def queue_places
     @browser.elements(data_automation_id: 'UserLoans_reservation_queue_place')
   end
+
+  def suspend_messages
+    @browser.elements(data_automation_id: 'Userloans_reservation_suspend_message')
+  end
 end

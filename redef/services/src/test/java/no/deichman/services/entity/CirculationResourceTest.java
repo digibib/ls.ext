@@ -69,7 +69,7 @@ public class CirculationResourceTest {
         KohaAPIMock kohaAPIMock = new KohaAPIMock();
         String checkoutData = kohaAPIMock.generateCheckoutsJson(USER_ID, ITEM_NUMBER_1);
         String holdsData = kohaAPIMock.generateHoldsJson(USER_ID, RECORD_ID_2, RECORD_ID_3);
-        String record1 = kohaAPIMock.generateBiblioExpanded(RECORD_ID_1, BOK, false, 2, 2);
+        String record1 = kohaAPIMock.generateBiblio(RECORD_ID_1, BOK);
         String recordExpanded1 = kohaAPIMock.generateBiblioExpanded(RECORD_ID_2, BOK, false, 2, 2);
 
         when(mockKohaAdapter.getCheckouts(USER_ID)).thenReturn(checkoutData);
@@ -118,6 +118,7 @@ public class CirculationResourceTest {
                 + "        \"estimate\": 5,"
                 + "        \"error\": null"
                 + "      },"
+                + "      \"pickupNumber\": null,"
                 + "      \"recordId\": \"99232\",\n"
                 + "      \"workURI\": \"http://data.deichman.no/work/%5$s\",\n"
                 + "      \"publicationURI\": \"http://data.deichman.no/publication/%2$s\",\n"

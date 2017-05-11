@@ -26,4 +26,4 @@ RUN adduser elasticsearch
 RUN chown -R elasticsearch:elasticsearch /services
 USER elasticsearch
 
-CMD gradle --no-daemon build oneJar
+CMD gradle --info --no-daemon build oneJar

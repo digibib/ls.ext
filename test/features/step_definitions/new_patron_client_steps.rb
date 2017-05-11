@@ -272,6 +272,7 @@ end
 When(/^skal jeg se at boka er utlånt$/) do
   sleep 2
   wait_for {
+    binding.pry
     loans = @site.PatronClientLoansAndReservationsPage.loans
     loans.size.eql?(1) && loans.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
   }
@@ -539,7 +540,7 @@ end
 
 When(/^at reservasjonen får tilbakemelding om utsettelse$/) do
   wait_for {
-    @site.PatronClientLoansAndReservationsPage.queue_places.first.span.class_name.eql? "feedback"
+    @site.PatronClientLoansAndReservationsPage.suspend_messages.first.present?
   }
 end
 

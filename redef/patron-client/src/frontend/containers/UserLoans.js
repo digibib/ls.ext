@@ -143,7 +143,7 @@ class UserLoans extends React.Component {
                   ? <span>{item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}</span>
                   : <FormattedMessage {...messages.enRoute} />}
                   &nbsp;{item.suspendUntil
-                    ? <span className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
+                    ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
                     : ''
                   }
                 </p>

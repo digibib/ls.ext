@@ -31,6 +31,9 @@ public class Reservation extends CirculationObjectBase {
     @Expose
     @SerializedName("estimatedWait")
     private Estimation estimation;
+    @Expose
+    @SerializedName("pickupNumber")
+    private String pickupNumber;
 
     public final String getStatus() {
         return this.status;
@@ -58,5 +61,14 @@ public class Reservation extends CirculationObjectBase {
 
     public final int getQueuePlace() {
         return Integer.valueOf(queuePlace);
+    }
+
+
+    public final String getPickupNumber() {
+        return pickupNumber;
+    }
+
+    public final void setPickupNumber(String pickupNumber) {
+        this.pickupNumber = pickupNumber;
     }
 }

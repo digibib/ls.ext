@@ -800,6 +800,7 @@ public final class EntityServiceImpl implements EntityService {
             reservation.setSuspended(convertBooleanString(Optional.ofNullable(rawHold.getSuspended()).orElse("0")));
             reservation.setOrderedDate(Optional.ofNullable(rawHold.getReserveDate()).orElse(null));
             reservation.setSuspendUntil(Optional.ofNullable(rawHold.getSuspendUntil()).orElse(null));
+            reservation.setPickupNumber(Optional.ofNullable(rawHold.getPickupNumber()).orElse(null));
             circulationObject = reservation;
         }
         circulationObject.setId(rawHold.getId());
@@ -866,8 +867,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private Record getRecordIdFromLoan(Loan loan) {
         String data = kohaAdapter.getBiblioFromItemNumber(loan.getItemNumber());
-        ExpandedRecord loanRecord = GSON.fromJson(data, ExpandedRecord.class);
-        return loanRecord.getLoanRecord();
+        return GSON.fromJson(data, Record.class);
     }
 
 
