@@ -215,7 +215,7 @@ end
 
 When(/^jeg følger lenken til posten i Koha i arbeidsflyten$/) do
   link = @browser.a(:data_automation_id => 'biblio_record_link').href
-  steps 'at jeg er logget inn som adminbruker'
+  steps 'at jeg er logget inn som superbruker'
   @browser.goto(link)
 end
 

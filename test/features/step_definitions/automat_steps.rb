@@ -9,7 +9,7 @@ require_relative '../support/services/sip/SIP2Client.rb'
 
 # Automat user should not be deleted after creation
 Given(/^at det finnes en utlånsautomat$/) do
-  step "at jeg er logget inn som adminbruker"
+  step "at jeg er logget inn som superbruker"
 
   unless KohaRESTAPI::Patron.new(@browser,@context,@active).exists?({userid: "autouser"})
     # prereq: library and patron category

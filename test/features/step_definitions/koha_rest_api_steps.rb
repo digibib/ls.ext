@@ -5,7 +5,7 @@ require_relative '../support/services/koha/item.rb'
 
 # Superlibrarian user should not be deleted after creation
 Given(/^at det finnes en superbruker$/) do
-  step "at jeg er logget inn som adminbruker"
+  step "at jeg er logget inn som superbruker"
   true # api-user set up by services
 end
 

@@ -9,7 +9,7 @@ Egenskap: Se felter i Koha
   Skal jeg kunne se utvalgt data om en utgivelse i Koha
 
   Bakgrunn:
-    Gitt at jeg er logget inn som adminbruker
+    Gitt at jeg er logget inn som superbruker
     Og at jeg er i katalogiseringsgrensesnittet
 
   Scenario: Finn utgivelsestittel og forfatter i Koha

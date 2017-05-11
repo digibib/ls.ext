@@ -107,7 +107,7 @@ After do |scenario| # cleanup based on @cleanup - in reverse order
 
   STDOUT.puts "--------------- Cleanup: #{title_of(scenario)} "
   if @browser
-    step "at jeg er logget inn som adminbruker" if @cleanup.length > 0 # TODO Only relevant for Koha-related cleanups
+    step "at jeg er logget inn som superbruker" if @cleanup.length > 0 # TODO Only relevant for Koha-related cleanups
   end
   @cleanup.reverse.each do |hash|
     cleanup_desc = " cleanup '#{hash.keys.first}'"

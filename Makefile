@@ -127,7 +127,7 @@ cuke_test:						## Run Cucumber tests
 		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)"
 	@$(XHOST_REMOVE)
 
-test_one:						## Run 'utlaan_via_adminbruker'.
+test_one:						## Run 'utlaan_via_superbruker'.
 	@$(XHOST_ADD)
 	$(DOCKER_COMPOSE_FULL) run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Superbruker l.ner ut bok til Knut"
 	@$(XHOST_REMOVE)

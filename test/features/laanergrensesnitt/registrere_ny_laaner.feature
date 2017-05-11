@@ -8,7 +8,7 @@ Egenskap: Registrere låner
   Ønsker jeg å kunne registrere meg selv som låner
 
   Scenario: Ny voksenbruker registrerer seg i registreringsskjema
-    Gitt at jeg er logget inn som adminbruker
+    Gitt at jeg er logget inn som superbruker
     Og at det finnes en person som ikke er låner
     Og at jeg er i søkegrensesnittet
     Og jeg trykker på logg inn
@@ -26,7 +26,7 @@ Egenskap: Registrere låner
     Og jeg kan søkes opp i systemet som låner
 
   Scenario: Ny barnebruker registrerer seg i registreringsskjema
-    Gitt at jeg er logget inn som adminbruker
+    Gitt at jeg er logget inn som superbruker
     Og at det finnes en person som ikke er låner
     Og at jeg er i søkegrensesnittet
     Og jeg trykker på logg inn
@@ -44,7 +44,7 @@ Egenskap: Registrere låner
     Og jeg kan søkes opp i systemet som låner
 
   Scenario: Validering av felter i registreringsskjema
-    Gitt at jeg er logget inn som adminbruker
+    Gitt at jeg er logget inn som superbruker
     Og at det finnes en person som ikke er låner
     Og at jeg er i søkegrensesnittet
     #Og jeg trykker på registrer deg
