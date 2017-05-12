@@ -78,10 +78,9 @@ export function removePeriodInBackUrl (years) {
   }
 }
 
-export function removeAllFilters() {
+export function removeAllFilters () {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     dispatch(push({ pathname: '/search', query: { query: locationQuery.query } }))
   }
 }
-

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
-import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
+import { defineMessages, FormattedHTMLMessage } from 'react-intl'
 import MediaQuery from 'react-responsive'
 
 class SearchResultsText extends React.Component {

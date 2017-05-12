@@ -31,7 +31,7 @@ class SearchResults extends React.Component {
           totalHits={this.props.totalHits}
           locationQuery={this.props.locationQuery}
         />
-        <div data-automation-id="search-result-entries">
+        <div data-automation-id="search-result-entries" className="search-results-list">
           {this.props.locationQuery.query
             ? this.props.searchResults.slice(from, to).map(result => (
             <SearchResult key={result.relativeUri}

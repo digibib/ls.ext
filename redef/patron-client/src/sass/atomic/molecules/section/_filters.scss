@@ -1,7 +1,7 @@
 .filters {
   @include span(12);
   @include container();
-  margin-bottom: rhythm(4);
+  margin-bottom: rhythm(1);
 
   .limit-filters {
     @include span(12);
@@ -10,7 +10,7 @@
     display: block;
     color: $redColor;
     margin-bottom: rhythm(3);
-    border-top: 1px solid $mediumGreyColor;
+    /* border-top: 1px solid $mediumGreyColor; */
 
     a {
       width: 100%;

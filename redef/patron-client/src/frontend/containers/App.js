@@ -74,8 +74,9 @@ App.propTypes = {
   mobileNavigationActions: PropTypes.object.isRequired,
   showMobileNavigation: PropTypes.bool.isRequired,
   windowActions: PropTypes.object.isRequired,
-  borrowerName: PropTypes.string
-
+  borrowerName: PropTypes.string,
+  searchActions: PropTypes.object.isRequired,
+  isSearching: PropTypes.bool.isRequired
 }
 
 function mapStateToProps (state) {

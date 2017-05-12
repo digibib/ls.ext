@@ -63,7 +63,7 @@
 
 @mixin wrapper-container() {
   @include container();
-  padding: gutter(12);
+  padding: 1% gutter(12) gutter(12) gutter(12);
   @include breakpoint($small) {
     @include container(800px);
   }

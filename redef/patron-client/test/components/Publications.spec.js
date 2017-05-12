@@ -62,6 +62,7 @@ function setup (propOverrides) {
     },
     query: {},
     workLanguage: '',
+    path: 'test-path',
     ...propOverrides
   }
 

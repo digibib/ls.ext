@@ -12,7 +12,9 @@ function setup (propOverrides) {
     toggleFilter: () => {},
     toggleAvailability: () => {},
     removePeriod: () => {},
+    removeAllFilters: () => {},
     titleText: 'dummyTitle',
+    path: 'test-path',
     ...propOverrides
   }
 

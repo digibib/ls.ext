@@ -1,8 +1,19 @@
 .search-results {
   @include span(12 of 12);
   @include container;
-  @include border-top;
-  padding-top: rhythm(2);
+  /* @include border-top;
+  padding-top: rhythm(2); */
+
+  .search-results-list {
+    @include border-top;
+    padding-top: rhythm(2);
+  }
+
+  .search-results-number {
+    margin-top: rhythm(0.9);
+    font-size: 0.9em;
+    line-height: 1.8em;
+  }
 }
 
 .search-results-header {
@@ -12,7 +23,7 @@
     @include span(12);
     @include container;
     font-size: rhythm(3);
-    margin: rhythm(2) 0;
+    /* margin: rhythm(2) 0; */
 
     .search-results-number {
       @include span(3);
@@ -80,13 +91,13 @@
 
   .search-results {
     @include span(9 of 12);
-    margin-top: rhythm(5);
-    padding-top: rhythm(4);
+    /* margin-top: rhythm(5);
+    padding-top: rhythm(4); */
     margin-right: 0;
   }
 
   .search-results-header {
-    border-bottom: 1px solid $mediumGreyColor;
+    /* border-bottom: 1px solid $mediumGreyColor; */
 
     .search-results-summary {
 

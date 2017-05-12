@@ -104,6 +104,7 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
 
     locationQuery[ 'showFilter' ] = [ 'language' ]
     locationQuery[ 'showFilter' ].push([ 'mediatype' ])
+    locationQuery[ 'showFilter' ].push([ 'branch' ])
 
     return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }

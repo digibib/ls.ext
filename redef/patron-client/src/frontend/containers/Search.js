@@ -15,7 +15,6 @@ import * as RegistrationActions from '../actions/RegistrationActions'
 import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
-import SearchResultsText from '../components/SearchResultsText'
 import SearchFilterBox from '../components/SearchFilterBox'
 
 class Search extends React.Component {
@@ -112,6 +111,7 @@ class Search extends React.Component {
                                isSearching={this.props.isSearching} /> */}
             {this.props.totalHitsPublications === 0
              ? <div className="search-no-hits">
+                <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
                 <SearchFilterBox
                   path={this.props.location.pathname}
                   query={this.props.locationQuery}
@@ -119,7 +119,6 @@ class Search extends React.Component {
                   removePeriod={this.props.searchFilterActions.removePeriod}
                   toggleAvailability={this.props.searchFilterActions.toggleAvailability}
                   removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
-                <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
                 <p>{this.props.intl.formatMessage(messages.noHitsTry)}</p>
                 <ul>
                   <li>{this.props.intl.formatMessage(messages.noHitsTryA)}</li>

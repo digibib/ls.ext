@@ -85,7 +85,8 @@ SearchFilterBox.propTypes = {
   query: PropTypes.object.isRequired,
   removePeriod: PropTypes.func.isRequired,
   toggleAvailability: PropTypes.func.isRequired,
-  path: PropTypes.string.isRequired
+  path: PropTypes.string.isRequired,
+  removeAllFilters: PropTypes.func
 }
 
 export default SearchFilterBox
