@@ -1201,6 +1201,7 @@ module.exports = (app) => {
                       indexTypes: [ 'instrument' ],
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ 'prefLabel' ],
+                      required: true,
                       widgetOptions: {
                         enableEditResource: {
                           formRefs: [
