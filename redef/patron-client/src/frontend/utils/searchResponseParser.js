@@ -47,7 +47,7 @@ export function processSearchResponse (response, locationQuery) {
       // If there is an active language filter, choose a publication that matches language
       // according to the preferred list.
       selected = element.inner_hits.publications.hits.hits.find(pub => {
-        Constants.preferredLanguages.filter(prefLang => (filteredLanguages || []).includes(prefLang)).some(lang => (pub._source.languages || []).includes(lang))
+        return Constants.preferredLanguages.filter(prefLang => (filteredLanguages || []).includes(prefLang)).some(lang => (pub._source.languages || []).includes(lang))
       })
 
       if (!selected) {
