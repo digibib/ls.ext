@@ -272,7 +272,6 @@ end
 When(/^skal jeg se at boka er utlånt$/) do
   sleep 2
   wait_for {
-    binding.pry
     loans = @site.PatronClientLoansAndReservationsPage.loans
     loans.size.eql?(1) && loans.first.attribute_value('data-recordid').eql?(@context[:reserve_record_id])
   }

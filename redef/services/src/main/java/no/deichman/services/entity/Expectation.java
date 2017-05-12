@@ -47,8 +47,8 @@ final class Expectation {
 
         int loanPeriod = getLoanPeriod(items.get(0).getType());
 
-        int estimate =  (isDistantLoan(reservableItems.size(), adjustedQueuePlace, loanPeriod)) ?
-            12 : guess(queuePlace, reservableItems, precedingZeroUser, loanPeriod);
+        int estimate = (isDistantLoan(reservableItems.size(), adjustedQueuePlace, loanPeriod))
+                ? 12 : guess(queuePlace, reservableItems, precedingZeroUser, loanPeriod);
 
         estimation.setEstimatedWait((estimate < CUTOFF) ? estimate : CUTOFF);
 

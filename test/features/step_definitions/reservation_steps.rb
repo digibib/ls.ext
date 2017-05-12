@@ -26,7 +26,6 @@ Then(/^gir systemet tilbakemelding om at at reservasjon "([^"]*)" er klar til av
 end
 
 Then(/^låner får hentemelding med hentenummer på eksemplar "([^"]*)"$/) do |item|
-  binding.pry
   last_msg = @context[:c].last
   expect(last_msg["pickupnumber"]).not_to be_empty
   expect(last_msg["itemnumber"]).to eq(@context[:koha].biblio["items"][item.to_i-1]["itemnumber"])
