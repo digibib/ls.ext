@@ -2,6 +2,26 @@ import {getId, relativeUri} from './uriParser'
 import Constants from '../constants/Constants'
 import title from './title'
 
+const titleCCLFields = Object
+  .keys(Constants.queryFieldTranslations)
+  .map(key => {return {key, value:Constants.queryFieldTranslations[ key ]}})
+  .filter(translation => { return translation.value.title})
+  .map(translation => { return translation.key})
+
+function titleTermsFromQuery (query) {
+  const keywords = query.toLocaleLowerCase().match(/\w+|:|"(?:\\"|[^"])+"/g) || []
+  for (let i = 0; i < keywords.length; i++) {
+    if (keywords[ i ] === ':') {
+      keywords[ i ] = undefined
+      if (!titleCCLFields.includes(keywords[ i - 1 ])) {
+        keywords[ i + 1 ] = undefined
+      }
+      keywords[ i - 1 ] = undefined
+    }
+  }
+  return keywords.filter(keyword => {return keyword !== undefined})
+}
+
 export function processSearchResponse (response, locationQuery) {
   const processedResponse = {}
   if (response.error) {
@@ -32,12 +52,14 @@ export function processSearchResponse (response, locationQuery) {
 
       if (!selected) {
         // If  the title of any preferred language contains the search query, use that title.
+        const titleMatchTerms = titleTermsFromQuery(locationQuery.query)
+
         for (let prefLang of Constants.preferredLanguages) {
           let selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
+            const titles = `${pub._source.mainTitle} ${pub._source.subtitle} ${pub._source.partNumber} ${pub._source.partTitle}`
+              .toLocaleLowerCase()
             return (pub._source.languages || []).includes(prefLang) &&
-              (`${pub._source.mainTitle} ${pub._source.subtitle} ${pub._source.partNumber} ${pub._source.partTitle}`
-                .toLocaleLowerCase()
-                .includes(locationQuery.query.toLocaleLowerCase()))
+              titleMatchTerms.find(term => {return titles.includes(term)})
           })
           if (selectedByPrefLang) {
             selected = selectedByPrefLang
@@ -78,9 +100,9 @@ export function processSearchResponse (response, locationQuery) {
         })
       }
 
-      result.mediaTypes = [... new Set(element.inner_hits.publications.hits.hits.filter(function (pub) {
+      result.mediaTypes = [ ... new Set(element.inner_hits.publications.hits.hits.filter(function (pub) {
         return pub._source.mediatype
-      }).map(pub => (pub._source.mediatype ))) ].map(uri => ({uri}))
+      }).map(pub => (pub._source.mediatype ))) ].map(uri => ({ uri }))
 
       return result
     })
