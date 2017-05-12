@@ -1711,6 +1711,10 @@
             }),
             parentInput: currentInput
           }
+          // prefill vetoes according to inputs' requiredness
+          if (subInput.required) {
+            currentInput.inputGroupRequiredVetoes.push(`${subInputIndex}`)
+          }
 
           copyResourceForms(newSubInput.input, compoundInput.isMainEntry)
 
@@ -2351,7 +2355,7 @@
       return targetInput.widgetOptions && targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom
     }
 
-  var Main = {
+    var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -3219,7 +3223,7 @@
           }
 
           const shouldExecPatchImmediately = function (keypath) {
-            return ractive.get(`${(keypath.match(/(^.*enableEditResource).*$/) || [undefined, {mode: undefined}])[ 1 ]}.mode` === 'edit')
+            return ractive.get(`${(keypath.match(/(^.*enableEditResource).*$/) || [ undefined, { mode: undefined } ])[ 1 ]}.mode` === 'edit')
           }
 
           // Initialize ractive component from template
@@ -3389,9 +3393,6 @@
               },
               resourceIsLoaded: function (type) {
                 return typeof ractive.get(`targetUri.${type}`) !== 'undefined'
-              },
-              emptySubInputs: function (subInputs) {
-                return subInputs.filter(function (i) { return i.input.values[0].current.value && ($.isNumeric(i.input.values[0].current.value) || i.input.values[0].current.value.length > 0) }).length === 0
               },
               getSearchResultItemLabel: function (item, itemLabelProperties) {
                 let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
