@@ -880,8 +880,8 @@
 
     function forAllGroupInputs (handleInput, options) {
       options = options || {}
-      _.find(options.inputGroups || ractive.get('inputGroups'), function (group, groupIndex) {
-        return _.find(group.inputs, function (input, inputIndex) {
+      _.find(options.inputGroups || _.compact(ractive.get('inputGroups')), function (group, groupIndex) {
+        return _.find(_.compact(group.inputs), function (input, inputIndex) {
           if (input.subInputs) {
             if (options.handleInputGroups) {
               handleInput(input, groupIndex, inputIndex)
