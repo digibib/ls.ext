@@ -1659,7 +1659,7 @@
           predicate: ontologyUri + compoundInput.subInputs.rdfProperty,
           ranges: compoundInput.subInputs.ranges,
           range: compoundInput.subInputs.range,
-          inputGroupRequiredVetoes: ['0'],
+          inputGroupRequiredVetoes: [],
           accordionHeader: compoundInput.subInputs.accordionHeader,
           pagination: compoundInput.subInputs.pagination,
           objectSortOrder: compoundInput.subInputs.objectSortOrder,
@@ -4536,12 +4536,6 @@
               var veto = !(typeof newValue === 'string' && newValue.length > 0) ||
                 (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
               castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
-            } else {
-              // reset inputGroupRequiredVetoes which was initially set to ['0'],
-              // for inputgroups without required inputs
-              if (ractive.get(inputGroupKeypath).subInputs.filter(function (i) { return i.input.required }).length === 0) {
-                ractive.set(inputGroupKeypath + '.inputGroupRequiredVetoes', [])
-              }
             }
           }
 
