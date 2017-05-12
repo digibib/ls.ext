@@ -77,7 +77,7 @@ class Search extends React.Component {
               forcePage={this.props.location.query.page - 1 || 0}
               marginPagesDisplayed={1}
               pageRangeDisplayed={5}
-              pageCount={Math.ceil(this.props.totalHits / Constants.maxSearchResultsPerPage)}
+              pageCount={Math.ceil(Math.min(this.props.totalHits, 10000) / Constants.maxSearchResultsPerPage)}
               onPageChange={this.handlePageClick}
               containerClassName={'pagination'}
               subContainerClassName={'pages pagination'}
