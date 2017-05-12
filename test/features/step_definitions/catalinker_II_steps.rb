@@ -52,13 +52,13 @@ end
 
 When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted|verk) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verks)indeksen$/) do |art, type_1, type_2|
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT*5) {
-    @browser.element(:xpath => "//a[#{contains_class('edit-resource')}]|//a[#{contains_class('select-result-item')}]").present?
+    @browser.element(:xpath => "//span[#{contains_class('edit-resource')}]|//span[#{contains_class('select-result-item')}]").present?
   }
-  if @browser.a(:class => 'edit-resource').present?
-    @browser.as(:class => 'edit-resource').first.click
+  if @browser.span(:class => 'edit-resource').present?
+    @browser.spans(:class => 'edit-resource').first.click
   end
-  if @browser.a(:class => "select-result-item").present?
-    @browser.as(:class => "select-result-item").first.click
+  if @browser.span(:class => "select-result-item").present?
+    @browser.spans(:class => "select-result-item").first.click
   end
 end
 
@@ -67,7 +67,7 @@ When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne
   wait_for {
     @browser.div(:class => 'exact-match').present?
   }
-  @browser.div(:class => 'exact-match').as(:class => /select-result-item|edit-resource/).first.click
+  @browser.div(:class => 'exact-match').spans(:class => /select-result-item|edit-resource/).first.click
 end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
@@ -294,6 +294,7 @@ When(/^jeg legger inn navn på en person som skal knyttes til biinnførsel$/) do
 end
 
 When(/^trykker jeg på knappen for å avslutte$/) do
+  @context[:publication_identifier] = @site.WorkFlow.get_publication_uri || @context[:publication_identifier]
   @site.WorkFlow.finish
 end
 

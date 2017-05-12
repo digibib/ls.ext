@@ -279,10 +279,6 @@ class SearchResult extends React.Component {
     let defaultBranchPos
     const activeFilters = this.getActiveFilters('branch')
 
-    if (groupedByBranchAndMedia.length === 1) {
-      // this.handleBranchStatus(groupedByBranchAndMedia[0].branchcode)
-    }
-
     if (groupedByBranchAndMedia.length > 0) {
       const byBranch = groupedByBranchAndMedia.map((el, i) => {
         /* Check if any branch filters selected and if user has homeBranch and remember position of homeBranch */
@@ -303,7 +299,7 @@ class SearchResult extends React.Component {
                 <div className="flex-item item-icon-button">
                   <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
                     <button className="flex-item">
-                      {this.shouldShowBranchStatus(el.branchcode)
+                      {this.shouldShowBranchStatus(el.branchcode, groupedByBranchAndMedia.length)
                         ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
                           <FormattedMessage {...messages.showBranchAvailability} />
                         </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
@@ -316,7 +312,7 @@ class SearchResult extends React.Component {
                 </div>
               </div>
             </ClickableElement>
-            {this.shouldShowBranchStatus(el.branchcode)
+            {this.shouldShowBranchStatus(el.branchcode, groupedByBranchAndMedia.length)
               ? <Items
                 mediaItems={el.mediaItems}
                 showBranchStatusMedia={this.props.showBranchStatusMedia}
@@ -358,9 +354,14 @@ class SearchResult extends React.Component {
     this.props.showBranchStatus(code)
   }
 
-  shouldShowBranchStatus (code) {
-    const { locationQuery: { showBranchStatus } } = this.props
-    return (showBranchStatus && showBranchStatus === code || (Array.isArray(showBranchStatus) && showBranchStatus.includes(code)))
+  shouldShowBranchStatus (code, numberOfBranches) {
+    let showOneBranch = false
+    const { locationQuery: { showBranchStatus, showBranchStatusSingle } } = this.props
+    if (numberOfBranches === 1) {
+      showOneBranch = showBranchStatusSingle && showBranchStatusSingle === code ||
+        (Array.isArray(showBranchStatusSingle) && showBranchStatusSingle.includes(code))
+    }
+    return showBranchStatus && showBranchStatus === code || (Array.isArray(showBranchStatus) && showBranchStatus.includes(code)) || showOneBranch
   }
 
   handleShowStatusClick (event) {

@@ -48,6 +48,10 @@
           "@id": "http://data.deichman.no/mediaType#Film"
         },
         "deichman:ageLimit": 18,
+        "deichman:hasPrimaryCataloguingSource": {
+          "@id": "http://data.deichman.no/cataloguingSource#BS"
+        },
+        "deichman:hasIdentifierInPrimaryCataloguingSource": "0250080",
         "@type": [
           "deichman:Publication"
         ],

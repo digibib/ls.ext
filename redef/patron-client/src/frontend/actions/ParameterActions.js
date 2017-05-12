@@ -69,17 +69,22 @@ export function ensureOneBranchOpen (inputLocationQuery) {
     const pathname = getState().routing.locationBeforeTransitions.pathname
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     const searchResults = getState().search.searchResults
-    locationQuery[ 'showBranchStatus' ] = locationQuery[ 'showBranchStatus' ] || []
-    if (locationQuery[ 'showBranchStatus' ].length > 0) {
-      return
-    }
-    searchResults.forEach((el, i) => {
+    locationQuery[ 'showBranchStatusSingle' ] = locationQuery[ 'showBranchStatusSingle' ] || []
+
+    searchResults.forEach((el) => {
       if (el.publication.homeBranches && el.publication.homeBranches.length === 1) {
-        locationQuery[ 'showBranchStatus' ].push([ el.publication.homeBranches[0] ])
+        if (locationQuery[ 'showBranchStatusSingle' ].length === 0) {
+          locationQuery[ 'showBranchStatusSingle' ].push(el.publication.homeBranches[ 0 ])
+          return dispatch(replace({ pathname: pathname, query: locationQuery }))
+        } else {
+          if (locationQuery[ 'showBranchStatusSingle' ].indexOf(el.publication.homeBranches[ 0 ]) === -1) {
+            locationQuery[ 'showBranchStatusSingle' ].push(el.publication.homeBranches[ 0 ])
+            return dispatch(replace({ pathname: pathname, query: locationQuery }))
+          }
+        }
       }
     })
-
-    return dispatch(replace({ pathname: pathname, query: locationQuery }))
+    return
   }
 }
 

@@ -12,10 +12,44 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.40
+
+KOHA: aa0a81d20eaff4dd143f310ad4fb7a9f1c216bf5
+GITREF: TODO
+
+- Koha
+  - Update koha build to 16.11.07:
+    local - rework SIP2 automat transfer
+    Bug 18429 - Receiving an item should update the datelastseen
+    Bug 18335 - Check in: Make patron info in hold messages obey syspref AddressFormat
+    Bug 12021 - SIP2 checkin should alert on transfer and use CT for return branch
+    Bug 18439 - Resend button for notices being hidden by CSS and never unhidden
+    Bug 18001 - LocalHoldsPriority can cause multiple holds queue lines for same hold request
+    Bug 18372 - transits are not created at check in despite user responsing Yes to the prompt
+    Bug 17821 - due date in intranet search results should use TT date plugin
+    Bug 17309 - Renewing and HomeOrHoldingBranch syspref
+    Bug 18329 - Batch record deletion broken
+    Bug 18266: Fix internal error when paying fine for lost item without.. item
+    Bug 18242: 16.11.x adaptation - Old::Checkouts vs OldIssues
+    Bug 17346: Make checkin column hidable
+    Bug 12972 - Transfer slip and transfer message (blue box) can conflict
+    Bug 17758 - SIP checkin does not handle holds correctly
+    Bug 17995 - HOLDPLACED notice should have access to the reserves table
+    Bug 18058: Allow borrower_message_preferences to be truncated
+  - DEICH-769: Branchtransfers har blitt liggende i transfer fra automat til avd
+- Services:
+  - DEICH-782: Identifisere DFB-poster
+- Patron-client:
+  - DEICH-755: Sortering av lån etter dato
+  - DEICH-786: Fjern bestill-knapp på periodika
+- Catalinker:
+  - DEICH-789: Bytt rekkefølge på partNumber og partTitle
+  - DEICH-578: Åpne redigering av autoriteter i treffliste
+
 ## 2017.39
 
 KOHA: 3e191782ac52e7041730d54b786ccce4c4123c04
-GITREF: TODO
+GITREF: 08227eaaaaeefb433aaee909afd8a379b9a4f555
 
 - Koha
   - DEICH-112: Lagt til ekstra felt i REST biblio for tilgjengelighet

@@ -36,6 +36,8 @@ public final class Format {
             .put("mk", "XboxOneGame")
             .put("mn", "NintendoDSGame")
             .put("mo", "NintendoWiiGame")
+            .put("mp", "NintendoWiiUGame")
+            .put("ms", "NintendoSwitchGame")
             .put("na", "PDF")
             .put("nb", "EPUB")
             .build();

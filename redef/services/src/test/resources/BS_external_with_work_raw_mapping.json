@@ -259,6 +259,10 @@
         "deichman:locationClassNumber": "338.09481",
         "deichman:locationSignature": "N",
         "deichman:locationFormat": "q",
+        "deichman:hasPrimaryCataloguingSource": {
+          "@id": "http://data.deichman.no/cataloguingSource#BS"
+        },
+        "deichman:hasIdentifierInPrimaryCataloguingSource": "0250080",
         "deichman:contributor": [
           {
             "@id": "_:0000000"

@@ -48,6 +48,10 @@
         },
         "deichman:locationClassNumber": "225.53982",
         "deichman:locationSignature": "B",
+        "deichman:hasPrimaryCataloguingSource": {
+          "@id": "http://data.deichman.no/cataloguingSource#BS"
+        },
+        "deichman:hasIdentifierInPrimaryCataloguingSource": "0377057",
         "deichman:contributor": [
           {
             "@id": "_:0000000"

@@ -146,7 +146,7 @@
     function inputHasOpenForm (input) {
       var inputHasOpenForm = false
       if (input.widgetOptions) {
-        inputHasOpenForm = _.some(_.pick(input.widgetOptions, 'enableCreateNewResource', 'enableEditResource'), function (action) {
+        inputHasOpenForm = _.some(_.pick(input.widgetOptions, 'enableEditResource'), function (action) {
           return !isNaN(Number.parseInt(action.showInputs))
         })
       }
@@ -165,10 +165,9 @@
         })
       })
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
-        if (ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enableCreateNewResource.showInputs`) !== undefined ||
-          ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enableEditResource.showInputs`) !== undefined) {
+        if (ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enableEditResource.showInputs`) !== undefined) {
           if (input.widgetOptions) {
-            _.each(_.difference([ 'enableCreateNewResource', 'enableEditResource' ], keepActions), function (action) {
+            _.each(_.difference([ 'enableEditResource' ], keepActions), function (action) {
               if (input.widgetOptions[ action ]) {
                 input.widgetOptions[ action ].showInputs = null
                 changes = true
@@ -881,8 +880,8 @@
 
     function forAllGroupInputs (handleInput, options) {
       options = options || {}
-      _.find(options.inputGroups || ractive.get('inputGroups'), function (group, groupIndex) {
-        return _.find(group.inputs, function (input, inputIndex) {
+      _.find(options.inputGroups || _.compact(ractive.get('inputGroups')), function (group, groupIndex) {
+        return _.find(_.compact(group.inputs), function (input, inputIndex) {
           if (input.subInputs) {
             if (options.handleInputGroups) {
               handleInput(input, groupIndex, inputIndex)
@@ -905,7 +904,7 @@
       var addInput = function (input, groupIndex, inputIndex, subInputIndex) {
         inputs.push(input)
         var subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
-        var forms = ractive.get(`applicationData.inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.widgetOptions.enableCreateNewResource.forms`)
+        var forms = ractive.get(`applicationData.inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.widgetOptions.enableEditResource.forms`)
         if (forms) {
           _.each(forms, function (form) {
             inputs = inputs.concat(form.inputs)
@@ -917,14 +916,12 @@
 
       _.each(ractive.get('applicationData.maintenanceInputs'), function (input, index) {
         inputs.push(input)
-        _.each([ 'Edit', 'CreateNew' ], function (action) {
-          var forms = (ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enable${action}Resource.forms`))
-          if (forms) {
-            _.each(forms, function (form) {
-              inputs = inputs.concat(form.inputs)
-            })
-          }
-        })
+        var forms = (ractive.get(`applicationData.maintenanceInputs.${index}.widgetOptions.enableEditResource.forms`))
+        if (forms) {
+          _.each(forms, function (form) {
+            inputs = inputs.concat(form.inputs)
+          })
+        }
       })
       return inputs
     }
@@ -1561,6 +1558,7 @@
         case 'deichman:ClassificationEntry':
         case 'deichman:WorkSeries' :
         case 'deichman:WorkSeriesPart':
+        case 'deichman:CataloguingSource':
         case 'http://www.w3.org/2001/XMLSchema#anyURI':
           rdfType = 'http://www.w3.org/2001/XMLSchema#anyURI'
           inputType = 'input-string'
@@ -1730,42 +1728,38 @@
       }
 
       function copyResourceForms (input, targetResourceIsMainEntry) {
-        if (input.widgetOptions) {
-          _.each([ 'enableCreateNewResource', 'enableEditResource' ], function (enableAction) {
-            if (input.widgetOptions[ enableAction ]) {
-              input.widgetOptions[ enableAction ][ 'forms' ] = {}
-              _.each(input.widgetOptions[ enableAction ].formRefs, function (formRef) {
-                var resourceForm = deepClone(_.find(applicationData.config.inputForms, function (formSpec) {
-                  return formSpec.id === formRef.formId
-                }))
-                _.each(resourceForm.inputs, function (formInput) {
-                  var predicate = ontologyUri + formInput.rdfProperty
-                  var ontologyInput = inputMap[ `${resourceForm.rdfType}.${predicate}` ]
-                  if (formInput.label) {
-                    formInput.labelkey = formInput.label
-                  }
-                  _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
-                  formInput[ 'values' ] = emptyValues(false)
-                  formInput[ 'rdfType' ] = resourceForm.rdfType
-                  if (targetResourceIsMainEntry) {
-                    formInput.targetResourceIsMainEntry = true
-                  }
-                  if (enableAction === 'enableCreateNewResource' && !input.widgetOptions.maintenance) {
-                    if (!input.id) {
-                      throw new Error(`Input ${input.label} must have id since it has a create resource form ref`)
-                    }
-                    formInput.belongsToCreateResourceFormOfInput = input.id
-                    input.suggestedValuesForNewResource = []
-                  }
-                })
-                input.widgetOptions[ enableAction ][ 'forms' ][ formRef.targetType ] = {
-                  inputs: resourceForm.inputs,
-                  rdfType: resourceForm.rdfType,
-                  labelForCreateButton: resourceForm.labelForCreateButton,
-                  prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource,
-                  popupForm: true
+        if (input.widgetOptions && input.widgetOptions.enableEditResource) {
+          input.widgetOptions.enableEditResource.forms = {}
+          _.each(input.widgetOptions.enableEditResource.formRefs, function (formRef) {
+            var resourceForm = deepClone(_.find(applicationData.config.inputForms, function (formSpec) {
+              return formSpec.id === formRef.formId
+            }))
+            _.each(resourceForm.inputs, function (formInput) {
+              var predicate = ontologyUri + formInput.rdfProperty
+              var ontologyInput = inputMap[ `${resourceForm.rdfType}.${predicate}` ]
+              if (formInput.label) {
+                formInput.labelkey = formInput.label
+              }
+              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
+              formInput[ 'values' ] = emptyValues(false)
+              formInput[ 'rdfType' ] = resourceForm.rdfType
+              if (targetResourceIsMainEntry) {
+                formInput.targetResourceIsMainEntry = true
+              }
+              if (!input.widgetOptions.maintenance) {
+                if (!input.id) {
+                  throw new Error(`Input ${input.label} must have id since it has a create resource form ref`)
                 }
-              })
+                formInput.belongsToCreateResourceFormOfInput = input.id
+                input.suggestedValuesForNewResource = []
+              }
+            })
+            input.widgetOptions.enableEditResource.forms[ formRef.targetType ] = {
+              inputs: resourceForm.inputs,
+              rdfType: resourceForm.rdfType,
+              labelForCreateButton: resourceForm.labelForCreateButton,
+              prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource,
+              popupForm: true
             }
           })
         }
@@ -1917,7 +1911,7 @@
 
       // sort arrays of inputs for each domain type according to order in corresponding forms
       var maintenanceForms = _.chain(applicationData.maintenanceInputs)
-        .pluck('widgetOptions').pluck('enableCreateNewResource').compact().pluck('forms').value()
+        .pluck('widgetOptions').pluck('enableEditResource').compact().pluck('forms').value()
 
       _.each(maintenanceForms, function (form) {
         var formContent = _.chain(form).pairs().first().value()
@@ -1990,7 +1984,6 @@
       return _.initial(keypath.split('.')).join('.')
     }
 
-    /* public API */
     function visitInputs (mainInput, visitor) {
       _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, 'input') : [ mainInput ], visitor)
     }
@@ -2358,7 +2351,7 @@
       return targetInput.widgetOptions && targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom
     }
 
-    var Main = {
+  var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -2837,7 +2830,7 @@
                 ractive.set(`${keypath}.current.value`, $(e.target).val() || [])
                 var inputNode = ractive.get(grandParentOf(keypath))
                 let target = ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
-                if (target && !inputNode.isSubInput && (keypath.indexOf('enableCreateNewResource') === -1 || keypath.indexOf('enableEditResource') !== -1)) {
+                if (target && !inputNode.isSubInput && shouldExecPatchImmediately(keypath)) {
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
                 }
@@ -2920,7 +2913,7 @@
                 const targetIsEditResourceLink = !outsideX && $(event.originalEvent.target).is('a.edit-resource')
                 const targetIsASelect2RemoveSelectionCross = !outsideX && $(event.originalEvent.target).is('span.select2-selection__choice__remove') && !$(event.originalEvent.target).is('.overrride-outside-detect')
                 if (!(targetIsInsideSupportPanel || targetIsARadioButtonThatWasOffButIsOnNow || targetIsSupportPanel || targetIsASupportPanelButton || targetIsASelect2RemoveSelectionCross || targetIsEditResourceLink)) {
-                  clearSupportPanels({ keep: [ 'enableCreateNewResource' ] })
+                  clearSupportPanels({ keep: [ 'enableEditResource' ] })
                 }
               }
             })
@@ -3223,6 +3216,10 @@
           const displayValueOfInputById = function (inputId, valueIndex) {
             var keyPath = ractive.get(`inputLinks.${inputId}`)
             return ractive.get(`${keyPath}.values.${valueIndex}.current.displayValue`)
+          }
+
+          const shouldExecPatchImmediately = function (keypath) {
+            return ractive.get(`${(keypath.match(/(^.*enableEditResource).*$/) || [undefined, {mode: undefined}])[ 1 ]}.mode` === 'edit')
           }
 
           // Initialize ractive component from template
@@ -3593,7 +3590,8 @@
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, editAuthorityMode) {
                 const inputValue = event.context
-                const input = event.input || ractive.get(grandParentOf(event.keypath))
+                const eventKeypath = event.keypath
+                const input = event.input || ractive.get(grandParentOf(eventKeypath))
                 const proceed = function () {
                   const subject = ractive.get(`targetUri.${rdfType}`)
                   if (subject) {
@@ -3609,13 +3607,13 @@
                   ractive.set(`${event.keypath}.current.value`, event.context.old.value)
                 }
 
-                if (!input.isSubInput && (!event.keypath || event.keypath.indexOf('enableCreateNewResource') === -1)) {
+                if (!input.isSubInput && (!eventKeypath || shouldExecPatchImmediately(eventKeypath))) {
                   if (inputValue.error || (inputValue.current.value === '' && inputValue.old.value === '') || inputValue.current.value === inputValue.old.value) {
                     return
                   }
                   if (editAuthorityMode && /^.*(name|prefLabel|mainTitle)$/.test(predicate)) {
                     warnEditResourceName({
-                      fieldLabel: ractive.get(grandParentOf(event.keypath)).label.toLowerCase(),
+                      fieldLabel: ractive.get(grandParentOf(eventKeypath)).label.toLowerCase(),
                       rdfType,
                       proceed,
                       revert
@@ -3705,12 +3703,18 @@
                 Main.init(initOptions)
 //                updateBrowserLocationWithTemplate(editWith.template)
               },
-              focusNextItem: function (event) {
-                let nextItemId = $(event.node).attr('data-next-sel-item')
+              focusEditItem: function (event, itemIndex) {
+                $(`#ed-item-${itemIndex}`).focus()
+              },
+              focusSelectItem: function (event, itemIndex) {
+                $(`#sel-item-${itemIndex}`).focus()
+              },
+              focusNextItem: function (event, type) {
+                let nextItemId = $(event.node).attr(`data-next-${type}-item`)
                 $(`#${nextItemId}`).focus()
               },
-              focusPrevItem: function (event) {
-                let prevItemId = $(event.node).attr('data-prev-sel-item')
+              focusPrevItem: function (event, type) {
+                let prevItemId = $(event.node).attr(`data-prev-${type}-item`)
                 $(`#${prevItemId}`).focus()
               },
               focusNextSubItem: function (event) {
@@ -3726,13 +3730,18 @@
                   $(`#sel-item-${itemIndex}-details-toggle`).focus()
                 }
               },
-              focusDetailsToggle: function (event) {
-                const itemId = $(event.node).attr('id')
+              focusDetailsToggle: function (event, itemIndex) {
                 $(event.node).blur()
-                $(`#${itemId}-details-toggle`).focus()
+                $(`#item-${itemIndex}-details-toggle`).focus()
               },
-              focusItem: function (event, itemId) {
-                $(`#${itemId}`).focus()
+              focusItem: function (event, itemIndex, actions) {
+                actions = actions || [ 'sel' ]
+                $(event.node).blur()
+                for (var i = 0; i < actions.length; i++) {
+                  if ($(`#${actions[ i ]}-item-${itemIndex}`).focus().length > 0) {
+                    break
+                  }
+                }
               },
               handleTabForSearchResultItem: function (event, widgetOptions) {
                 if (!event.original.shiftKey) {
@@ -3772,19 +3781,25 @@
                   ractive.set(grandParentOf(event.keypath), undefined)
                   return
                 }
+                if (options.action === 'edit') {
+                  ractive.set(`${origin}.searchResultHidden`, ractive.get(`${origin}.searchResult`))
+                }
                 ractive.set(`${origin}.searchResult`, null)
                 var inputKeyPath = grandParentOf(origin)
                 var input = ractive.get(inputKeyPath)
                 var uri = context.uri
                 var editWithTemplateSpec = ractive.get(`${inputKeyPath}.widgetOptions.editWithTemplate`)
-                if (editWithTemplateSpec) {
+                if (options.action === 'edit' && editWithTemplateSpec) {
                   ractive.fire('editResource', null, editWithTemplateSpec, uri)
-                } else if (ractive.get(`${inputKeyPath}.widgetOptions.enableInPlaceEditing`)) {
+                } else if (options.action === 'edit' && ractive.get(`${inputKeyPath}.widgetOptions.enableInPlaceEditing`)) {
                   var indexType = ractive.get(`${inputKeyPath}.indexTypes.0`)
-                  var rdfType = ractive.get(`${inputKeyPath}.widgetOptions.enableEditResource.forms.${indexType}`).rdfType
+                  const form = ractive.get(`${inputKeyPath}.widgetOptions.enableEditResource.forms.${indexType}`)
+                  var rdfType = form.rdfType
+                  var inputs = form.inputs
                   unloadResourceForDomain(rdfType)
-                  fetchExistingResource(uri)
+                  fetchExistingResource(uri, { inputs, overrideMainEntry: true })
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.showInputs`, Number.parseInt(_.last(origin.split('.'))))
+                  ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.mode`, 'edit')
                 } else if (input.isMainEntry || options.subItem) {
                   fetchExistingResource(uri)
                     .then(function () {
@@ -3953,10 +3968,12 @@
               },
               createNewResource: function (event, origin) {
                 let maintenance = origin.indexOf('maintenanceInputs') !== -1
-                let displayValueInput = _.find(event.context.inputs, function (input) {
+                const inputs = event.context.inputs
+                let displayValueInput = _.find(inputs, function (input) {
                   return input.displayValueSource === true
                 })
-                let searchOriginInput = ractive.get(grandParentOf(event.keypath))
+                const eventKeypath = event.keypath
+                let searchOriginInput = ractive.get(grandParentOf(eventKeypath))
                 let useAfterCreation = searchOriginInput.useAfterCreation
                 let targetInput = ractive.get(grandParentOf(origin))
 
@@ -3968,14 +3985,14 @@
                     }
                     ractive.set(`${origin}.deletable`, true)
                     ractive.set(`${origin}.searchable`, false)
-                    ractive.set(`${event.keypath}.visible`, null)
+                    ractive.set(`${eventKeypath}.visible`, null)
                   } else {
                     ractive.set(`${origin}.current.value`, null)
                     if (displayValueInput) {
                       ractive.set(`${origin}.current.displayValue`, null)
                     }
                   }
-                  ractive.set(`${grandParentOf(event.keypath)}.showInputs`, null)
+                  ractive.set(`${grandParentOf(eventKeypath)}.showInputs`, null)
                   return resourceUri
                 }
                 let patchMotherResource = function (resourceUri) {
@@ -3987,7 +4004,7 @@
 
                 function setCreatedResourceValuesInMainInputs () {
                   let groupInputs = ractive.get('inputGroups')
-                  _.each(event.context.inputs, function (input) {
+                  _.each(inputs, function (input) {
                     _.each(groupInputs, function (group) {
                       _.each(group.inputs, function (groupInput) {
                         if (groupInput.predicate === input.predicate && groupInput.rdfType === input.rdfType) {
@@ -4000,10 +4017,11 @@
 
                 let setTargetUri = function (resourceUri) {
                   if (useAfterCreation) {
-                    ractive.set(`targetUri.${event.context.rdfType}`, resourceUri)
-                    updateInputsForDependentResources(event.context.rdfType, resourceUri)
+                    const type = typeFromUri(resourceUri)
+                    ractive.set(`targetUri.${type}`, resourceUri)
+                    updateInputsForDependentResources(type, resourceUri)
                     ractive.update()
-                    updateBrowserLocationWithUri(event.context.rdfType, resourceUri)
+                    updateBrowserLocationWithUri(type, resourceUri)
                   }
                   return resourceUri
                 }
@@ -4011,10 +4029,10 @@
                   if (ractive.get(`${origin}.searchResult`)) {
                     ractive.set(`${origin}.searchResult`, null)
                   }
-                  _.each(event.context.inputs, function (input, index) {
-                    ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
+                  _.each(inputs, function (input, index) {
+                    ractive.set(`${eventKeypath}.inputs.${index}.values`, emptyValues(false, true))
                   })
-                  ractive.set(`${event.keypath}.showInputs`, false)
+                  ractive.set(`${eventKeypath}.showInputs`, false)
                   ractive.set(`${grandParentOf(origin)}.allowAddNewButton`, true)
                 }
                 let nop = function (uri) {
@@ -4022,23 +4040,30 @@
                 }
                 let originTarget = $(`span[data-support-panel-base-id=support_panel_base_${ractive.get(origin).uniqueId}] span a.support-panel-expander`)
                 let wait = ractive.get('waitHandler').newWaitable(originTarget)
+                const domainType = event.context.rdfType
                 if (useAfterCreation) {
                   if (!targetInput.searchMainResource) {
-                    unloadResourceForDomain(event.context.rdfType, useAfterCreation.excludeInputRefs)
+                    unloadResourceForDomain(domainType, useAfterCreation.excludeInputRefs)
                   }
                   setCreatedResourceValuesInMainInputs()
                 }
-                saveInputs((!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(event.context.rdfType) : event.context.inputs, event.context.rdfType)
+                saveInputs((!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(domainType) : inputs, domainType)
                   .then(setCreatedResourceUriInSearchInput)
                   .then(!maintenance ? patchMotherResource : nop)
                   .then(!maintenance ? setTargetUri : nop)
                   .then(clearInputsAndSearchResult)
                   .then(wait.cancel)
               },
-              cancelEdit: function (event) {
+              cancelEdit: function (event, origin) {
                 $(event.node).closest('.panel-part').find('span[contenteditable=true]').focus()
                 clearSupportPanels()
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, null)
+                const hiddenSearchResult = ractive.get(`${origin}.searchResultHidden`)
+                if (hiddenSearchResult) {
+                  ractive.set(`${origin}.searchResult`, hiddenSearchResult)
+                  ractive.set(`${origin}.searchResultHidden`, undefined)
+                  event.original.preventDefault()
+                }
               },
               fetchValueSuggestions: function (event) {
                 ractive.get('waitHandler').newWaitable(event.original.target)

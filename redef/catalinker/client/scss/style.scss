@@ -6,14 +6,13 @@ $mintgreen: #DCFC9F;
 @mixin source-logo-loc {
   background-image: url('/images/logos/loc.svg');
   background-repeat: no-repeat;
-  background-size: auto 27px;
+  background-size: auto 20px;
 }
 
 @mixin source-logo-bibbi {
   background-image: url('/images/logos/bibbi.png');
   background-repeat: no-repeat;
   background-size: auto 17px;
-
 }
 
 @mixin focus {
@@ -27,13 +26,25 @@ $mintgreen: #DCFC9F;
 }
 
 @mixin pencil {
-  display: inline-block;
+//  display: inline-block;
   background-image: url('/images/lower_right_pencil.svg');
   background-repeat: no-repeat;
   background-position: left top;
-  padding: 40%;
+  padding: 1px 8px;
   cursor: pointer;
-  height: 20px
+  height: 20px;
+}
+
+@mixin selectBullet {
+  height: 10px;
+  width: 10px;
+  border: 1px solid black;
+  border-radius: 50%;
+  margin-top: 1.5px;
+  display: block;
+  margin-left: 2.3px;
+  box-shadow: 2px 2px 3px #888888;
+  content: "";
 }
 
 .label-font {
@@ -112,22 +123,17 @@ body {
       background-image: url("/images/arrow_down_solid.svg");
       background-repeat: no-repeat;
       background-position: 99% 6px;
-      padding-top: 1px;
       margin: -2px 1px !important;
-      padding: 0px 0px 1px 5px !important;
+      padding: 0 0 1px 5px !important;
       ul {
         li {
           span.suggestion-source {
             &.suggestion-source-bibbi {
-              padding: 0px 24px 2px 0;
-              @include source-logo-bibbi;
-              background-size: auto 16px;
-              background-position: 6px 0;
+              padding: 0 24px 2px 0;
+              background-position: 6px 0 !important;
             }
             &.suggestion-source-loc {
-              padding: 0px 65px 2px 0;
-              @include source-logo-loc;
-              background-size: auto 16px;
+              padding: 0 65px 2px 0;
               background-position: 6px 0;
             }
           }
@@ -565,7 +571,7 @@ body {
                 }
                 &.suggestion-source-loc {
                   @include source-logo-loc;
-                  background-position: 51%;
+                  background-position: 68%;
                   &.searchable {
                     background-position: 86% 0;
                   }
@@ -708,21 +714,14 @@ body {
             display: inline-block;
             margin-top: -24px;
           }
-          :not(.input-wrapper) .support-panel-expander {
-            left: 433px;
+          .support-panel-expander {
+            left: calc(100% - 20px);
             top: 32px;
             display: block;
             margin-top: -22px;
           }
-          .input-wrapper .support-panel-expander {
-            margin-right: 434px;
-            top: 32px;
-            display: block;
-            margin-top: -23px;
-            float: right;
-          }
-          .support-panel-expander {
-            display: inline-block;
+          .suggested-value .support-panel-expander {
+            top: -23px;
           }
           .deletable {
             background-image: url('/images/delete_cross.svg');
@@ -769,11 +768,11 @@ body {
           }
           .suggestion-source-bibbi {
             @include source-logo-bibbi;
-            background-position: 94% 0;
+            background-position: calc(100% - 21px) 8px;
           }
           .suggestion-source-loc {
             @include source-logo-loc;
-            background-position: 85% 9px;
+            background-position: calc(100% - 3px) 0px;
           }
 
           .search-result {
@@ -794,34 +793,28 @@ body {
             padding: 0.5em;
             min-height: 65px;
             .edit-resource {
-              @include pencil()
+              @include pencil();
             }
             .select-result-item {
-              display: inline-block;
-              height: 20px;
-              width: 20px;
+//              display: inline-block;
+              height: 16px;
+              width: 16px;
               border: 2px solid black;
               border-radius: 50%;
               box-shadow: 2px 2px 3px #888888;
-              span {
-                height: 10px;
-                width: 10px;
-                border: 1px solid black;
-                border-radius: 50%;
-                margin-top: 3px;
-                margin-left: 3px;
+              &:focus:after {
+                @include selectBullet();
                 background-color: black;
-                box-shadow: 2px 2px 3px #888888;
-                display: none;
               }
-              &:focus span {
-                display: block;
-              }
-              &:hover span {
-                display: block;
+              &:hover:after {
+                @include selectBullet();
                 background-color: lightgrey;
                 border-color: lightgrey;
               }
+            }
+            .search-item-label {
+              display: inline-block;
+              max-width: 80%;
             }
             .search-result-subitem {
               background: $lightergray;

@@ -621,6 +621,11 @@ When(/^verifiserer jeg valgte verdier for "([^"]*)"$/) do |label|
   verify_fragment(label, :get_select_prop_by_label)
 end
 
+When(/^sjekker at hovedkatalogiseringskilde og identifikator er lagret$/) do
+  @site.RegPublication.get_prop_from_span("http://data.deichman.no/ontology#hasIdentifierInPrimaryCataloguingSource").should eq "0506642"
+  @site.RegPublication.get_prop_from_span("http://data.deichman.no/ontology#hasPrimaryCataloguingSource").should eq "http://data.deichman.no/cataloguingSource#BS"
+end
+
 When(/^at utgivelsen er tilkoplet riktig (.*)$/) do |concept|
   data = Hash.new
   data[@site.translate(concept)] = :get_prop_from_span

@@ -3,7 +3,7 @@ package no.deichman.services.entity.z3950;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Responsibilit: handle mapping of dewey classification.
+ * Responsibility: handle mapping of dewey classification.
  */
 public final class Classification extends ExternalDataObject {
     @SerializedName("deichman:hasClassificationNumber")
