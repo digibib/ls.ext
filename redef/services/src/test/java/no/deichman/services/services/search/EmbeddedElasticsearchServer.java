@@ -7,6 +7,7 @@ import pl.allegro.tech.embeddedelasticsearch.IndexSettings;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.ClassLoader.getSystemResourceAsStream;
 import static java.lang.System.getenv;
@@ -35,6 +36,7 @@ public final class EmbeddedElasticsearchServer {
                 .withSetting("http.enabled", "true")
                 .withSetting("path.home", ".")
                 .withSetting("path.data", dataDirectory)
+                .withStartTimeout(2, TimeUnit.MINUTES)
                 .withEsJavaOpts("-Xms512m -Xmx512m")
                 .withPlugin(getenv().getOrDefault("ES_ICU_PLUGIN_URL", "analysis-icu"))
                 .withIndex("search", IndexSettings.builder()
