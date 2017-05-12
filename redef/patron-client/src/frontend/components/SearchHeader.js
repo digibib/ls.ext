@@ -212,7 +212,7 @@ class SearchHeader extends React.Component {
                 <div className="search-field">
                   <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                          id="search"
-                         type="search"
+                         type="text"
                          defaultValue={this.props.locationQuery.query || ''}
                          ref={e => this.searchFieldInput = e}
                          data-automation-id="search_input_field"
