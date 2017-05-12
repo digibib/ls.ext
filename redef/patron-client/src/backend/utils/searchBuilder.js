@@ -197,6 +197,9 @@ function translateFieldTerms (query, translations) {
       let field = chars.slice(startField, i).join('')
       if (translations[ field ]) {
         field = translations[ field ]
+        if (field instanceof Object) {
+          field = field.translation
+        }
       }
       result += field
       result += ':'
