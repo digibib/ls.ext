@@ -9,7 +9,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,11 +45,18 @@ final class Expectation {
             return estimation;
         }
 
-        int estimate = guess(queuePlace, reservableItems, precedingZeroUser);
+        int loanPeriod = getLoanPeriod(items.get(0).getType());
+
+        int estimate =  (isDistantLoan(reservableItems.size(), adjustedQueuePlace, loanPeriod)) ?
+            12 : guess(queuePlace, reservableItems, precedingZeroUser, loanPeriod);
 
         estimation.setEstimatedWait((estimate < CUTOFF) ? estimate : CUTOFF);
 
         return estimation;
+    }
+
+    private boolean isDistantLoan(int reservableItems, int adjustedQueuePlace, int loanPeriod) {
+        return (adjustedQueuePlace > reservableItems && (reservableItems / adjustedQueuePlace) * loanPeriod > 11);
     }
 
     private int getOffset(String onLoan) {
@@ -94,9 +100,7 @@ final class Expectation {
         return items.stream().filter(item -> item.getReturnDate() == null).collect(Collectors.toList());
     }
 
-    private int guess(int queuePlace, List<Item> items, boolean zeroUser) {
-        Item itemZero = items.get(0);
-        int loanPeriod = getLoanPeriod(Optional.ofNullable(itemZero.getType()).orElse("BOK"));
+    private int guess(int queuePlace, List<Item> items, boolean zeroUser, int loanPeriod) {
         int adjustedQueuePlace = (zeroUser) ? queuePlace + 1 : queuePlace;
         Pair queueRowAndItem = getMatrixPosition(adjustedQueuePlace, items.size());
         int queueRow = (int) queueRowAndItem.getLeft();
@@ -124,5 +128,4 @@ final class Expectation {
         }
         return returnValue;
     }
-
 }
