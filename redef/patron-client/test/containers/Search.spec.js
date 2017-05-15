@@ -66,12 +66,6 @@ function setup (propOverrides) {
 
 describe('containers', () => {
   describe('Search', () => {
-    // NB: not relevant write new test
-    /* it('should search on mount when query is provided', () => {
-      const { props } = setup({ locationQuery: { query: 'test_query' } })
-      expect(props.searchActions.search).toHaveBeenCalled()
-    }) */
-
     it('should not render pagination when few results', () => {
       const { node } = setup({ location: { query: { query: 'test' } }, totalHits: Constants.maxSearchResultsPerPage })
       expect(node.querySelectorAll("[data-automation-id='search-results-pagination']").length).toBe(0)
