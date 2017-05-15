@@ -6,7 +6,15 @@ function escape (query) {
   return query.replace(/\//g, '\\/')
 }
 
-function initCommonQuery (workQuery, publicationQuery, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 10, explain = false) {
+function initCommonQuery (workQuery, publicationQuery, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 20, options) {
+  options = Object.assign({
+    explain: false,
+    ageGain: 0.6,
+    ageScale: 100,
+    itemsGain: 0.5,
+    itemsScale: 50,
+    childBoost: 10
+  }, options)
   let aggregations = {}
   Object.keys(Constants.filterableFields).forEach(key => {
     let field
@@ -35,6 +43,52 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
       }
     }
   })
+
+  function boost (query) {
+    return {
+      function_score: {
+        boost: options.childBoost, // general child boost
+        query: query,
+        script_score: {
+          script: {
+            inline: `
+                      def langscores = [
+                        "nob": 1.5,
+                        "nno": 1.5,
+                        "nor": 1.5,
+                        "eng": 1.4,
+                        "swe": 1.3,
+                        "dan": 1.3,
+                        "ger": 1.2,
+                        "fre": 1.2,
+                        "spa": 1.1,
+                        "ita": 1.1
+                      ];
+                      def langscore = langscores.get(doc.language.value);
+                      if (langscore == null) {
+                        langscore = 1
+                      }
+                      def score = _score * langscore;
+                      def age_gain=${options.ageGain};
+                      def age_scale=${options.ageScale};
+                      if (doc.created.value != null) {
+                        score *= (1 + (age_gain*age_scale)/(age_scale+(System.currentTimeMillis()-doc.created.date.getMillis())/86400000));
+                      }
+                      
+                      def items_gain=${options.itemsGain};
+                      def items_scale=${options.itemsScale};
+                      if (doc.numItems.value != null) {
+                        score *= (1 + (items_gain*doc.numItems.value/items_scale));
+                      }
+                      
+                      return score;`.replace('\n', ''),
+            lang: 'painless'
+          }
+        }
+      }
+    }
+  }
+
   return {
     size: pageSize,
     from: pageSize * (page - 1 || 0),
@@ -54,7 +108,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
             has_child: {
               score_mode: 'max',
               type: 'publication',
-              query: wrapInLanguageBoost({
+              query: boost({
                 bool: {
                   must: [
                     publicationQuery
@@ -65,7 +119,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
               inner_hits: {
                 size: 100,
                 name: 'publications',
-                explain
+                explain: options.explain === 'true'
               }
             }
           },
@@ -75,7 +129,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
               must: [
                 {
                   has_child: {
-                    query: wrapInLanguageBoost({
+                    query: boost({
                       bool: {
                         should: {
                           match_all: {}
@@ -87,7 +141,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                     inner_hits: {
                       name: 'publications',
                       size: 100,
-                      explain
+                      explain: options.explain === 'true'
                     },
                     type: 'publication'
                   }
@@ -98,43 +152,6 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
             }
           }
         ]
-      }
-    }
-  }
-}
-
-function wrapInLanguageBoost (query) {
-  return {
-    function_score: {
-      query: query,
-      script_score: {
-        script: {
-          inline: `
-                      def langscores = [
-                        "nob": 1.5,
-                        "nno": 1.5,
-                        "nor": 1.5,
-                        "eng": 1.4,
-                        "swe": 1.3,
-                        "dan": 1.3,
-                        "ger": 1.2,
-                        "fre": 1.2,
-                        "spa": 1.1,
-                        "ita": 1.1
-                      ];
-                      def langscore = langscores.get(doc.language.value);
-                      if (langscore == null) {
-                        langscore = 1
-                      }
-                      def score = _score * langscore;
-                      def age_gain=0.6;
-                      def age_scale=100;
-                      if (doc.created.value != null) {
-                        score *= (1 + (age_gain*age_scale)/(age_scale+(System.currentTimeMillis()-doc.created.date.getMillis())/86400000));
-                      }
-                      return score;`.replace('\n', ''),
-          lang: 'painless'
-        }
       }
     }
   }
@@ -210,7 +227,7 @@ function translateFieldTerms (query, translations) {
 }
 
 // parse query string to decide what kind of query we think this is
-function queryStringToQuery (queryString, workFilters, publicationFilters, excludeUnavailable, page, pageSize, explain = false) {
+function queryStringToQuery (queryString, workFilters, publicationFilters, excludeUnavailable, page, pageSize, options) {
   const escapedQueryString = escape(queryString)
   const isbn10 = new RegExp('^[0-9Xx-]{10,13}$')
   const isbn13 = new RegExp('^[0-9-]{13,17}$')
@@ -219,9 +236,9 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
     return fieldQuery([ 'isbn' ], escapedQueryString)
   } else if (advTriggers.test(escapedQueryString)) {
-    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(queryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, explain)
+    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(queryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else {
-    return initCommonQuery(simpleQuery(escapedQueryString, Defaults.defaultWorkFields), simpleQuery(escapedQueryString, Defaults.defaultPublicationFields), workFilters, publicationFilters, excludeUnavailable, page, pageSize, explain)
+    return initCommonQuery(simpleQuery(escapedQueryString, Defaults.defaultWorkFields), simpleQuery(escapedQueryString, Defaults.defaultPublicationFields), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   }
 }
 
@@ -246,7 +263,7 @@ function parseFilters (filtersFromLocationQuery, domain) {
 
   const filters = []
   Object.keys(terms).forEach(aggregation => {
-    filters.push({ terms: {[aggregation]: terms[ aggregation ] }})
+    filters.push({ terms: { [aggregation]: terms[ aggregation ] } })
   })
 
   return filters
@@ -290,12 +307,14 @@ module.exports.buildQuery = function (urlQueryString) {
   const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
   const workFilters = parseFilters(params.filter || [], 'work')
   const publicationFilters = createPublicationFilters(params, excludeUnavailable)
-  return queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params.explain)
+  const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
+  console.log(JSON.stringify(query, null, 2))
+  return query
 }
 
 module.exports.buildUnfilteredAggregatedQuery = function (urlQueryString) {
   const params = QueryParser.parse(urlQueryString)
-  return queryStringToQuery(params.query, [], [], false, 0, 0, params.explain)
+  return queryStringToQuery(params.query, [], [], false, 0, 0, params)
 }
 
 // function exported only to be testable. TODO is there another way?
