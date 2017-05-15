@@ -1042,7 +1042,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: false
                       }
                     },
                     {
@@ -1301,7 +1301,7 @@ module.exports = (app) => {
                       }
                     ]
                   },
-                  enableInPlaceEditing: true,
+                  enableInPlaceEditing: false,
                   explanations: {
                     patterns: [
                       { match: '^.*\\/subject\\/.*$', explanation: '(Generelt emne)' },
@@ -1451,7 +1451,7 @@ module.exports = (app) => {
                             targetType: 'workUnstructured' // these are matched against index types, hence lower case
                           } ]
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: false
                       }
                     },
                     {
