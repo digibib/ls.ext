@@ -21,11 +21,15 @@ class SearchHeader extends React.Component {
   handleSearch (event) {
     event.preventDefault()
     this.props.mobileNavigationActions.hideMobileNavigation()
+
     /* Active filters are removed on new query */
-    // this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
-    this.props.locationQuery.query = this.searchFieldInput.value
-    /* Active filters are NOT removed on new query */
-    this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
+    if (this.props.path.includes('/work')) {
+      this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
+    } else {
+      /* Active filters are NOT removed on new query */
+      this.props.locationQuery.query = this.searchFieldInput.value
+      this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
+    }
     this.props.searchActions.search()
   }
 
@@ -253,7 +257,8 @@ SearchHeader.propTypes = {
   mobileNavigationActions: PropTypes.object.isRequired,
   searchActions: PropTypes.object.isRequired,
   isSearching: PropTypes.bool.isRequired,
-  borrowerName: PropTypes.string
+  borrowerName: PropTypes.string,
+  path: PropTypes.string.isRequired
 }
 
 export const messages = defineMessages({
