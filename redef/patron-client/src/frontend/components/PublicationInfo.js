@@ -324,7 +324,7 @@ export const messages = defineMessages({
   noItems: {
     id: 'PublicationInfo.noItems',
     description: 'Label stating that we have no items of this publication',
-    defaultMessage: 'We have no items'
+    defaultMessage: 'This publication has no items at the moment'
   }
 })
 
