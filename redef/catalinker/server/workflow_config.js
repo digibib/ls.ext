@@ -17,7 +17,7 @@ function maintenanceInputs (label, type) {
           targetType: type
         } ]
       },
-      enableInPlaceEditing: true
+      enableInPlaceEditing: false
     }
   }
 }
@@ -573,7 +573,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: false
                       },
                       headlinePart: {
                         order: 10
@@ -820,7 +820,7 @@ module.exports = (app) => {
                       }
                     ]
                   },
-                  enableInPlaceEditing: true
+                  enableInPlaceEditing: false
                 },
                 headlinePart: {
                   order: 50
@@ -841,7 +841,7 @@ module.exports = (app) => {
                       targetType: 'place'
                     } ]
                   },
-                  enableInPlaceEditing: true
+                  enableInPlaceEditing: false
                 }
               },
               {
@@ -872,7 +872,7 @@ module.exports = (app) => {
                           } ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: false
                       }
                     },
                     {
@@ -1093,7 +1093,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: false
                       }
                     },
                     {
@@ -1178,7 +1178,7 @@ module.exports = (app) => {
                       }
                     ]
                   },
-                  enableInPlaceEditing: true
+                  enableInPlaceEditing: false
                 }
               },
               {
@@ -1211,7 +1211,7 @@ module.exports = (app) => {
                             }
                           ]
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: false
                       }
                     },
                     {
@@ -1354,7 +1354,7 @@ module.exports = (app) => {
                       targetType: 'genre'
                     } ]
                   },
-                  enableInPlaceEditing: true
+                  enableInPlaceEditing: false
                 }
               }
             ],
@@ -1408,7 +1408,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true,
+                        enableInPlaceEditing: false,
                         whenEmptyExternalSuggestionCopyValueFrom: {
                           inputRef: 'mainEntryPersonInput'
                         }
@@ -1531,7 +1531,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: false
                       }
                     },
                     {
