@@ -27,6 +27,7 @@ function setup (propOverrides) {
       search: () => {}
     },
     isSearching: false,
+    path: 'test_path',
     ...propOverrides
   }
 

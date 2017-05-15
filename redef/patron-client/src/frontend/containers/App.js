@@ -36,10 +36,12 @@ class App extends React.Component {
   }
 
   render () {
+    console.log(this.props)
     return (
       <div>
         <ModalRoot />
-        <SearchHeader locationQuery={this.props.location.query}
+        <SearchHeader path={this.props.location.pathname}
+                      locationQuery={this.props.location.query}
                       dispatch={this.props.dispatch}
                       locale={this.props.locale}
                       isLoggedIn={this.props.isLoggedIn}
