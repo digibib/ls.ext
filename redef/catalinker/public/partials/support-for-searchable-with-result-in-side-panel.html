@@ -42,8 +42,7 @@ on-escape="cancelEdit">
                                 on-tab="handleTabForSearchResultItem:{{widgetOptions}}"
                                 title="Velg">
                             </span>
-                    {{/if}}
-                            {{#if widgetOptions.editWithTemplate || (widgetOptions.enableEditResource && widgetOptions.enableInPlaceEditing)}}
+                    {{else}}
                                 <span id="{{'ed-item-' + itemIndex}}"
                                    data-prev-ed-item="{{'ed-item-' + (itemIndex - 1)}}"
                                    data-next-ed-item="{{'ed-item-' + (itemIndex + 1)}}"
