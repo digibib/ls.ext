@@ -142,8 +142,8 @@ on-escape="cancelEdit">
 </div>
 {{/if}}
 {{/searchResult}}
-{{#if widgetOptions.enableCreateNewResource.showInputs === (inputValueIndex || 0) || widgetOptions.enableEditResource.showInputs === (inputValueIndex || 0)}}
-{{#widgetOptions[widgetOptions.enableEditResource.showInputs === (inputValueIndex || 0) ? 'enableEditResource' : 'enableCreateNewResource'].forms[current.accepted.selectedIndexType || suggested.selectedIndexType || selectedIndexType]}}
+{{#if widgetOptions.enableEditResource.showInputs === (inputValueIndex || 0)}}
+{{#widgetOptions.enableEditResource.forms[current.accepted.selectedIndexType || suggested.selectedIndexType || selectedIndexType]}}
     <div class="support-panel-content">
     <div class="search-result pure-u-1">
         {{#each inputs}}

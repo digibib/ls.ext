@@ -4069,6 +4069,8 @@
                 $(event.node).closest('.panel-part').find('span[contenteditable=true]').focus()
                 clearSupportPanels()
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, null)
+                ractive.set(`${grandParentOf(event.keypath)}.mode`, null)
+                ractive.set(`${event.keypath}.targetUri`, null)
                 const hiddenSearchResult = ractive.get(`${origin}.searchResultHidden`)
                 if (hiddenSearchResult) {
                   ractive.set(`${origin}.searchResult`, hiddenSearchResult)
