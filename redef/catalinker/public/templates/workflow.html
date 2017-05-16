@@ -96,7 +96,7 @@
                                                 tabindex="-1"
                                                 class="pure-button pure-button-primary next-step-button"
                                                 title="{{./buttonLabel}}"
-                                                on-click="editResource:{template:'edit_authority', descriptionKey: 'compareWork', inputsKeypath: 'applicationData.inputsForDomainType.Work'},{{targetUri}}"
+                                                on-click="editResource:{template:'edit_authority', descriptionKey: 'compareWork', inputsKeypath: 'applicationData.inputsForDomainType.Work'},{{targetUri[rdfType]}}"
                                         >{{>extendedEdit}}</button>
                                     </div>
                                 </div>
