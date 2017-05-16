@@ -3804,8 +3804,10 @@
                 } else if (options.action === 'edit' && ractive.get(`${inputKeyPath}.widgetOptions.enableInPlaceEditing`)) {
                   const indexType = ractive.get(`${inputKeyPath}.selectedIndexType`)
                   const form = ractive.get(`${inputKeyPath}.widgetOptions.enableEditResource.forms.${indexType}`)
-                  const rdfType = form.rdfType
                   const inputs = form.inputs
+                  _.each(inputs, function (input) {
+                    input.values = emptyValues(false, true)
+                  })
                   fetchExistingResource(uri, { inputs, overrideMainEntry: true, keepDocumentUrl: true })
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.showInputs`, Number.parseInt(_.last(origin.split('.'))))
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.mode`, 'edit')
@@ -3949,9 +3951,7 @@
                 if (eventShouldBeIgnored(event)) return
                 if (!event.context.prefillFromAcceptedSource) {
                   _.each(event.context.inputs, function (input, index) {
-                    if (input.hiddenUrlQueryValue) {
-                      ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
-                    }
+                    ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
                   })
                 }
                 ractive.set(`${origin}.searchResult.hidden`, true)
