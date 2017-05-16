@@ -171,8 +171,8 @@ on-escape="cancelEdit">
         {{else}}
         <span class="pure-u-1-1">
                 <div class="add-new-btn-row">
-                    <div class="pure-u-1-8"><a on-click="deleteResource" class="delete-link">{{>delete}}</a></div>
-                    <div class="pure-u-1-2" style="text-align: center;"><a on-click="editResource:{template:'edit_authority'},{{targetUri}}" class="delete-link">{{>extendedEdit}}</a></div>
+                    <div class="pure-u-1-8"><a on-click="deleteResource:{{this.targetUri}}" class="delete-link">{{>delete}}</a></div>
+                    <div class="pure-u-1-2" style="text-align: center;"><a on-click="editResource:{template:'edit_authority'},{{this.targetUri}}" class="delete-link">{{>extendedEdit}}</a></div>
                     <button
                             tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
                             class="pure-button pure-button-primary"

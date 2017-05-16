@@ -96,7 +96,7 @@
                                                 tabindex="-1"
                                                 class="pure-button pure-button-primary next-step-button"
                                                 title="{{./buttonLabel}}"
-                                                on-click="editResource:{template:'edit_authority', descriptionKey: 'compareWork', inputsKeypath: 'applicationData.inputsForDomainType.Work'},{{targetUri.Work}}"
+                                                on-click="editResource:{template:'edit_authority', descriptionKey: 'compareWork', inputsKeypath: 'applicationData.inputsForDomainType.Work'},{{targetUri}}"
                                         >{{>extendedEdit}}</button>
                                     </div>
                                 </div>
@@ -122,6 +122,7 @@
 <span style="display: none">
  {{>delete-publication-dialog}}
  {{>delete-work-dialog}}
+ {{>delete-resource-dialog}}
  {{>confirm-enable-special-input-dialog}}
  {{>alert-existing-resource-dialog}}
  {{>additional-suggestions-dialog}}
