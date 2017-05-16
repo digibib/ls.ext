@@ -134,7 +134,7 @@ body {
             }
             &.suggestion-source-loc {
               padding: 0 65px 2px 0;
-              background-position: 6px 0;
+              background-position: 6px 0 !important;
             }
           }
         }
@@ -772,7 +772,7 @@ body {
           }
           .suggestion-source-loc {
             @include source-logo-loc;
-            background-position: calc(100% - 3px) 0px;
+            background-position: calc(100% - 26px) 8px;
           }
 
           .search-result {

@@ -4103,7 +4103,7 @@
                         }
                       }
                     ).then(function (response) {
-                      var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
+                      var fromPreferredSource = response.data.source === (ractive.get('applicationData.preferredSource') || searchExternalSourceInput.searchForValueSuggestions.preferredSource.id)
                       var hitsFromPreferredSource = { source: response.data.source, items: [] }
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
@@ -4861,6 +4861,9 @@
           var externalSources = _.compact(_.flatten([ query.externalSource ]))
           if (externalSources && externalSources.length > 0) {
             applicationData.externalSources = externalSources
+          }
+          if (query.preferredSource) {
+            applicationData.preferredSource = query.preferredSource
           }
           var suggestionsAccepted = query.acceptedSuggestionsFrom
           if (suggestionsAccepted) {
