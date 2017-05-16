@@ -3808,6 +3808,7 @@
                   _.each(inputs, function (input) {
                     input.values = emptyValues(false, true)
                   })
+                  ractive.update()
                   fetchExistingResource(uri, { inputs, overrideMainEntry: true, keepDocumentUrl: true })
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.showInputs`, Number.parseInt(_.last(origin.split('.'))))
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.mode`, 'edit')
