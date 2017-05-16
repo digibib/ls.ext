@@ -2839,7 +2839,7 @@
                 var keypath = inputValue.keypath
                 ractive.set(`${keypath}.current.value`, $(e.target).val() || [])
                 var inputNode = ractive.get(grandParentOf(keypath))
-                let target = ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
+                let target = ractive.get(grandParentOf(grandParentOf(keypath))).targetUri || ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
                 if (target && !inputNode.isSubInput && shouldExecPatchImmediately(keypath)) {
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
