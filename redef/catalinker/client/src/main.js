@@ -1314,7 +1314,9 @@
       )
         .then(function (response) {
             updateInputsForResource(response, resourceUri, options)
-            ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+            if (!options.keepDocumentUrl) {
+              ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+            }
           }
         )
         .catch(function (err) {
@@ -1765,6 +1767,10 @@
               prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource,
               popupForm: true
             }
+            const form = input.widgetOptions.enableEditResource.forms[ formRef.targetType ]
+            _.each(form.inputs, function (input) {
+              input.belongsToForm = form
+            })
           })
         }
       }
@@ -3597,7 +3603,7 @@
                 const eventKeypath = event.keypath
                 const input = event.input || ractive.get(grandParentOf(eventKeypath))
                 const proceed = function () {
-                  const subject = ractive.get(`targetUri.${rdfType}`)
+                  const subject = input.belongsToForm ? input.belongsToForm.targetUri : ractive.get(`targetUri.${rdfType}`)
                   if (subject) {
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, input.datatypes[ 0 ], errors, event.keypath)
@@ -3789,21 +3795,21 @@
                   ractive.set(`${origin}.searchResultHidden`, ractive.get(`${origin}.searchResult`))
                 }
                 ractive.set(`${origin}.searchResult`, null)
-                var inputKeyPath = grandParentOf(origin)
-                var input = ractive.get(inputKeyPath)
-                var uri = context.uri
-                var editWithTemplateSpec = ractive.get(`${inputKeyPath}.widgetOptions.editWithTemplate`)
+                const inputKeyPath = grandParentOf(origin)
+                const input = ractive.get(inputKeyPath)
+                const uri = context.uri
+                const editWithTemplateSpec = ractive.get(`${inputKeyPath}.widgetOptions.editWithTemplate`)
                 if (options.action === 'edit' && editWithTemplateSpec) {
                   ractive.fire('editResource', null, editWithTemplateSpec, uri)
                 } else if (options.action === 'edit' && ractive.get(`${inputKeyPath}.widgetOptions.enableInPlaceEditing`)) {
-                  var indexType = ractive.get(`${inputKeyPath}.indexTypes.0`)
+                  const indexType = ractive.get(`${inputKeyPath}.selectedIndexType`)
                   const form = ractive.get(`${inputKeyPath}.widgetOptions.enableEditResource.forms.${indexType}`)
-                  var rdfType = form.rdfType
-                  var inputs = form.inputs
-                  unloadResourceForDomain(rdfType)
-                  fetchExistingResource(uri, { inputs, overrideMainEntry: true })
+                  const rdfType = form.rdfType
+                  const inputs = form.inputs
+                  fetchExistingResource(uri, { inputs, overrideMainEntry: true, keepDocumentUrl: true })
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.showInputs`, Number.parseInt(_.last(origin.split('.'))))
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.mode`, 'edit')
+                  form.targetUri = uri
                 } else if (input.isMainEntry || options.subItem) {
                   fetchExistingResource(uri)
                     .then(function () {

@@ -17,7 +17,7 @@ function maintenanceInputs (label, type) {
           targetType: type
         } ]
       },
-      enableInPlaceEditing: false
+      enableInPlaceEditing: true
     }
   }
 }
@@ -573,7 +573,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: false
+                        enableInPlaceEditing: true
                       },
                       headlinePart: {
                         order: 10
@@ -820,7 +820,7 @@ module.exports = (app) => {
                       }
                     ]
                   },
-                  enableInPlaceEditing: false
+                  enableInPlaceEditing: true
                 },
                 headlinePart: {
                   order: 50
@@ -841,7 +841,7 @@ module.exports = (app) => {
                       targetType: 'place'
                     } ]
                   },
-                  enableInPlaceEditing: false
+                  enableInPlaceEditing: true
                 }
               },
               {
@@ -872,7 +872,7 @@ module.exports = (app) => {
                           } ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: false
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1042,7 +1042,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: false
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1093,7 +1093,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: false
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1178,7 +1178,7 @@ module.exports = (app) => {
                       }
                     ]
                   },
-                  enableInPlaceEditing: false
+                  enableInPlaceEditing: true
                 }
               },
               {
@@ -1211,7 +1211,7 @@ module.exports = (app) => {
                             }
                           ]
                         },
-                        enableInPlaceEditing: false
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1301,7 +1301,7 @@ module.exports = (app) => {
                       }
                     ]
                   },
-                  enableInPlaceEditing: false,
+                  enableInPlaceEditing: true,
                   explanations: {
                     patterns: [
                       { match: '^.*\\/subject\\/.*$', explanation: '(Generelt emne)' },
@@ -1354,7 +1354,7 @@ module.exports = (app) => {
                       targetType: 'genre'
                     } ]
                   },
-                  enableInPlaceEditing: false
+                  enableInPlaceEditing: true
                 }
               }
             ],
@@ -1408,7 +1408,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: false,
+                        enableInPlaceEditing: true,
                         whenEmptyExternalSuggestionCopyValueFrom: {
                           inputRef: 'mainEntryPersonInput'
                         }
@@ -1451,7 +1451,7 @@ module.exports = (app) => {
                             targetType: 'workUnstructured' // these are matched against index types, hence lower case
                           } ]
                         },
-                        enableInPlaceEditing: false
+                        enableInPlaceEditing: true
                       }
                     },
                     {
@@ -1531,7 +1531,7 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: false
+                        enableInPlaceEditing: true
                       }
                     },
                     {
