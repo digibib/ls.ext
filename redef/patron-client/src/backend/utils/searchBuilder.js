@@ -153,7 +153,8 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
           }
         ]
       }
-    }
+    },
+    explain: options.explain === 'true'
   }
 }
 
@@ -308,7 +309,7 @@ module.exports.buildQuery = function (urlQueryString) {
   const workFilters = parseFilters(params.filter || [], 'work')
   const publicationFilters = createPublicationFilters(params, excludeUnavailable)
   const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
-  console.log(JSON.stringify(query, null, 2))
+//  console.log(JSON.stringify(query, null, 2))
   return query
 }
 
