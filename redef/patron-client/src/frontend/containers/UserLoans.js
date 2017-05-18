@@ -362,7 +362,11 @@ class UserLoans extends React.Component {
 
   render () {
     if (this.props.isRequestingLoansAndReservations) {
-      return <div />
+      return <div style={{textAlign: 'center'}}>
+        <span data-automation-id="is_searching" className="loading-spinner">
+          <i className="icon-spin4 animate-spin" style={{color: 'red', fontSize: '2em'}} />
+        </span>
+      </div>
     } else if (this.props.loansAndReservationError) {
       return <FormattedMessage {...messages.loansAndReservationError} />
     }
