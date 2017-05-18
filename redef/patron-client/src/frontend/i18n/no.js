@@ -107,7 +107,7 @@ export default {
   'PublicationInfo.available': 'ledige',
   'PublicationInfo.branch': 'Filial',
   'PublicationInfo.items': 'Eksemplarer',
-  'PublicationInfo.noItems': 'Vi har ingen eksemplarer',
+  'PublicationInfo.noItems': 'Denne utgivelsen har ingen eksemplarer for øyeblikket',
   'PublicationInfo.notes': 'Noter:',
   'PublicationInfo.of': 'av',
   'PublicationInfo.onlyInhouse': 'Til bruk i biblioteket',

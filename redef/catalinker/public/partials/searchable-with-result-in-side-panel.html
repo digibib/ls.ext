@@ -59,7 +59,7 @@
     {{else}}
         {{#if !deletable && widgetOptions.explanations && config.search[./current.accepted.selectedIndexType].selectIndexLabel}}
         <span class="explainable">
-                                    {{config.search[./current.accepted.selectedIndexType].selectIndexLabel}}
+                                    {{>config.search[./current.accepted.selectedIndexType].selectIndexLabel}}
         </span>
         {{/if}}
         <span {{#if nonEditable}}style="display:none;" {{/if}}>

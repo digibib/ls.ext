@@ -12,6 +12,23 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.41
+
+KOHA: deaa4b9b8bf17e719c31c516e12f08d30d038907
+GITREF: TODO
+
+- Koha
+  - add Koha template plugin for kemnersaker
+  - activate update_issues cronjob for popularity stats
+  - DEICH-771: Vis bøker som er knyttet til kemnersak
+- Patron-client:
+  - DEICH-755: Sortering av lån etter dato
+  - DEICH-788: Beholde filtre ved nytt søk
+  - DEICH-729: Vis status i ekesmplartabell dersom det ikke finnes eksemplarer
+- Catalinker:
+  - DEICH-576: Hindre tomme blanke noder
+  - DEICH-614: Mangelfull visning av tittelopplysninger
+
 ## 2017.40
 
 KOHA: aa0a81d20eaff4dd143f310ad4fb7a9f1c216bf5
