@@ -20,13 +20,17 @@ module.exports = (app) => {
   })
 
   function filterLibraries (libraries) {
-    return libraries.filter(library => {
+    return libraries.filter(l => {
+      return l.branchnotes === null // filter out branches with branchnotes
+    }).filter(l => {
       if ([ 'hutl', 'fbje', 'fbjo', 'fbol', 'ffur', 'fgry', 'fhol',
         'flam', 'fmaj', 'fnor', 'fnyd', 'fopp', 'frik', 'frmm', 'from', 'froa',
-        'fsme', 'fsto', 'ftor', 'fgam' ].includes(library.branchcode)) { return true }
-
-      // allow test branch codes also
-      return (/^[a-f0-9]{8}$/.test(library.branchcode))
+        'fsme', 'fsto', 'ftor', 'fgam' ].includes(l.branchcode)) {
+        return true
+      } else {
+        // allow test branch codes also
+        return (/^[a-f0-9]{8}$/.test(l.branchcode))
+      }
     })
   }
 }
