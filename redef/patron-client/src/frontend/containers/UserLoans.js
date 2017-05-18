@@ -139,12 +139,10 @@ class UserLoans extends React.Component {
               <div className="flex-col placeholder-column" />
               <div className="flex-col place-in-queue">
                 <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
-                <p data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                  ? <span>{item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}</span>
-                  : <FormattedMessage {...messages.enRoute} />}
-                  &nbsp;{item.suspendUntil
+                <p data-automation-id="UserLoans_reservation_queue_place">
+                  {item.suspendUntil
                     ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                    : ''
+                    : this.renderWaitingPeriodInit(item)
                   }
                 </p>
               </div>
@@ -164,6 +162,14 @@ class UserLoans extends React.Component {
           ))}
         </NonIETransitionGroup>
       )
+    }
+  }
+
+  renderWaitingPeriodInit (item) {
+    if (item.queuePlace > 0) {
+      return <span>{item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}</span>
+    } else {
+      return <FormattedMessage {...messages.enRoute} />
     }
   }
 
