@@ -496,7 +496,7 @@ module.exports = (app) => {
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
                   label: 'EANLabel',
-                  pattern: '^ *([0-9]{13})?\\s*$',
+                  pattern: '[0-9]{12,14}',
                   patternMismatchMessage: 'Dette ser ikke ut som et gyldig EAN-nummer',
                   parameterName: 'ean',
                   automationId: 'searchEanValueSuggestions',
