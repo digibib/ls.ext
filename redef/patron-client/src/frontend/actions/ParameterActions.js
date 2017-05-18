@@ -70,7 +70,9 @@ export function ensureOneBranchOpen (inputLocationQuery) {
     const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
     const searchResults = getState().search.searchResults
     locationQuery[ 'showBranchStatusSingle' ] = locationQuery[ 'showBranchStatusSingle' ] || []
-
+    if (!Array.isArray(locationQuery[ 'showBranchStatusSingle' ])) {
+      locationQuery[ 'showBranchStatusSingle' ] = [ locationQuery[ 'showBranchStatusSingle' ] ]
+    }
     searchResults.forEach((el) => {
       if (el.publication.homeBranches && el.publication.homeBranches.length === 1) {
         if (locationQuery[ 'showBranchStatusSingle' ].length === 0) {
