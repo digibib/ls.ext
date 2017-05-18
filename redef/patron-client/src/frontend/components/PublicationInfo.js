@@ -67,7 +67,9 @@ class PublicationInfo extends React.Component {
                 <td data-automation-id="item_status" >{this.renderAvailability(item)}</td>
               </tr>
             )
-          })}
+          })
+          }
+          {this.renderNoItems(items)}
           </tbody>
         </NonIETransitionGroup>
       )
@@ -153,6 +155,18 @@ class PublicationInfo extends React.Component {
         <span>
           {item.available} <FormattedMessage {...messages.of} /> {item.total} <FormattedMessage {...messages.available} />
         </span>
+      )
+    }
+  }
+
+  renderNoItems (items) {
+    if (items.length === 0) {
+      return (
+        <tr key="no-items" className="not-available">
+          <td data-automation-id="item_location" />
+          <td data-automation-id="item_shelfmark" />
+          <td data-automation-id="item_status" ><FormattedMessage {...messages.noItems} /></td>
+        </tr>
       )
     }
   }
@@ -306,6 +320,11 @@ export const messages = defineMessages({
     id: 'PublicationInfo.onlyInhouse',
     description: 'Label stating that item can only be used in the library',
     defaultMessage: 'Only for use in the library'
+  },
+  noItems: {
+    id: 'PublicationInfo.noItems',
+    description: 'Label stating that we have no items of this publication',
+    defaultMessage: 'This publication has no items at the moment'
   }
 })
 

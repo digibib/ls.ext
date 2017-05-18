@@ -1314,7 +1314,9 @@
       )
         .then(function (response) {
             updateInputsForResource(response, resourceUri, options)
-            ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+            if (!options.keepDocumentUrl) {
+              ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+            }
           }
         )
         .catch(function (err) {
@@ -1711,6 +1713,10 @@
             }),
             parentInput: currentInput
           }
+          // prefill vetoes according to inputs' requiredness
+          if (subInput.required) {
+            currentInput.inputGroupRequiredVetoes.push(`${subInputIndex}`)
+          }
 
           copyResourceForms(newSubInput.input, compoundInput.isMainEntry)
 
@@ -1761,6 +1767,10 @@
               prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource,
               popupForm: true
             }
+            const form = input.widgetOptions.enableEditResource.forms[ formRef.targetType ]
+            _.each(form.inputs, function (input) {
+              input.belongsToForm = form
+            })
           })
         }
       }
@@ -2351,7 +2361,7 @@
       return targetInput.widgetOptions && targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom
     }
 
-  var Main = {
+    var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -2829,7 +2839,7 @@
                 var keypath = inputValue.keypath
                 ractive.set(`${keypath}.current.value`, $(e.target).val() || [])
                 var inputNode = ractive.get(grandParentOf(keypath))
-                let target = ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
+                let target = ractive.get(grandParentOf(grandParentOf(keypath))).targetUri || ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
                 if (target && !inputNode.isSubInput && shouldExecPatchImmediately(keypath)) {
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
@@ -3219,7 +3229,7 @@
           }
 
           const shouldExecPatchImmediately = function (keypath) {
-            return ractive.get(`${(keypath.match(/(^.*enableEditResource).*$/) || [undefined, {mode: undefined}])[ 1 ]}.mode` === 'edit')
+            return ractive.get(`${(keypath.match(/(^.*enableEditResource).*$/) || [ undefined, { mode: undefined } ])[ 1 ]}.mode` === 'edit')
           }
 
           // Initialize ractive component from template
@@ -3593,7 +3603,7 @@
                 const eventKeypath = event.keypath
                 const input = event.input || ractive.get(grandParentOf(eventKeypath))
                 const proceed = function () {
-                  const subject = ractive.get(`targetUri.${rdfType}`)
+                  const subject = input.belongsToForm ? input.belongsToForm.targetUri : ractive.get(`targetUri.${rdfType}`)
                   if (subject) {
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, input.datatypes[ 0 ], errors, event.keypath)
@@ -3785,21 +3795,24 @@
                   ractive.set(`${origin}.searchResultHidden`, ractive.get(`${origin}.searchResult`))
                 }
                 ractive.set(`${origin}.searchResult`, null)
-                var inputKeyPath = grandParentOf(origin)
-                var input = ractive.get(inputKeyPath)
-                var uri = context.uri
-                var editWithTemplateSpec = ractive.get(`${inputKeyPath}.widgetOptions.editWithTemplate`)
+                const inputKeyPath = grandParentOf(origin)
+                const input = ractive.get(inputKeyPath)
+                const uri = context.uri
+                const editWithTemplateSpec = ractive.get(`${inputKeyPath}.widgetOptions.editWithTemplate`)
                 if (options.action === 'edit' && editWithTemplateSpec) {
                   ractive.fire('editResource', null, editWithTemplateSpec, uri)
                 } else if (options.action === 'edit' && ractive.get(`${inputKeyPath}.widgetOptions.enableInPlaceEditing`)) {
-                  var indexType = ractive.get(`${inputKeyPath}.indexTypes.0`)
+                  const indexType = ractive.get(`${inputKeyPath}.selectedIndexType`)
                   const form = ractive.get(`${inputKeyPath}.widgetOptions.enableEditResource.forms.${indexType}`)
-                  var rdfType = form.rdfType
-                  var inputs = form.inputs
-                  unloadResourceForDomain(rdfType)
-                  fetchExistingResource(uri, { inputs, overrideMainEntry: true })
+                  const inputs = form.inputs
+                  _.each(inputs, function (input) {
+                    input.values = emptyValues(false, true)
+                  })
+                  ractive.update()
+                  fetchExistingResource(uri, { inputs, overrideMainEntry: true, keepDocumentUrl: true })
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.showInputs`, Number.parseInt(_.last(origin.split('.'))))
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.mode`, 'edit')
+                  form.targetUri = uri
                 } else if (input.isMainEntry || options.subItem) {
                   fetchExistingResource(uri)
                     .then(function () {
@@ -3916,7 +3929,7 @@
                 })
               },
               deleteResource: function (event) {
-                var uriToDelete = ractive.get(`targetUri.${event.context.rdfType}`)
+                var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
                 deleteResource(uriToDelete, event.context, function () {
                   unloadResourceForDomain(event.context.rdfType)
                   if (event.context.afterSuccess) {
@@ -3939,9 +3952,7 @@
                 if (eventShouldBeIgnored(event)) return
                 if (!event.context.prefillFromAcceptedSource) {
                   _.each(event.context.inputs, function (input, index) {
-                    if (input.hiddenUrlQueryValue) {
-                      ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
-                    }
+                    ractive.set(`${event.keypath}.inputs.${index}.values`, emptyValues(false, true))
                   })
                 }
                 ractive.set(`${origin}.searchResult.hidden`, true)
@@ -4058,6 +4069,8 @@
                 $(event.node).closest('.panel-part').find('span[contenteditable=true]').focus()
                 clearSupportPanels()
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, null)
+                ractive.set(`${grandParentOf(event.keypath)}.mode`, null)
+                ractive.set(`${event.keypath}.targetUri`, null)
                 const hiddenSearchResult = ractive.get(`${origin}.searchResultHidden`)
                 if (hiddenSearchResult) {
                   ractive.set(`${origin}.searchResult`, hiddenSearchResult)
@@ -4090,7 +4103,7 @@
                         }
                       }
                     ).then(function (response) {
-                      var fromPreferredSource = response.data.source === searchExternalSourceInput.searchForValueSuggestions.preferredSource.id
+                      var fromPreferredSource = response.data.source === (ractive.get('applicationData.preferredSource') || searchExternalSourceInput.searchForValueSuggestions.preferredSource.id)
                       var hitsFromPreferredSource = { source: response.data.source, items: [] }
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
@@ -4848,6 +4861,9 @@
           var externalSources = _.compact(_.flatten([ query.externalSource ]))
           if (externalSources && externalSources.length > 0) {
             applicationData.externalSources = externalSources
+          }
+          if (query.preferredSource) {
+            applicationData.preferredSource = query.preferredSource
           }
           var suggestionsAccepted = query.acceptedSuggestionsFrom
           if (suggestionsAccepted) {

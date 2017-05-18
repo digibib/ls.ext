@@ -1,5 +1,5 @@
 .active-filters {
-  border-top: 1px solid $mediumGreyColor;
+  /* border-top: 1px solid $mediumGreyColor; */
   margin-top: rhythm(1);
   padding-top: rhythm(1);
   .label {
@@ -11,7 +11,7 @@
     margin: 0;
     padding: 0;
   }
-  .active-filter {
+  .active-filter, .remove-all-filters {
     list-style: none;
     display: inline-block;
     margin-bottom: rhythm(2);
@@ -36,5 +36,8 @@
         font-weight: bolder;
       }
     }
+  }
+  .remove-all-filters {
+    background: #dedcdc;
   }
 }

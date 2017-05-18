@@ -6,6 +6,7 @@ import * as LanguageActions from '../actions/LanguageActions'
 import * as LibraryActions from '../actions/LibraryActions'
 import * as MobileNavigationActions from '../actions/MobileNavigationActions'
 import * as WindowActions from '../actions/WindowActions'
+import * as SearchActions from '../actions/SearchActions'
 
 import * as LoginActions from '../actions/LoginActions'
 import ModalRoot from './ModalRoot'
@@ -38,7 +39,8 @@ class App extends React.Component {
     return (
       <div>
         <ModalRoot />
-        <SearchHeader locationQuery={this.props.location.query}
+        <SearchHeader path={this.props.location.pathname}
+                      locationQuery={this.props.location.query}
                       dispatch={this.props.dispatch}
                       locale={this.props.locale}
                       isLoggedIn={this.props.isLoggedIn}
@@ -49,6 +51,8 @@ class App extends React.Component {
                       showMobileNavigation={this.props.showMobileNavigation}
                       mobileNavigationActions={this.props.mobileNavigationActions}
                       borrowerName={this.props.borrowerName}
+                      searchActions={this.props.searchActions}
+                      isSearching={this.props.isSearching}
         />
         {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
@@ -71,8 +75,9 @@ App.propTypes = {
   mobileNavigationActions: PropTypes.object.isRequired,
   showMobileNavigation: PropTypes.bool.isRequired,
   windowActions: PropTypes.object.isRequired,
-  borrowerName: PropTypes.string
-
+  borrowerName: PropTypes.string,
+  searchActions: PropTypes.object.isRequired,
+  isSearching: PropTypes.bool.isRequired
 }
 
 function mapStateToProps (state) {
@@ -81,7 +86,8 @@ function mapStateToProps (state) {
     locale: state.application.locale,
     isLoggedIn: state.application.isLoggedIn,
     showMobileNavigation: state.mobileNavigation.visible,
-    borrowerName: state.profile.borrowerName
+    borrowerName: state.profile.borrowerName,
+    isSearching: state.search.isSearching
   }
 }
 
@@ -93,7 +99,8 @@ function mapDispatchToProps (dispatch) {
     libraryActions: bindActionCreators(LibraryActions, dispatch),
     registrationActions: bindActionCreators(RegistrationActions, dispatch),
     mobileNavigationActions: bindActionCreators(MobileNavigationActions, dispatch),
-    windowActions: bindActionCreators(WindowActions, dispatch)
+    windowActions: bindActionCreators(WindowActions, dispatch),
+    searchActions: bindActionCreators(SearchActions, dispatch)
   }
 }
 

@@ -1,4 +1,5 @@
 import { toggleParameter, toggleParameterValue, togglePeriodParamValues, deletePeriodParamValues } from './ParameterActions'
+import { push } from 'react-router-redux'
 
 export function toggleFilter (filterId) {
   return (dispatch, getState) => {
@@ -77,3 +78,9 @@ export function removePeriodInBackUrl (years) {
   }
 }
 
+export function removeAllFilters () {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    dispatch(push({ pathname: '/search', query: { query: locationQuery.query } }))
+  }
+}

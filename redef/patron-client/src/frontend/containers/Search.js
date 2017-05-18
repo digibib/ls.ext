@@ -15,13 +15,13 @@ import * as RegistrationActions from '../actions/RegistrationActions'
 import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
-import SearchResultsText from '../components/SearchResultsText'
 import SearchFilterBox from '../components/SearchFilterBox'
 
 class Search extends React.Component {
   constructor (props) {
     super(props)
     this.handlePageClick = this.handlePageClick.bind(this)
+    this.removeAllFilters = this.removeAllFilters.bind(this)
   }
 
   componentWillMount () {
@@ -46,6 +46,10 @@ class Search extends React.Component {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
+  }
+
+  removeAllFilters () {
+    this.props.dispatch(push({ pathname: '/search', query: { query: this.props.locationQuery.query } }))
   }
 
   handlePageClick (data) {
@@ -101,26 +105,35 @@ class Search extends React.Component {
           ? (<div className="search-results-header">
             <a href="#main-search-content" className="is-vishidden focusable">{this.props.intl.formatMessage(messages.jumpToMainContent)}</a>
           <div className="search-results-summary">
-            <SearchResultsText totalHits={this.props.totalHits}
-                               totalHitsPublications={this.props.totalHitsPublications}
-                               locationQuery={this.props.locationQuery}
-                               isSearching={this.props.isSearching} />
             {this.props.totalHitsPublications === 0
              ? <div className="search-no-hits">
                 <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
+                <SearchFilterBox
+                  path={this.props.location.pathname}
+                  query={this.props.locationQuery}
+                  toggleFilter={this.props.searchFilterActions.toggleFilter}
+                  removePeriod={this.props.searchFilterActions.removePeriod}
+                  toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                  removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
                 <p>{this.props.intl.formatMessage(messages.noHitsTry)}</p>
                 <ul>
                   <li>{this.props.intl.formatMessage(messages.noHitsTryA)}</li>
                   <li>{this.props.intl.formatMessage(messages.noHitsTryB)}</li>
                   <li>{this.props.intl.formatMessage(messages.noHitsTryC)}</li>
+                  <li>{this.props.intl.formatMessage(messages.noHitsTryD)}</li>
                 </ul>
               </div>
               : null }
           </div>
-          <SearchFilterBox query={this.props.locationQuery}
-                           toggleFilter={this.props.searchFilterActions.toggleFilter}
-                           removePeriod={this.props.searchFilterActions.removePeriod}
-                           toggleAvailability={this.props.searchFilterActions.toggleAvailability} />
+            {this.props.totalHits > 0
+              ? <SearchFilterBox
+                path={this.props.location.pathname}
+                query={this.props.locationQuery}
+                toggleFilter={this.props.searchFilterActions.toggleFilter}
+                removePeriod={this.props.searchFilterActions.removePeriod}
+                toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
+              : null}
           {this.props.totalHits > 0
             ? (<div className="search-sorting patron-placeholder">
             <p>Sorter treff på</p>
@@ -266,6 +279,11 @@ export const messages = defineMessages({
     id: 'Search.noHitsTryC',
     description: 'No hits? Try this part III',
     defaultMessage: 'try other keywords'
+  },
+  noHitsTryD: {
+    id: 'Search.noHitsTryD',
+    description: 'No hits? Try this part IV',
+    defaultMessage: 'try to remove filters'
   }
 })
 

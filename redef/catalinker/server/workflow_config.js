@@ -1201,6 +1201,7 @@ module.exports = (app) => {
                       indexTypes: [ 'instrument' ],
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ 'prefLabel' ],
+                      required: true,
                       widgetOptions: {
                         enableEditResource: {
                           formRefs: [
@@ -1618,7 +1619,7 @@ module.exports = (app) => {
             type: 'work',
             structuredQuery: true,
             selectIndexLabel: 'workLabel',
-            resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
+            resultItemLabelProperties: [ 'creator', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
             linkFromUri: {
@@ -1632,7 +1633,7 @@ module.exports = (app) => {
             type: 'work',
             selectIndexLabel: 'workLabel',
             legend: 'searchWorkLegend',
-            resultItemLabelProperties: [ 'mainTitle', ':subtitle' ],
+            resultItemLabelProperties: [ 'creator', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
             resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
             linkFromUri: {
@@ -1686,7 +1687,7 @@ module.exports = (app) => {
             type: 'publication',
             selectIndexLabel: 'publication',
             legend: 'searchPublicationLegend',
-            resultItemLabelProperties: [ 'creator', 'mainTitle', 'subtitle', 'publicationYear', 'recordIdPrefixed' ],
+            resultItemLabelProperties: [ 'creator', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ,'publicationYear', 'recordIdPrefixed' ],
             itemHandler: 'publicationItemHandler'
           },
           instrument: {

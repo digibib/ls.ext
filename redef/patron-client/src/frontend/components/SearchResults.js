@@ -4,6 +4,8 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchResult from './SearchResult'
 import Constants from '../constants/Constants'
 
+import SearchResultsText from '../components/SearchResultsText'
+
 class SearchResults extends React.Component {
   render () {
     if (this.props.searchError) {
@@ -23,9 +25,13 @@ class SearchResults extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="section"
-        className="search-results"
-        id="main-search-content">
-        <div data-automation-id="search-result-entries">
+        id="main-search-content"
+        className="search-results">
+        <SearchResultsText
+          totalHits={this.props.totalHits}
+          locationQuery={this.props.locationQuery}
+        />
+        <div data-automation-id="search-result-entries" className="search-results-list">
           {this.props.locationQuery.query
             ? this.props.searchResults.slice(from, to).map(result => (
             <SearchResult key={result.relativeUri}

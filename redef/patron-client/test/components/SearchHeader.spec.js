@@ -23,6 +23,11 @@ function setup (propOverrides) {
       showMobileNavigation: () => {},
       hideMobileNavigation: () => {}
     },
+    searchActions: {
+      search: () => {}
+    },
+    isSearching: false,
+    path: 'test_path',
     ...propOverrides
   }
 

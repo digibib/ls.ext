@@ -67,11 +67,12 @@
 
 }
 
-.search-no-hits {
-  padding-top: 1em;
-}
-
 @include breakpoint($small) {
+
+  .search-no-hits {
+    margin: auto;
+    width: 50%;
+  }
 
   .logged-in-message {
     @include wrapper-container;

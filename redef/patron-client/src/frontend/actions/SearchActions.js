@@ -43,7 +43,6 @@ export function search () {
 
     const inputQuery = locationQuery.query
     dispatch(requestSearch(inputQuery))
-
     return fetch(`/q${getState().routing.locationBeforeTransitions.search}`, {
       method: 'GET',
       headers: {

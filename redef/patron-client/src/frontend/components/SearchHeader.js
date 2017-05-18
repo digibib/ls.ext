@@ -21,7 +21,16 @@ class SearchHeader extends React.Component {
   handleSearch (event) {
     event.preventDefault()
     this.props.mobileNavigationActions.hideMobileNavigation()
-    this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
+
+    /* Active filters are removed on new query */
+    if (this.props.path.includes('/work')) {
+      this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
+    } else {
+      /* Active filters are NOT removed on new query */
+      this.props.locationQuery.query = this.searchFieldInput.value
+      this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
+    }
+    this.props.searchActions.search()
   }
 
   handleLoginClick (event) {
@@ -207,7 +216,7 @@ class SearchHeader extends React.Component {
                 <div className="search-field">
                   <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                          id="search"
-                         type="search"
+                         type="text"
                          defaultValue={this.props.locationQuery.query || ''}
                          ref={e => this.searchFieldInput = e}
                          data-automation-id="search_input_field"
@@ -216,7 +225,12 @@ class SearchHeader extends React.Component {
                 <div className="search-button">
                   <button onClick={this.handleSearch} type="button" className="search-submit"
                           data-automation-id="search_button">
-                    <FormattedMessage {...messages.search} />
+                    {!this.props.isSearching
+                      ? <FormattedMessage {...messages.search} />
+                      : <span data-automation-id="is_searching" className="loading-spinner">
+                          <i className="icon-spin4 animate-spin" style={{color: '#fff'}} />
+                        </span>
+                    }
                   </button>
                 </div>
               </div>
@@ -241,7 +255,10 @@ SearchHeader.propTypes = {
   startRegistration: PropTypes.func.isRequired,
   showMobileNavigation: PropTypes.bool.isRequired,
   mobileNavigationActions: PropTypes.object.isRequired,
-  borrowerName: PropTypes.string
+  searchActions: PropTypes.object.isRequired,
+  isSearching: PropTypes.bool.isRequired,
+  borrowerName: PropTypes.string,
+  path: PropTypes.string.isRequired
 }
 
 export const messages = defineMessages({

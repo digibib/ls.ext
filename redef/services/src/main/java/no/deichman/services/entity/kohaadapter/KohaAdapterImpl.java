@@ -27,8 +27,8 @@ import static javax.ws.rs.core.Response.Status.OK;
  */
 public final class KohaAdapterImpl implements KohaAdapter {
 
-    private static final String KOHA_USER = System.getProperty("KOHA_API_USER", "api");
-    private static final String KOHA_PASSWORD = System.getProperty("KOHA_API_PASS", "secret");
+    private static final String KOHA_USER = System.getenv().getOrDefault("KOHA_API_USER", "api");
+    private static final String KOHA_PASSWORD = System.getenv().getOrDefault("KOHA_API_PASS", "secret");
     static final String SESSION_COOKIE_KEY = "CGISESSID";
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());

@@ -9,9 +9,8 @@ Given(/^at det finnes en lånerkategori$/) do
 end
 
 Given(/^at det finnes en låner med lånekort$/) do |table|
-  step "at det finnes en avdeling"
+  #step "at det finnes en avdeling"
   branch = @context[:defaults][:branches][0]
-
   step "at det finnes en lånerkategori" unless (@active[:patroncategory] || @context[:patroncategories])
   patroncategory = @active[:patroncategory] ? @active[:patroncategory] : @context[:patroncategories][0]
 

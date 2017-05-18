@@ -4,16 +4,21 @@ import NonIETransitionGroup from './NonIETransitionGroup'
 import SearchFilterBoxItem from '../components/SearchFilterBoxItem'
 import SearchFilterDateRangeBoxItem from '../components/SearchFilterDateRangeBoxItem'
 import SearchFilterAvailabilityBoxItem from '../components/SearchFilterAvailabilityBoxItem'
+import SearchFilterBoxesRemoveAllItem from '../components/SearchFilterBoxesRemoveAllItem'
 import { getFiltersFromQuery, getDateRange } from '../utils/filterParser'
 import { defineMessages, FormattedMessage } from 'react-intl'
 
-const SearchFilterBox = ({ toggleFilter, removePeriod, query, toggleAvailability }) => {
+const SearchFilterBox = ({ path, toggleFilter, removePeriod, query, toggleAvailability, removeAllFilters }) => {
   const filterText = query.back ? <FormattedMessage {...messages.titleWork} />
     : <FormattedMessage {...messages.titleSearch} />
+
   const filters = getFiltersFromQuery(query).filter(f => {
     // We want to hide filters on work-level properties, since
     // they by definition allways match all publications of the given work.
-    return !f.id.startsWith('fictionNonfiction') && !f.id.startsWith('audience')
+    if (path.includes('/work/')) {
+      return !f.id.startsWith('fictionNonfiction') && !f.id.startsWith('audience')
+    }
+    return f
   })
 
   const dateRange = []
@@ -40,7 +45,7 @@ const SearchFilterBox = ({ toggleFilter, removePeriod, query, toggleAvailability
         className="active-filters">
         <div className="label">{filterText}</div>
         <ul>
-          {filters.filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
+          { filters.filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
             key={filter.id} filter={filter} toggleFilter={toggleFilter} />)}
           { dateRange.length > 0
             ? <SearchFilterDateRangeBoxItem dateRange={dateRange} removePeriod={removePeriod} />
@@ -48,6 +53,10 @@ const SearchFilterBox = ({ toggleFilter, removePeriod, query, toggleAvailability
           }
           { availability
             ? <SearchFilterAvailabilityBoxItem toggleAvailability={toggleAvailability} />
+            : null
+          }
+          { !path.includes('/work/')
+            ? <SearchFilterBoxesRemoveAllItem removeAllFilters={removeAllFilters} />
             : null
           }
         </ul>
@@ -75,7 +84,9 @@ SearchFilterBox.propTypes = {
   toggleFilter: PropTypes.func.isRequired,
   query: PropTypes.object.isRequired,
   removePeriod: PropTypes.func.isRequired,
-  toggleAvailability: PropTypes.func.isRequired
+  toggleAvailability: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired,
+  removeAllFilters: PropTypes.func
 }
 
 export default SearchFilterBox
