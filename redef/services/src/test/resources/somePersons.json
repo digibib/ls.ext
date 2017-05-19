@@ -14,7 +14,17 @@
         },
         "name": {
           "type": "literal",
-          "value": "Olsen Johnny"
+          "value": "Olsen, Johnny"
+        }
+      },
+      {
+        "uri": {
+          "type": "uri",
+          "value": "http://data.deichman.no/uri/h17221900"
+        },
+        "name": {
+          "type": "literal",
+          "value": "Olseng, Johnny"
         }
       },
       {

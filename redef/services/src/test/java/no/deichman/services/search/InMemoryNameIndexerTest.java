@@ -24,7 +24,8 @@ public class InMemoryNameIndexerTest {
             "Karlsen, Kai|http://data.deichman.no/uri/h13322200",
             "Karlsen, Kai-Tommy|http://data.deichman.no/uri/h13322202",
             "Olderbolle, Felix|http://data.deichman.no/uri/h13322200",
-            "Olsen Johnny|http://data.deichman.no/uri/h17221900",
+            "Olsen, Johnny|http://data.deichman.no/uri/h17221900",
+            "Olseng, Johnny|http://data.deichman.no/uri/h17221900",
             "Pettersen, Frans|http://data.deichman.no/uri/h28940200",
             "Aagerkarlsen, Karl|http://data.deichman.no/uri/h13322200",
             "Åleskjær, Aage|http://data.deichman.no/uri/h13322200"
