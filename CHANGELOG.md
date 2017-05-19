@@ -12,10 +12,28 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.42
+
+KOHA: 8e004ac2a27725b3a79305afb4700721a5e00cf8
+GITREF: TODO
+
+- Koha
+  - DEICH-785: read-only mysql replisering
+  - DEICH-794, DEICH-795: Nytt plugin for stenging av filialer
+  - DEICH-796: Rewrite biblio expanded endpoint to use hand-crafted SQL
+  - DEICH-791: Rapport til Wanda hyllerydder
+- Patron-client:
+  - DEICH-445: Antatt ventetid på mine sider
+  - DEICH-755: Sortering av lån feil visning i nettlesere
+  - DECIH-794: skjul avdelinger med merknader i API (branchnotes)
+  - nye ikoner
+- Catalinker:
+  - DECIH-609: oppslag på ugyldige ean hos bs
+
 ## 2017.41
 
 KOHA: deaa4b9b8bf17e719c31c516e12f08d30d038907
-GITREF: TODO
+GITREF: d8c49052fa9e79aa02d8d4aaa1b22ae5e5e9ec9e
 
 - Koha
   - add Koha template plugin for kemnersaker
@@ -32,7 +50,7 @@ GITREF: TODO
 ## 2017.40
 
 KOHA: aa0a81d20eaff4dd143f310ad4fb7a9f1c216bf5
-GITREF: TODO
+GITREF: 25bf63b5a2b3590abab4a57dd9e871f085e642c7
 
 - Koha
   - Update koha build to 16.11.07:
