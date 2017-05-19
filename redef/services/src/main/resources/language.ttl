@@ -366,6 +366,10 @@ language:pus	a	lvont:Language ;
 	rdfs:label	"Pashto"@no ;
 	rdfs:label	"Pushto"@en .
 
+language:sje	a	lvont:Language ;
+	rdfs:label	"Pitesamisk"@no ;
+	rdfs:label	"Pite Sami"@en .
+
 language:pol	a	lvont:Language ;
 	rdfs:label	"Polsk"@no ;
 	rdfs:label	"Polish"@en .
@@ -525,6 +529,10 @@ language:ger	a	lvont:Language ;
 language:ukr	a	lvont:Language ;
 	rdfs:label	"Ukrainsk"@no ;
 	rdfs:label	"Ukrainian"@en .
+
+language:sju	a	lvont:Language ;
+	rdfs:label	"Umesamisk"@no ;
+	rdfs:label	"Ume Sami"@en .
 
 language:hun	a	lvont:Language ;
 	rdfs:label	"Ungarsk"@no ;
