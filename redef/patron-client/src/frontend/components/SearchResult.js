@@ -112,20 +112,6 @@ class SearchResult extends React.Component {
         </span>
       </div>
     )
-
-    // TOO: When series information is available ...
-    /*
-     return (
-     <div data-automation-id="publication_series">
-     <strong><FormattedMessage {...messages.partOfSeries} /></strong>
-     {publication.series.map((serie, i) => (
-     <span key={serie}>
-     <Link to={this.seriesSearchLink(serie)} onClick={this.scrollToTop}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
-     </span>
-     ))}
-     </div>
-     )
-     */
   }
 
   getResultItems () {
@@ -425,36 +411,37 @@ class SearchResult extends React.Component {
         component="div"
         className="single-entry"
         data-formats={formats.join(', ')}>
-        <aside className="book-cover" aria-hidden="true">
-          <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
-            {result.image ? <img src={result.image} alt={coverAltText} />
-              : <i aria-label={missingCoverAltText}
-                   className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
-          </Link>
-        </aside>
+        <div className="entry-header">
+          <aside className="book-cover" aria-hidden="true">
+            <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
+              {result.image ? <img src={result.image} alt={coverAltText} />
+                : <i aria-label={missingCoverAltText}
+                     className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
+            </Link>
+          </aside>
 
-        <article className="entry-content">
+          <article className="entry-content">
 
-          <div className="entry-content-icon">
-            <FormattedMessage {...messages.availableAs} />
-            {result.mediaTypes.map(mediaType => {
-              return <MediaType key={mediaType.uri} mediaType={mediaType} />
-            })}
-          </div>
+            <div className="entry-content-icon">
+              <FormattedMessage {...messages.availableAs} />
+              {result.mediaTypes.map(mediaType => {
+                return <MediaType key={mediaType.uri} mediaType={mediaType} />
+              })}
+            </div>
 
-          {this.renderDisplayTitle(result)}
-          {this.renderContributors(result.publication.contributors)}
-          {this.renderOriginalTitle(result.publication)}
-          {/* this.renderSeries(result.publication) */}
-          {result.publication.abstract
-            ? <p className="abstract">{result.publication.abstract}</p>
-            : null
-          }
+            {this.renderDisplayTitle(result)}
+            {this.renderContributors(result.publication.contributors)}
+            {this.renderOriginalTitle(result.publication)}
+            {/* this.renderSeries(result.publication) */}
+            {result.publication.abstract
+              ? <p className="abstract">{result.publication.abstract}</p>
+              : null
+            }
 
-          {this.renderSubjects(result.publication)}
-          {this.renderGenres(result.publication)}
-        </article>
-
+            {this.renderSubjects(result.publication)}
+            {this.renderGenres(result.publication)}
+          </article>
+        </div>
         {this.shouldShowStatus()
           ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
                 <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>

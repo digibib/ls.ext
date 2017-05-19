@@ -12,6 +12,7 @@ import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as RegistrationActions from '../actions/RegistrationActions'
+import SearchResultsSettings from '../components/SearchResultsSettings'
 import SearchResults from '../components/SearchResults'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
@@ -150,6 +151,7 @@ class Search extends React.Component {
           : null}
         {this.props.totalHits > 0
           ? <div className="search-wrapper">
+              <SearchResultsSettings />
               <SearchFilters key="search_filters"
                              filters={this.props.filters}
                              locationQuery={this.props.location.query}

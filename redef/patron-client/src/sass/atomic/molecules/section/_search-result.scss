@@ -7,6 +7,7 @@
   .book-cover {
     @include span(3);
     text-align: center;
+    float: none;
 
     a {
       display: inline-block;
@@ -46,10 +47,16 @@
 
 }
 
+.entry-header {
+  display: flex;
+}
+
 .entry-content {
-  @include span(9 last);
+  @include span(12);
   @include container;
   font-size: rhythm(2);
+  margin-right: auto;
+  float: none;
 
   .entry-content-icon {
     @include span(12);
@@ -70,8 +77,11 @@
       @include span(1 last);
       text-align: right;
       font-size: 2.75em;
+      position: relative;
 
       i {
+        position: absolute;
+        left: 0.1em;
         margin-left: -0.25em;
         -webkit-transition: all 0.5s ease-in-out;
         -moz-transition: all 0.5s ease-in-out;
@@ -308,6 +318,7 @@
 
   .entry-content {
     font-size: rhythm(2.5);
+    margin-left: 1em;
 
     h1 {
       margin-bottom: rhythm(0.5);
