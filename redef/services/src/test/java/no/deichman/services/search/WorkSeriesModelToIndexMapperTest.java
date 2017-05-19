@@ -55,6 +55,7 @@ public class WorkSeriesModelToIndexMapperTest {
                 + "  \"subtitle\": \"Sagaen om Bård og Passop\","
                 + "  \"partTitle\": \"På lykke og fromme\","
                 + "  \"partNumber\": \"42\","
+                + "  \"displayLine1\": \"Hellerudfolket : Sagaen om Bård og Passop. 42. På lykke og fromme\","
                 + "}").allowingAnyArrayOrdering());
     }
 }

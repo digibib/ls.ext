@@ -29,6 +29,10 @@ public class WorkModelToIndexMapperTest {
             + "        \"subtitle\": \"Hvit uke i Trondheim\","
             + "        \"partTitle\": \"Tredje del\","
             + "        \"partNumber\": \"3\","
+            + "        \"publicationYear\": \"1999\","
+            + "        \"litform\": [\"Skjønnlitteratur\", \"Roman\"],"
+            + "        \"displayLine1\": \"Ragde, Anne B.. Berlinerpoplene : Hvit uke i Trondheim. 3. Tredje del\",\n"
+            + "        \"displayLine2\": \"1999. Litteratur. Skjønnlitteratur, Roman\","
             + "         \"subjects\": [\n"
             + "              {\n"
             + "                   \"uri\": \"http://data.deichman.no/subject/e1200005\"\n"
@@ -70,6 +74,7 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:subtitle \"Hvit uke i Trondheim\" ;\n"
                 + "    ns2:partTitle \"Tredje del\" ;\n"
                 + "    ns2:partNumber \"3\" ;\n"
+                + "    ns2:publicationYear \"1999\" \n;"
                 + "    ns2:subject <http://data.deichman.no/subject/e1200005> ;\n"
                 + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> .\n"
                 + "\n"
@@ -87,7 +92,9 @@ public class WorkModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
                 + "    ns2:prefLabel \"Trondheim\" .\n"
-                + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en \n";
+                + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en .\n"
+                + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Skjønnlitteratur\"@no .\n"
+                + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no .\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);
         String jsonDocument = new ModelToIndexMapper("work").createIndexDocument(model, workXuri);

@@ -48,6 +48,7 @@ public class InstrumentModelToIndexMapperTest {
                 + "  \"uri\": \"" + placeXuri1.getUri() + "\","
                 + "  \"prefLabel\": \"Lute\","
                 + "  \"alternativeName\": \"alternativeName_value\","
+                + "  \"displayLine1\": \"Lute (Large chicken leg with strings)\","
                 + "  \"specification\": \"Large chicken leg with strings\","
                 + "}").allowingAnyArrayOrdering());
     }

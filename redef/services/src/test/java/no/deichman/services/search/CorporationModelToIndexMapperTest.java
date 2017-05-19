@@ -74,6 +74,7 @@ public class CorporationModelToIndexMapperTest extends ModelToIndexMapperTestSup
                 + "  \"alternativeName\": \"alternativeName_value\","
                 + "  \"subdivision\": \"subdivision_value\","
                 + "  \"specification\": \"specification_value\","
+                + "  \"displayLine1\": \"publisherName_value. subdivision_value (specification_value). " + getPlacePrefLabel() + "\","
                 + "  \"placePrefLabel\": \"" + getPlacePrefLabel() + "\","
                 + (withAlternativePlaceName ? "  \"placeAlternativeName\": \"" + getPlaceAlternativeName() + "\"" : "")
                 + "}").allowingAnyArrayOrdering());

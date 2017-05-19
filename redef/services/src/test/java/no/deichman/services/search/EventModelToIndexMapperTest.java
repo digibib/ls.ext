@@ -63,6 +63,7 @@ public class EventModelToIndexMapperTest extends ModelToIndexMapperTestSupport {
                 + "  \"prefLabel\": \"Jesus returns\","
                 + "  \"alternativeName\": \"alternativeName_value\","
                 + "  \"specification\": \"Jesus (pron. Hey-soos) returns to earth\","
+                + "  \"displayLine1\": \"Jesus returns, " + getPlacePrefLabel() + " (Jesus (pron. Hey-soos) returns to earth)\","
                 + "  \"placePrefLabel\": \"" + getPlacePrefLabel() + "\","
                 + (withAlternativePlaceName ? "  \"placeAlternativeName\": \"" + getPlaceAlternativeName() + "\"" : "")
                 + "}").allowingAnyArrayOrdering());

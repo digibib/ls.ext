@@ -22,6 +22,12 @@
       },
       "work": {
         "enabled": false
+      },
+      "displayLine1": {
+        "type": "keyword"
+      },
+      "displayLine2": {
+        "type": "keyword"
       }
     }
   }

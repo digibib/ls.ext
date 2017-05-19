@@ -10,6 +10,12 @@
       },
       "alternativeName": {
         "type": "text"
+      },
+      "displayLine1": {
+        "type": "keyword"
+      },
+      "displayLine2": {
+        "type": "keyword"
       }
     }
   }

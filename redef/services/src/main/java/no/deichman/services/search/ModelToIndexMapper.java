@@ -12,6 +12,7 @@ import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import no.deichman.services.utils.ResourceReader;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
@@ -100,7 +101,205 @@ public class ModelToIndexMapper {
             if (uri != null && map.get("type") == null && nodeIndex.get(uri) != null) {
                 map.putAll((Map) nodeIndex.get(uri));
             }
-            map.remove("type");
+
+            if (map.containsKey("type")) {
+                String displayLine1 = "";
+                String displayLine2 = "";
+                switch (map.get("type").toString()) {
+                    case "Work":
+                        if (map.containsKey("mainEntryName")) {
+                            displayLine1 = map.get("mainEntryName").toString()+ ". ";
+                        }
+                        if (map.containsKey("mainTitle")) {
+                            displayLine1 += map.get("mainTitle").toString();
+                        }
+                        if (map.containsKey("subtitle")) {
+                            displayLine1 += " : " +  map.get("subtitle").toString();
+                        }
+                        if (map.containsKey("partNumber")) {
+                            displayLine1 += ". " +  map.get("partNumber").toString();
+                        }
+                        if (map.containsKey("partTitle")) {
+                            displayLine1 += ". " +  map.get("partTitle").toString();
+                        }
+                        if (map.containsKey("publicationYear")) {
+                            displayLine2 += map.get("publicationYear").toString();
+                        }
+                        if (map.containsKey("workTypeLabel")) {
+                            if (displayLine2.length() > 0) {
+                                displayLine2 += ". ";
+                            }
+                            displayLine2 += map.get("workTypeLabel").toString();
+                        }
+                        if (map.containsKey("litform")) {
+                            if (displayLine2.length() > 0) {
+                                displayLine2 += ". ";
+                            }
+                            if (map.get("litform").getClass() == String.class) {
+                                displayLine2 += map.get("litform").toString();
+                            } else if (map.get("litform").getClass() == ArrayList.class) {
+                                displayLine2 += StringUtils.join((ArrayList) map.get("litform"), ", ");
+                            }
+                           }
+                        break;
+                    case "Publication":
+                        if (map.containsKey("mainEntryName")) {
+                            displayLine1 = map.get("mainEntryName").toString()+ ". ";
+                        }
+                        if (map.containsKey("mainTitle")) {
+                            displayLine1 += map.get("mainTitle").toString();
+                        }
+                        if (map.containsKey("subtitle")) {
+                            displayLine1 += " : " +  map.get("subtitle").toString();
+                        }
+                        if (map.containsKey("partNumber")) {
+                            displayLine1 += ". " +  map.get("partNumber").toString();
+                        }
+                        if (map.containsKey("partTitle")) {
+                            displayLine1 += ". " +  map.get("partTitle").toString();
+                        }
+                        if (map.containsKey("mt") || map.containsKey("format")) {
+                            displayLine1 += " (";
+                            if (map.containsKey("mt")) {
+                                displayLine1 += map.get("mt").toString();
+                            }
+                            if (map.containsKey("format")) {
+                                displayLine1 += ". " + map.get("format").toString();
+                            }
+                            displayLine1 +=")";
+                        }
+                        if (map.containsKey("publishedBy")) {
+                            displayLine2 += map.get("publishedBy").toString();
+                        }
+                        if (map.containsKey("publicationYear")) {
+                            if (displayLine2.length() > 0) {
+                                displayLine2 += ", ";
+                            }
+                            displayLine2 += map.get("publicationYear");
+                        }
+                        if (map.containsKey("isbn")) {
+                            if (displayLine2.length() > 0) {
+                                displayLine2 += ". ";
+                            }
+                            displayLine2 += "ISBN " + map.get("isbn").toString();
+                        }
+                        if (map.containsKey("ean")) {
+                            if (displayLine2.length() > 0) {
+                                displayLine2 += ". ";
+                            }
+                            displayLine2 += "EAN " + map.get("ean").toString();
+                        }
+                        if (map.containsKey("recordId")) {
+                            if (displayLine2.length() > 0) {
+                                displayLine2 += ". ";
+                            }
+                            displayLine2 += "Tnr: " + map.get("recordId").toString();
+                        }
+                        break;
+                    case "Person":
+                        displayLine1 = map.getOrDefault("name", "").toString();
+                        if (map.containsKey("ordinal")) {
+                            displayLine1 += " " +  map.get("ordinal").toString();
+                        }
+                        if (map.containsKey("specification")) {
+                            displayLine1 += " (" +  map.get("specification").toString() + ")";
+                        }
+                        if (map.containsKey("birthYear") || map.containsKey("deathYear")) {
+                            displayLine1 += ", ";
+                            if (map.containsKey("birthYear")) {
+                                displayLine1 += map.get("birthYear").toString();
+                            }
+                            if (map.containsKey("deathYear")) {
+                                displayLine1 += "-" +map.get("deathYear").toString();
+                            }
+                        }
+                        if (map.containsKey("nationality")) {
+                            if (map.get("nationality").getClass() == String.class) {
+                                displayLine2 = map.get("nationality").toString();
+                            } else if (map.get("nationality").getClass() == ArrayList.class) {
+                                displayLine2 = StringUtils.join((ArrayList) map.get("nationality"), ", ");
+                            }
+                        }
+                        break;
+                    case "Corporation":
+                        displayLine1 = map.getOrDefault("name", "").toString();
+                        if (map.containsKey("subdivision")) {
+                            displayLine1 += ". " +  map.get("subdivision").toString();
+                        }
+                        if (map.containsKey("specification")) {
+                            displayLine1 += " (" +  map.get("specification").toString() + ")";
+                        }
+                        if (map.containsKey("placePrefLabel")) {
+                            displayLine1 += ". " +  map.get("placePrefLabel").toString();
+                        }
+                        break;
+                    case "Event":
+                        displayLine1 = map.getOrDefault("prefLabel", "").toString();
+                        if (map.containsKey("ordinal")) {
+                            displayLine1 += " " +  map.get("ordinal").toString();
+                        }
+                        if (map.containsKey("date")) {
+                            displayLine1 += ". " +  map.get("date").toString();
+                        }
+                        if (map.containsKey("placePrefLabel")) {
+                            displayLine1 += ", " +  map.get("placePrefLabel").toString();
+                        }
+                        if (map.containsKey("placeSpecification")) {
+                            displayLine1 += " (" +  map.get("placeSpecification").toString() + ")";
+                        }
+                              if (map.containsKey("specification")) {
+                            displayLine1 += " (" +  map.get("specification").toString() + ")";
+                        }
+                        break;
+                    case "Serial":
+                        displayLine1 = map.getOrDefault("serialMainTitle", "").toString();
+                        if (map.containsKey("subtitle")) {
+                            displayLine1 += " : " +  map.get("subtitle").toString();
+                        }
+                        if (map.containsKey("partNumber")) {
+                            displayLine1 += ". " +  map.get("partNumber").toString();
+                        }
+                        if (map.containsKey("partTitle")) {
+                            displayLine1 += ". " +  map.get("partTitle").toString();
+                        }
+                        if (map.containsKey("publishedByName")) {
+                            displayLine1 += " (" +  map.get("publishedByName").toString() + ")";
+                        }
+                        break;
+                    case "WorkSeries":
+                        displayLine1 = map.getOrDefault("workSeriesMainTitle", "").toString();
+                        if (map.containsKey("subtitle")) {
+                            displayLine1 += " : " +  map.get("subtitle").toString();
+                        }
+                        if (map.containsKey("partNumber")) {
+                            displayLine1 += ". " +  map.get("partNumber").toString();
+                        }
+                        if (map.containsKey("partTitle")) {
+                            displayLine1 += ". " +  map.get("partTitle").toString();
+                        }
+                        break;
+                    case "Subject":
+                    case "Genre":
+                    case "Instrument":
+                    case "CompositionType":
+                    case "Place":
+                        displayLine1 = map.getOrDefault("prefLabel", "").toString();
+                        if (map.containsKey("specification")) {
+                            displayLine1 += " (" +  map.get("specification").toString() + ")";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if (displayLine1.length() > 0) {
+                    map.put("displayLine1", displayLine1);
+                }
+                if (displayLine2.length() > 0) {
+                    map.put("displayLine2", displayLine2);
+                }
+                map.remove("type");
+            }
+
             if (map.containsKey("uri") && map.get("uri").toString().startsWith("_:")) {
                 map.remove("uri");
             }

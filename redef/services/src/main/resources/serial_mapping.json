@@ -33,6 +33,9 @@
       "issn": {
         "type": "text",
         "analyzer": "isbn_analyzer"
+      },
+      "displayLine1": {
+        "type": "keyword"
       }
     }
   }

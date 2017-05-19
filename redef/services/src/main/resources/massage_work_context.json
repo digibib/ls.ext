@@ -51,6 +51,7 @@
     "workTypeLabel": "deichman:workTypeLabel",
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
-    "mainEntryName": "deichman:mainEntryName"
+    "mainEntryName": "deichman:mainEntryName",
+    "litform": "deichman:literaryForm"
   }
 }

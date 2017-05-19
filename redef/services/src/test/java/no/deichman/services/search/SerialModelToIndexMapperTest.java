@@ -77,6 +77,7 @@ public class SerialModelToIndexMapperTest extends ModelToIndexMapperTestSupport 
                 + "  \"partTitle\": \"Sinne\","
                 + "  \"partNumber\": \"12\","
                 + "  \"issn\": \"1234-5678\","
+                + "  \"displayLine1\": \"Blå Lanterne : Følelser i sentrum. 12. Sinne (" + getPublishedByName() + ")\","
                 + (withAlternativePublisherName ? "  \"publishedByAlternativeName\": \"" + getPublishedByAlternativeName() + "\"," : "")
                 + (withAlternativePublisherName ? "  \"publishedByPlaceAlternativeName\": \"" + getPlaceAlternativeName() + "\"" : "")
                 + "}").allowingAnyArrayOrdering());
