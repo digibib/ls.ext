@@ -151,7 +151,7 @@ class Search extends React.Component {
           : null}
         {this.props.totalHits > 0
           ? <div className="search-wrapper">
-              <SearchResultsSettings />
+              <SearchResultsSettings searchActions={this.props.searchActions} />
               <SearchFilters key="search_filters"
                              filters={this.props.filters}
                              locationQuery={this.props.location.query}

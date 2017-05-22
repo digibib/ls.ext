@@ -368,6 +368,11 @@ class SearchResult extends React.Component {
     }
   }
 
+  shouldShowFullList () {
+    const { locationQuery: { showFullList } } = this.props
+    return (showFullList === null)
+  }
+
   shouldShowStatus () {
     const { locationQuery: { showStatus }, result: { id } } = this.props
     return (showStatus && showStatus === id || (Array.isArray(showStatus) && showStatus.includes(id)))
@@ -400,7 +405,7 @@ class SearchResult extends React.Component {
 
     // Contains two arrays: one array for filtered branches and one array for branches excluded from filter criteria
     const groupedByBranchAndMedia = this.getResultItems()
-
+    // console.log('shouldShowFullList', this.shouldShowFullList())
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -412,13 +417,16 @@ class SearchResult extends React.Component {
         className="single-entry"
         data-formats={formats.join(', ')}>
         <div className="entry-header">
-          <aside className="book-cover" aria-hidden="true">
-            <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
-              {result.image ? <img src={result.image} alt={coverAltText} />
-                : <i aria-label={missingCoverAltText}
-                     className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
-            </Link>
-          </aside>
+          {this.shouldShowFullList()
+            ? <aside className="book-cover" aria-hidden="true">
+              <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
+                {result.image ? <img src={result.image} alt={coverAltText} />
+                  : <i aria-label={missingCoverAltText}
+                       className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
+                       </Link>
+            </aside>
+            : null
+          }
 
           <article className="entry-content">
 
@@ -437,9 +445,10 @@ class SearchResult extends React.Component {
               ? <p className="abstract">{result.publication.abstract}</p>
               : null
             }
-
-            {this.renderSubjects(result.publication)}
-            {this.renderGenres(result.publication)}
+            {this.shouldShowFullList()
+              ? (this.renderSubjects(result.publication), this.renderGenres(result.publication))
+              : null
+            }
           </article>
         </div>
         {this.shouldShowStatus()
