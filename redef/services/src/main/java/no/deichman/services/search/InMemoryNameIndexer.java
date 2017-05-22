@@ -2,9 +2,6 @@ package no.deichman.services.search;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.sparql.core.Var;
-import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.io.Reader;
 import java.text.Collator;
@@ -68,14 +65,11 @@ public class InMemoryNameIndexer implements NameIndexer {
         sort();
     }
 
-    public InMemoryNameIndexer(ResultSet resultSet) {
+    public InMemoryNameIndexer(Map<String, String> labelToURI) {
         this();
-        while (resultSet.hasNext()) {
-            Binding binding = resultSet.nextBinding();
-            String uri = binding.get(Var.alloc("uri")).getURI();
-            String name = binding.get(Var.alloc("name")).getLiteral().toString();
-            alphabeticalList.add(new NameEntry(uri, name));
-            rememberUriToName(uri, name);
+        for (Map.Entry<String, String> entry : labelToURI.entrySet()) {
+            alphabeticalList.add(new NameEntry(entry.getKey(), entry.getValue()));
+            rememberUriToName(entry.getKey(), entry.getValue());
         }
         sort();
     }

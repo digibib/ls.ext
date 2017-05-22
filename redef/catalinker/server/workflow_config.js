@@ -1600,7 +1600,8 @@ module.exports = (app) => {
             type: 'person',
             sortedListQueryForField: 'name',
             selectIndexLabel: 'personLabel',
-            resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear,', 'nationality.fragment.' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
+            resultItemLabelProperties2: [ 'displayLine2' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
             scrollToMiddleOfResultSet: true
@@ -1609,16 +1610,15 @@ module.exports = (app) => {
             type: 'subject',
             sortedListQueryForField: 'prefLabel',
             selectIndexLabel: 'generalSubjectLabel',
-            resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
           work: {
             type: 'work',
             structuredQuery: true,
             selectIndexLabel: 'workLabel',
-            resultItemLabelProperties: [ 'creator', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
-            resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
-            resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
+            resultItemLabelProperties2: [ 'displayLine2' ],
             linkFromUri: {
               regExp: '^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$',
               replacement: 'http://sok.deichman.no/work/$1',
@@ -1630,9 +1630,8 @@ module.exports = (app) => {
             type: 'work',
             selectIndexLabel: 'workLabel',
             legend: 'searchWorkLegend',
-            resultItemLabelProperties: [ 'creator', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
-            resultItemLabelProperties2: [ 'partNumber.', 'partTitle' ],
-            resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
+            resultItemLabelProperties2: [ 'displayLine2' ],
             linkFromUri: {
               regExp: '^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$',
               replacement: 'http://sok.deichman.no/work/$1',
@@ -1644,14 +1643,14 @@ module.exports = (app) => {
             type: 'genre',
             selectIndexLabel: 'genreLabel',
             sortedListQueryForField: 'prefLabel',
-            resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
           corporation: {
             type: 'corporation',
             selectIndexLabel: 'corporationLabel',
             sortedListQueryForField: 'name',
-            resultItemLabelProperties: [ 'name.', 'subdivision', '(specification)', 'placePrefLabel' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
 //          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
             scrollToMiddleOfResultSet: true
           },
@@ -1659,15 +1658,15 @@ module.exports = (app) => {
             type: 'place',
             selectIndexLabel: 'placeLabel',
             sortedListQueryForField: 'prefLabel',
-            resultItemLabelProperties: [ 'prefLabel', '(specification)' ],
-            resultItemDetailsLabelProperties: [ 'alternativeName' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
+            //resultItemDetailsLabelProperties: [ 'alternativeName' ],
             scrollToMiddleOfResultSet: true
           },
           event: {
             type: 'event',
             selectIndexLabel: 'eventLabel',
             sortedListQueryForField: 'prefLabel',
-            resultItemLabelProperties: [ 'prefLabel', '(ordinal).', 'placePrefLabel,', 'date' ], // prefLabel (ordinal). place, date
+            resultItemLabelProperties: [ 'displayLine1' ],
 //          resultItemDetailsLabelProperties: [ 'placePrefLabel', 'inParens:placeAlternativeName', 'specification' ]
             scrollToMiddleOfResultSet: true
           },
@@ -1675,15 +1674,16 @@ module.exports = (app) => {
             type: 'serial',
             selectIndexLabel: 'serialLabel',
             sortedListQueryForField: 'serialMainTitle',
-            resultItemLabelProperties: [ 'serialMainTitle:', 'subtitle' ],
-            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
+            //resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ],
             scrollToMiddleOfResultSet: true
           },
           publication: {
             type: 'publication',
             selectIndexLabel: 'publication',
             legend: 'searchPublicationLegend',
-            resultItemLabelProperties: [ 'creator', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ,'publicationYear', 'recordIdPrefixed' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
+            resultItemLabelProperties2: [ 'displayLine2' ],
             itemHandler: 'publicationItemHandler'
           },
           instrument: {
@@ -1704,8 +1704,8 @@ module.exports = (app) => {
             type: 'workSeries',
             selectIndexLabel: 'workSeriesLabel',
             sortedListQueryForField: 'workSeriesMainTitle',
-            resultItemLabelProperties: [ 'workSeriesMainTitle:', 'subtitle' ],
-            resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ],
+            resultItemLabelProperties: [ 'displayLine1' ],
+            //resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ],
             scrollToMiddleOfResultSet: true
           }
         },

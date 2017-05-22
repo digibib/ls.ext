@@ -2199,7 +2199,7 @@
             items: items,
             origin: event.keypath,
             searchTerm: searchString,
-            highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 - 1 : 0
+            highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? highestScoreIndex-1 : false
           })
           positionSupportPanels()
         })

@@ -3,7 +3,6 @@ package no.deichman.services.entity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.circulation.CirculationObject;
 import no.deichman.services.circulation.CirculationProfile;
 import no.deichman.services.circulation.ExpandedRecord;
@@ -22,9 +21,6 @@ import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
-import no.deichman.services.search.InMemoryNameIndexer;
-import no.deichman.services.search.NameEntry;
-import no.deichman.services.search.NameIndexer;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -79,7 +75,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
-import static no.deichman.services.search.SearchServiceImpl.LOCAL_INDEX_SEARCH_FIELDS;
 import static no.deichman.services.uridefaults.BaseURI.ontology;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -141,7 +136,6 @@ public final class EntityServiceImpl implements EntityService {
 
     private final String nonfictionResource = "http://data.deichman.no/fictionNonfiction#nonfiction";
     private final String fictionResource = "http://data.deichman.no/fictionNonfiction#fiction";
-    private static Map<EntityType, NameIndexer> nameIndexers = new HashMap<EntityType, NameIndexer>();
 
     public EntityServiceImpl(RDFRepository repository, KohaAdapter kohaAdapter) {
         this.repository = repository;
@@ -473,8 +467,6 @@ public final class EntityServiceImpl implements EntityService {
         }
         List<Patch> patches = PatchParser.parse(ldPatchJson);
         repository.patch(patches, createResource(xuri.getUri()));
-        patches.stream().filter(patch -> patch.getOperation().equals("del") && isNameStatement(patch.getStatement(), LOCAL_INDEX_SEARCH_FIELDS))
-                .forEach(patch -> removeIndexedName(xuri.getTypeAsEntityType(), patch.getStatement().getString(), xuri.getUri()));
         return synchronizeKoha(xuri);
     }
 
@@ -735,11 +727,6 @@ public final class EntityServiceImpl implements EntityService {
         return repository.retrievedResourcesConnectedTo(xuri);
     }
 
-    @Override
-    public Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width) {
-        return getNameIndexer(type).neighbourhoodOf(name, width);
-    }
-
     public StmtIterator statementsInModelAbout(final XURI xuri, final Model indexModel, final String... possibleNamePredicates) {
         return indexModel.listStatements(new SimpleSelector() {
             @Override
@@ -950,11 +937,6 @@ public final class EntityServiceImpl implements EntityService {
         repository.mergeResource(xuri, replaceeUri);
     }
 
-    @Override
-    public void removeFromLocalIndex(XURI xuri) {
-        getNameIndexer(xuri.getTypeAsEntityType()).removeUri(xuri.getUri());
-    }
-
     private boolean isAboutRelevantType(Statement s, Model model, XURI xuri) {
         return model.contains(s.getSubject(), RDF.type, ResourceFactory.createResource(ontology(xuri.getTypeAsEntityType().getRdfType())));
     }
@@ -963,27 +945,6 @@ public final class EntityServiceImpl implements EntityService {
         return stream(predicates).anyMatch(p -> s.getPredicate().equals(ResourceFactory.createResource(p)));
     }
 
-    private NameIndexer getNameIndexer(EntityType type) {
-        NameIndexer nameIndexer = nameIndexers.get(type);
-        if (nameIndexer == null) {
-            log.info("Creating local index for " + type);
-            long start = System.currentTimeMillis();
-            ResultSet resultSet = repository.retrieveAllNamesOfType(type);
-            nameIndexer = (NameIndexer) MonProxyFactory.monitor(new InMemoryNameIndexer(resultSet));
-            if (!nameIndexer.isEmpty()) {
-                nameIndexers.put(type, nameIndexer);
-            }
-            log.info(String.format("Created local index for %s with %d entries in %d msec", type, nameIndexer.size(), System.currentTimeMillis() - start));
-        }
-        return nameIndexer;
-    }
 
-    @Override
-    public void addIndexedName(EntityType type, String name, String uri) {
-        getNameIndexer(type).addNamedItem(name, uri);
-    }
 
-    private void removeIndexedName(EntityType type, String name, String uri) {
-        getNameIndexer(type).removeNamedItem(name, uri);
-    }
 }

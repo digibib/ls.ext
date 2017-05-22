@@ -1,7 +1,6 @@
 package no.deichman.services.entity;
 
 import no.deichman.services.circulation.CirculationProfile;
-import no.deichman.services.search.NameEntry;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -59,17 +58,11 @@ public interface EntityService {
 
     Set<String> retrieveResourcesConnectedTo(XURI xuri);
 
-    Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width);
-
     List<RelationshipGroup> retrieveResourceRelationships(XURI uri);
-
-    void addIndexedName(EntityType type, String name, String uri);
 
     StmtIterator statementsInModelAbout(XURI xuri, Model indexModel, String... predicates);
 
     void mergeResource(XURI xuri, XURI replaceeUri);
-
-    void removeFromLocalIndex(XURI xuri);
 
     List<XURI> retrieveResourceRelationshipsUris(XURI uri);
 
@@ -78,4 +71,5 @@ public interface EntityService {
     List<ResourceSummary> retrieveInverseRelations(XURI xuri, String predicate, List<String> projections);
 
     void deleteIncomingRelations(XURI xuri);
+
 }
