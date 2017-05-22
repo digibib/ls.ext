@@ -2,7 +2,7 @@
     {{#targetUri.Work}}
     <div class="pure-u-1">
         <a tabindex="0" data-automation-id="work_page_link" target="_blank"
-           href="{{'http://sok.deichman.no/work' + targetUri.Work.substring(targetUri.Work.lastIndexOf('/'))}}">{{>showWorkPageLink}}</a>
+           href="{{'http://deichman3.deichman.no:8000/work' + targetUri.Work.substring(targetUri.Work.lastIndexOf('/'))}}">{{>showWorkPageLink}}</a>
     </div>
     <div class="pure-u-1">
         <a tabindex="0" data-automation-id="show_work_rdf" on-click="showRdf:{{targetUri.Work}}" on-enter="showRdf:{{targetUri.Work}}">{{>showTURTLEForWorkLink}}</a>
@@ -11,7 +11,7 @@
     {{#targetUri.Publication}}
     <div class="pure-u-1">
         <a tabindex="0" data-automation-id="biblio_record_link" target="_blank"
-           href="https://intra.deichman.no/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
+           href="https://deichman3.deichman.no:8081/cgi-bin/koha/catalogue/detail.pl?biblionumber={{publicationId()}}"
            class="link">{{>showPublicationInKohaLink}}</a>
     </div>
     <div class="pure-u-1">
