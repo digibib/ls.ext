@@ -470,10 +470,10 @@ module.exports = (app) => {
                   parameterName: 'isbn',
                   automationId: 'searchValueSuggestions',
                   showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-                  sources: [ 'bibbi' ],
+                  sources: [ 'loc' ],
                   preferredSource: {
-                    id: 'bibbi',
-                    name: 'Biblioteksentralen'
+                    id: 'loc',
+                    name: 'Library Of Congress'
                   },
                   checkExistingResource: {
                     url: 'services/publication/isbn',
@@ -501,10 +501,10 @@ module.exports = (app) => {
                   parameterName: 'ean',
                   automationId: 'searchEanValueSuggestions',
                   showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-                  sources: [ 'bibbi' ],
+                  sources: [ 'loc' ],
                   preferredSource: {
-                    id: 'bibbi',
-                    name: 'Biblioteksentralen'
+                    id: 'loc',
+                    name: 'Library Of Congress'
                   },
                   checkExistingResource: {
                     url: 'services/publication',
