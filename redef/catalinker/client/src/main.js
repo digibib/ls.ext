@@ -512,7 +512,7 @@
     }
 
     function i18nLabelValue (label, lang) {
-      lang = lang || 'no'
+      lang = lang || 'en'
       if (ractive) {
         lang = ractive.get('applicationData.language') || lang
       }
@@ -2519,7 +2519,7 @@
 
         const initTranslations = function (applicationData) {
           applicationData.translations = translations
-          const language = (URI.parseQuery(URI.parse(document.location.href).query).language || 'no')
+          const language = (URI.parseQuery(URI.parse(document.location.href).query).language || 'en')
           applicationData.partials = applicationData.partials || {}
           applicationData.partials = _.extend(applicationData.partials, translations[ language ])
           applicationData.language = language
@@ -3235,7 +3235,7 @@
           // Initialize ractive component from template
           ractive = new Ractive({
             el: 'container',
-            lang: 'no',
+            lang: 'en',
             template: applicationData.template,
             events: {
               backspace: function (node, fire) {
@@ -4728,8 +4728,8 @@
 
         function initLanguages (applicationData) {
           $('#close-preview-button').text(applicationData.partials.close)
-          $('#home').attr('href', `/?language=${applicationData.language || 'no'}`)
-          $('html').attr('lang', applicationData.language || 'no')
+          $('#home').attr('href', `/?language=${applicationData.language || 'en'}`)
+          $('html').attr('lang', applicationData.language || 'en')
           return applicationData
         }
 
