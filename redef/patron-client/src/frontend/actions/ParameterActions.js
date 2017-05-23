@@ -1,5 +1,23 @@
 import { push, replace } from 'react-router-redux'
 
+export function toggleListParameter (queryParamName, inputLocationQuery) {
+  return (dispatch, getState) => {
+    const pathname = getState().routing.locationBeforeTransitions.pathname
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+
+    if (queryParamName === 'showFullList') {
+      delete locationQuery[ 'showList' ]
+      locationQuery[ 'showFullList' ] = null
+    }
+
+    if (queryParamName === 'showList') {
+      delete locationQuery[ 'showFullList' ]
+      locationQuery[ 'showList' ] = null
+    }
+    return dispatch(push({ pathname: pathname, query: locationQuery }))
+  }
+}
+
 export function toggleParameter (queryParamName, inputLocationQuery, shouldRemoveInBackString = false) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
@@ -107,6 +125,7 @@ export function ensureDefinedFiltersOpen (inputLocationQuery) {
     locationQuery[ 'showFilter' ] = [ 'language' ]
     locationQuery[ 'showFilter' ].push([ 'mediatype' ])
     locationQuery[ 'showFilter' ].push([ 'branch' ])
+    locationQuery[ 'showFullList' ] = null
 
     return dispatch(replace({ pathname: pathname, query: locationQuery }))
   }

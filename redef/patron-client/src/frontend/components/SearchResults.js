@@ -3,6 +3,7 @@ import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import SearchResult from './SearchResult'
 import Constants from '../constants/Constants'
+import SearchResultsSettings from '../components/SearchResultsSettings'
 
 import SearchResultsText from '../components/SearchResultsText'
 
@@ -27,10 +28,16 @@ class SearchResults extends React.Component {
         component="section"
         id="main-search-content"
         className="search-results">
-        <SearchResultsText
-          totalHits={this.props.totalHits}
-          locationQuery={this.props.locationQuery}
-        />
+        <div className="search-results-header-flex">
+          <SearchResultsText
+            totalHits={this.props.totalHits}
+            locationQuery={this.props.locationQuery}
+          />
+          <SearchResultsSettings
+            searchActions={this.props.searchActions}
+            locationQuery={this.props.locationQuery}
+          />
+        </div>
         <div data-automation-id="search-result-entries" className="search-results-list">
           {this.props.locationQuery.query
             ? this.props.searchResults.slice(from, to).map(result => (

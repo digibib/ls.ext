@@ -112,20 +112,6 @@ class SearchResult extends React.Component {
         </span>
       </div>
     )
-
-    // TOO: When series information is available ...
-    /*
-     return (
-     <div data-automation-id="publication_series">
-     <strong><FormattedMessage {...messages.partOfSeries} /></strong>
-     {publication.series.map((serie, i) => (
-     <span key={serie}>
-     <Link to={this.seriesSearchLink(serie)} onClick={this.scrollToTop}> {serie} </Link> {(i < series.length - 1) ? '|' : null}
-     </span>
-     ))}
-     </div>
-     )
-     */
   }
 
   getResultItems () {
@@ -382,6 +368,11 @@ class SearchResult extends React.Component {
     }
   }
 
+  shouldShowFullList () {
+    const { locationQuery: { showFullList } } = this.props
+    return (showFullList === null)
+  }
+
   shouldShowStatus () {
     const { locationQuery: { showStatus }, result: { id } } = this.props
     return (showStatus && showStatus === id || (Array.isArray(showStatus) && showStatus.includes(id)))
@@ -414,7 +405,7 @@ class SearchResult extends React.Component {
 
     // Contains two arrays: one array for filtered branches and one array for branches excluded from filter criteria
     const groupedByBranchAndMedia = this.getResultItems()
-
+    // console.log('shouldShowFullList', this.shouldShowFullList())
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -425,36 +416,41 @@ class SearchResult extends React.Component {
         component="div"
         className="single-entry"
         data-formats={formats.join(', ')}>
-        <aside className="book-cover" aria-hidden="true">
-          <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
-            {result.image ? <img src={result.image} alt={coverAltText} />
-              : <i aria-label={missingCoverAltText}
-                   className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
-          </Link>
-        </aside>
-
-        <article className="entry-content">
-
-          <div className="entry-content-icon">
-            <FormattedMessage {...messages.availableAs} />
-            {result.mediaTypes.map(mediaType => {
-              return <MediaType key={mediaType.uri} mediaType={mediaType} />
-            })}
-          </div>
-
-          {this.renderDisplayTitle(result)}
-          {this.renderContributors(result.publication.contributors)}
-          {this.renderOriginalTitle(result.publication)}
-          {/* this.renderSeries(result.publication) */}
-          {result.publication.abstract
-            ? <p className="abstract">{result.publication.abstract}</p>
+        <div className="entry-header">
+          {this.shouldShowFullList()
+            ? <aside className="book-cover" aria-hidden="true">
+              <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
+                {result.image ? <img src={result.image} alt={coverAltText} />
+                  : <i aria-label={missingCoverAltText}
+                       className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
+                       </Link>
+            </aside>
             : null
           }
 
-          {this.renderSubjects(result.publication)}
-          {this.renderGenres(result.publication)}
-        </article>
+          <article className="entry-content">
 
+            <div className="entry-content-icon">
+              <FormattedMessage {...messages.availableAs} />
+              {result.mediaTypes.map(mediaType => {
+                return <MediaType key={mediaType.uri} mediaType={mediaType} />
+              })}
+            </div>
+
+            {this.renderDisplayTitle(result)}
+            {this.renderContributors(result.publication.contributors)}
+            {this.renderOriginalTitle(result.publication)}
+            {/* this.renderSeries(result.publication) */}
+            {result.publication.abstract
+              ? <p className="abstract">{result.publication.abstract}</p>
+              : null
+            }
+            {this.shouldShowFullList()
+              ? (this.renderSubjects(result.publication), this.renderGenres(result.publication))
+              : null
+            }
+          </article>
+        </div>
         {this.shouldShowStatus()
           ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
                 <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
