@@ -27,6 +27,8 @@
     selectAll: 'Select all',
     by: 'by',
     selectThis: 'Select this',
+    showHideRelations: 'Show/hide relations',
+    selectWorkLabel: 'Catalogue publication of this work',
     autoNumber: 'Automatic numbering',
     searchWorkLegend: 'Search by title, main entry, work uri or work id',
     searchPublicationLegend: 'Search by title or record id',

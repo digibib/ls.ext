@@ -42,8 +42,8 @@
                                    tabindex="0"
                                    class="pure-u-1-24 search-result-item select-result-item" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
                                     {{#if !(uri===targetUri[rdfType])}}
-                                           on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
-                                           on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
+                                           on-enter="selectSearchableItem:{{this.uri}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
+                                           on-click="selectSearchableItem:{{this.uri}},{{origin}},{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}},{loadResourceForCompare: true}"
                                            title="{{>selectThis}}"
                                     {{else}}
                                            title="{{>cannotMergeWithSelf}}"
@@ -72,9 +72,9 @@
                                 <a id="{{'item-' + itemIndex + '-details-toggle'}}" tabindex="0"
                                    class="toggle-show-sub-items"
                                    data-next-sub-item="sub-item-{{itemIndex}}-0"
-                                   {{#config.search[selectedIndexType].subItemsExpandTooltip}}title="{{config.search[selectedIndexType].subItemsExpandTooltip}}"{{/}}
-                                   on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
-                                   on-enter="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
+                                   title="{{>showHideRelations}}"
+                                   on-click="toggleSubItem"
+                                   on-enter="toggleSubItem"
                                    {{#toggleSubItem}}
                                         on-downarrow="focusNextSubItem"
                                    {{else}}

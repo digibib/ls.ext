@@ -931,6 +931,7 @@ public final class EntityServiceImpl implements EntityService {
         ofNullable(querySolution.getLiteral("alternativeName")).ifPresent(relationship::setAlternativeName);
         ofNullable(querySolution.getResource("type")).ifPresent(relationship::setTargetType);
         ofNullable(querySolution.getResource("targetUri")).ifPresent(relationship::setTargetUri);
+        ofNullable(querySolution.getLiteral("isMainEntry")).ifPresent(relationship::setIsMainEntry);
         return relationship;
     }
 

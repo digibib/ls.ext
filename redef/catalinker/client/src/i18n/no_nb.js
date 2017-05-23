@@ -27,6 +27,8 @@
     selectAll: 'Velg alle',
     by: 'av',
     selectThis: 'Velg',
+    showHideRelations: 'Vis/skjul relasjoner',
+    selectWorkLabel: 'Katalogisér utgivelse av dette verket',
     autoNumber: 'Automatisk nummerering',
     searchWorkLegend: 'Søk etter tittel, hovedinnførsel, verksuri eller -id',
     searchPublicationLegend: 'Søk etter tittel eller tittelnummer',

@@ -1,19 +1,40 @@
 <div class="relations pure-u-1" as-relations="./uri">
-{{#if ./relations}}
+{{#if ./relations.length > 0}}
     <ul >
-        {{#each ./relations}}
+        {{#each ./relations:typeIndex}}
         <div class="type">
             <span class="type-label pure-u-11-12">{{invert(applicationData.allLabels[relationshipType])}}</span>
-            <a class="toggle-show-sub-items"
-               on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
-               on-enter="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
-            >{{#toggleSubItem}}&#x25B2;{{else}}&#x25BC;{{/toggleSubItem}}</a>
+            <a id="sub-item-{{itemIndex}}-{{typeIndex}}"
+               data-next-sub-item="sub-item-{{itemIndex}}-{{(typeIndex + 1)}}"
+               data-prev-sub-item="sub-item-{{itemIndex}}-{{(typeIndex - 1)}}"
+               class="toggle-show-sub-items"
+               on-click="toggleRelations"
+               on-enter="toggleRelations"
+               on-downarrow="focusNextSubItem"
+               on-uparrow="focusPrevSubItem:{{itemIndex}},{{typeIndex}}"
+               tabindex="-1"
+               class-turn="{{this.toggleRelations}}"
+            >&#x25BC;</a>
         </div>
-        {{#toggleSubItem}}
+        {{#this.toggleRelations}}
         <li >
             <ul >
-                {{#each relationships}}
+                {{#each relationships:subItemIndex}}
                 <li class="rel-entry">
+                    {{# widgetOptions.showSelectItem && .isMainEntry}}
+                    <span class="search-result-work-selector">
+                                        <input id="sub-item-{{itemIndex}}-{{typeIndex}}-{{(subItemIndex)}}"
+                                               data-next-sub-item="sub-item-{{itemIndex}}-{{typeIndex}}-{{(subItemIndex + 1)}}"
+                                               data-prev-sub-item="sub-item-{{itemIndex}}-{{typeIndex}}-{{(subItemIndex - 1)}}"
+                                               class="select-work-radio" type="radio" checked="{{isChecked}}"
+                                               on-click="selectSearchableItem:{{targetUri}},{{origin}},{{items[itemIndex].name}},{subItem: true}"
+                                               on-enter="selectSearchableItem:{{targetUri}},{{origin}},{{items[itemIndex].name}},{subItem: true}"
+                                               on-downarrow="focusNextSubItem"
+                                               on-uparrow="focusPrevSubItem:{{itemIndex}},{{typeIndex}},{{subItemIndex}}"
+                                               title="{{>selectWorkLabel}}"
+                                        />
+                                    </span>
+                    {{/}}
                     {{#if config.search[config.rdfTypeToIndexType[targetType]].linkFromUri}}
                     <a class="pure-u-1-1"
                        href="{{getLinkfromUri({uri: .targetUri}, config.search[config.rdfTypeToIndexType[targetType]].linkFromUri)}}"
@@ -32,10 +53,11 @@
                 {{/each}}
             </ul >
         </li >
-        {{/toggleSubItem}}
+        {{/toggleRelations}}
         {{/each}}
     </ul >
-{{else}}
+{{/if}}
+{{#if ./relations.length === 0}}
     <div>{{>noRelations}}</div>
 {{/if}}
 </div >

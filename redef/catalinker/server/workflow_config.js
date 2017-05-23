@@ -1233,7 +1233,6 @@ module.exports = (app) => {
                 reportFormat: {
                   separateLines: true
                 },
-                loadWorksAsSubjectOfItem: true,
                 authority: true, // this indicates it is an authorized entity
                 nameProperties: [ 'prefLabel', 'mainTitle:', 'subtitle', 'partNumber.', 'partTitle',
                   {
@@ -1604,7 +1603,6 @@ module.exports = (app) => {
             resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear,', 'nationality.fragment.' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
-            subItemsExpandTooltip: 'Vis/skjul verk',
             scrollToMiddleOfResultSet: true
           },
           subject: {
@@ -1640,8 +1638,7 @@ module.exports = (app) => {
               replacement: 'http://sok.deichman.no/work/$1',
               toolTip: 'Vis verket på publikumssiden'
             },
-            itemHandler: 'workItemHandler',
-            subItemsExpandTooltip: 'Vis/skjul utgivelser'
+            itemHandler: 'workItemHandler'
           },
           genre: {
             type: 'genre',
