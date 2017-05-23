@@ -4,7 +4,10 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import SearchResults, { __RewireAPI__ as DefaultExportSearchResultsRewireApi } from '../../src/frontend/components/SearchResults'
 import ReactDOM from 'react-dom'
+import {Provider} from 'react-redux'
 import { IntlProvider } from 'react-intl'
+import rootReducer from '../../src/frontend/reducers'
+import {createStore} from 'redux'
 
 function setup (propOverrides) {
   const props = {
@@ -12,18 +15,24 @@ function setup (propOverrides) {
     searchError: false,
     totalHits: 0,
     searchResults: [],
-    searchActions: { search: () => {} },
+    searchActions: {
+      search: () => {},
+      toggleListView: () => {}
+    },
     fetchWorkResource: () => {},
     resources: {},
     items: {},
     page: 1,
     ...propOverrides
   }
+  const store = createStore(rootReducer, { modal: props })
 
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale="en">
-      <SearchResults {...props} />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale="en">
+        <SearchResults {...props} />
+      </IntlProvider>
+    </Provider>
   )
 
   return {

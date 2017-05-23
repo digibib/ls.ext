@@ -3,7 +3,7 @@ import { push, replace } from 'react-router-redux'
 export function toggleListParameter (queryParamName, inputLocationQuery) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query}
+    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
 
     if (queryParamName === 'showFullList') {
       delete locationQuery[ 'showList' ]

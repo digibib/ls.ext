@@ -80,7 +80,7 @@ export function showBranchStatusMedia (branchCodeMedia) {
   return toggleParameterValue('showBranchStatusMedia', branchCodeMedia)
 }
 
-export function toggleListView (listParam){
+export function toggleListView (listParam) {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     dispatch(toggleListParameter(listParam, locationQuery))

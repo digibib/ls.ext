@@ -12,7 +12,10 @@ import {IntlProvider} from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
-    searchActions: { search: expect.createSpy() },
+    searchActions: {
+      search: expect.createSpy(),
+      toggleListView: () => {}
+    },
     searchResults: [],
     isSearching: false,
     dispatch: () => {},
