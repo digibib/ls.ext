@@ -1849,9 +1849,17 @@ module.exports = (app) => {
           'Emne': 'Som emne',
           'Utgivelse av': 'Har utgivelse',
           'Har delutgivelse': 'Utgitt som del',
+          'I serie': 'I samme serie',
+          'Del av verksserie': 'Andre verk i samme serie',
+          'Sjanger': 'Verk i samme sjanger',
+          'Utgivelsessted': 'Utgitt samme sted',
           'Subject': 'As subject',
           'Publication of': 'Published',
-          'Has publication part': 'Published as part'
+          'Has publication part': 'Published as part',
+          'In serial': 'In the same series',
+          'Part of work series': 'Other works in same series',
+          'Genre': 'I this genre',
+          'Place of publication': 'Published at this place'
         }
       }
     response.json(config)
