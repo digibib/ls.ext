@@ -71,6 +71,9 @@ final class Expectation {
     }
 
     private int getLoanPeriod(String itemType) {
+        if (itemType == null) {
+            return FOUR_WEEKS;
+        }
         int period;
         switch (itemType) {
             case "FILM":
