@@ -356,6 +356,7 @@ export default {
   'ValidationMessage.required': 'Feltet må fylles ut',
   'ValidationMessage.termsMustBeAccepted': 'Brukervilkårene må godkjennes',
   'ValidationMessage.toYearBeforeFromYear': 'År fra er større enn år til',
+  'Work.backToSearchResults': 'Tilbake til søkeresultat',
   'Work.labelOriginalReleaseDate': 'Utgitt første gang',
   'Work.labelRelation': 'Navn på relasjon',
   'Work.labelSeries': 'Inngår i serien',

@@ -145,7 +145,7 @@ class Work extends React.Component {
             ? (
             <header className="back-to-results">
               <Link to={this.props.location.query.back}>
-                <i className="icon-angle-double-left" aria-hidden="true" />Tilbake til søkeresultat
+                <i className="icon-angle-double-left" aria-hidden="true" /><FormattedMessage {...messages.backToSearchResults} />
               </Link>
             </header>
           ) : ''}
@@ -226,6 +226,11 @@ export const messages = defineMessages({
     id: 'Work.workInformation',
     description: 'The header text for the work information',
     defaultMessage: 'Work information'
+  },
+  backToSearchResults: {
+    id: 'Work.backToSearchResults',
+    description: 'Text for link taking you back to search results',
+    defaultMessage: 'Back to search results'
   }
 })
 
