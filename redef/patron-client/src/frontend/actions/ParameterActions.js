@@ -85,7 +85,7 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
 export function ensureOneBranchOpen (inputLocationQuery) {
   return (dispatch, getState) => {
     const pathname = getState().routing.locationBeforeTransitions.pathname
-    const locationQuery = inputLocationQuery || { ...getState().routing.locationBeforeTransitions.query }
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
     const searchResults = getState().search.searchResults
     locationQuery[ 'showBranchStatusSingle' ] = locationQuery[ 'showBranchStatusSingle' ] || []
     if (!Array.isArray(locationQuery[ 'showBranchStatusSingle' ])) {

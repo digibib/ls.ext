@@ -28,7 +28,11 @@ export function toggleFilterVisibility (aggregation) {
 }
 
 export function toggleAllFiltersVisibility () {
-  return toggleParameter('hideFilters')
+  // return toggleParameter('hideFilters')
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+    dispatch(toggleParameter('hideFilters', locationQuery))
+  }
 }
 
 export function toggleCollapseFilter (aggregation) {
