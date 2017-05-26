@@ -808,6 +808,7 @@ public final class SPARQLQueryBuilder {
                 + "    ?pubPart         a                        ?type ;\n"
                 + "                     deich:mainTitle          ?mainTitle ; \n"
                 + "                     bind(?withPubPart    as ?targetUri) . \n"
+                + "                     bind(true as ?isRole) . \n"
                 + "  } union {\n"
                 + "    ?pubPart         deich:publicationOf      <%3$s> .\n"
                 + "    ?withPubPart     deich:hasPublicationPart ?pubPart ;\n"
