@@ -18,6 +18,7 @@ public final class Relationship {
     private String alternativeName;
     private String targetUri;
     private Boolean isMainEntry;
+    private Boolean isRole;
 
     public String getRelationshipType() {
         return relationshipType;
@@ -105,5 +106,13 @@ public final class Relationship {
 
     public Boolean isMainEntry() {
         return isMainEntry;
+    }
+
+    public void setIsRole(Literal resource) {
+        this.isRole = resource.getBoolean();
+    }
+
+    public Boolean isRole() {
+        return isRole;
     }
 }

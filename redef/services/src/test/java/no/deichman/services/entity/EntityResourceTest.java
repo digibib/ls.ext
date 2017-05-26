@@ -637,7 +637,7 @@ public class EntityResourceTest {
     }
 
     @Test
-    public void should_return_relations() throws Exception {
+    public void should_return_relations_for_person() throws Exception {
         entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("person_with_relations.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
         XURI xuri = new XURI("http://deichman.no/person/p1");
         Response result = entityResource.retriveResourceParticipations(xuri.getType(), xuri.getId());
@@ -661,7 +661,8 @@ public class EntityResourceTest {
                 + "        \"mainTitle\": \"Much ado about nothing\",\n"
                 + "        \"subtitle\": \"Hey nonny nonny\",\n"
                 + "        \"targetType\": \"Publication\",\n"
-                + "        \"targetUri\": \"http://data.deichman.no/publication/p80002\"\n"
+                + "        \"targetUri\": \"http://data.deichman.no/publication/p80002\",\n"
+                + "        \"isRole\": true\n"
                 + "      }\n"
                 + "    ]\n"
                 + "  },\n"
@@ -673,7 +674,8 @@ public class EntityResourceTest {
                 + "        \"mainTitle\": \"Much ado about nothing\",\n"
                 + "        \"targetType\": \"Work\",\n"
                 + "        \"targetUri\": \"http://data.deichman.no/work/w1\",\n"
-                + "        \"isMainEntry\": true\n"
+                + "        \"isMainEntry\": true,\n"
+                + "        \"isRole\": true\n"
                 + "      }\n"
                 + "    ]\n"
                 + "  }\n"

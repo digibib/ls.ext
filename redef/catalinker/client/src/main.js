@@ -942,9 +942,14 @@
       }
     }
 
+    const memoizedTypeMap = _.memoize(function () {
+      return ractive.get('applicationData.config.typeMap')
+    })
+
     function typeFromUri (resourceUri) {
-      var typeMap = ractive.get('applicationData.config.typeMap')
-      return typeMap[ resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ] ]
+      const typeMap = memoizedTypeMap()
+      const allTypes = _.keys(typeMap).join('|')
+      return typeMap[ resourceUri.match(`^.*\/(${allTypes})\/.*$`)[ 1 ] ]
     }
 
     function getDisplayProperties (properties, valueFromPropertyFunc, type) {
@@ -3463,7 +3468,8 @@
               },
               translate (msgKey) {
                 return translate(msgKey)
-              }
+              },
+              typeFromUri
             },
             decorators: {
               repositionSupportPanel,

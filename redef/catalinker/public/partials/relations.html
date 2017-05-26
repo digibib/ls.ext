@@ -3,7 +3,12 @@
     <ul >
         {{#each ./relations:typeIndex}}
         <div class="type">
-            <span class="type-label pure-u-11-12">{{invert(applicationData.allLabels[relationshipType])}}</span>
+            <span class="type-label pure-u-11-12" title="{{relationshipType}}">
+                {{#if relationships[0].isRole}}
+                    {{>inverseRoleRelation applicationData.allLabels[relationshipType] as role}}
+                {{else}}
+                    {{>relationshipType + '_inverse' typeFromUri(../../uri) as subjectType}}
+                {{/if}}</span>
             <a id="sub-item-{{itemIndex}}-{{typeIndex}}"
                data-next-sub-item="sub-item-{{itemIndex}}-{{(typeIndex + 1)}}"
                data-prev-sub-item="sub-item-{{itemIndex}}-{{(typeIndex - 1)}}"
@@ -41,12 +46,12 @@
                        target="_blank"
                        title="{{config.search[targetType].linkFromUri.toolTip}}">
                         {{getSearchResultItemLabel(., config.relationTargetLabels[targetType])}}
-                        {{#targetType}}<span class="work-type" >({{>(targetType+'Label')}})</span >{{/}}
+                        {{#targetType && relationships[0].isRole}}<span class="work-type" >({{>(targetType+'Label')}})</span >{{/}}
                     </a >
                     {{else}}
                     <span class="pure-u-1-1" >
                         {{getSearchResultItemLabel(., config.relationTargetLabels[targetType])}}
-                        {{#targetType}}<span class="work-type" >({{>(targetType+'Label')}})</span >{{/}}
+                        {{#targetType && relationships[0].isRole}}<span class="work-type" >({{>(targetType+'Label')}})</span >{{/}}
                     </span >
                     {{/if}}
                 </li >
