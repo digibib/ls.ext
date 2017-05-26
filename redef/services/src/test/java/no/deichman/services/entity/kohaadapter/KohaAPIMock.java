@@ -2,7 +2,15 @@ package no.deichman.services.entity.kohaadapter;
 
 import com.github.restdriver.clientdriver.ClientDriverRequest;
 import com.github.restdriver.clientdriver.ClientDriverRule;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import no.deichman.services.circulation.ExpandedRecord;
+import no.deichman.services.circulation.Item;
+import no.deichman.services.circulation.Record;
 import no.deichman.services.testutil.PortSelector;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Rule;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -10,8 +18,10 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
@@ -37,6 +47,7 @@ public final class KohaAPIMock {
     private final int clientdriverPort = PortSelector.randomFree();
     private static final DateFormat KOHA_DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final DateFormat KOHA_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final Gson GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
     @Rule
     private final ClientDriverRule clientDriver = new ClientDriverRule(clientdriverPort);
@@ -113,7 +124,7 @@ public final class KohaAPIMock {
 
     public void addDeleteBibloExpectation(String biblioId) {
         clientDriver.addExpectation(
-                onRequestTo("api/v1/biblios/" + biblioId)
+                onRequestTo("/api/v1/biblios/" + biblioId)
                         .withMethod(DELETE)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveEmptyResponse().withStatus(OK.getStatusCode()));
@@ -122,18 +133,31 @@ public final class KohaAPIMock {
     public void addGetCheckoutsExpectation(String borrowerNumber, String responseJSON) {
 
         clientDriver.addExpectation(
-                onRequestTo("/api/v1/checkouts?borrowernumber=" + borrowerNumber)
+                onRequestTo("/api/v1/checkouts")
+                        .withParam("borrowernumber", borrowerNumber)
                         .withMethod(GET)
+                        .withHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(responseJSON, "application/json; charset=utf8")
         );
     }
 
-    public void addGetBiblioFromItemnumberExpectation(String itemNumber) {
+    public void addGetBiblioFromItemNumberExpectation(String itemNumber) {
         clientDriver.addExpectation(onRequestTo("/api/v1/items/" + itemNumber + "/biblio")
                         .withMethod(GET)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(generateBiblioResponseJson(itemNumber), "application/json; charset=utf8")
+        );
+    }
+
+    public void addGetBiblioFromItemNumberExpectation(String itemNumber, String recordNumber, String title) {
+        String[] items = {itemNumber};
+        String responseJson = generateBiblioResponseJson(recordNumber, title, false);
+        clientDriver.addExpectation(onRequestTo("/api/v1/items/" + itemNumber + "/biblio")
+                        .withMethod(GET)
+                        .withHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                giveResponse(responseJson, "application/json; charset=utf8")
         );
     }
 
@@ -162,6 +186,16 @@ public final class KohaAPIMock {
 
     private String generateRandomID() {
         return String.valueOf(ThreadLocalRandom.current().nextInt(ORIGIN, BOUND));
+    }
+
+    public String generateBiblioResponseJson(String recordNumber, String title, boolean expiditedUser) {
+        Record record = new Record();
+        record.setTitle(title);
+        record.setId(recordNumber);
+        record.setBehindExpiditedUser(expiditedUser);
+
+        return GSON.toJson(record, Record.class);
+
     }
 
     public String generateBiblioResponseJson(String recordNumber) {
@@ -252,6 +286,7 @@ public final class KohaAPIMock {
                 recordNumber,
                 KOHA_DATE_FORMAT.format(getDate(0)));
     }
+
     private Date getDate(int addDays) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now().toDate());
@@ -306,5 +341,60 @@ public final class KohaAPIMock {
                 + "  \"biblionumber\": \"%4$s\"\n"
                 + "}]"
                 + "", userId, generateRandomID(), recordId1, recordId2);
+    }
+
+    public String generateBiblio(String recordNumber, String type) {
+        return GSON.toJson(RandomRecord.populateRandom(recordNumber, false, 1));
+    }
+
+    public String generateBiblioExpanded(String recordNumber, String type, boolean zeroUser, int numberOfItems, int numberOfHolds, boolean oneLoanedToMe) throws Exception {
+        Record record = RandomRecord.populateRandom(recordNumber, zeroUser, numberOfHolds);
+        ExpandedRecord apiResponse = new ExpandedRecord();
+        apiResponse.setLoanRecord(record);
+        List<Item> items = new ArrayList<>();
+        items.addAll(createItemsList(numberOfHolds, recordNumber, true, type));
+        int extraItems = numberOfItems - numberOfHolds;
+        if (extraItems > 0) {
+            items.addAll(createItemsList(extraItems, recordNumber, false, type));
+        } else if (extraItems < 0) {
+            throw new Exception("You have specified more holds than there are items");
+        }
+        apiResponse.setItems(items);
+        return GSON.toJson(apiResponse);
+    }
+
+    public String generateBiblioExpanded(String recordNumber, String type, boolean zeroUser, int numberOfItems, int numberOfHolds) throws Exception {
+        return generateBiblioExpanded(recordNumber, type, zeroUser, numberOfItems, numberOfHolds, false);
+    }
+
+    public String generateBiblioExpandedWithOneItemLoanedToMe(String recordNumber, String type, boolean zeroUser, int numberOfItems, int numberOfHolds) throws Exception {
+        return generateBiblioExpanded(recordNumber, type, zeroUser, numberOfItems, numberOfHolds, true);
+    }
+
+    private List<Item> createItemsList(int numberOfItems, String recordNumber, boolean onLoan, String type) {
+
+        String returnDate = null;
+        if (onLoan) {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+            returnDate = dateTimeFormatter.print(new DateTime().plusDays(28));
+        }
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < numberOfItems; i++) {
+            Item item = ItemStubber.generateRandom(recordNumber, type, returnDate, 1);
+            items.add(item);
+        }
+        return items;
+    }
+
+    public void addGetHoldsExpectation(String borrowerNumber, String responseJSON) {
+
+        clientDriver.addExpectation(
+                onRequestTo("/api/v1/holds")
+                        .withParam("borrowernumber", borrowerNumber)
+                        .withMethod(GET)
+                        .withHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
+                giveResponse(responseJSON, "application/json; charset=utf8")
+        );
     }
 }

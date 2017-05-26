@@ -89,7 +89,13 @@ public final class KohaAdapterImpl implements KohaAdapter {
         }
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.cookie(sessionCookie.toCookie());
-        return invocationBuilder.get();
+        Response response = invocationBuilder.get();
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = invocationBuilder.get();
+        }
+        return response;
     }
 
     private Response requestExpandedBiblio(String id) {
@@ -204,6 +210,19 @@ public final class KohaAdapterImpl implements KohaAdapter {
     }
 
     @Override
+    public String getExpandedRecordFromItemNumber(String itemNumber) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/items/" + itemNumber + "/biblio/expanded");
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        Response response = invocationBuilder.get();
+        return response.readEntity(String.class);
+    }
+
+    @Override
     public String getCheckouts(String userId) {
         Response response = getCheckoutsFromAPI(userId);
         return response.readEntity(String.class);
@@ -217,7 +236,7 @@ public final class KohaAdapterImpl implements KohaAdapter {
 
     private Response getHoldsFromAPI(String userId) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(kohaPort + "/api/v1/holds/?borrowernumber=" + userId);
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/holds?borrowernumber=" + userId);
         if (sessionCookie == null) {
             login();
         }

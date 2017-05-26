@@ -539,7 +539,7 @@ end
 
 When(/^at reservasjonen får tilbakemelding om utsettelse$/) do
   wait_for {
-    @site.PatronClientLoansAndReservationsPage.queue_places.first.span.class_name.eql? "feedback"
+    @site.PatronClientLoansAndReservationsPage.suspend_messages.first.present?
   }
 end
 

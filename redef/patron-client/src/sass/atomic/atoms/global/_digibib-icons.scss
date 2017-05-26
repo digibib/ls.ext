@@ -32,7 +32,8 @@
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
-
+.icon-th-list:before { content: '\e819';}
+.icon-th:before { content: '\e80e'; }
 .icon-calendar:before { content: '\e800'; } /* '' */
 .icon-play:before { content: '\e801'; } /* '' */
 .icon-pause:before { content: '\e802'; } /* '' */

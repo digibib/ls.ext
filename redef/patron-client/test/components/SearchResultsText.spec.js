@@ -34,16 +34,6 @@ describe('components', () => {
       const { node } = setup()
       expect(node).toBe(null)
     })
-
-    // NB: not relevant anymore
-    /* it('should render message when searching', () => {
-      const { node } = setup({
-        locationQuery: { query: 'test_query' },
-        isSearching: true
-      })
-      expect(node.querySelector("[data-automation-id='is_searching']")).toNotEqual(null)
-    }) */
-
     it('should render search term and total hits when display is large enough', () => {
       const { node, props } = setup({
         locationQuery: { query: 'test_query' },

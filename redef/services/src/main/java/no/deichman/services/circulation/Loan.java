@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Responsibility: Container object for loans.
  */
-public class Loan extends CirculationObjectBase {
+public final class Loan extends CirculationObjectBase {
 
     @Expose
     @SerializedName(value = "itemNumber", alternate = "itemnumber")
@@ -29,7 +29,15 @@ public class Loan extends CirculationObjectBase {
     @SerializedName("issuedate")
     private String issueDate;
 
-    public final String getItemNumber() {
+    public String getItemNumber() {
         return itemNumber;
+    }
+
+    public void setItemNumber(String itemNumber) {
+        this.itemNumber = itemNumber;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 }

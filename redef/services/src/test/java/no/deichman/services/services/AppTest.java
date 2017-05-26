@@ -3,6 +3,7 @@ package no.deichman.services.services;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -11,6 +12,11 @@ import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import no.deichman.services.App;
+import no.deichman.services.circulation.ExpandedRecord;
+import no.deichman.services.circulation.Item;
+import no.deichman.services.circulation.RawHold;
+import no.deichman.services.circulation.RawLoan;
+import no.deichman.services.circulation.Record;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.entity.kohaadapter.KohaAPIMock;
@@ -18,9 +24,11 @@ import no.deichman.services.entity.repository.InMemoryRepository;
 import no.deichman.services.entity.z3950.MappingTester;
 import no.deichman.services.entity.z3950.Z3950ServiceMock;
 import no.deichman.services.ontology.AuthorizedValue;
+import no.deichman.services.rdf.MediaType;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.services.search.EmbeddedElasticsearchServer;
 import no.deichman.services.testutil.PortSelector;
+import no.deichman.services.testutil.RandomisedData;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import no.deichman.services.utils.ResourceReader;
@@ -33,6 +41,9 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.system.JenaSystem;
 import org.apache.jena.vocabulary.RDFS;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -74,6 +85,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class AppTest {
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
     private static final int ONE_SECOND = 1000;
     private static final int TEN_TIMES = 10;
     private static final boolean SHOULD_NOT_FIND = true;
@@ -1115,6 +1127,10 @@ public class AppTest {
     }
 
     private void setupExpectationForMarcXmlSentToKoha(String creator, String title, String isbn, String publicationYear) {
+        setupExpectationForMarcXmlSentToKoha(creator, title, isbn, publicationYear, FIRST_BIBLIO_ID);
+    }
+
+    private void setupExpectationForMarcXmlSentToKoha(String creator, String title, String isbn, String publicationYear, String recordId) {
         // TODO MARC XML can end up in any order, need a better comparison method for expected MARC XML
         String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
@@ -1128,7 +1144,7 @@ public class AppTest {
                 + "<marcxml:datafield tag=\"260\" ind1=\" \" ind2=\" \">"
                 + "<marcxml:subfield code=\"c\">" + publicationYear + "</marcxml:subfield></marcxml:datafield>"
                 + "</marcxml:record></marcxml:collection>\n";
-        kohaAPIMock.addCreateNewBiblioFromMarcXmlExpectation(FIRST_BIBLIO_ID, expectedPayload);
+        kohaAPIMock.addCreateNewBiblioFromMarcXmlExpectation(recordId, expectedPayload);
     }
 
     @Test
@@ -1404,7 +1420,7 @@ public class AppTest {
         HttpResponse<String> mergeResponse = Unirest
                 .put(appURI + mergeResponseXuri.getType() + "/" + mergeResponseXuri.getId() + "/merge")
                 .header("Content-type", "application/json")
-                .body("{\"replacce\": \"" + getLocation(response2) + "\"}")
+                .body("{\"replacce\": \"" + getLocation(response2) + "\"}") //Deliberately misspelt
                 .asString();
 
         assertEquals(BAD_REQUEST.getStatusCode(), mergeResponse.getStatus());
@@ -1456,5 +1472,165 @@ public class AppTest {
             c++;
         }
         return false;
+    }
+
+    @Test
+    public void test_circulation_response() throws Exception {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String borrowerId = RandomisedData.randomNumericID();
+        String recordId = RandomisedData.randomNumericID();
+
+        DateTime now = new DateTime();
+        String creator = "Farenheit, Little Jimmy";
+        String workTitle = "The unbearable armness of 4";
+        String publicationTitle = "Den uutholdelig armhet av 4";
+        String partTitle = "Vondt i beinet";
+        String partNumber = "1";
+        String isbn = "978-3-16-148410-0";
+        String publicationYear = RandomisedData.randomYear();
+
+        String marcTitle = publicationTitle + ". " + partNumber + ". " + partTitle;
+        setupExpectationForMarcXmlSentToKoha(creator, marcTitle, isbn, publicationYear, recordId);
+        kohaAPIMock.addLoginExpectation();
+
+        String personUri = createPersonInRdfStore(creator, BaseURI.ontology());
+        String workUri = createWorkInRdfStore(workTitle, BaseURI.ontology(), personUri);
+
+        String publicationTriples = ""
+                + "<http://data.deichman.no/publication/p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <" + BaseURI.ontology("Publication") + "> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("mainTitle") + "> \"" + publicationTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partTitle") + "> \"" + partTitle + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationOf") + "> <__WORKURI__> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("hasMediaType") + "> <" + MediaType.BOOK + "> .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("partNumber") + "> \"" + partNumber + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("isbn") + "> \"" + isbn + "\" .\n"
+                + "<http://data.deichman.no/publication/p1> <" + BaseURI.ontology("publicationYear") + "> \"" + publicationYear + "\" .\n";
+
+        HttpResponse<JsonNode> createPublicationResponse = buildCreateRequestNtriples(appURI + "publication", publicationTriples.replace("__WORKURI__", workUri)).asJson();
+
+        assertEquals(201, createPublicationResponse.getStatus());
+
+        String publicationUri = getLocation(createPublicationResponse);
+        final HttpResponse<JsonNode> getPublication = buildGetRequest(resolveLocally(publicationUri)).asJson();
+
+        ArrayList<RawLoan> loans = new ArrayList<>();
+        RawLoan rawLoan = createMockRawLoan(borrowerId, now, 28);
+        loans.add(rawLoan);
+
+        int queuePlace = 3;
+
+        ArrayList<RawHold> holds = new ArrayList<>();
+        RawHold rawHold = createMockRawHold(borrowerId, queuePlace, recordId, now, false);
+        holds.add(rawHold);
+
+        Record record = new Record();
+        record.setBehindExpiditedUser(false);
+        record.setId(recordId);
+        record.setTitle(marcTitle);
+
+        Item item = RandomisedData.randomBorrowedItem(RandomisedData.randomNumericID(), recordId, 28);
+        List<Item> items = new ArrayList<>();
+        items.add(item);
+
+        ExpandedRecord expandedRecord = new ExpandedRecord();
+        expandedRecord.setItems(items);
+        expandedRecord.setLoanRecord(record);
+
+        String loansJson = gson.toJson(loans, new TypeToken<List<RawLoan>>(){}.getType());
+        String holdsJson = gson.toJson(holds, new TypeToken<List<RawHold>>(){}.getType());
+        String expandedHolds = gson.toJson(expandedRecord, ExpandedRecord.class);
+        kohaAPIMock.addLoginExpectation();
+        kohaAPIMock.addGetCheckoutsExpectation(borrowerId, loansJson);
+        kohaAPIMock.addGetHoldsExpectation(borrowerId, holdsJson);
+        kohaAPIMock.addGetBiblioFromItemNumberExpectation(rawLoan.getItemNumber(), recordId, marcTitle);
+        kohaAPIMock.addGetBiblioExpandedExpectation(recordId, expandedHolds);
+
+        HttpResponse<String> responseWork1 = Unirest.get(appURI + "circulation/" + borrowerId).asString();
+
+        String expected = "{\n"
+                + "  \"loans\": [\n"
+                + "    {\n"
+                + "      \"itemNumber\": \"" + rawLoan.getItemNumber() + "\",\n"
+                + "      \"dueDate\": \"" + rawLoan.getDueDate() + "\",\n"
+                + "      \"recordId\": \"" + recordId + "\",\n"
+                + "      \"workURI\": \"" + workUri + "\",\n"
+                + "      \"publicationURI\": \"" + publicationUri + "\",\n"
+                + "      \"publicationImage\": null,\n"
+                + "      \"contributor\": {\n"
+                + "        \"role\": \"http://data.deichman.no/role#author\",\n"
+                + "        \"agentUri\": \"" + personUri + "\",\n"
+                + "        \"contributorName\": \"" + creator + "\"\n"
+                + "      },\n"
+                + "      \"mediaType\": \"" + MediaType.BOOK + "\",\n"
+                + "      \"branchCode\": \"" + rawLoan.getBranchCode() + "\",\n"
+                + "      \"title\": \"" + marcTitle + "\",\n"
+                + "      \"publicationYear\": \"" + publicationYear + "\",\n"
+                + "      \"relativePublicationPath\": \"" + new XURI(workUri).getPath() + new XURI(publicationUri).getPath() + "\",\n"
+                + "      \"id\": \"" + rawLoan.getId() + "\"\n"
+                + "    }\n"
+                + "  ],\n"
+                + "  \"reservations\": [\n"
+                + "    {\n"
+                + "      \"suspended\": false,\n"
+                + "      \"queuePlace\": \"" + Integer.toString(queuePlace) + "\",\n"
+                + "      \"orderedDate\": null,\n"
+                + "      \"suspendUntil\": null,\n"
+                + "      \"estimatedWait\": {\n"
+                + "        \"pending\": false,\n"
+                + "        \"estimate\": 12,\n"
+                + "        \"error\": null\n"
+                + "      },\n"
+                + "      \"pickupNumber\": null,\n"
+                + "      \"recordId\": \"" + recordId + "\",\n"
+                + "      \"workURI\": \"" + workUri + "\",\n"
+                + "      \"publicationURI\": \"" + publicationUri + "\",\n"
+                + "      \"publicationImage\": null,\n"
+                + "      \"contributor\": {\n"
+                + "        \"role\": \"http://data.deichman.no/role#author\",\n"
+                + "        \"agentUri\": \"" + personUri + "\",\n"
+                + "        \"contributorName\": \"" + creator + "\"\n"
+                + "      },\n"
+                + "      \"mediaType\": \"" + MediaType.BOOK + "\",\n"
+                + "      \"branchCode\": \"" + rawHold.getBranchCode() + "\",\n"
+                + "      \"title\": \"" + marcTitle + "\",\n"
+                + "      \"publicationYear\": \"" + publicationYear + "\",\n"
+                + "      \"relativePublicationPath\": \"" + new XURI(workUri).getPath() + new XURI(publicationUri).getPath() + "\",\n"
+                + "      \"id\": null\n"
+                + "    }\n"
+                + "  ],\n"
+                + "  \"pickups\": []\n"
+                + "}";
+
+        assertEquals(expected, responseWork1.getBody());
+
+    }
+
+    private RawHold createMockRawHold(String borrowerId, int queuePlace, String recordId, DateTime reserveDate, boolean pending) {
+        RawHold rawHold = new RawHold();
+        rawHold.setBorrowerId(borrowerId);
+        rawHold.setTimestamp(DATE_TIME_FORMATTER.print(reserveDate));
+        String status = (pending) ? "W" : "";
+        rawHold.setStatus(status);
+        rawHold.setQueuePlace(Integer.toString(queuePlace));
+        rawHold.setBranchCode(RandomisedData.randomString(4));
+        rawHold.setRecordId(recordId);
+        return rawHold;
+    }
+
+    private RawLoan createMockRawLoan(String borrowerId, DateTime dayOfLoan, int daysUntilDue) {
+        RawLoan loan = new RawLoan();
+        loan.setId(RandomisedData.randomNumericID());
+        loan.setBorrowerId(borrowerId);
+        loan.setItemNumber(RandomisedData.randomNumericID());
+        loan.setDueDate(DATE_TIME_FORMATTER.print(new DateTime().plusDays(daysUntilDue)));
+        loan.setBranchCode(RandomisedData.randomString(4));
+        loan.setReturnDate(DATE_TIME_FORMATTER.print(new DateTime().plusDays(daysUntilDue)));
+        loan.setLastRenewDate(null);
+        loan.setRenewals(1);
+        loan.setTimestamp(DATE_TIME_FORMATTER.print(dayOfLoan));
+        loan.setIssueDate(DATE_TIME_FORMATTER.print(dayOfLoan));
+
+        return loan;
     }
 }

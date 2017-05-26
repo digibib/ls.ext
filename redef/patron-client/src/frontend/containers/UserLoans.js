@@ -139,12 +139,10 @@ class UserLoans extends React.Component {
               <div className="flex-col placeholder-column" />
               <div className="flex-col place-in-queue">
                 <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
-                <p data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace > 0
-                  ? item.queuePlace
-                  : <FormattedMessage {...messages.enRoute} />}
-                  &nbsp;{item.suspendUntil
-                    ? <span className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                    : ''
+                <p data-automation-id="UserLoans_reservation_queue_place">
+                  {item.suspendUntil
+                    ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
+                    : this.renderWaitingPeriodInit(item)
                   }
                 </p>
               </div>
@@ -164,6 +162,14 @@ class UserLoans extends React.Component {
           ))}
         </NonIETransitionGroup>
       )
+    }
+  }
+
+  renderWaitingPeriodInit (item) {
+    if (item.queuePlace > 0) {
+      return <span>{item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}</span>
+    } else {
+      return <FormattedMessage {...messages.enRoute} />
     }
   }
 
@@ -205,11 +211,12 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderWaitingPeriod (expected = 'unknown') {
-    if (expected === 'unknown') {
+  renderWaitingPeriod (expected) {
+    if (expected.error != null) {
       return <FormattedMessage {...messages.unknown} />
     } else {
-      return <span>({this.renderExpectedEstimationPrefix(expected)} {expected} <FormattedMessage {...messages.weeks} />)</span>
+      const estimate = (expected.estimate < 11) ? `${expected.estimate}–${expected.estimate + 2}` : '11'
+      return <span>({this.renderExpectedEstimationPrefix(estimate)} {estimate} <FormattedMessage {...messages.weeks} />)</span>
     }
   }
   // <FormattedMessage {...messages.name} values={{ name: this.props.borrowerName }} />
@@ -224,7 +231,7 @@ class UserLoans extends React.Component {
             </h1>
             {this.renderRenewAllButton()}
           </div>
-          {[ ...this.props.loansAndReservations.loans ].sort((a, b) => new Date(a.dueDate) > new Date(b.dueDate)).map(item => (
+          {[ ...this.props.loansAndReservations.loans ].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).map(item => (
             <article key={item.id}
                      className="single-entry"
                      data-automation-id="UserLoans_loan"
@@ -361,7 +368,11 @@ class UserLoans extends React.Component {
 
   render () {
     if (this.props.isRequestingLoansAndReservations) {
-      return <div />
+      return <div style={{textAlign: 'center'}}>
+        <span data-automation-id="is_searching" className="loading-spinner">
+          <i className="icon-spin4 animate-spin" style={{color: 'red', fontSize: '2em'}} />
+        </span>
+      </div>
     } else if (this.props.loansAndReservationError) {
       return <FormattedMessage {...messages.loansAndReservationError} />
     }
