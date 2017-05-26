@@ -336,7 +336,7 @@
     statusSaved: 'saved',
 
     // labels for inverse relations
-    'http://data.deichman.no/ontology#subject_inverse': 'Works with this {{#if type == "Subject"}}subject{{else}}{{>subjectType + "Label"}} as subject{{/if}}',
+    'http://data.deichman.no/ontology#subject_inverse': 'Works with this {{#if subjectType == "Subject"}}subject{{else}}{{>subjectType + "Label"}} as subject{{/if}}',
     'http://data.deichman.no/ontology#publicationOf_inverse': 'Publications of this work',
     'http://data.deichman.no/ontology#hasPublicationPart_inverse': 'Published as part',
     'http://data.deichman.no/ontology#inSerial_inverse': 'Publications in this series',

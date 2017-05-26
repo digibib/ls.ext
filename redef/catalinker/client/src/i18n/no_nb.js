@@ -338,7 +338,7 @@
     statusSaved: 'alle endringer er lagret',
 
     // labels for inverse relations
-    'http://data.deichman.no/ontology#subject_inverse': 'Verk med {{#if type == "Subject"}}dette emnet{{else}}{{>subjectType + "LabelDem"}} som emne{{/if}}',
+    'http://data.deichman.no/ontology#subject_inverse': 'Verk med {{#if subjectType == "Subject"}}dette emnet{{else}}{{>subjectType + "LabelDem"}} som emne{{/if}}',
     'http://data.deichman.no/ontology#publicationOf_inverse': 'Utgivelser av dette verket',
     'http://data.deichman.no/ontology#hasPublicationPart_inverse': 'Utgitt som del',
     'http://data.deichman.no/ontology#inSerial_inverse': 'Utgivelser i denne serien',
