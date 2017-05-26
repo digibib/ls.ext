@@ -115,6 +115,7 @@
     "express": "4.14.0",
     "express-request-proxy": "2.0.0",
     "express-session": "1.14.2",
+    "express-static-gzip": "0.2.2",
     "jsonld": "0.4.11",
     "moment": "^2.17.1",
     "node-mysql": "0.4.2",
@@ -122,9 +123,9 @@
     "query-string": "4.2.3",
     "react-datepicker": "^0.40.0",
     "react-paginate": "^4.1.0",
+    "react-tooltip-component": "^0.3.0",
     "sanitize-html": "1.13.0",
     "url-loader": "0.5.7",
-    "xml2js": "0.4.17",
-    "express-static-gzip": "0.2.2"
+    "xml2js": "0.4.17"
   }
 }
