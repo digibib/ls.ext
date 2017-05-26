@@ -112,7 +112,7 @@
     workSeriesLabel: 'Verksserie',
     compositionTypeLabel: 'Komposisjonstype',
 
-    // determinativs
+    // determinatives
     PersonLabelDet: 'personen',
     GeneralSubjectLabelDet: 'emnet',
     WorkLabelDet: 'verket',
@@ -125,6 +125,20 @@
     InstrumentLabelDet: 'instrumentet',
     WorkSeriesLabelDet: 'verksserien',
     CompositionTypeLabelDet: 'komposisjonstypen',
+
+    // demonstratives
+    PersonLabelDem: 'denne personen',
+    GeneralSubjectLabelDem: 'dette emnet',
+    WorkLabelDem: 'dette verket',
+    GenreLabelDem: 'denne sjangeren',
+    CorporationLabelDem: 'denne organisasjonen',
+    PlaceLabelDem: 'dette stedet',
+    EventLabelDem: 'denne hendelsen',
+    SerialLabelDem: 'denne serien',
+    PublicationLabelDem: 'denne utgivelsen',
+    InstrumentLabelDem: 'dette instrumentet',
+    WorkSeriesLabelDem: 'denne verksserien',
+    CompositionTypeLabelDem: 'komposisjonstypen',
 
     // indeterminativ
     PersonLabel: 'person',
@@ -324,7 +338,7 @@
     statusSaved: 'alle endringer er lagret',
 
     // labels for inverse relations
-    'http://data.deichman.no/ontology#subject_inverse': 'Verk med dette {{#if type == "Subject"}}emnet{{else}}{{>subjectType + "LabelDet"}} som emne{{/if}}',
+    'http://data.deichman.no/ontology#subject_inverse': 'Verk med {{#if type == "Subject"}}dette emnet{{else}}{{>subjectType + "LabelDem"}} som emne{{/if}}',
     'http://data.deichman.no/ontology#publicationOf_inverse': 'Utgivelser av dette verket',
     'http://data.deichman.no/ontology#hasPublicationPart_inverse': 'Utgitt som del',
     'http://data.deichman.no/ontology#inSerial_inverse': 'Utgivelser i denne serien',
@@ -338,7 +352,7 @@
     'http://data.deichman.no/relationType#relatedWork_inverse': 'Verk som er relatert til dette',
     'http://data.deichman.no/relationType#continuationOf_inverse': 'Verk som dette er en fortsettelse av',
     'http://data.deichman.no/relationType#continuedIn_inverse': 'Verk som er del av dette',
-    inverseRoleRelation: 'Verk/utgivelser med denne som {{role.toLowerCase()}}',
+    inverseRoleRelation: 'Verk/utgivelser med {{>subjectType + "LabelDem"}} som {{role.toLowerCase()}}',
 
     // misc
     partsLabel: 'Deler'

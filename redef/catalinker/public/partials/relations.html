@@ -5,7 +5,7 @@
         <div class="type">
             <span class="type-label pure-u-11-12" title="{{relationshipType}}">
                 {{#if relationships[0].isRole}}
-                    {{>inverseRoleRelation applicationData.allLabels[relationshipType] as role}}
+                    {{>inverseRoleRelation applicationData.allLabels[relationshipType] as role, typeFromUri(../../uri) as subjectType}}
                 {{else}}
                     {{>relationshipType + '_inverse' typeFromUri(../../uri) as subjectType}}
                 {{/if}}</span>

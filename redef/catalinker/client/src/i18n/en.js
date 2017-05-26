@@ -110,7 +110,7 @@
     workSeriesLabel: 'Work series',
     compositionTypeLabel: 'Composition type',
 
-    // determinativ
+    // determinative
     PersonLabelDet: 'the person',
     GeneralSubjectLabelDet: 'the subject',
     WorkLabelDet: 'this work',
@@ -124,7 +124,21 @@
     WorkSeriesLabelDet: 'the work series',
     CompositionTypeLabelDet: 'the composition type',
 
-    // indeterminativ
+    // demonstrative
+    PersonLabelDem: 'this person',
+    GeneralSubjectLabelDem: 'this subject',
+    WorkLabelDem: 'this work',
+    GenreLabelDem: 'this genre',
+    CorporationLabelDem: 'this corporation',
+    PlaceLabelDem: 'this place',
+    EventLabelDem: 'this event',
+    SerialLabelDem: 'this serial',
+    PublicationLabelDem: 'this publication',
+    InstrumentLabelDem: 'this instrument',
+    WorkSeriesLabelDem: 'this work series',
+    CompositionTypeLabelDem: 'this composition type',
+
+    // indeterminative
     PersonLabel: 'person',
     GeneralSubjectLabel: 'subject',
     WorkLabel: 'work',
@@ -336,7 +350,7 @@
     'http://data.deichman.no/relationType#relatedWork_inverse': 'Works related to this',
     'http://data.deichman.no/relationType#continuationOf_inverse': 'Works of which this is a continuation',
     'http://data.deichman.no/relationType#continuedIn_inverse': 'Works that are parts of this',
-    inverseRoleRelation: 'Works/publications with this as {{role.toLowerCase()}}',
+    inverseRoleRelation: 'Works/publications with {{>subjectType + "LabelDem"}} as {{role.toLowerCase()}}',
 
     // misc
     partsLabel: 'Parts'
