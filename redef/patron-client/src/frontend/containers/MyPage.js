@@ -31,6 +31,7 @@ class MyPage extends React.Component {
     }
     const tabList = [
       { label: this.props.intl.formatMessage(messages.loansAndReservations), path: '/profile/loans' },
+      { label: this.props.intl.formatMessage(messages.history), path: '/profile/history' },
       { label: this.props.intl.formatMessage(messages.personalInformation), path: '/profile/info' },
       { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' }
     ]
@@ -61,6 +62,11 @@ MyPage.propTypes = {
 }
 
 export const messages = defineMessages({
+  history: {
+    id: 'MyPage.history',
+    description: 'The label on the history tab',
+    defaultMessage: 'History'
+  },
   profileMenuLabel: {
     id: 'MyPage.profileMenuLabel',
     description: 'The label on the profile menu',

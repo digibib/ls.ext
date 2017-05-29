@@ -9,6 +9,7 @@ import MyPage from '../containers/MyPage'
 import UserLoans from '../containers/UserLoans'
 import UserInfo from '../containers/UserInfo'
 import UserSettings from '../containers/UserSettings'
+import UserHistory from '../containers/UserHistory'
 import { requireLoginBeforeAction } from '../actions/LoginActions'
 import { SHOW_PRIVILEGED_ROUTE } from '../constants/ActionTypes'
 
@@ -30,6 +31,7 @@ export default function (store) {
       <Route path="profile" component={MyPage} onEnter={requireLogin}>
         <IndexRoute component={UserLoans} />
         <Route path="loans" component={UserLoans} />
+        <Route path="history" component={UserHistory} />
         <Route path="info" component={UserInfo} />
         <Route path="settings" component={UserSettings} />
       </Route>
