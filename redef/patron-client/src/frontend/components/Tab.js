@@ -12,7 +12,7 @@ class Tab extends React.Component {
     this.handleKey = this.handleKey.bind(this)
   }
 
-  handleClick (tab) {
+  handleClick () {
     if (this.props.tab.path && this.props.push) {
       this.props.push({ pathname: this.props.tab.path })
     } else if (this.props.tab.tabId) {

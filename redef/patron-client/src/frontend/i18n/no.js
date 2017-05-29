@@ -87,6 +87,7 @@ export default {
   'MyPage.personalInformation': 'Personopplysninger',
   'MyPage.profileMenuLabel': 'Profilmeny',
   'MyPage.settings': 'Innstillinger',
+  'MyPage.history': 'Historikk',
   'Navigation.loggedInAs': 'Logget inn som:',
   'Navigation.logIn': 'Logg inn',
   'Navigation.logout': 'Logg ut',
