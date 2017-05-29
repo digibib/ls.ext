@@ -73,7 +73,7 @@ class SearchResult extends React.Component {
   renderSubjects (result) {
     if (result.subject) {
       return (
-        <p className="subjects" data-automation-id="work_subjects">
+        <p key="pubs" className="subjects" data-automation-id="work_subjects">
           <strong><FormattedMessage {...messages.subjects} /></strong><br />
           {result.subject.map((subject, i) => (
             <span key={subject}>
@@ -90,7 +90,7 @@ class SearchResult extends React.Component {
   renderGenres (result) {
     if (result.genre) {
       return (
-        <p className="genres" data-automation-id="work_genres">
+        <p key="gens" className="genres" data-automation-id="work_genres">
           <strong><FormattedMessage {...messages.genres} /></strong><br />
           {result.genre.map((genre, i) => (
             <span key={genre}>
@@ -446,7 +446,7 @@ class SearchResult extends React.Component {
               : null
             }
             {this.shouldShowFullList()
-              ? (this.renderSubjects(result.publication), this.renderGenres(result.publication))
+              ? [this.renderSubjects(result.publication), this.renderGenres(result.publication)]
               : null
             }
           </article>
