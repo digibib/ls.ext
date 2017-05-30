@@ -84,7 +84,7 @@
       } else {
         query.query = {
           simple_query_string: {
-            query: searchString,
+            query: searchString.replace(/\!/g, '\\!').replace(/[^]*&[^]*/g, '"$&"'),
             default_operator: 'and',
             fields: fields[indexType]
           }
