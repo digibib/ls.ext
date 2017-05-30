@@ -259,11 +259,11 @@ module.exports = (app) => {
               },
               {
                 type: 'input-string',
-                rdfProperty: 'partTitle'
+                rdfProperty: 'partNumber'
               },
               {
                 type: 'input-string',
-                rdfProperty: 'partNumber'
+                rdfProperty: 'partTitle'
               },
               {
                 rdfProperty: 'hasWorkType'
