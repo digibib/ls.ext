@@ -101,7 +101,7 @@
             must: [
               {
                 query_string: {
-                  query: searchString.replace("!", "\\!"),
+                  query: searchString.replace(/\!/g, '\\!').replace(/ & /g, ' "&" '),
                   default_operator: 'and'
                 }
               },
