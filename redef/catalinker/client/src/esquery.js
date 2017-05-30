@@ -101,7 +101,7 @@
             must: [
               {
                 query_string: {
-                  query: searchString,
+                  query: searchString.replace("!", "\\!"),
                   default_operator: 'and'
                 }
               },
