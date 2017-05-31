@@ -2016,7 +2016,7 @@
             }
           }
           if ($(panel).hasClass('fixed')) {
-            offset = 0;
+            offset = 0
           }
           if (supportPanelBase.length > 0) {
             $(panel).css({
