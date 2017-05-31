@@ -27,6 +27,8 @@
     selectAll: 'Velg alle',
     by: 'av',
     selectThis: 'Velg',
+    showHideRelations: 'Vis/skjul relasjoner',
+    selectWorkLabel: 'Katalogisér utgivelse av dette verket',
     autoNumber: 'Automatisk nummerering',
     searchWorkLegend: 'Søk etter tittel, hovedinnførsel, verksuri eller -id',
     searchPublicationLegend: 'Søk etter tittel eller tittelnummer',
@@ -110,7 +112,7 @@
     workSeriesLabel: 'Verksserie',
     compositionTypeLabel: 'Komposisjonstype',
 
-    // determinativs
+    // determinatives
     PersonLabelDet: 'personen',
     GeneralSubjectLabelDet: 'emnet',
     WorkLabelDet: 'verket',
@@ -123,6 +125,20 @@
     InstrumentLabelDet: 'instrumentet',
     WorkSeriesLabelDet: 'verksserien',
     CompositionTypeLabelDet: 'komposisjonstypen',
+
+    // demonstratives
+    PersonLabelDem: 'denne personen',
+    GeneralSubjectLabelDem: 'dette emnet',
+    WorkLabelDem: 'dette verket',
+    GenreLabelDem: 'denne sjangeren',
+    CorporationLabelDem: 'denne organisasjonen',
+    PlaceLabelDem: 'dette stedet',
+    EventLabelDem: 'denne hendelsen',
+    SerialLabelDem: 'denne serien',
+    PublicationLabelDem: 'denne utgivelsen',
+    InstrumentLabelDem: 'dette instrumentet',
+    WorkSeriesLabelDem: 'denne verksserien',
+    CompositionTypeLabelDem: 'komposisjonstypen',
 
     // indeterminativ
     PersonLabel: 'person',
@@ -320,6 +336,23 @@
     statusOpenedExistingResource: 'åpnet eksisterende ressurs',
     statusWorking: 'arbeider...',
     statusSaved: 'alle endringer er lagret',
+
+    // labels for inverse relations
+    'http://data.deichman.no/ontology#subject_inverse': 'Verk med {{#if subjectType == "Subject"}}dette emnet{{else}}{{>subjectType + "LabelDem"}} som emne{{/if}}',
+    'http://data.deichman.no/ontology#publicationOf_inverse': 'Utgivelser av dette verket',
+    'http://data.deichman.no/ontology#hasPublicationPart_inverse': 'Utgitt som del',
+    'http://data.deichman.no/ontology#inSerial_inverse': 'Utgivelser i denne serien',
+    'http://data.deichman.no/ontology#isPartOfWorkSeries_inverse': 'Verk i denne serien',
+    'http://data.deichman.no/ontology#genre_inverse': 'Verk i denne sjangeren',
+    'http://data.deichman.no/ontology#hasPlaceOfPublication_inverse': 'Utgitt på dette stedet',
+    'http://data.deichman.no/ontology#isRelatedTo_inverse': 'Verk relatert til dette',
+    'http://data.deichman.no/ontology#hasInstrumentation_inverse': 'Verk med dette instrumentet',
+    'http://data.deichman.no/ontology#hasCompositionType_inverse': 'Verk med denne komposisjonstypen',
+    'http://data.deichman.no/relationType#partOf_inverse': 'Verk som er del av dette',
+    'http://data.deichman.no/relationType#relatedWork_inverse': 'Verk som er relatert til dette',
+    'http://data.deichman.no/relationType#continuationOf_inverse': 'Verk som dette er en fortsettelse av',
+    'http://data.deichman.no/relationType#continuedIn_inverse': 'Verk som er del av dette',
+    inverseRoleRelation: 'Verk/utgivelser med {{>subjectType + "LabelDem"}} som {{role.toLowerCase()}}',
 
     // misc
     partsLabel: 'Deler'

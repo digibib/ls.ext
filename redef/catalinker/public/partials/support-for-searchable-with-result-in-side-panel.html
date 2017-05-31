@@ -30,8 +30,8 @@ on-escape="cancelEdit">
                                 data-next-sel-item="{{'sel-item-' + (itemIndex + 1)}}"
                                 tabindex="0"
                                 class="pure-u-1-24 search-result-item select-result-item" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
-                                on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'select'}"
-                                on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'select'}"
+                                on-enter="selectSearchableItem:{{this.uri}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'select'}"
+                                on-click="selectSearchableItem:{{this.uri}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'select'}"
                                 on-downarrow="focusNextItem:'sel'"
                                 on-uparrow="focusPrevItem:'sel'"
                                 {{#if widgetOptions.editWithTemplate || widgetOptions.enableEditResource}}
@@ -50,8 +50,8 @@ on-escape="cancelEdit">
                                    tabindex="0"
                                    class="pure-u-1-24 search-result-item edit-resource" {{#if !highestScoreIndex || exactMatch}}tabindex="0"{{/if}}
                                    as-tabIndex="{{tabSelected}}"
-                                   on-enter="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'edit'}"
-                                   on-click="selectSearchableItem:{{.}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'edit'}"
+                                   on-enter="selectSearchableItem:{{this.uri}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'edit'}"
+                                   on-click="selectSearchableItem:{{this.uri}},{{origin}},{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}},{action:'edit'}"
                                    on-downarrow="focusNextItem:'ed'"
                                    on-uparrow="focusPrevItem:'ed'"
                                    on-rightarrow="focusDetailsToggle:{{itemIndex}}"
@@ -75,47 +75,26 @@ on-escape="cancelEdit">
                             <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemDetailsLabelProperties)}}</p>
                         </span>
 
-                        <div class="pure-u-1-24">
-                            {{#subItems.length || loadWorksAsSubjectOfItem}}
-                            <a id="{{'item-' + itemIndex + '-details-toggle'}}" tabindex="0"
-                               class="toggle-show-sub-items"
-                               data-next-sub-item="sub-item-{{itemIndex}}-0"
-                               {{#config.search[selectedIndexType].subItemsExpandTooltip}}title="{{config.search[selectedIndexType].subItemsExpandTooltip}}"{{/}}
-                               on-click="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
-                               on-enter="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
-                               {{#toggleSubItem}}
-                                    on-downarrow="focusNextSubItem"
-                               {{else}}
-                                    on-downarrow="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}"
-                               {{/toggleSubItem}}
-                               on-leftarrow="focusItem:{{itemIndex}},{{['ed','sel']}}"
-                               on-uparrow="toggleSubItem:{{loadWorksAsSubjectOfItem}},{{.}}">
-                            {{#toggleSubItem}}&#x25B2;{{else}}&#x25BC;{{/toggleSubItem}}</a>
-                            {{/}}
+                        <div class="pure-u-1-24 toggle-subitem">
+                                <a id="{{'item-' + itemIndex + '-details-toggle'}}" tabindex="0"
+                                   class="toggle-show-sub-items"
+                                   data-next-sub-item="sub-item-{{itemIndex}}-0"
+                                   title="{{>showHideRelations}}"
+                                on-click="toggleRelations"
+                                on-enter="toggleRelations"
+                                {{#toggleRelations}}
+                                on-downarrow="focusNextSubItem"
+                                {{else}}
+                                on-downarrow="toggleRelations"
+                                {{/toggleRelations}}
+                                on-leftarrow="focusItem:{{itemIndex}},{{['ed','sel']}}"
+                                on-uparrow="toggleRelations"
+                                class-turn="{{toggleRelations}}">&#x25BC</a>
                         </div>
                         {{>"additional-search-result-item-info-for-"+selectedIndexType}}
-                        {{#toggleSubItem}}
-                        <div class="work-items pure-u-1">
-                            {{#subItems:subItemIndex}}
-                            <div class="search-result-subitem pure-g">
-                                {{>subItemType}}
-                                {{# widgetOptions.showSelectItem}}
-                                    <span class="search-result-work-selector pure-u-2-24">
-                                        <input id="sub-item-{{itemIndex}}-{{subItemIndex}}"
-                                               data-next-sub-item="sub-item-{{itemIndex}}-{{(subItemIndex + 1)}}"
-                                               data-prev-sub-item="sub-item-{{itemIndex}}-{{(subItemIndex - 1)}}"
-                                               class="select-work-radio" type="radio" checked="{{isChecked}}"
-                                               on-click="selectSearchableItem:{{.}},{{origin}},{{items[itemIndex].name}},{subItem: true}"
-                                               on-enter="selectSearchableItem:{{.}},{{origin}},{{items[itemIndex].name}},{subItem: true}"
-                                               on-downarrow="focusNextSubItem"
-                                               on-uparrow="focusPrevSubItem:{{itemIndex}},{{subItemIndex}}"
-                                        />
-                                    </span>
-                                {{/}}
-                            </div>
-                            {{/work}}
-                        </div>
-                        {{/toggleSubItem}}
+                        {{#toggleRelations}}
+                        {{>relations}}
+                        {{/toggleRelations}}
                 </div>
                 {{/each}}
             </div>

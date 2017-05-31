@@ -21,12 +21,22 @@ $mintgreen: #DCFC9F;
   outline-offset: 2px;
 }
 
+@mixin turnableArrow {
+  a {
+    display: inline-block;
+    transition: transform 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+    &.turn {
+      transform: rotate(180deg);
+    }
+  }
+}
+
 .focus {
   @include focus()
 }
 
 @mixin pencil {
-//  display: inline-block;
+  //  display: inline-block;
   background-image: url('/images/lower_right_pencil.svg');
   background-repeat: no-repeat;
   background-position: left top;
@@ -190,7 +200,7 @@ body {
       float: none;
       list-style: none;
       position: relative;
-      li {
+      >li {
         float: left;
         display: block;
         margin-bottom: -7px;
@@ -225,7 +235,7 @@ body {
       z-index: 100;
       .grid-tab {
         .grid-tab-link {
-          padding: 0.5em 0.5em;
+          padding: 5px 14px;
           font-size: 0.9em;
         }
         .grid-tab-link-selected {
@@ -629,6 +639,10 @@ body {
               height: 36px;
               padding: 6px;
             }
+            &[type=radio] {
+              height: 12px;
+              margin-top: 12px;
+            }
             &[type=search] {
               height: 28px;
               margin-right: 16px;
@@ -776,6 +790,7 @@ body {
           }
 
           .search-result {
+            @include turnableArrow();
             .field {
               margin-bottom: 10px;
             }
@@ -792,11 +807,14 @@ body {
             background: white;
             padding: 0.5em;
             min-height: 65px;
+            .toggle-subitem {
+              float: right;
+            }
             .edit-resource {
               @include pencil();
             }
             .select-result-item {
-//              display: inline-block;
+              //              display: inline-block;
               height: 16px;
               width: 16px;
               border: 2px solid black;
@@ -1327,17 +1345,25 @@ body {
       padding: 0 0 0 5px;
     }
     ul {
-      margin: 0px;
+      @include turnableArrow();
+      margin: 0;
       padding: 0;
       list-style-type: none;
       li {
+        float: none !important;
         max-height: 350px;
-        overflow: scroll;
         ul {
           li {
+            margin-bottom: 0 !important;
+            float: none !important;
             padding: 0 5px 0 15px;
             &:nth-child(even) {
               background: $lightestgray;
+            }
+            .search-result-work-selector {
+              margin: -6px -4px 0 -13px;
+              top: -6px;
+              position: relative;
             }
           }
         }

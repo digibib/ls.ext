@@ -942,9 +942,14 @@
       }
     }
 
+    const memoizedTypeMap = _.memoize(function () {
+      return ractive.get('applicationData.config.typeMap')
+    })
+
     function typeFromUri (resourceUri) {
-      var typeMap = ractive.get('applicationData.config.typeMap')
-      return typeMap[ resourceUri.match(`^.*\/(${_.keys(typeMap).join('|')})\/.*$`)[ 1 ] ]
+      const typeMap = memoizedTypeMap()
+      const allTypes = _.keys(typeMap).join('|')
+      return typeMap[ resourceUri.match(`^.*\/(${allTypes})\/.*$`)[ 1 ] ]
     }
 
     function getDisplayProperties (properties, valueFromPropertyFunc, type) {
@@ -1473,9 +1478,6 @@
         input.cssClassPrefix = prop.cssClassPrefix
       } else {
         input.cssClassPrefix = 'default'
-      }
-      if (prop.loadWorksAsSubjectOfItem) {
-        input.loadWorksAsSubjectOfItem = prop.loadWorksAsSubjectOfItem
       }
       if (prop.type === 'searchable-with-result-in-side-panel') {
         input.searchable = true
@@ -2013,6 +2015,9 @@
               offset = Math.max(0, (80 - supportPanelBase.height()) / 2)
             }
           }
+          if ($(panel).hasClass('fixed')) {
+            offset = 0;
+          }
           if (supportPanelBase.length > 0) {
             $(panel).css({
               top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,
@@ -2024,19 +2029,6 @@
         })
       }
       return applicationData
-    }
-
-    function loadWorksAsSubject (target) {
-      axios.get(proxyToServices(`${target.uri}/asSubjectOfWorks`), {
-          headers: {
-            Accept: 'application/ld+json'
-          }
-        }
-      ).then(function (response) {
-        target.subItems = _.pluck(ensureJSON(response).data.hits.hits, '_source')
-        target.subItemType = 'work'
-        ractive.update()
-      })
     }
 
     function externalSourceHitDescription (graph, source, sourceLabel) {
@@ -2120,7 +2112,7 @@
       return txt.value
     }
 
-    function doSearch (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem) {
+    function doSearch (event, searchString, preferredIndexType, secondaryIndexType) {
       searchString = stripHtml(searchString).trim()
 
       if (!searchString) {
@@ -2181,9 +2173,6 @@
             var item = hit._source
             item.isChecked = false
             item.score = hit._score
-            if (loadWorksAsSubjectOfItem) {
-              item.work = null
-            }
             if (item.work) {
               if (!_.isArray(item.work)) {
                 item.work = [ item.work ]
@@ -3017,6 +3006,9 @@
             uri = uri || ractive.get(`targetUri.${type}`)
             axios.get(proxyToServices(`${uri}/relations`)).then(function (response) {
               ractive.set(`${keypath}.relations`, response.data)
+              if (response.data.length === 1) {
+                ractive.set(`${keypath}.relations.0.toggleRelations`, true)
+              }
             })
             return {
               teardown: function () {}
@@ -3479,7 +3471,8 @@
               },
               translate (msgKey) {
                 return translate(msgKey)
-              }
+              },
+              typeFromUri
             },
             decorators: {
               repositionSupportPanel,
@@ -3665,23 +3658,16 @@
                 ractive.set(`${parentInput.keypath}.edit`, true)
                 ractive.update()
               },
-              searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options) {
+              searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, options) {
                 options = options || {}
                 if (options.skipIfAdvancedQuery && esquery.isAdvancedQuery(searchString)) {
                   return
                 }
-                debouncedSearch(event, searchString, preferredIndexType, secondaryIndexType, loadWorksAsSubjectOfItem, options)
+                debouncedSearch(event, searchString, preferredIndexType, secondaryIndexType, options)
               },
-              searchResourceFromSuggestion: function (event, searchString, indexType, loadWorksAsSubjectOfItem) {
+              searchResourceFromSuggestion: function (event, searchString, indexType) {
                 if (eventShouldBeIgnored(event)) return
-                ractive.fire('searchResource', { keypath: `${grandParentOf(event.keypath)}.values.0` }, searchString, indexType, loadWorksAsSubjectOfItem)
-              },
-              toggleSubItem: function (event, findWorksAsSubjectOfType, origin) {
-                var keypath = `${event.keypath}.toggleSubItem`
-                ractive.get(keypath) !== true ? ractive.set(keypath, true) : ractive.set(keypath, false)
-                if (findWorksAsSubjectOfType && !origin.subItems) {
-                  loadWorksAsSubject(origin)
-                }
+                ractive.fire('searchResource', { keypath: `${grandParentOf(event.keypath)}.values.0` }, searchString, indexType)
               },
               editResource: function (event, editWith, uri, preAction) {
                 if (preAction) {
@@ -3731,13 +3717,16 @@
                 let nextSubItemId = $(event.node).attr('data-next-sub-item')
                 $(`#${nextSubItemId}`).focus()
               },
+              xfocusPrevSubItem: function (event) {
+                let nextSubItemId = $(event.node).attr('data-prev-sub-item')
+                $(`#${nextSubItemId}`).focus()
+              },
               focusPrevSubItem: function (event, itemIndex, subItemIndex) {
                 if (subItemIndex > 0) {
                   let prevSubItemId = $(event.node).attr('data-prev-sub-item')
                   $(`#${prevSubItemId}`).focus()
                 } else {
-                  $(event.node).blur()
-                  $(`#sel-item-${itemIndex}-details-toggle`).focus()
+                  $(`#item-${itemIndex}-details-toggle`).focus()
                 }
               },
               focusDetailsToggle: function (event, itemIndex) {
@@ -3752,6 +3741,12 @@
                     break
                   }
                 }
+              },
+              toggleSubItem: function (event) {
+                ractive.toggle(`${event.keypath}.toggleSubItem`)
+              },
+              toggleRelations: function (event) {
+                ractive.toggle(`${event.keypath}.toggleRelations`)
               },
               handleTabForSearchResultItem: function (event, widgetOptions) {
                 if (!event.original.shiftKey) {
@@ -3779,13 +3774,13 @@
                   searchResultItem.focus()
                 }
               },
-              selectSearchableItem: function (event, context, origin, displayValue, options) {
+              selectSearchableItem: function (event, uri, origin, displayValue, options) {
                 ractive.set('currentSearchResultKeypath', grandParentOf(event.keypath))
                 options = options || {}
                 if (options.loadResourceForCompare) {
                   var queryArg = {}
-                  const type = typeFromUri(context.uri)
-                  queryArg[ `compare_with_${type}` ] = context.uri
+                  const type = typeFromUri(uri)
+                  queryArg[ `compare_with_${type}` ] = uri
                   loadOtherResource(queryArg)
                   setTaskDescription(`compare${type}`)
                   ractive.set(grandParentOf(event.keypath), undefined)
@@ -3797,7 +3792,6 @@
                 ractive.set(`${origin}.searchResult`, null)
                 const inputKeyPath = grandParentOf(origin)
                 const input = ractive.get(inputKeyPath)
-                const uri = context.uri
                 const editWithTemplateSpec = ractive.get(`${inputKeyPath}.widgetOptions.editWithTemplate`)
                 if (options.action === 'edit' && editWithTemplateSpec) {
                   ractive.fire('editResource', null, editWithTemplateSpec, uri)

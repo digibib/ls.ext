@@ -259,11 +259,11 @@ module.exports = (app) => {
               },
               {
                 type: 'input-string',
-                rdfProperty: 'partTitle'
+                rdfProperty: 'partNumber'
               },
               {
                 type: 'input-string',
-                rdfProperty: 'partNumber'
+                rdfProperty: 'partTitle'
               },
               {
                 rdfProperty: 'hasWorkType'
@@ -1233,7 +1233,6 @@ module.exports = (app) => {
                 reportFormat: {
                   separateLines: true
                 },
-                loadWorksAsSubjectOfItem: true,
                 authority: true, // this indicates it is an authorized entity
                 nameProperties: [ 'prefLabel', 'mainTitle:', 'subtitle', 'partNumber.', 'partTitle',
                   {
@@ -1604,7 +1603,6 @@ module.exports = (app) => {
             resultItemLabelProperties: [ 'name,', '#ordinal,', 'specification,', 'birthYear-', 'deathYear,', 'nationality.fragment.' ],
 //          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
-            subItemsExpandTooltip: 'Vis/skjul verk',
             scrollToMiddleOfResultSet: true
           },
           subject: {
@@ -1640,8 +1638,7 @@ module.exports = (app) => {
               replacement: 'http://sok.deichman.no/work/$1',
               toolTip: 'Vis verket på publikumssiden'
             },
-            itemHandler: 'workItemHandler',
-            subItemsExpandTooltip: 'Vis/skjul utgivelser'
+            itemHandler: 'workItemHandler'
           },
           genre: {
             type: 'genre',
@@ -1852,9 +1849,17 @@ module.exports = (app) => {
           'Emne': 'Som emne',
           'Utgivelse av': 'Har utgivelse',
           'Har delutgivelse': 'Utgitt som del',
+          'I serie': 'I samme serie',
+          'Del av verksserie': 'Andre verk i samme serie',
+          'Sjanger': 'Verk i samme sjanger',
+          'Utgivelsessted': 'Utgitt samme sted',
           'Subject': 'As subject',
           'Publication of': 'Published',
-          'Has publication part': 'Published as part'
+          'Has publication part': 'Published as part',
+          'In serial': 'In the same series',
+          'Part of work series': 'Other works in same series',
+          'Genre': 'I this genre',
+          'Place of publication': 'Published at this place'
         }
       }
     response.json(config)

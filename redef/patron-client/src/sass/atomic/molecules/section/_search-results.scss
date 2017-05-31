@@ -1,6 +1,11 @@
+.search-wrapper {
+  margin-top: 1em;
+}
+
 .search-results {
   @include span(12 of 12);
   @include container;
+  margin-top: -0.99em;
   /* @include border-top;
   padding-top: rhythm(2); */
 
@@ -14,6 +19,24 @@
     font-size: 0.9em;
     line-height: 1.8em;
   }
+}
+
+.search-results-settings {
+  button {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .search-results-settings-label {
+    display: block;
+    font-size: 0.59em;
+    padding-left: 0.3em;
+  }
+}
+
+.search-results-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .search-results-header {

@@ -1,7 +1,7 @@
 .filters {
   @include span(12);
   @include container();
-  margin-bottom: rhythm(1);
+  margin-bottom: 1.5em;
 
   .limit-filters {
     @include span(12);

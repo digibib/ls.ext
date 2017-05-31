@@ -27,6 +27,8 @@
     selectAll: 'Select all',
     by: 'by',
     selectThis: 'Select this',
+    showHideRelations: 'Show/hide relations',
+    selectWorkLabel: 'Catalogue publication of this work',
     autoNumber: 'Automatic numbering',
     searchWorkLegend: 'Search by title, main entry, work uri or work id',
     searchPublicationLegend: 'Search by title or record id',
@@ -108,7 +110,7 @@
     workSeriesLabel: 'Work series',
     compositionTypeLabel: 'Composition type',
 
-    // determinativ
+    // determinative
     PersonLabelDet: 'the person',
     GeneralSubjectLabelDet: 'the subject',
     WorkLabelDet: 'this work',
@@ -122,7 +124,21 @@
     WorkSeriesLabelDet: 'the work series',
     CompositionTypeLabelDet: 'the composition type',
 
-    // indeterminativ
+    // demonstrative
+    PersonLabelDem: 'this person',
+    GeneralSubjectLabelDem: 'this subject',
+    WorkLabelDem: 'this work',
+    GenreLabelDem: 'this genre',
+    CorporationLabelDem: 'this corporation',
+    PlaceLabelDem: 'this place',
+    EventLabelDem: 'this event',
+    SerialLabelDem: 'this serial',
+    PublicationLabelDem: 'this publication',
+    InstrumentLabelDem: 'this instrument',
+    WorkSeriesLabelDem: 'this work series',
+    CompositionTypeLabelDem: 'this composition type',
+
+    // indeterminative
     PersonLabel: 'person',
     GeneralSubjectLabel: 'subject',
     WorkLabel: 'work',
@@ -318,6 +334,23 @@
     statusOpenedExistingResource: 'opened resource',
     statusWorking: 'working...',
     statusSaved: 'saved',
+
+    // labels for inverse relations
+    'http://data.deichman.no/ontology#subject_inverse': 'Works with this {{#if subjectType == "Subject"}}subject{{else}}{{>subjectType + "Label"}} as subject{{/if}}',
+    'http://data.deichman.no/ontology#publicationOf_inverse': 'Publications of this work',
+    'http://data.deichman.no/ontology#hasPublicationPart_inverse': 'Published as part',
+    'http://data.deichman.no/ontology#inSerial_inverse': 'Publications in this series',
+    'http://data.deichman.no/ontology#isPartOfWorkSeries_inverse': 'Works in this series',
+    'http://data.deichman.no/ontology#genre_inverse': 'Works in this genre',
+    'http://data.deichman.no/ontology#hasPlaceOfPublication_inverse': 'Published at this place',
+    'http://data.deichman.no/ontology#isRelatedTo_inverse': 'Works related to this work',
+    'http://data.deichman.no/ontology#hasInstrumentation_inverse': 'Works with this instrument',
+    'http://data.deichman.no/ontology#hasCompositionType_inverse': 'Works with this composition type',
+    'http://data.deichman.no/relationType#partOf_inverse': 'Works that are parts of this',
+    'http://data.deichman.no/relationType#relatedWork_inverse': 'Works related to this',
+    'http://data.deichman.no/relationType#continuationOf_inverse': 'Works of which this is a continuation',
+    'http://data.deichman.no/relationType#continuedIn_inverse': 'Works that are parts of this',
+    inverseRoleRelation: 'Works/publications with {{>subjectType + "LabelDem"}} as {{role.toLowerCase()}}',
 
     // misc
     partsLabel: 'Parts'

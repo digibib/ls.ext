@@ -543,7 +543,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void enqueueIndexing(Set<String> uris, XURI triggeredBy) {
+    public final void  enqueueIndexing(Set<String> uris, XURI triggeredBy) {
         LOG.info("Enqueuing indexing of " + uris.size() + " resources triggered by changes in <" + triggeredBy.getUri() + ">");
         THREADPOOL.execute(new Runnable() {
             @Override
