@@ -2199,7 +2199,7 @@
             items: items,
             origin: event.keypath,
             searchTerm: searchString,
-            highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? highestScoreIndex-1 : false
+            highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? highestScoreIndex - 1 : false
           })
           positionSupportPanels()
         })
@@ -3401,6 +3401,12 @@
                   .replace('– ', '–')
                   .replace(/[,:]$/, '')
                   .replace(': ', ' : ')
+              },
+              genPublicationLink: function (item) {
+                return item.workUri.replace(
+                  new RegExp('^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$'),
+                  'http://sok.deichman.no/work/$1') +
+                  item.uri.substr(23)
               },
               getLinkfromUri: function (item, linkProps) {
                 return item.uri.replace(new RegExp(linkProps.regExp), linkProps.replacement)

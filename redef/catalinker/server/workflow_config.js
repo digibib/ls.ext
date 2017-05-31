@@ -1684,7 +1684,8 @@ module.exports = (app) => {
             legend: 'searchPublicationLegend',
             resultItemLabelProperties: [ 'displayLine1' ],
             resultItemLabelProperties2: [ 'displayLine2' ],
-            itemHandler: 'publicationItemHandler'
+            itemHandler: 'publicationItemHandler',
+            publicationLink: true
           },
           instrument: {
             type: 'instrument',

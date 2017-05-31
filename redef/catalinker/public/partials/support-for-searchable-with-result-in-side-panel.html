@@ -68,6 +68,13 @@ on-escape="cancelEdit">
                                title="{{config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri.toolTip}}">
                                 {{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}
                             </a>
+                            {{elseif config.search[current.accepted.selectedIndexType || selectedIndexType].publicationLink}}
+                            <a class="search-result-item-label"
+                               href="{{genPublicationLink(.)}}"
+                               target="_blank"
+                               title="Se utgivelsen på verkssiden">
+                                {{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}
+                            </a>
                             {{else}}
                             <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}</p>
                             {{/if}}
