@@ -48,7 +48,7 @@ class Subjects extends React.Component {
         <aside className="work-subjects">
           <h2><FormattedMessage {...messages.subjects} /></h2>
           <ul data-automation-id="work_subjects">
-            {subjects.map(subject => <li key={subject.id}><Link to={fieldQueryLink('emne', this.renderLabel(subject))}>{this.renderLabel(subject)}</Link></li>)}
+            {subjects.map(subject => <li key={subject.id}><Link to={fieldQueryLink('emne', subject.prefLabel || subject.name || subject.mainTitle)}>{this.renderLabel(subject)}</Link></li>)}
           </ul>
         </aside>
       )
