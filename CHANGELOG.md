@@ -14,8 +14,8 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 ## 2017.43
 
-KOHA: TODO
-GITREF: TODO
+KOHA: 722ef07b638ca04731b20f934c09578d1c72219b
+GITREF: 32fc3ddb662223798274c80e341f7ce223dd6af9
 
 - Koha
   - DEICH-767 Fiks på kvittering på skole
@@ -27,6 +27,9 @@ GITREF: TODO
   - DEICH-811 Listevisning av trefflisten
 - Catalinker:
   - DEICH-710 Oppslag i registre - Vise tilknyttede ressurser
+  - DEICH-799 Bytte rekkefølge på felt for delnummer og deltittel ved oppretting av nytt verk
+  - DEICH-739 Oppslag etterverk med utropstegn i tittel feiler
+  - DEICH-815 Kobling av verk feiler
 
 ## 2017.42
 
