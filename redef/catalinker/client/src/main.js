@@ -2015,6 +2015,9 @@
               offset = Math.max(0, (80 - supportPanelBase.height()) / 2)
             }
           }
+          if ($(panel).hasClass('fixed')) {
+            offset = 0;
+          }
           if (supportPanelBase.length > 0) {
             $(panel).css({
               top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,

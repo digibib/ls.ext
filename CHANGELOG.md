@@ -12,6 +12,22 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.43
+
+KOHA: TODO
+GITREF: TODO
+
+- Koha
+  - DEICH-767 Fiks på kvittering på skole
+  - DEICH-816 Skjul eksemplarer med status forlengst forfalt
+  - DEICH-768 Automater: bare første hentenummer vises hvis flere eks samme tittel
+  - DEICH-814 Koha API for lånerhistorikk
+- Patron-client:
+  - DEICH-802 Filter ikke lukket på mobil.
+  - DEICH-811 Listevisning av trefflisten
+- Catalinker:
+  - DEICH-710 Oppslag i registre - Vise tilknyttede ressurser
+
 ## 2017.42
 
 KOHA: 8e004ac2a27725b3a79305afb4700721a5e00cf8
