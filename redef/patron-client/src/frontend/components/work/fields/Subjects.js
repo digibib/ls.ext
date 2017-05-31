@@ -21,6 +21,15 @@ class Subjects extends React.Component {
       }
     }
     if (subject.type === 'Work' && subject.contributors) {
+      if (subject.subtitle) {
+        label += ` : ${subject.subtitle}`
+      }
+      if (subject.partNumber) {
+        label += `. ${subject.partNumber}`
+      }
+      if (subject.partTitle) {
+        label += `. ${subject.partTitle}`
+      }
       const contribs = subject.contributors.filter(contrib => contrib.type.includes('MainEntry'))
       if (contribs.length >= 1) {
         label += ` / ${contribs[0].agent.name}`
