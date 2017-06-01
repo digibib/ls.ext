@@ -1,14 +1,14 @@
 import React, {PropTypes} from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import {Link} from 'react-router'
-import {injectIntl, intlShape, defineMessages, FormattedMessage} from 'react-intl'
+import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
 import Items from '../components/Items'
 import MediaType from '../components/MediaType'
 import createPath from '../utils/createPath'
 import Constants from '../constants/Constants'
-import { groupByBranch, groupByMediaType } from '../utils/sorting'
+import {groupByBranch, groupByMediaType} from '../utils/sorting'
 import fieldQueryLink from '../utils/link'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 import ClickableElement from '../components/ClickableElement'
 
@@ -451,7 +451,7 @@ class SearchResult extends React.Component {
               : null
             }
             {this.shouldShowFullList()
-              ? [this.renderSubjects(result.publication), this.renderGenres(result.publication)]
+              ? [this.renderSubjects(result), this.renderGenres(result.publication)]
               : null
             }
           </article>

@@ -11,6 +11,7 @@ CONSTRUCT {
                deich:publicationYear ?publicationYear ;
                deich:contributor ?workContrib ;
                deich:subject ?subject ;
+               deich:subjectName ?subjectName ;
                deich:hasWorkType ?hasWorkType ;
                deich:workTypeLabel ?workTypeLabel ;
                deich:mainEntryName ?mainEntryName ;

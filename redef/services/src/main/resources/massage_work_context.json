@@ -42,6 +42,7 @@
       "@id": "deichman:subject",
       "@container": "@set"
     },
+    "subject": "deichman:subjectName",
     "Subject": "deichman:Subject",
     "role": "deichman:role",
     "mainEntry": "deichman:mainEntry",

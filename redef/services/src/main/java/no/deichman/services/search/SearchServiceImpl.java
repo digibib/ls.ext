@@ -43,8 +43,10 @@ import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -147,8 +149,8 @@ public class SearchServiceImpl implements SearchService {
 
     public final void indexOnly(XURI xuri, boolean bulk) throws Exception {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
-             LOG.info("Indexing " + xuri.getUri());
-                doIndex(xuri, bulk);
+            LOG.info("Indexing " + xuri.getUri());
+            doIndex(xuri, bulk);
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
             skipped++;
@@ -533,7 +535,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final void enqueueIndexingAllResources() {
-         THREADPOOL.execute(new Runnable() {
+        THREADPOOL.execute(new Runnable() {
             @Override
             public void run() {
                 for (EntityType type : EntityType.values()) {
@@ -685,7 +687,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void cacheNameIndex(XURI xuri, Map<String, Object> doc) {
-        if (xuri.getTypeAsEntityType() == EntityType.PUBLICATION || xuri.getTypeAsEntityType() == EntityType.WORK){
+        if (xuri.getTypeAsEntityType() == EntityType.PUBLICATION || xuri.getTypeAsEntityType() == EntityType.WORK) {
             // We don't want to keep in-memory indexes of Publication & Work resources,
             // as Catalinker has no need for them.
             return;
@@ -706,12 +708,17 @@ public class SearchServiceImpl implements SearchService {
         }
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
             ProducerTemplate template = App.getCamelContext().createProducerTemplate();
-            final IndexRequest indexRequest = new IndexRequest("search", xuri.getType(), xuri.getId()).source(document);
-            if (parentUri != null) {
-                indexRequest.parent(parentUri.getUri());
+            final IndexRequest indexRequest;
+            try {
+                indexRequest = new IndexRequest("search", xuri.getType(), URLEncoder.encode(xuri.getId(), "UTF-8")).source(document);
+                if (parentUri != null) {
+                    indexRequest.parent(URLEncoder.encode(parentUri.getId(), "UTF-8"));
+                }
+                template.requestBodyAndHeaders(bulk ? "direct:bulkIndex" : "direct:index",
+                        indexRequest, ImmutableMap.of("indexType", xuri.getType()));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-            template.requestBodyAndHeaders(bulk ? "direct:bulkIndex" : "direct:index",
-                    indexRequest, ImmutableMap.of("indexType", xuri.getType()));
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
             skipped++;
