@@ -290,7 +290,7 @@
     },
     "ageLimit": {
       "@id": "deichman:ageLimit",
-      "@type": "xsd:nonNegativeInteger"
+      "@type": "xsd:integer"
     },
     "hasSubtitles": {
       "@id": "deichman:hasSubtitles",

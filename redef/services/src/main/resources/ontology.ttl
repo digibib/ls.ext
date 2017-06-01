@@ -618,7 +618,7 @@ duo:Biography a rdfs:Class ;
 :ageLimit a rdfs:Property ;
   rdfs:label "Age limit"@en ;
   rdfs:label "Aldersgrense"@no ;
-  rdfs:range xsd:nonNegativeInteger ;
+  rdfs:range xsd:integer ;
   rdfs:domain :Publication .
 
 :hasSubtitles a rdfs:Property ;
