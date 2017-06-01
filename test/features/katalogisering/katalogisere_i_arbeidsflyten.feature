@@ -420,7 +420,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Gitt at det finnes et verk med forfatter
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
     Og jeg venter litt
-    Så ser jeg at det står forfatter med navn og levetid i resultatlisten
+    Så ser jeg at det står forfatter med navn i resultatlisten
 
   @wip
   Scenario: Søke opp verk hvor det finnes to med samme tittel men forskjellig forfatter
