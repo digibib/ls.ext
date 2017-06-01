@@ -1623,7 +1623,7 @@ module.exports = (app) => {
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
             linkFromUri: {
               regExp: '^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$',
-              replacement: 'http://deichman3.deichman.no:8000/work/$1',
+              replacement: 'http://elag.deichman.no:8000/work/$1',
               toolTip: 'Vis verket på publikumssiden'
             },
             itemHandler: 'workItemHandler'
@@ -1637,7 +1637,7 @@ module.exports = (app) => {
             resultItemDetailsLabelProperties: [ 'workTypeLabel,', 'publicationYear,', 'creator' ],
             linkFromUri: {
               regExp: '^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$',
-              replacement: 'http://deichman3.deichman.no:8000/work/$1',
+              replacement: 'http://elag.deichman.no:8000/work/$1',
               toolTip: 'Vis verket på publikumssiden'
             },
             itemHandler: 'workItemHandler',
