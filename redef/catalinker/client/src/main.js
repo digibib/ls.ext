@@ -655,7 +655,7 @@
         function getValues (onlyFirstField) {
           return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
             .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,\\.]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
+            .join(' ').replace(/[,\\.]$/, '').replace(/- /, '-').replace(/-(?=[^0-9])/, '- ')
         }
 
         var values = getValues(options.onlyFirstField)
@@ -980,7 +980,7 @@
           parensStarted = true
         }
         if (propName.indexOf('-') !== -1) {
-          ornamented += '–'
+          ornamented += '-'
         }
         ornamented = checkEndParens(propName, ornamented)
         if (checkEndPunctuation && /.\)$/.test(ornamented)) {
@@ -2090,7 +2090,7 @@
         var creatorAgent = author.agent
         contributionTarget.creator = creatorAgent.name
         if (creatorAgent.birthYear) {
-          contributionTarget.creator += `, ${creatorAgent.birthYear}–`
+          contributionTarget.creator += `, ${creatorAgent.birthYear}-`
           if (creatorAgent.deathYear) {
             contributionTarget.creator += creatorAgent.deathYear
           }
@@ -2363,7 +2363,7 @@
           personItem.subItemType = 'work'
           personItem.lifeSpan = ''
           if (personItem.birthYear) {
-            personItem.lifeSpan += `(${personItem.birthYear}–`
+            personItem.lifeSpan += `(${personItem.birthYear}-`
             if (personItem.deathYear) {
               personItem.lifeSpan += personItem.deathYear
             }
@@ -3398,7 +3398,7 @@
                 })
                 return _.compact(_.pluck(searchResultItems, 'val'))
                   .join(' ')
-                  .replace('– ', '–')
+                  .replace('– ', '-')
                   .replace(/[,:]$/, '')
                   .replace(': ', ' : ')
               },
@@ -4494,7 +4494,7 @@
                     const textBody = ractive.get(`${event.keypath}.current.value`)
                     if (textBody && ractive.get(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`)) {
                       var lines = _.compact(textBody.split(/\r\n|\r|\n/)).length
-                      ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.current.value`, `${nextNumber}${lines > 1 ? '–' : ''}${lines > 1 ? (nextNumber + lines - 1) : ''}`)
+                      ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.current.value`, `${nextNumber}${lines > 1 ? '-' : ''}${lines > 1 ? (nextNumber + lines - 1) : ''}`)
                     }
                   })
                 }
