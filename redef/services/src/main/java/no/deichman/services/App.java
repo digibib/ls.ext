@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
@@ -102,21 +103,23 @@ public final class App {
     private void setUpCamelRouting() throws Exception {
         RouteBuilder builder = new RouteBuilder() {
             public void configure() {
+                final String elasticSearchHost = System.getProperty("ELASTICSEARCH_HOST", "elasticsearch");
+                final String elasticsearchTcpPort = System.getProperty("ELASTICSEARCH_TCP_PORT", "9300");
                 from("direct:bulkIndex")
                         .aggregate(constant(true), new BulkRequestAggregationStrategy())
                         .completionSize(Integer.parseInt(System.getProperty("ELASTICSEARCH_BULK_SIZE", "1000")))     // set bulk size here
                         .forceCompletionOnStop()
                         .completionTimeout(Integer.parseInt(System.getProperty("ELASTICSEARCH_BULK_TIMEOUT", "1000")))  // set completion timeout here
-                        .to("elasticsearch5://elasticsearch?indexName=search&ip=" + System.getProperty("ELASTICSEARCH_HOST", "elasticsearch") + "&port=" + System.getProperty("ELASTICSEARCH_TCP_PORT", "9300"))
+                        .to(format("elasticsearch5://elasticsearch?indexName=search&ip=%s&port=%s", elasticSearchHost, elasticsearchTcpPort))
                         .process(exchange -> {
                             final BulkResponse bulkResponse = (BulkResponse) exchange.getIn().getBody();
                             final int bulkLength = bulkResponse.getItems().length;
                             if (bulkLength > 1) {
-                                LOG.info(String.format("Indexed bulk with %d items in %s", bulkLength, bulkResponse.getTook().toString()));
+                                LOG.info(format("Indexed bulk with %d items in %s", bulkLength, bulkResponse.getTook().toString()));
                             }
                         });
                 from("direct:index")
-                        .to("elasticsearch5://elasticsearch?indexName=search&ip=" + System.getProperty("ELASTICSEARCH_HOST", "elasticsearch") + "&port=" + System.getProperty("ELASTICSEARCH_TCP_PORT", "9300"))
+                        .to(format("elasticsearch5://elasticsearch?indexName=search&ip=%s&port=%s", elasticSearchHost, elasticsearchTcpPort))
                         .process(exchange -> {
                             LOG.info("Indexed " + exchange.getIn().getBody().toString());
                         });
