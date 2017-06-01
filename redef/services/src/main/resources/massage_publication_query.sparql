@@ -100,7 +100,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasMediaType ?mturi .
           ?mturi rdfs:label ?mtNoLang .
           BIND(str(?mtNoLang) AS ?mtNo)
-          FILTER(lang(?mtNoLang) = "no")
+          FILTER(lang(?mtNoLang) = "en")
           BIND(str(?mturi) AS ?pubMediaType) }
   UNION { <__PUBLICATIONURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
   UNION { <__PUBLICATIONURI__> deich:mainTitle ?pubMainTitle }
@@ -124,7 +124,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:format ?formatURI .
           ?formatURI rdfs:label ?formatNoLang .
           BIND(str(?formatNoLang) AS ?formatNo)
-          FILTER(lang(?formatNoLang) = "no") }
+          FILTER(lang(?formatNoLang) = "en") }
   UNION { <__PUBLICATIONURI__> deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
   UNION { <__PUBLICATIONURI__> deich:hasImage ?img }
   UNION { <__PUBLICATIONURI__> deich:hasSummary ?summary }
@@ -140,13 +140,13 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasFormatAdaptation ?formatAdaptation .
            ?formatAdaptation rdfs:label ?formatAtaptNoLang .
            BIND(str(?formatAtaptNoLang) AS ?formatAdaptNo)
-           FILTER(lang(?formatAtaptNoLang) = "no") }
+           FILTER(lang(?formatAtaptNoLang) = "en") }
   UNION { <__PUBLICATIONURI__> deich:publishedBy ?publisher .
            ?publisher deich:name ?publishedBy . }
   UNION { <__PUBLICATIONURI__> deich:writingSystem ?writingSystem.
              ?writingSystem rdfs:label ?wsNoLang .
              BIND(str(?wsNoLang) AS ?wsNo)
-             FILTER(lang(?wsNoLang) = "no") }
+             FILTER(lang(?wsNoLang) = "en") }
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 2. Information from other publications:
@@ -201,7 +201,7 @@ WHERE {
            ?work a deich:Work ; deich:literaryForm ?l .
            ?l rdfs:label ?litLabel .
            BIND(str(?litLabel) AS ?litform)
-           FILTER(lang(?litLabel) = "no") }
+           FILTER(lang(?litLabel) = "en") }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasInstrumentation ?instrumentation.
            ?instrumentation deich:hasInstrument ?instrument .
@@ -210,12 +210,12 @@ WHERE {
            ?work a deich:Work ; deich:biography ?b .
            ?b rdfs:label ?bioLabel .
            BIND(str(?bioLabel) AS ?bio)
-           FILTER(lang(?bioLabel) = "no") }
+           FILTER(lang(?bioLabel) = "en") }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:nationality ?n .
            ?n rdfs:label ?nLabel .
            BIND(str(?nLabel) AS ?country)
-           FILTER(lang(?nLabel) = "no") }
+           FILTER(lang(?nLabel) = "en") }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:language ?wLangO .
            BIND(str(?wLangO) AS ?wLang) .
@@ -274,7 +274,7 @@ WHERE {
            ?contribAgent deich:name ?mainEntryName .
            OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
              BIND(str(?nationLabelLang) AS ?nationLabel)
-             FILTER(lang(?nationLabelLang) = "no")
+             FILTER(lang(?nationLabelLang) = "en")
              }
            }
     }

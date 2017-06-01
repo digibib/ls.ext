@@ -303,7 +303,7 @@ public class MARCMapper {
                         addExternalObject(graphList, a, GENRE_TYPE, work::addGenre);
                     });
                     getSubfieldValue(dataField, 'z').ifPresent(z -> {
-                        addLabeledValue(graphList, "no", z, NATIONALITY_TYPE, work::addNationality);
+                        addLabeledValue(graphList, "en", z, NATIONALITY_TYPE, work::addNationality);
                     });
                     break;
                 case "700":

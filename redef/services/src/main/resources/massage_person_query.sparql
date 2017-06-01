@@ -30,20 +30,20 @@ WHERE {
   UNION { <__PERSONURI__> :specification ?specificationO . BIND(str(?specificationO) AS ?specification) }
   UNION { <__PERSONURI__> :nationality ?nationality .
           ?nationality rdfs:label ?nl .
-          FILTER (lang(?nl) = "no")
+          FILTER (lang(?nl) = "en")
           BIND(str(?nl) AS ?nationalityLabel) }
   UNION { ?work a :Work ;
              :contributor ?contrib .
           ?contrib :agent <__PERSONURI__> ;
              :role ?contribRole .
           ?contribRole rdfs:label ?contribRoleNameNo .
-          FILTER (lang(?contribRoleNameNo) = "no")
+          FILTER (lang(?contribRoleNameNo) = "en")
           BIND(str(?contribRoleNameNo) AS ?contribRoleName) }
   UNION { ?work :mainTitle ?mainTitle }
   UNION { ?work :subtitle ?subtitle }
   UNION { ?work :hasWorkType ?hasWorkType .
            ?hasWorkType rdfs:label ?workTypeNameNo .
-            FILTER(lang(?workTypeNameNo) = "no")
+            FILTER(lang(?workTypeNameNo) = "en")
             BIND(str(?workTypeNameNo) AS ?workTypeName) }
   UNION { ?work :partTitle ?partTitle }
   UNION { ?work :partNumber ?partNumber }

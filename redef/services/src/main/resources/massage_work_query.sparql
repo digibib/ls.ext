@@ -38,7 +38,7 @@ WHERE {
   UNION { <__WORKURI__> deich:partNumber ?partNumberO . BIND(str(?partNumberO) as ?partNumber) }
   UNION { <__WORKURI__> deich:hasWorkType ?hasWorkType .
         ?hasWorkType rdfs:label ?langWorkTypeLabel .
-        FILTER(LANGMATCHES(LANG(?langWorkTypeLabel), "no")) .
+        FILTER(LANGMATCHES(LANG(?langWorkTypeLabel), "en")) .
         BIND(str(?langWorkTypeLabel) AS ?workTypeLabel)
         }
   UNION { <__WORKURI__> deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }

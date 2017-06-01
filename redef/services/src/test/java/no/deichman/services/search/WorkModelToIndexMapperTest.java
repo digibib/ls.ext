@@ -34,7 +34,7 @@ public class WorkModelToIndexMapperTest {
             + "                   \"uri\": \"http://data.deichman.no/subject/e1200005\"\n"
             + "              }\n"
             + "         ],\n"
-            + "        \"workTypeLabel\": \"Litteratur\",\n"
+            + "        \"workTypeLabel\": \"Literature\",\n"
             + "        \"hasWorkType\": {\n"
             + "              \"uri\": \"http://data.deichman.no/workType#Literature\"\n"
             + "         }\n"

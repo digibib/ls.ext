@@ -558,7 +558,7 @@
         "@type": "duo:Nationality",
         "rdfs:label": [
           {
-            "@language": "no",
+            "@language": "en",
             "@value": "USA"
           }
         ]
