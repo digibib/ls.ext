@@ -101,6 +101,7 @@ public class AppTest {
     private static final String ADD = "ADD";
     private static final String DEL = "DEL";
     public static final String ISBN = "978-82-525-8570-4";
+    public static final String LOOPBACK = "127.0.0.1";
     private static String appURI;
     private static App app;
 
@@ -127,7 +128,7 @@ public class AppTest {
         setupElasticSearch();
         System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + EmbeddedElasticsearchServer.getHttpPort());
         System.setProperty("ELASTICSEARCH_TCP_PORT", EmbeddedElasticsearchServer.getTcpPort().toString());
-        System.setProperty("ELASTICSEARCH_HOST", "127.0.0.1");
+        System.setProperty("ELASTICSEARCH_HOST", LOOPBACK);
         System.setProperty("ELASTICSEARCH_BULK_SIZE", "2");
         System.setProperty("ELASTICSEARCH_BULK_TIMEOUT", "100");
         appURI = LOCALHOST + ":" + appPort + "/";
