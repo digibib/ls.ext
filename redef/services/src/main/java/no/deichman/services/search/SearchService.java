@@ -13,9 +13,9 @@ import java.util.Set;
  * Responsibility: perform indexing and searching.
  */
 public interface SearchService {
-    void index(XURI xuri);
+    void index(XURI xuri, boolean bulk);
 
-    void indexOnly(XURI xuri) throws Exception;
+    void indexOnly(XURI xuri, boolean bulk) throws Exception;
 
     Response searchWork(String query);
 
@@ -61,7 +61,7 @@ public interface SearchService {
 
     void enqueueIndexingAllOfType(String type, Boolean ignoreConnectedResources);
 
-    void enqueueIndexing(Set<String> uris, XURI triggeredBy);
+    void enqueueIndexing(Set<String> uris, XURI triggeredBy, boolean bulk);
 
     Map<String, String> getAllSortLabelsForType(EntityType type);
 

@@ -177,7 +177,7 @@ public class SearchResource extends ResourceBase {
                 updateAvailabilityData(recordId, homeBranches, availableBranches, numItems);
 
         try {
-            getSearchService().indexOnly(pubUri);
+            getSearchService().indexOnly(pubUri, false);
         } catch (Exception e) {
             e.printStackTrace();
         }

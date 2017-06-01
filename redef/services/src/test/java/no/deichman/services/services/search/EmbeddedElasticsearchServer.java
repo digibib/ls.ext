@@ -19,7 +19,8 @@ public final class EmbeddedElasticsearchServer {
     private static final String DEFAULT_DATA_DIRECTORY = "/var/tmp/target/elasticsearch-data";
     private static EmbeddedElastic embeddedElastic;
     private final String dataDirectory;
-    private static int port;
+    private static int httpPort;
+    private static int tcpPort;
 
     public EmbeddedElasticsearchServer() throws Exception {
         this(DEFAULT_DATA_DIRECTORY);
@@ -27,15 +28,18 @@ public final class EmbeddedElasticsearchServer {
 
     private EmbeddedElasticsearchServer(String dataDirectory) throws Exception {
         this.dataDirectory = dataDirectory;
-        this.port = PortSelector.randomFree();
+        httpPort = PortSelector.randomFree();
+        tcpPort = PortSelector.randomFree();
         new File(dataDirectory).mkdirs();
 
         embeddedElastic = EmbeddedElastic.builder()
                 .withElasticVersion("5.2.1")
-                .withSetting("http.port", port)
+                .withSetting("http.port", httpPort)
+                .withSetting("transport.tcp.port", tcpPort)
                 .withSetting("http.enabled", "true")
                 .withSetting("path.home", ".")
                 .withSetting("path.data", dataDirectory)
+                .withSetting("cluster.name", "elasticsearch")
                 .withStartTimeout(2, TimeUnit.MINUTES)
                 .withEsJavaOpts("-Xms512m -Xmx512m")
                 .withPlugin(getenv().getOrDefault("ES_ICU_PLUGIN_URL", "analysis-icu"))
@@ -62,8 +66,8 @@ public final class EmbeddedElasticsearchServer {
     }
 
 
-    public static Integer getPort() {
-        return port;
+    public static Integer getHttpPort() {
+        return httpPort;
     }
 
 
@@ -86,4 +90,7 @@ public final class EmbeddedElasticsearchServer {
         }
     }
 
+    public static Integer getTcpPort() {
+        return tcpPort;
+    }
 }
