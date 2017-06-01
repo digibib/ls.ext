@@ -39,7 +39,7 @@ export function processSearchResponse (response, locationQuery) {
       result.workUri = element._source.uri
       result.id = getId(element._source.uri)
       result.relativeUri = relativeUri(result.workUri)
-      result.subject = [].concat(...[element._source.subject])
+      result.subject = [].concat(...[element._source.subject || []])
       if (element.inner_hits.publications.hits.hits.length > 0) {
         result.publication = element.inner_hits.publications.hits.hits[ 0 ]._source
         result.publication.contributors = result.publication.contributors || []
