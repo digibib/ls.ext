@@ -107,7 +107,7 @@ public final class App {
                         .completionSize(Integer.parseInt(System.getProperty("ELASTICSEARCH_BULK_SIZE", "1000")))     // set bulk size here
                         .forceCompletionOnStop()
                         .completionTimeout(Integer.parseInt(System.getProperty("ELASTICSEARCH_BULK_TIMEOUT", "1000")))  // set completion timeout here
-                        .to("elasticsearch5://elasticsearch?indexName=search&ip=elasticsearch&port=" + System.getProperty("ELASTICSEARCH_TCP_PORT", "9300"))
+                        .to("elasticsearch5://elasticsearch?indexName=search&ip=" + System.getProperty("ELASTICSEARCH_HOST", "elasticsearch") + "&port=" + System.getProperty("ELASTICSEARCH_TCP_PORT", "9300"))
                         .process(exchange -> {
                             final BulkResponse bulkResponse = (BulkResponse) exchange.getIn().getBody();
                             final int bulkLength = bulkResponse.getItems().length;
@@ -116,9 +116,9 @@ public final class App {
                             }
                         });
                 from("direct:index")
-                        .to("elasticsearch5://elasticsearch?indexName=search&ip=elasticsearch&port=" + System.getProperty("ELASTICSEARCH_TCP_PORT", "9300"))
+                        .to("elasticsearch5://elasticsearch?indexName=search&ip=" + System.getProperty("ELASTICSEARCH_HOST", "elasticsearch") + "&port=" + System.getProperty("ELASTICSEARCH_TCP_PORT", "9300"))
                         .process(exchange -> {
-                           LOG.info("Indexed " + exchange.getIn().getBody().toString());
+                            LOG.info("Indexed " + exchange.getIn().getBody().toString());
                         });
             }
         };
