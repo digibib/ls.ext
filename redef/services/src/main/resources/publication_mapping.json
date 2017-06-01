@@ -217,9 +217,6 @@
       "series": {
         "type": "text"
       },
-      "subject": {
-        "type": "text"
-      },
       "genre": {
         "type": "text"
       },
