@@ -85,6 +85,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 public class AppTest {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
     private static final int ONE_SECOND = 1000;
@@ -100,8 +101,8 @@ public class AppTest {
     private static final String EMPTY_STRING = "";
     private static final String ADD = "ADD";
     private static final String DEL = "DEL";
-    public static final String ISBN = "978-82-525-8570-4";
-    public static final String LOOPBACK = "127.0.0.1";
+    private static final String ISBN = "978-82-525-8570-4";
+    private static final String LOOPBACK = "127.0.0.1";
     private static String appURI;
     private static App app;
 
