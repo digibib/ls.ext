@@ -43,7 +43,6 @@ public final class EmbeddedElasticsearchServer {
                         .withType("workSeries", getSystemResourceAsStream("workSeries_mapping.json"))
                         .withType("subject", getSystemResourceAsStream("subject_mapping.json"))
                         .withType("genre", getSystemResourceAsStream("genre_mapping.json"))
-
                         .withType("instrument", getSystemResourceAsStream("instrument_mapping.json"))
                         .withType("compositionType", getSystemResourceAsStream("compositionType_mapping.json"))
                         .withType("event", getSystemResourceAsStream("event_mapping.json"))
@@ -78,7 +77,6 @@ public final class EmbeddedElasticsearchServer {
         return port;
     }
 
-
     public void shutdown() throws Exception {
         embeddedElastic.stop();
         deleteDataDirectory();
@@ -97,5 +95,4 @@ public final class EmbeddedElasticsearchServer {
             throw new RuntimeException("Could not delete data directory of embedded elasticsearch server", e);
         }
     }
-
 }

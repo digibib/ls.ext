@@ -122,17 +122,17 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void index(XURI xuri) {
+    public final void index(XURI xuri, boolean bulk) {
         try {
             if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
                 LOG.info("Indexing " + xuri.getUri());
 
                 // Index the requested resource
-                doIndex("search", xuri);
+                doIndex("search", xuri, bulk);
 
                 // Fetch a list of all connected resources which needs to be indexed as well
                 Set<String> connectedResources = entityService.retrieveResourcesConnectedTo(xuri);
-                enqueueIndexing(connectedResources, xuri);
+                enqueueIndexing(connectedResources, xuri, bulk);
             } else {
                 LOG.info("Skipping already indexed uri: " + xuri.getUri());
                 skipped++;
@@ -145,7 +145,7 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    public final void indexOnly(XURI xuri) throws Exception {
+    public final void indexOnly(XURI xuri, boolean bulk) throws Exception {
         indexOnly("search", xuri);
     }
 
@@ -156,7 +156,7 @@ public class SearchServiceImpl implements SearchService {
     private void indexOnly(String idx, XURI xuri) throws Exception {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
             LOG.info("Indexing " + xuri.getUri());
-            doIndex(idx, xuri);
+            doIndex(idx, xuri, bulk);
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
             skipped++;
@@ -166,12 +166,12 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private void indexWorkAndPublications(String idx, XURI xuri) throws Exception {
+    private void indexWorkAndPublications(String idx, XURI xuri, boolean bulk) throws Exception {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
             LOG.info("Indexing " + xuri.getUri() + " with publications");
             Model indexModel = entityService.retrieveWorkWithLinkedResources(xuri);
             Map<String, Object> indexDocument = new ModelToIndexMapper(EntityType.WORK.getPath()).createIndexObject(indexModel, xuri);
-            indexDocument(idx, xuri, GSON.toJson(indexDocument), null);
+            indexDocument(idx, xuri, GSON.toJson(indexDocument), null, bulk);
             cacheNameIndex(xuri, indexDocument);
             ResIterator subjectIterator = indexModel.listSubjects();
             while (subjectIterator.hasNext()) {
@@ -183,7 +183,7 @@ public class SearchServiceImpl implements SearchService {
                     XURI pubUri = new XURI(subj.toString());
                     LOG.info("Indexing " + pubUri.getUri());
                     Map<String, Object> doc = new ModelToIndexMapper("publication").createIndexObject(indexModel, pubUri);
-                    indexDocument(idx, pubUri, GSON.toJson(doc), xuri);
+                    indexDocument(idx, pubUri, GSON.toJson(doc), xuri, bulk);
                     cacheNameIndex(pubUri, doc);
                 }
             }
@@ -627,9 +627,9 @@ public class SearchServiceImpl implements SearchService {
                         try {
                             XURI resource = new XURI(uri);
                             if (resource.getTypeAsEntityType().equals(EntityType.WORK)) {
-                                indexWorkAndPublications(newIndex, resource);
+                                indexWorkAndPublications(newIndex, resource, true);
                             } else {
-                                indexOnly(newIndex, resource);
+                                indexOnly(newIndex, resource, true);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -664,9 +664,9 @@ public class SearchServiceImpl implements SearchService {
                 entityService.retrieveAllWorkUris(type, uri -> EXECUTOR_SERVICE.execute(() -> {
                     try {
                         if (ignoreConnectedResources) {
-                            indexOnly(new XURI(uri));
+                            indexOnly(new XURI(uri), true);
                         } else {
-                            index(new XURI(uri));
+                            index(new XURI(uri), true);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -677,7 +677,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public final void  enqueueIndexing(Set<String> uris, XURI triggeredBy) {
+    public final void  enqueueIndexing(Set<String> uris, XURI triggeredBy, boolean bulk) {
         LOG.info("Enqueuing indexing of " + uris.size() + " resources triggered by changes in <" + triggeredBy.getUri() + ">");
         THREADPOOL.execute(new Runnable() {
             @Override
@@ -685,7 +685,7 @@ public class SearchServiceImpl implements SearchService {
                 uris.forEach(uri -> EXECUTOR_SERVICE.execute(() -> {
                     try {
                         LOG.info("Indexing <" + uri + "> triggered by changes in <" + triggeredBy.getUri() + ">");
-                        doIndex("search", new XURI(uri));
+                        doIndex("search", new XURI(uri), bulk);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -740,7 +740,7 @@ public class SearchServiceImpl implements SearchService {
         return getIndexUriBuilder().setPath("/search/" + type.getPath()+"/_search");
     }
 
-    private void doIndex(String idx, XURI xuri) throws Exception {
+    private void doIndex(String idx, XURI xuri, boolean bulk) throws Exception {
 
         Model indexModel;
         XURI workXURI = null;
@@ -776,7 +776,7 @@ public class SearchServiceImpl implements SearchService {
         Monitor mon = MonitorFactory.start("createIndexDocument");
         Map<String, Object> indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexObject(indexModel, xuri);
         mon.stop();
-        indexDocument(idx, xuri, GSON.toJson(indexDocument), workXURI);
+        indexDocument(idx, xuri, GSON.toJson(indexDocument), workXURI, bulk);
         cacheNameIndex(xuri, indexDocument);
     }
 
@@ -795,7 +795,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    private void indexDocument(String idx, XURI xuri, String document, XURI parentUri) {
+    private void indexDocument(String idx, XURI xuri, String document, XURI parentUri, boolean bulk) {
         long now = currentTimeMillis();
         if (indexedUris != null && lastIndexedTime > 0 && now - lastIndexedTime > SILENT_PERIOD) {
             indexUrisOnlyOnce(false);

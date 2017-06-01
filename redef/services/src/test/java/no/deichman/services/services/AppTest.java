@@ -124,8 +124,10 @@ public class AppTest {
         System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
 
         setupElasticSearch();
-        System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + embeddedElasticsearchServer.getPort());
-
+        System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + EmbeddedElasticsearchServer.getHttpPort());
+        System.setProperty("ELASTICSEARCH_TCP_PORT", EmbeddedElasticsearchServer.getTcpPort().toString());
+        System.setProperty("ELASTICSEARCH_BULK_SIZE", "2");
+        System.setProperty("ELASTICSEARCH_BULK_TIMEOUT", "100");
         appURI = LOCALHOST + ":" + appPort + "/";
         app = new App(appPort, kohaAPIEndpoint, USE_IN_MEMORY_REPO, jamonAppPort, z3950Endpoint);
         app.startAsync();
@@ -1211,10 +1213,17 @@ public class AppTest {
     @Test
     public void when_index_is_cleared_and_reindexed_subjects_are_found() throws Exception {
         createSubjectInRdfStore("Hekling", BaseURI.ontology());
+        createSubjectInRdfStore("Strikking", BaseURI.ontology());
+        createSubjectInRdfStore("Sying", BaseURI.ontology());
+        createSubjectInRdfStore("Baking", BaseURI.ontology());
+        createSubjectInRdfStore("Hitler", BaseURI.ontology());
+        createSubjectInRdfStore("Trump", BaseURI.ontology());
         HttpResponse<String> response = Unirest.post(appURI + "search/clear_index").asString();
         assertEquals(HTTP_OK, response.getStatus());
+        LOG.error(response.getStatusText());
         Unirest.post(appURI + "search/subject/reindex_all").asString();
         doSearchForSubject("Hekling");
+        doSearchForSubject("Trump");
     }
 
 
@@ -1260,10 +1269,10 @@ public class AppTest {
                 buildLDPatch(
                         buildPatchStatement("add", workUri, BaseURI.ontology("partTitle"), "æøå"))).asString();
 
-        assertTrue(resourceIsIndexedWithinNumSeconds(workUri, 2));
-        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 2));
-        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 2));
-        assertTrue(resourceIsIndexedWithinNumSeconds(persUri1, 2));
+        assertTrue(resourceIsIndexedWithinNumSeconds(workUri, 40));
+        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 20));
+        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 20));
+        assertTrue(resourceIsIndexedWithinNumSeconds(persUri1, 20));
 
         // 4) Patch person, and verify that persn, work and publications gets reindexed within few seconds
         buildPatchRequest(
@@ -1286,7 +1295,7 @@ public class AppTest {
                         buildPatchStatement("add", subjUri, BaseURI.ontology("prefLabel"), "Drontheim"))).asString();
 
         //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Drontheim", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Drontheim", 20));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Drontheim", 2));
 
         // 6) Patch work series, and verify that publications get reindexed
@@ -1296,7 +1305,7 @@ public class AppTest {
                         buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
                         buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
 
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Cosmicomics", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Cosmicomics", 20));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Cosmicomics", 2));
     }
 
@@ -1459,6 +1468,7 @@ public class AppTest {
             Thread.sleep(ONE_SECOND);
             c++;
         }
+        LOG.error("Waited " + c + " seconds");
         return false;
     }
 
