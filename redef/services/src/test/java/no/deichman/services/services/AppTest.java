@@ -127,6 +127,7 @@ public class AppTest {
         setupElasticSearch();
         System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + EmbeddedElasticsearchServer.getHttpPort());
         System.setProperty("ELASTICSEARCH_TCP_PORT", EmbeddedElasticsearchServer.getTcpPort().toString());
+        System.setProperty("ELASTICSEARCH_HOST", "127.0.0.1");
         System.setProperty("ELASTICSEARCH_BULK_SIZE", "2");
         System.setProperty("ELASTICSEARCH_BULK_TIMEOUT", "100");
         appURI = LOCALHOST + ":" + appPort + "/";
