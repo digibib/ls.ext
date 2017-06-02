@@ -26,7 +26,6 @@ CONSTRUCT {
                deich:mt ?mtNo ;
                deich:hasMediaTypeAll ?mediaType ;
                deich:workUri ?workUri ;
-               deich:genre ?genreLabel ;
                deich:audience ?audience ;
                deich:agents ?contribAgentName ;
                deich:agents ?pubPartAgentName ;
@@ -229,14 +228,6 @@ WHERE {
           VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
           }
 
-  UNION {
-      <__PUBLICATIONURI__> deich:publicationOf ?work .
-      ?work deich:genre ?genre .
-      ?genre a deich:Genre ;
-            deich:prefLabel ?genreName  .
-      OPTIONAL { ?work deich:genre ?genre. ?genre deich:specification ?genreSpec }
-      BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
-    }
 
   # 4. Information from contributions on both publication and work:
 

@@ -117,6 +117,14 @@
             "type": "keyword"
           }
         }
+      },
+      "genre": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       }
     }
   }

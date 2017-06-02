@@ -60,10 +60,6 @@
     "publicationYear": "deichman:publicationYear",
     "firstPublicationYear": "deichman:firstPublicationYear",
     "Person": "deichman:Person",
-    "genre": {
-      "@id": "deichman:genre",
-      "@container": "@set"
-    },
     "role": "deichman:role",
     "mainEntry": "deichman:mainEntry",
     "mainEntryName": "deichman:mainEntryName",

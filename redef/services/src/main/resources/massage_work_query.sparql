@@ -14,6 +14,7 @@ CONSTRUCT {
                deich:subjectName ?subjectName ;
                deich:hasWorkType ?hasWorkType ;
                deich:workTypeLabel ?workTypeLabel ;
+               deich:genre ?genreLabel ;
                deich:mainEntryName ?mainEntryName ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
@@ -62,5 +63,12 @@ WHERE {
           OPTIONAL { ?agent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
           OPTIONAL { ?agent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
   }
+  UNION {
+      <__WORKURI__> deich:genre ?genre .
+      ?genre a deich:Genre ;
+            deich:prefLabel ?genreName  .
+      OPTIONAL { <__WORKURI__> deich:genre ?genre. ?genre deich:specification ?genreSpec }
+      BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
+    }
 
 }
