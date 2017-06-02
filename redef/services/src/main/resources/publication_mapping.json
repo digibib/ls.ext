@@ -217,9 +217,6 @@
       "series": {
         "type": "text"
       },
-      "genre": {
-        "type": "text"
-      },
       "ageLimit": {
         "type": "integer"
       },

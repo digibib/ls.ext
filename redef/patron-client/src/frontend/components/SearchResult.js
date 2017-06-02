@@ -451,7 +451,7 @@ class SearchResult extends React.Component {
               : null
             }
             {this.shouldShowFullList()
-              ? [this.renderSubjects(result), this.renderGenres(result.publication)]
+              ? [this.renderSubjects(result), this.renderGenres(result)]
               : null
             }
           </article>

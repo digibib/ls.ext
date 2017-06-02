@@ -44,6 +44,10 @@
     },
     "subject": "deichman:subjectName",
     "Subject": "deichman:Subject",
+    "genre": {
+      "@id": "deichman:genre",
+      "@container": "@set"
+    },
     "role": "deichman:role",
     "mainEntry": "deichman:mainEntry",
     "author": "http://data.deichman.no/role#author",
