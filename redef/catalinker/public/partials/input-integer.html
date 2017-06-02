@@ -1,0 +1,19 @@
+{{#if nonEditable === true}}
+<span data-automation-id="{{../../dataAutomationId}}">{{./current.value}}</span>
+{{else}}
+<input {{#disabled}} disabled="true" {{/}}
+tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+type="number" min="0"
+class-invalid-input="{{error}}"
+class-valid="{{!error}}"
+class="pure-u-{{input.widgetOptions.isRangeStart ? '1-1' : (input.widgetOptions.isRangeEnd ? '1-4' : (widgetOptions.short ? '1-4' : '1-1'))}}"
+on-blur='patchResource:{{predicate}},{{rdfType}}'
+{{#if input.widgetOptions.isRangeStart}}
+oninput="main.checkRangeStart(this)"
+{{/if}}
+{{#if input.widgetOptions.isRangeEnd}}
+onchange="main.checkRangeEnd(this)"
+{{/if}}
+data-automation-id="{{../../dataAutomationId}}"
+value="{{./current.value}}" />
+{{/if}}

@@ -1536,6 +1536,9 @@
         case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
           inputType = 'input-nonNegativeInteger'
           break
+        case 'http://www.w3.org/2001/XMLSchema#integer':
+          inputType = 'input-integer'
+          break
         case 'http://data.deichman.no/utility#duration':
           inputType = 'input-duration'
           break
@@ -2422,6 +2425,7 @@
           'input-gYear',
           'input-duration',
           'input-date-time',
+          'input-integer',
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
@@ -2435,6 +2439,7 @@
           'suggestor-for-select-predefined-value',
           'suggestor-for-input-string',
           'suggestor-for-input-gYear',
+          'suggestor-for-input-integer',
           'suggestor-for-input-nonNegativeInteger',
           'suggestor-for-input-literal',
           'select-predefined-value',
@@ -2458,6 +2463,7 @@
           'readonly-input-gYear',
           'readonly-input-duration',
           'readonly-input-date-time',
+          'readonly-input-integer',
           'readonly-input-nonNegativeInteger',
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
