@@ -96,6 +96,9 @@ services:
       - "--binlog-format=row"
       - "--max_binlog_size=100M"
       - "--log_bin_trust_function_creators=true"
+      - "--slow-query-log=1"
+      - "--slow-query-log-file=/var/lib/mysql/slow-query.log"
+      - "--long-query-time=10"
     environment:
       MYSQL_DATABASE: "koha_${KOHA_INSTANCE:-name}"
       MYSQL_PASSWORD: "${KOHA_ADMINPASS:-secret}"
