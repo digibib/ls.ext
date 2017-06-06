@@ -125,6 +125,10 @@
             "type": "keyword"
           }
         }
+      },
+      "summary": {
+        "type": "text",
+        "index": false
       }
     }
   }

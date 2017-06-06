@@ -29,6 +29,7 @@
     "subtitle": "deichman:subtitle",
     "partTitle": "deichman:partTitle",
     "partNumber": "deichman:partNumber",
+    "summary": "deichman:hasSummary",
     "publications": {
       "@id": "deichman:publication",
       "@container": "@set"
