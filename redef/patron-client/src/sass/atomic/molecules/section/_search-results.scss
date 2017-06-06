@@ -5,7 +5,7 @@
 .search-results {
   @include span(12 of 12);
   @include container;
-  margin-top: -0.7em;
+  // margin-top: -0.7em;
   /* @include border-top;
   padding-top: rhythm(2); */
 
@@ -22,8 +22,9 @@
 }
 
 .search-results-settings {
-  position: relative;
+  position: absolute;
   bottom: 0.1em;
+  right: 0;
   button {
     padding: 0;
   }
@@ -38,6 +39,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  position: relative;
 }
 
 .search-results-header {
