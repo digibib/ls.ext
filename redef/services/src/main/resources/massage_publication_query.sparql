@@ -15,7 +15,6 @@ CONSTRUCT {
                deich:format ?format ;
                deich:desc ?desc ;
                deich:publicationYear ?pubPublicationYear ;
-               deich:firstPublicationYear ?workPublicationYear ;
                deich:audience ?audience ;
                deich:homeBranches ?homeBranch ;
                deich:availableBranches ?availBranch ;
@@ -61,14 +60,10 @@ CONSTRUCT {
                deich:writingSystem ?wsNo ;
                deich:inst ?inst ;
                deich:bio ?bio ;
-               deich:workMainTitle ?workMainTitle ;
                deich:summary ?summary ;
                deich:country ?country ;
                deich:origLang ?origLang ;
                deich:contentAdaptation ?contentAdaptationCode ;
-               deich:workSubtitle ?workSubtitle ;
-               deich:workPartNumber ?workPartNumber ;
-               deich:workPartTitle ?workPartTitle ;
                deich:created ?created .
  <http://ignore> ?anyLang [
                 deich:mainTitle ?anyMt;
@@ -91,7 +86,6 @@ CONSTRUCT {
 }
 WHERE {
   # 1. Information from publication:
-
         { <__PUBLICATIONURI__> deich:recordId ?recordId ;
             deich:publicationOf ?work .
             BIND(str(?work) AS ?workUri ) }
@@ -172,14 +166,6 @@ WHERE {
 
   # 3. Information from work:
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:mainTitle ?workMainTitle. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:subtitle ?workSubtitle. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:partNumber ?workPartNumber. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:partTitle ?workPartTitle. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
             ?work a deich:Work ; deich:hasSummary ?summary. }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasCompositionType ?compType .
@@ -189,9 +175,6 @@ WHERE {
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:audience ?audienceO .
            BIND(str(?audienceO) AS ?audience) }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-          ?work a deich:Work ; deich:publicationYear ?workYear .
-          BIND(str(?workYear) AS ?workPublicationYear) }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
           ?work a deich:Work ; deich:hasClassification ?classEntry .
           ?classEntry deich:hasClassificationNumber ?dewey . }
