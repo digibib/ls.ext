@@ -47,6 +47,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -570,9 +571,9 @@ public class SearchServiceImpl implements SearchService {
                 entityService.retrieveAllWorkUris(type, uri -> EXECUTOR_SERVICE.execute(() -> {
                     try {
                         if (ignoreConnectedResources) {
-                            indexOnly(new XURI(uri), true);
+                            indexOnly(new XURI(uri), false);
                         } else {
-                            index(new XURI(uri), true);
+                            index(new XURI(uri), false);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -707,17 +708,10 @@ public class SearchServiceImpl implements SearchService {
             indexUrisOnlyOnce(false);
         }
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
-            ProducerTemplate template = App.getCamelContext().createProducerTemplate();
-            final IndexRequest indexRequest;
-            try {
-                indexRequest = new IndexRequest("search", xuri.getType(), URLEncoder.encode(xuri.getId(), "UTF-8")).source(document);
-                if (parentUri != null) {
-                    indexRequest.parent(URLEncoder.encode(parentUri.getId(), "UTF-8"));
-                }
-                template.requestBodyAndHeaders(bulk ? "direct:bulkIndex" : "direct:index",
-                        indexRequest, ImmutableMap.of("indexType", xuri.getType()));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+            if (bulk) {
+                bulkIndex(xuri, document, parentUri);
+            } else {
+                singleIndex(xuri, document, parentUri);
             }
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
@@ -725,6 +719,46 @@ public class SearchServiceImpl implements SearchService {
         }
         if (indexedUris != null) {
             indexedUris.add(xuri.getUri());
+        }
+        lastIndexedTime = now;
+    }
+
+    private void singleIndex(XURI xuri, String document, XURI parentUri) {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            final URIBuilder uriBuilder = getIndexUriBuilder()
+                    .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8)));
+            if (parentUri != null) {
+                uriBuilder.setParameter("parent", encode(parentUri.getUri(), UTF_8));
+            }
+            HttpPut httpPut = new HttpPut(uriBuilder // TODO drop urlencoded ID, and define _id in mapping from field uri
+                    .build());
+            httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
+            httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
+            Monitor mon = MonitorFactory.start("indexDocument");
+            try (CloseableHttpResponse putResponse = httpclient.execute(httpPut)) {
+                // no-op
+            } finally {
+                mon.stop();
+            }
+        } catch (Exception e) {
+            LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    private void bulkIndex(XURI xuri, String document, XURI parentUri) {
+        ProducerTemplate template = App.getCamelContext().createProducerTemplate();
+        final IndexRequest indexRequest;
+        try {
+            indexRequest = new IndexRequest("search", xuri.getType(), URLEncoder.encode(xuri.getId(), "UTF-8")).source(document);
+            if (parentUri != null) {
+                indexRequest.parent(URLEncoder.encode(parentUri.getId(), "UTF-8"));
+            }
+            template.requestBodyAndHeaders("direct:bulkIndex",
+                    indexRequest, ImmutableMap.of("indexType", xuri.getType()));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 
