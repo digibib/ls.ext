@@ -125,7 +125,6 @@ public class PublicationModelToIndexMapperTest {
             + "        \"workSeriesPartTitle\"\n"
             + "    ],\n"
             + "    \"subtitle\": \"xyz\",\n"
-            + "    \"summary\": \"En bok...\",\n"
             + "    \"title\": [\n"
             + "        \"La casa delle bugie\",\n"
             + "        \"xyz\",\n"

@@ -26,7 +26,6 @@ module.exports = {
     'publishedBy',
     'recordId',
     'series^20',
-    'summary',
     'title^20'
   ],
   defaultWorkFields: [

@@ -288,10 +288,6 @@
           }
         }
       },
-      "summary": {
-        "type": "text",
-        "index": false
-      },
       "compType": {
         "type": "text"
       },

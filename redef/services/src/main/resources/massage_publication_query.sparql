@@ -32,7 +32,6 @@ CONSTRUCT {
                ?pubPartRoleURI ?pubPartAgentName ;
                deich:mainEntryName ?mainEntryName ;
                deich:recordId ?recordId ;
-               deich:summary ?summary ;
                deich:formatNo ?formatNo ;
                deich:formatAdaptation ?formatAdaptNo ;
                deich:ageLimit ?ageLimit ;
@@ -165,8 +164,6 @@ WHERE {
       }
 
   # 3. Information from work:
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:hasSummary ?summary. }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasCompositionType ?compType .
            ?compType deich:prefLabel ?compTypeLabel . }
