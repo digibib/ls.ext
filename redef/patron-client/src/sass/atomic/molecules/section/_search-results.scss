@@ -5,7 +5,7 @@
 .search-results {
   @include span(12 of 12);
   @include container;
-  margin-top: -0.99em;
+  margin-top: -0.7em;
   /* @include border-top;
   padding-top: rhythm(2); */
 
@@ -22,9 +22,10 @@
 }
 
 .search-results-settings {
+  position: relative;
+  bottom: 0.1em;
   button {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
   }
   .search-results-settings-label {
     display: block;
