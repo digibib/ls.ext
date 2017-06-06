@@ -1,5 +1,8 @@
 {
   "publication": {
+    "_parent": {
+      "type": "work"
+    },
     "properties": {
       "displayLine1": {
         "type": "keyword"

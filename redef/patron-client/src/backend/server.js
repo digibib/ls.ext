@@ -23,6 +23,8 @@ if (process.env.NODE_ENV !== 'production') {
   }))
   app.use(require('webpack-hot-middleware')(compiler))
   console.log('HMR activated')
+} else {
+  app.set('json spaces', 2)
 }
 
 app.use('/', staticGzip(`${__dirname}/../../public`))

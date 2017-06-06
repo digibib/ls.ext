@@ -34,22 +34,23 @@ public final class EmbeddedElasticsearchServer {
         new File(dataDirectory).mkdirs();
 
         IndexSettings idx = IndexSettings.builder()
-                .withSettings(getSystemResourceAsStream("search_index.json"))
-                .withType("person", getSystemResourceAsStream("person_mapping.json"))
-                .withType("work", getSystemResourceAsStream("work_mapping.json"))
-                .withType("corporation", getSystemResourceAsStream("corporation_mapping.json"))
-                .withType("serial", getSystemResourceAsStream("serial_mapping.json"))
-                .withType("workSeries", getSystemResourceAsStream("workSeries_mapping.json"))
-                .withType("subject", getSystemResourceAsStream("subject_mapping.json"))
-                .withType("genre", getSystemResourceAsStream("genre_mapping.json"))
-                .withType("publication", getSystemResourceAsStream("publication_mapping.json"))
-                .withType("instrument", getSystemResourceAsStream("instrument_mapping.json"))
-                .withType("compositionType", getSystemResourceAsStream("compositionType_mapping.json"))
-                .withType("event", getSystemResourceAsStream("event_mapping.json"))
-                .build();
+                        .withSettings(getSystemResourceAsStream("search_index.json"))
+                        .withType("person", getSystemResourceAsStream("person_mapping.json"))
+                        .withType("publication", getSystemResourceAsStream("publication_mapping.json"))
+                        .withType("work", getSystemResourceAsStream("work_mapping.json"))
+                        .withType("corporation", getSystemResourceAsStream("corporation_mapping.json"))
+                        .withType("serial", getSystemResourceAsStream("serial_mapping.json"))
+                        .withType("workSeries", getSystemResourceAsStream("workSeries_mapping.json"))
+                        .withType("subject", getSystemResourceAsStream("subject_mapping.json"))
+                        .withType("genre", getSystemResourceAsStream("genre_mapping.json"))
+
+                        .withType("instrument", getSystemResourceAsStream("instrument_mapping.json"))
+                        .withType("compositionType", getSystemResourceAsStream("compositionType_mapping.json"))
+                        .withType("event", getSystemResourceAsStream("event_mapping.json"))
+                        .build();
 
         embeddedElastic = EmbeddedElastic.builder()
-                .withElasticVersion("5.2.1")
+                .withElasticVersion("5.4.1")
                 .withSetting("http.port", port)
                 .withSetting("http.enabled", "true")
                 .withSetting("path.home", ".")

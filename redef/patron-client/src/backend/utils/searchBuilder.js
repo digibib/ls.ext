@@ -6,33 +6,155 @@ function escape (query) {
   return query.replace(/\//g, '\\/')
 }
 
-function simpleQuery (query) {
-  return {
-    bool: {
-      must: [
-        {
-          simple_query_string: {
-            query: query,
-            default_operator: 'and',
-            fields: Defaults.defaultFields
+function initCommonQuery (workQuery, publicationQuery, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 10, explain = false) {
+  let aggregations = {}
+  Object.keys(Constants.filterableFields).forEach(key => {
+    let field
+    let fieldName
+    if (key === 'branch') {
+      fieldName = 'branches'
+      field = 'homeBranches'
+      if (excludeUnavailable) {
+        field = 'availableBranches'
+      }
+    } else {
+      field = Constants.filterableFields[ key ].name
+      fieldName = field
+    }
+    aggregations[ fieldName ] = {
+      terms: {
+        field: fieldName,
+        size: 1000
+      },
+      aggregations: {
+        parents: {
+          cardinality: {
+            field: '_parent',
           }
         }
-      ]
+      }
+    }
+  })
+  return {
+    size: pageSize,
+    from: pageSize * (page - 1 || 0),
+    aggs: {
+      facets: {
+        children: {
+          type: 'publication'
+        },
+        aggregations
+      }
+    },
+    query: {
+      bool: {
+        should: [
+          {
+            // query work by publication properties
+            has_child: {
+              score_mode: 'max',
+              type: 'publication',
+              query: wrapInLanguageBoost({
+                bool: {
+                  must: [
+                    publicationQuery
+                  ],
+                  filter: publicationFilters
+                },
+              }),
+              inner_hits: {
+                size: 100,
+                name: 'publications',
+                explain
+              }
+            }
+          },
+          {
+            // query by work properties
+            bool: {
+              must: [
+                {
+                  has_child: {
+                    query: wrapInLanguageBoost({
+                      bool: {
+                        should: {
+                          match_all: {}
+                        },
+                        filter: publicationFilters
+                      }
+                    }),
+                    score_mode: 'max',
+                    inner_hits: {
+                      name: 'publications',
+                      size: 100,
+                      explain
+                    },
+                    type: 'publication'
+                  }
+                },
+                workQuery
+              ],
+              filter: workFilters
+            }
+          }
+        ]
+      }
     }
   }
 }
 
-function advancedQuery (query) {
+function wrapInLanguageBoost (query) {
   return {
-    bool: {
-      must: [
-        {
-          query_string: {
-            query: translateFieldTerms(query, Constants.queryFieldTranslations),
-            default_operator: 'and'
-          }
+    function_score: {
+      query: query,
+      script_score: {
+        script: {
+          inline: `
+                      def langscores = [
+                        "nob": 1.5,
+                        "nno": 1.5,
+                        "nor": 1.5,
+                        "eng": 1.4,
+                        "swe": 1.3,
+                        "dan": 1.3,
+                        "ger": 1.2,
+                        "fre": 1.2,
+                        "spa": 1.1,
+                        "ita": 1.1
+                      ];
+                      def langscore = langscores.get(doc.language.value);
+                      if (langscore == null) {
+                        langscore = 1
+                      }
+                      def score = _score * langscore;
+                      def age_gain=0.6;
+                      def age_scale=100;
+                      if (doc.created.value != null) {
+                        score *= (1 + (age_gain*age_scale)/(age_scale+(System.currentTimeMillis()-doc.created.date.getMillis())/86400000));
+                      }
+                      return score;`.replace('\n', ''),
+          lang: 'painless'
         }
-      ]
+      }
+    }
+  }
+}
+
+function simpleQuery (query, fields) {
+  return {
+    simple_query_string: {
+      query: query,
+      default_operator: 'and',
+      fields: fields
+    }
+  }
+}
+
+function initAdvancedQuery (query) {
+  return {
+    query_string: {
+      query: translateFieldTerms(query, Constants.queryFieldTranslations),
+      default_operator: 'and'
     }
   }
 }
@@ -54,13 +176,13 @@ function fieldQuery (fields, queryString) {
 }
 
 function translateFieldTerms (query, translations) {
-  const chars = [...query]
+  const chars = [ ...query ]
   let result = ''
   let inQuote = false
   let startField = 0
   let startValue = 0
   for (let i = 0; i < chars.length; i++) {
-    const c = chars[i]
+    const c = chars[ i ]
     if (c === ' ') {
       if (i + 1 === chars.length) {
         break
@@ -73,8 +195,8 @@ function translateFieldTerms (query, translations) {
     if (!inQuote && c === ':') {
       result += chars.slice(startValue, startField).join('')
       let field = chars.slice(startField, i).join('')
-      if (translations[field]) {
-        field = translations[field]
+      if (translations[ field ]) {
+        field = translations[ field ]
       }
       result += field
       result += ':'
@@ -85,41 +207,43 @@ function translateFieldTerms (query, translations) {
 }
 
 // parse query string to decide what kind of query we think this is
-function queryStringToQuery (queryString) {
+function queryStringToQuery (queryString, workFilters, publicationFilters, excludeUnavailable, page, pageSize, explain = false) {
   const escapedQueryString = escape(queryString)
   const isbn10 = new RegExp('^[0-9Xx-]{10,13}$')
   const isbn13 = new RegExp('^[0-9-]{13,17}$')
   const advTriggers = new RegExp('[:+/-^()"*]|AND|OR|NOT|TO')
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
-    return fieldQuery(['isbn'], escapedQueryString)
+    return fieldQuery([ 'isbn' ], escapedQueryString)
   } else if (advTriggers.test(escapedQueryString)) {
-    return advancedQuery(escapedQueryString)
+    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(queryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, explain)
   } else {
-    return simpleQuery(escapedQueryString)
+    return initCommonQuery(simpleQuery(escapedQueryString, Defaults.defaultWorkFields), simpleQuery(escapedQueryString, Defaults.defaultPublicationFields), workFilters, publicationFilters, excludeUnavailable, page, pageSize, explain)
   }
 }
 
-function parseFilters (excludeUnavailable, filtersFromLocationQuery) {
+function parseFilters (filtersFromLocationQuery, domain) {
   const filterableFields = Constants.filterableFields
-  const filterBuckets = {}
+  const terms = {}
   if (!Array.isArray(filtersFromLocationQuery)) {
     filtersFromLocationQuery = [ filtersFromLocationQuery ]
   }
-  filtersFromLocationQuery.forEach(filter => { // ex filter: 'audience_juvenile'
-    const split = filter.split('_')
+  filtersFromLocationQuery.forEach(filterParamValue => { // ex filterParamValue: 'audience_juvenile'
+    const split = filterParamValue.split('_')
     const filterableField = filterableFields[ split[ 0 ] ]
-    const aggregation = filterableField.name
-    if (!filterBuckets[ aggregation ]) {
-      filterBuckets[ aggregation ] = []
+    if (filterableField.domain === domain) {
+      const aggregation = filterableField.name
+      if (!terms[ aggregation ]) {
+        terms[ aggregation ] = []
+      }
+      const val = filterableField.prefix + filterParamValue.substring(`${split[ 0 ]}_`.length)
+      terms[ aggregation ].push(val)
     }
-    const val = filterableField.prefix + filter.substring(`${split[ 0 ]}_`.length)
-    filterBuckets[ aggregation ].push(val)
   })
 
   const filters = []
-  Object.keys(filterBuckets).forEach(aggregation => {
-    filters.push({ aggregation: aggregation, bucket: filterBuckets[ aggregation ] })
+  Object.keys(terms).forEach(aggregation => {
+    filters.push({ terms: {[aggregation]: terms[ aggregation ] }})
   })
 
   return filters
@@ -146,103 +270,31 @@ function yearRangeFilter (yearFrom, yearTo) {
   }
 }
 
-module.exports.buildQuery = function (urlQueryString) {
-  const params = QueryParser.parse(urlQueryString)
-  const elasticSearchQuery = Defaults.queryDefaults
-  elasticSearchQuery.aggs = Defaults.defaultAggregates
-  elasticSearchQuery.query = queryStringToQuery(params.query)
-  const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
-  const filters = parseFilters(excludeUnavailable, params.filter || [])
-  const musts = {}
-  filters.forEach(filter => {
-    let aggregation = filter.aggregation
-    if (aggregation === 'branches') {
-      aggregation = 'homeBranches'
-      if (excludeUnavailable) {
-        aggregation = 'availableBranches'
-      }
-    }
-    const must = createMust(aggregation, filter.bucket)
-    musts[ aggregation ] = must
-  })
-
-  Object.keys(musts).forEach(aggregation => {
-    elasticSearchQuery.query.bool.must.push(musts[ aggregation ])
-  })
+function createPublicationFilters (params, excludeUnavailable) {
+  const publicationFilters = parseFilters(params.filter || [], 'publication')
 
   let yearRange
   if (params.yearFrom || params.yearTo) {
     yearRange = yearRangeFilter(params.yearFrom, params.yearTo)
   }
-
   if (yearRange) {
-    elasticSearchQuery.query.bool.must.push(yearRange)
+    publicationFilters.push(yearRange)
   }
+  return publicationFilters
+}
+module.exports.buildQuery = function (urlQueryString) {
+  const params = QueryParser.parse(urlQueryString)
+  const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
+  const workFilters = parseFilters(params.filter || [], 'work')
+  const publicationFilters = createPublicationFilters(params, excludeUnavailable)
+  return queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params.explain)
+}
 
-  if (excludeUnavailable) {
-    elasticSearchQuery.query.bool.must.push({
-      exists: {
-        field: 'availableBranches'
-      }
-    })
-  }
-
-  Object.keys(Constants.filterableFields).forEach(key => {
-    let field
-    let fieldName
-    if (key === 'branch') {
-      fieldName = 'branches'
-      field = 'homeBranches'
-      if (excludeUnavailable) {
-        field = 'availableBranches'
-      }
-    } else {
-      field = Constants.filterableFields[ key ].name
-      fieldName = field
-    }
-    elasticSearchQuery.aggs.facets.aggs[ fieldName ] = {
-      filter: {
-        bool: Object.assign({}, elasticSearchQuery.query.bool)
-      },
-      aggs: {
-        [fieldName]: {
-          terms: {
-            field: field,
-            size: 1000
-          }
-        }
-      }
-    }
-
-    const aggregationMusts = [elasticSearchQuery.query.bool.must[0]]
-    if (yearRange) {
-      aggregationMusts.push(yearRange)
-    }
-    if (excludeUnavailable) {
-      aggregationMusts.push({
-        exists: {
-          field: 'availableBranches'
-        }
-      })
-    }
-    Object.keys(musts).forEach(aggregation => {
-      const must = musts[ aggregation ]
-      if (fieldName === 'branches') {
-        if (aggregation === 'homeBranches' || aggregation === 'availableBranches') {
-          return
-        }
-      }
-      if (aggregation !== fieldName) {
-        aggregationMusts.push(must)
-      }
-    })
-    elasticSearchQuery.aggs.facets.aggs[ fieldName ].filter.bool.must = aggregationMusts
-  })
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`Parsed searchBuilder query: ${JSON.stringify(elasticSearchQuery)}`)
-  }
-  return elasticSearchQuery
+module.exports.buildUnfilteredAggregatedQuery = function (urlQueryString) {
+  const params = QueryParser.parse(urlQueryString)
+  return queryStringToQuery(params.query, [], [], false, 0, 0, params.explain)
 }
 
 // function exported only to be testable. TODO is there another way?
 module.exports.translateFieldTerms = translateFieldTerms
+
