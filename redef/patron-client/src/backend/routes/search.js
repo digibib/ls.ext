@@ -14,15 +14,15 @@ module.exports = (app) => {
             method: 'POST',
             body: JSON.stringify(searchBuilder.buildQuery(queryString))
           }).then(res => {
-            return res.json().then(searchResult =>{
+            return res.json().then(searchResult => {
               Object.keys(aggregationResult.aggregations.facets).forEach(facet => {
-                searchResultFacet = searchResult.aggregations.facets[facet]
+                const searchResultFacet = searchResult.aggregations.facets[ facet ]
                 if (typeof searchResultFacet === 'object') {
                   if (!searchResultFacet) {
                     searchResult.aggregations.facets[ facet ] = aggregationResult.aggregations.facets[ facet ]
                   } else {
                     aggregationResult.aggregations.facets[ facet ].buckets.forEach(aggBucket => {
-                      if (!searchResultFacet.buckets.find(bucket => {return bucket.key === aggBucket.key})) {
+                      if (!searchResultFacet.buckets.find(bucket => { return bucket.key === aggBucket.key })) {
                         searchResultFacet.buckets.push({
                           key: aggBucket.key,
                           doc_count: 0,
@@ -33,6 +33,7 @@ module.exports = (app) => {
                   }
                 }
               })
+              searchResult.aggregations = aggregationResult.aggregations
               return searchResult
             })
           })

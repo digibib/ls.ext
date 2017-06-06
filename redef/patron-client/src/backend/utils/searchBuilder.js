@@ -15,7 +15,8 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
     itemsScale: 50,
     childBoost: 10
   }, options)
-  let aggregations = {}
+
+  const aggregations = {}
   Object.keys(Constants.filterableFields).forEach(key => {
     let field
     let fieldName
@@ -37,7 +38,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
       aggregations: {
         parents: {
           cardinality: {
-            field: '_parent',
+            field: '_parent'
           }
         }
       }
@@ -114,7 +115,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                     publicationQuery
                   ],
                   filter: publicationFilters
-                },
+                }
               }),
               inner_hits: {
                 size: 100,
@@ -268,14 +269,6 @@ function parseFilters (filtersFromLocationQuery, domain) {
   })
 
   return filters
-}
-
-function createMust (field, terms) {
-  return {
-    terms: {
-      [field]: terms
-    }
-  }
 }
 
 function yearRangeFilter (yearFrom, yearTo) {

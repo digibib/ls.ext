@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import {defineMessages, FormattedMessage} from 'react-intl'
 import SearchResult from './SearchResult'
-import Constants from '../constants/Constants'
 import SearchResultsSettings from '../components/SearchResultsSettings'
 
 import SearchResultsText from '../components/SearchResultsText'
