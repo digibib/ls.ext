@@ -102,32 +102,37 @@ module.exports = {
   },
   backendUri: '/services',
   maxVisibleFilterItems: 3,
-  maxSearchResults: 200,
-  maxSearchResultsPerPage: 20,
+  maxSearchResultsPerPage: 10,
   filterableFields: {
     branch: {
       name: 'branches',
-      prefix: ''
+      prefix: '',
+      domain: 'publication'
     },
     mediatype: {
       name: 'mediatype',
-      prefix: 'http://data.deichman.no/mediaType#'
+      prefix: 'http://data.deichman.no/mediaType#',
+      domain: 'publication'
     },
     format: {
       name: 'formats',
-      prefix: 'http://data.deichman.no/format#'
+      prefix: 'http://data.deichman.no/format#',
+      domain: 'publication'
     },
     language: {
       name: 'languages',
-      prefix: 'http://lexvo.org/id/iso639-3/'
+      prefix: 'http://lexvo.org/id/iso639-3/',
+      domain: 'publication'
     },
     audience: {
       name: 'audiences',
-      prefix: 'http://data.deichman.no/audience#'
+      prefix: 'http://data.deichman.no/audience#',
+      domain: 'work'
     },
     fictionNonfiction: {
       name: 'fictionNonfiction',
-      prefix: 'http://data.deichman.no/fictionNonfiction#'
+      prefix: 'http://data.deichman.no/fictionNonfiction#',
+      domain: 'work'
     }
   },
   mediaTypeIcons: {

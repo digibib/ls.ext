@@ -1,6 +1,6 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
-import { injectIntl, intlShape } from 'react-intl'
+import {injectIntl, intlShape} from 'react-intl'
 
 class SearchFilterItem extends React.Component {
   constructor (props) {
@@ -51,7 +51,7 @@ class SearchFilterItem extends React.Component {
             />
           </div>
           <h2 className="filter_label" data-automation-id="filter_label" data-checked={filter.active} aria-hidden="true">
-            {this.props.intl.formatMessage({ id: filter.bucket })}{/* ({filter.count}) */}
+            {this.props.intl.formatMessage({ id: filter.bucket })} ({filter.count})
           </h2>
         </label>
       </li>

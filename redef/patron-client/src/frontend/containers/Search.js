@@ -1,12 +1,12 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
 import NonIETransitionGroup from '../components/NonIETransitionGroup'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
 import ReactPaginate from 'react-paginate'
-import { push } from 'react-router-redux'
+import {push} from 'react-router-redux'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import { injectIntl, intlShape, defineMessages } from 'react-intl'
+import {defineMessages, injectIntl, intlShape} from 'react-intl'
 
 import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
@@ -42,7 +42,7 @@ class Search extends React.Component {
 
   filterLocationQuery (locationQuery) {
     const filteredLocationQuery = {}
-    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'yearFrom', 'yearTo', 'excludeUnavailable' ].includes(key)).forEach(key => {
+    Object.keys(locationQuery).filter(key => [ 'query', 'filter', 'yearFrom', 'yearTo', 'excludeUnavailable', 'page' ].includes(key)).forEach(key => {
       filteredLocationQuery[ key ] = locationQuery[ key ]
     })
     return filteredLocationQuery
@@ -77,7 +77,7 @@ class Search extends React.Component {
               forcePage={this.props.location.query.page - 1 || 0}
               marginPagesDisplayed={1}
               pageRangeDisplayed={5}
-              pageCount={Math.ceil(Math.min(this.props.totalHits, Constants.maxSearchResults) / Constants.maxSearchResultsPerPage)}
+              pageCount={Math.ceil(this.props.totalHits / Constants.maxSearchResultsPerPage)}
               onPageChange={this.handlePageClick}
               containerClassName={'pagination'}
               subContainerClassName={'pages pagination'}
