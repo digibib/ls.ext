@@ -1,5 +1,3 @@
-const Constants = require('../../frontend/constants/Constants')
-
 module.exports = {
   queryDefaults: {
     size: 100

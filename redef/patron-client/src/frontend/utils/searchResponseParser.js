@@ -4,9 +4,9 @@ import title from './title'
 
 const titleCCLFields = Object
   .keys(Constants.queryFieldTranslations)
-  .map(key => {return {key, value:Constants.queryFieldTranslations[ key ]}})
-  .filter(translation => { return translation.value.title})
-  .map(translation => { return translation.key})
+  .map(key => { return { key, value: Constants.queryFieldTranslations[ key ] } })
+  .filter(translation => { return translation.value.title })
+  .map(translation => { return translation.key })
 
 function titleTermsFromQuery (query) {
   // strip out all ccl prefixes like "ht:", "mainTitle:" etc. If prefix is not among ccl prefixes for title related fields,
@@ -23,8 +23,8 @@ function titleTermsFromQuery (query) {
     }
   }
   return keywords
-    .filter(keyword => {return keyword !== undefined})
-    .map(titleExpr =>{ return titleExpr.replace(/^"|"$/g,'')})
+    .filter(keyword => { return keyword !== undefined })
+    .map(titleExpr => { return titleExpr.replace(/^"|"$/g, '') })
 }
 
 export function processSearchResponse (response, locationQuery) {
@@ -39,7 +39,7 @@ export function processSearchResponse (response, locationQuery) {
       result.workUri = element._source.uri
       result.id = getId(element._source.uri)
       result.relativeUri = relativeUri(result.workUri)
-      result.subject = [].concat(...[element._source.subject || []])
+      result.subject = [].concat(...[ element._source.subject || [] ])
       if (result.subject.length === 0) {
         result.subject = undefined
       }
@@ -64,12 +64,12 @@ export function processSearchResponse (response, locationQuery) {
         // If  the title of any preferred language contains the search query, use that title.
         const titleMatchTerms = titleTermsFromQuery(locationQuery.query)
 
-        for (let prefLang of Constants.preferredLanguages) {
-          let selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
+        for (const prefLang of Constants.preferredLanguages) {
+          const selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
             const titles = `${pub._source.mainTitle} ${pub._source.subtitle} ${pub._source.partNumber} ${pub._source.partTitle}`
               .toLocaleLowerCase()
             return (pub._source.languages || []).includes(prefLang) &&
-              titleMatchTerms.find(term => {return titles.includes(term)})
+              titleMatchTerms.find(term => { return titles.includes(term) })
           })
           if (selectedByPrefLang) {
             selected = selectedByPrefLang
@@ -110,9 +110,7 @@ export function processSearchResponse (response, locationQuery) {
         })
       }
 
-      result.mediaTypes = [ ... new Set(element.inner_hits.publications.hits.hits.filter(function (pub) {
-        return pub._source.mediatype
-      }).map(pub => (pub._source.mediatype ))) ].map(uri => ({ uri }))
+      result.mediaTypes = [ ...new Set(element.inner_hits.publications.hits.hits.filter(pub => pub._source.mediatype).map(pub => (pub._source.mediatype))) ].map(uri => ({ uri }))
 
       return result
     })
