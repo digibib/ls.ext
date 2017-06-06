@@ -141,9 +141,6 @@
       "publicationYear": {
         "type": "short"
       },
-      "firstPublicationYear": {
-        "type": "short"
-      },
       "audiences": {
         "type": "keyword"
       },
@@ -319,9 +316,6 @@
       "kd": {
         "type": "text"
       },
-      "workMainTitle": {
-        "type": "text"
-      },
       "country": {
         "type": "text"
       },
@@ -332,15 +326,6 @@
       "contentAdaptation": {
         "type": "text",
         "analyzer": "content_adaptation_analyzer"
-      },
-      "workSubtitle": {
-        "type": "text"
-      },
-      "workPartNumber": {
-        "type": "text"
-      },
-      "workPartTitle": {
-        "type": "text"
       },
       "created": {
         "type": "date"
