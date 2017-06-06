@@ -47,7 +47,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,7 +207,7 @@ public class AppTest {
     }
 
     private static HttpResponse<String> buildReplaceRequest(XURI replacee, XURI replacement) throws UnsupportedEncodingException, UnirestException {
-        return  Unirest
+        return Unirest
                 .put(appURI + replacement.getType() + "/" + replacement.getId() + "/merge")
                 .header("Content-type", "application/json")
                 .body("{\"replacee\": \"" + replacee.getUri() + "\"}")
@@ -375,7 +374,7 @@ public class AppTest {
 
         doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
 
-        
+
         // delete publication
         kohaAPIMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, "{\"items\":[]}");
         kohaAPIMock.addDeleteBibloExpectation(FIRST_BIBLIO_ID);
@@ -1052,7 +1051,7 @@ public class AppTest {
                 + "    }]"
                 + "}";
         embeddedElasticsearchServer.getClient().index("search", "work", source);
-     }
+    }
 
     @Test
     public void when_get_elasticsearch_work_without_query_parameter_should_get_bad_request_response() throws Exception {
@@ -1232,7 +1231,6 @@ public class AppTest {
 
 
     @Test
-    @Ignore
     public void resources_are_reindexed_when_themself_or_connected_resources_are_changed() throws Exception {
         kohaAPIMock.addLoginExpectation(); // TODO understand why needed here
 
@@ -1300,8 +1298,7 @@ public class AppTest {
                         buildPatchStatement("add", subjUri, BaseURI.ontology("prefLabel"), "Drontheim"))).asString();
 
         //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Drontheim", 20));
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Drontheim", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 20));
 
         // 6) Patch work series, and verify that publications get reindexed
         buildPatchRequest(
@@ -1449,7 +1446,7 @@ public class AppTest {
                 break;
             }
         }
-       return found;
+        return found;
     }
 
     private Boolean resourceIsIndexedWithValue(String uri, String value) throws Exception {
@@ -1473,7 +1470,6 @@ public class AppTest {
             Thread.sleep(ONE_SECOND);
             c++;
         }
-        LOG.error("Waited " + c + " seconds");
         return false;
     }
 

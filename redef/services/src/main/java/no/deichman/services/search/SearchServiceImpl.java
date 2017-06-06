@@ -664,9 +664,9 @@ public class SearchServiceImpl implements SearchService {
                 entityService.retrieveAllWorkUris(type, uri -> EXECUTOR_SERVICE.execute(() -> {
                     try {
                         if (ignoreConnectedResources) {
-                            indexOnly(new XURI(uri), true);
+                            indexOnly(new XURI(uri), false);
                         } else {
-                            index(new XURI(uri), true);
+                            index(new XURI(uri), false);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -825,9 +825,6 @@ public class SearchServiceImpl implements SearchService {
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
             skipped++;
-        }
-        if (indexedUris != null) {
-            indexedUris.add(xuri.getUri());
         }
     }
 

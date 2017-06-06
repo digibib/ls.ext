@@ -477,7 +477,7 @@ public final class EntityResource extends ResourceBase {
                 getSearchService().removeFromLocalIndex(outgoing);
                 final SearchService searchService = getSearchService();
                 searchService.delete(outgoing);
-                newHashSet(relatedUris).forEach(xuri -> searchService.index(xuri, true));
+                newHashSet(relatedUris).forEach(xuri -> searchService.index(xuri, false));
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new InternalServerErrorException(e);
