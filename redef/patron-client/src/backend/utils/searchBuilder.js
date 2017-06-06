@@ -178,22 +178,6 @@ function initAdvancedQuery (query) {
   }
 }
 
-function fieldQuery (fields, queryString) {
-  const q = fields.map(field => { return `${field}:${queryString}` }).join(' ')
-  return {
-    bool: {
-      must: [
-        {
-          query_string: {
-            query: q,
-            default_operator: 'or'
-          }
-        }
-      ]
-    }
-  }
-}
-
 function translateFieldTerms (query, translations) {
   const chars = [ ...query ]
   let result = ''
@@ -236,9 +220,9 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   const advTriggers = new RegExp('[:+/-^()"*]|AND|OR|NOT|TO')
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
-    return fieldQuery([ 'isbn' ], escapedQueryString)
+    return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else if (advTriggers.test(escapedQueryString)) {
-    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(queryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
+    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else {
     return initCommonQuery(simpleQuery(escapedQueryString, Defaults.defaultWorkFields), simpleQuery(escapedQueryString, Defaults.defaultPublicationFields), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   }
