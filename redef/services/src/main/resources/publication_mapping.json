@@ -189,9 +189,6 @@
       "publicationYear": {
         "type": "short"
       },
-      "audiences": {
-        "type": "keyword"
-      },
       "homeBranches": {
         "type": "keyword"
       },

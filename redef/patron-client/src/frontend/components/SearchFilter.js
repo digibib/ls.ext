@@ -175,7 +175,7 @@ export const messages = defineMessages({
     defaultMessage: 'Language'
   },
   audience: {
-    id: 'SearchFilter.filter[work.publications.audiences]',
+    id: 'SearchFilter.filter[work.audiences]',
     description: 'Label of the audience filter',
     defaultMessage: 'Audience'
   },

@@ -208,7 +208,7 @@ export default {
   'SearchFilterAvailabilityBoxItem.title.filter': 'Tilgjengelighetsfilter på',
   'SearchFilter.collapseGroup': 'Skjul filtergruppen:',
   'SearchFilter.expandGroup': 'Vis filtergruppen:',
-  'SearchFilter.filter[work.publications.audiences]': 'Målgruppe',
+  'SearchFilter.filter[work.audiences]': 'Målgruppe',
   'SearchFilter.filter[work.publications.branches]': 'Velg avdeling',
   'SearchFilter.filter[work.fictionNonfiction]': 'Fag/fiksjon',
   'SearchFilter.filter[work.publications.formats]': 'Format',

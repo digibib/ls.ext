@@ -163,6 +163,9 @@
       },
       "fictionNonfiction": {
         "type": "keyword"
+      },
+      "audiences": {
+        "type": "keyword"
       }
     }
   }

@@ -42,10 +42,6 @@
     "graph": "@graph",
     "birthYear": "deichman:birthYear",
     "deathYear": "deichman:deathYear",
-    "audiences": {
-      "@id": "deichman:audience",
-      "@container": "@set"
-    },
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
     "publications": {

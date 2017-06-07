@@ -15,7 +15,6 @@ CONSTRUCT {
                deich:format ?format ;
                deich:desc ?desc ;
                deich:publicationYear ?pubPublicationYear ;
-               deich:audience ?audience ;
                deich:homeBranches ?homeBranch ;
                deich:availableBranches ?availBranch ;
                deich:numItems ?numItems ;
@@ -24,7 +23,6 @@ CONSTRUCT {
                deich:mediaType ?pubMediaType ;
                deich:mt ?mtNo ;
                deich:workUri ?workUri ;
-               deich:audience ?audience ;
                deich:agents ?contribAgentName ;
                deich:agents ?pubPartAgentName ;
                ?contribRoleURI ?contribAgentName ;
@@ -129,9 +127,6 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 3. Information from work:
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:audience ?audienceO .
-           BIND(str(?audienceO) AS ?audience) }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
           ?work a deich:Work ; deich:hasClassification ?classEntry .
           ?classEntry deich:hasClassificationNumber ?dewey . }
