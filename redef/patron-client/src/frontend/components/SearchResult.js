@@ -36,10 +36,10 @@ class SearchResult extends React.Component {
   renderContributors (contributors) {
     if (contributors.length > 0) {
       return (
-        <p data-automation-id="work_contributors">{contributors.map(contribution => (
-          <span key={contribution.agent.relativeUri}>
+        <p data-automation-id="work_contributors" >{contributors.map(contribution => (
+          <span key={contribution.agent.relativeUri} >
             <strong>Av</strong>
-            <Link to={fieldQueryLink('aktør', contribution.agent.name)}> {contribution.agent.name} </Link>
+            <Link to={fieldQueryLink('aktør', contribution.agent.name)} > {contribution.agent.name} </Link>
           </span>
         ))}
         </p>
@@ -49,11 +49,11 @@ class SearchResult extends React.Component {
 
   renderDisplayTitle (result) {
     return (
-      <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
-        <h1 className="workTitle" data-automation-id="work-title">
-          <span className="title-text">{result.title}</span>
+      <Link data-automation-id="work-link" to={this.getResultUrl(result)} >
+        <h1 className="workTitle" data-automation-id="work-title" >
+          <span className="title-text" >{result.title}</span>
           {this.shouldShowFullList()
-            ? <span className="caret"><i className="icon-angle-wide" aria-hidden="true" /></span>
+            ? <span className="caret" ><i className="icon-angle-wide" aria-hidden="true" /></span>
             : null
           }
         </h1>
@@ -61,12 +61,12 @@ class SearchResult extends React.Component {
     )
   }
 
-  renderOriginalTitle (publication) {
-    if (publication.originalTitle) {
+  renderOriginalTitle (originalTitle) {
+    if (originalTitle) {
       return (
-        <div className="original-title">
-          <p data-automation-id="work_originaltitle">
-            <FormattedMessage {...messages.originalTitle} /> {publication.originalTitle}
+        <div className="original-title" >
+          <p data-automation-id="work_originaltitle" >
+            <FormattedMessage {...messages.originalTitle} /> { originalTitle }
           </p>
         </div>
       )
@@ -76,13 +76,13 @@ class SearchResult extends React.Component {
   renderSubjects (result) {
     if (result.subject) {
       return (
-        <p key="pubs" className="subjects" data-automation-id="work_subjects">
+        <p key="pubs" className="subjects" data-automation-id="work_subjects" >
           <strong><FormattedMessage {...messages.subjects} /></strong>
           {result.subject.map((subject, i) => (
-            <span key={subject}>
+            <span key={subject} >
                 <Link
                   to={fieldQueryLink('emne', subject)}
-                  onClick={this.scrollToTop}> {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
+                  onClick={this.scrollToTop} > {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
                 </span>
           ))}
         </p>
@@ -93,12 +93,12 @@ class SearchResult extends React.Component {
   renderGenres (result) {
     if (result.genre) {
       return (
-        <p key="gens" className="genres" data-automation-id="work_genres">
+        <p key="gens" className="genres" data-automation-id="work_genres" >
           <strong><FormattedMessage {...messages.genres} /></strong>
           {result.genre.map((genre, i) => (
-            <span key={genre}>
+            <span key={genre} >
                 <Link to={fieldQueryLink('sjanger', genre)}
-                      onClick={this.scrollToTop}> {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
+                      onClick={this.scrollToTop} > {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
                 </span>
           ))}
         </p>
@@ -108,10 +108,10 @@ class SearchResult extends React.Component {
 
   renderSeries (publication) {
     return (
-      <div data-automation-id="publication_series">
+      <div data-automation-id="publication_series" >
         <strong><FormattedMessage {...messages.partOfSeries} /></strong>
         <span>
-          <Link to="#" onClick={this.scrollToTop}>Serie placeholder</Link>
+          <Link to="#" onClick={this.scrollToTop} >Serie placeholder</Link>
         </span>
       </div>
     )
@@ -163,15 +163,15 @@ class SearchResult extends React.Component {
     if (groupedByBranchAndMediaLangFiltered.length > 0 && groupedByBranchAndMediaMediaFiltered.length > 0) {
       const mediaAndLangFiltered = this.extractBranchesByMedia(groupedByBranchAndMediaLangFiltered)
       remainingBranches = this.extractRemainingBranches(groupedByBranchAndMedia, mediaAndLangFiltered)
-      return [mediaAndLangFiltered, remainingBranches]
+      return [ mediaAndLangFiltered, remainingBranches ]
     } else if (groupedByBranchAndMediaLangFiltered.length > 0) {
       remainingBranches = this.extractRemainingBranches(groupedByBranchAndMedia, groupedByBranchAndMediaLangFiltered)
-      return [groupedByBranchAndMediaLangFiltered, remainingBranches]
+      return [ groupedByBranchAndMediaLangFiltered, remainingBranches ]
     } else if (groupedByBranchAndMediaMediaFiltered.length > 0) {
       remainingBranches = this.extractRemainingBranches(groupedByBranchAndMedia, groupedByBranchAndMediaMediaFiltered)
-      return [groupedByBranchAndMediaMediaFiltered, remainingBranches]
+      return [ groupedByBranchAndMediaMediaFiltered, remainingBranches ]
     } else {
-      return [groupedByBranchAndMedia, []]
+      return [ groupedByBranchAndMedia, [] ]
     }
   }
 
@@ -279,22 +279,24 @@ class SearchResult extends React.Component {
           defaultBranchPos = i
         }
         return (
-          <div className="items-by-branch" key={el.branchcode}>
-            <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
-              <div className="flex-wrapper branch-header">
-                <div className="flex-item">
+          <div className="items-by-branch" key={el.branchcode} >
+            <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode} >
+              <div className="flex-wrapper branch-header" >
+                <div className="flex-item" >
                   <h1>{this.props.intl.formatMessage({ id: el.branchcode })}</h1>
                 </div>
-                <div className="flex-item item-icon-button">
-                  <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode}>
-                    <button className="flex-item">
+                <div className="flex-item item-icon-button" >
+                  <ClickableElement onClickAction={this.handleBranchStatus} onClickArguments={el.branchcode} >
+                    <button className="flex-item" >
                       {this.shouldShowBranchStatus(el.branchcode, groupedByBranchAndMedia.length)
-                        ? [(<span key={`show-less-content${el.branchcode}`} className="is-vishidden">
+                        ? [ (<span key={`show-less-content${el.branchcode}`} className="is-vishidden" >
                           <FormattedMessage {...messages.showBranchAvailability} />
-                        </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open" aria-hidden="true" />)]
-                        : [(<span key={`show-more-content${el.branchcode}`} className="is-vishidden">
+                        </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open"
+                                      aria-hidden="true" />) ]
+                        : [ (<span key={`show-more-content${el.branchcode}`} className="is-vishidden" >
                         <FormattedMessage {...messages.hideBranchAvailability} />
-                        </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open" aria-hidden="true" />)]
+                        </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open"
+                                      aria-hidden="true" />) ]
                       }
                     </button>
                   </ClickableElement>
@@ -396,8 +398,7 @@ class SearchResult extends React.Component {
   render () {
     const { result } = this.props
     const pubFormats = new Set()
-    result.publication.formats = result.publication.formats || []
-    result.publication.formats.forEach(format => {
+    result.formats.forEach(format => {
       pubFormats.add(this.props.intl.formatMessage({ id: format }))
     })
 
@@ -419,22 +420,21 @@ class SearchResult extends React.Component {
         component="div"
         className="single-entry"
         data-formats={formats.join(', ')}
-        style={{borderWidth: '1px'}}>
-        <div className="entry-header">
+        style={{borderWidth: '1px'}}><div className="entry-header">
           {this.shouldShowFullList()
-            ? <aside className="book-cover" aria-hidden="true">
-              <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1">
+            ? <aside className="book-cover" aria-hidden="true" >
+              <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1" >
                 {result.image ? <img src={result.image} alt={coverAltText} />
                   : <i aria-label={missingCoverAltText}
                        className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
-                       </Link>
+              </Link>
             </aside>
             : null
           }
 
-          <article className="entry-content">
+          <article className="entry-content" >
 
-            <div className="entry-content-icon">
+            <div className="entry-content-icon" >
               {/* <FormattedMessage {...messages.availableAs} /> */}
               {result.mediaTypes.map(mediaType => {
                 return <MediaType key={mediaType.uri} mediaType={mediaType} />
@@ -443,51 +443,55 @@ class SearchResult extends React.Component {
             </div>
 
             {this.renderDisplayTitle(result)}
-            {this.renderContributors(result.publication.contributors)}
-            {this.renderOriginalTitle(result.publication)}
+            {this.renderContributors(result.contributors)}
+            {this.renderOriginalTitle(result.originalTitle)}
             {/* this.renderSeries(result.publication) */}
-            {result.publication.abstract
-              ? <p className="abstract">{result.publication.abstract}</p>
+            {result.abstract
+              ? <p className="abstract" >{result.abstract}</p>
               : null
             }
             {this.shouldShowFullList()
-              ? [this.renderSubjects(result), this.renderGenres(result)]
+              ? [ this.renderSubjects(result), this.renderGenres(result) ]
               : null
             }
           </article>
         </div>
         {this.shouldShowStatus()
-          ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
-                <p><a role="button" tabIndex="0" aria-expanded="true"><FormattedMessage {...messages.hideStatus} /></a></p>
-                <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
-              </div>),
-              (<div key="entry-more-content" className="entry-content-more">
-                {this.renderItems(groupedByBranchAndMedia[0])}
-              </div>),
-              (<span key="entry-more-content-unfiltered-wrapper">{groupedByBranchAndMedia[ 1 ].length
-                  ? (<div key="entry-more-content-unfiltered" onClick={this.handleShowUnfilteredStatusClick} onKeyDown={this.handleEnter}>
-                    {this.shouldShowUnfilteredStatus()
-                      ? [ (<div key="show-more-unfiltered-content" className="show-more-content">
-                        <p><a role="button" tabIndex="0"
-                              aria-expanded="true"><FormattedMessage {...messages.hideRestOfBranches} /></a></p>
-                        <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
-                      </div>),
-                        (<div key="show-more-unfiltered-content-items"
-                              className="entry-content-more">{this.renderItems(groupedByBranchAndMedia[ 1 ])}</div>) ]
-                      : (<div className="show-more-content" onClick={this.handleShowUnfilteredStatusClick} onKeyDown={this.handleEnter}>
-                        <p><a role="button" tabIndex="0"
-                              aria-expanded="false"><FormattedMessage {...messages.restOfBranches} /></a></p>
-                        <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
-                      </div>)
-                    }
-                </div>)
-                  : null
-              }</span>)
+          ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}
+                    onKeyDown={this.handleEnter} >
+            <p><a role="button" tabIndex="0" aria-expanded="true" ><FormattedMessage {...messages.hideStatus} /></a></p>
+            <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
+          </div>),
+            (<div key="entry-more-content" className="entry-content-more" >
+              {this.renderItems(groupedByBranchAndMedia[ 0 ])}
+            </div>),
+            (<span key="entry-more-content-unfiltered-wrapper" >{groupedByBranchAndMedia[ 1 ].length
+              ? (<div key="entry-more-content-unfiltered" onClick={this.handleShowUnfilteredStatusClick}
+                      onKeyDown={this.handleEnter} >
+                {this.shouldShowUnfilteredStatus()
+                  ? [ (<div key="show-more-unfiltered-content" className="show-more-content" >
+                    <p><a role="button" tabIndex="0"
+                          aria-expanded="true" ><FormattedMessage {...messages.hideRestOfBranches} /></a></p>
+                    <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
+                  </div>),
+                    (<div key="show-more-unfiltered-content-items"
+                          className="entry-content-more" >{this.renderItems(groupedByBranchAndMedia[ 1 ])}</div>) ]
+                  : (<div className="show-more-content" onClick={this.handleShowUnfilteredStatusClick}
+                          onKeyDown={this.handleEnter} >
+                    <p><a role="button" tabIndex="0"
+                          aria-expanded="false" ><FormattedMessage {...messages.restOfBranches} /></a></p>
+                    <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
+                  </div>)
+                }
+              </div>)
+              : null
+            }</span>)
           ]
-          : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter}>
-              <p><a role="button" tabIndex="0" aria-expanded="false"><FormattedMessage {...messages.showStatus} /></a></p>
-              <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
-            </div>)
+          : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter} >
+            <p><a role="button" tabIndex="0" aria-expanded="false" ><FormattedMessage {...messages.showStatus} /></a>
+            </p>
+            <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
+          </div>)
         }
 
       </NonIETransitionGroup>
@@ -600,7 +604,7 @@ intlSearchResult = connect(
   mapStateToProps
 )(intlSearchResult)
 
-export { intlSearchResult as SearchResult }
+export {intlSearchResult as SearchResult}
 
 export default intlSearchResult
 

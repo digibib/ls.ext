@@ -20,7 +20,7 @@ CONSTRUCT {
                deich:availableBranches ?availBranch ;
                deich:numItems ?numItems ;
                deich:contributor ?contrib ;
-               deich:hasImage ?img ;
+               deich:hasImage  ?img ;
                deich:mediaType ?pubMediaType ;
                deich:mt ?mtNo ;
                deich:workUri ?workUri ;
@@ -53,7 +53,6 @@ CONSTRUCT {
                deich:publishedBy ?publishedBy ;
                deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
-               deich:langTitles <http://ignore> ;
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
                deich:inst ?inst ;
@@ -63,14 +62,6 @@ CONSTRUCT {
                deich:origLang ?origLang ;
                deich:contentAdaptation ?contentAdaptationCode ;
                deich:created ?created .
- <http://ignore> ?anyLang [
-                deich:mainTitle ?anyMt;
-                deich:subtitle ?anySt ;
-                deich:variantTitle ?anyVt ;
-                deich:partNumber ?anyPn ;
-                deich:partTitle ?anyPt ;
-                deich:hasImage ?anyImage ;
-                deich:pubUri ?anyPub ]  .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -138,20 +129,6 @@ WHERE {
              BIND(str(?wsNoLang) AS ?wsNo)
              FILTER(lang(?wsNoLang) = "no") }
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
-
-  # 2. Information from other publications:
-  UNION {
-    <__PUBLICATIONURI__> deich:publicationOf ?work  .
-    ?anyP deich:publicationOf ?work ;
-      deich:language ?anyLang ;
-      deich:mainTitle ?anyMt .
-    OPTIONAL { ?anyP deich:subtitle ?anySt }
-    OPTIONAL { ?anyP deich:partTitle ?anyPt }
-    OPTIONAL { ?anyP deich:variantTitle ?anyVt }
-    OPTIONAL { ?anyP deich:partNumber ?anyPn }
-    OPTIONAL { ?anyP deich:hasImage ?anyImage }
-    BIND(str(?anyP) AS ?anyPub)
-  }
 
   # 3. Information from work:
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .

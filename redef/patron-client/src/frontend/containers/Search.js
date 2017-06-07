@@ -171,7 +171,7 @@ class Search extends React.Component {
                            searchError={this.props.searchError}
                            fetchWorkResource={this.props.resourceActions.fetchWorkResource}
                            resources={this.props.resources}
-                           page={this.props.location.query.page}
+                           page={Number(this.props.location.query.page || '1')}
                            items={this.props.items}
                            homeBranch={this.props.userProfile.homeBranch}
               />
