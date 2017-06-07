@@ -23,7 +23,6 @@ CONSTRUCT {
                deich:hasImage ?img ;
                deich:mediaType ?pubMediaType ;
                deich:mt ?mtNo ;
-               deich:hasMediaTypeAll ?mediaType ;
                deich:workUri ?workUri ;
                deich:audience ?audience ;
                deich:agents ?contribAgentName ;
@@ -153,15 +152,6 @@ WHERE {
     OPTIONAL { ?anyP deich:hasImage ?anyImage }
     BIND(str(?anyP) AS ?anyPub)
   }
-
-  UNION {
-        ?p4 deich:publicationOf ?work ;
-           deich:hasMediaType ?mediaType .
-        OPTIONAL {
-          ?p4 deich:format ?mtFormatO .
-          BIND(str(?mtFormatO) AS ?mtFormat)
-        }
-      }
 
   # 3. Information from work:
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .

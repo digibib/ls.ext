@@ -67,10 +67,6 @@
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
     "image": "deichman:hasImage",
-    "mediaTypesFromAllPublications": {
-      "@id": "deichman:hasMediaTypeAll",
-      "@container": "@set"
-    },
     "mediatype": "deichman:mediaType",
     "norwegianTitle": "deichman:norwegianTitle",
     "englishTitle": "deichman:englishTitle",

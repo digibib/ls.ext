@@ -477,18 +477,6 @@
       "langTitles": {
         "enabled": false
       },
-      "mediatypesFromAllPublications": {
-        "type": "nested",
-        "properties": {
-          "uri": {
-            "type": "keyword"
-          },
-          "formats": {
-            "type": "text",
-            "index": false
-          }
-        }
-      },
       "kd": {
         "type": "text",
         "norms": {
