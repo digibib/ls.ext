@@ -100,7 +100,6 @@
     "isbn": "deichman:isbn",
     "ismn": "deichman:ismn",
     "ean": "deichman:ean",
-    "compType": "deichman:compType",
     "fictionNonfiction": "deichman:fictionNonfiction",
     "title1": "deichman:titleFirst",
     "title2": "deichman:titleSecond",

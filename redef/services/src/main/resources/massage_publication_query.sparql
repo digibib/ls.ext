@@ -51,7 +51,6 @@ CONSTRUCT {
                deich:ismn ?ismn ;
                deich:ean ?ean ;
                deich:publishedBy ?publishedBy ;
-               deich:compType ?compTypeLabel ;
                deich:fictionNonfiction ?fictionNonfiction ;
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
@@ -131,9 +130,6 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 3. Information from work:
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:hasCompositionType ?compType .
-           ?compType deich:prefLabel ?compTypeLabel . }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work deich:fictionNonfiction ?ficturi .BIND(str(?ficturi) AS ?fictionNonfiction) }
   UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .

@@ -15,6 +15,13 @@
         },
         "index_options": "docs"
       },
+      "compositionType": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
       "subjects": {
         "type": "nested",
         "properties": {

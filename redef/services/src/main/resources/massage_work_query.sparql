@@ -16,6 +16,7 @@ CONSTRUCT {
                deich:hasWorkType ?hasWorkType ;
                deich:workTypeLabel ?workTypeLabel ;
                deich:genre ?genreLabel ;
+               deich:compType ?compTypeLabel ;
                deich:mainEntryName ?mainEntryName ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
@@ -71,6 +72,8 @@ WHERE {
             deich:prefLabel ?genreName  .
       OPTIONAL { <__WORKURI__> deich:genre ?genre. ?genre deich:specification ?genreSpec }
       BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
-    }
-
+  }
+  UNION {  <__WORKURI__> deich:hasCompositionType ?compType .
+           ?compType deich:prefLabel ?compTypeLabel .
+  }
 }

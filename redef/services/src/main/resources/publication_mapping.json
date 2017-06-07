@@ -460,13 +460,6 @@
           }
         }
       },
-      "compType": {
-        "type": "text",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "publishedBy": {
         "type": "text",
         "norms": {
