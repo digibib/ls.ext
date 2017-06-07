@@ -474,9 +474,6 @@
         },
         "index_options": "docs"
       },
-      "langTitles": {
-        "enabled": false
-      },
       "kd": {
         "type": "text",
         "norms": {

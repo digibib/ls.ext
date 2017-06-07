@@ -44,13 +44,14 @@ export function processSearchResponse (response, locationQuery) {
         result.subject = undefined
       }
       result.genre = element._source.genre
+      result.formats = []
       if (element.inner_hits.publications.hits.hits.length > 0) {
-        result.publication = element.inner_hits.publications.hits.hits[ 0 ]._source
-        result.publication.contributors = result.publication.contributors || []
-        result.publication.contributors = result.publication.contributors.filter(contributor => contributor.mainEntry)
-        result.publication.contributors.forEach(contributor => {
+        result.contributors = element._source.contributors || []
+        result.contributors = result.contributors.filter(contributor => contributor.mainEntry)
+        result.contributors.forEach(contributor => {
           contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
         })
+        result.formats = [].concat.apply([], element.inner_hits.publications.hits.hits.map(pub => { return pub._source.formats || [] }))
       }
 
       let selected // will be our selected publication for display, based on language criteria
@@ -79,6 +80,7 @@ export function processSearchResponse (response, locationQuery) {
       }
 
       if (selected) {
+        result.publication = selected
         result.title = title({
           mainTitle: selected._source.mainTitle,
           subtitle: selected._source.subtitle,
@@ -95,13 +97,17 @@ export function processSearchResponse (response, locationQuery) {
           // Choose any available based on preferred languages
           for (let i = 0; i < Constants.preferredLanguages.length; i++) {
             const prefLang = Constants.preferredLanguages[ i ]
-            if (result.publication.langTitles[ prefLang ] && result.publication.langTitles[ prefLang ].image) {
-              result.image = result.publication.langTitles[ prefLang ].image
+            const pubWithImage = element.inner_hits.publications.hits.hits.find(pub => {
+              return pub._source.image && [].concat(...[ pub._source.languages || [] ]).includes(prefLang)
+            })
+            if (pubWithImage) {
+              result.image = pubWithImage.image
               break
             }
           }
         }
       } else {
+        result.publication = {}
         result.title = title({
           mainTitle: element._source.mainTitle,
           subtitle: element._source.subtitle,
