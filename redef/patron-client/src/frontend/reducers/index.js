@@ -12,6 +12,7 @@ import reservation from './reservation'
 import registration from './registration'
 import resources from './resources'
 import datepicker from './datepicker'
+import history from './history'
 
 const rootReducer = combineReducers({
   application,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   registration,
   resources,
   datepicker,
+  history,
   routing: routerReducer,
   form: formReducer
 })

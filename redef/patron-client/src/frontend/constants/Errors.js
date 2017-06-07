@@ -22,5 +22,8 @@ export default {
   profile: {
     CURRENT_PIN_NOT_CORRRECT: 'currentPinNotCorrect',
     GENERIC_CHANGE_PIN_ERROR: 'genericChangePinError'
+  },
+  history: {
+    GENERIC_FETCH_HISTORY_ERROR: 'genericFetchHistoryError'
   }
 }
