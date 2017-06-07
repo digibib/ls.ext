@@ -20,6 +20,7 @@ CONSTRUCT {
                deich:compType ?compTypeLabel ;
                deich:mainEntryName ?mainEntryName ;
                deich:audience ?audience ;
+               deich:dewey ?dewey ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -84,4 +85,6 @@ WHERE {
   UNION {  <__WORKURI__> deich:audience ?audienceUri .
            BIND(str(?audienceUri) AS ?audience)
   }
+  UNION { <__WORKURI__> deich:hasClassification ?classEntry .
+          ?classEntry deich:hasClassificationNumber ?dewey . }
 }

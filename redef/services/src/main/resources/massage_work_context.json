@@ -24,6 +24,7 @@
       "@id": "deichman:audience",
       "@container": "@set"
     },
+    "dewey": "deichman:dewey",
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
     "subtitle": "deichman:subtitle",

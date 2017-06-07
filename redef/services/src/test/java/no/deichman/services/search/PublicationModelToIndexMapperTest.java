@@ -47,7 +47,6 @@ public class PublicationModelToIndexMapperTest {
             + "    ],\n"
             + "    \"ean\": \"7023060119782\",\n"
             + "    \"desc\": \"rather good\",\n"
-            + "    \"dewey\": \"929.209484213\",\n"
             + "    \"country\": \"Norge\",\n"
             + "    \"format\": \"E-bok\",\n"
             + "    \"formatAdaptation\": \"Storskrift\",\n"
