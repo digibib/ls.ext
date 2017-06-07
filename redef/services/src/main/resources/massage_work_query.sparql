@@ -19,6 +19,7 @@ CONSTRUCT {
                deich:genre ?genreLabel ;
                deich:compType ?compTypeLabel ;
                deich:mainEntryName ?mainEntryName ;
+               deich:audience ?audience ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -79,5 +80,8 @@ WHERE {
   }
   UNION { <__WORKURI__>  deich:fictionNonfiction ?ficturi .
             BIND(str(?ficturi) AS ?fictionNonfiction)
+  }
+  UNION {  <__WORKURI__> deich:audience ?audienceUri .
+           BIND(str(?audienceUri) AS ?audience)
   }
 }
