@@ -3,16 +3,47 @@
     "properties": {
       "workSeriesMainTitle": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "subtitle": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "partTitle": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "partNumber": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "uri": {
         "type": "keyword"

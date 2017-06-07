@@ -3,7 +3,11 @@
     "properties": {
       "name": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "birthYear": {
         "type": "text"
@@ -12,10 +16,18 @@
         "type": "text"
       },
       "nationality": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "specification": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "uri": {
         "type": "keyword"
