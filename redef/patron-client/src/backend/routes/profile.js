@@ -9,6 +9,24 @@ const extendedValidatorContactDetails = require('../utils/extendedValidator')(co
 
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
+
+  app.get('/api/v1/profile/history', (request, response) => {
+    // fetch(`http://xkoha:8081/api/v1/patrons/9/history`)
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/history`)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          response.status(res.status).send(res.statusText)
+          throw Error()
+        }
+      }).then(json => response.status(200).send(parseHistory(json)))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
   app.get('/api/v1/profile/info', (request, response) => {
     fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`)
       .then(res => {
@@ -162,6 +180,10 @@ module.exports = (app) => {
         response.sendStatus(500)
       })
   })
+
+  function parseHistory (history) {
+    console.log(history)
+  }
 
   function parsePatron (patron) {
     return {
