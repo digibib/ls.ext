@@ -166,6 +166,13 @@
       },
       "audiences": {
         "type": "keyword"
+      },
+      "dewey": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       }
     }
   }

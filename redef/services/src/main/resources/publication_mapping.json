@@ -92,13 +92,6 @@
         },
         "index_options": "docs"
       },
-      "dewey": {
-        "type": "text",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "nationality": {
         "type": "text",
         "norms": {

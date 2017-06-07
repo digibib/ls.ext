@@ -86,7 +86,6 @@
     "featuring":"http://data.deichman.no/role#featuring",
     "recordId": "deichman:recordId",
     "agents": "deichman:agents",
-    "dewey": "deichman:dewey",
     "nationality": "deichman:nationality",
     "title": "deichman:title",
     "litform": "deichman:litform",
