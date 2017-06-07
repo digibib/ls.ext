@@ -205,9 +205,6 @@
         "type": "text",
         "index": false
       },
-      "fictionNonfiction": {
-        "type": "keyword"
-      },
       "mediatype": {
         "type": "keyword"
       },
