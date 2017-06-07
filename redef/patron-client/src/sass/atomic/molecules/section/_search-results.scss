@@ -18,6 +18,8 @@
     margin-top: rhythm(0.9);
     font-size: 0.9em;
     line-height: 1.8em;
+    position: absolute;
+    bottom: 0.1em;
   }
 }
 
@@ -36,10 +38,11 @@
 }
 
 .search-results-header-flex {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-end; */
   position: relative;
+  margin-top: 1.85em;
 }
 
 .search-results-header {
