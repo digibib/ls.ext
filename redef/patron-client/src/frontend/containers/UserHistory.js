@@ -3,22 +3,19 @@ import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
-import {routerActions} from 'react-router-redux'
-import {Link} from 'react-router'
-import fieldQueryLink from '../utils/link'
-import isEmpty from '../utils/emptyObject'
 
-import * as ProfileActions from '../actions/ProfileActions'
-import ClickableElement from '../components/ClickableElement'
+import * as HistoryActions from '../actions/HistoryActions'
 import {formatDate} from '../utils/dateFormatter'
 import Loading from '../components/Loading'
+import HistoryItems from '../components/HistoryItems'
 
 class UserHistory extends React.Component {
+  componentWillMount () {
+    this.props.historyActions.fetchHistory()
+  }
   render () {
     return (
-      <div>
-        <p>User history here</p>
-      </div>
+      <HistoryItems historyItems={this.props.historyItems} />
     )
   }
 }
@@ -28,14 +25,14 @@ export const messages = defineMessages({})
 
 function mapStateToProps (state) {
   return {
-    loansAndReservationError: state.profile.loansAndReservationError
+    historyItems: state.history.historyData
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    profileActions: bindActionCreators(ProfileActions, dispatch)
+    historyActions: bindActionCreators(HistoryActions, dispatch)
   }
 }
 
