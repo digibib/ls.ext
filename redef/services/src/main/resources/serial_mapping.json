@@ -4,31 +4,78 @@
     {
       "serialMainTitle": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "subtitle": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "uri": {
         "type": "keyword"
       },
       "publishedByName": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "publishedByAlternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "publishedByPlacePrefLabel": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "publishedByPlaceAlternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "partTitle": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "partNumber": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "issn": {
         "type": "text",

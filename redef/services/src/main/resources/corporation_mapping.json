@@ -4,20 +4,40 @@
     {
       "name": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "subdivision": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "alternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "placePrefLabel": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "placeAlternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "displayLine1": {
         "type": "keyword"

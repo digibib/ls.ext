@@ -24,7 +24,11 @@
                 "type": "keyword"
               },
               "name": {
-                "type": "text"
+                "type": "text",
+                "norms": {
+                  "enabled": false
+                },
+                "index_options": "docs"
               },
               "birthYear": {
                 "type": "text",
@@ -55,7 +59,11 @@
                 "type": "keyword"
               },
               "name": {
-                "type": "text"
+                "type": "text",
+                "norms": {
+                  "enabled": false
+                },
+                "index_options": "docs"
               },
               "birthYear": {
                 "type": "text",
@@ -68,28 +76,52 @@
             }
           },
           "mainTitle": {
-            "type": "text"
+            "type": "text",
+            "norms": {
+              "enabled": false
+            },
+            "index_options": "docs"
           }
         }
       },
       "bio": {
         "type": "text",
-        "analyzer": "biography_analyzer"
+        "analyzer": "biography_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "dewey": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "nationality": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "recordId": {
         "type": "keyword"
       },
       "contributorNames": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "title": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "mainTitle": {
         "type": "text",
@@ -101,6 +133,10 @@
       },
       "partTitle": {
         "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -109,6 +145,10 @@
       },
       "subtitle": {
         "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -117,6 +157,10 @@
       },
       "partNumber": {
         "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -125,7 +169,11 @@
       },
       "subtitles": {
         "type": "text",
-        "analyzer": "language_analyzer"
+        "analyzer": "language_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "norwegianTitle": {
         "type": "text",
@@ -165,54 +213,102 @@
       },
       "mt": {
         "type": "text",
-        "analyzer": "mediatype_analyzer"
+        "analyzer": "mediatype_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "formats": {
         "type": "keyword"
       },
       "litform": {
         "type": "text",
-        "analyzer": "litform_analyzer"
+        "analyzer": "litform_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "format": {
         "type": "text",
-        "analyzer": "format_analyzer"
+        "analyzer": "format_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "desc": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "inst": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "formatAdaptation": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "language": {
         "type": "text",
         "analyzer": "language_analyzer",
-        "fielddata": true
+        "fielddata": true,
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "languages": {
         "type": "keyword"
       },
       "writingSystem": {
         "type": "text",
-        "analyzer": "writing_system_analyzer"
+        "analyzer": "writing_system_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "isbn": {
         "type": "text",
-        "analyzer": "isbn_analyzer"
+        "analyzer": "isbn_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "ismn": {
         "type": "text",
-        "analyzer": "isbn_analyzer"
+        "analyzer": "isbn_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "ean": {
         "type": "text",
-        "analyzer": "isbn_analyzer"
+        "analyzer": "isbn_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "series": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "ageLimit": {
         "type": "integer"
@@ -221,64 +317,140 @@
         "type": "keyword"
       },
       "scriptWriter": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "agents": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "actor": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "photographer": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "lyricist": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "composer": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "director": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "performer": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "musicalArranger": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "reader": {
         "type": "text"
       },
       "conductor": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "author": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "translator": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "illustrator": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "editor": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "contributor": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "coreographer": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "producer": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "productionCompany": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "featuring": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "mainEntryName": {
         "type": "text",
@@ -289,10 +461,18 @@
         }
       },
       "compType": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "publishedBy": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "langTitles": {
         "enabled": false
@@ -310,18 +490,34 @@
         }
       },
       "kd": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "country": {
-        "type": "text"
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "origLang": {
         "type": "text",
-        "analyzer": "language_analyzer"
+        "analyzer": "language_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "contentAdaptation": {
         "type": "text",
-        "analyzer": "content_adaptation_analyzer"
+        "analyzer": "content_adaptation_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "created": {
         "type": "date"

@@ -9,7 +9,11 @@
       },
       "litform": {
         "type": "text",
-        "analyzer": "litform_analyzer"
+        "analyzer": "litform_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       },
       "subjects": {
         "type": "nested",
@@ -18,7 +22,11 @@
             "type": "keyword"
           },
           "name": {
-            "type": "text"
+            "type": "text",
+            "norms": {
+              "enabled": false
+            },
+            "index_options": "docs"
           }
         }
       },
@@ -36,7 +44,11 @@
                 "type": "keyword"
               },
               "name": {
-                "type": "text"
+                "type": "text",
+                "norms": {
+                  "enabled": false
+                },
+                "index_options": "docs"
               },
               "birthYear": {
                 "type": "text",
@@ -63,6 +75,10 @@
       },
       "subtitle": {
         "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -71,6 +87,10 @@
       },
       "partTitle": {
         "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -79,6 +99,10 @@
       },
       "partNumber": {
         "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
