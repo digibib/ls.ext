@@ -210,7 +210,7 @@ export default {
   'SearchFilter.expandGroup': 'Vis filtergruppen:',
   'SearchFilter.filter[work.publications.audiences]': 'Målgruppe',
   'SearchFilter.filter[work.publications.branches]': 'Velg avdeling',
-  'SearchFilter.filter[work.publications.fictionNonfiction]': 'Fag/fiksjon',
+  'SearchFilter.filter[work.fictionNonfiction]': 'Fag/fiksjon',
   'SearchFilter.filter[work.publications.formats]': 'Format',
   'SearchFilter.filter[work.publications.languages]': 'Språk',
   'SearchFilter.filter[work.publications.mediatype]': 'Medietype',

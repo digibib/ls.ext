@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import ReactDOM from 'react-dom'
 import Constants from '../constants/Constants'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
 
 import SearchFilterItem from './SearchFilterItem'
 
@@ -155,7 +155,7 @@ export const messages = defineMessages({
     defaultMessage: 'Show less -'
   },
   fictionNonfiction: {
-    id: 'SearchFilter.filter[work.publications.fictionNonfiction]',
+    id: 'SearchFilter.filter[work.fictionNonfiction]',
     description: 'Label of the fictionNonFiction filter',
     defaultMessage: 'Fiction/nonfiction'
   },

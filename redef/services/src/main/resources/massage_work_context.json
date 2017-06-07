@@ -59,6 +59,7 @@
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
     "mainEntryName": "deichman:mainEntryName",
-    "litform": "deichman:literaryForm"
+    "litform": "deichman:literaryForm",
+    "fictionNonfiction": "deichman:fictionNonfiction"
   }
 }

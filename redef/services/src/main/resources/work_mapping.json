@@ -160,6 +160,9 @@
       "summary": {
         "type": "text",
         "index": false
+      },
+      "fictionNonfiction": {
+        "type": "keyword"
       }
     }
   }
