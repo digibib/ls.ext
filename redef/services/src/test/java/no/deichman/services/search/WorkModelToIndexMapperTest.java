@@ -33,6 +33,7 @@ public class WorkModelToIndexMapperTest {
             + "        \"publicationYear\": \"1999\","
             + "        \"litform\": \"Roman\","
             + "        \"bio\": \"Biografisk innhold\",\n"
+            + "        \"contentAdaptation\": \"ta\",\n"
             + "        \"country\": \"Norge\",\n"
             + "        \"displayLine1\": \"Ragde, Anne B.. Berlinerpoplene : Hvit uke i Trondheim. 3. Tredje del\",\n"
             + "        \"displayLine2\": \"1999. Litteratur. Roman\","
@@ -66,6 +67,7 @@ public class WorkModelToIndexMapperTest {
         XURI subjectXuri = new XURI("http://data.deichman.no/subject/e1200005");
 
         String inputGraph = "@prefix ns1: <http://data.deichman.no/duo#> .\n"
+                + "@prefix ns1: <http://data.deichman.no/utility#> .\n"
                 + "@prefix ns2: <http://data.deichman.no/ontology#> .\n"
                 + "@prefix ns4: <http://data.deichman.no/raw#> .\n"
                 + "@prefix ns5: <http://data.deichman.no/role#> .\n"
@@ -93,7 +95,9 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:publicationYear \"1999\" \n;"
                 + "    ns2:subject <http://data.deichman.no/subject/e1200005> ;\n"
                 + "    ns2:biography <http://data.deichman.no/biography#biographicalContent> ;\n"
+                + "    ns2:nationality <http://data.deichman.no/nationality#n> ;\n"
                 + "    ns2:fictionNonfiction <http://data.deichman.no/fictionNonfiction#fiction> ;\n"
+                + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
                 + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> .\n"
                 + "\n"
                 + "<http://data.deichman.no/person/h10834700> rdf:type ns2:Person ;\n"
@@ -120,7 +124,9 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:prefLabel \"Trondheim\" .\n"
                 + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en .\n"
                 + "<http://data.deichman.no/biography#biographicalContent> rdfs:label \"Biografisk innhold\"@no, \"Biographical content\"@en . \n"
+                + "<http://data.deichman.no/nationality#n> rdfs:label \"Norge\"@no, \"Norway\"@en ."
                 + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Skjønnlitteratur\"@no .\n"
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> ns1:code \"ta\" . \n"
                 + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no .\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);

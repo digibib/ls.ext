@@ -51,7 +51,6 @@ CONSTRUCT {
                deich:writingSystem ?wsNo ;
                deich:summary ?summary ;
                deich:origLang ?origLang ;
-               deich:contentAdaptation ?contentAdaptationCode ;
                deich:created ?created .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
@@ -126,9 +125,6 @@ WHERE {
            ?work a deich:Work ; deich:language ?wLangO .
            BIND(str(?wLangO) AS ?wLang) .
            BIND(afn:substr(?wLang, 29) AS ?origLang) }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:hasContentAdaptation ?contentAdaptation .
-           ?contentAdaptation duo:code ?contentAdaptationCode . }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
           ?work deich:isPartOfWorkSeries ?wsBnode .
           ?wsBnode deich:workSeries ?workSeries .

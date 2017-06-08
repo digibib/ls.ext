@@ -105,7 +105,6 @@
     "writingSystem": "deichman:writingSystem",
     "desc": "deichman:desc",
     "origLang": "deichman:origLang",
-    "contentAdaptation": "deichman:contentAdaptation",
     "created": "deichman:created"
   }
 }

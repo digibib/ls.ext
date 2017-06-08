@@ -446,14 +446,6 @@
         },
         "index_options": "docs"
       },
-      "contentAdaptation": {
-        "type": "text",
-        "analyzer": "content_adaptation_analyzer",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "created": {
         "type": "date"
       }
