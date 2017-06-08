@@ -40,7 +40,6 @@ CONSTRUCT {
                deich:title ?pubPartNumber ;
                deich:title ?pubPartMainTitle ;
                deich:title ?pubVarTitle ;
-               deich:litform ?litform ;
                deich:subtitles ?subtitles ;
                deich:subtitle ?pubSubtitle ;
                deich:partNumber ?pubPartNumber ;
@@ -126,11 +125,6 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 3. Information from work:
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:literaryForm ?l .
-           ?l rdfs:label ?litLabel .
-           BIND(str(?litLabel) AS ?litform)
-           FILTER(lang(?litLabel) = "no") }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:hasInstrumentation ?instrumentation.
            ?instrumentation deich:hasInstrument ?instrument .
