@@ -25,6 +25,7 @@ CONSTRUCT {
                deich:inst ?inst ;
                deich:bio ?bio ;
                deich:country ?country ;
+               deich:nationality ?nationLabel ;
                deich:contentAdaptation ?contentAdaptationCode ;
                deich:series ?seriesTitle ;
                deich:literaryForm ?litform .
@@ -69,6 +70,10 @@ WHERE {
                ?workContrib a deich:MainEntry.
                BIND(true AS ?mainEntry) .
                ?agent deich:name ?mainEntryName .
+               OPTIONAL { ?agent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
+                 BIND(str(?nationLabelLang) AS ?nationLabel)
+                 FILTER(lang(?nationLabelLang) = "no")
+               }
            }
           ?agent deich:name ?name .
           BIND(str(?roleURI) AS ?role)

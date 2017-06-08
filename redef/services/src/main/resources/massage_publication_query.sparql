@@ -138,6 +138,8 @@ WHERE {
         OPTIONAL { ?contribAgent deich:specification ?contribSpec }
         BIND(IF(BOUND(?contribSpec), CONCAT(?contribAgentOnlyName, " (", ?contribSpec, ")"), ?contribAgentOnlyName) AS ?contribAgentName)
         BIND(str(?contribRoleURI) AS ?contribRole)
+         # strictly, main entry does not belong to publication index document, but is kept in order to generate a displayLine
+         # that includes main entry name and nationality
          OPTIONAL {
            ?contrib a deich:MainEntry .
            BIND(true as ?mainEntry) .

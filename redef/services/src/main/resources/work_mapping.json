@@ -94,6 +94,13 @@
           }
         }
       },
+      "nationality": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
       "mainTitle": {
         "type": "text",
         "fields": {
