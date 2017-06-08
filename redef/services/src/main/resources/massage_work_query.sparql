@@ -21,6 +21,7 @@ CONSTRUCT {
                deich:mainEntryName ?mainEntryName ;
                deich:audience ?audience ;
                deich:dewey ?dewey ;
+               deich:inst ?inst ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -86,5 +87,9 @@ WHERE {
            BIND(str(?audienceUri) AS ?audience)
   }
   UNION { <__WORKURI__> deich:hasClassification ?classEntry .
-          ?classEntry deich:hasClassificationNumber ?dewey . }
+          ?classEntry deich:hasClassificationNumber ?dewey .
+  }
+  UNION { <__WORKURI__> deich:hasInstrumentation ?instrumentation.
+           ?instrumentation deich:hasInstrument ?instrument .
+           ?instrument deich:prefLabel ?inst }
 }

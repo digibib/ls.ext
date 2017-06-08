@@ -49,7 +49,6 @@ CONSTRUCT {
                deich:publishedBy ?publishedBy ;
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
-               deich:inst ?inst ;
                deich:bio ?bio ;
                deich:summary ?summary ;
                deich:country ?country ;
@@ -125,10 +124,6 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 3. Information from work:
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:hasInstrumentation ?instrumentation.
-           ?instrumentation deich:hasInstrument ?instrument .
-           ?instrument deich:prefLabel ?inst }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:biography ?b .
            ?b rdfs:label ?bioLabel .

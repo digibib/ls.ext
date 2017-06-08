@@ -224,13 +224,6 @@
         },
         "index_options": "docs"
       },
-      "inst": {
-        "type": "text",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "formatAdaptation": {
         "type": "text",
         "norms": {
