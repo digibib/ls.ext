@@ -91,8 +91,7 @@
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "title": {
         "type": "text",
@@ -111,6 +110,7 @@
       },
       "partTitle": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
@@ -123,6 +123,7 @@
       },
       "subtitle": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
@@ -135,6 +136,7 @@
       },
       "partNumber": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
@@ -188,8 +190,7 @@
         "analyzer": "mediatype_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "formats": {
         "type": "keyword"
@@ -199,8 +200,7 @@
         "analyzer": "format_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "desc": {
         "type": "text",
@@ -213,8 +213,7 @@
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "language": {
         "type": "text",
@@ -222,8 +221,7 @@
         "fielddata": true,
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "languages": {
         "type": "keyword"
@@ -233,39 +231,35 @@
         "analyzer": "writing_system_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "isbn": {
         "type": "text",
         "analyzer": "isbn_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "ismn": {
         "type": "text",
         "analyzer": "isbn_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "ean": {
         "type": "text",
         "analyzer": "isbn_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "series": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "ageLimit": {
         "type": "integer"
@@ -277,159 +271,159 @@
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "agents": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "actor": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "photographer": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "lyricist": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "composer": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "director": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "performer": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "musicalArranger": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "reader": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": {
+          "enabled": false
+        }
       },
       "conductor": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "author": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "translator": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "illustrator": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "editor": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "contributor": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "coreographer": {
+        "term_vector": "with_positions_offsets",
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "producer": {
+        "term_vector": "with_positions_offsets",
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "productionCompany": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "featuring": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "publishedBy": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "kd": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "origLang": {
         "type": "text",
         "analyzer": "language_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "created": {
         "type": "date"

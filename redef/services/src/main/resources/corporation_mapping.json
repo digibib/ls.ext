@@ -7,37 +7,32 @@
         "analyzer": "name_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "subdivision": {
         "type": "text",
         "analyzer": "name_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "alternativeName": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "placePrefLabel": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "placeAlternativeName": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "displayLine1": {
         "type": "keyword"

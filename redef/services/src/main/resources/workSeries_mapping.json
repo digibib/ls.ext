@@ -6,15 +6,14 @@
         "analyzer": "name_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "subtitle": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -23,10 +22,10 @@
       },
       "partTitle": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -35,10 +34,10 @@
       },
       "partNumber": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"

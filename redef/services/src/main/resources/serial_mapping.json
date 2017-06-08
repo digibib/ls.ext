@@ -7,15 +7,14 @@
         "analyzer": "name_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "subtitle": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -29,36 +28,32 @@
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "publishedByAlternativeName": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "publishedByPlacePrefLabel": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "publishedByPlaceAlternativeName": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "partTitle": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -67,10 +62,10 @@
       },
       "partNumber": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
         },
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
