@@ -7,22 +7,19 @@
         "analyzer": "name_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "specification": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "alternativeName": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "displayLine1": {
         "type": "keyword"

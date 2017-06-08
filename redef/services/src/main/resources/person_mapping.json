@@ -6,8 +6,7 @@
         "analyzer": "name_analyzer",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "birthYear": {
         "type": "text"
@@ -17,17 +16,16 @@
       },
       "nationality": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "specification": {
         "type": "text",
         "norms": {
           "enabled": false
-        },
-        "index_options": "docs"
+        }
       },
       "uri": {
         "type": "keyword"
