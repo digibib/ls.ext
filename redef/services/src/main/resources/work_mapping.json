@@ -189,6 +189,14 @@
       "audiences": {
         "type": "keyword"
       },
+      "contentAdaptation": {
+        "type": "text",
+        "analyzer": "content_adaptation_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
       "dewey": {
         "type": "text",
         "norms": {

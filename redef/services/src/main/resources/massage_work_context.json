@@ -39,6 +39,7 @@
     "inst": "deichman:inst",
     "bio": "deichman:bio",
     "country": "deichman:country",
+    "contentAdaptation": "deichman:contentAdaptation",
     "name": "deichman:name",
     "Work": "deichman:Work",
     "publicationYear": "deichman:publicationYear",

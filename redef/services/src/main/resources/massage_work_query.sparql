@@ -1,6 +1,7 @@
 PREFIX deich: <__ONTOLOGY__>
 PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
+PREFIX   duo: <http://data.deichman.no/utility#>
 
 CONSTRUCT {
  <__WORKURI__> a deich:Work ;
@@ -24,6 +25,7 @@ CONSTRUCT {
                deich:inst ?inst ;
                deich:bio ?bio ;
                deich:country ?country ;
+               deich:contentAdaptation ?contentAdaptationCode ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -103,5 +105,9 @@ WHERE {
   UNION { <__WORKURI__> deich:nationality ?n .
            ?n rdfs:label ?nLabel .
            BIND(str(?nLabel) AS ?country)
-           FILTER(lang(?nLabel) = "no") }
+           FILTER(lang(?nLabel) = "no")
+  }
+  UNION { <__WORKURI__> deich:hasContentAdaptation ?contentAdaptation .
+           ?contentAdaptation duo:code ?contentAdaptationCode .
+  }
 }
