@@ -10,7 +10,7 @@ import org.junit.Test;
 import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 
 /**
- * Responsibility: unit test WorkModelToIndexMapper.
+ * Responsibility: unit test PublicationModelToIndexMapper.
  */
 public class PublicationModelToIndexMapperTest {
     private String comparisonJsonDocument = "{\n"
@@ -64,7 +64,6 @@ public class PublicationModelToIndexMapperTest {
             + "    \"languages\": [\n"
             + "        \"http://lexvo.org/id/iso639-3/ita\"\n"
             + "    ],\n"
-            + "    \"litform\": \"Roman\",\n"
             + "    \"mainEntryName\": \"Ragde, Anne B.\",\n"
             + "    \"mainTitle\": \"La casa delle bugie\",\n"
             + "    \"mediatype\": \"http://data.deichman.no/mediaType#Book\",\n"

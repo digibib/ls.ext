@@ -209,14 +209,6 @@
       "formats": {
         "type": "keyword"
       },
-      "litform": {
-        "type": "text",
-        "analyzer": "litform_analyzer",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "format": {
         "type": "text",
         "analyzer": "format_analyzer",
