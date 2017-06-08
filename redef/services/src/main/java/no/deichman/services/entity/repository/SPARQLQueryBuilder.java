@@ -958,8 +958,7 @@ public final class SPARQLQueryBuilder {
                 break;
             case WORK_SERIES:
                 queryString += ""
-                        + "      { ?resource :publicationOf ?work .\n"
-                        + "        ?work :isPartOfWorkSeries [ a :WorkSeriesPart ; :workSeries <__URI__> ] }\n";
+                        + "      { ?resource :isPartOfWorkSeries [ a :WorkSeriesPart ; :workSeries <__URI__> ] }\n";
                 break;
             case SERIAL:
                 queryString += "      ?resource :inSerial [ a :SerialIssue ; :serial <__URI__> ]\n";

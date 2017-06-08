@@ -388,13 +388,6 @@ class SearchResult extends React.Component {
     return (showUnfilteredStatus && showUnfilteredStatus === id || (Array.isArray(showUnfilteredStatus) && showUnfilteredStatus.includes(id)))
   }
 
-  bookCoverText (result) {
-    if (result.publication.mainEntryName) {
-      return `${result.displayTitle} / ${result.publication.mainEntryName}`
-    }
-    return result.mainTitle
-  }
-
   render () {
     const { result } = this.props
     const pubFormats = new Set()
