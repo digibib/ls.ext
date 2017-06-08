@@ -22,6 +22,7 @@ CONSTRUCT {
                deich:audience ?audience ;
                deich:dewey ?dewey ;
                deich:inst ?inst ;
+               deich:bio ?bio ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -91,5 +92,11 @@ WHERE {
   }
   UNION { <__WORKURI__> deich:hasInstrumentation ?instrumentation.
            ?instrumentation deich:hasInstrument ?instrument .
-           ?instrument deich:prefLabel ?inst }
+           ?instrument deich:prefLabel ?inst
+  }
+  UNION { <__WORKURI__> deich:biography ?b .
+           ?b rdfs:label ?bioLabel .
+           BIND(str(?bioLabel) AS ?bio)
+           FILTER(lang(?bioLabel) = "no")
+  }
 }

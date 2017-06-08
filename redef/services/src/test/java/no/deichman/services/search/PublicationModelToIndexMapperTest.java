@@ -25,7 +25,6 @@ public class PublicationModelToIndexMapperTest {
             + "        \"Falcinella, Cristina\",\n"
             + "        \"Frankenstein, Casanova\"\n"
             + "    ],\n"
-            + "    \"bio\": \"Biografisk innhold\",\n"
             + "    \"contentAdaptation\": \"ta\",\n"
             + "    \"contributors\": [\n"
             + "        {\n"
