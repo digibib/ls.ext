@@ -56,7 +56,6 @@ public class PublicationModelToIndexMapperTest {
             + "    \"homeBranches\": [\"hutl\",\"fgry\"],\n"
             + "    \"availableBranches\": [\"fgry\"],\n"
             + "    \"image\": \"http://static.deichman.no/1549895/bk/1_thumb.jpg\",\n"
-            + "    \"inst\": \"Tverrfløyte\",\n"
             + "    \"isbn\": \"978-88-545-0662-6\",\n"
             + "    \"ismn\": \"M 23000399-5\",\n"
             + "    \"kd\": \"ITA\",\n"

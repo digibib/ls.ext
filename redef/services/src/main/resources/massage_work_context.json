@@ -36,6 +36,7 @@
       "@id": "deichman:publication",
       "@container": "@set"
     },
+    "inst": "deichman:inst",
     "name": "deichman:name",
     "Work": "deichman:Work",
     "publicationYear": "deichman:publicationYear",
