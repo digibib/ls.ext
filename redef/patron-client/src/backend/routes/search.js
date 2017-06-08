@@ -39,6 +39,8 @@ module.exports = (app) => {
     ]).then(res => {
       return mergeAggregation(res[ 0 ], res[ 1 ])
     }).then(json => response.status(200).send(json))
-      .catch(error => { response.status(500).send({ message: error, queryString: queryString }) })
+      .catch(error => {
+        response.status(500).send({ message: error, queryString: queryString })
+      })
   })
 }
