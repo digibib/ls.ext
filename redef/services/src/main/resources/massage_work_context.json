@@ -49,6 +49,10 @@
       "@id": "deichman:subject",
       "@container": "@set"
     },
+    "series": {
+      "@id": "deichman:series",
+      "@container": "@set"
+    },
     "subject": "deichman:subjectName",
     "Subject": "deichman:Subject",
     "genre": {

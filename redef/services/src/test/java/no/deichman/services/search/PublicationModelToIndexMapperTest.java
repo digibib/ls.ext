@@ -74,8 +74,6 @@ public class PublicationModelToIndexMapperTest {
             + "    \"series\": [\n"
             + "        \"italiano norveigano\","
             + "        \"serialissimo\","
-            + "        \"workSeriesMainTitle\","
-            + "        \"workSeriesPartTitle\"\n"
             + "    ],\n"
             + "    \"subtitle\": \"xyz\",\n"
             + "    \"title\": [\n"

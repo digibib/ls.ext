@@ -45,6 +45,10 @@ public class WorkModelToIndexMapperTest {
             + "        \"genre\": [\n"
             + "            \"Krim (spesial)\"\n"
             + "        ],\n"
+            + "        \"series\": [\n"
+            + "            \"workSeriesMainTitle\","
+            + "            \"workSeriesPartTitle\"\n"
+            + "        ],\n"
             + "        \"compositionType\": \"Opera\",\n"
             + "        \"fictionNonfiction\": \"http://data.deichman.no/fictionNonfiction#fiction\",\n"
             + "        \"workTypeLabel\": \"Litteratur\",\n"
@@ -98,6 +102,7 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:nationality <http://data.deichman.no/nationality#n> ;\n"
                 + "    ns2:fictionNonfiction <http://data.deichman.no/fictionNonfiction#fiction> ;\n"
                 + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
+                + "    ns2:isPartOfWorkSeries [ a ns2:WorkSeriesPart ; ns2:workSeries <http://data.deichman.no/workSeries/s1> ] ;\n"
                 + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> .\n"
                 + "\n"
                 + "<http://data.deichman.no/person/h10834700> rdf:type ns2:Person ;\n"
@@ -127,6 +132,8 @@ public class WorkModelToIndexMapperTest {
                 + "<http://data.deichman.no/nationality#n> rdfs:label \"Norge\"@no, \"Norway\"@en ."
                 + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Skjønnlitteratur\"@no .\n"
                 + "<http://data.deichman.no/contentAdaptation#easyLanguage> ns1:code \"ta\" . \n"
+                + "<http://data.deichman.no/workSeries/s1> a ns2:WorkSeries ; "
+                + "    ns2:mainTitle \"workSeriesMainTitle\" ; ns2:partTitle \"workSeriesPartTitle\" ."
                 + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no .\n";
 
         Model model = RDFModelUtil.modelFrom(inputGraph, Lang.TURTLE);

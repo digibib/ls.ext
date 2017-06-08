@@ -26,6 +26,7 @@ CONSTRUCT {
                deich:bio ?bio ;
                deich:country ?country ;
                deich:contentAdaptation ?contentAdaptationCode ;
+               deich:series ?seriesTitle ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -109,5 +110,10 @@ WHERE {
   }
   UNION { <__WORKURI__> deich:hasContentAdaptation ?contentAdaptation .
            ?contentAdaptation duo:code ?contentAdaptationCode .
+  }
+  UNION { <__WORKURI__> deich:isPartOfWorkSeries ?wsBnode .
+          ?wsBnode deich:workSeries ?workSeries .
+          ?workSeries ?seriesPred ?seriesTitle .
+          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
   }
 }
