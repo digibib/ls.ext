@@ -1300,14 +1300,14 @@ public class AppTest {
         //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 20));
 
-        // 6) Patch work series, and verify that publications get reindexed
+        // 6) Patch work series, and verify that works get reindexed
         buildPatchRequest(
                 resolveLocally(workSeriesUri),
                 buildLDPatch(
                         buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
                         buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
 
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 20));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 30));
     }
 
     @Test
