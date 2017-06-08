@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
-import {injectIntl, intlShape, defineMessages, FormattedMessage} from 'react-intl'
+import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
 import MediaQuery from 'react-responsive'
 import firstBy from 'thenby'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import Publication from './Publication'
 import PublicationInfo from './PublicationInfo'
-import {getId, getFragment} from '../utils/uriParser'
+import {getFragment, getId} from '../utils/uriParser'
 import ClickableElement from './ClickableElement'
 import {getCategorizedFilters, getDateRange} from '../utils/filterParser'
 import Constants from '../constants/Constants'
@@ -360,7 +360,6 @@ Publications.propTypes = {
   workLanguage: PropTypes.string,
   mediaQueryValues: PropTypes.object,
   libraries: PropTypes.object,
-  audiences: PropTypes.array.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
   query: PropTypes.object.isRequired,
   path: PropTypes.string.isRequired
