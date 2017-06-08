@@ -94,6 +94,135 @@
           }
         }
       },
+      "agents": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "actor": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "photographer": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "lyricist": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "composer": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "director": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "performer": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "musicalArranger": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "reader": {
+        "type": "text"
+      },
+      "conductor": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "author": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "translator": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "illustrator": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "editor": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "contributor": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "coreographer": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "producer": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "productionCompany": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
+      "featuring": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
       "nationality": {
         "type": "text",
         "norms": {
