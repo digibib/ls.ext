@@ -125,13 +125,6 @@ WHERE {
            ?work a deich:Work ; deich:language ?wLangO .
            BIND(str(?wLangO) AS ?wLang) .
            BIND(afn:substr(?wLang, 29) AS ?origLang) }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-          ?work deich:isPartOfWorkSeries ?wsBnode .
-          ?wsBnode deich:workSeries ?workSeries .
-          ?workSeries ?seriesPred ?seriesTitle .
-          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
-          }
-
 
   # 4. Information from contributions on both publication and work:
 

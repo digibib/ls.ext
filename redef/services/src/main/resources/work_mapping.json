@@ -203,6 +203,13 @@
           "enabled": false
         },
         "index_options": "docs"
+      },
+      "series": {
+        "type": "text",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
       }
     }
   }
