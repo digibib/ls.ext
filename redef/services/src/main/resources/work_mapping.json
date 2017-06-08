@@ -29,6 +29,14 @@
         },
         "index_options": "docs"
       },
+      "bio": {
+        "type": "text",
+        "analyzer": "biography_analyzer",
+        "norms": {
+          "enabled": false
+        },
+        "index_options": "docs"
+      },
       "subjects": {
         "type": "nested",
         "properties": {

@@ -37,6 +37,7 @@
       "@container": "@set"
     },
     "inst": "deichman:inst",
+    "bio": "deichman:bio",
     "name": "deichman:name",
     "Work": "deichman:Work",
     "publicationYear": "deichman:publicationYear",

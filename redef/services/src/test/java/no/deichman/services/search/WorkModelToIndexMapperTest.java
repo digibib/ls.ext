@@ -32,6 +32,7 @@ public class WorkModelToIndexMapperTest {
             + "        \"summary\": \"In the end, everybody dies\","
             + "        \"publicationYear\": \"1999\","
             + "        \"litform\": \"Roman\","
+            + "        \"bio\": \"Biografisk innhold\",\n"
             + "        \"displayLine1\": \"Ragde, Anne B.. Berlinerpoplene : Hvit uke i Trondheim. 3. Tredje del\",\n"
             + "        \"displayLine2\": \"1999. Litteratur. Roman\","
             + "         \"subjects\": [\n"
@@ -90,6 +91,7 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:hasSummary \"In the end, everybody dies\" ;\n"
                 + "    ns2:publicationYear \"1999\" \n;"
                 + "    ns2:subject <http://data.deichman.no/subject/e1200005> ;\n"
+                + "    ns2:biography <http://data.deichman.no/biography#biographicalContent> ;\n"
                 + "    ns2:fictionNonfiction <http://data.deichman.no/fictionNonfiction#fiction> ;\n"
                 + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> .\n"
                 + "\n"
@@ -116,6 +118,7 @@ public class WorkModelToIndexMapperTest {
                 + "<http://data.deichman.no/subject/e1200005> rdf:type ns2:Subject ;\n"
                 + "    ns2:prefLabel \"Trondheim\" .\n"
                 + "<http://data.deichman.no/workType#Literature> rdfs:label \"Litteratur\"@no, \"Literature\"@en .\n"
+                + "<http://data.deichman.no/biography#biographicalContent> rdfs:label \"Biografisk innhold\"@no, \"Biographical content\"@en . \n"
                 + "<http://data.deichman.no/literaryForm#fiction> rdfs:label \"Skjønnlitteratur\"@no .\n"
                 + "<http://data.deichman.no/literaryForm#novel> rdfs:label \"Roman\"@no .\n";
 

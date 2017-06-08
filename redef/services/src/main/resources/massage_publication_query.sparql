@@ -49,7 +49,6 @@ CONSTRUCT {
                deich:publishedBy ?publishedBy ;
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
-               deich:bio ?bio ;
                deich:summary ?summary ;
                deich:country ?country ;
                deich:origLang ?origLang ;
@@ -124,11 +123,6 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
   # 3. Information from work:
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:biography ?b .
-           ?b rdfs:label ?bioLabel .
-           BIND(str(?bioLabel) AS ?bio)
-           FILTER(lang(?bioLabel) = "no") }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:nationality ?n .
            ?n rdfs:label ?nLabel .

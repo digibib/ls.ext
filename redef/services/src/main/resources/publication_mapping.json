@@ -84,14 +84,6 @@
           }
         }
       },
-      "bio": {
-        "type": "text",
-        "analyzer": "biography_analyzer",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "nationality": {
         "type": "text",
         "norms": {
