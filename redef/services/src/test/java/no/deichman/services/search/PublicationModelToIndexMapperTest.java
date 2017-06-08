@@ -46,7 +46,6 @@ public class PublicationModelToIndexMapperTest {
             + "    ],\n"
             + "    \"ean\": \"7023060119782\",\n"
             + "    \"desc\": \"rather good\",\n"
-            + "    \"country\": \"Norge\",\n"
             + "    \"format\": \"E-bok\",\n"
             + "    \"formatAdaptation\": \"Storskrift\",\n"
             + "    \"formats\": [\n"

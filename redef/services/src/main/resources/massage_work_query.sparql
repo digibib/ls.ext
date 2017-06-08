@@ -23,6 +23,7 @@ CONSTRUCT {
                deich:dewey ?dewey ;
                deich:inst ?inst ;
                deich:bio ?bio ;
+               deich:country ?country ;
                deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
@@ -99,4 +100,8 @@ WHERE {
            BIND(str(?bioLabel) AS ?bio)
            FILTER(lang(?bioLabel) = "no")
   }
+  UNION { <__WORKURI__> deich:nationality ?n .
+           ?n rdfs:label ?nLabel .
+           BIND(str(?nLabel) AS ?country)
+           FILTER(lang(?nLabel) = "no") }
 }

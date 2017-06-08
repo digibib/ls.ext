@@ -33,6 +33,7 @@ public class WorkModelToIndexMapperTest {
             + "        \"publicationYear\": \"1999\","
             + "        \"litform\": \"Roman\","
             + "        \"bio\": \"Biografisk innhold\",\n"
+            + "        \"country\": \"Norge\",\n"
             + "        \"displayLine1\": \"Ragde, Anne B.. Berlinerpoplene : Hvit uke i Trondheim. 3. Tredje del\",\n"
             + "        \"displayLine2\": \"1999. Litteratur. Roman\","
             + "         \"subjects\": [\n"

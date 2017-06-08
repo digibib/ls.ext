@@ -104,7 +104,6 @@
     "formatAdaptation": "deichman:formatAdaptation",
     "writingSystem": "deichman:writingSystem",
     "desc": "deichman:desc",
-    "country": "deichman:country",
     "origLang": "deichman:origLang",
     "contentAdaptation": "deichman:contentAdaptation",
     "created": "deichman:created"

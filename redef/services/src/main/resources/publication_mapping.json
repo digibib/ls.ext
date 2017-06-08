@@ -438,13 +438,6 @@
         },
         "index_options": "docs"
       },
-      "country": {
-        "type": "text",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "origLang": {
         "type": "text",
         "analyzer": "language_analyzer",
