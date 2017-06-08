@@ -84,13 +84,6 @@
           }
         }
       },
-      "nationality": {
-        "type": "text",
-        "norms": {
-          "enabled": false
-        },
-        "index_options": "docs"
-      },
       "recordId": {
         "type": "keyword"
       },
@@ -415,14 +408,6 @@
           "enabled": false
         },
         "index_options": "docs"
-      },
-      "mainEntryName": {
-        "type": "text",
-        "fields": {
-          "raw": {
-            "type": "keyword"
-          }
-        }
       },
       "publishedBy": {
         "type": "text",

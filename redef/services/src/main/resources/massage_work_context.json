@@ -60,14 +60,15 @@
       "@container": "@set"
     },
     "role": "deichman:role",
-    "mainEntry": "deichman:mainEntry",
     "author": "http://data.deichman.no/role#author",
     "agent": "deichman:agent",
     "hasWorkType": "deichman:hasWorkType",
     "workTypeLabel": "deichman:workTypeLabel",
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
+    "mainEntry": "deichman:mainEntry",
     "mainEntryName": "deichman:mainEntryName",
+    "nationality": "deichman:nationality",
     "litform": "deichman:literaryForm",
     "fictionNonfiction": "deichman:fictionNonfiction"
   }
