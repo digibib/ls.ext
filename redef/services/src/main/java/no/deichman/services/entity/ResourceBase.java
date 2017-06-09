@@ -111,6 +111,10 @@ public abstract class ResourceBase {
         return searchService;
     }
 
+    public final SearchService getBootstrapSearchService() {
+        return  new SearchServiceImpl(elasticSearchBaseUrl());
+    }
+
     public final void setKohaAdapter(KohaAdapter kohaAdapter) {
         this.kohaAdapter = kohaAdapter;
     }

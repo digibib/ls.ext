@@ -113,6 +113,11 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    public SearchServiceImpl(String elasticSearchBaseUrl) {
+        this.elasticSearchBaseUrl = elasticSearchBaseUrl;
+        this.entityService = null;
+    }
+
     @Override
     public final void index(XURI xuri) {
         try {
