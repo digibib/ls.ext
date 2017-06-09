@@ -33,7 +33,7 @@ public final class EmbeddedElasticsearchServer {
         new File(dataDirectory).mkdirs();
 
         embeddedElastic = EmbeddedElastic.builder()
-                .withElasticVersion("5.2.1")
+                .withElasticVersion("5.4.1")
                 .withSetting("http.port", httpPort)
                 .withSetting("transport.tcp.port", tcpPort)
                 .withSetting("http.enabled", "true")
