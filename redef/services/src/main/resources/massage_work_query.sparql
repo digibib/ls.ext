@@ -13,7 +13,8 @@ CONSTRUCT {
                deich:subject ?subject ;
                deich:hasWorkType ?hasWorkType ;
                deich:workTypeLabel ?workTypeLabel ;
-               deich:mainEntryName ?mainEntryName .
+               deich:mainEntryName ?mainEntryName ;
+               deich:literaryForm ?litform .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
                deich:mainEntry ?mainEntry ;
@@ -26,6 +27,10 @@ CONSTRUCT {
 WHERE {
         { <__WORKURI__> a deich:Work . }
 
+  UNION { <__WORKURI__> deich:literaryForm ?l .
+           ?l rdfs:label ?litLabel .
+           BIND(str(?litLabel) AS ?litform)
+           FILTER(lang(?litLabel) = "no") }
   UNION { <__WORKURI__> deich:subject ?subject .
             ?subject deich:prefLabel ?subjectName  . }
   UNION { <__WORKURI__> deich:subject ?subject .

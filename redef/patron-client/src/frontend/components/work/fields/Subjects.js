@@ -21,6 +21,15 @@ class Subjects extends React.Component {
       }
     }
     if (subject.type === 'Work' && subject.contributors) {
+      if (subject.subtitle) {
+        label += ` : ${subject.subtitle}`
+      }
+      if (subject.partNumber) {
+        label += `. ${subject.partNumber}`
+      }
+      if (subject.partTitle) {
+        label += `. ${subject.partTitle}`
+      }
       const contribs = subject.contributors.filter(contrib => contrib.type.includes('MainEntry'))
       if (contribs.length >= 1) {
         label += ` / ${contribs[0].agent.name}`
@@ -39,7 +48,7 @@ class Subjects extends React.Component {
         <aside className="work-subjects">
           <h2><FormattedMessage {...messages.subjects} /></h2>
           <ul data-automation-id="work_subjects">
-            {subjects.map(subject => <li key={subject.id}><Link to={fieldQueryLink('emne', this.renderLabel(subject))}>{this.renderLabel(subject)}</Link></li>)}
+            {subjects.map(subject => <li key={subject.id}><Link to={fieldQueryLink('emne', subject.prefLabel || subject.name || subject.mainTitle)}>{this.renderLabel(subject)}</Link></li>)}
           </ul>
         </aside>
       )

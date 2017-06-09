@@ -43,35 +43,11 @@
         size: 100,
         sort: [
           {
-            "mainEntryName.raw": {
+            "displayLine1": {
               "order": "asc",
               "unmapped_type": "keyword"
             }
           },
-          {
-            "mainTitle.raw": {
-              "order": "asc",
-              "unmapped_type": "keyword"
-            }
-          },
-          {
-            "subtitle.raw": {
-              "order": "asc",
-              "unmapped_type": "keyword"
-            }
-          },
-          {
-            "partNumber.raw": {
-              "order": "asc",
-              "unmapped_type": "keyword"
-            }
-          },
-          {
-            "partTitle.raw": {
-              "order": "asc",
-              "unmapped_type": "keyword"
-            }
-          }
         ]
       }
       if (isAdvancedQuery(searchString)) {

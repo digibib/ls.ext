@@ -1,6 +1,16 @@
 {
   "work": {
     "properties": {
+      "displayLine1": {
+        "type": "keyword"
+      },
+      "displayLine2": {
+        "type": "keyword"
+      },
+      "litform": {
+        "type": "text",
+        "analyzer": "litform_analyzer"
+      },
       "subjects": {
         "type": "nested",
         "properties": {

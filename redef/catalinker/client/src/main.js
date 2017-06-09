@@ -655,7 +655,7 @@
         function getValues (onlyFirstField) {
           return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
             .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,\\.]$/, '').replace(/– /, '–').replace(/–(?=[^0-9])/, '– ')
+            .join(' ').replace(/[,\\.]$/, '').replace(/- /, '-').replace(/-(?=[^0-9])/, '- ')
         }
 
         var values = getValues(options.onlyFirstField)
@@ -980,7 +980,7 @@
           parensStarted = true
         }
         if (propName.indexOf('-') !== -1) {
-          ornamented += '–'
+          ornamented += '-'
         }
         ornamented = checkEndParens(propName, ornamented)
         if (checkEndPunctuation && /.\)$/.test(ornamented)) {
@@ -1536,6 +1536,9 @@
         case 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger':
           inputType = 'input-nonNegativeInteger'
           break
+        case 'http://www.w3.org/2001/XMLSchema#integer':
+          inputType = 'input-integer'
+          break
         case 'http://data.deichman.no/utility#duration':
           inputType = 'input-duration'
           break
@@ -2016,7 +2019,7 @@
             }
           }
           if ($(panel).hasClass('fixed')) {
-            offset = 0;
+            offset = 0
           }
           if (supportPanelBase.length > 0) {
             $(panel).css({
@@ -2090,7 +2093,7 @@
         var creatorAgent = author.agent
         contributionTarget.creator = creatorAgent.name
         if (creatorAgent.birthYear) {
-          contributionTarget.creator += `, ${creatorAgent.birthYear}–`
+          contributionTarget.creator += `, ${creatorAgent.birthYear}-`
           if (creatorAgent.deathYear) {
             contributionTarget.creator += creatorAgent.deathYear
           }
@@ -2199,7 +2202,7 @@
             items: items,
             origin: event.keypath,
             searchTerm: searchString,
-            highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? items.length / 2 - 1 : 0
+            highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? highestScoreIndex - 1 : false
           })
           positionSupportPanels()
         })
@@ -2363,7 +2366,7 @@
           personItem.subItemType = 'work'
           personItem.lifeSpan = ''
           if (personItem.birthYear) {
-            personItem.lifeSpan += `(${personItem.birthYear}–`
+            personItem.lifeSpan += `(${personItem.birthYear}-`
             if (personItem.deathYear) {
               personItem.lifeSpan += personItem.deathYear
             }
@@ -2422,6 +2425,7 @@
           'input-gYear',
           'input-duration',
           'input-date-time',
+          'input-integer',
           'input-nonNegativeInteger',
           'searchable-with-result-in-side-panel',
           'support-for-searchable-with-result-in-side-panel',
@@ -2435,6 +2439,7 @@
           'suggestor-for-select-predefined-value',
           'suggestor-for-input-string',
           'suggestor-for-input-gYear',
+          'suggestor-for-input-integer',
           'suggestor-for-input-nonNegativeInteger',
           'suggestor-for-input-literal',
           'select-predefined-value',
@@ -2458,6 +2463,7 @@
           'readonly-input-gYear',
           'readonly-input-duration',
           'readonly-input-date-time',
+          'readonly-input-integer',
           'readonly-input-nonNegativeInteger',
           'readonly-select-predefined-value',
           'readonly-hidden-url-query-value',
@@ -3398,9 +3404,15 @@
                 })
                 return _.compact(_.pluck(searchResultItems, 'val'))
                   .join(' ')
-                  .replace('– ', '–')
+                  .replace('– ', '-')
                   .replace(/[,:]$/, '')
                   .replace(': ', ' : ')
+              },
+              genPublicationLink: function (item) {
+                return item.workUri.replace(
+                  new RegExp('^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$'),
+                  'http://sok.deichman.no/work/$1') +
+                  item.uri.substr(23)
               },
               getLinkfromUri: function (item, linkProps) {
                 return item.uri.replace(new RegExp(linkProps.regExp), linkProps.replacement)
@@ -4488,7 +4500,7 @@
                     const textBody = ractive.get(`${event.keypath}.current.value`)
                     if (textBody && ractive.get(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`)) {
                       var lines = _.compact(textBody.split(/\r\n|\r|\n/)).length
-                      ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.current.value`, `${nextNumber}${lines > 1 ? '–' : ''}${lines > 1 ? (nextNumber + lines - 1) : ''}`)
+                      ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.current.value`, `${nextNumber}${lines > 1 ? '-' : ''}${lines > 1 ? (nextNumber + lines - 1) : ''}`)
                     }
                   })
                 }

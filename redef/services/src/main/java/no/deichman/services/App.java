@@ -145,8 +145,10 @@ public final class App {
                         VersionResource.class.getCanonicalName(),
                         TranslationResource.class.getCanonicalName(),
                         Datasource.class.getCanonicalName(),
-                        CirculationResource.class.getCanonicalName()
+                        CirculationResource.class.getCanonicalName(),
+                        ImmediateFeature.class.getCanonicalName()
                 )));
+
 
         HandlerCollection collection = new HandlerCollection();
         RequestLogHandler rlh = new RequestLogHandler();

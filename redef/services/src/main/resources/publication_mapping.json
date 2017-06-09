@@ -1,6 +1,12 @@
 {
   "publication": {
     "properties": {
+      "displayLine1": {
+        "type": "keyword"
+      },
+      "displayLine2": {
+        "type": "keyword"
+      },
       "contributors": {
         "type": "nested",
         "properties": {

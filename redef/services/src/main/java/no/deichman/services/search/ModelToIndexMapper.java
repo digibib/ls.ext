@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
@@ -50,7 +51,7 @@ public class ModelToIndexMapper {
         }
         String json = null;
         try {
-            json = applyContext(massagedModel);
+            json = GSON.toJson(applyContext(massagedModel, xuri.getTypeAsEntityType()));
         } catch (IOException | JsonLdError e) {
             throw new RuntimeException("Exception raised when applying context to json-ld", e);
         }
@@ -58,12 +59,26 @@ public class ModelToIndexMapper {
         return json;
     }
 
+    public final Map<String, Object> createIndexObject(Model model, XURI xuri) {
+        Model massagedModel = massageModel(model, xuri);
+        if (massagedModel.isEmpty()) {
+            throw new RuntimeException("Massaged model of " + xuri.getUri() + " is empty");
+        }
+        Map<String, Object> doc = null;
+        try {
+            doc = applyContext(massagedModel, xuri.getTypeAsEntityType());
+        } catch (IOException | JsonLdError e) {
+            throw new RuntimeException("Exception raised when applying context to json-ld", e);
+        }
+        return doc;
+    }
+
     private Model massageModel(Model model, XURI xuri) {
         QueryExecution queryExecution = QueryExecutionFactory.create(query.replaceAll("__" + type.toUpperCase() + "URI__", xuri.getUri()), model);
         return queryExecution.execConstruct();
     }
 
-    private String applyContext(Model model) throws IOException, JsonLdError {
+    private Map<String, Object> applyContext(Model model, EntityType type) throws IOException, JsonLdError {
         Object json = JsonUtils.fromString(RDFModelUtil.stringFrom(model, Lang.JSONLD));
         JsonLdOptions options = new JsonLdOptions();
         options.setEmbed(true);
@@ -72,9 +87,10 @@ public class ModelToIndexMapper {
         nodeIndex = new HashMap<>();
         indexNodes(graph);
         removeTypeAndBnodeIdAndEmbedAllNodes(graph);
+        type.addSortingLabels(graph);
         Map<String, Object> root = new HashMap<>();
         root.putAll(graph);
-        return GSON.toJson(root);
+        return root;
     }
 
     private void indexNodes(Object input) {
@@ -100,6 +116,7 @@ public class ModelToIndexMapper {
             if (uri != null && map.get("type") == null && nodeIndex.get(uri) != null) {
                 map.putAll((Map) nodeIndex.get(uri));
             }
+
             map.remove("type");
             if (map.containsKey("uri") && map.get("uri").toString().startsWith("_:")) {
                 map.remove("uri");

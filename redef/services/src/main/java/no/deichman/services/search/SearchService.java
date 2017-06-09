@@ -1,9 +1,12 @@
 package no.deichman.services.search;
 
+import no.deichman.services.entity.EntityType;
 import no.deichman.services.uridefaults.XURI;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -59,4 +62,12 @@ public interface SearchService {
     void enqueueIndexingAllOfType(String type, Boolean ignoreConnectedResources);
 
     void enqueueIndexing(Set<String> uris, XURI triggeredBy);
+
+    Map<String, String> getAllSortLabelsForType(EntityType type);
+
+    Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width);
+
+    void addIndexedName(EntityType type, String name, String uri);
+
+    void removeFromLocalIndex(XURI xuri);
 }

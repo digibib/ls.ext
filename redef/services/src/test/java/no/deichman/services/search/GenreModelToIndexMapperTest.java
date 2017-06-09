@@ -48,6 +48,7 @@ public class GenreModelToIndexMapperTest {
                 + "  \"uri\": \"" + subjetXuri1.getUri() + "\","
                 + "  \"prefLabel\": \"Krim\","
                 + "  \"alternativeName\": \"alternativeName_value\","
+                + "  \"displayLine1\": \"Krim (Drap og mord)\","
                 + "  \"specification\": \"Drap og mord\","
                 + "}").allowingAnyArrayOrdering());
     }

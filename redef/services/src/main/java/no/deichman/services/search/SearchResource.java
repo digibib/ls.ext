@@ -2,10 +2,10 @@ package no.deichman.services.search;
 
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.uridefaults.XURI;
+import org.glassfish.hk2.api.Immediate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -30,7 +30,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * Responsibility: Expose a subset of Elasticsearch REST API limited to searching for works, as well as providing
  * routes to trigger reindexing of resources.
  */
-@Singleton
+@Immediate
 @Path("search")
 public class SearchResource extends ResourceBase {
     private static final Logger LOG = LoggerFactory.getLogger(SearchResource.class);
@@ -39,6 +39,14 @@ public class SearchResource extends ResourceBase {
     private ServletConfig servletConfig;
 
     public SearchResource() {
+        if (System.getenv("GITREF") != null) {
+            // We don't want this to execute when running tests, hence the check for environment
+            // variable which is only present in production.
+            new Thread(() -> {
+                // This will trigger the initialization of the in-memory authorized lists
+                getSearchService();
+            }).start();
+        }
     }
 
     public SearchResource(SearchService searchService) {

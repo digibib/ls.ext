@@ -43,6 +43,7 @@ public class PlaceModelToIndexMapperTest {
                 + "  \"uri\": \"" + placeXuri1.getUri() + "\","
                 + "  \"prefLabel\": \"Bø\","
                 + "  \"specification\": \"Telemark\","
+                + "  \"displayLine1\": \"Bø (Telemark)\","
                 + "}").allowingAnyArrayOrdering());
     }
 }

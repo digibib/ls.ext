@@ -8,7 +8,8 @@ CONSTRUCT {
     :date ?date ;
     :alternativeName  ?alternativeName ;
     :placePrefLabel ?placePrefLabel ;
-    :placeAlternativeName ?placeAlternativeName .
+    :placeAlternativeName ?placeAlternativeName ;
+    :placeSpecification ?placeSpecification .
 }
 
 WHERE {
@@ -22,5 +23,6 @@ WHERE {
           ?placeUri a :Place ;
             :prefLabel ?placePrefLabel.
           OPTIONAL { ?placeUri :alternativeName ?placeAlternativeName }
+          OPTIONAL { ?placeUri :specification ?placeSpecification }
     }
 }

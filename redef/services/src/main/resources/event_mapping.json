@@ -23,6 +23,9 @@
       },
       "placeAlternativeName": {
         "type": "text"
+      },
+      "displayLine1": {
+        "type": "keyword"
       }
     }
   }

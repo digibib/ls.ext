@@ -11,6 +11,9 @@
       },
       "alternativeName": {
         "type": "text"
+      },
+      "displayLine1": {
+        "type": "keyword"
       }
     }
   }

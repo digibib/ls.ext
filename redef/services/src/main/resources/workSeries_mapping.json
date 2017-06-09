@@ -16,6 +16,12 @@
       },
       "uri": {
         "type": "keyword"
+      },
+      "displayLine1": {
+        "type": "keyword"
+      },
+      "displayLine2": {
+        "type": "keyword"
       }
     }
   }

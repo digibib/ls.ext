@@ -49,6 +49,7 @@ public class CompositionTypeModelToIndexMapperTest {
                 + "  \"prefLabel\": \"Opera\","
                 + "  \"alternativeName\": \"alternativeName_value\","
                 + "  \"specification\": \"Not over before the fat lady sings\","
+                + "  \"displayLine1\": \"Opera (Not over before the fat lady sings)\""
                 + "}").allowingAnyArrayOrdering());
     }
 }

@@ -147,7 +147,9 @@ public class PublicationModelToIndexMapperTest {
             + "    \"workPartNumber\": \"1\","
             + "    \"workPartTitle\": \"Den første og siste\",\n"
             + "    \"workSubtitle\": \"Et trønderdrama\",\n"
-            + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\"\n"
+            + "    \"workUri\": \"http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20\",\n"
+            + "    \"displayLine2\": \"Verdamt Verlag, 2013. ISBN 978-88-545-0662-6. EAN 7023060119782. Tnr: 3\",\n"
+            + "    \"displayLine1\": \"Ragde, Anne B.. La casa delle bugie : xyz. abc (bok. E-bok)\"\n"
             + "}";
 
     @Test

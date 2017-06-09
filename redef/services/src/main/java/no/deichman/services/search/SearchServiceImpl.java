@@ -2,6 +2,10 @@ package no.deichman.services.search;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import no.deichman.services.entity.EntityService;
@@ -23,6 +27,7 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResIterator;
@@ -77,11 +82,6 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
-    public static final String[] LOCAL_INDEX_SEARCH_FIELDS = {
-            ontology("name"),
-            ontology("prefLabel"),
-            ontology("mainTitle")
-    };
     public static final int SILENT_PERIOD = 1000000;
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
@@ -99,10 +99,17 @@ public class SearchServiceImpl implements SearchService {
             SIXTY, TimeUnit.SECONDS,
             new LinkedBlockingQueue());
 
+    private static Map<EntityType, NameIndexer> nameIndexers = new HashMap<EntityType, NameIndexer>();
+
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
         this.elasticSearchBaseUrl = elasticSearchBaseUrl;
         this.entityService = entityService;
         getIndexUriBuilder();
+        for (EntityType type : EntityType.values()) {
+            if (type != EntityType.WORK && type != EntityType.PUBLICATION) {
+                getNameIndexer(type);
+            }
+        }
     }
 
     @Override
@@ -146,9 +153,9 @@ public class SearchServiceImpl implements SearchService {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
             LOG.info("Indexing " + xuri.getUri() + " with publications");
             Model indexModel = entityService.retrieveWorkWithLinkedResources(xuri);
-            String indexDocument = new ModelToIndexMapper(EntityType.WORK.getPath()).createIndexDocument(indexModel, xuri);
-            indexDocument(xuri, indexDocument);
-            cacheNameIndex(xuri, indexModel);
+            Map<String, Object> indexDocument = new ModelToIndexMapper(EntityType.WORK.getPath()).createIndexObject(indexModel, xuri);
+            indexDocument(xuri, GSON.toJson(indexDocument));
+            cacheNameIndex(xuri, indexDocument);
             ResIterator subjectIterator = indexModel.listSubjects();
             while (subjectIterator.hasNext()) {
                 Resource subj = subjectIterator.next();
@@ -158,8 +165,9 @@ public class SearchServiceImpl implements SearchService {
                 if (subj.toString().contains("publication")) { // TODO match more accurately with { subj :publicationOf <xuri> }
                     XURI pubUri = new XURI(subj.toString());
                     LOG.info("Indexing " + pubUri.getUri());
-                    indexDocument(pubUri, new ModelToIndexMapper("publication").createIndexDocument(indexModel, pubUri));
-                    cacheNameIndex(pubUri, indexModel);
+                    Map<String, Object> doc = new ModelToIndexMapper("publication").createIndexObject(indexModel, pubUri);
+                    indexDocument(pubUri, GSON.toJson(doc));
+                    cacheNameIndex(pubUri, doc);
                 }
             }
         } else {
@@ -279,6 +287,24 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    private String scrollSearch(String body, URIBuilder searchUriBuilder) {
+        try {
+            HttpPost httpPost = new HttpPost(searchUriBuilder.build());
+            httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
+            httpPost.setHeader(CONTENT_TYPE, "application/json");
+            CloseableHttpClient httpclient = createDefault();
+            CloseableHttpResponse response = httpclient.execute(httpPost);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HTTP_OK) {
+                throw new ServerErrorException("Failed to search elasticsearch: "+EntityUtils.toString(response.getEntity()), HTTP_INTERNAL_ERROR);
+            }
+            return EntityUtils.toString(response.getEntity());
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private Header[] removeHeader(Header[] headers, String headerName) {
         return stream(headers)
                 .filter(header -> !header
@@ -378,7 +404,7 @@ public class SearchServiceImpl implements SearchService {
             case GENRE:
             case MUSICAL_INSTRUMENT:
             case MUSICAL_COMPOSITION_TYPE:
-                Collection<NameEntry> nameEntries = entityService.neighbourhoodOfName(entityType, prefix, minSize);
+                Collection<NameEntry> nameEntries = neighbourhoodOfName(entityType, prefix, minSize);
                 return searchWithJson(createPreIndexedSearchQuery(minSize, nameEntries),
                         searchUriBuilder, orderResultByIdOrder(nameEntries
                                 .stream()
@@ -453,6 +479,9 @@ public class SearchServiceImpl implements SearchService {
 
     private static String urlEncode(String uri) {
         return uri.replace(":", "%3A").replace("/", "%2F");
+    }
+    private static String urlDecode(String uri) {
+        return uri.replace("%3A", ":").replace("%2F", "/");
     }
 
     @Override
@@ -560,6 +589,52 @@ public class SearchServiceImpl implements SearchService {
         });
     }
 
+    @Override
+    public final Map<String, String> getAllSortLabelsForType(EntityType type) {
+        Map<String, String> result = new HashMap<String, String>();
+
+        String initialBody = "{\"size\":10000,\"query\":{\"match_all\":{}},\"sort\":[\"_doc\"]}";
+        String scrollId = null;
+        String resp;
+        Boolean hasMore = true;
+        while (hasMore) {
+            URIBuilder uriBuilder;
+            String body;
+            if (scrollId == null) {
+                uriBuilder = getSearchUriBuilder(type);
+                uriBuilder.addParameter("scroll", "1m");
+                body = initialBody;
+            } else {
+                uriBuilder = getScrollUriBuilder();
+                body = GSON.toJson(of(
+                        "scroll", "1m",
+                        "scroll_id", scrollId
+                ));
+            }
+            resp = scrollSearch(body, uriBuilder);
+            JsonObject json = new JsonParser().parse(resp).getAsJsonObject();
+            scrollId = json.get("_scroll_id").getAsString();
+            JsonArray hits = json.getAsJsonObject("hits").getAsJsonArray("hits");
+            for (JsonElement hit : hits) {
+                if (hit.getAsJsonObject().get("_source").getAsJsonObject().has("displayLine1")) {
+                    result.put(
+                            urlDecode(hit.getAsJsonObject().get("_id").getAsString()),
+                            hit.getAsJsonObject().get("_source").getAsJsonObject().get("displayLine1").getAsString());
+                }
+            }
+
+            if (hits.size() == 0) {
+                hasMore = false;
+            }
+        }
+
+        return result;
+    }
+
+    private URIBuilder getSearchUriBuilder(EntityType type) {
+        return getIndexUriBuilder().setPath("/search/" + type.getPath()+"/_search");
+    }
+
     private void doIndex(XURI xuri) throws Exception {
 
         Model indexModel;
@@ -592,25 +667,24 @@ public class SearchServiceImpl implements SearchService {
                 break;
         }
         Monitor mon = MonitorFactory.start("createIndexDocument");
-        String indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexDocument(indexModel, xuri);
+        Map<String, Object> indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexObject(indexModel, xuri);
         mon.stop();
-        indexDocument(xuri, indexDocument);
-        cacheNameIndex(xuri, indexModel);
+        indexDocument(xuri, GSON.toJson(indexDocument));
+        cacheNameIndex(xuri, indexDocument);
     }
 
-    private void cacheNameIndex(XURI xuri, Model indexModel) {
+    private void cacheNameIndex(XURI xuri, Map<String, Object> doc) {
         if (xuri.getTypeAsEntityType() == EntityType.PUBLICATION || xuri.getTypeAsEntityType() == EntityType.WORK){
             // We don't want to keep in-memory indexes of Publication & Work resources,
             // as Catalinker has no need for them.
             return;
         }
-        entityService.statementsInModelAbout(xuri, indexModel, LOCAL_INDEX_SEARCH_FIELDS)
-                .forEachRemaining(statement -> {
-                    entityService.addIndexedName(
-                            xuri.getTypeAsEntityType(),
-                            statement.getObject().asLiteral().toString(),
-                            statement.getSubject().getURI());
-                });
+        if (doc.containsKey("displayLine1")) {
+            addIndexedName(
+                    xuri.getTypeAsEntityType(),
+                    doc.get("displayLine1").toString(),
+                    xuri.getUri());
+        }
     }
 
 
@@ -669,6 +743,15 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    private URIBuilder getScrollUriBuilder() {
+        try {
+            return new URIBuilder(this.elasticSearchBaseUrl+"/_search/scroll");
+        } catch (URISyntaxException e) {
+            LOG.error("Failed to create uri builder for elasticsearch");
+            throw new RuntimeException(e);
+        }
+    }
+
     private URIBuilder getWorkSearchUriBuilder(MultivaluedMap<String, String> queryParams) {
         URIBuilder uriBuilder = getIndexUriBuilder().setPath("/search/work/_search");
         if (queryParams != null && !queryParams.isEmpty()) {
@@ -721,5 +804,36 @@ public class SearchServiceImpl implements SearchService {
 
     private URIBuilder getEventSearchUriBuilder() {
         return getIndexUriBuilder().setPath("/search/event/_search");
+    }
+
+    private NameIndexer getNameIndexer(EntityType type) {
+        NameIndexer nameIndexer = nameIndexers.get(type);
+        if (nameIndexer == null) {
+            LOG.info("Creating local index for " + type);
+            long start = System.currentTimeMillis();
+            nameIndexers.put(type, new InMemoryNameIndexer()); // Store immediately, so we can't trigger multiple initial loads
+            nameIndexers.put(type, new InMemoryNameIndexer(getAllSortLabelsForType(type)));
+            LOG.info(String.format("Created local index for %s with %d entries in %d msec", type, nameIndexers.get(type).size(), System.currentTimeMillis() - start));
+        }
+        return nameIndexer;
+    }
+
+    @Override
+    public final void addIndexedName(EntityType type, String name, String uri) {
+        getNameIndexer(type).addNamedItem(name, uri);
+    }
+
+    private void removeIndexedName(EntityType type, String name, String uri) {
+        getNameIndexer(type).removeNamedItem(name, uri);
+    }
+
+    @Override
+    public final void removeFromLocalIndex(XURI xuri) {
+        getNameIndexer(xuri.getTypeAsEntityType()).removeUri(xuri.getUri());
+    }
+
+    @Override
+    public final Collection<NameEntry> neighbourhoodOfName(EntityType type, String name, int width) {
+        return getNameIndexer(type).neighbourhoodOf(name, width);
     }
 }

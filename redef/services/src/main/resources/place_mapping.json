@@ -1,7 +1,6 @@
 {
   "place": {
-    "properties":
-    {
+    "properties": {
       "prefLabel": {
         "type": "text",
         "analyzer": "name_analyzer"
@@ -11,6 +10,9 @@
       },
       "alternativeName": {
         "type": "text"
+      },
+      "displayLine1": {
+        "type": "keyword"
       }
     }
   }

@@ -49,6 +49,7 @@ public class SubjectModelToIndexMapperTest {
                 + "  \"prefLabel\": \"Strikking\","
                 + "  \"alternativeName\": \"alternativeName_value\","
                 + "  \"specification\": \"Måte å lage klesplagg ved hjelp av to pinner og garn\","
+                + "  \"displayLine1\": \"Strikking (Måte å lage klesplagg ved hjelp av to pinner og garn)\","
                 + "}").allowingAnyArrayOrdering());
     }
 }

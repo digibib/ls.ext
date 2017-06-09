@@ -465,7 +465,7 @@ public final class EntityResource extends ResourceBase {
             try {
                 List<XURI> relatedUris = getEntityService().retrieveResourceRelationshipsUris(outgoing);
                 getEntityService().mergeResource(staying, outgoing);
-                getEntityService().removeFromLocalIndex(outgoing);
+                getSearchService().removeFromLocalIndex(outgoing);
                 final SearchService searchService = getSearchService();
                 searchService.delete(outgoing);
                 newHashSet(relatedUris).forEach(searchService::index);
