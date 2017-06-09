@@ -3,8 +3,8 @@ import * as types from '../constants/ActionTypes'
 import { requireLoginBeforeAction } from './LoginActions'
 import Errors from '../constants/Errors'
 
-export function startFetchHistory () {
-  return requireLoginBeforeAction(fetchHistory())
+export function startFetchHistory (args) {
+  return requireLoginBeforeAction(fetchHistory(args))
 }
 
 export function fetchHistoryFailure (error) {
@@ -32,16 +32,17 @@ export function receiveHistory (data) {
   }
 }
 
-export function fetchHistory () {
+export function fetchHistory (args) {
   const url = '/api/v1/profile/history'
   return dispatch => {
     dispatch(requestHistory())
     return fetch(url, {
-      method: 'GET',
+      method: 'POST',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify(args)
     })
       .then(response => {
         if (response.status === 200) {

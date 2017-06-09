@@ -6,12 +6,17 @@ const userInfoForm = require('../../common/forms/userInfoForm')
 const contactDetailsForm = require('../../common/forms/contactDetailsForm')
 const extendedValidatorUserInfo = require('../utils/extendedValidator')(userInfoForm)
 const extendedValidatorContactDetails = require('../utils/extendedValidator')(contactDetailsForm)
+const querystring = require('querystring')
 
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
 
-  app.get('/api/v1/profile/history', (request, response) => {
-    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/history`)
+  app.post('/api/v1/profile/history', jsonParser, (request, response) => {
+    const params = {
+      offset: request.body.offset,
+      limit: request.body.limit
+    }
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/history?${querystring.stringify(params)}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()

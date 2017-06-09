@@ -1,12 +1,27 @@
 import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage } from 'react-intl'
+import InfiniteScroll from 'react-infinite-scroller';
 
 import HistoryItem from './HistoryItem'
 
 class HistoryItems extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      hasMoreItems: true,
+    }
+  }
+  loadItems = (page) => {
+    console.log('PAGE', page)
+    this.setState({
+      hasMoreItems: false
+    });
+  }
+
   render () {
-    console.log('HISTORY PROPS', this.props)
+    const items = this.props.historyItems.map((el, i) => <HistoryItem key={i} historyItem={el} />)
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -15,11 +30,17 @@ class HistoryItems extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="section"
-        className="reserve">
+        className="history">
         <h1><FormattedMessage {...messages.history} /></h1>
-        {
-          this.props.historyItems.map((el, i) => <HistoryItem key={i} historyItem={el} />)
-        }
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={this.loadItems}
+          hasMore={this.state.hasMoreItems}
+        >
+          <div>
+            {items}
+          </div>
+        </InfiniteScroll>
       </NonIETransitionGroup>
     )
   }

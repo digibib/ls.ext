@@ -1,18 +1,20 @@
 import React, {PropTypes} from 'react'
-import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
+import {defineMessages, injectIntl} from 'react-intl'
 
 import * as HistoryActions from '../actions/HistoryActions'
-import {formatDate} from '../utils/dateFormatter'
-import Loading from '../components/Loading'
 import HistoryItems from '../components/HistoryItems'
 
 class UserHistory extends React.Component {
   componentWillMount () {
-    this.props.historyActions.fetchHistory()
+    this.props.historyActions.fetchHistory({limit: 10, offset:4})
   }
+
+  loadItems = (args) => {
+    this.props.historyActions.fetchHistory(JSON.strinify(args))
+  }
+
   render () {
     return (
       <HistoryItems historyItems={this.props.historyItems} />

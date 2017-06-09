@@ -86,6 +86,7 @@ export default {
   'MyPage.settings': 'Innstillinger',
   'MyPage.history': 'Historikk',
   'History.history': 'Historikk',
+  'History.checkedIn': 'Levert',
   'Navigation.faq': 'Ofte stilte spørsmål',
   'Navigation.loggedInAs': 'Logget inn som:',
   'Navigation.logIn': 'Logg inn',
