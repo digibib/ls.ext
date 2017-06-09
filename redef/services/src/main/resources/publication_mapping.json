@@ -60,6 +60,7 @@
               },
               "name": {
                 "type": "text",
+                "similarity": "boolean",
                 "norms": {
                   "enabled": false
                 },
@@ -77,6 +78,7 @@
           },
           "mainTitle": {
             "type": "text",
+            "similarity": "boolean",
             "norms": {
               "enabled": false
             },
@@ -89,12 +91,14 @@
       },
       "contributorNames": {
         "type": "text",
+        "similarity": "boolean",
         "norms": {
           "enabled": false
         }
       },
       "title": {
         "type": "text",
+        "similarity": "boolean",
         "norms": {
           "enabled": false
         },
@@ -102,6 +106,7 @@
       },
       "mainTitle": {
         "type": "text",
+        "similarity": "boolean",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -110,6 +115,7 @@
       },
       "partTitle": {
         "type": "text",
+        "similarity": "boolean",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
@@ -123,6 +129,7 @@
       },
       "subtitle": {
         "type": "text",
+        "similarity": "boolean",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
@@ -204,6 +211,7 @@
       },
       "desc": {
         "type": "text",
+        "similarity": "boolean",
         "norms": {
           "enabled": false
         },
@@ -256,6 +264,7 @@
       },
       "series": {
         "type": "text",
+        "similarity": "boolean",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
@@ -269,26 +278,31 @@
       },
       "scriptWriter": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "agents": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "actor": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "photographer": {
         "type": "text",
+        "similarity": "boolean",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
@@ -299,115 +313,132 @@
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "composer": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "director": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "performer": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "musicalArranger": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "reader": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "conductor": {
         "type": "text",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "author": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "translator": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "illustrator": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "editor": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "contributor": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "coreographer": {
         "term_vector": "with_positions_offsets",
         "type": "text",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "producer": {
         "term_vector": "with_positions_offsets",
         "type": "text",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "productionCompany": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "featuring": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "norms": {
           "enabled": false
-        }
+        },
+        "similarity": "boolean"
       },
       "publishedBy": {
         "type": "text",
         "term_vector": "with_positions_offsets",
+        "similarity": "boolean",
         "norms": {
           "enabled": false
         }
