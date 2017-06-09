@@ -12,6 +12,24 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.44
+
+KOHA: 722ef07b638ca04731b20f934c09578d1c72219b (uforandret)
+GITREF: TODO
+
+- Patron-client:
+  - DEICH-804: Verk som emne mangler opplysninger
+  - DEICH-805: Klikk på verk som emne gir feil søk
+  - DEICH-820: Vis aldersgrense
+- Catalinker:
+  - DEICH-707: Oppslag i autoritetsregister bommer
+  - DEICH-706: Oppslag i registre - Sortering
+  - DEICH-705: Oppslag i registre - Visning
+  - DEICH-709: Oppslag i registre - Oppslag i alle opplysninger
+  - DEICH-468: Sortering av korporasjonsregister må ta hensyn til underavdeling (2d)
+- Annet
+  - DEICH-797 - Bedre logging av mysql
+
 ## 2017.43
 
 KOHA: 722ef07b638ca04731b20f934c09578d1c72219b
