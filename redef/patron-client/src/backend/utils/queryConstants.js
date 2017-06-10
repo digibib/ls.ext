@@ -39,7 +39,7 @@ module.exports = {
     'inst',
     'language',
     'litform',
-    'mainTitle',
+    'mainTitle^50',
     'mt',
     'partNumber',
     'partTitle',
