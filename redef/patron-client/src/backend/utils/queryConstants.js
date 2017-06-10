@@ -40,6 +40,7 @@ module.exports = {
     'language',
     'litform',
     'mainTitle^50',
+    'mainTitle.raw^100',
     'mt',
     'partNumber',
     'partTitle',
