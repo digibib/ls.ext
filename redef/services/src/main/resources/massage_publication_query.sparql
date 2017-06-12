@@ -266,8 +266,10 @@ WHERE {
         ?contrib a deich:Contribution ;
                  deich:agent ?contribAgent ;
                  deich:role ?contribRoleURI .
-        ?contribAgent deich:name ?contribAgentName .
-         BIND(str(?contribRoleURI) AS ?contribRole)
+        ?contribAgent deich:name ?contribAgentOnlyName .
+        OPTIONAL { ?contribAgent deich:specification ?contribSpec }
+        BIND(IF(BOUND(?contribSpec), CONCAT(?contribAgentOnlyName, " (", ?contribSpec, ")"), ?contribAgentOnlyName) AS ?contribAgentName)
+        BIND(str(?contribRoleURI) AS ?contribRole)
          OPTIONAL {
            ?contrib a deich:MainEntry .
            BIND(true as ?mainEntry) .

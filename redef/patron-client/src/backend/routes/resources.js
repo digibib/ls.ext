@@ -267,6 +267,9 @@ function transformContributors (input) {
       contributor.uri = contributor.id
       contributor.id = getId(contributor.id)
       contributor.relativeUri = relativeUri(contributor.uri)
+      if (contributor.specification) {
+        contributor.name += ` (${contributor.specification})`
+      }
       contributors[ inputContributor.role ] = contributors[ inputContributor.role ] || []
       contributors[ inputContributor.role ].push(contributor)
     })
