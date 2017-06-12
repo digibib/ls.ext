@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Updates for table `systempreferences`
+--
+
+LOCK TABLES `systempreferences` WRITE;
+/*!40000 ALTER TABLE `systempreferences` DISABLE KEYS */;
+UPDATE TABLE `systempreferences` SET `value` = 'en' WHERE `variable` = 'language';
+UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'noItemTypeImages';
+UPDATE TABLE `systempreferences` SET `value` = '0' WHERE `variable` = 'SessionRestrictionByIP';
+UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'ExtendedPatronAttributes';
+UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'EnhancedMessagingPreferences';
+UPDATE TABLE `systempreferences` SET `value` = '' WHERE `variable` = ' StaticHoldsQueueWeight ';
+UPDATE TABLE `systempreferences` SET `value` = 'softyes' WHERE `variable` = 'CheckPrevCheckout';
+UPDATE TABLE `systempreferences` SET `value` = 'exact_time' WHERE `variable` = 'NoRenewalBeforePrecision';
+UPDATE TABLE `systempreferences` SET `value` = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å' WHERE `variable` = 'alphabet';
+UPDATE TABLE `systempreferences` SET `value` = 'title|initials|othernames|streetnumber|state|mobile|fax|emailpro|phonepro|B_streetnumber|B_streettype|B_address|B_address2|B_city|B_state|B_zipcode|B_country|B_email|B_phone|borrowernotes|opacnote|contactnote|altcontactfirstname|altcontactsurname|altcontactaddress1|altcontactaddress2|altcontactaddress3|altcontactstate|altcontactzipcode|altcontactcountry|altcontactphone' WHERE `variable` = 'BorrowerUnwantedField';
+
+UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'AutomaticItemReturn';
+UPDATE TABLE `systempreferences` SET `value` = '.deichman-hidden { display: none !important; }' WHERE `variable` = 'IntranetUserCSS';
+UPDATE TABLE `systempreferences` SET `value` = '$(document).ready(function(){\r\n  if ($(\'div#aai_fnr\')[0]) {\r\n  $(\'div#aai_fnr\')[0].innerHTML = $(\'div#aai_fnr\')[0].innerHTML.replace(/\\d/g,\'*\');\r\n  }\r\n\r\n  var forms = document.querySelectorAll(\"form\");\r\n  Array.prototype.forEach.call(forms, function(form, i){\r\n    if (form.getAttribute(\"action\") === \"nl-search.pl\" && form.op.value !== \"save\") {\r\n      form.addEventListener(\"submit\", function(e) {\r\n        e.preventDefault();\r\n        var value = form.querySelector(\"input[name=\'q\'\").value;\r\n        if (value.length >= 10) {\r\n          form.submit();\r\n        } else {\r\n          alert(\"Skriv lånenummer 10 siffer, eller personnummer 11 siffer\")\r\n        }\r\n      }, false)\r\n    }\r\n  });\r\n\r\n  var addItemForm = document.getElementById(\'f\');\r\n  if (addItemForm && addItemForm.getAttribute(\'action\') === \'/cgi-bin/koha/cataloguing/additem.pl\') {\r\n    addItemForm.addEventListener(\'submit\', function(event) {\r\n      var sf = document.getElementById(\'subfield952p\');\r\n      if (sf && sf.querySelector(\'input.input_marceditor\') && sf.querySelector(\'input.input_marceditor\').value.length != 14) {\r\n        event.preventDefault();\r\n        alert(\"Strekkoden må være 14 siffer! Tøm feltet og klikk på ny\");\r\n      }\r\n    });\r\n  }\r\n\r\n});\r\n\r\n\r\nfunction printSlip() {\r\n  setTimeout(function(){\r\n\r\n  if (document.getElementById(\"return1\")) {\r\n    var links = document.getElementById(\"return1\").querySelectorAll(\"a\")\r\n    Array.prototype.forEach.call(links, function(el, i){\r\n      if (/kvittering/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"return1\")) {\r\n    var links = document.getElementById(\"return1\").querySelectorAll(\"button\")\r\n    Array.prototype.forEach.call(links, function(el, i){\r\n      if (/kvittering/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"return2\")) {\r\n    var buttons = document.getElementById(\"return2\").querySelectorAll(\"button\")\r\n    Array.prototype.forEach.call(buttons, function(el, i){\r\n      if (/Skriv/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"hold-found1\") || document.getElementById(\"hold-found2\")) {\r\n    var buttons = document.getElementsByTagName(\"button\")\r\n    Array.prototype.forEach.call(buttons, function(el, i){\r\n      if (/Skriv ut/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"item-transfer\")) {\r\n    var buttons = document.getElementById(\"item-transfer\").querySelectorAll(\"button\")\r\n    Array.prototype.forEach.call(buttons, function(el, i){\r\n      if (el.getAttribute(\"data-url\")) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n}, 10);\r\n}\r\n\r\n\r\n\r\n$(document).ready(printSlip)\r\n' WHERE `variable` = 'IntranetUserJS';
+
+UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'NorwegianPatronDBEnable';
+UPDATE TABLE `systempreferences` SET `value` = 'http://nlsink:9999' WHERE `variable` = 'NorwegianPatronDBEndpoint';
+
+/*!40000 ALTER TABLE `systempreferences` ENABLE KEYS */;
+
+UNLOCK TABLES;
+
+--
 -- Table structure for table `borrower_attribute_types`
 --
 
@@ -28,6 +56,7 @@ CREATE TABLE `borrower_attribute_types` (
   `repeatable` tinyint(1) NOT NULL DEFAULT '0',
   `unique_id` tinyint(1) NOT NULL DEFAULT '0',
   `opac_display` tinyint(1) NOT NULL DEFAULT '0',
+  `opac_editable` tinyint(1) NOT NULL DEFAULT '0',
   `staff_searchable` tinyint(1) NOT NULL DEFAULT '0',
   `authorised_value_category` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `display_checkout` tinyint(1) NOT NULL DEFAULT '0',
@@ -44,7 +73,7 @@ CREATE TABLE `borrower_attribute_types` (
 
 LOCK TABLES `borrower_attribute_types` WRITE;
 /*!40000 ALTER TABLE `borrower_attribute_types` DISABLE KEYS */;
-INSERT INTO `borrower_attribute_types` VALUES ('dooraccess','Meråpent tilgang',0,0,0,0,'DOORACCESS',0,NULL,'dooraccess'),('fnr','Fødselsnummer',0,1,0,1,'',0,NULL,'fnr'),('old_lnr','Biblifil lånenummer',0,1,0,1,'',0,NULL,'');
+INSERT INTO `borrower_attribute_types` VALUES ('dooraccess','Meråpent tilgang',0,0,0,0,0,'DOORACCESS',0,NULL,'dooraccess'),('fnr','Fødselsnummer',0,1,0,1,0,'',0,NULL,'fnr'),('old_lnr','Biblifil lånenummer',0,1,0,1,0,'',0,NULL,'');
 /*!40000 ALTER TABLE `borrower_attribute_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,24 +87,25 @@ DROP TABLE IF EXISTS `branches`;
 CREATE TABLE `branches` (
   `branchcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `branchname` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `branchaddress1` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchaddress2` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchaddress3` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `branchaddress1` mediumtext COLLATE utf8_unicode_ci,
+  `branchaddress2` mediumtext COLLATE utf8_unicode_ci,
+  `branchaddress3` mediumtext COLLATE utf8_unicode_ci,
   `branchzip` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchcity` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchstate` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchcountry` text COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchphone` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchfax` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchemail` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchreplyto` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchreturnpath` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchurl` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `branchcity` mediumtext COLLATE utf8_unicode_ci,
+  `branchstate` mediumtext COLLATE utf8_unicode_ci,
+  `branchcountry` text COLLATE utf8_unicode_ci,
+  `branchphone` mediumtext COLLATE utf8_unicode_ci,
+  `branchfax` mediumtext COLLATE utf8_unicode_ci,
+  `branchemail` mediumtext COLLATE utf8_unicode_ci,
+  `branchreplyto` mediumtext COLLATE utf8_unicode_ci,
+  `branchreturnpath` mediumtext COLLATE utf8_unicode_ci,
+  `branchurl` mediumtext COLLATE utf8_unicode_ci,
   `issuing` tinyint(4) DEFAULT NULL,
   `branchip` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
   `branchprinter` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `branchnotes` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `opac_info` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `branchnotes` mediumtext COLLATE utf8_unicode_ci,
+  `opac_info` text COLLATE utf8_unicode_ci,
+  `geolocation` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`branchcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -86,7 +116,30 @@ CREATE TABLE `branches` (
 
 LOCK TABLES `branches` WRITE;
 /*!40000 ALTER TABLE `branches` DISABLE KEYS */;
-INSERT INTO `branches` VALUES ('api','Intern API avdeling',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fbje','Bjerke',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fbjo','Bjørnholt',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fbol','Bøler',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('ffur','Furuset',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fgam','Tøyen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fgry','Grünerløkka',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fhol','Holmlia',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('flam','Lambertseter',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fmaj','Majorstuen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fnor','Nordtvet',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fnyd','Nydalen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fopp','Oppsal',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('frik','Rikshospitalet',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('frmm','Rommen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('froa','Røa',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('from','Romsås',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fsme','Smestad',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('fsto','Stovner',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('ftor','Torshov',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('hsko','Skoletjenesten',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('hutl','Hovedbiblioteket',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),('ukjent','Ukjent avdeling',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `branches` VALUES
+('api','Intern API avdeling',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fbje','Bjerke',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fbjo','Bjørnholt',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fbol','Bøler',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('ffur','Furuset',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fgam','Tøyen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fgry','Grünerløkka',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fhol','Holmlia',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('flam','Lambertseter',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fmaj','Majorstuen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fnor','Nordtvet',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fnyd','Nydalen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fopp','Oppsal',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('frik','Rikshospitalet',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('frmm','Rommen',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('froa','Røa',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('from','Romsås',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fsme','Smestad',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('fsto','Stovner',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('ftor','Torshov',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('hsko','Skoletjenesten',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('hutl','Hovedbiblioteket',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('ukjent','Ukjent avdeling',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `branches` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -126,7 +179,23 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES ('ADMIN','Administrator',NULL,NULL,2999,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),('ANS','Ansatt',0,'2999-12-31',999,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'S',-1,'default','inherit'),('API','API-user',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),('AUTO','Selvbetjeningsautomat',NULL,NULL,2999,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),('B','A Barn',0,'2999-01-01',15,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'C',-1,'default','inherit'),('BHG','Barnehage',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),('BIB','Bibliotek',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),('DOOR','Meråpent dørterminal',NULL,NULL,2999,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),('I','Institusjon',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),('KL','Klasselåner',0,'2999-12-31',0,0,NULL,NULL,0.000000,0,NULL,0.000000,0,'P',-1,'default','inherit'),('MDL','Midlertidig bosatt',0,'2999-12-31',999,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit'),('PAS','Pasient',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit'),('REGBARN','Selvregistrert barn',1,NULL,16,0,NULL,NULL,0.000000,0,NULL,0.000000,0,'C',-1,'default','inherit'),('REGVOKSEN','Selvregistrert voksen',1,NULL,0,0,NULL,NULL,0.000000,0,NULL,0.000000,0,'A',-1,'default','inherit'),('SKO','Skole',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),('V','A Voksen',0,'2999-01-01',100,15,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit');
+INSERT INTO `categories` VALUES
+('ADMIN','Administrator',NULL,NULL,2999,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),
+('ANS','Ansatt',0,'2999-12-31',999,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'S',-1,'default','inherit'),
+('API','API-user',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),
+('AUTO','Selvbetjeningsautomat',NULL,NULL,2999,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),
+('B','A Barn',0,'2999-01-01',15,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'C',-1,'default','inherit'),
+('BHG','Barnehage',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),
+('BIB','Bibliotek',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),
+('DOOR','Meråpent dørterminal',NULL,NULL,2999,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),
+('I','Institusjon',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),
+('KL','Klasselåner',0,'2999-12-31',0,0,NULL,NULL,0.000000,0,NULL,0.000000,0,'P',-1,'default','inherit'),
+('MDL','Midlertidig bosatt',0,'2999-12-31',999,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit'),
+('PAS','Pasient',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit'),
+('REGBARN','Selvregistrert barn',1,NULL,16,0,NULL,NULL,0.000000,0,NULL,0.000000,0,'C',-1,'default','inherit'),
+('REGVOKSEN','Selvregistrert voksen',1,NULL,0,0,NULL,NULL,0.000000,0,NULL,0.000000,0,'A',-1,'default','inherit'),
+('SKO','Skole',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),
+('V','A Voksen',0,'2999-01-01',100,15,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,6 +285,7 @@ CREATE TABLE `issuingrules` (
   `norenewalbefore` int(4) DEFAULT NULL,
   `auto_renew` tinyint(1) DEFAULT '0',
   `no_auto_renewal_after` int(4) DEFAULT NULL,
+  `no_auto_renewal_after_hard_limit` date DEFAULT NULL,
   `reservesallowed` smallint(6) NOT NULL DEFAULT '0',
   `holds_per_record` smallint(6) NOT NULL DEFAULT '1',
   `branchcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -236,7 +306,44 @@ CREATE TABLE `issuingrules` (
 
 LOCK TABLES `issuingrules` WRITE;
 /*!40000 ALTER TABLE `issuingrules` DISABLE KEYS */;
-INSERT INTO `issuingrules` VALUES ('*','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','DAGSLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,1,'days',NULL,-1,0,0,0,0,NULL,0,0,'*',NULL,0,1,'Y','no'),('*','FILM',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','KART',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','LYDBOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','MUSIKK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,14,7,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','NOTER',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','PERIODIKA',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','SPILL',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','SPRAAKKURS',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('*','TOUKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,14,'days',NULL,-1,0,0,0,0,NULL,0,0,'*',NULL,0,1,'Y','no'),('*','UKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,7,'days',NULL,-1,0,0,0,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('ANS','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,NULL,NULL,42,'days',NULL,-1,2,42,NULL,0,NULL,500,500,'*',NULL,0,1,'Y','no'),('B','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('B','DAGSLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,1,'days',NULL,-1,0,0,NULL,0,NULL,0,0,'*',NULL,0,1,'Y','no'),('B','FILM',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('B','MUSIKK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('B','PERIODIKA',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('B','SPILL',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('B','SPRAAKKURS',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('B','TOUKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,14,'days',NULL,-1,0,0,0,0,NULL,0,0,'*',NULL,0,1,'Y','no'),('B','UKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,7,'days',NULL,-1,0,0,NULL,0,NULL,0,0,'*',NULL,0,1,'Y','no'),('BHG','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('BIB','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('I','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('KL','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,1000,NULL,60,'days',NULL,-1,2,60,NULL,0,NULL,1000,200,'*',NULL,0,1,'Y','no'),('SKO','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('V','*',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,30,30,'*',100.000000,0,1,'Y','no'),('V','BOK',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',100.000000,0,1,'Y','no'),('V','DAGSLAAN',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,1,'days',NULL,-1,0,0,NULL,0,NULL,0,0,'*',100.000000,0,1,'Y','no'),('V','EBOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',NULL,0,1,'Y','no'),('V','LYDBOK',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',100.000000,0,1,'Y','no'),('V','NOTER',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',100.000000,0,1,'Y','no'),('V','SPRAAKKURS',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,30,30,'*',100.000000,0,1,'Y','no'),('V','TOUKESLAAN',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,14,'days',NULL,-1,0,0,NULL,0,NULL,0,0,'*',100.000000,0,1,'Y','no'),('V','UKESLAAN',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,7,'days',NULL,-1,0,0,NULL,0,NULL,0,0,'*',100.000000,0,1,'Y','no');
+INSERT INTO `issuingrules` VALUES
+('*','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','DAGSLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,1,'days',NULL,-1,0,0,0,0,NULL,NULL,0,0,'*',NULL,0,1,'Y','no'),
+('*','FILM',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','KART',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','LYDBOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','MUSIKK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,14,7,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','NOTER',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','PERIODIKA',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','SPILL',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','SPRAAKKURS',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('*','TOUKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,14,'days',NULL,-1,0,0,0,0,NULL,NULL,0,0,'*',NULL,0,1,'Y','no'),
+('*','UKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,7,'days',NULL,-1,0,0,0,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('ANS','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,NULL,NULL,42,'days',NULL,-1,2,42,NULL,0,NULL,NULL,500,500,'*',NULL,0,1,'Y','no'),
+('B','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('B','DAGSLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,1,'days',NULL,-1,0,0,NULL,0,NULL,NULL,0,0,'*',NULL,0,1,'Y','no'),
+('B','FILM',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('B','MUSIKK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('B','PERIODIKA',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('B','SPILL',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('B','SPRAAKKURS',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('B','TOUKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,14,'days',NULL,-1,0,0,0,0,NULL,NULL,0,0,'*',NULL,0,1,'Y','no'),
+('B','UKESLAAN',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,7,'days',NULL,-1,0,0,NULL,0,NULL,NULL,0,0,'*',NULL,0,1,'Y','no'),
+('BHG','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('BIB','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('I','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('KL','*',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,1000,NULL,60,'days',NULL,-1,2,60,NULL,0,NULL,NULL,1000,200,'*',NULL,0,1,'Y','no'),
+('SKO','BOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,1,NULL,NULL,30,NULL,42,'days',NULL,-1,2,42,21,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('V','*',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,14,'days',NULL,-1,2,14,7,0,NULL,NULL,30,30,'*',100.000000,0,1,'Y','no'),
+('V','BOK',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',100.000000,0,1,'Y','no'),
+('V','DAGSLAAN',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,1,'days',NULL,-1,0,0,NULL,0,NULL,NULL,0,0,'*',100.000000,0,1,'Y','no'),
+('V','EBOK',NULL,0.000000,NULL,0.000000,0,NULL,0,0,0,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',NULL,0,1,'Y','no'),
+('V','LYDBOK',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',100.000000,0,1,'Y','no'),
+('V','NOTER',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',100.000000,0,1,'Y','no'),
+('V','SPRAAKKURS',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,28,'days',NULL,-1,2,28,14,0,NULL,NULL,30,30,'*',100.000000,0,1,'Y','no'),
+('V','TOUKESLAAN',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,14,'days',NULL,-1,0,0,NULL,0,NULL,NULL,0,0,'*',100.000000,0,1,'Y','no'),
+('V','UKESLAAN',NULL,0.000000,NULL,100.000000,0,NULL,10,1,1,NULL,NULL,30,NULL,7,'days',NULL,-1,0,0,NULL,0,NULL,NULL,0,0,'*',100.000000,0,1,'Y','no');
 /*!40000 ALTER TABLE `issuingrules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,10 +377,57 @@ CREATE TABLE `itemtypes` (
 
 LOCK TABLES `itemtypes` WRITE;
 /*!40000 ALTER TABLE `itemtypes` DISABLE KEYS */;
-INSERT INTO `itemtypes` VALUES ('BOK','Bok',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('DAGSLAAN','Dagslån',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('EBOK','E-bok',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('FILM','Film',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('KART','Kart',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('LYDBOK','Lydbok',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('MUSIKK','Musikkopptak',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('NOTER','Noter',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('PERIODIKA','Periodika',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('REALIA','Realia',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('SPILL','Spill',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('SPRAAKKURS','Språkkurs',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('TOUKESLAAN','Hurtiglån (14 dager)',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('UKESLAAN','Hurtiglån (7 dager)',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),('UKJENT','Ukjent',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL);
+INSERT INTO `itemtypes` VALUES
+('BOK','Bok',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('DAGSLAAN','Dagslån',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('EBOK','E-bok',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('FILM','Film',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('KART','Kart',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('LYDBOK','Lydbok',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('MUSIKK','Musikkopptak',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('NOTER','Noter',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('PERIODIKA','Periodika',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('REALIA','Realia',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('SPILL','Spill',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('SPRAAKKURS','Språkkurs',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('TOUKESLAAN','Hurtiglån (14 dager)',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('UKESLAAN','Hurtiglån (7 dager)',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL),
+('UKJENT','Ukjent',NULL,NULL,NULL,NULL,NULL,'message',NULL,0,NULL);
 /*!40000 ALTER TABLE `itemtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `letter`
+--
+
+DROP TABLE IF EXISTS `letter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `letter` (
+  `module` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `code` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `branchcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `is_html` tinyint(1) DEFAULT '0',
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `content` text COLLATE utf8_unicode_ci,
+  `message_transport_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'email',
+  `lang` varchar(25) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'default',
+  PRIMARY KEY (`module`,`code`,`branchcode`,`message_transport_type`,`lang`),
+  KEY `message_transport_type_fk` (`message_transport_type`),
+  CONSTRAINT `message_transport_type_fk` FOREIGN KEY (`message_transport_type`) REFERENCES `message_transport_types` (`message_transport_type`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `letter`
+--
+
+LOCK TABLES `letter` WRITE;
+/*!40000 ALTER TABLE `letter` DISABLE KEYS */;
+INSERT INTO `letter` VALUES ('members','ACCTDETAILS','','Patron Account Details',1,'Welcome user','Hi <<borrowers.firstname>>,\r\n\r\nWelcome as a new user!\r\n\r\n<p>Your temporary card number is <<borrowers.userid>></p>\r\n','email','default');
+/*!40000 ALTER TABLE `letter` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `marc_subfield_structure`
@@ -497,62 +651,6 @@ INSERT INTO `overduerules_transport_types` VALUES (304,1,'email',11),(305,1,'sms
 /*!40000 ALTER TABLE `overduerules_transport_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `repeatable_holidays`
---
-
-DROP TABLE IF EXISTS `repeatable_holidays`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `repeatable_holidays` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `branchcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `weekday` smallint(6) DEFAULT NULL,
-  `day` smallint(6) DEFAULT NULL,
-  `month` smallint(6) DEFAULT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `repeatable_holidays`
---
-
-LOCK TABLES `repeatable_holidays` WRITE;
-/*!40000 ALTER TABLE `repeatable_holidays` DISABLE KEYS */;
-/*!40000 ALTER TABLE `repeatable_holidays` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
---
--- Updates for table `systempreferences`
---
-
-LOCK TABLES `systempreferences` WRITE;
-/*!40000 ALTER TABLE `systempreferences` DISABLE KEYS */;
-UPDATE TABLE `systempreferences` SET `value` = 'en' WHERE `variable` = 'language';
-UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'noItemTypeImages';
-UPDATE TABLE `systempreferences` SET `value` = '0' WHERE `variable` = 'SessionRestrictionByIP';
-UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'ExtendedPatronAttributes';
-UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'EnhancedMessagingPreferences';
-UPDATE TABLE `systempreferences` SET `value` = '' WHERE `variable` = ' StaticHoldsQueueWeight ';
-UPDATE TABLE `systempreferences` SET `value` = 'softyes' WHERE `variable` = 'CheckPrevCheckout';
-UPDATE TABLE `systempreferences` SET `value` = 'exact_time' WHERE `variable` = 'NoRenewalBeforePrecision';
-UPDATE TABLE `systempreferences` SET `value` = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å' WHERE `variable` = 'alphabet';
-UPDATE TABLE `systempreferences` SET `value` = 'title|initials|othernames|streetnumber|state|mobile|fax|emailpro|phonepro|B_streetnumber|B_streettype|B_address|B_address2|B_city|B_state|B_zipcode|B_country|B_email|B_phone|borrowernotes|opacnote|contactnote|altcontactfirstname|altcontactsurname|altcontactaddress1|altcontactaddress2|altcontactaddress3|altcontactstate|altcontactzipcode|altcontactcountry|altcontactphone' WHERE `variable` = 'BorrowerUnwantedField';
-
-UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'AutomaticItemReturn';
-UPDATE TABLE `systempreferences` SET `value` = '.deichman-hidden { display: none !important; }' WHERE `variable` = 'IntranetUserCSS';
-UPDATE TABLE `systempreferences` SET `value` = '$(document).ready(function(){\r\n  if ($(\'div#aai_fnr\')[0]) {\r\n  $(\'div#aai_fnr\')[0].innerHTML = $(\'div#aai_fnr\')[0].innerHTML.replace(/\\d/g,\'*\');\r\n  }\r\n\r\n  var forms = document.querySelectorAll(\"form\");\r\n  Array.prototype.forEach.call(forms, function(form, i){\r\n    if (form.getAttribute(\"action\") === \"nl-search.pl\" && form.op.value !== \"save\") {\r\n      form.addEventListener(\"submit\", function(e) {\r\n        e.preventDefault();\r\n        var value = form.querySelector(\"input[name=\'q\'\").value;\r\n        if (value.length >= 10) {\r\n          form.submit();\r\n        } else {\r\n          alert(\"Skriv lånenummer 10 siffer, eller personnummer 11 siffer\")\r\n        }\r\n      }, false)\r\n    }\r\n  });\r\n\r\n  var addItemForm = document.getElementById(\'f\');\r\n  if (addItemForm && addItemForm.getAttribute(\'action\') === \'/cgi-bin/koha/cataloguing/additem.pl\') {\r\n    addItemForm.addEventListener(\'submit\', function(event) {\r\n      var sf = document.getElementById(\'subfield952p\');\r\n      if (sf && sf.querySelector(\'input.input_marceditor\') && sf.querySelector(\'input.input_marceditor\').value.length != 14) {\r\n        event.preventDefault();\r\n        alert(\"Strekkoden må være 14 siffer! Tøm feltet og klikk på ny\");\r\n      }\r\n    });\r\n  }\r\n\r\n});\r\n\r\n\r\nfunction printSlip() {\r\n  setTimeout(function(){\r\n\r\n  if (document.getElementById(\"return1\")) {\r\n    var links = document.getElementById(\"return1\").querySelectorAll(\"a\")\r\n    Array.prototype.forEach.call(links, function(el, i){\r\n      if (/kvittering/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"return1\")) {\r\n    var links = document.getElementById(\"return1\").querySelectorAll(\"button\")\r\n    Array.prototype.forEach.call(links, function(el, i){\r\n      if (/kvittering/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"return2\")) {\r\n    var buttons = document.getElementById(\"return2\").querySelectorAll(\"button\")\r\n    Array.prototype.forEach.call(buttons, function(el, i){\r\n      if (/Skriv/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"hold-found1\") || document.getElementById(\"hold-found2\")) {\r\n    var buttons = document.getElementsByTagName(\"button\")\r\n    Array.prototype.forEach.call(buttons, function(el, i){\r\n      if (/Skriv ut/.test(el.innerHTML)) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n\r\n  if (document.getElementById(\"item-transfer\")) {\r\n    var buttons = document.getElementById(\"item-transfer\").querySelectorAll(\"button\")\r\n    Array.prototype.forEach.call(buttons, function(el, i){\r\n      if (el.getAttribute(\"data-url\")) {\r\n        console.log(\"printing\")\r\n        el.click()\r\n      }\r\n    })\r\n  }\r\n}, 10);\r\n}\r\n\r\n\r\n\r\n$(document).ready(printSlip)\r\n' WHERE `variable` = 'IntranetUserJS';
-
-UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'NorwegianPatronDBEnable';
-UPDATE TABLE `systempreferences` SET `value` = 'http://nlsink:9999' WHERE `variable` = 'NorwegianPatronDBEndpoint';
-
-/*!40000 ALTER TABLE `systempreferences` ENABLE KEYS */;
-
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

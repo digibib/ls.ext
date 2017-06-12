@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@kohadb
 Egenskap: Avdelinger via API
   Som superbruker
   For å finne en avdeling

@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # language: no
 
+@kohadb
 Egenskap: Legg til låner via API
   Som bruker
   For å kunne bruke bibliotekets tjenester

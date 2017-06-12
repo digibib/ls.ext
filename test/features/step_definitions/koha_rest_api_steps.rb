@@ -19,12 +19,12 @@ Given(/^at jeg er logget på som superbruker via REST API$/) do
 end
 
 When(/^låneren reserverer boka via API$/) do
-	params = {
-		biblionumber: @active[:book].biblionumber.to_i,
-		branchcode: @active[:branch].code,
-		borrowernumber: @active[:patron].borrowernumber.to_i
-	}
-	res = KohaRESTAPI::Hold.new(@browser,@context,@active).add(params)
+  params = {
+    biblionumber: @context[:koha].biblio["biblio"]["biblionumber"].to_i,
+    branchcode: @context[:koha].patrons[0]["branchcode"],
+    borrowernumber: @context[:koha].patrons[0]["borrowernumber"].to_i
+  }
+  res = KohaRESTAPI::Hold.new(@browser,@context,@active).add(params)
   @context[:reserve] = JSON.parse(res)
 
   @cleanup.push("reservering #{@context[:reserve]['reserve_id']} på bok #{@context[:reserve]['biblionumber']}" =>
@@ -35,9 +35,9 @@ When(/^låneren reserverer boka via API$/) do
 end
 
 Then(/^gir APIet tilbakemelding om at boka er reservert$/) do
-  @context[:reserve]["biblionumber"].should eq(@active[:book].biblionumber)
+  @context[:reserve]["biblionumber"].should eq(@context[:koha].biblio["biblio"]["biblionumber"].to_i)
   @context[:reserve]["branchcode"].should eq(@context[:defaults][:branches][0].code)
-  @context[:reserve]["borrowernumber"].should eq(@active[:patron].borrowernumber)
+  @context[:reserve]["borrowernumber"].should eq(@context[:koha].patrons[0]["borrowernumber"].to_i)
 end
 
 Given(/^at jeg har mottatt opplysninger om en låner$/) do
@@ -175,7 +175,6 @@ When(/^jeg legger inn boka via Kohas API$/) do
     biblionumber: json["biblionumber"],
     items: json["items"]
   }
-
   @active[:book].biblionumber = json["biblionumber"]
   @cleanup.push( "biblio #{@context[:biblio_api_response][:biblionumber]}" =>
     lambda do
