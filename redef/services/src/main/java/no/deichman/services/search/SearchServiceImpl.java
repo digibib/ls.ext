@@ -83,6 +83,7 @@ public class SearchServiceImpl implements SearchService {
     private static final String UTF_8 = "UTF-8";
     public static final int SIXTY_ONE = 61;
     public static final int SILENT_PERIOD = 1000000;
+    private static final String DISPLAY_LINE_1 = "displayLine1";
     private final EntityService entityService;
     private final String elasticSearchBaseUrl;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -616,10 +617,10 @@ public class SearchServiceImpl implements SearchService {
             scrollId = json.get("_scroll_id").getAsString();
             JsonArray hits = json.getAsJsonObject("hits").getAsJsonArray("hits");
             for (JsonElement hit : hits) {
-                if (hit.getAsJsonObject().get("_source").getAsJsonObject().has("displayLine1")) {
+                if (hit.getAsJsonObject().get("_source").getAsJsonObject().has(DISPLAY_LINE_1)) {
                     result.put(
                             urlDecode(hit.getAsJsonObject().get("_id").getAsString()),
-                            hit.getAsJsonObject().get("_source").getAsJsonObject().get("displayLine1").getAsString());
+                            hit.getAsJsonObject().get("_source").getAsJsonObject().get(DISPLAY_LINE_1).getAsString());
                 }
             }
 

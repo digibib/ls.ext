@@ -28,6 +28,8 @@ public enum EntityType {
     // must be handwritten because of stupid Java
     public static final String ALL_TYPES_PATTERN =
             "(work|publication|person|place|corporation|serial|workSeries|subject|genre|instrument|compositionType|event)";
+    private static final String DISPLAY_LINE_1 = "displayLine1";
+    private static final String DISPLAY_LINE_2 = "displayLine2";
 
     private final String path;
     private final String rdfType;
@@ -260,10 +262,10 @@ public enum EntityType {
                 break;
         }
         if (displayLine1.length() > 0) {
-            map.put("displayLine1", displayLine1);
+            map.put(DISPLAY_LINE_1, displayLine1);
         }
         if (displayLine2.length() > 0) {
-            map.put("displayLine2", displayLine2);
+            map.put(DISPLAY_LINE_2, displayLine2);
         }
     }
 
