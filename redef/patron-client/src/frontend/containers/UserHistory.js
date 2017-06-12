@@ -6,18 +6,31 @@ import {defineMessages, injectIntl} from 'react-intl'
 import * as HistoryActions from '../actions/HistoryActions'
 import HistoryItems from '../components/HistoryItems'
 
+/* const args = {
+  limit: 10,
+  offset: 0
+} */
+
 class UserHistory extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      hasMoreItems: true,
+    }
+  }
   componentWillMount () {
-    this.props.historyActions.fetchHistory({limit: 10, offset:4})
+    this.props.historyActions.fetchHistory({limit: 2, offset:0})
   }
 
   loadItems = (args) => {
-    this.props.historyActions.fetchHistory(JSON.strinify(args))
+    this.props.historyActions.fetchHistory({limit: 2, offset: 2})
+    this.setState({ hasMoreItems: false })
   }
 
   render () {
     return (
-      <HistoryItems historyItems={this.props.historyItems} />
+      <HistoryItems historyItems={this.props.historyItems} loadItems={this.loadItems} hasMoreItems={this.state.hasMoreItems} />
     )
   }
 }

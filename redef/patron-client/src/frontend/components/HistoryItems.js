@@ -34,8 +34,8 @@ class HistoryItems extends React.Component {
         <h1><FormattedMessage {...messages.history} /></h1>
         <InfiniteScroll
           pageStart={0}
-          loadMore={this.loadItems}
-          hasMore={this.state.hasMoreItems}
+          loadMore={this.props.loadItems}
+          hasMore={this.props.hasMoreItems}
         >
           <div>
             {items}
