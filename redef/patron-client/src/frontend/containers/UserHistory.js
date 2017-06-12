@@ -6,10 +6,7 @@ import {defineMessages, injectIntl} from 'react-intl'
 import * as HistoryActions from '../actions/HistoryActions'
 import HistoryItems from '../components/HistoryItems'
 
-/* const args = {
-  limit: 10,
-  offset: 0
-} */
+const limit = 2
 
 class UserHistory extends React.Component {
   constructor(props) {
@@ -20,27 +17,35 @@ class UserHistory extends React.Component {
     }
   }
   componentWillMount () {
-    this.props.historyActions.fetchHistory({limit: 2, offset:0})
+    this.props.historyActions.resetHistory()
+    this.props.historyActions.fetchHistory({limit:limit, offset:0})
   }
 
-  loadItems = (args) => {
-    this.props.historyActions.fetchHistory({limit: 2, offset: 2})
-    this.setState({ hasMoreItems: false })
+  loadItems = () => {
+    console.log(this.props.hasMoreItems)
+    this.props.historyActions.fetchHistory({limit:limit, offset:parseInt(this.props.loadedHistoryItems)})
+    this.props.historyActions.updateHistory()
   }
 
   render () {
     return (
-      <HistoryItems historyItems={this.props.historyItems} loadItems={this.loadItems} hasMoreItems={this.state.hasMoreItems} />
+      <HistoryItems historyItems={this.props.allLoadedHistory} loadItems={this.loadItems} hasMoreItems={this.props.hasMoreItems} />
     )
   }
 }
 
-UserHistory.propTypes = {}
+UserHistory.propTypes = {
+  historyActions: PropTypes.object.isRequired
+}
+
 export const messages = defineMessages({})
 
 function mapStateToProps (state) {
   return {
-    historyItems: state.history.historyData
+    historyItems: state.history.historyData,
+    allLoadedHistory: state.history.allLoadedHistory,
+    loadedHistoryItems: state.history.loadedHistoryItems,
+    hasMoreItems: state.history.moreToFetch
   }
 }
 

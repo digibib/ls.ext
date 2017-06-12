@@ -6,20 +6,6 @@ import InfiniteScroll from 'react-infinite-scroller';
 import HistoryItem from './HistoryItem'
 
 class HistoryItems extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      hasMoreItems: true,
-    }
-  }
-  loadItems = (page) => {
-    console.log('PAGE', page)
-    this.setState({
-      hasMoreItems: false
-    });
-  }
-
   render () {
     const items = this.props.historyItems.map((el, i) => <HistoryItem key={i} historyItem={el} />)
     return (
