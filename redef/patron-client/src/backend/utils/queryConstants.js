@@ -47,7 +47,6 @@ module.exports = {
     'subtitle',
     'series^10',
     'subject^50',
-    'summary',
     'title^20'
   ]
 }

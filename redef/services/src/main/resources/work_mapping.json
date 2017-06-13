@@ -256,12 +256,14 @@
       "mainTitle": {
         "type": "text",
         "similarity": "boolean",
+        "norms": {
+          "enabled": false
+        },
         "fields": {
           "raw": {
             "type": "keyword"
           }
-        },
-        "similarity": "boolean"
+        }
       },
       "subtitle": {
         "type": "text",
@@ -280,7 +282,6 @@
       "partTitle": {
         "type": "text",
         "term_vector": "with_positions_offsets",
-        "similarity": "boolean",
         "norms": {
           "enabled": false
         },

@@ -161,10 +161,14 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
 
 function simpleQuery (query, fields) {
   return {
-    simple_query_string: {
-      query: query,
-      default_operator: 'and',
-      fields: fields
+    dis_max: {
+      queries: fields.map(field => {
+        return {
+          match: {
+            [field]: query
+          }
+        }
+      })
     }
   }
 }
