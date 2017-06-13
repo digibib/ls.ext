@@ -4,6 +4,7 @@
     {{else}}
             <select style="width: 100%;"
                     as-select2="{mode: 'authoritySelectSingle'}"
+                    as-tabIndex="{{tabSelected}}"
                     id="sel_{{uniqueId}}"
                     class="searchable-authority" multiple value="{{current.value}}">
         {{#if ./current.value}}

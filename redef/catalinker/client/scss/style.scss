@@ -20,7 +20,9 @@ $mintgreen: #DCFC9F;
   outline: auto 5px -webkit-focus-ring-color;
   outline-offset: 2px;
 }
-#highest-score-item { border-bottom: 2px solid red; }
+#highest-score-item:not(.exact-match) {
+  border-bottom: 2px solid red;
+}
 @mixin turnableArrow {
   a {
     display: inline-block;

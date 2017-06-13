@@ -2115,6 +2115,23 @@
       return txt.value
     }
 
+    function processSearchResultNavigation (results, config, indexType, fieldForSortedListQuery, searchString) {
+      let items = _.map(_.pluck(results.hits.hits, '_source'),
+        Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ])
+      let highestScoreIndex
+      _.each(items, function (item, index) {
+        if (!highestScoreIndex && item.score === results.hits.max_score) {
+          highestScoreIndex = index
+        }
+      })
+      var exactMatchWasFound = false
+      if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([ items[ highestScoreIndex ][ fieldForSortedListQuery ] ]).join().toLocaleLowerCase()) {
+        items[ highestScoreIndex ].exactMatch = true
+        exactMatchWasFound = true
+      }
+      return { items, highestScoreIndex, exactMatchWasFound }
+    }
+
     function doSearch (event, searchString, preferredIndexType, secondaryIndexType) {
       searchString = stripHtml(searchString).trim()
 
@@ -2176,28 +2193,11 @@
             var item = hit._source
             item.isChecked = false
             item.score = hit._score
-            if (item.work) {
-              if (!_.isArray(item.work)) {
-                item.work = [ item.work ]
-              }
-              _.each(item.work, function (work) {
-                work.isChecked = false
-              })
-            }
           })
-          let items = _.map(_.pluck(results.hits.hits, '_source'),
-            Main.searchResultItemHandlers[ config.search[ indexType ].itemHandler || 'defaultItemHandler' ])
-          var highestScoreIndex
-          _.each(items, function (item, index) {
-            if (item.score === results.hits.max_score) {
-              highestScoreIndex = index
-            }
-          })
-          var exactMatchWasFound = false
-          if (items.length > 0 && highestScoreIndex !== undefined && fieldForSortedListQuery && searchString.toLocaleLowerCase() === _.flatten([ items[ highestScoreIndex ][ fieldForSortedListQuery ] ]).join().toLocaleLowerCase()) {
-            items[ highestScoreIndex ].exactMatch = true
-            exactMatchWasFound = true
-          }
+          const searchResultNav = processSearchResultNavigation(results, config, indexType, fieldForSortedListQuery, searchString)
+          let items = searchResultNav.items
+          var highestScoreIndex = searchResultNav.highestScoreIndex
+          var exactMatchWasFound = searchResultNav.exactMatchWasFound
           ractive.set(`${event.keypath}.searchResult`, {
             items: items,
             origin: event.keypath,
@@ -2749,6 +2749,9 @@
               $(node).siblings().find('span ul li input').first().attr('tabindex', newValue ? '0' : '-1')
             })
           }, { init: true })
+          setTimeout(function () {
+            $(node).siblings().find('span ul li input').first().attr('tabindex', '0')
+          })
         }
 
         function whileUnobserved (doStuff) {
@@ -2760,6 +2763,7 @@
         var initRactive = function (applicationData) {
           // decorators
           var select2 = function (node, mode) {
+            const config = ractive.get('config')
             tabIndexForNode(node)
             if (mode.mode === 'singleSelect') {
               $(node).select2({
@@ -2771,17 +2775,18 @@
                 templateSelection: templateSelection
               })
             } else if (mode.mode === 'authoritySelectSingle') {
-              var inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath))
+              const inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath))
               if (_.isArray(inputDef.indexTypes) && inputDef.indexTypes.length > 1) {
                 throw new Error('searchable-authority-dropdown supports only supports singe indexType')
               }
-              var indexType = _.isArray(inputDef.indexTypes) ? inputDef.indexTypes[ 0 ] : inputDef.indexTypes
-              var config = ractive.get('config')
+              const indexType = _.isArray(inputDef.indexTypes) ? inputDef.indexTypes[ 0 ] : inputDef.indexTypes
+              const config = ractive.get('config')
+              const fieldForSortedListQuery = config.search[ indexType ].sortedListQueryForField
               $(node).select2({
                 maximumSelectionLength: 1,
-                minimumInputLength: 3,
+                minimumInputLength: 1,
                 ajax: {
-                  url: `${config.resourceApiUri}search/${indexType}/_search`,
+                  url: `${config.resourceApiUri}search/${indexType}/sorted_list`,
                   dataType: 'json',
                   delay: 250,
                   id: function (item) {
@@ -2789,20 +2794,34 @@
                   },
                   data: function (params) {
                     return {
-                      q: `${params.term}*`, // search term
+                      prefix: `${params.term}`, // search term
                       page: params.page
                     }
                   },
                   processResults: function (data, params) {
                     params.page = params.page || 1
+                    data.hits.hits.forEach(function (hit) {
+                      var item = hit._source
+                      item.score = hit._score
+                    })
 
-                    var select2Data = _.map(data.hits.hits, function (obj) {
+                    const navigation = processSearchResultNavigation(data, config, indexType, fieldForSortedListQuery, params.term)
+                    const select2Data = _.map(data.hits.hits, function (obj, index) {
                       obj.id = obj._source.uri
                       obj.text = _.compact(_.map(inputDef.indexDocumentFields, function (field) {
                         return obj._source[ field ]
                       })).join(' - ')
+                      if (index === navigation.highestScoreIndex) {
+                        obj.highestScorer = true
+                      }
+                      if (navigation.exactMatchWasFound) {
+                        obj.exactMatch = true
+                      }
                       return obj
                     })
+                    if (select2Data.length > 0) {
+                      select2Data[ select2Data.length - 1 ].last = true
+                    }
 
                     return {
                       results: select2Data,
@@ -2813,6 +2832,30 @@
                   },
                   cache: true
                 },
+                templateResult: function (data, option) {
+                  const scrollScript = `<script>
+                              var maxAttempts = 20
+                              function tryScroll () {
+                                  var target = document.main.$('#highest-score-item')
+                                  if (target) {
+                                    target.closest('ul').find('li').removeClass('select2-results__option--highlighted')
+                                    target.parent().addClass('select2-results__option--highlighted')
+                                    target.closest('ul').scrollTo(target, 500, {offset: -30})
+                                  } else {
+                                      if (maxAttempts-- > 0) {
+                                          setTimeout(tryScroll, 500)
+                                      }
+                                  }
+                              }
+                              setTimeout(tryScroll)
+                            </script>`
+
+                    return $(`
+                        <div ${data.highestScorer ? 'id=highest-score-item' : ''} ${data.exactMatch ? 'class=exactMatch' : ''} >
+                          ${data.text}
+                          ${data.last ? scrollScript : ''}
+                        </div> `)
+                },
                 templateSelection: function (data) {
                   return data.text === '' ? ractive.get(`authorityLabels[${data.id}]`) : data.text
                 }
@@ -2821,9 +2864,14 @@
               throw Error("Value for as-select2 must be 'singleSelect', 'multiselect' or 'authoritySelectSingle")
             }
 
-            var enableChange = false
-            $(node).on('select2:selecting select2:unselecting', function (event) {
+            let enableChange = false
+            let unsetting = false
+            $(node).on('select2:selecting', function (event) {
               enableChange = true
+            })
+            $(node).on('select2:unselecting', function (event) {
+              enableChange = true
+              unsetting = true
             })
             var setting = false
             $(node).on('change', function (e) {
@@ -2832,7 +2880,7 @@
                 enableChange = false
                 var inputValue = Ractive.getNodeInfo(e.target)
                 var keypath = inputValue.keypath
-                ractive.set(`${keypath}.current.value`, $(e.target).val() || [])
+                ractive.set(`${keypath}.current.value`, unsetting ? [] : $(e.target).val() || [])
                 var inputNode = ractive.get(grandParentOf(keypath))
                 let target = ractive.get(grandParentOf(grandParentOf(keypath))).targetUri || ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
                 if (target && !inputNode.isSubInput && shouldExecPatchImmediately(keypath)) {
@@ -2841,10 +2889,11 @@
                 }
                 setting = false
               }
+              unsetting = false
             })
 
             let keypath = `${this.getNodeInfo(node).resolve()}.current.value`
-            var observer = ractive.observe(keypath, function (newvalue, oldValue) {
+            const observer = ractive.observe(keypath, function (newvalue, oldValue) {
               if (!setting && (newvalue || [])[ 0 ] !== (oldValue || [])[ 0 ]) {
                 setting = true
                 window.setTimeout(function () {
@@ -3410,8 +3459,8 @@
               },
               genPublicationLink: function (item) {
                 return item.workUri.replace(
-                  new RegExp('^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$'),
-                  'http://sok.deichman.no/work/$1') +
+                    new RegExp('^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$'),
+                    'http://sok.deichman.no/work/$1') +
                   item.uri.substr(23)
               },
               getLinkfromUri: function (item, linkProps) {
