@@ -107,6 +107,9 @@
       "mainTitle": {
         "type": "text",
         "similarity": "boolean",
+        "norms": {
+          "enabled": false
+        },
         "fields": {
           "raw": {
             "type": "keyword"
