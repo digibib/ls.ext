@@ -49,9 +49,9 @@ export function fetchHistory (args) {
             dispatch(receiveHistory(json))
             dispatch(updateHistory())
             console.log(json.length)
-            if (json.length === 0) {
+            /* if (json.length === 0) {
               dispatch(setNoHistoryToFetch())
-            }
+            } */
           })
         } else {
           dispatch(fetchHistoryFailure(Errors.loan.GENERIC_FETCH_HISTORY_ERROR))
