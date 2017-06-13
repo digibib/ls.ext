@@ -2763,7 +2763,6 @@
         var initRactive = function (applicationData) {
           // decorators
           var select2 = function (node, mode) {
-            const config = ractive.get('config')
             tabIndexForNode(node)
             if (mode.mode === 'singleSelect') {
               $(node).select2({
