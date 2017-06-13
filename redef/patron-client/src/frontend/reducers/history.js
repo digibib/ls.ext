@@ -14,7 +14,7 @@ const initialState = {
   fetchHistoryFailure: false,
   historyData: [],
   allLoadedHistory: [],
-  moreToFetch: false,
+  moreToFetch: true,
   loadedHistoryItems: 0
 }
 
@@ -25,7 +25,7 @@ export default function loan (state = initialState, action) {
     case SET_CURRENT_LOADED_HISTORY_ITEMS:
       return { ...state, loadedHistoryItems: action.payload.items}
     case RESET_HISTORY:
-      return { ...state, moreToFetch: false, allLoadedHistory: [] }
+      return { ...state, moreToFetch: true, allLoadedHistory: [], historyData: [], loadedHistoryItems: 0 }
     case REQUEST_FETCH_HISTORY:
       return { ...state, isRequestingHistory: true, fetchHistoryFailure: false }
     case RECEIVE_FETCH_HISTORY:

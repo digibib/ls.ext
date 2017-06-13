@@ -18,13 +18,14 @@ class UserHistory extends React.Component {
   }
   componentWillMount () {
     this.props.historyActions.resetHistory()
-    this.props.historyActions.fetchHistory({limit:limit, offset:0})
+    // this.props.historyActions.fetchHistory({limit:limit, offset:0})
   }
 
   loadItems = () => {
-    console.log(this.props.hasMoreItems)
+    console.log('loadedHistoryItems', this.props.loadedHistoryItems)
     this.props.historyActions.fetchHistory({limit:limit, offset:parseInt(this.props.loadedHistoryItems)})
     this.props.historyActions.updateHistory()
+    this.props.historyActions.setNoHistoryToFetch()
   }
 
   render () {
