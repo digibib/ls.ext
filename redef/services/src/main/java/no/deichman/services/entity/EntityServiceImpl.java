@@ -800,7 +800,7 @@ public final class EntityServiceImpl implements EntityService {
 
     private boolean convertBooleanString(String string) {
         boolean returnValue = true;
-        if (string.equals("0")) {
+        if (string.equals("0") || string.equals("false")) {
             returnValue = false;
         }
         return returnValue;
