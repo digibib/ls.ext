@@ -48,10 +48,6 @@ export function fetchHistory (args) {
           response.json().then(json => {
             dispatch(receiveHistory(json))
             dispatch(updateHistory())
-            console.log(json.length)
-            /* if (json.length === 0) {
-              dispatch(setNoHistoryToFetch())
-            } */
           })
         } else {
           dispatch(fetchHistoryFailure(Errors.loan.GENERIC_FETCH_HISTORY_ERROR))
@@ -66,5 +62,9 @@ export function updateHistory () {
     const mergedHistory = merge(historyData, allLoadedHistory, 'issue_id')
     dispatch(requestUpdateHistory(mergedHistory))
     dispatch(setCurrentLoadedNumber(mergedHistory.length))
+
+    if (historyData.length === 0) {
+      dispatch(setNoHistoryToFetch())
+    }
   }
 }

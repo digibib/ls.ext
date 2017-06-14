@@ -270,6 +270,10 @@ class UserSettings extends React.Component {
           </div>
         </footer>
 
+        <header>
+          <h1><FormattedMessage {...messages.myHistory} /></h1>
+        </header>
+
         <ChangePin />
 
       </NonIETransitionGroup>
@@ -290,6 +294,11 @@ UserSettings.propTypes = {
 }
 
 export const messages = defineMessages({
+  myHistory: {
+    id: 'UserSettings.history',
+    description: 'Header for users My history',
+    defaultMessage: 'My history'
+  },
   saveSuccess: {
     id: 'UserSettings.saveSuccess',
     description: 'Success notification when settings are saved',
