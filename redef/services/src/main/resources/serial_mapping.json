@@ -18,7 +18,8 @@
         },
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },
@@ -58,7 +59,8 @@
         },
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },
