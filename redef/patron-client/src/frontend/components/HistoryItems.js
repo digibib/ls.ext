@@ -22,6 +22,7 @@ class HistoryItems extends React.Component {
           pageStart={0}
           loadMore={this.props.loadItems}
           hasMore={this.props.hasMoreItems}
+          threshold={10}
         >
           <div>
             {items}

@@ -6,7 +6,7 @@ import {defineMessages, injectIntl} from 'react-intl'
 import * as HistoryActions from '../actions/HistoryActions'
 import HistoryItems from '../components/HistoryItems'
 
-const limit = 2
+const limit = 4
 
 class UserHistory extends React.Component {
   constructor(props) {
@@ -18,14 +18,10 @@ class UserHistory extends React.Component {
   }
   componentWillMount () {
     this.props.historyActions.resetHistory()
-    // this.props.historyActions.fetchHistory({limit:limit, offset:0})
   }
 
   loadItems = () => {
-    console.log('loadedHistoryItems', this.props.loadedHistoryItems)
-    this.props.historyActions.fetchHistory({limit:limit, offset:parseInt(this.props.loadedHistoryItems)})
-    this.props.historyActions.updateHistory()
-    this.props.historyActions.setNoHistoryToFetch()
+    this.props.historyActions.fetchHistory({ limit: limit, offset: parseInt(this.props.loadedHistoryItems) })
   }
 
   render () {
