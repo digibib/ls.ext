@@ -112,7 +112,8 @@
         },
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },
@@ -126,7 +127,8 @@
         "index_options": "docs",
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },
@@ -140,7 +142,8 @@
         "index_options": "docs",
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },

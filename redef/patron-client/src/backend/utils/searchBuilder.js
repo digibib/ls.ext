@@ -11,9 +11,9 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
     explain: false,
     ageGain: 0.6,
     ageScale: 100,
-    itemsGain: 0.5,
+    itemsGain: 0.3,
     itemsScale: 50,
-    childBoost: 10
+    childBoost: 1
   }, options)
 
   const aggregations = {}
@@ -163,11 +163,18 @@ function simpleQuery (query, fields) {
   return {
     dis_max: {
       queries: fields.map(field => {
-        return {
+        const match = {
           match: {
-            [field]: query
+            [field.field]: {
+              query: query,
+              boost: field.boost || 1
+            }
           }
         }
+        if (field.phrase) {
+          match.match[field.field].type = 'phrase'
+        }
+        return match
       })
     }
   }
@@ -221,7 +228,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   const escapedQueryString = escape(queryString)
   const isbn10 = new RegExp('^[0-9Xx-]{10,13}$')
   const isbn13 = new RegExp('^[0-9-]{13,17}$')
-  const advTriggers = new RegExp('[:+/-^()"*]|AND|OR|NOT|TO')
+  const advTriggers = new RegExp('[:+/\\-()*^]|AND|OR|NOT|TO')
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
     return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
