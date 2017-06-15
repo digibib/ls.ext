@@ -207,7 +207,7 @@ function simpleQuery (query, fields) {
     if (field.phrase) {
       phrases.forEach(phrase => {
         fieldsAndPhrases.push({
-          field, query: phrase, boost: (field.boost || 1 ) * ((phrase.length / query.length)**3) })
+          field, query: phrase, boost: (field.boost || 1 ) * (Math.pow(phrase.length / query.length, 3)) })
       })
     } else {
       fieldsAndPhrases.push({
