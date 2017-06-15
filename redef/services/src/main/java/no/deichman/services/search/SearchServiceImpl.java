@@ -668,6 +668,7 @@ public class SearchServiceImpl implements SearchService {
                 break;
             case SERIAL:
                 indexModel = entityService.retrieveSerialWithLinkedResources(xuri);
+                break;
             default:
                 indexModel = entityService.retrieveById(xuri);
                 break;
