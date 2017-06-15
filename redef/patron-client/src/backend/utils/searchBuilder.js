@@ -53,6 +53,31 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
         script_score: {
           script: {
             inline: `
+                      def score = _score;
+
+                      def mtScores = [
+                        "Film": 0.3,
+                        "Språkkurs": 0.2
+                      ];
+                      
+                      if (doc['_type'] === 'publication') {
+                        def mtScore = mtScores.get(doc.mt.value);
+                        if (mtScore !== null) {
+                          score = score * mtScore;
+                        }
+                      }
+                      
+                      def workTypes = [
+                        "Film": 0.3
+                      ];
+                      
+                      if (doc['_type'] === 'work') {
+                        def wtScore = workTypes.get(doc.workTypeLabel.value);
+                        if (wtScore !== null) {
+                          score = score * wtScore;
+                        }
+                      }
+                      
                       def langscores = [
                         "nob": 1.5,
                         "nno": 1.5,
@@ -65,11 +90,12 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                         "spa": 1.1,
                         "ita": 1.1
                       ];
+                      
                       def langscore = langscores.get(doc.language.value);
                       if (langscore == null) {
-                        langscore = 1
+                        langscore = 1;
                       }
-                      def score = _score * langscore;
+                      score = _score * langscore;
                       def age_gain=${options.ageGain};
                       def age_scale=${options.ageScale};
                       if (doc.created.value != null) {
@@ -77,9 +103,16 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       }
                       
                       def items_gain=${options.itemsGain};
+                      if (doc['_type'] === 'publication' && doc.mt.value === "Periodika") {
+                        items_gain = 0.0;
+                      }
                       def items_scale=${options.itemsScale};
                       if (doc.numItems.value != null) {
                         score *= (1 + (items_gain*doc.numItems.value/items_scale));
+                      }
+
+                      if (doc['_type'] === 'work' && doc.litform.value === "Roman") {
+                        score = score * 1.1;
                       }
                       
                       return score;`.replace('\n', ''),
@@ -160,21 +193,39 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
 }
 
 function simpleQuery (query, fields) {
+  const terms = query.split(/\s+/)
+  let phrases = []
+  for (let i=0; i<terms.length; i++) {
+    phrases.push(terms.slice(0, i+1).join(' '))
+    phrases.push(terms.slice(i).join(' '))
+  }
+
+  phrases = [...new Set(phrases)]
+
+  const fieldsAndPhrases = []
+  fields.forEach(field => {
+    if (field.phrase) {
+      phrases.forEach(phrase => {
+        fieldsAndPhrases.push({
+          field, query: phrase, boost: (field.boost || 1 ) * ((phrase.length / query.length)**3) })
+      })
+    } else {
+      fieldsAndPhrases.push({
+        field, query, boost: field.boost})
+    }
+  })
+
   return {
     dis_max: {
-      queries: fields.map(field => {
-        const match = {
-          match: {
-            [field.field]: {
-              query: query,
+      queries: fieldsAndPhrases.map(field => {
+        return {
+          [`match${field.field.phrase ? '_phrase' : ''}`]: {
+            [field.field.field]: {
+              query: field.query,
               boost: field.boost || 1
             }
           }
         }
-        if (field.phrase) {
-          match.match[field.field].type = 'phrase'
-        }
-        return match
       })
     }
   }
