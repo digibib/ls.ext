@@ -712,6 +712,13 @@ module.exports = (app) => {
                 addAnotherLabel: 'addAnotherExtent'
               },
               {
+                includeOnlyWhen: {
+                  hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Audiobook', 'LanguageCourse' ]
+                },
+                rdfProperty: 'duration',
+                type: 'input-duration'
+              },
+              {
                 includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
                 rdfProperty: 'illustrativeMatter',
                 multiple: true
@@ -759,13 +766,6 @@ module.exports = (app) => {
                 }
               },
               { rdfProperty: 'format', multiple: true },
-              {
-                includeOnlyWhen: {
-                  hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Audiobook', 'LanguageCourse' ]
-                },
-                rdfProperty: 'duration',
-                type: 'input-duration'
-              },
               {
                 includeOnlyWhen: {
                   hasMediaType: [ 'Other', 'Film', 'Game' ]
