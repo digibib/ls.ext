@@ -41,6 +41,7 @@
     addAnotherExtent: 'Add  another extent',
     addAnotherISBN: 'Add  another ISBN',
     addAnotherISMN: 'Add another ISMN',
+    addAnotherPublisher: 'Add another publisher',
     addAnotherSeries: 'Add  another series',
     addAnotherRelation: 'Add  another relation',
     addAnotherWorkSeries: 'Add  another work series',
