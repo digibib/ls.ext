@@ -113,7 +113,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:hasNumItems ?numItems }
   UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
   UNION { <__PUBLICATIONURI__> deich:ismn ?ismn }
-  UNION { <__PUBLICATIONURI__> deich:ean ?ean }
+  UNION { <__PUBLICATIONURI__> deich:hasEan ?ean }
   UNION { <__PUBLICATIONURI__> deich:language ?languageO .
           BIND(str(?languageO) AS ?language) .
           BIND(afn:substr(?language, 29) AS ?langCode) }
