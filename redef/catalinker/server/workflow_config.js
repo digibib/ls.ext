@@ -784,6 +784,8 @@ module.exports = (app) => {
               {
                 id: 'publishedByInput',
                 rdfProperty: 'publishedBy',
+                multiple: true,
+                addAnotherLabel: 'addAnotherPublisher',
                 authority: true, // this indicates it is an authorized entity
                 nameProperties: [
                   {
