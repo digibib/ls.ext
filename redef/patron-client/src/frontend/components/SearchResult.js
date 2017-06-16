@@ -52,7 +52,10 @@ class SearchResult extends React.Component {
       <Link data-automation-id="work-link" to={this.getResultUrl(result)}>
         <h1 className="workTitle" data-automation-id="work-title">
           <span className="title-text">{result.title}</span>
-          <span className="caret"><i className="icon-angle-wide" aria-hidden="true" /></span>
+          {this.shouldShowFullList()
+            ? <span className="caret"><i className="icon-angle-wide" aria-hidden="true" /></span>
+            : null
+          }
         </h1>
       </Link>
     )

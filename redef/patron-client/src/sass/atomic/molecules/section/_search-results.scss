@@ -5,7 +5,7 @@
 .search-results {
   @include span(12 of 12);
   @include container;
-  margin-top: -0.99em;
+  // margin-top: -0.7em;
   /* @include border-top;
   padding-top: rhythm(2); */
 
@@ -18,13 +18,17 @@
     margin-top: rhythm(0.9);
     font-size: 0.9em;
     line-height: 1.8em;
+    position: absolute;
+    bottom: 0.1em;
   }
 }
 
 .search-results-settings {
+  position: absolute;
+  bottom: 0.1em;
+  right: 0;
   button {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
   }
   .search-results-settings-label {
     display: block;
@@ -34,9 +38,11 @@
 }
 
 .search-results-header-flex {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-end; */
+  position: relative;
+  margin-top: 1.85em;
 }
 
 .search-results-header {
