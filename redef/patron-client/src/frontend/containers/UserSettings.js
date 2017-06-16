@@ -18,6 +18,7 @@ class UserSettings extends React.Component {
     this.handleKeyReminderOfPickupEmail = this.handleKeyReminderOfPickupEmail.bind(this)
     this.handleKeyReceiptOnLoansEmail = this.handleKeyReceiptOnLoansEmail.bind(this)
     this.handleKeyReceiptOnReturnsEmail = this.handleKeyReceiptOnReturnsEmail.bind(this)
+    this.handleKeyKeepMyHistory = this.handleKeyKeepMyHistory.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
 
@@ -101,6 +102,17 @@ class UserSettings extends React.Component {
       event.preventDefault()
       this.receiptOnReturnsEmailCheckbox.click()
     }
+  }
+
+  handleKeyKeepMyHistory (event) {
+    if (event.keyCode === 32) { // Space for checkbox
+      event.preventDefault()
+      this.handleKeepMyHistory.click()
+    }
+  }
+
+  handleKeepMyHistory () {
+    console.log('Handling ')
   }
 
   render () {
@@ -272,20 +284,19 @@ class UserSettings extends React.Component {
 
         <header>
           <h1><FormattedMessage {...messages.myHistory} /></h1>
-          <div className="reminder-item">
-            <input data-automation-id="UserSettings_receiptOnReturnsEmail"
+          <div className="reminder-item" style={{ width: '20em' }}>
+            <input data-automation-id="UserSettings_keepMyHistory"
                    type="checkbox"
-                   name="receipt-returns-email"
-                   id="receipt-returns-email"
-                   ref={e => this.receiptOnReturnsEmailCheckbox = e}
-                   onChange={this.handleChange}
-                   defaultChecked={settings.receipts.returns.email} />
-            <label htmlFor="receipt-returns-email" onKeyDown={this.handleKeyReceiptOnReturnsEmail}>
+                   name="keep-my-history"
+                   id="keep-my-history"
+                   onClick={this.handleKeepMyHistory}
+                   defaultChecked={this.props.personalInformation.privacy === 0 || this.props.personalInformation.privacy === 1} />
+            <label htmlFor="keep-my-history" onKeyDown={this.handleKeyKeepMyHistory}>
               <span className="checkbox-wrapper">
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
               </span>
-              <FormattedMessage {...messages.returnReceipt} />
+              <FormattedMessage {...messages.keepMyHistory} />
             </label>
           </div>
         </header>
@@ -310,6 +321,11 @@ UserSettings.propTypes = {
 }
 
 export const messages = defineMessages({
+  keepMyHistory: {
+    id: 'UserSettings.keepMyHistory',
+    description: 'Label for checkbox which manages keep/discard history',
+    defaultMessage: 'Keep my history'
+  },
   myHistory: {
     id: 'UserSettings.history',
     description: 'Header for users My history',
