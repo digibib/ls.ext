@@ -272,6 +272,22 @@ class UserSettings extends React.Component {
 
         <header>
           <h1><FormattedMessage {...messages.myHistory} /></h1>
+          <div className="reminder-item">
+            <input data-automation-id="UserSettings_receiptOnReturnsEmail"
+                   type="checkbox"
+                   name="receipt-returns-email"
+                   id="receipt-returns-email"
+                   ref={e => this.receiptOnReturnsEmailCheckbox = e}
+                   onChange={this.handleChange}
+                   defaultChecked={settings.receipts.returns.email} />
+            <label htmlFor="receipt-returns-email" onKeyDown={this.handleKeyReceiptOnReturnsEmail}>
+              <span className="checkbox-wrapper">
+                <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
+                <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
+              </span>
+              <FormattedMessage {...messages.returnReceipt} />
+            </label>
+          </div>
         </header>
 
         <ChangePin />
@@ -290,7 +306,7 @@ UserSettings.propTypes = {
   settingsError: PropTypes.object,
   contactDetailsNeedVerification: PropTypes.bool,
   contactDetailsVerificationError: PropTypes.object,
-  postProfileSettingsSuccess: PropTypes.object
+  postProfileSettingsSuccess: PropTypes.bool
 }
 
 export const messages = defineMessages({
