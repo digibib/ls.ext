@@ -2195,7 +2195,7 @@
             item.isChecked = false
             item.score = hit._score
           })
-          const searchResultNav = processSearchResultNavigation(results, config, indexType, fieldForSortedListQuery, searchString)
+          const searchResultNav = processSearchResultNavigation(results, config, indexType, fieldForSortedListQuery || config.search[ indexType ].exactMatchCompareField, searchString)
           let items = searchResultNav.items
           var highestScoreIndex = searchResultNav.highestScoreIndex
           var exactMatchWasFound = searchResultNav.exactMatchWasFound

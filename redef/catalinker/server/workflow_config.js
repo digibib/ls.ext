@@ -1601,6 +1601,7 @@ module.exports = (app) => {
           person: {
             type: 'person',
             alphabeticalList: true,
+            exactMatchCompareField: 'name',
             selectIndexLabel: 'personLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             resultItemLabelProperties2: [ 'displayLine2' ],
@@ -1610,6 +1611,7 @@ module.exports = (app) => {
           subject: {
             type: 'subject',
             alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             selectIndexLabel: 'generalSubjectLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
@@ -1644,6 +1646,7 @@ module.exports = (app) => {
             type: 'genre',
             selectIndexLabel: 'genreLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
@@ -1651,6 +1654,7 @@ module.exports = (app) => {
             type: 'corporation',
             selectIndexLabel: 'corporationLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'name',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
@@ -1658,6 +1662,7 @@ module.exports = (app) => {
             type: 'place',
             selectIndexLabel: 'placeLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
@@ -1665,6 +1670,7 @@ module.exports = (app) => {
             type: 'event',
             selectIndexLabel: 'eventLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
@@ -1672,6 +1678,7 @@ module.exports = (app) => {
             type: 'serial',
             selectIndexLabel: 'serialLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'serialMainTitle',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
@@ -1688,6 +1695,7 @@ module.exports = (app) => {
             type: 'instrument',
             selectIndexLabel: 'instrumentLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
             scrollToMiddleOfResultSet: true
           },
@@ -1695,6 +1703,7 @@ module.exports = (app) => {
             type: 'compositionType',
             selectIndexLabel: 'compositionTypeLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
             scrollToMiddleOfResultSet: true
           },
@@ -1702,6 +1711,7 @@ module.exports = (app) => {
             type: 'workSeries',
             selectIndexLabel: 'workSeriesLabel',
             alphabeticalList: true,
+            exactMatchCompareField: 'workSeriesMainTitle',
             resultItemLabelProperties: [ 'displayLine1' ],
             //resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ],
             scrollToMiddleOfResultSet: true
