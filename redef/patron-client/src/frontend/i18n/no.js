@@ -347,6 +347,7 @@ export default {
   'UserSettings.settingsError': 'Noe gikk galt ved henting av brukerinnstillinger.',
   'UserSettings.saveSuccess': 'Lagret!',
   'UserSettings.history': 'Min historikk',
+  'UserSettings.keepMyHistory': 'Bevar min historikk',
   'ValidationMessage.emailOrMobileRequired': 'Enten epost eller mobilnummer må fylles ut',
   'ValidationMessage.genericFieldError': 'Feltet inneholder feil',
   'ValidationMessage.illegalCharacters': 'Feltet inneholder ulovlige karakterer',
