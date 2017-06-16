@@ -169,8 +169,8 @@ class UserLoans extends React.Component {
     if (item.queuePlace > 0) {
       return <span>
         {item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}
-        <Tooltip title='Dette er viktig informason som du må lese flere ganger!' position='top'>
-          <button className='btn btn-default'><span className="icon-help" style={{ color: '#fff', background: '#000', borderRadius: '50%', fontSize: 12, marginLeft: 5  }}></span></button>
+        <Tooltip title={this.props.intl.formatMessage(messages.waitingTime)} position='top'>
+          <button className='btn btn-default'><span className="icon-help" style={{ color: '#fff', background: '#000', borderRadius: '50%', fontSize: 12, marginLeft: '5px' }}></span></button>
         </Tooltip>
       </span>
     } else {
@@ -413,6 +413,11 @@ UserLoans.propTypes = {
 }
 
 export const messages = defineMessages({
+  waitingTime: {
+    id: 'UserLoans.waitingTime',
+    description: 'The waiting time explanation text',
+    defaultMessage: 'Waiting time may vary'
+  },
   title: {
     id: 'UserLoans.title',
     description: 'The label of the item title',
@@ -506,7 +511,7 @@ export const messages = defineMessages({
   approx: {
     id: 'UserLoans.approximately',
     description: 'The abbreviation used to mean approximately',
-    defaultMessage: 'approx.'
+    defaultMessage: '~'
   },
   weeks: {
     id: 'UserLoans.weeks',
