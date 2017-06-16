@@ -68,7 +68,7 @@ function setup (propOverrides) {
         },
         queuePlace: '1',
         expected: '1–2',
-        expectedTestData: '(approx. 1–2 weeks)',
+        expectedTestData: '(~ 1–2 weeks)',
         branchCode: 'branchCode_1',
         estimatedWait: {
           error: null,
@@ -200,7 +200,7 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(messages[loansAndReservations.reservations[ index ].mediaType])
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].contributor.contributorName)
-        expect(queuePlace.replace(/\s/g, '')).toEqual(`${loansAndReservations.reservations[ indexMap[ index ] ].queuePlace}(approx.${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate}–${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate + 2}weeks)`)
+        expect(queuePlace.replace(/\s/g, '')).toEqual(`${loansAndReservations.reservations[ indexMap[ index ] ].queuePlace}(~${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate}–${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate + 2}weeks)`)
         // TODO: Uncomment below line when enabling estimates again
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")
@@ -226,7 +226,7 @@ describe('containers', () => {
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_type']").textContent).toEqual(messages[loansAndReservations.reservations[ index ].mediaType])
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_title']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].title)
         expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_author']").textContent).toEqual(loansAndReservations.reservations[ indexMap[ index ] ].contributor.contributorName)
-        expect(queuePlace.replace(/\s/g, '')).toEqual(`${loansAndReservations.reservations[ indexMap[ index ] ].queuePlace}(approx.${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate}–${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate + 2}weeks)`)
+        expect(queuePlace.replace(/\s/g, '')).toEqual(`${loansAndReservations.reservations[ indexMap[ index ] ].queuePlace}(~${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate}–${loansAndReservations.reservations[ indexMap[ index ] ].estimatedWait.estimate + 2}weeks)`)
         // TODO: Uncomment below line when enabling estimates again
         // expect(reservation.querySelector("[data-automation-id='UserLoans_reservation_waitingPeriod']").textContent).toEqual(loansAndReservations.reservations[ indexMap[index] ].expectedTestData)
         const select = reservation.querySelector("[data-automation-id='UserLoans_reservation_library'] select")

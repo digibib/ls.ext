@@ -7,7 +7,7 @@ import {routerActions} from 'react-router-redux'
 import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
 import isEmpty from '../utils/emptyObject'
-import Tooltip from 'react-tooltip-component';
+import Tooltip from 'react-tooltip-component'
 
 import * as LoanActions from '../actions/LoanActions'
 import * as ReservationActions from '../actions/ReservationActions'
@@ -169,8 +169,10 @@ class UserLoans extends React.Component {
     if (item.queuePlace > 0) {
       return <span>
         {item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}
-        <Tooltip title={this.props.intl.formatMessage(messages.waitingTime)} position='top'>
-          <button className='btn btn-default'><span className="icon-help" style={{ color: '#fff', background: '#000', borderRadius: '50%', fontSize: 12, marginLeft: '5px' }}></span></button>
+        <Tooltip title={this.props.intl.formatMessage(messages.waitingTime)} position="top">
+          <button className="btn btn-default">
+            <span className="icon-help" style={{ color: '#fff', background: '#000', borderRadius: '50%', fontSize: 12, marginLeft: '5px' }} />
+          </button>
         </Tooltip>
       </span>
     } else {
