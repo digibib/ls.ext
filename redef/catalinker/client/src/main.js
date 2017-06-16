@@ -2110,7 +2110,7 @@
     function stripHtml (html) {
       // trick to strip unwanted tags, attributes and stuff we get from
       // contenteditable inputs
-      var txt = document.createElement('textarea')
+      const txt = document.createElement('textarea')
       txt.innerHTML = html
       return txt.value
     }
@@ -2143,24 +2143,25 @@
       }
 
       // secondaryIndexType is used when searching for subject as suggestion from external source
-      var indexType = preferredIndexType || secondaryIndexType
+      let indexType = preferredIndexType || secondaryIndexType
 
-      var config = ractive.get('config')
+      const config = ractive.get('config')
 
       // We have two kinds of searches:
       //   A) Searching in a sorted list of authority labels
       //   B) Searching in Elasticsearch with a structured search query
       //
       // The following variables will be populated depending on which kind of search we do:
-      var searchURI
-      var searchBody
-      var axiosMethod
+      let searchURI
+      let searchBody
+      let axiosMethod
 
-      var fieldForSortedListQuery = config.search[ indexType ].sortedListQueryForField
-      if (fieldForSortedListQuery) {
+      const fieldForSortedListQuery = config.search[ indexType ].sortedListQueryForField
+      const alphabeticalList = config.search[ indexType ].alphabeticalList
+      if (alphabeticalList || fieldForSortedListQuery) {
         // A) Searching in sorted list
         axiosMethod = axios.get
-        searchURI = searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}&field=${fieldForSortedListQuery}&minSize=40`
+        searchURI = searchURI = `${config.resourceApiUri}search/${config.search[ indexType ].type}/sorted_list?prefix=${searchString}${fieldForSortedListQuery ? '&field=' + fieldForSortedListQuery : ''}&minSize=40`
       } else {
         // B) Searching in Elasticsearch
         indexType = config.search[ indexType ].type
@@ -2168,9 +2169,9 @@
         axiosMethod = axios.post
 
         // Determine if we are doing a mainEntry constrained search
-        var inputkeyPath = grandParentOf(event.keypath)
-        var filterArgInputRef = ractive.get(`${inputkeyPath}.widgetOptions.filter.inputRef`)
-        var mainEntry
+        const inputkeyPath = grandParentOf(event.keypath)
+        const filterArgInputRef = ractive.get(`${inputkeyPath}.widgetOptions.filter.inputRef`)
+        let mainEntry
         if (filterArgInputRef) {
           mainEntry = _.find(allInputs(), function (input) {
             return filterArgInputRef === input.id
@@ -3720,7 +3721,7 @@
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, options) {
                 options = options || {}
-                if (options.skipIfAdvancedQuery && esquery.isAdvancedQuery(searchString)) {
+                if (options.skipIfAdvancedQuery && esquery.isAdvancedQuery(searchString) && !ractive.get('config.search')[ preferredIndexType || secondaryIndexType ].alphabeticalList) {
                   return
                 }
                 debouncedSearch(event, searchString, preferredIndexType, secondaryIndexType, options)

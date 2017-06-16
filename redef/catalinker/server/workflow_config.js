@@ -1600,17 +1600,16 @@ module.exports = (app) => {
         search: {
           person: {
             type: 'person',
-            sortedListQueryForField: 'name',
+            alphabeticalList: true,
             selectIndexLabel: 'personLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             resultItemLabelProperties2: [ 'displayLine2' ],
-//          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
             scrollToMiddleOfResultSet: true
           },
           subject: {
             type: 'subject',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
             selectIndexLabel: 'generalSubjectLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
@@ -1644,40 +1643,36 @@ module.exports = (app) => {
           genre: {
             type: 'genre',
             selectIndexLabel: 'genreLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
           corporation: {
             type: 'corporation',
             selectIndexLabel: 'corporationLabel',
-            sortedListQueryForField: 'name',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'displayLine1' ],
-//          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
             scrollToMiddleOfResultSet: true
           },
           place: {
             type: 'place',
             selectIndexLabel: 'placeLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'displayLine1' ],
-            //resultItemDetailsLabelProperties: [ 'alternativeName' ],
             scrollToMiddleOfResultSet: true
           },
           event: {
             type: 'event',
             selectIndexLabel: 'eventLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'displayLine1' ],
-//          resultItemDetailsLabelProperties: [ 'placePrefLabel', 'inParens:placeAlternativeName', 'specification' ]
             scrollToMiddleOfResultSet: true
           },
           serial: {
             type: 'serial',
             selectIndexLabel: 'serialLabel',
-            sortedListQueryForField: 'serialMainTitle',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'displayLine1' ],
-            //resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ],
             scrollToMiddleOfResultSet: true
           },
           publication: {
@@ -1692,21 +1687,21 @@ module.exports = (app) => {
           instrument: {
             type: 'instrument',
             selectIndexLabel: 'instrumentLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
             scrollToMiddleOfResultSet: true
           },
           compositiontype: {
             type: 'compositionType',
             selectIndexLabel: 'compositionTypeLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
             scrollToMiddleOfResultSet: true
           },
           workseries: {
             type: 'workSeries',
             selectIndexLabel: 'workSeriesLabel',
-            sortedListQueryForField: 'workSeriesMainTitle',
+            alphabeticalList: true,
             resultItemLabelProperties: [ 'displayLine1' ],
             //resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ],
             scrollToMiddleOfResultSet: true

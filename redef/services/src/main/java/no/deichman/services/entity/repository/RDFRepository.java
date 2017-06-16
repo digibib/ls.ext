@@ -90,8 +90,6 @@ public interface RDFRepository {
 
     Set<String> retrievedResourcesConnectedTo(XURI xuri);
 
-    ResultSet retrieveAllNamesOfType(EntityType type);
-
     ResultSet retrieveResourceRelationships(XURI xuri);
 
     void mergeResource(XURI xuri, XURI replaceeUri);

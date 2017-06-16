@@ -440,15 +440,6 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     }
 
     @Override
-    public final ResultSet retrieveAllNamesOfType(EntityType type) {
-        log.debug("retrieving all names for type: " + type);
-        try (QueryExecution qexec = getQueryExecution(sqb.retrieveAllNamesForType(type))) {
-            disableCompression(qexec);
-            return ResultSetFactory.copyResults(qexec.execSelect());
-        }
-    }
-
-    @Override
     public final ResultSet retrieveResourceRelationships(XURI xuri) {
         log.debug("retrieving all participations for uri: " + xuri.getUri());
         try (QueryExecution qexec = getQueryExecution(sqb.retriveResourceRelationships(xuri))) {
