@@ -383,6 +383,26 @@ module.exports = (app) => {
     }
   })
 
+  app.put('api/v1/profile/managehistory', jsonParser, (request, response) => {
+    return fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({ privacy: request.body.privacy })
+    }).then(res => {
+      if (res.status === 200) {
+        console.log(res.json())
+        return res.json()
+      } else {
+        response.status(res.status).send(res.body)
+      }
+    }).catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
+
   app.get('/api/v1/profile/settings', (request, response) => {
     return fetch(`http://xkoha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`)
       .then(res => {
@@ -401,6 +421,7 @@ module.exports = (app) => {
 
   function parsePatron (patron) {
     return {
+      privacy: patron.privacy ||'',
       borrowerNumber: patron.borrowernumber || '',
       cardNumber: patron.cardnumber || '',
       homeBranch: patron.branchcode || '',
