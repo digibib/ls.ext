@@ -7,7 +7,7 @@ const WorkAgeLimit = ({ publications, intl }) => {
   if (ageLimits.length === 1) {
     return (
       <MetaItem label={messages.ageLimit} data-automation-id="work_ageLimit">
-        {ageLimits[0]}
+        {ageLimits[0] === '0' ? <FormattedMessage {...messages.noAgeLimit} /> : ageLimits[0]}
       </MetaItem>
     )
   } else if (ageLimits.length > 1) {
@@ -35,6 +35,11 @@ export const messages = defineMessages({
     id: 'AgeLimit.ageLimit',
     description: 'Label for age limit meta',
     defaultMessage: 'Age limit'
+  },
+  noAgeLimit: {
+    id: 'AgeLimit.noAgeLimit',
+    description: 'Label for no age limit',
+    defaultMessage: 'For all ages'
   },
   seePublication: {
     id: 'WorkAgeLimit.seePublication',

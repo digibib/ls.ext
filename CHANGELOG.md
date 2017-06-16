@@ -12,11 +12,19 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
-## 2017.44
+## 2017.45
 
-KOHA: 722ef07b638ca04731b20f934c09578d1c72219b (uforandret)
+KOHA: 40aecbcf9e419f8feb8fc8071b648ebf957af7bb
 GITREF: TODO
 
+- Koha:
+  - DEICH-795: Plugin for closing branches and handling item and reservations
+  - DEICH-794, DEICH-822: Closing Stovner
+  - DEICH-791: shelf cleaner report
+  - DEICH-824: Plugin for School Overdue Reports
+  - DEICH-822: Update timestamp when checking in book with SIP
+  - DEICH-823: Add Cronjob for updating item ccodes
+  - DEICH-758: Activate update of borrower last seen
 - Patron-client:
   - DEICH-804: Verk som emne mangler opplysninger
   - DEICH-805: Klikk på verk som emne gir feil søk
@@ -30,10 +38,17 @@ GITREF: TODO
 - Annet
   - DEICH-797 - Bedre logging av mysql
 
+## 2017.44
+
+KOHA: 722ef07b638ca04731b20f934c09578d1c72219b (uforandret)
+GITREF: 32fc3ddb662223798274c80e341f7ce223dd6af9
+
+- was never released
+
 ## 2017.43
 
 KOHA: 722ef07b638ca04731b20f934c09578d1c72219b
-GITREF: 32fc3ddb662223798274c80e341f7ce223dd6af9
+GITREF: 9e0d45352ebc09febf2e20185f69b4db30ccab49
 
 - Koha
   - DEICH-767 Fiks på kvittering på skole
@@ -52,7 +67,7 @@ GITREF: 32fc3ddb662223798274c80e341f7ce223dd6af9
 ## 2017.42
 
 KOHA: 8e004ac2a27725b3a79305afb4700721a5e00cf8
-GITREF: TODO
+GITREF: ad860515c5ba68c8d5c490840291263e7d380bbe
 
 - Koha
   - DEICH-785: read-only mysql replisering

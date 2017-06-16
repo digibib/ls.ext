@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
-import { defineMessages } from 'react-intl'
+import { defineMessages, FormattedMessage } from 'react-intl'
 import MetaItem from '../../../MetaItem'
 
 const AgeLimit = ({ ageLimit }) => {
   if (ageLimit) {
     return (
-      <MetaItem label={messages.ageLimit} data-automation-id="publication_ageLimit">{ageLimit}</MetaItem>
+      <MetaItem label={messages.ageLimit} data-automation-id="publication_ageLimit">{ageLimit === '0' ? <FormattedMessage {...messages.noAgeLimit} /> : ageLimit}</MetaItem>
     )
   } else {
     return null
@@ -21,6 +21,11 @@ export const messages = defineMessages({
     id: 'AgeLimit.ageLimit',
     description: 'Label for age limit meta',
     defaultMessage: 'Age limit'
+  },
+  noAgeLimit: {
+    id: 'AgeLimit.noAgeLimit',
+    description: 'Label for no age limit',
+    defaultMessage: 'For all ages'
   }
 })
 

@@ -2,6 +2,7 @@ export default {
   'AdditionalInformation.additionalInfoToggleLess': 'Mindre om dette verket',
   'AdditionalInformation.additionalInfoToggleMore': 'Mer om dette verket',
   'AgeLimit.ageLimit': 'Aldersgrense',
+  'AgeLimit.noAgeLimit': 'Tillatt for alle',
   'Author.labelBy': 'Av',
   'AvailableFilter.availabilityLabel': 'Vis kun ledige',
   'BiblioNumber.biblioNumber': 'Tittelnummer',
