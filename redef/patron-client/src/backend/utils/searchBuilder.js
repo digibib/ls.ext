@@ -49,6 +49,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
     return {
       function_score: {
         boost: options.childBoost, // general child boost
+        boost_mode: 'replace',
         query: query,
         script_score: {
           script: {
@@ -95,7 +96,11 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       if (langscore == null) {
                         langscore = 1;
                       }
-                      score = _score * langscore;
+
+                      if (doc['_type'] === 'publication' && doc.mt === 'Bok') {
+                        score = _score * langscore;
+                      }
+
                       def age_gain=${options.ageGain};
                       def age_scale=${options.ageScale};
                       if (doc.created.value != null) {
@@ -142,6 +147,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
             has_child: {
               score_mode: 'max',
               type: 'publication',
+              boost: 0.1,
               query: boost({
                 bool: {
                   must: [
@@ -207,7 +213,7 @@ function simpleQuery (query, fields) {
     if (field.phrase) {
       phrases.forEach(phrase => {
         fieldsAndPhrases.push({
-          field, query: phrase, boost: (field.boost || 1 ) * (Math.pow(phrase.length / query.length, 3)) })
+          field, query: phrase, boost: (field.boost || 1 ) * (phrase.length / query.length) })
       })
     } else {
       fieldsAndPhrases.push({
