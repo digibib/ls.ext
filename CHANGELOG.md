@@ -12,6 +12,29 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.46
+
+KOHA: 5714b4763cfa6b5639bccbe5a7cad062f3edf5e7
+GITREF: TODO
+
+- Koha
+  - DEICH-826 Oppgradere koha til 17.05
+  - DEICH-834 rydde bort automatavdelinger i Koha
+- Patron-client
+  - DEICH-825 Viser nulltreffsinfo i det søket lastes
+  - DEICH-818 Tilgjengelighetsfilter tar ikke hensyn til statuser
+  - DEICH-536 Søk på termer med skråstrek feiler
+  - DEICH-793 Forklarende tilføyelse på bidragsyter ikke synlig og søkbar
+- Catalinker
+  - DEICH-712 Feil treffliste for sted
+  - DEICH-640 Feil ved oppslag med forslag som inneholder parentes
+  - DEICH-711 Tastaturnavigering. Tab hopper over felt
+  - DEICH-836 Oppslag i registre - Visning. Manglende opplysninger
+- Annet
+  - DEICH-841 Opplegg for å kjøre periodiske jobber
+  - DEICH-830 Innhente "krydder" fra eksterne kilder Bokbasen
+  - DEICH-730 Slette utgivelser uten eksemplarer
+
 ## 2017.45
 
 KOHA: 40aecbcf9e419f8feb8fc8071b648ebf957af7bb
