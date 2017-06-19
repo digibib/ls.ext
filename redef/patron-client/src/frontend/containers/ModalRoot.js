@@ -9,8 +9,10 @@ import Modal from 'react-modal'
 import * as ModalActions from '../actions/ModalActions'
 import CancelReservation from './modals/CancelReservationModal'
 import PostponeReservation from './modals/PostponeReservationModal'
+import UserHistoryModal from './modals/UserHistoryModal'
 
 const MODAL_COMPONENTS = {
+  'USER_HISTORY': UserHistoryModal,
   'POSTPONE_RESERVATION': PostponeReservation,
   'CANCEL_RESERVATION': CancelReservation,
   'LOGIN': Login,

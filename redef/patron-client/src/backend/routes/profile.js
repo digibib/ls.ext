@@ -11,6 +11,28 @@ const querystring = require('querystring')
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
 
+  app.post('/api/v1/profile/settings/history', jsonParser, (request, response) => {
+    const params = {
+      privacy: request.body.privacy
+    }
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
+      method: 'PUT',
+      body: JSON.stringify(params)
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json
+        } else {
+          response.status(res.status).send(res.statusText)
+          // throw Error()
+        }
+      }).then(json => response.status(200).send(json))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
   app.post('/api/v1/profile/history', jsonParser, (request, response) => {
     const params = {
       offset: request.body.offset,
