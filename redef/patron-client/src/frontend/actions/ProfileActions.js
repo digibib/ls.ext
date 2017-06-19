@@ -1,5 +1,8 @@
 import fetch from 'isomorphic-fetch'
 
+import { requireLoginBeforeAction } from './LoginActions'
+import { showModal } from './ModalActions'
+import ModalComponents from '../constants/ModalComponents'
 import * as types from '../constants/ActionTypes'
 import Errors from '../constants/Errors'
 import { action, errorAction } from './GenericActions'
@@ -245,5 +248,39 @@ export function fetchAllProfileData () {
     dispatch(fetchProfileInfo())
     dispatch(fetchProfileLoans())
     dispatch(fetchProfileSettings())
+  }
+}
+
+export const requestManageHistory = () => action(types.REQUEST_MANAGE_HISTORY)
+
+export const manageHistoryFailure = (error) => errorAction(types.MANAGE_HISTORY_FAILURE, error)
+
+export const changeHistoryPrivacy = (privacy) => action(types.CHANGE_HISTORY_PRIVACY, {privacy: privacy})
+
+export function userHistory () {
+  return requireLoginBeforeAction(showModal(ModalComponents.USER_HISTORY, { isSuccess: true} ))
+}
+
+export function manageHistory (privacy) {
+  const url = '/api/v1/profile/settings/history'
+  return dispatch => {
+    dispatch(requestManageHistory())
+    return fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ privacy: privacy })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          // dispatch(changeHistoryPrivacy(privacy))
+          dispatch(fetchProfileInfo())
+        } else {
+          throw Error('Unexpected status code')
+        }
+      })
+      .catch(error => dispatch(manageHistoryFailure(error)))
   }
 }

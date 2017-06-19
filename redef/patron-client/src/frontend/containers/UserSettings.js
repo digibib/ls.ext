@@ -19,6 +19,7 @@ class UserSettings extends React.Component {
     this.handleKeyReceiptOnReturnsEmail = this.handleKeyReceiptOnReturnsEmail.bind(this)
     this.handleKeyKeepMyHistory = this.handleKeyKeepMyHistory.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleKeepMyHistory = this.handleKeepMyHistory.bind(this)
   }
 
   componentWillMount () {
@@ -111,7 +112,11 @@ class UserSettings extends React.Component {
   }
 
   handleKeepMyHistory () {
-    console.log('Handling ')
+    if (this.props.personalInformation.privacy === 0 || this.props.personalInformation.privacy === 1 || this.props.personalInformation.privacy === '') {
+      this.props.profileActions.userHistory()
+    } else if (this.props.personalInformation.privacy === 2) {
+      this.props.profileActions.manageHistory(0)
+    }
   }
 
   render () {

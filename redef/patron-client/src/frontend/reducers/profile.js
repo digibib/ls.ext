@@ -26,7 +26,10 @@ import {
   CHANGE_PICKUP_LOCATION_SUCCESS,
   CHANGE_RESERVATION_SUSPENSION_SUCCESS,
   EXTEND_LOAN_SUCCESS,
-  EXTEND_LOAN_FAILURE
+  EXTEND_LOAN_FAILURE,
+  REQUEST_MANAGE_HISTORY,
+  MANAGE_HISTORY_FAILURE,
+  CHANGE_HISTORY_PRIVACY
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -50,11 +53,18 @@ const initialState = {
   contactDetailsNeedVerification: false,
   contactDetailsVerificationError: null,
   postProfileSettingsSuccess: false,
-  postProfileSettingsFailure: false
+  postProfileSettingsFailure: false,
+  postHistorySettingsFailure: false,
 }
 
 export default function profile (state = initialState, action) {
   switch (action.type) {
+    case CHANGE_HISTORY_PRIVACY:
+      return { ...state, isRequestingPersonalInformation: false, personalInformation: { privacy: action.payload.privacy } }
+    case MANAGE_HISTORY_FAILURE:
+      return { ...state, isRequestingPersonalInformation: false, postHistorySettingsFailure: true }
+    case REQUEST_MANAGE_HISTORY:
+      return { ...state, isRequestingPersonalInformation: true }
     case REQUEST_PROFILE_INFO:
       return { ...state, /* personalInformationError: null, */ isRequestingPersonalInformation: true }
     case RECEIVE_PROFILE_INFO:
