@@ -88,7 +88,7 @@ export default {
   'MyPage.profileMenuLabel': 'Profilmeny',
   'MyPage.settings': 'Innstillinger',
   'MyPage.history': 'Historikk',
-  'History.history': 'Historikk',
+  'History.history': 'Min historikk',
   'History.checkedIn': 'Levert',
   'Navigation.loggedInAs': 'Logget inn som:',
   'Navigation.logIn': 'Logg inn',
