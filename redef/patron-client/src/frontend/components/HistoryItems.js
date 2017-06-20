@@ -37,7 +37,7 @@ export const messages = defineMessages({
   history: {
     id: 'History.history',
     description: 'The label of history title',
-    defaultMessage: 'History'
+    defaultMessage: 'My history'
   }
 })
 
