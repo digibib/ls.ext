@@ -32,6 +32,7 @@
     "partNumber": "deichman:partNumber",
     "summary": "deichman:hasSummary",
     "compositionType": "deichman:compType",
+    "totalNumItems": "deichman:totalNumItems",
     "publications": {
       "@id": "deichman:publication",
       "@container": "@set"
