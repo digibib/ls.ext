@@ -70,7 +70,7 @@ export function processSearchResponse (response, locationQuery) {
             const titles = `${pub._source.mainTitle} ${pub._source.subtitle} ${pub._source.partNumber} ${pub._source.partTitle}`
               .toLocaleLowerCase()
             return (pub._source.languages || []).includes(prefLang) &&
-              titleMatchTerms.find(term => { return titles.includes(term) })
+              titleMatchTerms.every(term => { return pub._source.displayLine1.toLocaleLowerCase().includes(term) })
           })
           if (selectedByPrefLang) {
             selected = selectedByPrefLang

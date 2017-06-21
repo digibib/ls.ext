@@ -45,11 +45,11 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
     }
   })
 
-  function boost (query) {
+  function publicationBoost (query) {
     return {
       function_score: {
         boost: options.childBoost, // general child boost
-        boost_mode: 'replace',
+        boost_mode: 'multiply',
         query: query,
         script_score: {
           script: {
@@ -65,17 +65,6 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                         def mtScore = mtScores.get(doc.mt.value);
                         if (mtScore !== null) {
                           score = score * mtScore;
-                        }
-                      }
-                      
-                      def workTypes = [
-                        "Film": 0.3
-                      ];
-                      
-                      if (doc['_type'] === 'work') {
-                        def wtScore = workTypes.get(doc.workTypeLabel.value);
-                        if (wtScore !== null) {
-                          score = score * wtScore;
                         }
                       }
                       
@@ -115,11 +104,6 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       if (doc.numItems.value != null) {
                         score *= (1 + (items_gain*doc.numItems.value/items_scale));
                       }
-
-                      if (doc['_type'] === 'work' && doc.litform.value === "Roman") {
-                        score = score * 1.1;
-                      }
-                      
                       return score;`.replace('\n', ''),
             lang: 'painless'
           }
@@ -128,6 +112,14 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
     }
   }
 
+  const boostableQuery = {
+    bool: {
+      must: [
+        publicationQuery
+      ],
+      filter: publicationFilters
+    }
+  }
   return {
     size: pageSize,
     from: pageSize * (page - 1 || 0),
@@ -140,22 +132,14 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
       }
     },
     query: {
-      bool: {
-        should: [
+      dis_max: {
+        queries: [
           {
             // query work by publication properties
             has_child: {
               score_mode: 'max',
               type: 'publication',
-              boost: 0.1,
-              query: boost({
-                bool: {
-                  must: [
-                    publicationQuery
-                  ],
-                  filter: publicationFilters
-                }
-              }),
+              query: !options.skipScript ? publicationBoost(boostableQuery) : boostableQuery,
               inner_hits: {
                 size: 100,
                 name: 'publications',
@@ -169,14 +153,14 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
               must: [
                 {
                   has_child: {
-                    query: boost({
+                    query: {
                       bool: {
                         should: {
                           match_all: {}
                         },
                         filter: publicationFilters
                       }
-                    }),
+                    },
                     score_mode: 'max',
                     inner_hits: {
                       name: 'publications',
@@ -198,38 +182,53 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
   }
 }
 
-function simpleQuery (query, fields) {
+function simpleQuery (query, fields, options) {
+  options = options || {}
   const terms = query.split(/\s+/)
   let phrases = []
-  for (let i=0; i<terms.length; i++) {
-    phrases.push(terms.slice(0, i+1).join(' '))
+  for (let i = 0; i < terms.length; i++) {
+    phrases.push(terms.slice(0, i + 1).join(' '))
     phrases.push(terms.slice(i).join(' '))
   }
 
-  phrases = [...new Set(phrases)]
+  phrases = [ ...new Set(phrases) ]
 
   const fieldsAndPhrases = []
   fields.forEach(field => {
-    if (field.phrase) {
+    if (field.phrase && !options.noPhrasePerm || field.tokenize) {
       phrases.forEach(phrase => {
         fieldsAndPhrases.push({
-          field, query: phrase, boost: (field.boost || 1 ) * (phrase.length / query.length) })
+          field, query: phrase, boost: (field.boost || 1 )
+        })
       })
     } else {
       fieldsAndPhrases.push({
-        field, query, boost: field.boost})
+        field, query, boost: field.boost
+      })
     }
   })
 
   return {
     dis_max: {
+      tie_breaker: 0.4,
       queries: fieldsAndPhrases.map(field => {
         return {
-          [`match${field.field.phrase ? '_phrase' : ''}`]: {
-            [field.field.field]: {
-              query: field.query,
-              boost: field.boost || 1
-            }
+          constant_score: {
+            filter: field.field.phrase ? {
+              match_phrase: {
+                [field.field.field]: {
+                  query: field.query,
+                  slop: 3
+                }
+              }
+            } : {
+              match: {
+                [field.field.field]: {
+                  query: field.query
+                }
+              }
+            },
+            boost: field.boost || 1
           }
         }
       })
@@ -292,7 +291,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   } else if (advTriggers.test(escapedQueryString)) {
     return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else {
-    return initCommonQuery(simpleQuery(escapedQueryString, Defaults.defaultWorkFields), simpleQuery(escapedQueryString, Defaults.defaultPublicationFields), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
+    return initCommonQuery(simpleQuery(escapedQueryString, Defaults.defaultWorkFields, options), simpleQuery(escapedQueryString, Defaults.defaultPublicationFields, options), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   }
 }
 
@@ -351,10 +350,18 @@ function createPublicationFilters (params, excludeUnavailable) {
 module.exports.buildQuery = function (urlQueryString) {
   const params = QueryParser.parse(urlQueryString)
   const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
-  const workFilters = parseFilters(params.filter || [], 'work')
-  const publicationFilters = createPublicationFilters(params, excludeUnavailable)
+  const _allFilter = params.allFilter ? [ {
+    match: {
+      _all: {
+        query: params.query,
+        operator: 'and'
+      }
+    }
+  } ] : []
+  const workFilters = _allFilter.concat(parseFilters(params.filter || [], 'work'))
+  const publicationFilters = _allFilter.concat(createPublicationFilters(params, excludeUnavailable))
   const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
-//  console.log(JSON.stringify(query, null, 2))
+  console.log(JSON.stringify(query, null, 2))
   return query
 }
 
