@@ -168,7 +168,8 @@ module.exports = {
     'http://lexvo.org/id/iso639-3/ger',
     'http://lexvo.org/id/iso639-3/fre',
     'http://lexvo.org/id/iso639-3/spa',
-    'http://lexvo.org/id/iso639-3/ita'
+    'http://lexvo.org/id/iso639-3/ita',
+    'http://lexvo.org/id/iso639-3/rus'
   ],
   enabledParameter: null /* used to clarify url parameters without value, e.g. ?hideFilters */
 }
