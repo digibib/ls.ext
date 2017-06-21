@@ -93,7 +93,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       def age_gain=${options.ageGain};
                       def age_scale=${options.ageScale};
                       if (doc.created.value != null) {
-                        score *= (1 + (age_gain*age_scale)/(age_scale+(System.currentTimeMillis()-doc.created.date.getMillis())/86400000));
+                        score *= (1 + (age_gain*age_scale)/(age_scale+(params.now-doc.created.date.getMillis())/86400000));
                       }
                       
                       def items_gain=${options.itemsGain};
@@ -103,6 +103,33 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       def items_scale=${options.itemsScale};
                       if (doc.numItems.value != null) {
                         score *= (1 + (items_gain*doc.numItems.value/items_scale));
+                      }
+                      return score;`.replace('\n', ''),
+            lang: 'painless',
+            params: {
+              now: Date.now()
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function workBoost (query) {
+    return {
+      function_score: {
+        boost: options.childBoost, // general child boost
+        boost_mode: 'multiply',
+        query: query,
+        script_score: {
+          script: {
+            inline: `
+                      def score = _score;
+
+                      def items_gain=${options.itemsGain};
+                      def items_scale=${options.itemsScale};
+                      if (doc.numItems.value != null) {
+                        score *= (1 + (items_gain*doc.totalNumItems.value/items_scale));
                       }
                       return score;`.replace('\n', ''),
             lang: 'painless'

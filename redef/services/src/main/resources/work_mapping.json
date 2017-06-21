@@ -381,6 +381,9 @@
         "norms": {
           "enabled": false
         }
+      },
+      "totalNumItems": {
+        "type": "short"
       }
     }
   }

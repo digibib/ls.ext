@@ -48,6 +48,7 @@ module.exports = {
     { field: 'subtitle.raw', boost: 1 },
     { field: 'partTitle', phrase: true },
     { field: 'series', boost: 2 },
-    { field: 'subject', boost: 0.5, phrase: true }
+    { field: 'subject', boost: 0.5, phrase: true },
+    { field: 'totalNumItems'}
   ]
 }
