@@ -443,7 +443,7 @@ module.exports = (app) => {
 
   function parsePatron (patron) {
     return {
-      privacy: patron.privacy ||'',
+      privacy: patron.privacy || '',
       borrowerNumber: patron.borrowernumber || '',
       cardNumber: patron.cardnumber || '',
       homeBranch: patron.branchcode || '',

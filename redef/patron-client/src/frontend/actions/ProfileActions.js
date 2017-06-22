@@ -258,7 +258,7 @@ export const manageHistoryFailure = (error) => errorAction(types.MANAGE_HISTORY_
 export const changeHistoryPrivacy = (privacy) => action(types.CHANGE_HISTORY_PRIVACY, {privacy: privacy})
 
 export function userHistory () {
-  return requireLoginBeforeAction(showModal(ModalComponents.USER_HISTORY, { isSuccess: true} ))
+  return requireLoginBeforeAction(showModal(ModalComponents.USER_HISTORY, { isSuccess: true }))
 }
 
 export function manageHistory (privacy) {

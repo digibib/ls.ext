@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import { defineMessages, FormattedMessage } from 'react-intl'
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from 'react-infinite-scroller'
 
 import HistoryItem from './HistoryItem'
 
@@ -16,7 +16,8 @@ class HistoryItems extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="section"
-        className="history">
+        className="history"
+        style={{ marginTop: '1em' }}>
         <h1><FormattedMessage {...messages.history} /></h1>
         <InfiniteScroll
           pageStart={0}
@@ -31,6 +32,12 @@ class HistoryItems extends React.Component {
       </NonIETransitionGroup>
     )
   }
+}
+
+HistoryItems.propTypes = {
+  historyItems: PropTypes.array.isRequired,
+  loadItems: PropTypes.func.isRequired,
+  hasMoreItems: PropTypes.func.isRequired
 }
 
 export const messages = defineMessages({
