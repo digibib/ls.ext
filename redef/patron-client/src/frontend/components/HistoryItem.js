@@ -29,6 +29,10 @@ const HistoryItem = ({ historyItem }) => {
   )
 }
 
+HistoryItem.propTypes = {
+  historyItem: PropTypes.object.isRequired
+}
+
 export const messages = defineMessages({
   checkedIn: {
     id: 'History.checkedIn',

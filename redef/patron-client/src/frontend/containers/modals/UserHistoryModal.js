@@ -21,18 +21,24 @@ class UserHistoryModal extends React.Component {
   handleDeleteHistory (event) {
     event.preventDefault()
     this.props.profileActions.manageHistory(2) // privacy=2 (never store history)
+    this.props.modalActions.hideModal()
   }
 
   render () {
     return (
       <div data-automation-id="history_delete_modal" className="default-modal">
-        <h1>Vil du slette historikk+</h1>
-        <button className="grey-btn" onClick={this.handleCancel} data-automation-id="cancel_button">
-          <FormattedMessage {...messages.cancel} />
-        </button>
-        <button className="black-btn" onClick={this.handleDeleteHistory} data-automation-id="delete_button">
-          <FormattedMessage {...messages.deleteHistory} />
-        </button>
+        <h1 style={{ fontSize: '1em', marginBottom: '1em' }}><FormattedMessage {...messages.deleteHistoryTitle} /></h1>
+        <p>
+          <FormattedMessage {...messages.deleteHistoryExplainer} />
+        </p>
+        <div style={{ textAlign: 'center' }}>
+          <button className="grey-btn" onClick={this.handleCancel} data-automation-id="cancel_button">
+            <FormattedMessage {...messages.cancel} />
+          </button>
+          <button className="black-btn" onClick={this.handleDeleteHistory} data-automation-id="delete_button">
+            <FormattedMessage {...messages.delete} />
+          </button>
+        </div>
       </div>
     )
   }
@@ -46,15 +52,25 @@ UserHistoryModal.propTypes = {
 }
 
 export const messages = defineMessages({
-  deleteHistory: {
-    id: 'UserSettings.deleteHistory',
+  deleteHistoryTitle: {
+    id: 'History.deleteHistoryTitle',
+    description: 'Delete history modal title',
+    defaultMessage: 'Would you like to delete your history'
+  },
+  delete: {
+    id: 'History.delete',
     description: 'Button text for deleting history',
     defaultMessage: 'Delete'
   },
   cancel: {
-    id: 'UserSettings.cancel',
+    id: 'History.cancel',
     description: 'The cancel button text',
     defaultMessage: 'Cancel'
+  },
+  deleteHistoryExplainer: {
+    id: 'History.deleteHistoryExplainer',
+    description: 'Explainer text in popup when user tries to remove history storage',
+    defaultMessage: 'Your loan history will be anonymized/deleted within 24 hours.'
   }
 })
 
