@@ -328,7 +328,7 @@ export default {
   'UserLoans.waitingPeriod': 'Ventetid',
   'UserLoans.weeks': 'uker',
   'UserLoans.yourLoans': 'Dine lån',
-  'UserLoans.waitingTime': 'Ventetiden kan avvike',
+  'UserLoans.waitingTime': 'Antatt ventetid er kun et anslag, avvik kan forekomme.',
   'UserSettings.alerts': 'Varslinger',
   'UserSettings.byEmail': 'På epost',
   'UserSettings.bySms': 'På SMS',

@@ -418,7 +418,7 @@ export const messages = defineMessages({
   waitingTime: {
     id: 'UserLoans.waitingTime',
     description: 'The waiting time explanation text',
-    defaultMessage: 'Waiting time may vary'
+    defaultMessage: 'Expected waiting time is a rough estimate, accuracy may vary.'
   },
   title: {
     id: 'UserLoans.title',
