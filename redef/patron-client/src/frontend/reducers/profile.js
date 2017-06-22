@@ -54,7 +54,7 @@ const initialState = {
   contactDetailsVerificationError: null,
   postProfileSettingsSuccess: false,
   postProfileSettingsFailure: false,
-  postHistorySettingsFailure: false,
+  postHistorySettingsFailure: false
 }
 
 export default function profile (state = initialState, action) {

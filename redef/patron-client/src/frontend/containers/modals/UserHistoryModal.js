@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage } from 'react-intl'
 
 import * as ModalActions from '../../actions/ModalActions'
 import * as ProfileActions from '../../actions/ProfileActions'

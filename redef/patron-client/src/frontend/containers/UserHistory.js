@@ -10,21 +10,22 @@ import HistoryItems from '../components/HistoryItems'
 const limit = 4
 
 class UserHistory extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
-      hasMoreItems: true,
+      hasMoreItems: true
     }
     this.handleKeyKeepMyHistory = this.handleKeyKeepMyHistory.bind(this)
     this.handleKeepMyHistory = this.handleKeepMyHistory.bind(this)
+    this.loadItems = this.loadItems.bind(this)
   }
 
   componentWillMount () {
     this.props.historyActions.resetHistory()
   }
 
-  loadItems = () => {
+  loadItems () {
     this.props.historyActions.fetchHistory({ limit: limit, offset: parseInt(this.props.loadedHistoryItems) })
   }
 
@@ -53,9 +54,9 @@ class UserHistory extends React.Component {
                  name="keep-my-history"
                  id="keep-my-history"
                  onClick={this.handleKeepMyHistory}
-                 defaultChecked={this.props.personalInformation.privacy === 0
-                 || this.props.personalInformation.privacy === 1
-                 || this.props.personalInformation.privacy === ''} />
+                 defaultChecked={this.props.personalInformation.privacy === 0 ||
+                 this.props.personalInformation.privacy === 1 ||
+                 this.props.personalInformation.privacy === ''} />
           <label htmlFor="keep-my-history" onKeyDown={this.handleKeyKeepMyHistory}>
               <span className="checkbox-wrapper" style={{ display: 'inline-block' }}>
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
@@ -64,9 +65,9 @@ class UserHistory extends React.Component {
               <FormattedMessage {...messages.keepMyHistory} />
             </label>
         </div>
-        {this.props.personalInformation.privacy === 0
-        || this.props.personalInformation.privacy === 1
-        || this.props.personalInformation.privacy === ''
+        {this.props.personalInformation.privacy === 0 ||
+        this.props.personalInformation.privacy === 1 ||
+        this.props.personalInformation.privacy === ''
           ? < HistoryItems historyItems={this.props.allLoadedHistory} loadItems={this.loadItems} hasMoreItems={this.props.hasMoreItems} />
           : null
         }
@@ -78,7 +79,10 @@ class UserHistory extends React.Component {
 UserHistory.propTypes = {
   historyActions: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
-  profileActions: PropTypes.object.isRequired
+  profileActions: PropTypes.object.isRequired,
+  loadedHistoryItems: PropTypes.string.isRequired,
+  allLoadedHistory: PropTypes.array.isRequired,
+  hasMoreItems: PropTypes.bool.isRequired
 }
 
 export const messages = defineMessages({
@@ -100,7 +104,7 @@ function mapStateToProps (state) {
     allLoadedHistory: state.history.allLoadedHistory,
     loadedHistoryItems: state.history.loadedHistoryItems,
     hasMoreItems: state.history.moreToFetch,
-    personalInformation: state.profile.personalInformation,
+    personalInformation: state.profile.personalInformation
   }
 }
 
