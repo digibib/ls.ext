@@ -12,7 +12,8 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
     ageGain: 0.6,
     ageScale: 100,
     itemsGain: 0.3,
-    itemsScale: 50,
+    itemsScale: 100,
+    itemsCountLimit: 200,
     childBoost: 1
   }, options)
 
@@ -90,24 +91,18 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                         score = _score * langscore;
                       }
 
-                      def age_gain=${options.ageGain};
-                      def age_scale=${options.ageScale};
+                      def age_gain=params.ageGain;
+                      def age_scale=params.ageScale;
                       if (doc.created.value != null) {
                         score *= (1 + (age_gain*age_scale)/(age_scale+(params.now-doc.created.date.getMillis())/86400000));
                       }
                       
-                      def items_gain=${options.itemsGain};
-                      if (doc['_type'] === 'publication' && doc.mt.value === "Periodika") {
-                        items_gain = 0.0;
-                      }
-                      def items_scale=${options.itemsScale};
-                      if (doc.numItems.value != null) {
-                        score *= (1 + (items_gain*doc.numItems.value/items_scale));
-                      }
                       return score;`.replace('\n', ''),
             lang: 'painless',
             params: {
-              now: Date.now()
+              now: Date.now(),
+              ageGain: Number(options.ageGain),
+              ageScale: Number(options.ageScale)
             }
           }
         }
@@ -126,13 +121,18 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
             inline: `
                       def score = _score;
 
-                      def items_gain=${options.itemsGain};
-                      def items_scale=${options.itemsScale};
-                      if (doc.numItems.value != null) {
-                        score *= (1 + (items_gain*doc.totalNumItems.value/items_scale));
+                      def items_gain=params.itemsGain;
+                      def items_scale=params.itemsScale;
+                      if (doc.totalNumItems.value != null) {
+                        score *= (1 + (items_gain*(Math.min(doc.totalNumItems.value, params.itemsCountLimit)/items_scale)));
                       }
                       return score;`.replace('\n', ''),
-            lang: 'painless'
+            lang: 'painless',
+            params: {
+              itemsGain: Number(options.itemsGain),
+              itemsScale: Number(options.itemsScale),
+              itemsCountLimit: Number(options.itemsCountLimit)
+            }
           }
         }
       }
@@ -197,7 +197,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                     type: 'publication'
                   }
                 },
-                workQuery
+                workBoost(workQuery)
               ],
               filter: workFilters
             }
@@ -214,8 +214,14 @@ function simpleQuery (query, fields, options) {
   const terms = query.split(/\s+/)
   let phrases = []
   for (let i = 0; i < terms.length; i++) {
-    phrases.push(terms.slice(0, i + 1).join(' '))
-    phrases.push(terms.slice(i).join(' '))
+    const firstPart = terms.slice(0, i + 1)
+    if (firstPart.length > 1) {
+      phrases.push(firstPart.join(' '))
+    }
+    const secondPart = terms.slice(i)
+    if (secondPart.length > 1) {
+      phrases.push(secondPart.join(' '))
+    }
   }
 
   phrases = [ ...new Set(phrases) ]
@@ -237,7 +243,6 @@ function simpleQuery (query, fields, options) {
 
   return {
     dis_max: {
-      tie_breaker: 0.4,
       queries: fieldsAndPhrases.map(field => {
         return {
           constant_score: {
@@ -251,7 +256,8 @@ function simpleQuery (query, fields, options) {
             } : {
               match: {
                 [field.field.field]: {
-                  query: field.query
+                  query: field.query,
+                  minimum_should_match: field.minimumMatch || '70%',
                 }
               }
             },
@@ -318,7 +324,20 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   } else if (advTriggers.test(escapedQueryString)) {
     return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else {
-    return initCommonQuery(simpleQuery(escapedQueryString, Defaults.defaultWorkFields, options), simpleQuery(escapedQueryString, Defaults.defaultPublicationFields, options), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
+    const _allFilter = options.noAllFilter ? [] : [ {
+      match: {
+        _all: {
+          query: options.query,
+          operator: 'and'
+        }
+      }
+    } ]
+    return initCommonQuery(
+      simpleQuery(escapedQueryString, Defaults.defaultWorkFields, options),
+      simpleQuery(escapedQueryString, Defaults.defaultPublicationFields, options),
+      _allFilter.concat(workFilters),
+      _allFilter.concat(publicationFilters),
+      excludeUnavailable, page, pageSize, options)
   }
 }
 
@@ -377,16 +396,8 @@ function createPublicationFilters (params, excludeUnavailable) {
 module.exports.buildQuery = function (urlQueryString) {
   const params = QueryParser.parse(urlQueryString)
   const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
-  const _allFilter = params.allFilter ? [ {
-    match: {
-      _all: {
-        query: params.query,
-        operator: 'and'
-      }
-    }
-  } ] : []
-  const workFilters = _allFilter.concat(parseFilters(params.filter || [], 'work'))
-  const publicationFilters = _allFilter.concat(createPublicationFilters(params, excludeUnavailable))
+  const workFilters = parseFilters(params.filter || [], 'work')
+  const publicationFilters = createPublicationFilters(params, excludeUnavailable)
   const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
   console.log(JSON.stringify(query, null, 2))
   return query
