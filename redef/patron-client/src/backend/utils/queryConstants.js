@@ -33,7 +33,7 @@ module.exports = {
   ],
   defaultWorkFields: [
     { field: 'agents', boost: 1 },
-    { field: 'author', boost: 5 },
+    { field: 'author', boost: 5, minimumMatch: '60%' },
     { field: 'bio' },
     { field: 'compType' },
     { field: 'country' },
@@ -49,6 +49,5 @@ module.exports = {
     { field: 'partTitle', phrase: true },
     { field: 'series', boost: 2 },
     { field: 'subject', boost: 0.5, phrase: true },
-    { field: 'totalNumItems'}
   ]
 }
