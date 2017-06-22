@@ -77,7 +77,7 @@ class SearchResult extends React.Component {
     if (result.subject) {
       return (
         <p key="pubs" className="subjects" data-automation-id="work_subjects">
-          <strong><FormattedMessage {...messages.subjects} /></strong><br />
+          <strong><FormattedMessage {...messages.subjects} /></strong>
           {result.subject.map((subject, i) => (
             <span key={subject}>
                 <Link
@@ -94,7 +94,7 @@ class SearchResult extends React.Component {
     if (result.genre) {
       return (
         <p key="gens" className="genres" data-automation-id="work_genres">
-          <strong><FormattedMessage {...messages.genres} /></strong><br />
+          <strong><FormattedMessage {...messages.genres} /></strong>
           {result.genre.map((genre, i) => (
             <span key={genre}>
                 <Link to={fieldQueryLink('sjanger', genre)}
@@ -431,13 +431,14 @@ class SearchResult extends React.Component {
             : null
           }
 
-          <article className="entry-content">
+          <article className="entry-content" style={{marginTop: '1em'}}>
 
             <div className="entry-content-icon">
-              <FormattedMessage {...messages.availableAs} />
+              {/* <FormattedMessage {...messages.availableAs} /> */}
               {result.mediaTypes.map(mediaType => {
                 return <MediaType key={mediaType.uri} mediaType={mediaType} />
-              })}
+              }).sort((x,y) => {return x.key === 'http://data.deichman.no/mediaType#Book' ? -1 : y.key === 'http://data.deichman.no/mediaType#Book' ? 1 : 0 })
+              }
             </div>
 
             {this.renderDisplayTitle(result)}
