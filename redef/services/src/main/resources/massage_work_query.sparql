@@ -1,7 +1,8 @@
-PREFIX deich: <__ONTOLOGY__>
+PREFIX  deich: <__ONTOLOGY__>
 PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
-PREFIX   duo: <http://data.deichman.no/utility#>
+PREFIX  duo: <http://data.deichman.no/utility#>
+PREFIX  mediaType: <http://data.deichman.no/mediaType#>
 
 CONSTRUCT {
  <__WORKURI__> a deich:Work ;
@@ -133,6 +134,8 @@ WHERE {
         where {
             ?publication deich:publicationOf <__WORKURI__> ;
                          deich:hasNumItems ?items .
+                         optional {?publication deich:hasMediaType ?mediatype }
+            FILTER(!bound(?mediatype) || ?mediatype != mediaType:Periodical)
         }
         having(sum(?items) > 0)
       }
