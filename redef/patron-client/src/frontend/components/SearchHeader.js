@@ -21,7 +21,7 @@ class SearchHeader extends React.Component {
   handleSearch (event) {
     event.preventDefault()
     // Ensure that page-param is deleted on new search
-    delete this.props.locationQuery["page"]
+    delete this.props.locationQuery['page']
     this.props.mobileNavigationActions.hideMobileNavigation()
 
     /* Active filters are removed on new query */
