@@ -4612,7 +4612,7 @@
 
             ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, function (newValue, oldValue, keypath) {
               checkRequiredSubInput(newValue, keypath)
-            }, { init: false }),
+            }, { init: true }),
 
             ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.nonEditable`, function (newValue, oldValue, keypath) {
               let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
