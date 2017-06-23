@@ -15,7 +15,7 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 ## 2017.46
 
 KOHA: 5714b4763cfa6b5639bccbe5a7cad062f3edf5e7
-GITREF: TODO
+GITREF: 47d79983fe7b153b198c8abf2ea383440d911c02
 
 - Koha
   - DEICH-826 Oppgradere koha til 17.05
@@ -31,9 +31,7 @@ GITREF: TODO
   - DEICH-711 Tastaturnavigering. Tab hopper over felt
   - DEICH-836 Oppslag i registre - Visning. Manglende opplysninger
 - Annet
-  - DEICH-841 Opplegg for å kjøre periodiske jobber
   - DEICH-830 Innhente "krydder" fra eksterne kilder Bokbasen
-  - DEICH-730 Slette utgivelser uten eksemplarer
 
 ## 2017.45
 
