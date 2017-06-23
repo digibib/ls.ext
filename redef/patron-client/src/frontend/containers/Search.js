@@ -173,7 +173,7 @@ class Search extends React.Component {
                            resources={this.props.resources}
                            page={this.props.location.query.page}
                            items={this.props.items}
-                           homeBranch={this.props.userProfile.personalInformation.homeBranch}
+                           homeBranch={this.props.userProfile.homeBranch}
               />
             </div>
           : null}

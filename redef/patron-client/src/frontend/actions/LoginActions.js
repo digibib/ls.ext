@@ -95,10 +95,11 @@ export function logout () {
 
 export const requestLoginStatus = () => action(types.REQUEST_LOGIN_STATUS)
 
-export const receiveLoginStatus = (isLoggedIn, borrowerNumber, borrowerName) => action(types.RECEIVE_LOGIN_STATUS, {
+export const receiveLoginStatus = (isLoggedIn, borrowerNumber, borrowerName, homeBranch) => action(types.RECEIVE_LOGIN_STATUS, {
   isLoggedIn,
   borrowerNumber,
-  borrowerName
+  borrowerName,
+  homeBranch
 })
 
 export const loginStatusFailure = (error) => action(types.LOGIN_STATUS_FAILURE, error)
@@ -115,7 +116,7 @@ export function updateLoginStatus () {
       },
       credentials: 'same-origin'
     }).then(response => response.json())
-      .then(json => dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName)))
+      .then(json => dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName, json.homeBranch)))
       .catch(error => dispatch(loginStatusFailure(error)))
   }
 }
@@ -137,7 +138,7 @@ export function updateLoginStatusBeforeAction (successAction) {
       credentials: 'same-origin'
     }).then(response => response.json())
       .then(json => {
-        dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName))
+        dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName, json.homeBranch))
         dispatch(successAction)
       })
       .catch(error => dispatch(loginStatusFailure(error)))

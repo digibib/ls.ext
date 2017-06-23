@@ -71,7 +71,7 @@ export function toggleParameterValue (queryParamName, value, inputLocationQuery,
         }
       })
     }
-    const homeBranch = getState().profile.personalInformation.homeBranch
+    const homeBranch = getState().profile.homeBranch
 
     if (queryParamName !== 'showBranchStatus' && queryParamName !== 'showBranchStatusMedia') {
       const locationQueryWithBranches = ensureBranchStatus(locationQuery, homeBranch)
