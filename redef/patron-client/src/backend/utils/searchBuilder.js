@@ -231,7 +231,7 @@ function simpleQuery (query, fields, options) {
     if (field.phrase && !options.noPhrasePerm || field.tokenize) {
       phrases.forEach(phrase => {
         fieldsAndPhrases.push({
-          field, query: phrase, boost: (field.boost || 1 )
+          field, query: phrase, boost: (field.boost || 1)
         })
       })
     } else {
@@ -257,7 +257,7 @@ function simpleQuery (query, fields, options) {
               match: {
                 [field.field.field]: {
                   query: field.query,
-                  minimum_should_match: field.minimumMatch || '70%',
+                  minimum_should_match: field.minimumMatch || '70%'
                 }
               }
             },

@@ -14,7 +14,7 @@ function advancedQuery (queryWant, boolOpeator) {
             query: {
               function_score: {
                 boost: 1,
-                boost_mode: "multiply",
+                boost_mode: 'multiply',
                 query: {
                   bool: {
                     must: [
@@ -54,7 +54,7 @@ function advancedQuery (queryWant, boolOpeator) {
                 has_child: {
                   inner_hits: {
                     explain: false,
-                    name: "publications",
+                    name: 'publications',
                     size: 100
                   },
                   query: {
@@ -65,24 +65,24 @@ function advancedQuery (queryWant, boolOpeator) {
                       }
                     }
                   },
-                  score_mode: "max",
-                  type: "publication"
+                  score_mode: 'max',
+                  type: 'publication'
                 }
               },
               {
                 function_score: {
                   boost: 1,
-                  boost_mode: "multiply",
+                  boost_mode: 'multiply',
                   query: {
                     query_string: {
-                      default_operator: "and",
+                      default_operator: 'and',
                       query: queryWant
                     }
                   },
                   script_score: {
                     script: {
-                      inline: "deleted",
-                      lang: "painless",
+                      inline: 'deleted',
+                      lang: 'painless',
                       params: {
                         itemsCountLimit: 200,
                         itemsGain: 0.3,
@@ -129,7 +129,6 @@ describe('searchBuilder', () => {
 
     it('should build simple query', () => {
       const urlQueryString = 'query=some+more+strings'
-      const queryWant = 'some more strings'
       const q = buildQuery(urlQueryString).query
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.inline = 'deleted'
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.params.now = 'deleted'
@@ -140,12 +139,12 @@ describe('searchBuilder', () => {
             queries: [
               {
                 has_child: {
-                  score_mode: "max",
-                  type: "publication",
+                  score_mode: 'max',
+                  type: 'publication',
                   query: {
                     function_score: {
                       boost: 1,
-                      boost_mode: "multiply",
+                      boost_mode: 'multiply',
                       query: {
                         bool: {
                           must: [
@@ -157,8 +156,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           agents: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -170,8 +169,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           author: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -183,8 +182,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           country: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -196,8 +195,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           desc: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -209,8 +208,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           ean: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -222,8 +221,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           format: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -235,8 +234,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           inst: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -248,8 +247,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           isbn: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -261,8 +260,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           ismn: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -274,8 +273,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           language: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -287,20 +286,7 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           mainTitle: {
-                                            query: "some more strings",
-                                            slop: 3
-                                          }
-                                        }
-                                      },
-                                      boost: 5
-                                    }
-                                  },
-                                  {
-                                    constant_score: {
-                                      filter: {
-                                        match_phrase: {
-                                          mainTitle: {
-                                            query: "some more",
+                                            query: 'some more strings',
                                             slop: 3
                                           }
                                         }
@@ -313,7 +299,20 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           mainTitle: {
-                                            query: "more strings",
+                                            query: 'some more',
+                                            slop: 3
+                                          }
+                                        }
+                                      },
+                                      boost: 5
+                                    }
+                                  },
+                                  {
+                                    constant_score: {
+                                      filter: {
+                                        match_phrase: {
+                                          mainTitle: {
+                                            query: 'more strings',
                                             slop: 3
                                           }
                                         }
@@ -326,8 +325,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           'mainTitle.raw': {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -339,8 +338,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           'mainTitle.raw': {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -352,8 +351,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           'mainTitle.raw': {
-                                            query: "some more",
-                                            minimum_should_match: "70%"
+                                            query: 'some more',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -365,8 +364,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           'mainTitle.raw': {
-                                            query: "more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -378,7 +377,7 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           subtitle: {
-                                            query: "some more strings",
+                                            query: 'some more strings',
                                             slop: 3
                                           }
                                         }
@@ -391,7 +390,7 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           subtitle: {
-                                            query: "some more",
+                                            query: 'some more',
                                             slop: 3
                                           }
                                         }
@@ -404,7 +403,7 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           subtitle: {
-                                            query: "more strings",
+                                            query: 'more strings',
                                             slop: 3
                                           }
                                         }
@@ -417,8 +416,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           'subtitle.raw': {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -430,8 +429,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           mt: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -443,7 +442,7 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           partTitle: {
-                                            query: "some more strings",
+                                            query: 'some more strings',
                                             slop: 3
                                           }
                                         }
@@ -456,7 +455,7 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           partTitle: {
-                                            query: "some more",
+                                            query: 'some more',
                                             slop: 3
                                           }
                                         }
@@ -469,7 +468,7 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match_phrase: {
                                           partTitle: {
-                                            query: "more strings",
+                                            query: 'more strings',
                                             slop: 3
                                           }
                                         }
@@ -482,8 +481,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           publishedBy: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -495,8 +494,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           recordId: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -508,8 +507,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           series: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -521,8 +520,8 @@ describe('searchBuilder', () => {
                                       filter: {
                                         match: {
                                           title: {
-                                            query: "some more strings",
-                                            minimum_should_match: "70%"
+                                            query: 'some more strings',
+                                            minimum_should_match: '70%'
                                           }
                                         }
                                       },
@@ -537,18 +536,18 @@ describe('searchBuilder', () => {
                             {
                               match: {
                                 _all: {
-                                  operator: "and",
-                                  query: "some more strings"
+                                  operator: 'and',
+                                  query: 'some more strings'
                                 }
                               }
                             }
-                          ],
+                          ]
                         }
                       },
                       script_score: {
                         script: {
                           inline: 'deleted',
-                          lang: "painless",
+                          lang: 'painless',
                           params: {
                             now: 'deleted',
                             ageGain: 0.6,
@@ -560,7 +559,7 @@ describe('searchBuilder', () => {
                   },
                   inner_hits: {
                     size: 100,
-                    name: "publications",
+                    name: 'publications',
                     explain: false
                   }
                 }
@@ -579,27 +578,27 @@ describe('searchBuilder', () => {
                               {
                                 match: {
                                   _all: {
-                                    operator: "and",
-                                    query: "some more strings"
+                                    operator: 'and',
+                                    query: 'some more strings'
                                   }
                                 }
                               }
                             ]
                           }
                         },
-                        score_mode: "max",
+                        score_mode: 'max',
                         inner_hits: {
-                          name: "publications",
+                          name: 'publications',
                           size: 100,
                           explain: false
                         },
-                        type: "publication"
+                        type: 'publication'
                       }
                     },
                     {
                       function_score: {
                         boost: 1,
-                        boost_mode: "multiply",
+                        boost_mode: 'multiply',
                         query: {
                           dis_max: {
                             queries: [
@@ -608,8 +607,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       agents: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -621,8 +620,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       author: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -634,8 +633,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       bio: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -647,8 +646,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       compType: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -660,8 +659,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       country: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -673,8 +672,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       desc: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -686,8 +685,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       genre: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -699,8 +698,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       inst: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -712,8 +711,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       language: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -725,8 +724,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       litform: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -738,7 +737,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       mainTitle: {
-                                        query: "some more strings",
+                                        query: 'some more strings',
                                         slop: 3
                                       }
                                     }
@@ -751,7 +750,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       mainTitle: {
-                                        query: "some more",
+                                        query: 'some more',
                                         slop: 3
                                       }
                                     }
@@ -764,7 +763,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       mainTitle: {
-                                        query: "more strings",
+                                        query: 'more strings',
                                         slop: 3
                                       }
                                     }
@@ -777,8 +776,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       'mainTitle.raw': {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -790,7 +789,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       subtitle: {
-                                        query: "some more strings",
+                                        query: 'some more strings',
                                         slop: 3
                                       }
                                     }
@@ -803,7 +802,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       subtitle: {
-                                        query: "some more",
+                                        query: 'some more',
                                         slop: 3
                                       }
                                     }
@@ -816,7 +815,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       subtitle: {
-                                        query: "more strings",
+                                        query: 'more strings',
                                         slop: 3
                                       }
                                     }
@@ -829,8 +828,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       'subtitle.raw': {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -842,7 +841,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       partTitle: {
-                                        query: "some more strings",
+                                        query: 'some more strings',
                                         slop: 3
                                       }
                                     }
@@ -855,7 +854,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       partTitle: {
-                                        query: "some more",
+                                        query: 'some more',
                                         slop: 3
                                       }
                                     }
@@ -868,7 +867,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       partTitle: {
-                                        query: "more strings",
+                                        query: 'more strings',
                                         slop: 3
                                       }
                                     }
@@ -881,8 +880,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       series: {
-                                        query: "some more strings",
-                                        minimum_should_match: "70%"
+                                        query: 'some more strings',
+                                        minimum_should_match: '70%'
                                       }
                                     }
                                   },
@@ -894,7 +893,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       subject: {
-                                        query: "some more strings",
+                                        query: 'some more strings',
                                         slop: 3
                                       }
                                     }
@@ -907,7 +906,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       subject: {
-                                        query: "some more",
+                                        query: 'some more',
                                         slop: 3
                                       }
                                     }
@@ -920,7 +919,7 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       subject: {
-                                        query: "more strings",
+                                        query: 'more strings',
                                         slop: 3
                                       }
                                     }
@@ -934,7 +933,7 @@ describe('searchBuilder', () => {
                         script_score: {
                           script: {
                             inline: 'deleted',
-                            lang: "painless",
+                            lang: 'painless',
                             params: {
                               itemsCountLimit: 200,
                               itemsGain: 0.3,
@@ -949,8 +948,8 @@ describe('searchBuilder', () => {
                     {
                       match: {
                         _all: {
-                          operator: "and",
-                          query: "some more strings"
+                          operator: 'and',
+                          query: 'some more strings'
                         }
                       }
                     }

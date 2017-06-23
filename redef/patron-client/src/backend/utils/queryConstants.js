@@ -21,7 +21,7 @@ module.exports = {
     { field: 'language' },
     { field: 'mainTitle', boost: 5, phrase: true },
     { field: 'mainTitle.raw', boost: 5 },
-    { field: 'mainTitle.raw', boost: 5, tokenize:true },
+    { field: 'mainTitle.raw', boost: 5, tokenize: true },
     { field: 'subtitle', boost: 1, phrase: true },
     { field: 'subtitle.raw', boost: 1 },
     { field: 'mt' },
@@ -48,6 +48,6 @@ module.exports = {
     { field: 'subtitle.raw', boost: 1 },
     { field: 'partTitle', phrase: true },
     { field: 'series', boost: 2 },
-    { field: 'subject', boost: 0.5, phrase: true },
+    { field: 'subject', boost: 0.5, phrase: true }
   ]
 }

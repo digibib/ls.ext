@@ -67,8 +67,6 @@ export function processSearchResponse (response, locationQuery) {
 
         for (const prefLang of Constants.preferredLanguages) {
           const selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
-            const titles = `${pub._source.mainTitle} ${pub._source.subtitle} ${pub._source.partNumber} ${pub._source.partTitle}`
-              .toLocaleLowerCase()
             return (pub._source.languages || []).includes(prefLang) &&
               titleMatchTerms.every(term => { return pub._source.displayLine1.toLocaleLowerCase().includes(term) })
           })
