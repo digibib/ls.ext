@@ -62,7 +62,7 @@ Before do |scenario|
     # Pre-populate Koha once before tests are run
     unless $kohadb_setup
       $kohadb_setup = TestSetup::Koha.new "xkoha"
-      $kohadb_setup.setup_db "16.1107000"
+      $kohadb_setup.setup_db "17.0500000"
     end
     @context[:koha] = $kohadb_setup
   end

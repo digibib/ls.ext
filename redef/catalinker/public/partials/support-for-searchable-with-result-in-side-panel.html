@@ -135,7 +135,7 @@ on-escape="cancelEdit">
         {{#each inputs}}
             {{#if !(type === 'hidden-url-query-value')}}
                 <div>
-                    <span data-uri-escaped-label="{{encodeURI(./label)}}">{{label}}:</span>
+                    <span data-uri-escaped-label="{{encodeURI(./label)}}">{{#if .labelKey}}{{>.labelKey}}{{else}}{{label}}{{/if}}:</span>
                     {{#each values}}
                         <span class="field" class-pure-u-1-1="{{!oneLiner}}">
                             {{>(readOnly ? "readonly-" : "") + type}}

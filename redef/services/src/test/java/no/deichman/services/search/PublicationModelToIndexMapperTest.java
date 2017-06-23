@@ -188,7 +188,7 @@ public class PublicationModelToIndexMapperTest {
                 + "    ns2:hasMediaType <http://data.deichman.no/mediaType#Book> ;\n"
                 + "    ns2:isbn \"978-88-545-0662-6\" ;\n"
                 + "    ns2:ismn \"M 23000399-5\" ;\n"
-                + "    ns2:ean \"7023060119782\" ;\n"
+                + "    ns2:hasEan \"7023060119782\" ;\n"
                 + "    ns2:language <http://lexvo.org/id/iso639-3/ita> ;\n"
                 + "    ns2:mainTitle \"La casa delle bugie\" ;\n"
                 + "    ns2:partTitle \"abc\" ;\n"

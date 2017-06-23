@@ -712,6 +712,13 @@ module.exports = (app) => {
                 addAnotherLabel: 'addAnotherExtent'
               },
               {
+                includeOnlyWhen: {
+                  hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Audiobook', 'LanguageCourse' ]
+                },
+                rdfProperty: 'duration',
+                type: 'input-duration'
+              },
+              {
                 includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
                 rdfProperty: 'illustrativeMatter',
                 multiple: true
@@ -761,13 +768,6 @@ module.exports = (app) => {
               { rdfProperty: 'format', multiple: true },
               {
                 includeOnlyWhen: {
-                  hasMediaType: [ 'Other', 'Film', 'MusicRecording', 'Audiobook', 'LanguageCourse' ]
-                },
-                rdfProperty: 'duration',
-                type: 'input-duration'
-              },
-              {
-                includeOnlyWhen: {
                   hasMediaType: [ 'Other', 'Film', 'Game' ]
                 },
                 rdfProperty: 'ageLimit',
@@ -784,6 +784,8 @@ module.exports = (app) => {
               {
                 id: 'publishedByInput',
                 rdfProperty: 'publishedBy',
+                multiple: true,
+                addAnotherLabel: 'addAnotherPublisher',
                 authority: true, // this indicates it is an authorized entity
                 nameProperties: [
                   {
@@ -1598,17 +1600,18 @@ module.exports = (app) => {
         search: {
           person: {
             type: 'person',
-            sortedListQueryForField: 'name',
+            alphabeticalList: true,
+            exactMatchCompareField: 'name',
             selectIndexLabel: 'personLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             resultItemLabelProperties2: [ 'displayLine2' ],
-//          resultItemDetailsLabelProperties: [ 'lifeSpan', 'nationality' ],
             itemHandler: 'personItemHandler',
             scrollToMiddleOfResultSet: true
           },
           subject: {
             type: 'subject',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             selectIndexLabel: 'generalSubjectLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
@@ -1642,40 +1645,41 @@ module.exports = (app) => {
           genre: {
             type: 'genre',
             selectIndexLabel: 'genreLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
             scrollToMiddleOfResultSet: true
           },
           corporation: {
             type: 'corporation',
             selectIndexLabel: 'corporationLabel',
-            sortedListQueryForField: 'name',
+            alphabeticalList: true,
+            exactMatchCompareField: 'name',
             resultItemLabelProperties: [ 'displayLine1' ],
-//          resultItemDetailsLabelProperties: [ 'inParens:specification' ]
             scrollToMiddleOfResultSet: true
           },
           place: {
             type: 'place',
             selectIndexLabel: 'placeLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
-            //resultItemDetailsLabelProperties: [ 'alternativeName' ],
             scrollToMiddleOfResultSet: true
           },
           event: {
             type: 'event',
             selectIndexLabel: 'eventLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'displayLine1' ],
-//          resultItemDetailsLabelProperties: [ 'placePrefLabel', 'inParens:placeAlternativeName', 'specification' ]
             scrollToMiddleOfResultSet: true
           },
           serial: {
             type: 'serial',
             selectIndexLabel: 'serialLabel',
-            sortedListQueryForField: 'serialMainTitle',
+            alphabeticalList: true,
+            exactMatchCompareField: 'serialMainTitle',
             resultItemLabelProperties: [ 'displayLine1' ],
-            //resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle', 'issn' ],
             scrollToMiddleOfResultSet: true
           },
           publication: {
@@ -1690,21 +1694,24 @@ module.exports = (app) => {
           instrument: {
             type: 'instrument',
             selectIndexLabel: 'instrumentLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
             scrollToMiddleOfResultSet: true
           },
           compositiontype: {
             type: 'compositionType',
             selectIndexLabel: 'compositionTypeLabel',
-            sortedListQueryForField: 'prefLabel',
+            alphabeticalList: true,
+            exactMatchCompareField: 'prefLabel',
             resultItemLabelProperties: [ 'prefLabel', 'inParens:specification' ],
             scrollToMiddleOfResultSet: true
           },
           workseries: {
             type: 'workSeries',
             selectIndexLabel: 'workSeriesLabel',
-            sortedListQueryForField: 'workSeriesMainTitle',
+            alphabeticalList: true,
+            exactMatchCompareField: 'workSeriesMainTitle',
             resultItemLabelProperties: [ 'displayLine1' ],
             //resultItemDetailsLabelProperties: [ 'partNumber.', 'partTitle' ],
             scrollToMiddleOfResultSet: true

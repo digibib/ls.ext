@@ -12,22 +12,24 @@ import java.util.Map;
  * Responsibility: Enumerate different resource types.
  */
 public enum EntityType {
-    WORK("work", "Work", Constants.MAIN_TITLE),
-    PUBLICATION("publication", "Publication", Constants.MAIN_TITLE),
-    PERSON("person", "Person", Constants.NAME),
-    PLACE("place", "Place", Constants.PREF_LABEL),
-    CORPORATION("corporation", "Corporation", Constants.NAME),
-    SERIAL("serial", "Serial", Constants.MAIN_TITLE),
-    WORK_SERIES("workSeries", "WorkSeries", Constants.MAIN_TITLE),
-    SUBJECT("subject", "Subject", Constants.PREF_LABEL),
-    GENRE("genre", "Genre", Constants.PREF_LABEL),
-    MUSICAL_INSTRUMENT("instrument", "Instrument", Constants.PREF_LABEL),
-    MUSICAL_COMPOSITION_TYPE("compositionType", "CompositionType", Constants.PREF_LABEL),
-    EVENT("event", "Event", Constants.PREF_LABEL);
+    WORK("work", "Work"),
+    PUBLICATION("publication", "Publication"),
+    PERSON("person", "Person"),
+    PLACE("place", "Place"),
+    CORPORATION("corporation", "Corporation"),
+    SERIAL("serial", "Serial"),
+    WORK_SERIES("workSeries", "WorkSeries"),
+    SUBJECT("subject", "Subject"),
+    GENRE("genre", "Genre"),
+    MUSICAL_INSTRUMENT("instrument", "Instrument"),
+    MUSICAL_COMPOSITION_TYPE("compositionType", "CompositionType"),
+    EVENT("event", "Event");
 
     // must be handwritten because of stupid Java
     public static final String ALL_TYPES_PATTERN =
             "(work|publication|person|place|corporation|serial|workSeries|subject|genre|instrument|compositionType|event)";
+    private static final String DISPLAY_LINE_1 = "displayLine1";
+    private static final String DISPLAY_LINE_2 = "displayLine2";
 
     private final String path;
     private final String rdfType;
@@ -45,12 +47,9 @@ public enum EntityType {
         assert wantedPattern.equals(ALL_TYPES_PATTERN) : "Please update ALL_TYPES_PATTERN to '" + wantedPattern + "'";
     }
 
-    private final String searchIndexField;
-
-    EntityType(String path, String rdfType, String searchIndexField) {
+    EntityType(String path, String rdfType) {
         this.path = path;
         this.rdfType = rdfType;
-        this.searchIndexField = searchIndexField;
     }
 
     public static EntityType get(String path) {
@@ -63,10 +62,6 @@ public enum EntityType {
 
     public String getRdfType() {
         return rdfType;
-    }
-
-    public String getSearchIndexField() {
-        return searchIndexField;
     }
 
     public void addSortingLabels(Map<String, Object> map) {
@@ -260,10 +255,10 @@ public enum EntityType {
                 break;
         }
         if (displayLine1.length() > 0) {
-            map.put("displayLine1", displayLine1);
+            map.put(DISPLAY_LINE_1, displayLine1);
         }
         if (displayLine2.length() > 0) {
-            map.put("displayLine2", displayLine2);
+            map.put(DISPLAY_LINE_2, displayLine2);
         }
     }
 

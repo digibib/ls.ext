@@ -105,7 +105,7 @@ class Search extends React.Component {
           ? (<div className="search-results-header">
             <a href="#main-search-content" className="is-vishidden focusable">{this.props.intl.formatMessage(messages.jumpToMainContent)}</a>
           <div className="search-results-summary">
-            {this.props.totalHitsPublications === 0
+            {!this.props.isSearching && this.props.totalHitsPublications === 0
              ? <div className="search-no-hits">
                 <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
                 <SearchFilterBox

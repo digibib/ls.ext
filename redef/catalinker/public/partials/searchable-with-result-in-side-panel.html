@@ -99,7 +99,7 @@
                     {{/if}}
             </div>
             <span class="legend">
-                {{#if isAdvancedQuery(./current.displayValue)}}
+                {{#if !config.search[./current.accepted.selectedIndexType || ../../selectedIndexType].alphabeticalList && isAdvancedQuery(./current.displayValue)}}
                     <span class="advanced-search-legend pure-u-7-24">
                         <span class="ui-icon ui-icon-info"/>{{>advancedSearchLegend}}</span>
                 {{else}}

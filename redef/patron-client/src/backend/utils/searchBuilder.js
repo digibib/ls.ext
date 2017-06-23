@@ -2,6 +2,10 @@ const QueryParser = require('querystring')
 const Constants = require('../../frontend/constants/Constants')
 const Defaults = require('./queryConstants')
 
+function escape (query) {
+  return query.replace(/\//g, '\\/')
+}
+
 function simpleQuery (query) {
   return {
     bool: {
@@ -82,16 +86,17 @@ function translateFieldTerms (query, translations) {
 
 // parse query string to decide what kind of query we think this is
 function queryStringToQuery (queryString) {
+  const escapedQueryString = escape(queryString)
   const isbn10 = new RegExp('^[0-9Xx-]{10,13}$')
   const isbn13 = new RegExp('^[0-9-]{13,17}$')
   const advTriggers = new RegExp('[:+/-^()"*]|AND|OR|NOT|TO')
 
-  if (isbn10.test(queryString) || isbn13.test(queryString)) {
-    return fieldQuery(['isbn'], queryString)
-  } else if (advTriggers.test(queryString)) {
-    return advancedQuery(queryString)
+  if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
+    return fieldQuery(['isbn'], escapedQueryString)
+  } else if (advTriggers.test(escapedQueryString)) {
+    return advancedQuery(escapedQueryString)
   } else {
-    return simpleQuery(queryString)
+    return simpleQuery(escapedQueryString)
   }
 }
 
