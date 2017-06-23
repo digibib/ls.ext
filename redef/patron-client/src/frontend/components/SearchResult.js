@@ -438,7 +438,7 @@ class SearchResult extends React.Component {
               {/* <FormattedMessage {...messages.availableAs} /> */}
               {result.mediaTypes.map(mediaType => {
                 return <MediaType key={mediaType.uri} mediaType={mediaType} />
-              }).sort((x,y) => {return x.key === 'http://data.deichman.no/mediaType#Book' ? -1 : y.key === 'http://data.deichman.no/mediaType#Book' ? 1 : 0 })
+              }).sort((x, y) => { return x.key === 'http://data.deichman.no/mediaType#Book' ? -1 : y.key === 'http://data.deichman.no/mediaType#Book' ? 1 : 0 })
               }
             </div>
 
