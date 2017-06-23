@@ -418,7 +418,8 @@ class SearchResult extends React.Component {
         transitionLeaveTimeout={500}
         component="div"
         className="single-entry"
-        data-formats={formats.join(', ')}>
+        data-formats={formats.join(', ')}
+        style={{borderWidth: '1px'}}>
         <div className="entry-header">
           {this.shouldShowFullList()
             ? <aside className="book-cover" aria-hidden="true">
@@ -431,7 +432,7 @@ class SearchResult extends React.Component {
             : null
           }
 
-          <article className="entry-content" style={{marginTop: '1em'}}>
+          <article className="entry-content">
 
             <div className="entry-content-icon">
               {/* <FormattedMessage {...messages.availableAs} /> */}
