@@ -69,7 +69,7 @@ SearchResults.propTypes = {
   resources: PropTypes.object.isRequired,
   fetchWorkResource: PropTypes.func.isRequired,
   items: PropTypes.object.isRequired,
-  page: PropTypes.number.isRequired,
+  page: PropTypes.any.isRequired,
   homeBranch: PropTypes.string
 }
 
