@@ -135,7 +135,7 @@ WHERE {
             ?publication deich:publicationOf <__WORKURI__> ;
                          deich:hasNumItems ?items .
                          optional {?publication deich:hasMediaType ?mediatype }
-            FILTER(!bound(?mediatype) || ?mediatype != mediaType:Periodical)
+            FILTER(!bound(?mediatype) || (bound(?mediatype) && ?mediatype != mediaType:Periodical))
         }
         having(sum(?items) > 0)
       }
