@@ -3,6 +3,7 @@ package no.deichman.services.entity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
+import no.deichman.services.entity.kohaadapter.PublicationHasItemsException;
 import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.restutils.MimeType;
@@ -254,7 +255,15 @@ public final class EntityResource extends ResourceBase {
         }
         if (xuri.getTypeAsEntityType() == PUBLICATION) {
             String recordId = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordId"))).next().asLiteral().getString();
-            getKohaAdapter().deleteBiblio(recordId);
+            try {
+                getKohaAdapter().deleteBiblio(recordId);
+            } catch (Exception e) {
+                // We abort if biblio has items, but we want to continue deleting publication
+                // on other errors, for example if the biblio does not exist at all.
+                if (e instanceof PublicationHasItemsException) {
+                    throw e;
+                }
+            }
             getEntityService().delete(model);
             Set<String> connectedResources = getEntityService().retrieveResourcesConnectedTo(xuri);
             getEntityService().deleteIncomingRelations(xuri);
