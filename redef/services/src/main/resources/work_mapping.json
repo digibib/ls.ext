@@ -384,6 +384,9 @@
       },
       "totalNumItems": {
         "type": "short"
+      },
+      "created": {
+        "type": "date"
       }
     }
   }

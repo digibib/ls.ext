@@ -90,17 +90,10 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       if (doc['_type'] === 'publication' && doc.mt === 'Bok') {
                         score = _score * langscore;
                       }
-
-                      def age_gain=params.ageGain;
-                      def age_scale=params.ageScale;
-                      if (doc.created.value != null) {
-                        score *= (1 + (age_gain*age_scale)/(age_scale+(params.now-doc.created.date.getMillis())/86400000));
-                      }
                       
                       return score;`.replace('\n', ''),
             lang: 'painless',
             params: {
-              now: Date.now(),
               ageGain: Number(options.ageGain),
               ageScale: Number(options.ageScale)
             }
@@ -126,9 +119,17 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       if (doc.totalNumItems.value != null) {
                         score *= (1 + (items_gain*(Math.min(doc.totalNumItems.value, params.itemsCountLimit)/items_scale)));
                       }
+
+                      def age_gain=params.ageGain;
+                      def age_scale=params.ageScale;
+                      if (doc.created.value != null) {
+                        score *= (1 + (age_gain*age_scale)/(age_scale+(params.now-doc.created.date.getMillis())/86400000));
+                      }
+
                       return score;`.replace('\n', ''),
             lang: 'painless',
             params: {
+              now: Date.now(),
               itemsGain: Number(options.itemsGain),
               itemsScale: Number(options.itemsScale),
               itemsCountLimit: Number(options.itemsCountLimit)
