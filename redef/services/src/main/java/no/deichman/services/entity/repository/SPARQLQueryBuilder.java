@@ -354,6 +354,19 @@ public final class SPARQLQueryBuilder {
         return QueryFactory.create(q);
     }
 
+    public String deleteBiblioReferences(String recordId) {
+        String q = format(""
+                        + "PREFIX : <%s>\n"
+                        + "DELETE { ?pub :recordId \"%s\" ; :hasHomeBranch ?homeBranch ; :hasAvailableBranch ?availBranch ; :hasNumItems ?numItems }\n"
+                        + "WHERE  { ?pub :recordId \"%s\" .\n"
+                        + "         OPTIONAL { ?pub :hasNumItems ?numItems }\n"
+                        + "         OPTIONAL { ?pub :hasHomeBranch ?homeBranch }\n"
+                        + "         OPTIONAL { ?pub :hasAvailableBranch ?availBranch }\n"
+                        + "}\n",
+                BaseURI.ontology(), recordId, recordId);
+        return q;
+    }
+
     public String updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems) {
         List<String> inserts = newArrayList();
         if (homeBranches != null && !homeBranches.equals("")) {
