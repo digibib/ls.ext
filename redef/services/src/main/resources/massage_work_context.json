@@ -95,6 +95,7 @@
     "mainEntryName": "deichman:mainEntryName",
     "nationality": "deichman:nationality",
     "litform": "deichman:literaryForm",
-    "fictionNonfiction": "deichman:fictionNonfiction"
+    "fictionNonfiction": "deichman:fictionNonfiction",
+    "created": "deichman:created"
   }
 }
