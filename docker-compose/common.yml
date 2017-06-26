@@ -196,7 +196,7 @@ services:
 
   fuseki:
     container_name: fuseki
-    image: "digibib/fuseki2"
+    image: "digibib/fuseki2:ae95941f9bb3799b253f40e5be278866c4113fa7"
     networks:
       - backend
     volumes:
