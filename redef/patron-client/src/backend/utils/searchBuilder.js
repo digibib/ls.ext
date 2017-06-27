@@ -92,11 +92,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                       }
                       
                       return score;`.replace('\n', ''),
-            lang: 'painless',
-            params: {
-              ageGain: Number(options.ageGain),
-              ageScale: Number(options.ageScale)
-            }
+            lang: 'painless'
           }
         }
       }
@@ -122,17 +118,19 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
 
                       def age_gain=params.ageGain;
                       def age_scale=params.ageScale;
-                      if (doc.created.value != null) {
-                        score *= (1 + (age_gain*age_scale)/(age_scale+(params.now-doc.created.date.getMillis())/86400000));
+                      if (!doc['created'].empty) {
+                        score *= (1 + (age_gain*age_scale)/(age_scale+(params.now - doc.created.date.getMillis())/86400000));
                       }
 
                       return score;`.replace('\n', ''),
             lang: 'painless',
             params: {
-              now: Date.now(),
+              now: Date.now() - options.timeTravel ? Number(options.timeTravel) * 86400000 : 0,
               itemsGain: Number(options.itemsGain),
               itemsScale: Number(options.itemsScale),
-              itemsCountLimit: Number(options.itemsCountLimit)
+              itemsCountLimit: Number(options.itemsCountLimit),
+              ageGain: Number(options.ageGain),
+              ageScale: Number(options.ageScale)
             }
           }
         }
