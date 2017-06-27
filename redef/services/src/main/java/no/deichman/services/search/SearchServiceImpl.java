@@ -19,6 +19,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -62,6 +63,7 @@ import static com.google.common.collect.Sets.newConcurrentHashSet;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static java.util.Arrays.stream;
@@ -95,10 +97,11 @@ public class SearchServiceImpl implements SearchService {
     private static final int COREPOOLSIZE = 16;
     private static final int MAXPOOLSIZE = 32;
     private static final ForkJoinPool THREADPOOL = new ForkJoinPool(NUMTHREADS);
+    private static final LinkedBlockingQueue INDEX_QUEUE = new LinkedBlockingQueue();
     private static final ExecutorService EXECUTOR_SERVICE = new ThreadPoolExecutor(
             COREPOOLSIZE, MAXPOOLSIZE,
             SIXTY, TimeUnit.SECONDS,
-            new LinkedBlockingQueue());
+            INDEX_QUEUE);
 
     private static Map<EntityType, NameIndexer> nameIndexers = new HashMap<EntityType, NameIndexer>();
 
@@ -125,7 +128,7 @@ public class SearchServiceImpl implements SearchService {
                 LOG.info("Indexing " + xuri.getUri());
 
                 // Index the requested resource
-                doIndex(xuri);
+                doIndex("search", xuri);
 
                 // Fetch a list of all connected resources which needs to be indexed as well
                 Set<String> connectedResources = entityService.retrieveResourcesConnectedTo(xuri);
@@ -143,9 +146,17 @@ public class SearchServiceImpl implements SearchService {
     }
 
     public final void indexOnly(XURI xuri) throws Exception {
+        indexOnly("search", xuri);
+    }
+
+    public final void indexWorkAndPublications(XURI xuri) throws Exception {
+        indexWorkAndPublications("search", xuri);
+    }
+
+    private void indexOnly(String idx, XURI xuri) throws Exception {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
-             LOG.info("Indexing " + xuri.getUri());
-                doIndex(xuri);
+            LOG.info("Indexing " + xuri.getUri());
+            doIndex(idx, xuri);
         } else {
             LOG.info("Skipping already indexed uri: " + xuri.getUri());
             skipped++;
@@ -155,12 +166,12 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    public final void indexWorkAndPublications(XURI xuri) throws Exception {
+    private void indexWorkAndPublications(String idx, XURI xuri) throws Exception {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
             LOG.info("Indexing " + xuri.getUri() + " with publications");
             Model indexModel = entityService.retrieveWorkWithLinkedResources(xuri);
             Map<String, Object> indexDocument = new ModelToIndexMapper(EntityType.WORK.getPath()).createIndexObject(indexModel, xuri);
-            indexDocument(xuri, GSON.toJson(indexDocument));
+            indexDocument(idx, xuri, GSON.toJson(indexDocument));
             cacheNameIndex(xuri, indexDocument);
             ResIterator subjectIterator = indexModel.listSubjects();
             while (subjectIterator.hasNext()) {
@@ -172,7 +183,7 @@ public class SearchServiceImpl implements SearchService {
                     XURI pubUri = new XURI(subj.toString());
                     LOG.info("Indexing " + pubUri.getUri());
                     Map<String, Object> doc = new ModelToIndexMapper("publication").createIndexObject(indexModel, pubUri);
-                    indexDocument(pubUri, GSON.toJson(doc));
+                    indexDocument(idx, pubUri, GSON.toJson(doc));
                     cacheNameIndex(pubUri, doc);
                 }
             }
@@ -219,8 +230,15 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response clearIndex() {
+        clearIndex("a");
+        clearIndex("b");
+        toggleActiveIndex("a");
+        return Response.status(Response.Status.OK).build();
+    }
+
+    private void clearIndex(String idx) {
         try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = getIndexUriBuilder().setPath("/search").build();
+            URI uri = getIndexUriBuilder().setPath("/"+idx).build();
 
             try (CloseableHttpResponse getExistingIndex = httpclient.execute(new HttpGet(uri))) {
                 if (getExistingIndex.getStatusLine().getStatusCode() == HTTP_OK) {
@@ -242,28 +260,27 @@ public class SearchServiceImpl implements SearchService {
                     throw new ServerErrorException("Failed to create elasticsearch index", HTTP_INTERNAL_ERROR);
                 }
             }
-            putIndexMapping(httpclient, "work");
-            putIndexMapping(httpclient, "person");
-            putIndexMapping(httpclient, "serial");
-            putIndexMapping(httpclient, "corporation");
-            putIndexMapping(httpclient, "place");
-            putIndexMapping(httpclient, "subject");
-            putIndexMapping(httpclient, "genre");
-            putIndexMapping(httpclient, "publication");
-            putIndexMapping(httpclient, "instrument");
-            putIndexMapping(httpclient, "compositionType");
-            putIndexMapping(httpclient, "event");
-            putIndexMapping(httpclient, "workSeries");
+            putIndexMapping(httpclient, idx,"work");
+            putIndexMapping(httpclient, idx,"person");
+            putIndexMapping(httpclient, idx,"serial");
+            putIndexMapping(httpclient, idx,"corporation");
+            putIndexMapping(httpclient, idx,"place");
+            putIndexMapping(httpclient, idx,"subject");
+            putIndexMapping(httpclient, idx,"genre");
+            putIndexMapping(httpclient, idx,"publication");
+            putIndexMapping(httpclient, idx,"instrument");
+            putIndexMapping(httpclient, idx,"compositionType");
+            putIndexMapping(httpclient, idx,"event");
+            putIndexMapping(httpclient, idx,"workSeries");
 
-            return Response.status(Response.Status.OK).build();
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
     }
 
-    private void putIndexMapping(CloseableHttpClient httpclient, String type) throws URISyntaxException, IOException {
-        URI workIndexUri = getIndexUriBuilder().setPath("/search/_mapping/" + type).build();
+    private void putIndexMapping(CloseableHttpClient httpclient, String idx, String type) throws URISyntaxException, IOException {
+        URI workIndexUri = getIndexUriBuilder().setPath("/" + idx + "/_mapping/" + type).build();
         HttpPut putWorkMappingRequest = new HttpPut(workIndexUri);
         putWorkMappingRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/" + type + "_mapping.json"), APPLICATION_JSON));
         try (CloseableHttpResponse create = httpclient.execute(putWorkMappingRequest)) {
@@ -272,6 +289,71 @@ public class SearchServiceImpl implements SearchService {
             if (statusCode != HTTP_OK) {
                 throw new ServerErrorException("Failed to create elasticsearch mapping for " + type, HTTP_INTERNAL_ERROR);
             }
+        }
+    }
+
+    private void toggleActiveIndex(String idx) {
+        removeAliases();
+        addAlias(idx, "search");
+    }
+
+    private void addAlias(String from, String to) {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = getIndexUriBuilder().setPath("/" + from + "/_alias/" + to).build();
+            try (CloseableHttpResponse res = httpclient.execute(new HttpPut(uri))) {
+                int statusCode = res.getStatusLine().getStatusCode();
+                LOG.info("Create index aliase returned status " + statusCode);
+                if (statusCode != HTTP_OK){
+                    throw new ServerErrorException("Failed to create index alias", HTTP_INTERNAL_ERROR);
+                }
+            }
+
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void removeAliases() {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = getIndexUriBuilder().setPath("/_all/_aliases/search").build();
+            try (CloseableHttpResponse res = httpclient.execute(new HttpDelete(uri))) {
+                int statusCode = res.getStatusLine().getStatusCode();
+                LOG.info("Delete index aliases returned status " + statusCode);
+                if (statusCode != HTTP_OK && statusCode != HTTP_NOT_FOUND){
+                    throw new ServerErrorException("Failed to delete index aliases", HTTP_INTERNAL_ERROR);
+                }
+            }
+
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private String getActiveIndex() {
+        // Check if index A is aliased to 'search'
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = getIndexUriBuilder().setPath("/a/_alias/search").build();
+            try (CloseableHttpResponse res = httpclient.execute(new HttpHead(uri))) {
+                int statusCode = res.getStatusLine().getStatusCode();
+                if (statusCode == HTTP_OK){
+                    return "a";
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+        // Index A is not aliased to 'search', so it must be index B
+        return "b";
+    }
+
+    private String getInactiveIndex() {
+        if (getActiveIndex() == "a") {
+            return "b";
+        } else {
+            return "a";
         }
     }
 
@@ -533,6 +615,9 @@ public class SearchServiceImpl implements SearchService {
          THREADPOOL.execute(new Runnable() {
             @Override
             public void run() {
+                String newIndex = getInactiveIndex();
+                clearIndex(newIndex);
+
                 for (EntityType type : EntityType.values()) {
                     if (type.equals(EntityType.PUBLICATION)) {
                         // Publications are indexed when the work they belong to are indexed
@@ -542,15 +627,29 @@ public class SearchServiceImpl implements SearchService {
                         try {
                             XURI resource = new XURI(uri);
                             if (resource.getTypeAsEntityType().equals(EntityType.WORK)) {
-                                indexWorkAndPublications(resource);
+                                indexWorkAndPublications(newIndex, resource);
                             } else {
-                                indexOnly(resource);
+                                indexOnly(newIndex, resource);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }));
                 }
+
+                while (true) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch(InterruptedException e) {
+                        // no-op
+                    }
+                    if (INDEX_QUEUE.size() == 0) {
+                        break;
+                    }
+                }
+
+                LOG.info("Done indexing all resources - setting active index: " + newIndex);
+                toggleActiveIndex(newIndex);
             }
         });
     }
@@ -586,7 +685,7 @@ public class SearchServiceImpl implements SearchService {
                 uris.forEach(uri -> EXECUTOR_SERVICE.execute(() -> {
                     try {
                         LOG.info("Indexing <" + uri + "> triggered by changes in <" + triggeredBy.getUri() + ">");
-                        doIndex(new XURI(uri));
+                        doIndex("search", new XURI(uri));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -641,7 +740,7 @@ public class SearchServiceImpl implements SearchService {
         return getIndexUriBuilder().setPath("/search/" + type.getPath()+"/_search");
     }
 
-    private void doIndex(XURI xuri) throws Exception {
+    private void doIndex(String idx, XURI xuri) throws Exception {
 
         Model indexModel;
         switch (xuri.getTypeAsEntityType()) {
@@ -676,7 +775,7 @@ public class SearchServiceImpl implements SearchService {
         Monitor mon = MonitorFactory.start("createIndexDocument");
         Map<String, Object> indexDocument = new ModelToIndexMapper(xuri.getTypeAsEntityType().getPath()).createIndexObject(indexModel, xuri);
         mon.stop();
-        indexDocument(xuri, GSON.toJson(indexDocument));
+        indexDocument(idx, xuri, GSON.toJson(indexDocument));
         cacheNameIndex(xuri, indexDocument);
     }
 
@@ -695,7 +794,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
 
-    private void indexDocument(XURI xuri, String document) {
+    private void indexDocument(String idx, XURI xuri, String document) {
         long now = currentTimeMillis();
         if (indexedUris != null && lastIndexedTime > 0 && now - lastIndexedTime > SILENT_PERIOD) {
             indexUrisOnlyOnce(false);
@@ -703,7 +802,7 @@ public class SearchServiceImpl implements SearchService {
         if (indexedUris == null || !indexedUris.contains(xuri.getUri())) {
             try (CloseableHttpClient httpclient = createDefault()) {
                 HttpPut httpPut = new HttpPut(getIndexUriBuilder()
-                        .setPath(format("/search/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8))) // TODO drop urlencoded ID, and define _id in mapping from field uri
+                        .setPath(format("/" +idx + "/%s/%s", xuri.getType(), encode(xuri.getUri(), UTF_8))) // TODO drop urlencoded ID, and define _id in mapping from field uri
                         .build());
                 httpPut.setEntity(new StringEntity(document, Charset.forName(UTF_8)));
                 httpPut.setHeader(CONTENT_TYPE, APPLICATION_JSON.withCharset(UTF_8).toString());
