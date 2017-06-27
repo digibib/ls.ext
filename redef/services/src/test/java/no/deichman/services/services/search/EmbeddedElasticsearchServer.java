@@ -46,7 +46,7 @@ public final class EmbeddedElasticsearchServer {
                 .withType("instrument", getSystemResourceAsStream("instrument_mapping.json"))
                 .withType("compositionType", getSystemResourceAsStream("compositionType_mapping.json"))
                 .withType("event", getSystemResourceAsStream("event_mapping.json"))
-                .build());
+                .build();
 
         embeddedElastic = EmbeddedElastic.builder()
                 .withElasticVersion("5.2.1")
