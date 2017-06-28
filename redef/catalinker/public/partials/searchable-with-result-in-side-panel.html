@@ -86,7 +86,7 @@
                     {{/if}}
                     on-escape="clearSupportPanels"
                     value="{{./current.displayValue}}"/>
-                    {{#if ./previewProperties && primarySuggestionAccepted === true}}
+                    {{#if ./previewProperties.length > 0 && primarySuggestionAccepted === true}}
                         <span class="preview-properties">
                             {{#each ./previewProperties}}
                                 {{#if ./fragment}}

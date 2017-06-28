@@ -509,7 +509,7 @@ module.exports = (app) => {
                   checkExistingResource: {
                     url: 'services/publication',
                     queryParameter: 'hasEan',
-                    showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear' ],
+                    showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.',, 'publicationYear' ],
                     type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
@@ -863,7 +863,7 @@ module.exports = (app) => {
                       rdfProperty: 'serial',
                       id: 'serialInput',
                       indexTypes: 'serial',
-                      nameProperties: [ 'mainTitle', 'subtitle' ],
+                      nameProperties: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', '(@publisherName)' ],
                       type: 'searchable-with-result-in-side-panel',
                       widgetOptions: {
                         showSelectItem: false, // show and enable select work radio button
@@ -1032,7 +1032,7 @@ module.exports = (app) => {
                       required: true,
                       indexTypes: [ 'workUnstructured' ],
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
+                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
                       widgetOptions: {
                         enableEditResource: {
                           formRefs: [
@@ -1083,7 +1083,7 @@ module.exports = (app) => {
                       required: true,
                       indexTypes: [ 'workseries' ],
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ 'mainTitle', 'subtitle', 'partNumber' ],
+                      nameProperties: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
                       widgetOptions: {
                         enableEditResource: {
                           formRefs: [
@@ -1236,13 +1236,15 @@ module.exports = (app) => {
                   separateLines: true
                 },
                 authority: true, // this indicates it is an authorized entity
-                nameProperties: [ 'prefLabel', 'mainTitle:', 'subtitle', 'partNumber.', 'partTitle',
+                nameProperties: [ {
+                  work: '@mainEntryName.' // @ means use property extraction helper function
+                }, 'prefLabel', 'mainTitle:', 'subtitle', 'partNumber.', 'partTitle',
                   {
                     person: 'name,',
                     corporation: 'name.'
                   },
                   {
-                    person: '#ordinal,',
+                    person: '#ordinal,', // # means remove previous member's trailing comma
                     event: '(ordinal).'
                   },
                   'subdivision',
@@ -1442,7 +1444,7 @@ module.exports = (app) => {
                       id: 'publicationPartWorkInput',
                       rdfProperty: 'publicationOf',
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
+                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
                       indexTypes: [ 'workUnstructured' ], // this is the name of the elasticsearch index type from which authorities are searched within
                       widgetOptions: {
                         enableEditResource: {

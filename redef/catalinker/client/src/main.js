@@ -3,24 +3,25 @@
   'use strict'
 
   if (typeof module === 'object' && module.exports) {
-    var Ractive = require('ractive')
+    const Ractive = require('ractive')
     Ractive.events = require('ractive-events-keys')
-    var axios = require('axios')
-    var Graph = require('./graph')
-    var Ontology = require('./ontology')
-    var StringUtil = require('./stringutil')
-    var _ = require('underscore')
-    var $ = require('jquery')
-    var ldGraph = require('ld-graph')
-    var URI = require('urijs')
-    var esquery = require('./esquery')
+    const axios = require('axios')
+    const Graph = require('./graph')
+    const Ontology = require('./ontology')
+    const StringUtil = require('./stringutil')
+    const NestedPropertyHelper = require('./nestedPropertyHelper')
+    const _ = require('underscore')
+    const $ = require('jquery')
+    const ldGraph = require('ld-graph')
+    const URI = require('urijs')
+    const esquery = require('./esquery')
     require('isbn2')
-    module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, window.ISBN, esquery)
+    module.exports = factory(Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, window.ISBN, esquery, NestedPropertyHelper)
   } else {
     // Browser globals (root is window)
-    root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI, root.ISBN, root.esquery)
+    root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI, root.ISBN, root.esquery, root.nestedPropertyHelper)
   }
-}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, ISBN, esquery) {
+}(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, ISBN, esquery, nestedPropertyHelper) {
     'use strict'
 
     Ractive.DEBUG = false
@@ -54,16 +55,11 @@
 
       return clone
     }
+    const utils = require('./utils')
 
-    // need to leave already parsed JSON from axios
-    var ensureJSON = function (res) {
-      return (typeof res === 'string') ? JSON.parse(res) : res
-    }
-
-    var proxyToServices = function (url) {
-      var r = new RegExp('http://[^/]+/')
-      return url.replace(url.match(r), '/services/')
-    }
+    const ensureJSON = utils.ensureJSON
+    const proxyToServices = utils.proxyToServices
+    const isPromise = utils.isPromise
 
     function unPrefix (prefixed) {
       return _.last(prefixed.split(':'))
@@ -635,11 +631,15 @@
 
     function valuePropertyFromNode (node) {
       return function (propNameCore) {
-        let propVal = (node.getAll(propNameCore)[ 0 ] || { value: undefined }).value
-        if (propVal === undefined) {
-          propVal = (node.outAll(propNameCore)[ 0 ] || { 'id': undefined }).id
+        if (propNameCore.indexOf('@') === 0) {
+          return nestedPropertyHelper[ propNameCore.substring(1) ](node)
+        } else {
+          let propVal = (node.getAll(propNameCore)[ 0 ] || { value: undefined }).value
+          if (propVal === undefined) {
+            propVal = (node.outAll(propNameCore)[ 0 ] || { 'id': undefined }).id
+          }
+          return propVal
         }
-        return propVal
       }
     }
 
@@ -653,53 +653,68 @@
 
       function fromRoot (root) {
         function getValues (onlyFirstField) {
-          return _.pluck(getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root)) || [], 'val')
-            .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-            .join(' ').replace(/[,\\.]$/, '').replace(/- /, '-').replace(/-(?=[^0-9])/, '- ')
-        }
-
-        var values = getValues(options.onlyFirstField)
-        var typeMap = ractive.get('applicationData.config.typeMap')
-        var selectedIndexType
-        _.each(input.indexTypes, function (indexType) {
-          if (root.isA(typeMap[ indexType ])) {
-            selectedIndexType = indexType
-          }
-        })
-        if ((options.onlyFirstField || (input.nameProperties || []).length === 1) && /^\[.*\]$/.test(values)) {
-          input[ valuesField ][ index ].bracketed = true
-          values = values.replace('[', '').replace(']', '')
-        }
-
-        var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-        if (options.onlyValueSuggestions) {
-          if (multiple) {
-            input[ valuesField ][ index ].suggested = {
-              source: options.source,
-              selectedIndexType: selectedIndexType
+          return new Promise((resolve, reject) => {
+            const displayProperties = getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
+            const handleDisplayProperties = displayProperties => {
+              resolve(_.pluck(displayProperties || [], 'val')
+                .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
+                .join(' ')
+                .replace(/[,\\.]$/, '')
+                .replace(/- /, '-')
+                .replace(/-(?=[^0-9])/, '- ')
+                .replace(/: /g, ' : '))
             }
-            input[ valuesField ][ index ].current.displayValue = values
+            if (isPromise(displayProperties)) {
+              return displayProperties.then(handleDisplayProperties)
+            } else {
+              return handleDisplayProperties(displayProperties)
+            }
+          })
+        }
+
+        getValues(options.onlyFirstField).then((values) => {
+          var typeMap = ractive.get('applicationData.config.typeMap')
+          var selectedIndexType
+          _.each(input.indexTypes, function (indexType) {
+            if (root.isA(typeMap[ indexType ])) {
+              selectedIndexType = indexType
+            }
+          })
+          if ((options.onlyFirstField || (input.nameProperties || []).length === 1) && /^\[.*\]$/.test(values)) {
+            input[ valuesField ][ index ].bracketed = true
+            values = values.replace('[', '').replace(']', '')
+          }
+
+          var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
+          if (options.onlyValueSuggestions) {
+            if (multiple) {
+              input[ valuesField ][ index ].suggested = {
+                source: options.source,
+                selectedIndexType: selectedIndexType
+              }
+              input[ valuesField ][ index ].current.displayValue = values
+            } else {
+              input.suggestedValues = input.suggestedValues || []
+              input.suggestedValues[ index ] = {
+                value: values,
+                displayValue: getValues(),
+                source: options.source,
+                selectedIndexType: selectedIndexType
+              }
+            }
           } else {
-            input.suggestedValues = input.suggestedValues || []
-            input.suggestedValues[ index ] = {
-              value: values,
-              displayValue: getValues(),
-              source: options.source,
-              selectedIndexType: selectedIndexType
+            input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
+            input[ valuesField ][ index ].current = input[ valuesField ][ index ].current || {}
+            input[ valuesField ][ index ].current.displayValue = values
+            if (options.source) {
+              input[ valuesField ][ index ].current.accepted = {
+                source: options.source,
+                selectedIndexType: selectedIndexType
+              }
             }
           }
-        } else {
-          input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
-          input[ valuesField ][ index ].current = input[ valuesField ][ index ].current || {}
-          input[ valuesField ][ index ].current.displayValue = values
-          if (options.source) {
-            input[ valuesField ][ index ].current.accepted = {
-              source: options.source,
-              selectedIndexType: selectedIndexType
-            }
-          }
-        }
-        ractive.update(`${input.keypath}.${valuesField}.${index}`)
+          ractive.update(`${input.keypath}.${valuesField}.${index}`)
+        })
       }
 
       if (isBlankNodeUri(uri)) {
@@ -968,7 +983,7 @@
         var checkEndPunctuation = false
         _.each([ '.', ',', '/', ':' ], function (seperator) {
           if (propName.lastIndexOf(seperator) >= propName.length - 2) {
-            ornamented += seperator
+            ornamented += (seperator === ':' ? ': ' : seperator)
             checkEndPunctuation = true
           }
           if (propName.lastIndexOf(seperator) === 0) {
@@ -989,7 +1004,9 @@
         return ornamented
       }
 
-      var displayProperties
+      let promises = []
+      let realPromisesWereMade = false
+      let values = []
       _.each(properties, function (propSpec) {
         var propName
         if (typeof propSpec === 'object') {
@@ -999,32 +1016,48 @@
         }
         if (propName) {
           var propNameCore = propName.split(/\.fragment|[#\.,:\(\)-]/).join('')
-          var propVal = valueFromPropertyFunc(propNameCore)
-
-          if (propVal && propVal !== '') {
-            displayProperties = displayProperties || []
-            let property = { prop: propNameCore }
-            var ornamented
-            if (propName.indexOf('.fragment') !== -1) {
-              ornamented = ornament(fragmentPartOf(propVal), propName)
+          const propValue = valueFromPropertyFunc(propNameCore)
+          const handleValue = propVal => {
+            const displayProperties = []
+            if (propVal && propVal !== '') {
+              let property = { prop: propNameCore }
+              let ornamented
+              if (propName.indexOf('.fragment') !== -1) {
+                ornamented = ornament(fragmentPartOf(propVal), propName)
+              } else {
+                ornamented = ornament(propVal, propName)
+              }
+              if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
+                let previousPropVal = _.last(displayProperties).val
+                _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
+              }
+              property.val = ornamented
+              displayProperties.push(property)
             } else {
-              ornamented = ornament(propVal, propName)
+              let endParensVal = checkEndParens(propName, '')
+              if (endParensVal !== '') {
+                displayProperties.push({ val: endParensVal })
+              }
             }
-            if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
-              let previousPropVal = _.last(displayProperties).val
-              _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
-            }
-            property.val = ornamented
-            displayProperties.push(property)
+            return displayProperties
+          }
+          if (isPromise(propValue)) {
+            realPromisesWereMade = true
+            promises.push(propValue.then(handleValue))
           } else {
-            let endParensVal = checkEndParens(propName, '')
-            if (endParensVal !== '') {
-              displayProperties.push({ val: endParensVal })
-            }
+            const value = handleValue(propValue)
+            promises.push(Promise.resolve(value))
+            values.push(value)
           }
         }
       })
-      return displayProperties
+      if (realPromisesWereMade) {
+        return Promise.all(promises).then(promiseValues => {
+          return _.flatten(promiseValues)
+        })
+      } else {
+        return _.flatten(values)
+      }
     }
 
     function indexTypeFromNode (node) {
@@ -2850,7 +2883,7 @@
                               setTimeout(tryScroll)
                             </script>`
 
-                    return $(`
+                  return $(`
                         <div ${data.highestScorer ? 'id=highest-score-item' : ''} ${data.exactMatch ? 'class=exactMatch' : ''} >
                           ${data.text}
                           ${data.last ? scrollScript : ''}
@@ -3447,7 +3480,7 @@
               resourceIsLoaded: function (type) {
                 return typeof ractive.get(`targetUri.${type}`) !== 'undefined'
               },
-              getSearchResultItemLabel: function (item, itemLabelProperties) {
+              getSearchResultItemLabel: function (item, itemLabelProperties, keypath) {
                 let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
                   return item[ prop ]
                 })
