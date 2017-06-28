@@ -391,7 +391,7 @@ module.exports = (app) => {
                 rdfProperty: 'issn'
               },
               {
-                label: 'publisherLabel',
+                label: 'publishedByLabel',
                 rdfProperty: 'publishedBy',
                 type: 'searchable-authority-dropdown',
                 indexTypes: 'corporation',
