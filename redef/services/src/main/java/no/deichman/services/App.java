@@ -13,10 +13,6 @@ import no.deichman.services.ontology.TranslationResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
 import no.deichman.services.version.VersionResource;
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.elasticsearch5.aggregation.BulkRequestAggregationStrategy;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.system.JenaSystem;
 import org.eclipse.jetty.server.Handler;
@@ -30,7 +26,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.elasticsearch.action.bulk.BulkResponse;
 import org.glassfish.jersey.server.ServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
@@ -51,7 +45,6 @@ public final class App {
     private static final int JAMON_WEBAPP_PORT = 8006;
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
     private static final int SERVICES_PORT_NO = 8005;
-    public static final int COMPLETION_INTERVAL = 2_000;
     private final int port;
     private Server jettyServer;
     private String kohaPort;
@@ -59,7 +52,6 @@ public final class App {
     private int jamonAppPort;
     private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://elasticsearch:9200");
     private String z3950Endpoint;
-    private static CamelContext camelContext;
 
     public App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort, String z3950Endpoint) {
         this.port = port;
@@ -67,11 +59,6 @@ public final class App {
         this.inMemoryRDFRepository = inMemoryRDFRepository;
         this.jamonAppPort = jamonAppPort;
         this.z3950Endpoint = z3950Endpoint;
-        camelContext = new DefaultCamelContext();
-    }
-
-    public static CamelContext getCamelContext() {
-        return camelContext;
     }
 
     public static void main(String[] args) {
@@ -97,36 +84,6 @@ public final class App {
     public void startAsync() throws Exception {
         setUpMainWebApp();
         setUpJamonWebApp();
-        setUpCamelRouting();
-    }
-
-    private void setUpCamelRouting() throws Exception {
-        RouteBuilder builder = new RouteBuilder() {
-            public void configure() {
-                final String elasticSearchHost = System.getProperty("ELASTICSEARCH_HOST", "elasticsearch");
-                final String elasticsearchTcpPort = System.getProperty("ELASTICSEARCH_TCP_PORT", "9300");
-                from("direct:bulkIndex")
-                        .aggregate(constant(true), new BulkRequestAggregationStrategy())
-                        .completionSize(Integer.parseInt(System.getProperty("ELASTICSEARCH_BULK_SIZE", "1000")))     // set bulk size here
-                        .forceCompletionOnStop()
-                        .completionTimeout(Integer.parseInt(System.getProperty("ELASTICSEARCH_BULK_TIMEOUT", "1000")))  // set completion timeout here
-                        .to(format("elasticsearch5://elasticsearch?indexName=search&ip=%s&port=%s", elasticSearchHost, elasticsearchTcpPort))
-                        .process(exchange -> {
-                            final BulkResponse bulkResponse = (BulkResponse) exchange.getIn().getBody();
-                            final int bulkLength = bulkResponse.getItems().length;
-                            if (bulkLength > 1) {
-                                LOG.info(format("Indexed bulk with %d items in %s", bulkLength, bulkResponse.getTook().toString()));
-                            }
-                        });
-                from("direct:index")
-                        .to(format("elasticsearch5://elasticsearch?indexName=search&ip=%s&port=%s", elasticSearchHost, elasticsearchTcpPort))
-                        .process(exchange -> {
-                            LOG.info("Indexed " + exchange.getIn().getBody().toString());
-                        });
-            }
-        };
-        camelContext.addRoutes(builder);
-        camelContext.start();
     }
 
     private void setUpMainWebApp() throws Exception {

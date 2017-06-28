@@ -42,12 +42,12 @@ export function processSearchResponse (response, locationQuery) {
       result.subject = element._source.subject
       result.genre = element._source.genre
       result.formats = []
+      result.contributors = element._source.contributors || []
+      result.contributors = result.contributors.filter(contributor => contributor.mainEntry)
+      result.contributors.forEach(contributor => {
+        contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
+      })
       if (element.inner_hits.publications.hits.hits.length > 0) {
-        result.contributors = element._source.contributors || []
-        result.contributors = result.contributors.filter(contributor => contributor.mainEntry)
-        result.contributors.forEach(contributor => {
-          contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
-        })
         result.formats = [].concat.apply([], element.inner_hits.publications.hits.hits.map(pub => { return pub._source.formats || [] }))
       }
 

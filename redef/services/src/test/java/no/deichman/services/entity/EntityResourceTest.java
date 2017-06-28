@@ -544,8 +544,8 @@ public class EntityResourceTest {
         assertEquals(NO_CONTENT.getStatusCode(), result.getStatus());
         assertTrue(repo.getModel().isIsomorphicWith(testModel));
         Mockito.verify(mockSearchService).delete(new XURI(replacee));
-        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w1"), false);
-        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w3"), false);
+        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w1"));
+        Mockito.verify(mockSearchService).index(new XURI("http://data.deichman.no/work/w3"));
     }
 
     @Test(expected = NotFoundException.class)

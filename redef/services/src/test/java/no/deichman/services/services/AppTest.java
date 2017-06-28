@@ -84,7 +84,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 public class AppTest {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
     private static final int ONE_SECOND = 1000;
@@ -100,8 +99,7 @@ public class AppTest {
     private static final String EMPTY_STRING = "";
     private static final String ADD = "ADD";
     private static final String DEL = "DEL";
-    private static final String ISBN = "978-82-525-8570-4";
-    private static final String LOOPBACK = "127.0.0.1";
+    public static final String ISBN = "978-82-525-8570-4";
     private static String appURI;
     private static App app;
 
@@ -126,11 +124,8 @@ public class AppTest {
         System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
 
         setupElasticSearch();
-        System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + EmbeddedElasticsearchServer.getHttpPort());
-        System.setProperty("ELASTICSEARCH_TCP_PORT", EmbeddedElasticsearchServer.getTcpPort().toString());
-        System.setProperty("ELASTICSEARCH_HOST", LOOPBACK);
-        System.setProperty("ELASTICSEARCH_BULK_SIZE", "2");
-        System.setProperty("ELASTICSEARCH_BULK_TIMEOUT", "100");
+        System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + embeddedElasticsearchServer.getPort());
+
         appURI = LOCALHOST + ":" + appPort + "/";
         app = new App(appPort, kohaAPIEndpoint, USE_IN_MEMORY_REPO, jamonAppPort, z3950Endpoint);
         app.startAsync();
@@ -1272,10 +1267,10 @@ public class AppTest {
                 buildLDPatch(
                         buildPatchStatement("add", workUri, BaseURI.ontology("partTitle"), "æøå"))).asString();
 
-        assertTrue(resourceIsIndexedWithinNumSeconds(workUri, 40));
-        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 20));
-        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 20));
-        assertTrue(resourceIsIndexedWithinNumSeconds(persUri1, 20));
+        assertTrue(resourceIsIndexedWithinNumSeconds(workUri, 2));
+        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri1, 2));
+        assertTrue(resourceIsIndexedWithinNumSeconds(pubUri2, 2));
+        assertTrue(resourceIsIndexedWithinNumSeconds(persUri1, 2));
 
         // 4) Patch person, and verify that persn, work and publications gets reindexed within few seconds
         buildPatchRequest(
@@ -1298,7 +1293,7 @@ public class AppTest {
                         buildPatchStatement("add", subjUri, BaseURI.ontology("prefLabel"), "Drontheim"))).asString();
 
         //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 20));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2));
 
         // 6) Patch work series, and verify that works get reindexed
         buildPatchRequest(
@@ -1307,7 +1302,7 @@ public class AppTest {
                         buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
                         buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
 
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 30));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 2));
     }
 
     @Test
@@ -1547,8 +1542,10 @@ public class AppTest {
         expandedRecord.setItems(items);
         expandedRecord.setLoanRecord(record);
 
-        String loansJson = gson.toJson(loans, new TypeToken<List<RawLoan>>(){}.getType());
-        String holdsJson = gson.toJson(holds, new TypeToken<List<RawHold>>(){}.getType());
+        String loansJson = gson.toJson(loans, new TypeToken<List<RawLoan>>() {
+        }.getType());
+        String holdsJson = gson.toJson(holds, new TypeToken<List<RawHold>>() {
+        }.getType());
         String expandedHolds = gson.toJson(expandedRecord, ExpandedRecord.class);
         kohaAPIMock.addLoginExpectation();
         kohaAPIMock.addGetCheckoutsExpectation(borrowerId, loansJson);

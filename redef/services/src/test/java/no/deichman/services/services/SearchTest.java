@@ -33,7 +33,7 @@ public class SearchTest {
     @BeforeClass
     public static void setup() throws Exception {
         setupElasticSearch();
-        elasticSearchUrl =  "http://localhost:" + EmbeddedElasticsearchServer.getHttpPort();
+        elasticSearchUrl =  "http://localhost:" + EmbeddedElasticsearchServer.getPort();
         populateSearchIndex();
     }
 

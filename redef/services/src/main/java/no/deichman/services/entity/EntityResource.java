@@ -268,12 +268,12 @@ public final class EntityResource extends ResourceBase {
             Set<String> connectedResources = getEntityService().retrieveResourcesConnectedTo(xuri);
             getEntityService().deleteIncomingRelations(xuri);
             getSearchService().delete(xuri);
-            getSearchService().enqueueIndexing(connectedResources, xuri, false);
+            getSearchService().enqueueIndexing(connectedResources, xuri);
             Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("publicationOf")));
             while (sourceIterator.hasNext()) {
                 String publicationOf = sourceIterator.next().asResource().getURI();
                 try {
-                    getSearchService().index(new XURI(publicationOf), false);
+                    getSearchService().index(new XURI(publicationOf));
                 } catch (RuntimeException e) {
                     // Will fail if massaged model is empty, but that shouldn't cause this delete request to fail
                 }
@@ -283,7 +283,7 @@ public final class EntityResource extends ResourceBase {
             Set<String> connectedResources = getEntityService().retrieveResourcesConnectedTo(xuri);
             getEntityService().deleteIncomingRelations(xuri);
             getSearchService().delete(xuri);
-            getSearchService().enqueueIndexing(connectedResources, xuri, false);
+            getSearchService().enqueueIndexing(connectedResources, xuri);
         }
 
         getSearchService().delete(xuri);
@@ -320,7 +320,7 @@ public final class EntityResource extends ResourceBase {
             }
         }
         try {
-            getSearchService().index(xuri, false);
+            getSearchService().index(xuri);
         } catch (RuntimeException e) {
             log.error("Failed to index uri " + xuri.getUri(), e);
         }
@@ -351,7 +351,7 @@ public final class EntityResource extends ResourceBase {
     @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
     public Response index(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
-        getSearchService().index(xuri, false);
+        getSearchService().index(xuri);
         return accepted().build();
     }
 
@@ -477,7 +477,7 @@ public final class EntityResource extends ResourceBase {
                 getSearchService().removeFromLocalIndex(outgoing);
                 final SearchService searchService = getSearchService();
                 searchService.delete(outgoing);
-                newHashSet(relatedUris).forEach(xuri -> searchService.index(xuri, false));
+                newHashSet(relatedUris).forEach(searchService::index);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new InternalServerErrorException(e);
