@@ -30,7 +30,7 @@ function advancedQuery (queryWant, boolOpeator) {
                 script_score: {
                   script: {
                     inline: 'deleted',
-                    lang: 'painless',
+                    lang: 'painless'
                   }
                 }
               }
