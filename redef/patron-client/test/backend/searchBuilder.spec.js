@@ -31,10 +31,6 @@ function advancedQuery (queryWant, boolOpeator) {
                   script: {
                     inline: 'deleted',
                     lang: 'painless',
-                    params: {
-                      ageGain: 0.6,
-                      ageScale: 100
-                    }
                   }
                 }
               }
@@ -48,7 +44,7 @@ function advancedQuery (queryWant, boolOpeator) {
         },
         {
           bool: {
-            must: [
+            should: [
               {
                 has_child: {
                   inner_hits: {
@@ -84,6 +80,8 @@ function advancedQuery (queryWant, boolOpeator) {
                       lang: 'painless',
                       params: {
                         now: 'deleted',
+                        ageGain: 0.6,
+                        ageScale: 100,
                         itemsCountLimit: 200,
                         itemsGain: 0.3,
                         itemsScale: 100
@@ -131,8 +129,8 @@ describe('searchBuilder', () => {
       const urlQueryString = 'query=some+more+strings'
       const q = buildQuery(urlQueryString).query
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.inline = 'deleted'
-      q.dis_max.queries[ 1 ].bool.must[ 1 ].function_score.script_score.script.params.now = 'deleted'
-      q.dis_max.queries[ 1 ].bool.must[ 1 ].function_score.script_score.script.inline = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.params.now = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.inline = 'deleted'
       expect(q).toEqual(
         {
           dis_max: {
@@ -547,11 +545,7 @@ describe('searchBuilder', () => {
                       script_score: {
                         script: {
                           inline: 'deleted',
-                          lang: 'painless',
-                          params: {
-                            ageGain: 0.6,
-                            ageScale: 100
-                          }
+                          lang: 'painless'
                         }
                       }
                     }
@@ -565,7 +559,7 @@ describe('searchBuilder', () => {
               },
               {
                 bool: {
-                  must: [
+                  should: [
                     {
                       has_child: {
                         query: {
@@ -935,6 +929,8 @@ describe('searchBuilder', () => {
                             lang: 'painless',
                             params: {
                               now: 'deleted',
+                              ageGain: 0.6,
+                              ageScale: 100,
                               itemsCountLimit: 200,
                               itemsGain: 0.3,
                               itemsScale: 100
@@ -967,8 +963,8 @@ describe('searchBuilder', () => {
       const queryWant = 'author: Hamsun'
       const q = buildQuery(urlQueryString).query
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.inline = 'deleted'
-      q.dis_max.queries[ 1 ].bool.must[ 1 ].function_score.script_score.script.params.now = 'deleted'
-      q.dis_max.queries[ 1 ].bool.must[ 1 ].function_score.script_score.script.inline = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.params.now = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.inline = 'deleted'
       expect(q).toEqual(
         advancedQuery(queryWant, 'and'))
     })
@@ -977,10 +973,10 @@ describe('searchBuilder', () => {
       const urlQueryString = 'query=82-05-30003-8'
       const q = buildQuery(urlQueryString).query
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.inline = 'deleted'
-      q.dis_max.queries[ 1 ].bool.must[ 1 ].function_score.script_score.script.params.now = 'deleted'
-      q.dis_max.queries[ 1 ].bool.must[ 1 ].function_score.script_score.script.inline = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.params.now = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.inline = 'deleted'
       const expected = advancedQuery('isbn:82-05-30003-8', 'and')
-      expected.dis_max.queries[ 1 ].bool.must[ 1 ].function_score.query = {}
+      expected.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.query = {}
 
       expect(q).toEqual(
         expected
