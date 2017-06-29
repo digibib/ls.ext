@@ -25,6 +25,10 @@ language:swe	a	lvont:Language ;
 language:afr	a	lvont:Language ;
 	rdfs:label	"Afrikaans"@no ;
 	rdfs:label	"Afrikaans"@en .
+	
+language:sia	a	lvont:Language ;
+	rdfs:label	"Akkalasamisk"@no ;
+	rdfs:label	"Akkala Sami"@en .
 
 language:alb	a	lvont:Language ;
 	rdfs:label	"Albansk"@no ;
@@ -217,10 +221,18 @@ language:kan	a	lvont:Language ;
 language:cat	a	lvont:Language ;
 	rdfs:label	"Katalansk"@no ;
 	rdfs:label	"Catalan"@en .
+	
+language:sjk	a	lvont:Language ;
+	rdfs:label	"Kemisamisk"@no ;
+	rdfs:label	"Kemi Sami"@en .
 
 language:cam	a	lvont:Language ;
 	rdfs:label	"Khmer"@no ;
 	rdfs:label	"Khmer"@en .
+	
+language:sjd	a	lvont:Language ;
+	rdfs:label	"Kildinsamisk"@no ;
+	rdfs:label	"Kildin Sami"@en .
 
 language:chi	a	lvont:Language ;
 	rdfs:label	"Kinesisk"@no ;
@@ -477,6 +489,10 @@ language:sgn	a	lvont:Language ;
 language:tel	a	lvont:Language ;
 	rdfs:label	"Telugu"@no ;
 	rdfs:label	"Telugu"@en .
+	
+language:sjt	a	lvont:Language ;
+	rdfs:label	"Tersamisk"@no ;
+	rdfs:label	"Ter Sami"@en .
 
 language:tet	a	lvont:Language ;
 	rdfs:label	"Tetum"@no ;
