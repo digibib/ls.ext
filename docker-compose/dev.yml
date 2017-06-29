@@ -127,22 +127,3 @@ services:
   koha_indexer:
     ports:
       - "8009:8009"
-
-  search_metrics:
-     container_name: search_metrics
-     image: "digibib/search_metrics:1fce7db007a93bf442a2a81de7299817f6396856"
-     networks:
-       - backend
-     extra_hosts:
-       - "metrics:10.172.2.97"
-       - "sok.deichman.no:10.172.2.6"
-     ports:
-       - "9997:9999"
-     environment:
-       METRICS_INTERVAL: 600
-       GRAPH_HOST: metrics
-       METRICS_HOST: "kristoffer"
-       METRICS_DOCKER: "search_metrics"
-       METRICS_ENV: "dev"
-     volumes:
-       - "overview_data:/app/html"
