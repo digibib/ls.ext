@@ -655,11 +655,11 @@
         function getValues (onlyFirstField) {
           return new Promise((resolve, reject) => {
             const displayProperties = getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
-            const handleDisplayProperties = displayProperties => {
+            const handleDisplayProperties = () => {
               resolve(_.pluck(displayProperties || [], 'val')
                 .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
                 .join(' ')
-                .replace(/[,\\.]$/, '')
+                .replace(/[,\.:]\s*$/g, '')
                 .replace(/- /, '-')
                 .replace(/-(?=[^0-9])/, '- ')
                 .replace(/: /g, ' : '))
