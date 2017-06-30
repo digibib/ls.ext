@@ -1302,7 +1302,7 @@ public class AppTest {
                         buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
                         buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
 
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 4));
     }
 
     @Test
