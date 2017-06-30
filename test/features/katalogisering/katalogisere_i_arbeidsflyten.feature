@@ -70,7 +70,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så sjekker jeg at den verdien jeg la inn for "Aktør" inneholder personnavnet
     Og jeg fjerner valgt verdi for "Aktør"
     Og jeg fjerner valgt verdi for "Rolle"
-    Så velger jeg aktørtype "Organisasjon"
+    Så velger jeg aktørtype "Organisasjon" for "Aktør"
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen
@@ -89,7 +89,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Legg til en del til"-knappen
     Og jeg fjerner valgt verdi for "Aktør"
     Og jeg fjerner valgt verdi for "Rolle"
-    Så velger jeg aktørtype "Person"
+    Så velger jeg aktørtype "Person" for "Aktør"
     Og jeg legger inn et nytt navn
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
@@ -241,7 +241,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så ombestemmer jeg meg
     Så fjerner jeg hovedinnførselen
     Og jeg venter litt
-    Så velger jeg aktørtype "Organisasjon"
+    Så velger jeg aktørtype "Organisasjon" for "Aktør"
     Og jeg venter litt
     Og jeg venter litt
     Og jeg legger inn et nytt navn
@@ -261,7 +261,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så fjerner jeg valgt verdi i feltet "Utgitt av"
-    Så velger jeg aktørtype "Person"
+    Så velger jeg aktørtype "Person" for "Utgitt av"
     Og at jeg skriver inn tilfeldig person i feltet "Utgitt av" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
@@ -284,7 +284,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Opprett"-knappen
     Og jeg venter litt
     Så trykker jeg på "Neste steg: Emneopplysninger"-knappen
-    Så velger jeg emnetype "Generelt"
+    Så velger jeg emnetype "Generelt" for "Emne"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt generelt emne"-knappen
@@ -292,14 +292,14 @@ Egenskap: Katalogisere i arbeidsflyt
     Så tar jeg en liten pause
     Og jeg trykker på "Legg til et emne til"-knappen
     Så tar jeg en liten pause
-    Så velger jeg emnetype "Person"
+    Så velger jeg emnetype "Person" for "Emne"
     Og at jeg skriver inn tilfeldig person i feltet "Emne" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny person"-knappen
     Så trykker jeg på "Opprett"-knappen
     Så tar jeg en liten pause
     Og jeg trykker på "Legg til et emne til"-knappen
-    Så velger jeg emnetype "Verk"
+    Så velger jeg emnetype "Verk" for "Emne"
     Og at jeg skriver inn tilfeldig emne i feltet "Emne" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
@@ -475,7 +475,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv verk"
-    Og at jeg skriver inn tilfeldig verksnavn i feltet "Verk" og trykker enter
+    Og at jeg skriver inn tilfeldig verksnavn i feltet "Relasjon til annet verk eller verksserie" og trykker enter
     Så får jeg ingen treff
     Så trykker jeg på "Opprett nytt verk"-knappen
     Så trykker jeg på "Opprett"-knappen
@@ -486,7 +486,10 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg trykker på "Legg til"-knappen
     Og jeg venter litt
     Så frisker jeg opp nettleseren
-    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Verk" stemmer med verksnavnet
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksnavnet
 
   Scenario: katalogisere verk med nasjonalitet
     Gitt jeg kan dikte opp en verkstittel

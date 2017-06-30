@@ -1030,15 +1030,20 @@ module.exports = (app) => {
                       rdfProperty: 'work',
                       id: 'relatedToWorkInput',
                       required: true,
-                      indexTypes: [ 'workUnstructured' ],
+                      indexTypes: [ 'workUnstructured', 'workseries' ],
                       type: 'searchable-with-result-in-side-panel',
                       nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
+                      preselectFirstIndexType: true,
                       widgetOptions: {
                         enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-work-form',
                               targetType: 'workUnstructured'
+                            },
+                            {
+                              formId: 'create-workseries-form',
+                              targetType: 'workseries'
                             }
                           ],
                           useAfterCreation: false

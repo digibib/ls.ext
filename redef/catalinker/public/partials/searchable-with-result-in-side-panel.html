@@ -6,7 +6,7 @@
         <div class="index-type-select pure-u-1-2">
             {{#if ./current.accepted.selectedIndexType}}
             <select tabindex="{{tabSelected ? '0' : '-1'}}" value="{{./current.accepted.selectedIndexType}}">
-                {{#with widgetOptions.selectIndexTypeLegend}}
+                {{#with ../../widgetOptions.selectIndexTypeLegend}}
                     <option disabled selected>{{>.}}</option>
                 {{/with}}
                 {{#each ../../indexTypes}}
@@ -15,7 +15,7 @@
             </select>
             {{else}}
             <select tabindex="{{tabSelected ? '0' : '-1'}}" value="{{../../selectedIndexType}}">
-                {{#with widgetOptions.selectIndexTypeLegend}}
+                {{#with ../../widgetOptions.selectIndexTypeLegend}}
                     <option disabled selected>{{>.}}</option>
                 {{/with}}
                 {{#each ../../indexTypes}}

@@ -73,7 +73,7 @@
     issueNumberLabel: 'Nummer i serien',
     publishedByLabel: 'Utgiver',
     workTabLabel: 'Beskriv verk',
-    workSeriesWorkLabel: 'Verk',
+    workSeriesWorkLabel: 'Relatert til',
     relationTypeLabel: 'Type relasjon',
     publicationYearLabel: 'År',
     originCountryLabel: 'Opprinnelsesland',
@@ -97,7 +97,7 @@
                           `,
     additionalEntriesTabLabel: 'Biinnførsler',
     additionalEntryLabel: 'Biinnførsel',
-    workRelationLabel: 'Relasjon til annet verk',
+    workRelationLabel: 'Relasjon til annet verk eller verksserie',
 
     // index type labels
     personLabel: 'Person',

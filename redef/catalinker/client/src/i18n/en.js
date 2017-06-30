@@ -72,7 +72,7 @@
     issueNumberLabel: 'Number in series',
     subSeriesTitle: 'Sub-series title',
     workTabLabel: 'Describe work',
-    workSeriesWorkLabel: 'Work',
+    workSeriesWorkLabel: 'Related to',
     relationTypeLabel: 'Relation type',
     publishedByLabel: 'Publisher',
     publicationYearLabel: 'Year',
@@ -95,7 +95,7 @@
                             `,
     additionalEntriesTabLabel: 'Additional entries',
     additionalEntryLabel: 'Additional entry',
-    workRelationLabel: 'Relation to other work',
+    workRelationLabel: 'Relation to other work or work series',
 
     // index type labels
     personLabel: 'Person',

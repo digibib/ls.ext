@@ -522,8 +522,8 @@ When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
   button.click
 end
 
-When(/^velger jeg (emnetype|aktørtype) "([^"]*)"$/) do |dummy, subject_type|
-  @browser.element(:class => 'index-type-select').select().select(subject_type)
+When(/^velger jeg (emnetype|aktørtype) "([^"]*)" for "([^"]*)"$/) do |dummy, subject_type, label|
+  @browser.selects(:xpath => "//span[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(label)}']//*[#{contains_class('index-type-select')}]/select").find(&:visible?).select(subject_type)
 end
 
 When(/^at jeg vil opprette (en|et) (.*)$/) do |article, concept|
@@ -753,7 +753,7 @@ end
 
 
 When(/^sjekker jeg at den tilfeldige verdien jeg la inn for feltet "([^"]*)" stemmer med (.*)/) do |parameter_label, concept|
-  value_span = @browser.spans(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}'][#{contains_class 'value'}]/span").find(&:visible?)
+  value_span = @browser.spans(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//span[#{contains_class 'value'}]/span").find(&:visible?)
   value_span.text.should eq @context["random_#{@site.translate(concept)}".to_sym]
 end
 
