@@ -54,6 +54,7 @@ public final class EmbeddedElasticsearchServer {
                 .withSetting("http.enabled", "true")
                 .withSetting("path.home", ".")
                 .withSetting("path.data", dataDirectory)
+                .withSetting("cluster.name", "test")
                 .withStartTimeout(2, TimeUnit.MINUTES)
                 .withEsJavaOpts("-Xms512m -Xmx512m")
                 .withPlugin(getenv().getOrDefault("ES_ICU_PLUGIN_URL", "analysis-icu"))
