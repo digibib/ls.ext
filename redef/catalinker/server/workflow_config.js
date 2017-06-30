@@ -470,7 +470,7 @@ module.exports = (app) => {
                   parameterName: 'isbn',
                   automationId: 'searchValueSuggestions',
                   showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-                  sources: [ 'bibbi' ],
+                  sources: [ 'bibbi', 'dfb' ],
                   preferredSource: {
                     id: 'bibbi',
                     name: 'Biblioteksentralen'

@@ -18,7 +18,7 @@ public class TargetTest {
     public void test_expected_values_are_returned() {
 
         for (Target value : Target.values()) {
-            assertTrue(value.getDatabaseName().matches("(bibbi|loc)"));
+            assertTrue(value.getDatabaseName().matches("(bibbi|loc|dfb)"));
         }
     }
 }
