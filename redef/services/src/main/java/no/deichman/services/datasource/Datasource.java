@@ -26,7 +26,7 @@ public class Datasource {
     public Datasource() {}
 
     @GET
-    @Path("{datasource: (bibbi|loc)}/{idType: (isbn|ean)}/{id: ([0-9Xx]+)}")
+    @Path("{datasource: (bibbi|loc|dfb)}/{idType: (isbn|ean)}/{id: ([0-9Xx]+)}")
     @Produces(LD_JSON + MimeType.UTF_8)
     public final Response getByISBN(@PathParam("datasource") String datasource, @PathParam("idType") String idType, @PathParam("id") String id) throws Exception {
         Mapper mapper = new Mapper();

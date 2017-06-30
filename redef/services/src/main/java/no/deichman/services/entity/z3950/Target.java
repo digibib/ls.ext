@@ -5,7 +5,8 @@ package no.deichman.services.entity.z3950;
  */
 public enum Target {
     BIBBI("bibbi", "normarc"),
-    LOC("loc", "marc21");
+    LOC("loc", "marc21"),
+    DFB("dfb", "normarc");
 
     private String databaseName;
     private String dataFormat;
