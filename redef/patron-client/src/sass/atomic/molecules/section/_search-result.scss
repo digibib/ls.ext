@@ -2,7 +2,7 @@
   @include span(12);
   @include container;
   @include border-bottom;
-  margin-bottom: rhythm(2);
+  margin-bottom: 0.75em;
 
   .book-cover {
     @include span(3);
@@ -57,9 +57,13 @@
   font-size: rhythm(2);
   margin-right: auto;
   float: none;
+  margin-top: 1em;
 
   .entry-content-icon {
     @include span(12);
+    .entry-content-icon-single {
+      opacity: 0.5;
+    }
   }
 
   h1 {
@@ -71,6 +75,7 @@
 
     .title-text {
       @include span(11);
+      color: #333;
     }
 
     .caret {
@@ -155,7 +160,7 @@
   @include span(12);
   text-align: center;
   /* margin-bottom: rhythm(1); */
-  margin-bottom: 0.5em;
+  margin-bottom: 0.2em;
 
   &:hover {
     cursor: pointer;

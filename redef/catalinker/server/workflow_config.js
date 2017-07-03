@@ -194,7 +194,7 @@ module.exports = (app) => {
                 rdfProperty: 'place',
                 type: 'searchable-authority-dropdown',
                 indexTypes: 'place',
-                indexDocumentFields: [ 'prefLabel' ]
+                indexDocumentFields: [ 'displayLine1' ]
               },
               {
                 rdfProperty: 'specification',
@@ -338,7 +338,7 @@ module.exports = (app) => {
                 rdfProperty: 'place',
                 type: 'searchable-authority-dropdown',
                 indexTypes: 'place',
-                indexDocumentFields: [ 'prefLabel' ]
+                indexDocumentFields: [ 'displayLine1' ]
               },
               {
                 rdfProperty: 'ordinal',
@@ -396,7 +396,7 @@ module.exports = (app) => {
                 type: 'searchable-authority-dropdown',
                 indexTypes: 'corporation',
                 nameProperties: [ 'name', 'subdivision', 'placePrefLabel', '(specification)' ],
-                indexDocumentFields: [ 'name', 'subdivision', 'placePrefLabel', 'specification' ]
+                indexDocumentFields: [ 'displayLine1' ]
               },
               createdTimestamp(),
               modifiedTimestamp()
