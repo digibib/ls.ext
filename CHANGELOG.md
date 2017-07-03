@@ -12,9 +12,26 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.47
+
+KOHA: de59526ee8b3c6adc9a709d40d69abc9767f8dfe
+GITREF: TODO
+
+- Koha
+  - Upgraded koha to 17.05.01 (bugfix release)
+  - SIP2: allow checkouts when not checked in
+  - [18651] fix: Move of checkouts is still not correctly handled
+  - [18835] fix: SQL syntax error in overdue_notices.pl
+- Patron-client
+  - DEICH-847 Fix search hits when page number active
+  - DEICH-851 Search hits UI improvements
+- Annet
+  - DEICH-730 Delete publications with no items attached
+  - DEICH-841 tool to run periodic jobs on containers
+
 ## 2017.46
 
-KOHA: 5714b4763cfa6b5639bccbe5a7cad062f3edf5e7
+KOHA: 58b4c284ff53e3b4507f37e52668a8a09e46aa9a
 GITREF: 47d79983fe7b153b198c8abf2ea383440d911c02
 
 - Koha
@@ -36,7 +53,7 @@ GITREF: 47d79983fe7b153b198c8abf2ea383440d911c02
 ## 2017.45
 
 KOHA: 40aecbcf9e419f8feb8fc8071b648ebf957af7bb
-GITREF: TODO
+GITREF: 3dfb19f4ba8cfb9b87d817f3b2f903842e522217
 
 - Koha:
   - DEICH-795: Plugin for closing branches and handling item and reservations
