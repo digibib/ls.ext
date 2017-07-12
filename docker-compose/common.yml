@@ -65,9 +65,13 @@ services:
       APACHE_REMOTE_INTERNAL_PROXY: "${APACHE_REMOTE_INTERNAL_PROXY:-172.19.0.0/16}"
       PLACK_MAX_REQUESTS: "${PLACK_MAX_REQUESTS:-100}"
       PLACK_WORKERS: "${PLACK_WORKERS:-4}"
+      ILLENABLE: "${ILLENABLE:-0}"
+      ILLUSER: "${ILLUSER:-illuser}"
+      ILLNAME: "${ILLNAME:-Interlibrary loan}"
     ports:
       - "6001:6001"
       - "8081:8081"
+      - "6009:3000"
     volumes:
       - "koha_index:/var/lib/koha/${KOHA_INSTANCE:-name}"
       - "koha_state:/var/lib/state"
