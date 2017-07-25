@@ -541,7 +541,7 @@ describe('searchBuilder', () => {
                             {
                               match: {
                                 _all: {
-                                  default_operator: 'and',
+                                  operator: 'and',
                                   query: 'some more strings'
                                 }
                               }
@@ -578,7 +578,7 @@ describe('searchBuilder', () => {
                               {
                                 match: {
                                   _all: {
-                                    default_operator: 'and',
+                                    operator: 'and',
                                     query: 'some more strings'
                                   }
                                 }
@@ -951,7 +951,7 @@ describe('searchBuilder', () => {
                     {
                       match: {
                         _all: {
-                          default_operator: 'and',
+                          operator: 'and',
                           query: 'some more strings'
                         }
                       }

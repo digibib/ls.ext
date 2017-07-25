@@ -327,7 +327,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
       match: {
         _all: {
           query: options.query,
-          default_operator: 'and'
+          operator: 'and'
         }
       }
     } ]
