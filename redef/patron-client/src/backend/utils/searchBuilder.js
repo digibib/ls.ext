@@ -321,7 +321,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
     return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else if (advTriggers.test(escapedQueryString)) {
-    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
+    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), [initAdvancedQuery(escapedQueryString)].concat(workFilters), publicationFilters, excludeUnavailable, page, pageSize, options)
   } else {
     const _allFilter = options.noAllFilter ? [] : [ {
       match: {
