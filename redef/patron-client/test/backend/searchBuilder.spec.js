@@ -91,7 +91,14 @@ function advancedQuery (queryWant, boolOpeator) {
                 }
               }
             ],
-            filter: []
+            filter: [
+              {
+                query_string: {
+                  query: queryWant,
+                  default_operator: 'and'
+                }
+              }
+            ]
           }
         }
       ]
@@ -534,7 +541,7 @@ describe('searchBuilder', () => {
                             {
                               match: {
                                 _all: {
-                                  operator: 'and',
+                                  default_operator: 'and',
                                   query: 'some more strings'
                                 }
                               }
@@ -571,7 +578,7 @@ describe('searchBuilder', () => {
                               {
                                 match: {
                                   _all: {
-                                    operator: 'and',
+                                    default_operator: 'and',
                                     query: 'some more strings'
                                   }
                                 }
@@ -944,7 +951,7 @@ describe('searchBuilder', () => {
                     {
                       match: {
                         _all: {
-                          operator: 'and',
+                          default_operator: 'and',
                           query: 'some more strings'
                         }
                       }

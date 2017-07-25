@@ -319,7 +319,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   const advTriggers = new RegExp('[:+/\\-()*^]|AND|OR|NOT|TO')
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
-    return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
+    return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), [initAdvancedQuery(`isbn:${escapedQueryString}`)].concat(workFilters), publicationFilters, excludeUnavailable, page, pageSize, options)
   } else if (advTriggers.test(escapedQueryString)) {
     return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), [initAdvancedQuery(escapedQueryString)].concat(workFilters), publicationFilters, excludeUnavailable, page, pageSize, options)
   } else {
@@ -327,7 +327,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
       match: {
         _all: {
           query: options.query,
-          operator: 'and'
+          default_operator: 'and'
         }
       }
     } ]
