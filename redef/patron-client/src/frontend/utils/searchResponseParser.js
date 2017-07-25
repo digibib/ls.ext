@@ -12,7 +12,7 @@ function titleTermsFromQuery (query) {
   // strip out all ccl prefixes like "ht:", "mainTitle:" etc. If prefix is not among ccl prefixes for title related fields,
   // remove following term as well. Strip leading and trailing double quotes
   // e.g.: hovedtittel:"På gjengrodde stier" forfatter:"Hamsun, Knut" => ["På gjengrodde stier"]
-  const keywords = query.toLocaleLowerCase().match(/\w+|:|"(?:\\"|[^"])+"/g) || []
+  const keywords = query.toLocaleLowerCase().match(/\p{L}+|:|"(?:\\"|[^"])+"/g) || []
   for (let i = 0; i < keywords.length; i++) {
     if (keywords[ i ] === ':') {
       keywords[ i ] = undefined
