@@ -96,7 +96,7 @@ export function processSearchResponse (response, locationQuery) {
               return pub._source.image && [].concat(...[ pub._source.languages || [] ]).includes(prefLang)
             })
             if (pubWithImage) {
-              result.image = pubWithImage.image
+              result.image = pubWithImage._source.image
               break
             }
           }
