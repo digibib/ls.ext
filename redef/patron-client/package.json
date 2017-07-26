@@ -27,9 +27,8 @@
     "lint": "eslint *.js test src",
     "dockerdev": "cross-env POLL=true npm start",
     "dist": "npm run clean && npm run lint && npm test && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
-    "productionbuild": "npm run clean && compass compile && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
-    "compass-watch": "compass watch",
-    "start": "npm run clean && npm run compass-watch & compass compile -q --force && webpack && node --debug src/backend/server.js",
+    "productionbuild": "npm run clean && cross-env NODE_ENV=production webpack --config webpack.config.production.js",
+    "start": "npm run clean && webpack && node --debug src/backend/server.js",
     "production": "cross-env NODE_ENV=production node src/backend/server.js",
     "test": "cross-env NODE_ENV=test mocha -R min --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:debug": "cross-env NODE_ENV=test mocha debug --recursive --compilers js:babel-core/register --require ./test/setup.js",
@@ -39,8 +38,7 @@
     "verify": "npm run lint && npm test",
     "es5": "rimraf es5-compiled && cross-env BABEL_ENV=test babel test --watch --out-dir es5-compiled/test --source-maps inline & cross-env BABEL_ENV=test babel src --watch --out-dir es5-compiled/src --source-maps inline",
     "dev": "KOHA_API_USER=api KOHA_API_PASS=secret PORT=8001 npm start",
-    "devnode": "KOHA_API_USER=api KOHA_API_PASS=secret PORT=8001 node --debug src/backend/server.js",
-    "killcompass": "ps aux | grep compass | awk '{print $2}' | xargs kill -9"
+    "devnode": "KOHA_API_USER=api KOHA_API_PASS=secret PORT=8001 node --debug src/backend/server.js"
   },
   "devDependencies": {
     "babel-eslint": "7.1.1",
@@ -75,6 +73,7 @@
     "localstorage-polyfill": "1.0.1",
     "mocha": "3.2.0",
     "node-browser-environment": "2.0.8",
+    "node-sass": "4.5.3",
     "raw-loader": "0.5.1",
     "react": "15.4.1",
     "react-addons-create-fragment": "15.4.1",

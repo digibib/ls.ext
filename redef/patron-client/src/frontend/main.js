@@ -1,4 +1,4 @@
-import '../../public/dist/styles/main.css'
+import '../sass/main.scss'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import configureStore from './store'
