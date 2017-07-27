@@ -36,7 +36,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
       // aggregations on work properties
       workAggregations[ fieldName ] = {
         terms: {
-          field: fieldName,
+          field: field,
           size: 1000
         }
       }
@@ -44,7 +44,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
       // aggregations on publication properties
       publicationAggregations[ fieldName ] = {
         terms: {
-          field: fieldName,
+          field: field,
           size: 1000
         },
         aggregations: {
