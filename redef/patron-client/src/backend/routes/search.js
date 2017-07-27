@@ -6,6 +6,13 @@ module.exports = (app) => {
     const queryString = request.originalUrl.substr(request.originalUrl.indexOf('?') + 1)
 
     function mergeAggregation (aggregationResult, searchResult) {
+
+      // merge work level aggregations (audiences & fictionNonficiton) into facets
+      aggregationResult.aggregations.facets.audiences = aggregationResult.aggregations.audiences
+      aggregationResult.aggregations.facets.fictionNonfiction = aggregationResult.aggregations.fictionNonfiction
+      searchResult.aggregations.facets.audiences = searchResult.aggregations.audiences
+      searchResult.aggregations.facets.fictionNonfiction = searchResult.aggregations.fictionNonfiction
+
       Object.keys(aggregationResult.aggregations.facets).forEach(facet => {
         const searchResultFacet = searchResult.aggregations.facets[ facet ]
         if (typeof searchResultFacet === 'object') {

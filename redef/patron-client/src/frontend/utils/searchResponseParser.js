@@ -147,7 +147,7 @@ export function processAggregationsToFilters (response, locationQuery, filteredL
         if (active && filterId.startsWith('language')) {
           filteredLanguages.push(bucket.key)
         }
-        filters.push({ id: filterId, bucket: bucket.key, count: bucket.parents.value, active: active })
+        filters.push({ id: filterId, bucket: bucket.key, count: bucket.parents ? bucket.parents.value: bucket.doc_count, active: active })
       })
     }
   })
