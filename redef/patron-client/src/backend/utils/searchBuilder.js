@@ -17,8 +17,8 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
     childBoost: 1
   }, options)
 
-  const publication_aggregations = {}
-  const work_aggregations = {}
+  const publicationAggregations = {}
+  const workAggregations = {}
   Object.keys(Constants.filterableFields).forEach(key => {
     let field
     let fieldName
@@ -32,9 +32,9 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
       field = Constants.filterableFields[ key ].name
       fieldName = field
     }
-    if (fieldName === "fictionNonfiction" || fieldName === "audiences") {
+    if (fieldName === 'fictionNonfiction' || fieldName === 'audiences') {
       // aggregations on work properties
-      work_aggregations[ fieldName ] = {
+      workAggregations[ fieldName ] = {
         terms: {
           field: fieldName,
           size: 1000
@@ -42,7 +42,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
       }
     } else {
       // aggregations on publication properties
-      publication_aggregations[ fieldName ] = {
+      publicationAggregations[ fieldName ] = {
         terms: {
           field: fieldName,
           size: 1000
@@ -166,9 +166,8 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
         children: {
           type: 'publication'
         },
-        aggs: publication_aggregations
-      }}, work_aggregations),
-    },
+        aggs: publicationAggregations
+      }}, workAggregations),
     query: {
       dis_max: {
         queries: [

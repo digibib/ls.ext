@@ -6,7 +6,6 @@ module.exports = (app) => {
     const queryString = request.originalUrl.substr(request.originalUrl.indexOf('?') + 1)
 
     function mergeAggregation (aggregationResult, searchResult) {
-
       // merge work level aggregations (audiences & fictionNonficiton) into facets
       aggregationResult.aggregations.facets.audiences = aggregationResult.aggregations.audiences
       aggregationResult.aggregations.facets.fictionNonfiction = aggregationResult.aggregations.fictionNonfiction
