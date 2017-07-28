@@ -54,7 +54,14 @@ function advancedQuery (queryWant, boolOpeator) {
                   },
                   query: {
                     bool: {
-                      filter: [],
+                      filter: [
+                        {
+                          query_string: {
+                            query: queryWant,
+                            default_operator: boolOpeator
+                          }
+                        }
+                      ],
                       should: {
                         match_all: {}
                       }
@@ -96,6 +103,25 @@ function advancedQuery (queryWant, boolOpeator) {
                 query_string: {
                   query: queryWant,
                   default_operator: 'and'
+                }
+              },
+              {
+                bool: {
+                  must: [
+                    {
+                      has_child: {
+                        query: {
+                          bool: {
+                            filter: [],
+                            should: {
+                              match_all: {}
+                            }
+                          }
+                        },
+                        type: 'publication'
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -537,16 +563,7 @@ describe('searchBuilder', () => {
                               }
                             }
                           ],
-                          filter: [
-                            {
-                              match: {
-                                _all: {
-                                  operator: 'and',
-                                  query: 'some more strings'
-                                }
-                              }
-                            }
-                          ]
+                          filter: []
                         }
                       },
                       script_score: {
@@ -955,6 +972,25 @@ describe('searchBuilder', () => {
                           query: 'some more strings'
                         }
                       }
+                    },
+                    {
+                      bool: {
+                        must: [
+                          {
+                            has_child: {
+                              query: {
+                                bool: {
+                                  filter: [],
+                                  should: {
+                                    match_all: {}
+                                  }
+                                }
+                              },
+                              type: 'publication'
+                            }
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
@@ -995,8 +1031,8 @@ describe('searchBuilder', () => {
     const urlQueryString = 'excludeUnavailable&filter=audience_juvenile&filter=branch_flam&filter=branch_fmaj&filter=branch_ftor&query=fiske&yearFrom=1980&yearTo=1990'
     it('should include activated filters in aggregations, excluding filters of the given aggregation', () => {
       const q = buildQuery(urlQueryString)
-      expect(q.query.dis_max.queries[ 0 ].has_child.query.function_score.query.bool.filter[ 1 ].terms.branches).toEqual([ 'flam', 'fmaj', 'ftor' ])
-      expect(q.query.dis_max.queries[ 0 ].has_child.query.function_score.query.bool.filter[ 2 ].range.publicationYear).toEqual({
+      expect(q.query.dis_max.queries[ 0 ].has_child.query.function_score.query.bool.filter[ 0 ].terms.availableBranches).toEqual([ 'flam', 'fmaj', 'ftor' ])
+      expect(q.query.dis_max.queries[ 0 ].has_child.query.function_score.query.bool.filter[ 1 ].range.publicationYear).toEqual({
         gte: 1980,
         lte: 1990
       })

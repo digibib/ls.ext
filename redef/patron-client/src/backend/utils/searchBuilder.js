@@ -6,7 +6,7 @@ function escape (query) {
   return query.replace(/\//g, '\\/')
 }
 
-function initCommonQuery (workQuery, publicationQuery, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 20, options) {
+function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 20, options) {
   options = Object.assign({
     explain: false,
     ageGain: 0.6,
@@ -195,7 +195,7 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                         should: {
                           match_all: {}
                         },
-                        filter: publicationFilters
+                        filter: allFilters.concat(publicationFilters)
                       }
                     },
                     score_mode: 'max',
@@ -209,7 +209,35 @@ function initCommonQuery (workQuery, publicationQuery, workFilters, publicationF
                 },
                 workBoost(workQuery)
               ],
-              filter: workFilters
+              filter: allFilters.concat(workFilters).concat([
+                {
+                  bool: {
+                    must: [
+                      {
+                        has_child: {
+                          type: 'publication',
+                          query: {
+                            bool: {
+                              should: {
+                                match_all: {}
+                              },
+                              filter: publicationFilters.concat(
+                                excludeUnavailable
+                                ? [{
+                                  exists: {
+                                    field: 'availableBranches'
+                                  }
+                                }]
+                                : []
+                                )
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ])
             }
           }
         ]
@@ -330,9 +358,9 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   const advTriggers = new RegExp('[:+/\\-()*^]|AND|OR|NOT|TO')
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
-    return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), [initAdvancedQuery(`isbn:${escapedQueryString}`)].concat(workFilters), publicationFilters, excludeUnavailable, page, pageSize, options)
+    return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), [initAdvancedQuery(`isbn:${escapedQueryString}`)], workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else if (advTriggers.test(escapedQueryString)) {
-    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), [initAdvancedQuery(escapedQueryString)].concat(workFilters), publicationFilters, excludeUnavailable, page, pageSize, options)
+    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), [initAdvancedQuery(escapedQueryString)], workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
   } else {
     const _allFilter = options.noAllFilter ? [] : [ {
       match: {
@@ -345,13 +373,14 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
     return initCommonQuery(
       simpleQuery(escapedQueryString, Defaults.defaultWorkFields, options),
       simpleQuery(escapedQueryString, Defaults.defaultPublicationFields, options),
-      _allFilter.concat(workFilters),
-      _allFilter.concat(publicationFilters),
+      _allFilter,
+      workFilters,
+      publicationFilters,
       excludeUnavailable, page, pageSize, options)
   }
 }
 
-function parseFilters (filtersFromLocationQuery, domain) {
+function parseFilters (filtersFromLocationQuery, domain, excludeUnavailable) {
   const filterableFields = Constants.filterableFields
   const terms = {}
   if (!Array.isArray(filtersFromLocationQuery)) {
@@ -361,7 +390,13 @@ function parseFilters (filtersFromLocationQuery, domain) {
     const split = filterParamValue.split('_')
     const filterableField = filterableFields[ split[ 0 ] ]
     if (filterableField.domain === domain) {
-      const aggregation = filterableField.name
+      let aggregation = filterableField.name
+      if (aggregation === 'branches') {
+        aggregation = 'homeBranches'
+        if (excludeUnavailable) {
+          aggregation = 'availableBranches'
+        }
+      }
       if (!terms[ aggregation ]) {
         terms[ aggregation ] = []
       }
@@ -392,7 +427,7 @@ function yearRangeFilter (yearFrom, yearTo) {
 }
 
 function createPublicationFilters (params, excludeUnavailable) {
-  const publicationFilters = parseFilters(params.filter || [], 'publication')
+  const publicationFilters = parseFilters(params.filter || [], 'publication', excludeUnavailable)
 
   let yearRange
   if (params.yearFrom || params.yearTo) {
@@ -401,8 +436,10 @@ function createPublicationFilters (params, excludeUnavailable) {
   if (yearRange) {
     publicationFilters.push(yearRange)
   }
+
   return publicationFilters
 }
+
 module.exports.buildQuery = function (urlQueryString) {
   const params = QueryParser.parse(urlQueryString)
   const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
