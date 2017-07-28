@@ -167,12 +167,6 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
         },
         aggs: publicationAggregations
       }}, workAggregations),
-    highlight: {
-      fields: {
-        '*': {}
-      },
-      require_field_match: false
-    },
     query: {
       bool: {
         must: {
@@ -215,7 +209,22 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
             ]
           }
         },
-        filter: allFilters.concat(workFilters).concat([
+        filter: [
+          {
+            bool: {
+              minimum_should_match: 1,
+              should: [
+                allFilters[0],
+                {
+                  has_child: {
+                    type: 'publication',
+                    query: allFilters[0]
+                  }
+                }
+              ]
+            }
+          }
+        ].concat(workFilters).concat([
           {
             bool: {
               must: [
