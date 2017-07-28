@@ -154,8 +154,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
     bool: {
       must: [
         publicationQuery
-      ],
-      filter: publicationFilters
+      ]
     }
   }
   return {
@@ -168,79 +167,83 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
         },
         aggs: publicationAggregations
       }}, workAggregations),
+    highlight: {
+      fields: {
+        '*': {}
+      },
+      require_field_match: false
+    },
     query: {
-      dis_max: {
-        queries: [
-          {
-            // query work by publication properties
-            has_child: {
-              score_mode: 'max',
-              type: 'publication',
-              query: !options.skipScript ? publicationBoost(boostableQuery) : boostableQuery,
-              inner_hits: {
-                size: 100,
-                name: 'publications',
-                explain: options.explain === 'true'
+      bool: {
+        must: {
+          dis_max: {
+            queries: [
+              {
+                // query work by publication properties
+                has_child: {
+                  score_mode: 'max',
+                  type: 'publication',
+                  query: !options.skipScript ? publicationBoost(boostableQuery) : boostableQuery,
+                  inner_hits: {
+                    size: 100,
+                    name: 'publications',
+                    explain: options.explain === 'true'
+                  }
+                }
+              },
+              {
+                // query by work properties
+                bool: {
+                  must: {
+                    has_child: {
+                      type: 'publication',
+                      query: {
+                        match_all: {}
+                      },
+                      inner_hits: {
+                        size: 100,
+                        name: 'publications'
+                      }
+                    }
+                  },
+                  should: [
+                    workQuery,
+                    workBoost(workQuery)
+                  ]
+                }
               }
-            }
-          },
+            ]
+          }
+        },
+        filter: allFilters.concat(workFilters).concat([
           {
-            // query by work properties
             bool: {
-              should: [
+              must: [
                 {
                   has_child: {
+                    type: 'publication',
                     query: {
                       bool: {
                         should: {
                           match_all: {}
                         },
-                        filter: allFilters.concat(publicationFilters)
-                      }
-                    },
-                    score_mode: 'max',
-                    inner_hits: {
-                      name: 'publications',
-                      size: 100,
-                      explain: options.explain === 'true'
-                    },
-                    type: 'publication'
-                  }
-                },
-                workBoost(workQuery)
-              ],
-              filter: allFilters.concat(workFilters).concat([
-                {
-                  bool: {
-                    must: [
-                      {
-                        has_child: {
-                          type: 'publication',
-                          query: {
-                            bool: {
-                              should: {
-                                match_all: {}
-                              },
-                              filter: publicationFilters.concat(
-                                excludeUnavailable
-                                ? [{
-                                  exists: {
-                                    field: 'availableBranches'
-                                  }
-                                }]
-                                : []
-                                )
+                        filter: publicationFilters.concat(
+                          excludeUnavailable
+                          ? [{
+                            exists: {
+                              field: 'availableBranches'
                             }
-                          }
-                        }
+                          }]
+                          : []
+                          )
                       }
-                    ]
+                    }
                   }
                 }
-              ])
+              ]
             }
           }
-        ]
+        ])
       }
     },
     explain: options.explain === 'true'
