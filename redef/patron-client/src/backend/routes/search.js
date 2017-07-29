@@ -47,6 +47,6 @@ module.exports = (app) => {
     }).then(json => response.status(200).send(json))
       .catch(error => {
         response.status(500).send({ message: error, queryString: queryString })
-    })
+      })
   })
 }
