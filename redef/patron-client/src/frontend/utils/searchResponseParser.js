@@ -126,6 +126,10 @@ export function processAggregationsToFilters (response, locationQuery, filteredL
   const filters = []
   const filterParameters = locationQuery[ 'filter' ] instanceof Array ? locationQuery[ 'filter' ] : [ locationQuery[ 'filter' ] ]
 
+  // merge work-level aggregations into facets
+  response.aggregations.facets.audiences = response.aggregations.audiences
+  response.aggregations.facets.fictionNonfiction = response.aggregations.fictionNonfiction
+
   const facets = response.aggregations.facets
   const excludeUnavailable = locationQuery.hasOwnProperty('excludeUnavailable')
 
