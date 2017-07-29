@@ -464,7 +464,7 @@ module.exports.buildQuery = function (urlQueryString) {
 
 module.exports.buildUnfilteredAggregatedQuery = function (urlQueryString) {
   const params = QueryParser.parse(urlQueryString)
-  return queryStringToQuery(params.query, [], [], false, 0, 0, params)
+  return queryStringToQuery('*', [], [], false, 0, 0, params)
 }
 
 // function exported only to be testable. TODO is there another way?
