@@ -1185,6 +1185,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   margin-bottom: 0;
 }
 
+.filter_count {
+  color: $darkGreyColor;
+}
+
 .show-all, .show-less, .show-more {
   font-weight: normal;
   color: $redColor;
