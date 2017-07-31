@@ -221,38 +221,28 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                     query: allFilters[0]
                   }
                 }
-              ]
-            }
-          }
-        ].concat(workFilters).concat([
-          {
-            bool: {
-              must: [
-                {
-                  has_child: {
-                    type: 'publication',
-                    query: {
-                      bool: {
-                        should: {
-                          match_all: {}
-                        },
-                        filter: publicationFilters.concat(
-                          excludeUnavailable
-                          ? [{
-                            exists: {
-                              field: 'availableBranches'
-                            }
-                          }]
-                          : []
-                          )
-                      }
+              ],
+              must: workFilters.concat(
+                publicationFilters.concat(
+                  excludeUnavailable
+                  ? [{
+                    exists: {
+                      field: 'availableBranches'
+                    }
+                  }]
+                  : []
+                ).map(filter => {
+                  return {
+                    has_child: {
+                      type: 'publication',
+                      query: filter
                     }
                   }
-                }
-              ]
+                })
+              )
             }
           }
-        ])
+        ]
       }
     },
     explain: options.explain === 'true'
