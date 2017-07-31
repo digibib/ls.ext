@@ -6,6 +6,42 @@ function escape (query) {
   return query.replace(/\//g, '\\/')
 }
 
+function workAggFilter (field, workFilters, publicationFilters) {
+  return {
+    bool: {
+      must: workFilters.filter(f => { return !f.terms[field] })
+      .concat(
+        publicationFilters.filter(f => { return f.range || !f.terms[field] }).map(f => {
+          return {
+            has_child: {
+              type: 'publication',
+              query: f
+            }
+          }
+        })
+      )
+    }
+  }
+}
+
+function pubAggFilter (field, workFilters, publicationFilters) {
+  return {
+    bool: {
+      must: publicationFilters.filter(f => { return f.range || !f.terms[field] })
+      .concat(
+        workFilters.filter(f => { return !f.terms[field] }).map(f => {
+          return {
+            has_parent: {
+              type: 'work',
+              query: f
+            }
+          }
+        })
+      )
+    }
+  }
+}
+
 function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 20, options) {
   options = Object.assign({
     explain: false,
@@ -21,39 +57,46 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
   const workAggregations = {}
   Object.keys(Constants.filterableFields).forEach(key => {
     let field
-    let fieldName
     if (key === 'branch') {
-      fieldName = 'branches'
       field = 'homeBranches'
       if (excludeUnavailable) {
         field = 'availableBranches'
       }
     } else {
       field = Constants.filterableFields[ key ].name
-      fieldName = field
     }
-    if (fieldName === 'fictionNonfiction' || fieldName === 'audiences') {
+    if (field === 'fictionNonfiction' || field === 'audiences') {
       // aggregations on work properties
-      workAggregations[ fieldName ] = {
-        terms: {
-          field: field,
-          size: 1000
-        }
+      workAggregations[ field ] = {
+        aggs: {
+          [ field ]: {
+            terms: {
+              field: field,
+              size: 1000
+            }
+          }
+        },
+        filter: workAggFilter(field, workFilters, publicationFilters)
       }
     } else {
       // aggregations on publication properties
-      publicationAggregations[ fieldName ] = {
-        terms: {
-          field: field,
-          size: 1000
-        },
-        aggregations: {
-          parents: {
-            cardinality: {
-              field: '_parent'
+      publicationAggregations[ field ] = {
+        aggs: {
+          [ field ]: {
+            terms: {
+              field: field,
+              size: 1000
+            },
+            aggs: {
+              parents: {
+                cardinality: {
+                  field: '_parent'
+                }
+              }
             }
           }
-        }
+        },
+        filter: pubAggFilter(field, workFilters, publicationFilters)
       }
     }
   })
@@ -160,13 +203,40 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
   return {
     size: pageSize,
     from: pageSize * (page - 1 || 0),
-    aggs: Object.assign({
+    aggs: {
       facets: {
-        children: {
-          type: 'publication'
-        },
-        aggs: publicationAggregations
-      }}, workAggregations),
+        global: {},
+        aggs: {
+          facets: {
+            filter: {
+              bool: {
+                minimum_should_match: 1,
+                should: [
+                  allFilters[0],
+                  {
+                    has_child: {
+                      type: 'publication',
+                      query: allFilters[0]
+                    }
+                  }
+                ]
+              }
+            },
+            aggs: Object.assign(
+              workAggregations,
+              {
+                publication_facets: {
+                  children: {
+                    type: 'publication'
+                  },
+                  aggs: publicationAggregations
+                }
+              }
+            )
+          }
+        }
+      }
+    },
     query: {
       bool: {
         must: {

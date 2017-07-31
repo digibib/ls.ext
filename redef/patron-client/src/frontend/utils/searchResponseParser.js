@@ -126,11 +126,17 @@ export function processAggregationsToFilters (response, locationQuery, filteredL
   const filters = []
   const filterParameters = locationQuery[ 'filter' ] instanceof Array ? locationQuery[ 'filter' ] : [ locationQuery[ 'filter' ] ]
 
-  // merge work-level aggregations into facets
-  response.aggregations.facets.audiences = response.aggregations.audiences
-  response.aggregations.facets.fictionNonfiction = response.aggregations.fictionNonfiction
+  const facets = {}
+  facets.audiences = response.aggregations.facets.facets.audiences.audiences
+  facets.fictionNonfiction = response.aggregations.facets.facets.fictionNonfiction.fictionNonfiction
+  Object.keys(response.aggregations.facets.facets.publication_facets).forEach(facet => {
+    let key = facet
+    if (facet === 'homeBranches' || facet === 'availableBranches') {
+      key = 'branches'
+    }
+    facets[ key ] = response.aggregations.facets.facets.publication_facets[ facet ][ facet ]
+  })
 
-  const facets = response.aggregations.facets
   const excludeUnavailable = locationQuery.hasOwnProperty('excludeUnavailable')
 
   Object.keys(Constants.filterableFields).forEach(fieldShortName => {
