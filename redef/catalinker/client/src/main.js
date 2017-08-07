@@ -2789,15 +2789,43 @@
         const initRactive = function (applicationData) {
           // decorators
           var select2 = function (node, mode) {
+            const lang = applicationData.translations[applicationData.language]
+            const select2Messages = {
+              inputTooLong: function (args) {
+                const overChars = args.input.length - args.maximum
+                return lang.inputTooLong.replace('{{overChars}}', overChars)
+              },
+              inputTooShort: function (args) {
+                return lang.inputTooShort.replace('{{minimum}}', args.minimum).replace('{{s}}', args.minimum > 1 ? 's' : '')
+              },
+              loadingMore: function () {
+                return lang.loadingMore
+              },
+              maximumSelected: function (args) {
+                if (args.maximum === 1) {
+                  return lang.maximumOneCanBeSelected
+                } else {
+                  return lang.maximumSelected.replace('{{maximum}}', args.maximum)
+                }
+              },
+              noResults: function () {
+                return lang.noResults
+              },
+              searching: function () {
+                return lang.searching
+              }
+            }
             tabIndexForNode(node)
             if (mode.mode === 'singleSelect') {
               $(node).select2({
                 maximumSelectionLength: 1,
-                templateSelection: templateSelection
+                templateSelection: templateSelection,
+                language: select2Messages
               })
             } else if (mode.mode === 'multiSelect') {
               $(node).select2({
-                templateSelection: templateSelection
+                templateSelection: templateSelection,
+                language: select2Messages
               })
             } else if (mode.mode === 'authoritySelectSingle') {
               const inputDef = ractive.get(grandParentOf(Ractive.getNodeInfo(node).keypath))
@@ -2810,6 +2838,7 @@
               $(node).select2({
                 maximumSelectionLength: 1,
                 minimumInputLength: 1,
+                language: select2Messages,
                 ajax: {
                   url: `${config.resourceApiUri}search/${indexType}/sorted_list`,
                   dataType: 'json',
@@ -4752,38 +4781,6 @@
 
         function initSelect2 (applicationData) {
           require('select2')
-          $.fn.select2.defaults.set('language', {
-            inputTooLong: function (args) {
-              const overChars = args.input.length - args.maximum
-              return `Vennligst fjern ${overChars} tegn`
-            },
-            inputTooShort: function (args) {
-              const remainingChars = args.minimum - args.input.length
-              let message = 'Vennligst skriv inn '
-              if (remainingChars > 1) {
-                message += ' flere tegn'
-              } else {
-                message += ' tegn til'
-              }
-              return message
-            },
-            loadingMore: function () {
-              return 'Laster flere resultater…'
-            },
-            maximumSelected: function (args) {
-              if (args.maximum === 1) {
-                return 'Du kan bare velge én verdi her'
-              } else {
-                return `Du kan velge maks ${args.maximum} verdier her`
-              }
-            },
-            noResults: function () {
-              return 'Ingen treff'
-            },
-            searching: function () {
-              return 'Søker…'
-            }
-          })
           return applicationData
         }
 

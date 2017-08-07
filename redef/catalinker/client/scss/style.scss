@@ -113,6 +113,9 @@ body {
   }
 
   .select2-container {
+    .select2-dropdown {
+      top: 3px;
+    }
     &.select2-container--focus {
       @include focus()
     }

@@ -354,6 +354,14 @@
     inverseRoleRelation: 'Works/publications with {{>subjectType + "LabelDem"}} as {{role.toLowerCase()}}',
 
     // misc
-    partsLabel: 'Parts'
+    partsLabel: 'Parts',
+    inputTooLong: 'Please remove {{overChars}} characters',
+    inputTooShort: 'Please enter at least {{minimum}} character{{s}}',
+    loadingMore: 'Loading results…',
+    maximumOneCanBeSelected: 'You can only select one item here',
+    maximumSelected: 'You can select at most {{maximum}} values here',
+    noResults: 'No results',
+    searching: 'Searching…'
+
   }
 }));
