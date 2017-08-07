@@ -5,17 +5,13 @@
       "serialMainTitle": {
         "type": "text",
         "analyzer": "name_analyzer",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "subtitle": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "similarity": "boolean",
-        "norms": {
-          "enabled": false
-        },
+        "norms": false,
         "fields": {
           "raw": {
             "type": "text",
@@ -28,35 +24,25 @@
       },
       "publishedByName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "publishedByAlternativeName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "publishedByPlacePrefLabel": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "publishedByPlaceAlternativeName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "partTitle": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "similarity": "boolean",
-        "norms": {
-          "enabled": false
-        },
+        "norms": false,
         "fields": {
           "raw": {
             "type": "text",
@@ -67,9 +53,7 @@
       "partNumber": {
         "type": "text",
         "term_vector": "with_positions_offsets",
-        "norms": {
-          "enabled": false
-        },
+        "norms": false,
         "fields": {
           "raw": {
             "type": "keyword"

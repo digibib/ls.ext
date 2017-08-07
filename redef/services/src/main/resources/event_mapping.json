@@ -5,45 +5,31 @@
       "prefLabel": {
         "type": "text",
          "analyzer": "name_analyzer",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "specification": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "ordinal": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "date": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "alternativeName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "placePrefLabel": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "placeAlternativeName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "displayLine1": {
         "type": "keyword"

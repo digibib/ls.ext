@@ -4,9 +4,7 @@
       "name": {
         "type": "text",
         "analyzer": "name_analyzer",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "birthYear": {
         "type": "text"
@@ -17,15 +15,11 @@
       "nationality": {
         "type": "text",
         "term_vector": "with_positions_offsets",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "specification": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "uri": {
         "type": "keyword"

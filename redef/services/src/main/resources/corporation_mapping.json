@@ -5,34 +5,24 @@
       "name": {
         "type": "text",
         "analyzer": "name_analyzer",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "subdivision": {
         "type": "text",
         "analyzer": "name_analyzer",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "alternativeName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "placePrefLabel": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "placeAlternativeName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "displayLine1": {
         "type": "keyword"

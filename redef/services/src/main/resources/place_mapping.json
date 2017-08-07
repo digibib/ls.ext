@@ -4,21 +4,15 @@
       "prefLabel": {
         "type": "text",
         "analyzer": "name_analyzer",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "specification": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "alternativeName": {
         "type": "text",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "displayLine1": {
         "type": "keyword"

@@ -4,17 +4,13 @@
       "workSeriesMainTitle": {
         "type": "text",
         "analyzer": "name_analyzer",
-        "norms": {
-          "enabled": false
-        }
+        "norms": false
       },
       "subtitle": {
         "type": "text",
         "term_vector": "with_positions_offsets",
         "similarity": "boolean",
-        "norms": {
-          "enabled": false
-        },
+        "norms": false,
         "fields": {
           "raw": {
             "type": "text",
@@ -26,9 +22,7 @@
         "type": "text",
         "term_vector": "with_positions_offsets",
         "similarity": "boolean",
-        "norms": {
-          "enabled": false
-        },
+        "norms": false,
         "fields": {
           "raw": {
             "type": "text",
@@ -39,9 +33,7 @@
       "partNumber": {
         "type": "text",
         "term_vector": "with_positions_offsets",
-        "norms": {
-          "enabled": false
-        },
+        "norms": false,
         "fields": {
           "raw": {
             "type": "keyword"
