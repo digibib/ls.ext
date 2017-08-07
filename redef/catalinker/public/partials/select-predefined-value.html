@@ -6,10 +6,9 @@
     <select
             as-tabIndex="{{tabSelected}}"
             class="authorized" style="width: 100%;"
-            {{#if !multiple || input.isSubInput}}
+            {{#if !multiple || ../../isSubInput}}
                 as-select2="{mode: 'singleSelect'}"
-            {{elseif multiple && !input.isSubInput}}
-            class-multipleSelect="{{true}}"
+            {{elseif multiple}}
                 as-select2="{mode: 'multiSelect'}"
             {{else}}
                 as-select2="{mode: 'singleSelect'}"

@@ -1144,8 +1144,8 @@
         _.each(inputs, function (input, index) {
           if (!skipRest &&
             ((input.domain && type === unPrefix(input.domain) || _.contains((input.subjects), type)) ||
-            (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
-            (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain)))) {
+              (input.isSubInput && (type === input.parentInput.domain || _.contains(input.parentInput.subjectTypes, type))) ||
+              (options.onlyValueSuggestions && input.suggestValueFrom && type === unPrefix(input.suggestValueFrom.domain)))) {
             let ownerInput = inputFromInputId(input.belongsToCreateResourceFormOfInput)
             if (ownerInput && ownerInput.domain &&
               input.belongsToCreateResourceFormOfInput &&
@@ -1342,7 +1342,7 @@
       })
     }
 
-    var fetchExistingResource = function (resourceUri, options) {
+    const fetchExistingResource = function (resourceUri, options) {
       options = options || {}
       return axios.get(proxyToServices(resourceUri), {
           headers: {
@@ -1374,19 +1374,19 @@
           }
         })
       })
-      var errors = []
+      const errors = []
       let uri = ractive.get('config.resourceApiUri')
       let lowerCaseResourceType = resourceType.toLowerCase()
       let resourceTypeAlias = ractive.get('config.resourceTypeAliases')[ lowerCaseResourceType ] || lowerCaseResourceType
       return axios.post(`${uri}${resourceTypeAlias}`,
         {}, { headers: { Accept: 'application/ld+json', 'Content-Type': 'application/ld+json' } })
         .then(function (response) {
-          var resourceUri = response.headers.location
+          const resourceUri = response.headers.location
           let patchBatch = []
           _.each(inputsToSave, function (input) {
-            var predicate = input.predicate
+            const predicate = input.predicate
             _.each(input.values, function (value) {
-              var patches = Ontology.createPatch(resourceUri, predicate, value, input.datatypes[ 0 ])
+              const patches = Ontology.createPatch(resourceUri, predicate, value, input.datatypes[ 0 ])
               _.each(patches, function (patch) {
                 patchBatch.push(patch)
               })
@@ -1410,10 +1410,10 @@
       // })
     }
 
-    var saveNewResourceFromInputs = function (resourceType) {
+    const saveNewResourceFromInputs = function (resourceType) {
       // collect inputs related to resource type
 
-      var inputsToSave = []
+      const inputsToSave = []
       _.each(ractive.get('inputGroups'), function (group) {
         _.each(group.inputs, function (input) {
           if (resourceType === input.rdfType) {
@@ -1431,7 +1431,7 @@
       })
     }
 
-    var loadPredefinedValues = function (url, property) {
+    const loadPredefinedValues = function (url, property) {
       return axios.get(proxyToServices(url), {
           headers: {
             Accept: 'application/ld+json'
@@ -1439,13 +1439,13 @@
         }
       )
         .then(function (response) {
-          var values = ensureJSON(response.data)
+          const values = ensureJSON(response.data)
           // resolve all @id uris
           values[ '@graph' ].forEach(function (v) {
             v[ '@id' ] = Ontology.resolveURI(values, v[ '@id' ])
           })
 
-          var valuesSorted = values[ '@graph' ].sort(function (a, b) {
+          const valuesSorted = values[ '@graph' ].sort(function (a, b) {
             if (a[ 'label' ][ '@value' ] < b[ 'label' ][ '@value' ]) {
               return -1
             }
@@ -1533,11 +1533,11 @@
       }
     }
 
-    var lastFoundOrActualLast = function (lastIndexOfVisible, numberOfInputs) {
+    const lastFoundOrActualLast = function (lastIndexOfVisible, numberOfInputs) {
       return lastIndexOfVisible === -1 ? numberOfInputs - 1 : lastIndexOfVisible
     }
 
-    var markFirstAndLastInputsInGroup = function (group) {
+    const markFirstAndLastInputsInGroup = function (group) {
       for (var ix = 0; ix < group.inputs.length; ix++) {
         group.inputs[ ix ].firstInGroup = undefined
         group.inputs[ ix ].lastInGroup = undefined
@@ -1550,7 +1550,7 @@
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
-    var typesFromRange = function (range) {
+    const typesFromRange = function (range) {
       var inputType
       var rdfType = range
       switch (range) {
@@ -1613,7 +1613,7 @@
     }
 
     function assignInputTypeFromRange (input) {
-      var types = typesFromRange(input.ranges[ 0 ])
+      const types = typesFromRange(input.ranges[ 0 ])
       input.type = types.inputType
       input.datatypes = [ types.rdfType ]
     }
@@ -1624,41 +1624,43 @@
       })
     }
 
-    var createInputGroups = function (applicationData) {
-      var props = Ontology.allProps(applicationData.ontology)
-      var inputs = []
-      var inputMap = {}
-      var inputsForDomainType = {}
+    function createInputGroups (applicationData) {
+      const
+        props = Ontology.allProps(applicationData.ontology),
+        inputs = [],
+        inputMap = {},
+        inputsForDomainType = {},
+        predefinedValues = []
       applicationData.predefinedValues = {}
       applicationData.predefVals = {}
       applicationData.allLabels = {}
       applicationData.propertyLabels = {}
-      var predefinedValues = []
-      for (var i = 0; i < props.length; i++) {
-        var disabled = false
+      for (let i = 0; i < props.length; i++) {
+        let disabled = false
         if (props[ i ][ 'http://data.deichman.no/ui#editable' ] !== undefined && props[ i ][ 'http://data.deichman.no/ui#editable' ] !== true) {
           disabled = true
         }
 
         // Fetch predefined values, if required
-        var predicate = Ontology.resolveURI(applicationData.ontology, props[ i ][ '@id' ])
-        var valuesFrom = props[ i ][ 'http://data.deichman.no/utility#valuesFrom' ]
+        const
+          predicate = Ontology.resolveURI(applicationData.ontology, props[ i ][ '@id' ]),
+          valuesFrom = props[ i ][ 'http://data.deichman.no/utility#valuesFrom' ]
         if (valuesFrom) {
-          var url = valuesFrom[ '@id' ]
+          const url = valuesFrom[ '@id' ]
           predefinedValues.push(loadPredefinedValues(url, props[ i ][ '@id' ]))
         }
-        var ranges = props[ i ][ 'rdfs:range' ]
-        var datatypes = _.isArray(ranges) ? _.pluck(ranges, '@id') : [ ranges[ '@id' ] ]
-        var domains = props[ i ][ 'rdfs:domain' ]
+        const
+          ranges = props[ i ][ 'rdfs:range' ],
+          datatypes = _.isArray(ranges) ? _.pluck(ranges, '@id') : [ ranges[ '@id' ] ],
+          domains = props[ i ][ 'rdfs:domain' ]
         _.each(domains, function (domain) {
           if (_.isObject(domain)) {
             domain = domain[ '@id' ]
           }
-          var predefined = valuesFrom
-          var fragment = predicate.substring(predicate.lastIndexOf('#') + 1)
+          const predefined = valuesFrom, fragment = predicate.substring(predicate.lastIndexOf('#') + 1)
           let label = i18nLabelValue(props[ i ][ 'rdfs:label' ], applicationData.language)
           applicationData.propertyLabels[ fragment ] = label
-          var input = {
+          const input = {
             disabled: disabled,
             predicate: predicate,
             fragment: fragment,
@@ -1685,11 +1687,10 @@
           inputsForDomainType[ unPrefix(domain) ].push(input)
         })
       }
-      var inputGroups = []
-      var ontologyUri = applicationData.ontology[ '@context' ][ 'deichman' ]
+      const inputGroups = [], ontologyUri = applicationData.ontology[ '@context' ][ 'deichman' ]
 
-      var createInputForCompoundInput = function (compoundInput, tab, ontologyUri, inputMap) {
-        var currentInput = {
+      const createInputForCompoundInput = function (compoundInput, tab, ontologyUri, inputMap) {
+        const currentInput = {
           type: 'compound',
           labelKey: compoundInput.label,
           domain: tab.rdfType,
@@ -1718,39 +1719,40 @@
           if (!subInput.rdfProperty) {
             throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
           }
-          var inputFromOntology = deepClone(inputMap[ `${compoundInput.subInputs.range}.${ontologyUri}${subInput.rdfProperty}` ])
+          let inputFromOntology = deepClone(inputMap[ `${compoundInput.subInputs.range}.${ontologyUri}${subInput.rdfProperty}` ])
           if (!inputFromOntology) {
             throw new Error(`Property "${subInput.rdfProperty}" doesn't have "${compoundInput.subInputs.range}" in its domain`)
           }
           assignUniqueValueIds(inputFromOntology)
-          var indexTypes = _.isArray(subInput.indexTypes) ? subInput.indexTypes : [ subInput.indexTypes ]
-          var type = subInput.type || inputFromOntology.type
-          var newSubInput = {
-            input: _.extend(_.clone(inputFromOntology), {
-              labelKey: subInput.label,
-              type: type,
-              isSubInput: true,
-              parentInput: currentInput,
-              indexTypes: indexTypes,
-              selectedIndexType: indexTypes.length === 1 ? indexTypes[ 0 ] : undefined,
-              indexDocumentFields: subInput.indexDocumentFields,
-              nameProperties: subInput.nameProperties,
-              dataAutomationId: inputFromOntology.dataAutomationId,
-              widgetOptions: subInput.widgetOptions,
-              headlinePart: subInput.headlinePart,
-              suggestValueFrom: subInput.suggestValueFrom,
-              id: subInput.id,
-              required: subInput.required,
-              searchable: type === 'searchable-with-result-in-side-panel',
-              supportable: type === 'searchable-with-result-in-side-panel',
-              showOnlyWhen: subInput.showOnlyWhen,
-              isTitleSource: subInput.isTitleSource,
-              subInputIndex: subInputIndex,
-              keypath: `${compoundInput.keypath}.subInputs.${subInputIndex}.input`,
-              previewProperties: subInput.previewProperties
-            }),
-            parentInput: currentInput
-          }
+          const
+            indexTypes = _.isArray(subInput.indexTypes) ? subInput.indexTypes : [ subInput.indexTypes ],
+            type = subInput.type || inputFromOntology.type,
+            newSubInput = {
+              input: _.extend(_.clone(inputFromOntology), {
+                labelKey: subInput.label,
+                type: type,
+                isSubInput: true,
+                parentInput: currentInput,
+                indexTypes: indexTypes,
+                selectedIndexType: indexTypes.length === 1 ? indexTypes[ 0 ] : undefined,
+                indexDocumentFields: subInput.indexDocumentFields,
+                nameProperties: subInput.nameProperties,
+                dataAutomationId: inputFromOntology.dataAutomationId,
+                widgetOptions: subInput.widgetOptions,
+                headlinePart: subInput.headlinePart,
+                suggestValueFrom: subInput.suggestValueFrom,
+                id: subInput.id,
+                required: subInput.required,
+                searchable: type === 'searchable-with-result-in-side-panel',
+                supportable: type === 'searchable-with-result-in-side-panel',
+                showOnlyWhen: subInput.showOnlyWhen,
+                isTitleSource: subInput.isTitleSource,
+                subInputIndex: subInputIndex,
+                keypath: `${compoundInput.keypath}.subInputs.${subInputIndex}.input`,
+                previewProperties: subInput.previewProperties
+              }),
+              parentInput: currentInput
+            }
           // prefill vetoes according to inputs' requiredness
           if (subInput.required) {
             currentInput.inputGroupRequiredVetoes.push(`${subInputIndex}`)
@@ -1775,18 +1777,18 @@
         if (input.widgetOptions && input.widgetOptions.enableEditResource) {
           input.widgetOptions.enableEditResource.forms = {}
           _.each(input.widgetOptions.enableEditResource.formRefs, function (formRef) {
-            var resourceForm = deepClone(_.find(applicationData.config.inputForms, function (formSpec) {
+            const resourceForm = deepClone(_.find(applicationData.config.inputForms, function (formSpec) {
               return formSpec.id === formRef.formId
             }))
             _.each(resourceForm.inputs, function (formInput) {
-              var predicate = ontologyUri + formInput.rdfProperty
-              var ontologyInput = inputMap[ `${resourceForm.rdfType}.${predicate}` ]
+              const predicate = ontologyUri + formInput.rdfProperty
+              const ontologyInput = inputMap[ `${resourceForm.rdfType}.${predicate}` ]
               if (formInput.label) {
                 formInput.labelkey = formInput.label
               }
               _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
-              formInput[ 'values' ] = emptyValues(false)
-              formInput[ 'rdfType' ] = resourceForm.rdfType
+              formInput.values = emptyValues(false)
+              formInput.rdfType = resourceForm.rdfType
               if (targetResourceIsMainEntry) {
                 formInput.targetResourceIsMainEntry = true
               }
@@ -1814,9 +1816,9 @@
       }
 
       function createInputsForGroup (inputGroup, groupIndex) {
-        var groupInputs = []
+        const groupInputs = []
         _.each(inputGroup.inputs, function (input, index) {
-          var ontologyInput
+          let ontologyInput
           if (input.searchMainResource) {
             groupInputs.push({
               labelKey: input.searchMainResource.label,
@@ -3492,8 +3494,8 @@
               },
               genPublicationLink: function (item) {
                 return item.workUri.replace(
-                    new RegExp('^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$'),
-                    'http://sok.deichman.no/work/$1') +
+                  new RegExp('^http:\\/\\/data\\.deichman\\.no\\/work\\/(w[a-f0-9]+)$'),
+                  'http://sok.deichman.no/work/$1') +
                   item.uri.substr(23)
               },
               getLinkfromUri: function (item, linkProps) {
@@ -3621,6 +3623,7 @@
               }
             }
           })
+
           function loadInverseRelated (event, parentUri) {
             return axios.get(proxyToServices(`${parentUri}/inverseRelationsBy/${event.context.inverseRdfProperty}?projection=${_.pluck(event.context.showFieldsOfRelated, 'field').join('&projection=')}`))
               .then(function (response) {
@@ -4568,15 +4571,15 @@
                   ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.showAutonumber`, true)
                   ractive.set(`${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`, true)
                   var nextNumber = (_
-                      .chain(ractive.get(`${numberingInput.keypath}.values`))
-                      .pluck('current')
-                      .pluck('value')
-                      .map(Number)
-                      .map(function (value) {
-                        return isNaN(value) ? 0 : value
-                      })
-                      .reduce(function (memo, num) { return Math.max(memo, num) })
-                      .value() || 0) + 1
+                    .chain(ractive.get(`${numberingInput.keypath}.values`))
+                    .pluck('current')
+                    .pluck('value')
+                    .map(Number)
+                    .map(function (value) {
+                      return isNaN(value) ? 0 : value
+                    })
+                    .reduce(function (memo, num) { return Math.max(memo, num) })
+                    .value() || 0) + 1
                   ractive.set(`${numberingInput.keypath}.nextNumber`, nextNumber)
                   ractive.observe(`${event.keypath}.current.value ${numberingInput.keypath}.values.${_.last(event.keypath.split('.'))}.autoNumber`, function (newVal, oldVal, keypath) {
                     const textBody = ractive.get(`${event.keypath}.current.value`)
@@ -4735,7 +4738,7 @@
               if (sourceInput) {
                 var value = _.last(input.values)
                 if (value && (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
-                  (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object')) {
+                    (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object')) {
                   ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
                     value: sourceInput.values[ 0 ].current.value,
                     displayValue: sourceInput.values[ 0 ].current.displayValue

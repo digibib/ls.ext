@@ -1,4 +1,5 @@
-var _ = require('underscore')
+const _ = require('underscore')
+
 function maintenanceInputs (label, type) {
   return {
     // this is an input type used to search for a main resource, e.g. Work. The rendered input field
@@ -73,7 +74,7 @@ module.exports = (app) => {
       'birthYear-', 'deathYear,',
       'nationality.fragment.'
     ]
-    var config =
+    const config =
       {
         kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
         kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
@@ -509,7 +510,7 @@ module.exports = (app) => {
                   checkExistingResource: {
                     url: 'services/publication',
                     queryParameter: 'hasEan',
-                    showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.',, 'publicationYear' ],
+                    showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', , 'publicationYear' ],
                     type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
@@ -1032,7 +1033,7 @@ module.exports = (app) => {
                       required: true,
                       indexTypes: [ 'workUnstructured', 'workseries' ],
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', '@typeLabel' ],
+                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
                       preselectFirstIndexType: true,
                       widgetOptions: {
                         enableEditResource: {
