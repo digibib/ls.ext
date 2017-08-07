@@ -198,6 +198,10 @@ module.exports = (app) => {
                 indexDocumentFields: [ 'displayLine1' ]
               },
               {
+                rdfProperty: 'nationality',
+                multiple: true
+              },
+              {
                 rdfProperty: 'specification',
                 type: 'input-string'
               },

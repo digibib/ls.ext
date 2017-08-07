@@ -1957,7 +1957,7 @@
 
       _.each(maintenanceForms, function (form) {
         const formContent = _.chain(form).pairs().first().value()
-        const inputOrderMap = {}
+        let inputOrderMap = {}
         const readonlyness = {}
         _.each(formContent[ 1 ].inputs, function (input, index) {
           inputOrderMap[ input.predicate ] = index
@@ -1966,8 +1966,8 @@
           }
         })
         const type = formContent[ 1 ].rdfType
-        inputsForDomainType[ type ] = inputsForDomainType[ type ].sort(function (a, b) {
-          return (inputOrderMap[ a.predicate ]) - (inputOrderMap[ b.predicate ])
+        inputsForDomainType[ type ] = _.sortBy(inputsForDomainType[ type ], function (prop) {
+          return inputOrderMap[ prop.predicate ]
         })
         _.each(inputsForDomainType[ type ], function (input) {
           if (readonlyness[ input.predicate ]) {
