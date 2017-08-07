@@ -1032,7 +1032,7 @@ module.exports = (app) => {
                       required: true,
                       indexTypes: [ 'workUnstructured', 'workseries' ],
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
+                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', '@typeLabel' ],
                       preselectFirstIndexType: true,
                       widgetOptions: {
                         enableEditResource: {
@@ -1771,7 +1771,7 @@ module.exports = (app) => {
             resourceType: 'Serial',
             wrappedIn: 'SerialIssue',
             predicate: 'serial',
-            enableCreateNewResmource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Person',
