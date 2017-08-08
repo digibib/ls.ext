@@ -113,6 +113,20 @@
     workSeriesLabel: 'Verksserie',
     compositionTypeLabel: 'Komposisjonstype',
 
+    // type explanations
+    personExplanation: '(Person)',
+    generalSubjectExplanation: '(Generelt emne)',
+    workExplanation: '(Verk)',
+    genreExplanation: '(Sjanger)',
+    corporationExplanation: '(Organisasjon)',
+    placeExplanation: '(Sted)',
+    eventExplanation: '(Hendelse)',
+    serialExplanation: '(Serie)',
+    publicationExplanation: '(Utgivelse)',
+    instrumentExplanation: '(Instrument)',
+    workSeriesExplanation: '(Verksserie)',
+    compositionTypeExplanation: '(Komposisjonstype)',
+
     // determinatives
     PersonLabelDet: 'personen',
     GeneralSubjectLabelDet: 'emnet',

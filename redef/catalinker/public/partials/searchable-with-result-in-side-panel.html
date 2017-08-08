@@ -1,6 +1,6 @@
 <span data-automation-id="{{../../dataAutomationId}}" class-pure-u-1-1="{{! nonEditable && !suggested}}">
 {{#if ./nonEditable || suggested && subInputs}}
-    {{current.displayValue}}
+    {{current.displayValue}}{{#input.widgetOptions.explanations}}<span class="explanation">{{>getExplanation(., current.value)}}</span>{{/}}
 {{else}}
     {{#if ../../indexTypes.length > 1 && !(current.accepted || suggested) && !deletable}}
         <div class="index-type-select pure-u-1-2">
@@ -39,7 +39,7 @@
                                 {{#if !compareMode }}
                                     <span class-select2-selection__choice__remove="{{!compareMode}}" class="overrride-outside-detect" on-click="unselectEntity">×</span>
                                 {{/if}}
-                                <span class="value">{{current.displayValue}}{{#widgetOptions.explanations}}<span class="explanation">{{getExplanation(., current.value)}}</span>{{/}}</span>
+                                <span class="value">{{current.displayValue}}{{#widgetOptions.explanations}}<span class="explanation">{{>getExplanation(., current.value)}}</span>{{/}}</span>
                             {{/if}}
                         </li>
                         <li class="select2-search select2-search--inline" >

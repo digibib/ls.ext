@@ -111,6 +111,20 @@
     workSeriesLabel: 'Work series',
     compositionTypeLabel: 'Composition type',
 
+    // type explanations
+    personExplanation: '(Person)',
+    generalSubjectExplanation: '(General subject)',
+    workExplanation: '(Work)',
+    genreExplanation: '(Genre)',
+    corporationExplanation: '(Corporation)',
+    placeExplanation: '(Place)',
+    eventExplanation: '(Event)',
+    serialExplanation: '(Serial)',
+    publicationExplanation: '(Publication)',
+    instrumentExplanation: '(Instrument)',
+    workSeriesExplanation: '(Work series)',
+    compositionTypeExplanation: '(Composition type)',
+
     // determinative
     PersonLabelDet: 'the person',
     GeneralSubjectLabelDet: 'the subject',

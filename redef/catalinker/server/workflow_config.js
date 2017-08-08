@@ -1053,7 +1053,13 @@ module.exports = (app) => {
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: true,
+                        explanations: {
+                          patterns: [
+                            { match: '^.*\\/work\\/.*$', explanation: 'workExplanation' },
+                            { match: '^.*\\/workSeries\\/.*$', explanation: 'workSeriesExplanation' }
+                          ]
+                        }
                       }
                     },
                     {
@@ -1316,12 +1322,12 @@ module.exports = (app) => {
                   enableInPlaceEditing: true,
                   explanations: {
                     patterns: [
-                      { match: '^.*\\/subject\\/.*$', explanation: '(Generelt emne)' },
-                      { match: '^.*\\/person\\/.*$', explanation: '(Person)' },
-                      { match: '^.*\\/work\\/.*$', explanation: '(Verk)' },
-                      { match: '^.*\\/place\\/.*$', explanation: '(Sted)' },
-                      { match: '^.*\\/corporation\\/.*$', explanation: '(Organisasjon)' },
-                      { match: '^.*\\/event\\/.*$', explanation: '(Hendelse)' }
+                      { match: '^.*\\/subject\\/.*$', explanation: 'generalSubjectExplanation' },
+                      { match: '^.*\\/person\\/.*$', explanation: 'personExplanation' },
+                      { match: '^.*\\/work\\/.*$', explanation: 'workExplanation' },
+                      { match: '^.*\\/place\\/.*$', explanation: 'placeExplanation' },
+                      { match: '^.*\\/corporation\\/.*$', explanation: 'corporationExplanation' },
+                      { match: '^.*\\/event\\/.*$', explanation: 'eventExplanation' }
                     ]
                   }
                 }
