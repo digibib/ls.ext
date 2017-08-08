@@ -489,7 +489,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og jeg venter litt
-    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksnavnet
+    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksnavnet pluss "(Verk)"
 
   Scenario: katalogisere verk med relasjon til verksserie
     Gitt jeg kan dikte opp en verkstittel
@@ -518,7 +518,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og jeg venter litt
-    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksserienavnet
+    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksserienavnet pluss "(Verksserie)"
 
   Scenario: katalogisere verk med nasjonalitet
     Gitt jeg kan dikte opp en verkstittel

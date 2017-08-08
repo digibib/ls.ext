@@ -752,9 +752,9 @@ When(/^at jeg er i arbeidsflyten$/) do
 end
 
 
-When(/^sjekker jeg at den tilfeldige verdien jeg la inn for feltet "([^"]*)" stemmer med (.*)/) do |parameter_label, concept|
+When(/^sjekker jeg at den tilfeldige verdien jeg la inn for feltet "([^"]*)" stemmer med (.*) pluss "([^"]*)"/) do |parameter_label, concept, additionalText|
   value_span = @browser.spans(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//span[#{contains_class 'value'}]/span").find(&:visible?)
-  value_span.text.should eq @context["random_#{@site.translate(concept)}".to_sym]
+  value_span.text.should eq @context["random_#{@site.translate(concept)}".to_sym] + additionalText
 end
 
 When(/^sjekker jeg at den verdien jeg la inn for "([^"]*)" inneholder (.*)/) do |parameter_label, concept|
