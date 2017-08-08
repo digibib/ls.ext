@@ -22,6 +22,7 @@
     root.Main = factory(root.Ractive, root.axios, root.Graph, root.Ontology, root.StringUtil, root._, root.$, root.ldGraph, root.URI, root.ISBN, root.esquery, root.nestedPropertyHelper)
   }
 }(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, ISBN, esquery, nestedPropertyHelper) {
+    "use strict"
     const unloadResourceForDomain = function (domainType, excludeInputs) {
       excludeInputs = excludeInputs || []
       const subjectTypesOfInputValue = {}
