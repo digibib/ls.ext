@@ -491,6 +491,35 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksnavnet
 
+  Scenario: katalogisere verk med relasjon til verksserie
+    Gitt jeg kan dikte opp en verkstittel
+    Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv verk"
+    Så velger jeg relasjonsmål "Verksserie" for "Relatert til"
+    Og at jeg skriver inn tilfeldig verksserienavn i feltet "Relasjon til annet verk eller verksserie" og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett ny verksserie"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Og jeg velger verdien "Del av" for "Type relasjon"
+    Og jeg venter litt
+    Og jeg skriver verdien "1" for "Del"
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Så frisker jeg opp nettleseren
+    Og jeg venter litt
+    Og jeg venter litt
+    Og jeg venter litt
+    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksserienavnet
+
   Scenario: katalogisere verk med nasjonalitet
     Gitt jeg kan dikte opp en verkstittel
     Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter

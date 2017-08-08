@@ -522,7 +522,7 @@ When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
   button.click
 end
 
-When(/^velger jeg (emnetype|aktørtype) "([^"]*)" for "([^"]*)"$/) do |dummy, subject_type, label|
+When(/^velger jeg (.+) "([^"]*)" for "([^"]*)"$/) do |dummy, subject_type, label|
   @browser.selects(:xpath => "//span[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(label)}']//*[#{contains_class('index-type-select')}]/select").find(&:visible?).select(subject_type)
 end
 
