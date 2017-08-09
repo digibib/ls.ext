@@ -254,7 +254,16 @@ body {
     }
 
     .tab-content {
-      .input-panel {
+      .grid-panel > .input-panel {
+        &:not(.first):first-child:before {
+          background-color: lightgrey;
+          content:"";
+          width: 50%;
+          height:1px;
+          display: block;
+          top: 1px;
+          position: relative;
+        }
         &.drop-target {
           position: relative;
           &:before {

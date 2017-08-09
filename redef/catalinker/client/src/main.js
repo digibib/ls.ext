@@ -2790,7 +2790,7 @@
         const initRactive = function (applicationData) {
           // decorators
           var select2 = function (node, mode) {
-            const lang = applicationData.translations[applicationData.language]
+            const lang = applicationData.translations[ applicationData.language ]
             const select2Messages = {
               inputTooLong: function (args) {
                 const overChars = args.input.length - args.maximum
