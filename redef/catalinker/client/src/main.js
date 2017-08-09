@@ -1921,6 +1921,7 @@
         group.tabId = inputGroup.id
         group.tabSelected = false
         group.domain = inputGroup.rdfType
+        group.rdfType = inputGroup.rdfType
         group.showOnlyWhenInputHasValue = inputGroup.showOnlyWhenInputHasValue
         group.tools = inputGroup.tools
 
@@ -4892,6 +4893,7 @@
           fetchExistingResource(query.Publication)
             .then(loadWorkOfPublication)
             .then(function () {
+              ractive.set('rdfType', 'Publication')
               ractive.set('targetUri.Publication', query.Publication)
               ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
             })
