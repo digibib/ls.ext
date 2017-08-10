@@ -2970,7 +2970,11 @@
                 enableChange = false
                 var inputValue = Ractive.getNodeInfo(e.target)
                 var keypath = inputValue.keypath
-                ractive.set(`${keypath}.current.value`, unsetting ? [] : $(e.target).val() || [])
+                if ($(e.target).val()) {
+                  ractive.set(`${keypath}.current.value`, $(e.target).val() || [])
+                } else if (unsetting) {
+                  ractive.set(`${keypath}.current.value`, [])
+                }
                 var inputNode = ractive.get(grandParentOf(keypath))
                 let target = ractive.get(grandParentOf(grandParentOf(keypath))).targetUri || ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
                 if (target && !inputNode.isSubInput && shouldExecPatchImmediately(keypath)) {
