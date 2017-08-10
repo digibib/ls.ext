@@ -712,3 +712,17 @@ Egenskap: Katalogisere i arbeidsflyt
     Så vises en dialog med tittelen "Slett verk"
     Og dialogen viser at verket ikke kan slettes
 
+  Scenario: Registrere en CD med mindre brukte felter
+    Gitt at jeg har en CD
+    Og at det finnes et verk med komponist
+    Når jeg legger inn komponistnavnet på startsida
+    Og jeg venter litt
+    Så sjekker jeg at trefflistens forfatterinnslag viser nasjonalitet og levetid
+    Og velger verket fra lista tilkoplet forfatteren
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og verifiserer at verkets basisopplysninger uten endringer er korrekte
+    Og jeg venter litt
+    Så klikker jeg på lenken for å vise mindre brukte felter
+    Og legger inn opplysningene om CD-utgivelsen
+

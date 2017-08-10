@@ -684,9 +684,13 @@ module.exports = (app) => {
                   styleClass: 'title'
                 }
               },
-              { rdfProperty: 'partNumber' },
+              {
+                rdfProperty: 'partNumber',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] }
+              },
               {
                 rdfProperty: 'partTitle',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] },
                 headlinePart: {
                   order: 40,
                   styleClass: 'title'
@@ -694,10 +698,14 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'variantTitle',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] },
                 multiple: true,
                 addAnotherLabel: 'addAnotherVariantTitle',
               },
-              { rdfProperty: 'edition' },
+              {
+                rdfProperty: 'edition',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] }
+              },
               {
                 rdfProperty: 'publicationYear',
                 headlinePart: {

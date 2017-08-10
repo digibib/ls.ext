@@ -762,6 +762,35 @@
       return shouldInclude
     }
 
+    function checkEsoteric (input, allInputs) {
+      if (input.values && (((input.values[ 0 ].current.value || '') !== '') || ((input.values[ 0 ].old.value || '') !== ''))) {
+        return false
+      }
+      let isEsoteric = false
+      let handleInput = function (includeWhenValues, property) {
+        return function (input) {
+          if (input.fragment === property && _.contains(includeWhenValues, _.flatten([
+              fragmentPartOf(URI.parseQuery(document.location.href)[ property ] ||
+                _.flatten([ input.values[ 0 ].current.value ])[ 0 ])
+            ])[ 0 ])) {
+            isEsoteric = true
+            return true
+          }
+        }
+      }
+      if (input.esotericWhen) {
+        _.each(_.keys(input.esotericWhen), function (property) {
+          let includeWhenValues = _.flatten([ input.esotericWhen[ property ] ])
+          if (allInputs) {
+            _.find(allInputs, handleInput(includeWhenValues, property))
+          } else {
+            forAllGroupInputs(handleInput(includeWhenValues, property))
+          }
+        })
+      }
+      return isEsoteric
+    }
+
     function advancedSearchCharacters () {
       return ':+-^()´"*'
     }
@@ -1525,6 +1554,9 @@
       if (prop.includeOnlyWhen) {
         input.includeOnlyWhen = prop.includeOnlyWhen
       }
+      if (prop.esotericWhen) {
+        input.esotericWhen = prop.esotericWhen
+      }
       if (prop.isTitleSource) {
         input.isTitleSource = prop.isTitleSource
       }
@@ -2049,6 +2081,8 @@
           }
           if ($(panel).hasClass('fixed')) {
             offset = 0
+          } else if ($(panel).hasClass('no-offset')) {
+            offset = 25
           }
           if (supportPanelBase.length > 0) {
             $(panel).css({
@@ -3564,7 +3598,8 @@
               oneOrMoreEnabled: function (items) {
                 return _.some(items, function (item) { return item.enable })
               },
-              checkShouldInclude: checkShouldInclude,
+              checkShouldInclude,
+              checkEsoteric,
               abbreviate: function (label) {
                 return applicationData.config.abbreviations[ label ] || label
               },
@@ -3674,6 +3709,10 @@
               toggle: function (event) {
                 if (eventShouldBeIgnored(event)) return
                 this.toggle(`${event.keypath}.expanded`)
+              },
+              toggleEsoterics: function (event) {
+                if (eventShouldBeIgnored(event)) return
+                this.toggle('showEsoterics')
               },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)

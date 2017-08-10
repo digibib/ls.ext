@@ -255,6 +255,9 @@ body {
 
     .tab-content {
       .grid-panel > .input-panel {
+        &.esoteric+.esoteric {
+          display: none !important;
+        }
         &:not(.first):first-child:before {
           background-color: lightgrey;
           content:"";
@@ -384,6 +387,11 @@ body {
             padding: 12px 12px 4px 0px;
           }
           .panel-part {
+            a.show-esoterics {
+              margin-top: 5px;
+              max-height: 20px;
+              display: inline-block;
+            }
             &.for-one-liner {
               display: flex;
               &:not(.last-one) {

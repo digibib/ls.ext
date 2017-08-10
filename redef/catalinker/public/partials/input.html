@@ -1,234 +1,252 @@
 {{#if (!(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(input, allInputs)))}}
-<span class="input-panel prop-input"
-      class-pure-u-1-1="{{!compare}}"
-      class-pure-u-1-2="{{compare}}"
-      {{#if !compareMode}}
-      as-dropZone="{inputIndex, input}"
-      {{/if}}
-      {{#if !compare}}
-          intro='slideIn'
-          outro='slideOut'
-      {{/if}}
-      {{#if type != 'input-boolean' && !oneLiner}}as-heightAligned=".updateHeights"{{/if}}
-      {{#if inputIndex === 0}}data-support-panel-base-id="support_panel_base_fixed"{{/if}}
->
-<span class-for-one-liner="{{type === 'input-boolean' || oneLiner}}"
-      class-panel-part="{{type === 'input-boolean' || oneLiner}}"
-      class-pure-u-1-2="{{(type === 'input-boolean' || oneLiner) && !compare}}"
-      class-pure-u-1-1="{{(type === 'input-boolean' || oneLiner) && compare}}"
-      class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
-      class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
-<span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{accordionHeader || compare ? '1' : '2'}}{{/if}} label"
-      class-for-one-liner="{{oneLiner == true || type == 'input-boolean'}}"
-      class-panel-part="{{type !== 'input-boolean' && !oneLiner}}"
-      class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
-      {{#if labelKey}}
-      data-uri-escaped-label="{{encodeURI(translate(labelKey))}}"
-      {{else}}
-      data-uri-escaped-label="{{encodeURI(label)}}"
-      {{/if}}
->{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}
-</span>
-<span class-panel-part="{{type != 'input-boolean' && !oneLiner}}"
-      class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner && (accordionHeader || compare)}}"
-      class-pure-u-1-2="{{type != 'input-boolean' && !oneLiner && (!accordionHeader || !compare)}}"
-      class-one-liner="{{type === 'input-boolean' || oneLiner}}"
-      class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}"
-      intro={{accordionHeader && subInputs ? 'accordion' : ''}}>
-      {{#if compareMode }}
-        {{#if !subInputs && (!compareValues || !compareValues.length > 0) }}
-            <span class="pure-u-1 field dummy"></span>
-        {{/if}}
-        {{#each compareValues:inputValueIndex}}
-            {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
-                <span class="input" as-disabled>
-                    <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                        {{>conditional-input-type}}
-                        <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-                    </span>
-                </span>
-            {{/if}}
-        {{/each}}
-      {{else}}
-        {{#each values:inputValueIndex}}
-            {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
-                <span class="input">
-                    <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                        {{>conditional-input-type}}
-                        <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
-                    </span>
-                    {{#if supportable}}
-                    <span class="support-panel" class-fixed={{supportAuthorityComparison}} data-support-panel-base-ref="support_panel_base_{{!supportAuthorityComparison ? uniqueId : 'fixed'}}">
-                        {{#if supportAuthorityComparison}}
-                            {{>support-for-edit-authority}}
-                        {{else}}
-                            {{>"support-for-"+type}}
-                        {{/if}}
-                    </span>
-                    {{/if}}
-                </span>
-            {{/if}}
-        {{/each}}
-    {{/if}}
-        {{#with values[0]}}
-            {{>suggested-values}}
-        {{/with}}
-
-    {{#if subInputs}}
-    {{#if unacceptedSuggestions(input)}}
-    <div class="pure-u-1-1 label" style="order: 99;">
-        {{>"suggestionFromOtherSources"}}
-    </div>
-    {{/if}}
-    {{#if !./unFinished}}
-    {{#if !subInputs[0].input[compareMode ? 'compareValues' :'values']}}
-            <span class="pure-u-1 field dummy"></span>
-    {{/if}}
-    {{#each subInputs[0].input[compareMode ? 'compareValues' :'values']:inputValueIndex}}
-        {{#if nonEditable && ../../../../../accordionHeader}}
-        <h3 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}" class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
-            {{#with ../../../../../accordionHeader}}
-            {{>"accordion-header-for-"+. }}
-            {{/with}}
-        </h3>
-        {{/if}}
-        <div style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
-              {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
-            {{#if nonEditable && !suggested}}
-            <div class="pure-u-1" >
-                {{#if ! compareMode}}
-                <div class="pure-u-23-24 delete" >
-                    <a class="delete" title="{{>'deletEntry'}}"
-                       on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" ></a >
+        <span class="input-panel prop-input"
+              class-pure-u-1-1="{{!compare}}"
+              class-pure-u-1-2="{{compare}}"
+              class-esoteric="{{(!showEsoterics && checkEsoteric(input, allInputs))}}"
+              {{#if !compareMode}}
+              as-dropZone="{inputIndex, input}"
+              {{/if}}
+              {{#if !compare}}
+                  intro='slideIn'
+                  outro='slideOut'
+              {{/if}}
+              {{#if type != 'input-boolean' && !oneLiner}}as-heightAligned=".updateHeights"{{/if}}
+              {{#if inputIndex === 0}}data-support-panel-base-id="support_panel_base_fixed"{{/if}}
+        >
+        {{#if !showEsoterics && checkEsoteric(input, allInputs)}}
+        <span class="panel-part pure-u-1-2">
+            <span class="field pure-u" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                <a class="show-esoterics" on-keyup="toggleEsoterics" on-click='toggleEsoterics' title="{{>showEsotericFieldsLegend}}">{{>showEsotericFields}}</a>
+            </span>
+            <span class="support-panel no-offset" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+                <div class="prop-search-results support-panel-content"
+                     on-escape="cancelEdit">
+                    <div class="search-result-box">
+                    {{>showEsotericFieldsSupportLegend}}
+                    </div>
                 </div>
-                <div class="pure-u-1-24 edit" >
-                    <a class="edit"
-                       tabindex="{{tabSelected ? '0' : '-1'}}"
-                       title="{{>'editEntry'}}"
-                       on-click="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
-                       on-enter="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
-                    ></a >
-                </div>
+            </span>
+        </span>
+        {{/if}}
+        {{#if (showEsoterics || !(checkEsoteric(input, allInputs)))}}
+        <span class-for-one-liner="{{type === 'input-boolean' || oneLiner}}"
+              class-panel-part="{{type === 'input-boolean' || oneLiner}}"
+              class-pure-u-1-2="{{(type === 'input-boolean' || oneLiner) && !compare}}"
+              class-pure-u-1-1="{{(type === 'input-boolean' || oneLiner) && compare}}"
+              class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
+              class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
+        <span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{accordionHeader || compare ? '1' : '2'}}{{/if}} label"
+              class-for-one-liner="{{oneLiner == true || type == 'input-boolean'}}"
+              class-panel-part="{{type !== 'input-boolean' && !oneLiner}}"
+              class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
+              {{#if labelKey}}
+              data-uri-escaped-label="{{encodeURI(translate(labelKey))}}"
+              {{else}}
+              data-uri-escaped-label="{{encodeURI(label)}}"
+              {{/if}}
+        >{{#if labelKey}}{{>labelKey}}{{else}}{{label}}{{/if}}
+        </span>
+        <span class-panel-part="{{type != 'input-boolean' && !oneLiner}}"
+              class-pure-u-1-1="{{type != 'input-boolean' && !oneLiner && (accordionHeader || compare)}}"
+              class-pure-u-1-2="{{type != 'input-boolean' && !oneLiner && (!accordionHeader || !compare)}}"
+              class-one-liner="{{type === 'input-boolean' || oneLiner}}"
+              class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}"
+              intro={{accordionHeader && subInputs ? 'accordion' : ''}}>
+              {{#if compareMode }}
+                {{#if !subInputs && (!compareValues || !compareValues.length > 0) }}
+                    <span class="pure-u-1 field dummy"></span>
                 {{/if}}
-            </div >
+                {{#each compareValues:inputValueIndex}}
+                    {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
+                        <span class="input" as-disabled>
+                            <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                                {{>conditional-input-type}}
+                                <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+                            </span>
+                        </span>
+                    {{/if}}
+                {{/each}}
+              {{else}}
+                {{#each values:inputValueIndex}}
+                    {{#if (!suggested || (suggested && primarySuggestionAccepted))}}
+                        <span class="input">
+                            <span class="field" class-pure-u-1="{{type != 'input-boolean' && !oneLiner}}" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
+                                {{>conditional-input-type}}
+                                <div class="invalid-msg">{{#error}}{{error}}{{/error}}</div>
+                            </span>
+                            {{#if supportable}}
+                            <span class="support-panel" class-fixed={{supportAuthorityComparison}} data-support-panel-base-ref="support_panel_base_{{!supportAuthorityComparison ? uniqueId : 'fixed'}}">
+                                {{#if supportAuthorityComparison}}
+                                    {{>support-for-edit-authority}}
+                                {{else}}
+                                    {{>"support-for-"+type}}
+                                {{/if}}
+                            </span>
+                            {{/if}}
+                        </span>
+                    {{/if}}
+                {{/each}}
             {{/if}}
-            <span class="input-wrapper" {{#if compare && compareMode}}as-draggable="{inputIndex, input:../../../../../subInputs[0].parentInput, inputValueIndex}"{{/if}}>
-                <span class="inputs">
-                    {{#each ../../../../../subInputs}}
-                        {{#if !(./input.visible === false) || nonEditable}}
-                            <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
-                                <span class="label"
-                                      class-pure-u-3-4="{{!nonEditable && !suggested}}"
-                                      class-for-one-liner="{{input.type === 'input-boolean' || oneLiner == true}}"
-                                      data-uri-escaped-label="{{encodeURI(input.labelKey? translate(input.labelKey) : input.label)}}">{{#if input.labelKey}}{{>input.labelKey}}{{else}}{{input.label}}{{/if}}</span>
-                                {{#with input[compareMode ? 'compareValues' :'values'][inputValueIndex]}}
-                                    <span class="value sub-field" data-support-panel-base-id="support_panel_base_{{./uniqueId}}">
-                                        {{>../../../input.type}}
-                                        {{#if ! nonEditable }}
-                                            {{>suggested-values}}
-                                        {{/if}}
+                {{#with values[0]}}
+                    {{>suggested-values}}
+                {{/with}}
+
+            {{#if subInputs}}
+            {{#if unacceptedSuggestions(input)}}
+            <div class="pure-u-1-1 label" style="order: 99;">
+                {{>"suggestionFromOtherSources"}}
+            </div>
+            {{/if}}
+            {{#if !./unFinished}}
+            {{#if !subInputs[0].input[compareMode ? 'compareValues' :'values']}}
+                    <span class="pure-u-1 field dummy"></span>
+            {{/if}}
+            {{#each subInputs[0].input[compareMode ? 'compareValues' :'values']:inputValueIndex}}
+                {{#if nonEditable && ../../../../../accordionHeader}}
+                <h3 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}" class="accordionHeader" style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 || inputValueIndex + ((suggested || keepOrder) ? 100 : 0)}};" intro=accordionSection>
+                    {{#with ../../../../../accordionHeader}}
+                    {{>"accordion-header-for-"+. }}
+                    {{/with}}
+                </h3>
+                {{/if}}
+                <div style="order: {{valueOrderOfInputById(../../../../../orderBy, inputValueIndex) * 2 + 1}};" class="pure-u-1-{{accordionHeader && !nonEditable ? 2 : 1}} field {{#if cssClassPrefix && !suggested}}{{cssClassPrefix}}-{{nonEditable ? 'non-' :''}}editable{{/if}} {{#if cssClassPrefix && suggested}}{{cssClassPrefix}}-{{/if}}{{#if suggested}}suggested{{/if}}"
+                      {{#if nonEditable}}disabled="disabled" {{/if}}  {{#if nonEditable && ../../../../../accordionHeader}}intro=accordionSection{{/if}}>
+                    {{#if nonEditable && !suggested}}
+                    <div class="pure-u-1" >
+                        {{#if ! compareMode}}
+                        <div class="pure-u-23-24 delete" >
+                            <a class="delete" title="{{>'deletEntry'}}"
+                               on-click="deleteObject:{{../../../input.parentInput}},{{inputValueIndex}}" ></a >
+                        </div>
+                        <div class="pure-u-1-24 edit" >
+                            <a class="edit"
+                               tabindex="{{tabSelected ? '0' : '-1'}}"
+                               title="{{>'editEntry'}}"
+                               on-click="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
+                               on-enter="editObject:{{../../../input.parentInput}},{{inputValueIndex}}"
+                            ></a >
+                        </div>
+                        {{/if}}
+                    </div >
+                    {{/if}}
+                    <span class="input-wrapper" {{#if compare && compareMode}}as-draggable="{inputIndex, input:../../../../../subInputs[0].parentInput, inputValueIndex}"{{/if}}>
+                        <span class="inputs">
+                            {{#each ../../../../../subInputs}}
+                                {{#if !(./input.visible === false) || nonEditable}}
+                                    <span class="input {{#if !nonEditable && ! suggested}}pure-u-{{input.widgetOptions.isRangeStart ? '1-4' : (input.widgetOptions.isRangeEnd ? '3-4' : '1-1')}}{{/if}} {{#if input.widgetOptions.isRangeStart}}rangeStart{{/if}}{{#if input.widgetOptions.isRangeEnd}}rangeEnd{{/if}}">
+                                        <span class="label"
+                                              class-pure-u-3-4="{{!nonEditable && !suggested}}"
+                                              class-for-one-liner="{{input.type === 'input-boolean' || oneLiner == true}}"
+                                              data-uri-escaped-label="{{encodeURI(input.labelKey? translate(input.labelKey) : input.label)}}">{{#if input.labelKey}}{{>input.labelKey}}{{else}}{{input.label}}{{/if}}</span>
+                                        {{#with input[compareMode ? 'compareValues' :'values'][inputValueIndex]}}
+                                            <span class="value sub-field" data-support-panel-base-id="support_panel_base_{{./uniqueId}}">
+                                                {{>../../../input.type}}
+                                                {{#if ! nonEditable }}
+                                                    {{>suggested-values}}
+                                                {{/if}}
+                                            </span>
+                                            {{#if (! nonEditable && !suggested && ../../../input.supportable && !compareMode) || showSupportPanel}}
+                                                <span class="support-panel"
+                                                      data-support-panel-base-ref="support_panel_base_{{./uniqueId}}">
+                                                    {{#with ../../../input}}
+                                                        {{>"support-for-"+type}}
+                                                    {{/with}}
+                                                </span>
+                                            {{/if}}
+                                        {{/with}}
+                                        <span class="invalid-msg" class-pure-u-1-1="{{!nonEditable && !suggested}}">{{#error}}{{error}}{{/error}}</span>
                                     </span>
-                                    {{#if (! nonEditable && !suggested && ../../../input.supportable && !compareMode) || showSupportPanel}}
-                                        <span class="support-panel"
-                                              data-support-panel-base-ref="support_panel_base_{{./uniqueId}}">
-                                            {{#with ../../../input}}
-                                                {{>"support-for-"+type}}
-                                            {{/with}}
-                                        </span>
+                                {{/if}}
+                            {{/each}}
+                        </span>
+                        <span class="subject-type-association">
+                            <span class-pure-u-1-1="{{!nonEditable && !suggested}}">
+                                {{#with ../../../parentInput}}
+                                    {{#if ! nonEditable && ! (suggested && multiple)}}
+                                        {{#each subjectTypes:index}}
+                                        {{#with subInputs[0].input[compareMode ? 'compareValues' :'values'][inputValueIndex]}}
+                                            {{#if (subjectTypes.length > 1)}}
+                                            <span class="subject-type-select">
+                                                <input tabindex="{{tabSelected ? '0' : '-1'}}"type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
+                                                       {{# !targetUri[../../../../../../../subjectTypes[index]]}}title="{{>'cannotSelectRelationBeforeResourceTypeIsLoaded'}}"
+                                                       disabled='disabled' {{/}}/>
+                                                <label tabindex="-1">{{subjectTypeLabel(subjectTypes[index])}}</label>
+                                            </span>
+                                        {{/if}}
+                                        {{/with}}
+                                        {{/each}}
                                     {{/if}}
                                 {{/with}}
-                                <span class="invalid-msg" class-pure-u-1-1="{{!nonEditable && !suggested}}">{{#error}}{{error}}{{/error}}</span>
+                                {{#if ./nonEditable || ./suggested}}
+                                        {{subjectTypeLabelDet(subjectType)}}
+                                {{else}}
+                                <button class="pure-button pure-button-primary add-item-button"
+                                        tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                                        {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
+                                  title="{{>missingRequiredValuesOfBlankMode}}"{{/if}}
+                                {{#if edit}}
+                                   on-click="replaceObject:{{inputValueIndex}}"
+                                {{else}}
+                                   on-click="saveNewObject:{{inputValueIndex}}"
+                                {{/if}}
+                                >
+                                {{#if edit}}{{>"save"}}{{else}}{{>"defaultAddAnotherLabel"}}{{/if}}
+                                </button>
+                                <span class="save-placeholder"></span>
+                                {{/if}}
                             </span>
-                        {{/if}}
-                    {{/each}}
-                </span>
-                <span class="subject-type-association">
-                    <span class-pure-u-1-1="{{!nonEditable && !suggested}}">
-                        {{#with ../../../parentInput}}
-                            {{#if ! nonEditable && ! (suggested && multiple)}}
-                                {{#each subjectTypes:index}}
-                                {{#with subInputs[0].input[compareMode ? 'compareValues' :'values'][inputValueIndex]}}
-                                    {{#if (subjectTypes.length > 1)}}
-                                    <span class="subject-type-select">
-                                        <input tabindex="{{tabSelected ? '0' : '-1'}}"type="radio" name="{{inputGroups[groupIndex].inputs[0].subInputs[0].input.values[inputValueIndex].subjectType}}" value="{{subjectTypes[index]}}"
-                                               {{# !targetUri[../../../../../../../subjectTypes[index]]}}title="{{>'cannotSelectRelationBeforeResourceTypeIsLoaded'}}"
-                                               disabled='disabled' {{/}}/>
-                                        <label tabindex="-1">{{subjectTypeLabel(subjectTypes[index])}}</label>
-                                    </span>
-                                {{/if}}
-                                {{/with}}
-                                {{/each}}
-                            {{/if}}
-                        {{/with}}
-                        {{#if ./nonEditable || ./suggested}}
-                                {{subjectTypeLabelDet(subjectType)}}
-                        {{else}}
-                        <button class="pure-button pure-button-primary add-item-button"
-                                tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                                {{#if typeof ./subjectType === 'undefined' || ../../values.length == 0 || (!resourceIsLoaded(./subjectType)) || inputGroupRequiredVetoes[inputValueIndex].length > 0}}disabled
-                          title="{{>missingRequiredValuesOfBlankMode}}"{{/if}}
-                        {{#if edit}}
-                           on-click="replaceObject:{{inputValueIndex}}"
-                        {{else}}
-                           on-click="saveNewObject:{{inputValueIndex}}"
-                        {{/if}}
-                        >
-                        {{#if edit}}{{>"save"}}{{else}}{{>"defaultAddAnotherLabel"}}{{/if}}
-                        </button>
-                        <span class="save-placeholder"></span>
-                        {{/if}}
-                    </span>
-                </span>
-                {{#if suggested}}
-                <div class="pure-u-1-1 suggestion-source-{{suggested.source}}">
-                   <span class="pure-u-4-6"></span>
-                    <span class="pure-u-2-6 use-suggestion-button">
-                        <button
-                                tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                                on-click="useSuggestion"
-                                class="pure-button pure-button-primary">{{>"useSuggestion"}}</button>
-                    </span>
-                </div>
-                {{/if}}
-            </div>
-{{/each}}
-{{/if}}
-{{/if}}
-
-{{#multiple && allowAddNewButton}}
-    <span class="pure-u-1-1" style="order: 1000;">
-        <div class="add-new-btn-row pure-u-1">
-        {{#if ! compareMode}}
-            {{#if hasNextRange(input) || hasPrevRange(input)}}
-                        <button
-                                tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                                class="pure-button pure-button-primary pagination"
-                                {{#if !hasPrevRange(input)}}
-                                disabled="disabled"
-                                {{/if}}
-                                on-click="prevRange"
-                                on-enter="prevRange">-{{pagination}}</button>
-                        <button
-                                tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                                class="pure-button pure-button-primary pagination"
-                                {{#if !hasNextRange(input)}}
-                                disabled="disabled"
-                                {{/if}}
-                                on-click="nextRange"
-                                on-enter="nextRange">+{{pagination}}</button>
-                        <span class="pagination save-placeholder"></span>
-
-                        <span class="pure-u-11-24 pagination range-slider" as-rangeSlider="{rangeStats: subInputs[0].input.rangeStats, input}">
-                               <span class="range-slider-handle ui-slider-handle"/>
                         </span>
-            {{/if}}
-            <button
-                    tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-                    class="pure-button pure-button-primary add-button"
-                    on-click="addValue">{{>(addAnotherLabel || "defaultAddAnotherLabel")}}</button>
+                        {{#if suggested}}
+                        <div class="pure-u-1-1 suggestion-source-{{suggested.source}}">
+                           <span class="pure-u-4-6"></span>
+                            <span class="pure-u-2-6 use-suggestion-button">
+                                <button
+                                        tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                                        on-click="useSuggestion"
+                                        class="pure-button pure-button-primary">{{>"useSuggestion"}}</button>
+                            </span>
+                        </div>
+                        {{/if}}
+                    </div>
+        {{/each}}
         {{/if}}
-        </div>
-    </span>
-{{/}}
+        {{/if}}
+
+        {{#multiple && allowAddNewButton}}
+            <span class="pure-u-1-1" style="order: 1000;">
+                <div class="add-new-btn-row pure-u-1">
+                {{#if ! compareMode}}
+                    {{#if hasNextRange(input) || hasPrevRange(input)}}
+                                <button
+                                        tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                                        class="pure-button pure-button-primary pagination"
+                                        {{#if !hasPrevRange(input)}}
+                                        disabled="disabled"
+                                        {{/if}}
+                                        on-click="prevRange"
+                                        on-enter="prevRange">-{{pagination}}</button>
+                                <button
+                                        tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                                        class="pure-button pure-button-primary pagination"
+                                        {{#if !hasNextRange(input)}}
+                                        disabled="disabled"
+                                        {{/if}}
+                                        on-click="nextRange"
+                                        on-enter="nextRange">+{{pagination}}</button>
+                                <span class="pagination save-placeholder"></span>
+
+                                <span class="pure-u-11-24 pagination range-slider" as-rangeSlider="{rangeStats: subInputs[0].input.rangeStats, input}">
+                                       <span class="range-slider-handle ui-slider-handle"/>
+                                </span>
+                    {{/if}}
+                    <button
+                            tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
+                            class="pure-button pure-button-primary add-button"
+                            on-click="addValue">{{>(addAnotherLabel || "defaultAddAnotherLabel")}}</button>
+                {{/if}}
+                </div>
+            </span>
+        {{/}}
+    {{/if}}
 </span>
 {{/if}}
