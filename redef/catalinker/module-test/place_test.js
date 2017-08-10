@@ -20,17 +20,17 @@ describe("Catalinker", function () {
 
       // STUBS
 
-      sinon.stub(Main, "getResourceType", function () {
+      sinon.stub(Main, "getResourceType").callsFake(function () {
         return "Place"; // ID returned from window.location
       });
 
       // URL parameter
-      sinon.stub(Main, "getURLParameter", function () {
+      sinon.stub(Main, "getURLParameter").callsFake(function () {
         return "http://192.168.50.12:7000/place/g123456";
       });
 
       // http requests from axios used in module, faking returned promises
-      sinon.stub(axios, "get", function (path) {
+      sinon.stub(axios, "get").callsFake(function (path) {
 
         switch (path) {
         case "/config":
@@ -51,12 +51,12 @@ describe("Catalinker", function () {
       }
       });
       // Stub creating new resource
-      sinon.stub(axios, "post", function (path, data, headers) {
+      sinon.stub(axios, "post").callsFake(function (path, data, headers) {
         return Promise.resolve({data: {}, headers: { location: ""} });
       });
 
       // Stub updating resource
-      sinon.stub(axios, "patch", function (path, data, headers) {
+      sinon.stub(axios, "patch").callsFake(function (path, data, headers) {
         return Promise.resolve({data: {}, headers: { location: ""} });
       });
 
