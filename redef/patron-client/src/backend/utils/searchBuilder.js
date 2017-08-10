@@ -46,8 +46,8 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
   options = Object.assign({
     explain: false,
     ageGain: 0.6,
-    ageScale: 100,
-    itemsGain: 0.3,
+    ageScale: 1000.0,
+    itemsGain: 0.0,
     itemsScale: 100,
     itemsCountLimit: 200,
     childBoost: 1
@@ -174,7 +174,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                       def age_gain=params.ageGain;
                       def age_scale=params.ageScale;
                       if (!doc['created'].empty) {
-                        score *= (1 + (age_gain*age_scale)/(age_scale+(params.now - doc.created.date.getMillis())/86400000));
+                        score *= (1.0 + age_gain * Math.max(1 - ((params.now - doc.created.date.getMillis())/86400000)/age_scale, 1.0));
                       }
 
                       return score;`.replace('\n', ''),
