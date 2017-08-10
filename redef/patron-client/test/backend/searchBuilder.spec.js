@@ -82,11 +82,11 @@ function advancedQuery (queryWant, boolOperator) {
                             lang: 'painless',
                             params: {
                               now: 'deleted',
-                              itemsGain: 0.3,
+                              itemsGain: 0.0,
                               itemsScale: 100,
                               itemsCountLimit: 200,
                               ageGain: 0.6,
-                              ageScale: 100
+                              ageScale: 1000
                             }
                           }
                         }
@@ -1265,11 +1265,11 @@ describe('searchBuilder', () => {
                             lang: 'painless',
                             params: {
                               now: 'deleted',
-                              itemsGain: 0.3,
+                              itemsGain: 0.0,
                               itemsScale: 100,
                               itemsCountLimit: 200,
                               ageGain: 0.6,
-                              ageScale: 100
+                              ageScale: 1000
                             }
                           }
                         }
