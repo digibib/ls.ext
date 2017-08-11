@@ -33,7 +33,7 @@
                                     {{else}}
                                     {{#each ../../../../../subInputs}}
                                                 <span class="pure-u-1-2 label"
-                                                      data-uri-escaped-label="{{encodeURI(label)}}">{{>(input.widgetOptions.reportLabel || label)}}</span>
+                                                      data-uri-escaped-label="{{encodeURI(input.label)}}">{{#if input.widgetOptions.reportLabel}}{{>input.widgetOptions.reportLabel}}{{else}}{{input.label}}{{/if}}</span>
                                                 {{#with input.values[inputValueIndex]}}
                                                     <span class="pure-u-1-2">
                                                         {{>"readonly-" + ../../../input.type}}

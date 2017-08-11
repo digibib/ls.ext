@@ -1493,7 +1493,6 @@ module.exports = (app) => {
                       rdfProperty: 'startsAtPage',
                       widgetOptions: {
                         isRangeStart: true,
-                        reportLabel: 'Sidetall fra'
                       }
                     },
                     {
@@ -1502,7 +1501,6 @@ module.exports = (app) => {
                       rdfProperty: 'endsAtPage',
                       widgetOptions: {
                         isRangeEnd: true,
-                        reportLabel: 'Sidetall til'
                       }
                     }
                   ]
