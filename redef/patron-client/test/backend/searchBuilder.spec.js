@@ -85,7 +85,7 @@ function advancedQuery (queryWant, boolOperator) {
                               itemsGain: 0.0,
                               itemsScale: 100,
                               itemsCountLimit: 200,
-                              ageGain: 0.6,
+                              ageGain: 10.0,
                               ageScale: 1000
                             }
                           }
@@ -1268,8 +1268,8 @@ describe('searchBuilder', () => {
                               itemsGain: 0.0,
                               itemsScale: 100,
                               itemsCountLimit: 200,
-                              ageGain: 0.6,
-                              ageScale: 1000
+                              ageGain: 10.0,
+                              ageScale: 1000.0
                             }
                           }
                         }

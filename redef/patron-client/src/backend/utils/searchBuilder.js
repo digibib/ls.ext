@@ -45,7 +45,7 @@ function pubAggFilter (field, workFilters, publicationFilters) {
 function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 20, options) {
   options = Object.assign({
     explain: false,
-    ageGain: 0.6,
+    ageGain: 10.0,
     ageScale: 1000.0,
     itemsGain: 0.0,
     itemsScale: 100,
