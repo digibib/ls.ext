@@ -12,10 +12,33 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.48
+
+KOHA: 8e3b1c1814aaa079f33d4ed54fc22d30f5478c61
+GITREF: TODO
+
+- Koha
+  - DEICH-855: Reintroduce expirationdate on HOLD_SLIP
+  - DEICH-852: Add Template Plugin for extending waiting period
+  - DEICH-844, DEICH-828: Simplify acceptance of self-registered users in Koha
+  - DEICH-861: SIP checkout of material on hold should not be allowed
+  - DEICH-656: Add rudimentary NCIP and ILL support
+  - DEICH-860: Fix duplicates in biblios expanded endpoint
+- Catalinker:
+  - DEICH-688, DEICH-569: work series also show up on work page when related
+  - DEICH-736: fix multiple nationality on edit person popup form
+  - DEICH-614: Fix/conform main title information fields in catalinker
+  - DEICH-835: dont allow saving on incomplete fields in advanced edit
+  - DEICH-837: hide infrequently used fields
+  - DEICH-868: fix parsing of numbers
+- Annet
+  - DEICH-393: Rewrite index to use parent/child mapping
+  - Koha-indexer: DEICH-848 - fix availability filter
+
 ## 2017.47
 
 KOHA: de59526ee8b3c6adc9a709d40d69abc9767f8dfe
-GITREF: TODO
+GITREF: 3091db77df0d7cc9ef51c45bf2a4af3ebb85763e
 
 - Koha
   - Upgraded koha to 17.05.01 (bugfix release)
