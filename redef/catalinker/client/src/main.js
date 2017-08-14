@@ -4082,6 +4082,7 @@
                     ractive.set(`${keyPath}.tabSelected`, false)
                   }
                 })
+                positionSupportPanels()
               },
               deleteResource: function (event) {
                 var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
