@@ -175,6 +175,8 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                       def age_scale=params.ageScale;
                       if (!doc['created'].empty) {
                         score *= (1.0 + age_gain * Math.min(1 - ((params.now - doc.created.date.getMillis())/86400000)/age_scale, 1.0));
+                      } else if (!doc['publicationYear'].empty) {
+                        score *= (1.0 + age_gain * (1.0 - Math.min((params.now - (doc.publicationYear.value - 1970) * 31536000*1000)/86400000, age_scale)/age_scale))
                       }
 
                       return score;`.replace('\n', ''),
