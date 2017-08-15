@@ -28,7 +28,7 @@ module.exports = {
     { field: 'partTitle', phrase: true },
     { field: 'publishedBy' },
     { field: 'recordId' },
-    { field: 'series', boost: 1 },
+    { field: 'series', boost: 10 },
     { field: 'title', boost: 0.1 }
   ],
   defaultWorkFields: [
@@ -47,7 +47,8 @@ module.exports = {
     { field: 'subtitle', boost: 1, phrase: true },
     { field: 'subtitle.raw', boost: 1 },
     { field: 'partTitle', phrase: true },
-    { field: 'series', boost: 2 },
-    { field: 'subject', boost: 0.5, phrase: true }
+    { field: 'series', boost: 10 },
+    { field: 'subject', boost: 0.5, phrase: true },
+    { field: 'subject.raw', boost: 0.5, phrase: true }
   ]
 }
