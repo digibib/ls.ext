@@ -51,7 +51,7 @@ class SearchFilterItem extends React.Component {
             />
           </div>
           <h2 className="filter_label" data-automation-id="filter_label" data-checked={filter.active} aria-hidden="true">
-            {this.props.intl.formatMessage({ id: filter.bucket })} <span className="filter_count">({filter.count})</span>
+            {this.props.intl.formatMessage({ id: filter.bucket })}{/* <span className="filter_count">({filter.count})</span> */}
           </h2>
         </label>
       </li>
