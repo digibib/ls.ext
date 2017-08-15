@@ -751,7 +751,9 @@ module.exports = (app) => {
               },
               {
                 includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book', 'Film', 'MusicRecording', 'Game' ] },
-                rdfProperty: 'hasEan'
+                rdfProperty: 'hasEan',
+                multiple: true,
+                addAnotherLabel: 'addAnotherEAN'
               },
               {
                 includeOnlyWhen: {
