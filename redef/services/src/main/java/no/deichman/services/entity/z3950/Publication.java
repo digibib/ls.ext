@@ -24,7 +24,7 @@ public class Publication extends BibliographicObjectExternal {
         Paged, United
     }
 
-    Publication() {
+    public Publication() {
     }
 
     @SerializedName("deichman:isbn")

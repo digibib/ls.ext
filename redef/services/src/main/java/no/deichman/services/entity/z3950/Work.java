@@ -53,7 +53,7 @@ public class Work extends BibliographicObjectExternal {
         super(workId);
     }
 
-    Work() {
+    public Work() {
     }
 
     @Override
