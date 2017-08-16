@@ -8,6 +8,7 @@ import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Subfield;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -59,7 +61,7 @@ public class MARCMapper {
     }
 
     final List<Object> getMapping(String record) {
-        MarcReader reader = new MarcXmlReader(IOUtils.toInputStream(record));
+        MarcReader reader = new MarcXmlReader(IOUtils.toInputStream(record, StandardCharsets.UTF_8));
         List<Object> list = new ArrayList<>();
         while (reader.hasNext()) {
             list.add(mapRecordToMap(reader.next()));
@@ -72,7 +74,7 @@ public class MARCMapper {
         List<Corporation> corporations = new ArrayList<>();
         List<Contribution> contributions = new ArrayList<>();
         List<PublicationPart> publicationParts = new ArrayList<>();
-        List<Work> publicationPartWorks = new ArrayList<>();
+        AtomicReference<List<Work>> publicationPartWorks = new AtomicReference<>(new ArrayList<>());
 
         Work work = new Work();
         work.addType(TOP_BANANA_TYPE);
@@ -399,7 +401,7 @@ public class MARCMapper {
         if (publicationParts.size() > 0) {
             graphList.addAll(publicationParts);
         }
-        graphList.addAll(publicationPartWorks);
+        graphList.addAll(publicationPartWorks.get());
 
         return topLevelMap;
     }
@@ -635,7 +637,7 @@ public class MARCMapper {
         return punctuated.replace(".", "");
     }
 
-    public final String dataPrefix(String unprefixed) {
+    private String dataPrefix(String unprefixed) {
         return "http://data.deichman.no/" + unprefixed;
     }
 

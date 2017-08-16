@@ -1,4 +1,4 @@
-FROM java:8
+FROM java:9
 
 ADD build/libs/services-1.0-SNAPSHOT-standalone.jar /services-1.0-SNAPSHOT-standalone.jar
 

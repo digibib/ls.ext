@@ -18,6 +18,108 @@ import static org.junit.Assert.assertThat;
  * Responsibility: test that marc is mapped as expected.
  */
 public class MARCMapperTest extends MappingTester {
+    @Test
+    public void test_get_mapping() throws Exception {
+        String ragde = new ResourceReader().readFile("ragde.marcxml");
+        MARCMapper marcMapper = new MARCMapper();
+        String result = new GsonBuilder()
+                .setPrettyPrinting()
+                .create()
+                .toJson(marcMapper.getMapping(ragde))
+                .replaceAll("_:[^\"]+", "_:DOES_NOT_MATTER");
+
+        String expected = "[\n"
+                + "  {\n"
+                + "    \"@graph\": [\n"
+                + "      {\n"
+                + "        \"deichman:audience\": [\n"
+                + "          {\n"
+                + "            \"@id\": \"http://data.deichman.no/audience#adult\"\n"
+                + "          }\n"
+                + "        ],\n"
+                + "        \"deichman:fictionNonfiction\": {\n"
+                + "          \"@id\": \"http://data.deichman.no/fictionNonfiction#fiction\"\n"
+                + "        },\n"
+                + "        \"deichman:contributor\": [\n"
+                + "          {\n"
+                + "            \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "          }\n"
+                + "        ],\n"
+                + "        \"deichman:mainTitle\": \"Berlinerpoplene\",\n"
+                + "        \"@type\": [\n"
+                + "          \"deichman:Work\",\n"
+                + "          \"deichman:TopBanana\"\n"
+                + "        ],\n"
+                + "        \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "      },\n"
+                + "      {\n"
+                + "        \"deichman:hasPlaceOfPublication\": {\n"
+                + "          \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "        },\n"
+                + "        \"deichman:publishedBy\": {\n"
+                + "          \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "        },\n"
+                + "        \"deichman:publicationOf\": {\n"
+                + "          \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "        },\n"
+                + "        \"deichman:publicationYear\": \"2004\",\n"
+                + "        \"deichman:mainTitle\": \"Berlinerpoplene\",\n"
+                + "        \"deichman:language\": [\n"
+                + "          {\n"
+                + "            \"@id\": \"http://lexvo.org/id/iso639-3/nob\"\n"
+                + "          }\n"
+                + "        ],\n"
+                + "        \"@type\": [\n"
+                + "          \"deichman:Publication\"\n"
+                + "        ],\n"
+                + "        \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "      },\n"
+                + "      {\n"
+                + "        \"@type\": [\n"
+                + "          \"deichman:Place\"\n"
+                + "        ],\n"
+                + "        \"@id\": \"_:DOES_NOT_MATTER\",\n"
+                + "        \"deichman:prefLabel\": \"Oslo\"\n"
+                + "      },\n"
+                + "      {\n"
+                + "        \"deichman:name\": \"Oktober\",\n"
+                + "        \"@type\": [\n"
+                + "          \"deichman:Corporation\"\n"
+                + "        ],\n"
+                + "        \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "      },\n"
+                + "      {\n"
+                + "        \"deichman:name\": \"Ragde, Anne B.\",\n"
+                + "        \"@type\": [\n"
+                + "          \"deichman:Person\"\n"
+                + "        ],\n"
+                + "        \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "      },\n"
+                + "      {\n"
+                + "        \"deichman:agent\": {\n"
+                + "          \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "        },\n"
+                + "        \"deichman:role\": {\n"
+                + "          \"@id\": \"http://data.deichman.no/role#author\"\n"
+                + "        },\n"
+                + "        \"@type\": [\n"
+                + "          \"deichman:Contribution\",\n"
+                + "          \"deichman:MainEntry\"\n"
+                + "        ],\n"
+                + "        \"@id\": \"_:DOES_NOT_MATTER\"\n"
+                + "      }\n"
+                + "    ],\n"
+                + "    \"@context\": {\n"
+                + "      \"deichman\": \"http://deichman.no/ontology#\",\n"
+                + "      \"rdfs\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\",\n"
+                + "      \"duo\": \"http://deichman.no/utility#\"\n"
+                + "    }\n"
+                + "  }\n"
+                + "]";
+
+        assertEquals(expected, result);
+    }
+
     @BeforeClass
     public static void setupJena() {
         JenaSystem.init(); // Needed to counter sporadic nullpointerexceptions because of context is not initialized.
