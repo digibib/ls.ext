@@ -858,7 +858,11 @@ When(/^dialogen viser at verket ikke kan slettes$/) do
   @browser.span(:data_automation_id => 'undeleteable-work').should exist
 end
 
-When(/^klikker jeg på lenken for å vise mindre brukte felter$/) do
-  @browser.a(:text => 'Vis flere felter').click
+When(/^klikker jeg på lenkene for å vise mindre brukte felter$/) do
+  @browser.as(:class => 'toggle-esoteric').each do |a|
+    if a.visible?
+      a.click
+    end
+  end
   sleep 1
 end

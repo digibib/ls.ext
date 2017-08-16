@@ -723,6 +723,6 @@ Egenskap: Katalogisere i arbeidsflyt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og jeg venter litt
-    Så klikker jeg på lenken for å vise mindre brukte felter
+    Så klikker jeg på lenkene for å vise mindre brukte felter
     Og legger inn opplysningene om CD-utgivelsen
 

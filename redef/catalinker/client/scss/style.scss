@@ -255,8 +255,20 @@ body {
 
     .tab-content {
       .grid-panel > .input-panel {
-        &.esoteric+.esoteric {
-          display: none !important;
+        &.esoteric-hidden {
+          max-height: 0;
+        }
+        &.esoteric+.esoteric .support-panel {
+          display: none;
+        }
+        &.esoteric .support-panel {
+          ul {
+            margin-top: 0;
+            margin-bottom: 0;
+            li.visible {
+              display: list-item !important;
+            }
+          }
         }
         &:not(.first):first-child:before {
           background-color: lightgrey;
@@ -365,6 +377,9 @@ body {
             right: -39px;
           }
           .label {
+            &.esoteric {
+              margin-top: -23px;
+            }
             padding: 12px 12px 4px 12px;
             display: block;
             background: $input-background;
@@ -387,6 +402,9 @@ body {
             padding: 12px 12px 4px 0px;
           }
           .panel-part {
+            &.esoteric .field {
+              min-height: 0 !important;
+            }
             a.show-esoterics {
               margin-top: 5px;
               max-height: 20px;

@@ -764,7 +764,7 @@
 
     function checkEsoteric (input, allInputs) {
       if (input.values && (((input.values[ 0 ].current.value || '') !== '') || ((input.values[ 0 ].old.value || '') !== ''))) {
-        return false
+        input.showEsoteric = true
       }
       let isEsoteric = false
       let handleInput = function (includeWhenValues, property) {
@@ -2069,9 +2069,14 @@
       if (dummyPanel.length > 0) {
         const supportPanelLeftEdge = dummyPanel.position().left
         const supportPanelWidth = dummyPanel.width()
+        let lastShowEsotericLinksPanelBottom = 0
         $('span.support-panel').each(function (index, panel) {
-          const supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
+          const $panel = $(panel)
+          const supportPanelBaseId = $panel.attr('data-support-panel-base-ref')
           let supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
+          if (supportPanelBase.length === 0) {
+            supportPanelBase = $(`span[data-support-panel-base-id=${supportPanelBaseId}]`)
+          }
           let offset = 15
           if (supportPanelBase.length === 0) {
             supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}]`)
@@ -2079,18 +2084,27 @@
               offset = Math.max(0, (80 - supportPanelBase.height()) / 2)
             }
           }
-          if ($(panel).hasClass('fixed')) {
+          if ($panel.hasClass('fixed')) {
             offset = 0
-          } else if ($(panel).hasClass('no-offset')) {
-            offset = 25
+          } else if ($panel.hasClass('no-offset')) {
+            offset = 40
           }
           if (supportPanelBase.length > 0) {
-            $(panel).css({
-              top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,
-              left: supportPanelLeftEdge,
-              width: supportPanelWidth,
-              'z-index': 100 - index
-            })
+            let top = _.last(_.flatten([ supportPanelBase ])).position().top - offset
+            if ($panel.hasClass('show-esoterics') && lastShowEsotericLinksPanelBottom > 0 && top < lastShowEsotericLinksPanelBottom + 10) {
+              top = Math.max(top, lastShowEsotericLinksPanelBottom + 10)
+            }
+            if (top > 220) {
+              $panel.css({
+                top,
+                left: supportPanelLeftEdge,
+                width: supportPanelWidth,
+                'z-index': 100 - index
+              })
+            }
+            if ($panel.hasClass('show-esoterics') && ($panel.css('display') !== 'none')) {
+              lastShowEsotericLinksPanelBottom = top + $panel.height()
+            }
           }
         })
       }
@@ -3353,6 +3367,25 @@
               }
             }
           }
+          const esotericToggleGroup = function (node, input) {
+            const inputRef = `support_panel_base_${input.values[ 0 ].uniqueId}`
+            $(`span[data-support-panel-base-id=${inputRef}]`)
+            let group = [ inputRef ]
+            _.find($(node).closest('.esoteric.input-panel').nextAll(), function (node) {
+              const $node = $(node)
+              group.push($node.find('.field').attr('data-support-panel-base-id'))
+              return (!$node.hasClass('esoteric'))
+            })
+            _.each($(node).children(), function (li) {
+              const $li = $(li)
+              if (group.includes($li.attr('data-belongs-to-id-ref'))) {
+                $li.addClass('visible')
+              }
+            })
+            return {
+              teardown: function () {}
+            }
+          }
           titleRactive = new Ractive({
             el: 'title',
             template: '{{title.1 || title.2 || title.3 || "Katalogisering"}}',
@@ -3651,7 +3684,8 @@
               authorityEdit,
               draggable,
               dropZone,
-              setGlobalFlag
+              setGlobalFlag,
+              esotericToggleGroup
             },
             partials: applicationData.partials,
             transitions: {
@@ -3714,9 +3748,10 @@
                 if (eventShouldBeIgnored(event)) return
                 this.toggle(`${event.keypath}.expanded`)
               },
-              toggleEsoterics: function (event) {
+              toggleEsoteric: function (event) {
                 if (eventShouldBeIgnored(event)) return
-                this.toggle('showEsoterics')
+                this.toggle(`${event.keypath}.showEsoteric`)
+                positionSupportPanels()
               },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)
