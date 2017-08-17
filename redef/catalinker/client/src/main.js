@@ -1154,10 +1154,9 @@
       }
     }
 
-    function updateInputsForResource (response, resourceUri, options, root, type) {
+    function updateInputsForResource (graphData, resourceUri, options, root, type) {
       options = options || {}
       const valuesField = options.compareValues ? 'compareValues' : 'values'
-      const graphData = ensureJSON(response.data)
       const offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
       type = type || typeFromUri(resourceUri)
       root = root || ldGraph.parse(graphData).byId(resourceUri)
@@ -1187,7 +1186,7 @@
             } else {
               if (!onlyDoSuggestionForCreateNewResource) {
                 const rangeStart = (options.range || {}).start || 0
-                const rangeLength = (options.range || {}).rangeLength || ((input.parentInput || {}).pagination || 10000)
+                const rangeLength = options.disablePagination ? 10000 : (options.range || {}).rangeLength || ((input.parentInput || {}).pagination || 10000)
                 const loadForRangeOfInputs = function (startIndex, rangeLength) {
                   return function (_root) {
                     _root = _root || root
@@ -1380,7 +1379,7 @@
         }
       )
         .then(function (response) {
-            updateInputsForResource(response, resourceUri, options)
+            updateInputsForResource(ensureJSON(response.data), resourceUri, options)
             if (!options.keepDocumentUrl) {
               ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
             }
@@ -2323,7 +2322,7 @@
       })
         .then(function (response) {
           // successfully patched resource
-          updateInputsForResource(response, subject, {
+          updateInputsForResource(ensureJSON(response.data), subject, {
             keepDocumentUrl: true, inputs: [ _.find(allInputs(), function (input) {
               return input.predicate.indexOf('recordId') !== -1
             }) ]
@@ -4150,7 +4149,7 @@
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
                 let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
                 if (suggestedValuesGraphNode) {
-                  updateInputsForResource({ data: {} }, null, {
+                  updateInputsForResource({}, null, {
                     keepDocumentUrl: true,
                     source: event.context.source,
                     inputs: event.context.inputs,
@@ -4309,7 +4308,7 @@
                           }
                           _.each([ 'Work', 'Publication' ], function (domain) {
                             let byType = graph.byType(domain)
-                            updateInputsForResource({ data: {} }, null, options, byType[ 0 ], domain)
+                            updateInputsForResource({}, null, options, byType[ 0 ], domain)
                             resultStat.itemsFromOtherSources[ source ] = resultStat.itemsFromOtherSources[ source ] || 0
                             resultStat.itemsFromOtherSources[ source ]++
                           })
@@ -4447,13 +4446,14 @@
                           nodes = node.outAll(suggestionSpec.predicate)
                         }
                         _.each(nodes, function (node) {
-                          updateInputsForResource({ data: {} }, null, {
+                          updateInputsForResource({}, null, {
                             keepDocumentUrl: true,
                             source: event.context.source,
                             sourceLabel: event.context.sourceLabel,
                             wrapperObject: wrapperObject,
                             wrappedIn: wrappedIn,
-                            deferUpdate: true
+                            deferUpdate: true,
+                            disablePagination: true
                           }, node, domain)
 
                           if (node.isA('TopBanana')) {
