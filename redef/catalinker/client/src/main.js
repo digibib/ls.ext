@@ -1181,7 +1181,8 @@
               (unPrefix(ownerInput.domain) === options.wrappedIn || !options.wrappedIn) &&
               (options.wrapperObject && options.wrapperObject.isA(options.wrappedIn) || !options.wrapperObject)) {
               let inputParentOfCreateNewResourceFormKeypath = ractive.get(`inputLinks.${input.belongsToCreateResourceFormOfInput}`)
-              ractive.push(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource`, root)
+              let ownerValueIndex = ownerInput.values.map(value => value.current.value).indexOf(root.id)
+              ractive.set(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource.${ownerValueIndex}`, root)
               skipRest = true
             } else {
               if (!onlyDoSuggestionForCreateNewResource) {
@@ -2765,7 +2766,7 @@
               removeInputsForObject(input, index)()
               ractive.update()
               if (addedMultivalues > 1) {
-                updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
+                updateInputsForResource(response.data, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
               }
             }
             return response
@@ -2810,7 +2811,8 @@
         }
 
         function inputLabelWithContext (input) {
-          return input.isSubInput ? input.parentInput.label + ': ' + ractive.get(`${parentOf(input.keypath)}.label`) : input.label
+          let inputLabel = (input.labelKey ? translate(input.labelKey) : input.label)
+          return input.isSubInput ? (input.parentInput.labelKey ? translate(input.parentInput.labelKey) : input.parentInput.label) + ': ' + inputLabel : inputLabel
         }
 
         function tabIndexForNode (node) {
@@ -4474,66 +4476,71 @@
                       }
                     })
                   })
-                  let numberOfAdditionalSuggestions = []
-                  let sources = []
-                  let targets = []
-                  let suggestableMap = [] // an array of arrays with flags indicating which inputs may receive additional suggestion values
-                  let suggestedMap = []
-                  let warnWhenCopyingSubset = []
-                  forAllGroupInputs(function (targetInput, groupIndex, inputIndex, subInputIndex) {
-                    suggestableMap[ groupIndex ] = suggestableMap[ groupIndex ] || []
-                    suggestedMap[ groupIndex ] = suggestedMap[ groupIndex ] || []
-                    if (inputHasAcceptedSuggestions(targetInput, inputIndex) && inputCanReceiveAdditionalSuggestions(targetInput)) {
-                      suggestableMap[ groupIndex ][ subInputIndex ] = true
-                      _.each(targetInput.values, function (value, valueIndex) {
-                        if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
-                          (targetInput.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '')) {
-                          value.additionalSuggestion = {
-                            value: valueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0),
-                            displayValue: displayValueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0)
+                  ractive.update().then(function () {
+                    let numberOfAdditionalSuggestions = []
+                    let sources = []
+                    let targets = []
+                    let suggestableMap = [] // an array of arrays with flags indicating which inputs may receive additional suggestion values
+                    let suggestedMap = []
+                    let warnWhenCopyingSubset = []
+                    forAllGroupInputs(function (targetInput, groupIndex, inputIndex, subInputIndex) {
+                      suggestableMap[ groupIndex ] = suggestableMap[ groupIndex ] || []
+                      suggestedMap[ groupIndex ] = suggestedMap[ groupIndex ] || []
+                      if (inputHasAcceptedSuggestions(targetInput, inputIndex) && inputCanReceiveAdditionalSuggestions(targetInput)) {
+                        suggestableMap[ groupIndex ][ subInputIndex ] = true
+                        _.each(targetInput.values, function (value, valueIndex) {
+                          if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                            (targetInput.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '')) {
+                            let suggestedValue = valueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0)
+                            if (suggestedValue && !(suggestedValue === '' || _.isEqual(suggestedValue, []))) {
+                              value.additionalSuggestion = {
+                                value: suggestedValue,
+                                displayValue: displayValueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0)
+                              }
+                              suggestedMap[ groupIndex ][ subInputIndex ] = suggestedMap[ groupIndex ][ subInputIndex ] || []
+                              suggestedMap[ groupIndex ][ subInputIndex ][ valueIndex ] = true
+                              numberOfAdditionalSuggestions[ groupIndex ] = numberOfAdditionalSuggestions[ groupIndex ] || [ 0 ]
+                              numberOfAdditionalSuggestions[ groupIndex ]++
+                              var sourceInput = inputFromInputId(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
+                              sources[ groupIndex ] = sources[ groupIndex ] || []
+                              sources[ groupIndex ] = _.union(sources[ groupIndex ], [ inputLabelWithContext(sourceInput) ])
+                              targets[ groupIndex ] = targets[ groupIndex ] || []
+                              targets[ groupIndex ] = _.union(targets[ groupIndex ], [ inputLabelWithContext(targetInput) ])
+                            }
                           }
-                          suggestedMap[ groupIndex ][ subInputIndex ] = suggestedMap[ groupIndex ][ subInputIndex ] || []
-                          suggestedMap[ groupIndex ][ subInputIndex ][ valueIndex ] = true
-                          numberOfAdditionalSuggestions[ groupIndex ] = numberOfAdditionalSuggestions[ groupIndex ] || [ 0 ]
-                          numberOfAdditionalSuggestions[ groupIndex ]++
-                          var sourceInput = inputFromInputId(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
-                          sources[ groupIndex ] = sources[ groupIndex ] || []
-                          sources[ groupIndex ] = _.union(sources[ groupIndex ], [ inputLabelWithContext(sourceInput) ])
-                          targets[ groupIndex ] = targets[ groupIndex ] || []
-                          targets[ groupIndex ] = _.union(targets[ groupIndex ], [ inputLabelWithContext(targetInput) ])
+                        })
+                        if (targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset) {
+                          warnWhenCopyingSubset[ groupIndex ] = targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset
                         }
-                      })
-                      if (targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset) {
-                        warnWhenCopyingSubset[ groupIndex ] = targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset
-                      }
-                    }
-                  })
-                  var incompleteSuggestions = []
-                  _.each(suggestedMap, function (suggestedForGroup, groupIndex) {
-                    _.each(suggestedForGroup, function (suggestedForInput, inputIndex) {
-                      if (!_.isEqual(suggestedForGroup[ inputIndex ], suggestableMap[ groupIndex ][ inputIndex ])) {
-                        incompleteSuggestions[ groupIndex ] = incompleteSuggestions[ groupIndex ] || []
-                        incompleteSuggestions[ groupIndex ][ inputIndex ] = true
                       }
                     })
-                  })
-                  _.each(numberOfAdditionalSuggestions, function (numberOfSuggestionsForGroup, groupIndex) {
-                    if (numberOfSuggestionsForGroup > 0) {
-                      ractive.set(`inputGroups.${groupIndex}.additionalSuggestions`, {
-                        numberOfSuggestionsForGroup: numberOfSuggestionsForGroup,
-                        numberOfInCompleteForGroup: _.reduce(incompleteSuggestions[ groupIndex ], function (count, isIncomplete) {
-                          return count + isIncomplete ? 1 : 0
-                        }, 0),
-                        sources: sources[ groupIndex ],
-                        targets: targets[ groupIndex ],
-                        incompleteSuggestions: incompleteSuggestions[ groupIndex ],
-                        warnWhenCopyingSubset: warnWhenCopyingSubset[ groupIndex ],
-                        allowPartialSuggestions: warnWhenCopyingSubset[ groupIndex ].allowByDefault,
-                        group: groupIndex
+                    var incompleteSuggestions = []
+                    _.each(suggestedMap, function (suggestedForGroup, groupIndex) {
+                      _.each(suggestedForGroup, function (suggestedForInput, inputIndex) {
+                        if (!_.isEqual(suggestedForGroup[ inputIndex ], suggestableMap[ groupIndex ][ inputIndex ])) {
+                          incompleteSuggestions[ groupIndex ] = incompleteSuggestions[ groupIndex ] || []
+                          incompleteSuggestions[ groupIndex ][ inputIndex ] = true
+                        }
                       })
-                    }
-                  })
-                  ractive.update().then(waiter.done)
+                    })
+                    _.each(numberOfAdditionalSuggestions, function (numberOfSuggestionsForGroup, groupIndex) {
+                      if (numberOfSuggestionsForGroup > 0) {
+                        ractive.set(`inputGroups.${groupIndex}.additionalSuggestions`, {
+                          numberOfSuggestionsForGroup: numberOfSuggestionsForGroup,
+                          numberOfInCompleteForGroup: _.reduce(incompleteSuggestions[ groupIndex ], function (count, isIncomplete) {
+                            return count + isIncomplete ? 1 : 0
+                          }, 0),
+                          sources: sources[ groupIndex ],
+                          targets: targets[ groupIndex ],
+                          incompleteSuggestions: incompleteSuggestions[ groupIndex ],
+                          warnWhenCopyingSubset: warnWhenCopyingSubset[ groupIndex ],
+                          allowPartialSuggestions: warnWhenCopyingSubset[ groupIndex ].allowByDefault,
+                          group: groupIndex
+                        })
+                      }
+                    })
+                    ractive.update()
+                  }).then(waiter.done)
                 })
               },
               useSuggestion: function (event) {
@@ -4804,7 +4811,9 @@
                       forAllGroupInputs(function (input, groupIndex1) {
                         if (groupIndex1 === Number(groupIndex)) {
                           _.each(input.values, function (value, valueIndex) {
-                            if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion) {
+                            if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion &&
+                              (value && (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                                (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '')))) {
                               ractive.set(`${input.keypath}.values.${valueIndex}.current`, value.additionalSuggestion)
                               ractive.set(`${input.keypath}.values.${valueIndex}.additionalSuggestion`, null)
                             }
