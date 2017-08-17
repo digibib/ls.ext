@@ -20,6 +20,7 @@
     ns2:language <http://lexvo.org/id/iso639-3/ita> ;
     ns2:mainTitle "La casa delle bugie" ;
     ns2:publicationOf <http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20> ;
+    ns2:publishedBy <http://data.deichman.no/corporation/c123456> ;
     ns2:publicationYear "2013"^^xsd:gYear ;
     ns2:recordId "3" ;
     ns2:hasImage "http://static.deichman.no/1549895/bk/1_thumb.jpg" ;
@@ -57,6 +58,7 @@
         <http://data.deichman.no/literaryForm#novel> ;
     ns2:mainTitle "Berlinerpoplene" ;
     ns2:subject <http://data.deichman.no/subject/e1200005> ;
+    ns2:subject <http://data.deichman.no/corporation/c443233> ;
     ns2:isPartOfWorkSeries  [ a  ns2:WorkSeriesPart ;
              ns2:partNumber  "6" ;
              ns2:workSeries  <http://data.deichman.no/workSeries/v279125243466>
@@ -77,6 +79,12 @@
 <http://data.deichman.no/person/h11234> rdf:type ns2:Person ;
     ns2:name "Falcinella, Cristina" ;
     ns2:nationality <http://data.deichman.no/nationality#ita> .
+
+<http://data.deichman.no/corporation/c123456> rdf:type ns2:Corporation;
+    ns2:name "Bantam Publishing" .
+
+<http://data.deichman.no/corporation/c443233> rdf:type ns2:Corporation;
+    ns2:name "Goldendahl" .
 
 <http://data.deichman.no/subject/e1200005> rdf:type ns2:Subject ;
     ns2:prefLabel "Trondheim".

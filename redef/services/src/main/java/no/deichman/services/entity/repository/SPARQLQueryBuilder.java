@@ -950,7 +950,8 @@ public final class SPARQLQueryBuilder {
                         + "      { ?resource :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
                         + "UNION { ?publication :publicationOf ?resource . ?publication :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
                         + "UNION { ?resource :publicationOf ?work . ?work :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
-                        + "UNION { ?resource :subject <__URI__> }\n";
+                        + "UNION { ?resource :subject <__URI__> }\n"
+                        + "UNION { ?resource :publishedBy <__URI__> }\n";
                 break;
             case EVENT:
             case SUBJECT:

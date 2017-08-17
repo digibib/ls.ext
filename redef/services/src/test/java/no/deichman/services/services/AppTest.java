@@ -1240,6 +1240,8 @@ public class AppTest {
         String persUri2 = "http://data.deichman.no/person/h11234";
         String subjUri = "http://data.deichman.no/subject/e1200005";
         String workSeriesUri = "http://data.deichman.no/workSeries/v279125243466";
+        String corporationUri1 = "http://data.deichman.no/corporation/c123456";
+        String corporationUri2 = "http://data.deichman.no/corporation/c443233";
 
         // 1 ) Verify that resources exist in triplestore:
 
@@ -1303,6 +1305,24 @@ public class AppTest {
                         buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
 
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 4));
+
+        // patch corporation, and verify that publication gets reindexed
+        buildPatchRequest(
+                resolveLocally(corporationUri1),
+                buildLDPatch(
+                        buildPatchStatement("del", corporationUri1, BaseURI.ontology("name"), "Bantam Publishing"),
+                        buildPatchStatement("add", corporationUri1, BaseURI.ontology("name"), "Gakk Fontoy"))).asString();
+
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Gakk Fontoy", 4));
+
+        // patch corporation, and verify that work gets reindexed
+        buildPatchRequest(
+                resolveLocally(corporationUri2),
+                buildLDPatch(
+                        buildPatchStatement("del", corporationUri2, BaseURI.ontology("name"), "Goldendahl"),
+                        buildPatchStatement("add", corporationUri2, BaseURI.ontology("name"), "Simpar Delantos"))).asString();
+
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Simpar Delantos", 40));
     }
 
     @Test
