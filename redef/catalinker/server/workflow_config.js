@@ -686,11 +686,11 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'partNumber',
-                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] }
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'Book', 'Audiobook', 'LanguageCourse', 'Film' ] }
               },
               {
                 rdfProperty: 'partTitle',
-                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] },
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'Book', 'Audiobook', 'LanguageCourse', 'Film' ] },
                 headlinePart: {
                   order: 40,
                   styleClass: 'title'
@@ -698,13 +698,13 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'variantTitle',
-                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] },
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'Book', 'Audiobook', 'LanguageCourse', 'ComicBook' ] },
                 multiple: true,
                 addAnotherLabel: 'addAnotherVariantTitle',
               },
               {
                 rdfProperty: 'edition',
-                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] }
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'Book', 'Audiobook', 'LanguageCourse', 'ComicBook', 'Film' ] }
               },
               {
                 rdfProperty: 'publicationYear',
@@ -722,6 +722,7 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'hasExtent',
+                esotericWhen: { hasMediaType: [ 'Book', 'ComicBook' ] },
                 addAnotherLabel: 'addAnotherExtent'
               },
               {
@@ -752,6 +753,7 @@ module.exports = (app) => {
               {
                 includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book', 'Film', 'MusicRecording', 'Game' ] },
                 rdfProperty: 'hasEan',
+                esotericWhen: { hasMediaType: [ 'Book', 'Audiobook', 'LanguageCourse' ] },
                 multiple: true,
                 addAnotherLabel: 'addAnotherEAN'
               },
@@ -780,7 +782,11 @@ module.exports = (app) => {
                   prefix: 'http://data.deichman.no/mediaType#'
                 }
               },
-              { rdfProperty: 'format', multiple: true },
+              {
+                rdfProperty: 'format',
+                esotericWhen: { hasMediaType: [ 'Book', 'ComicBook' ] },
+                multiple: true
+              },
               {
                 includeOnlyWhen: {
                   hasMediaType: [ 'Other', 'Film', 'Game' ]
@@ -791,11 +797,17 @@ module.exports = (app) => {
                 }
               },
               {
-                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'E-bok', 'ComicBook', 'SheetMusic' ] },
+                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'E-book', 'ComicBook', 'SheetMusic' ] },
                 rdfProperty: 'writingSystem',
+                esotericWhen: { hasMediaType: [ 'Book', 'ComicBook' ] },
                 multiple: true
               },
-              { rdfProperty: 'hasFormatAdaptation', multiple: true },
+              {
+                rdfProperty: 'hasFormatAdaptation',
+                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'Audiobook', 'LanguageCourse', 'ComicBook', 'Film', 'E-book', 'SheetMusic' ] },
+                esotericWhen: { hasMediaType: [ 'Book', 'Audiobook', 'LanguageCourse', 'ComicBook', 'Film' ] },
+                multiple: true
+              },
               {
                 id: 'publishedByInput',
                 rdfProperty: 'publishedBy',
@@ -974,10 +986,12 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'partNumber',
+                esotericWhen: { hasWorkType: [ 'Literature', 'Music', 'Film' ] },
                 id: 'workPartNumber'
               },
               {
                 rdfProperty: 'partTitle',
+                esotericWhen: { hasWorkType: [ 'Literature', 'Music', 'Film' ] },
                 id: 'workPartTitle'
               },
               {
@@ -988,6 +1002,7 @@ module.exports = (app) => {
               {
                 rdfProperty: 'nationality',
                 label: 'originCountryLabel',
+                esotericWhen: { hasWorkType: [ 'Other' ] },
                 multiple: 'true'
               },
               { rdfProperty: 'language', multiple: true },
@@ -1013,6 +1028,7 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'literaryForm',
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Game' ] },
                 multiple: true,
                 headlinePart: {
                   order: 45
@@ -1028,7 +1044,12 @@ module.exports = (app) => {
                 rdfProperty: 'biography',
                 multiple: true
               },
-              { rdfProperty: 'hasContentAdaptation', multiple: true },
+              {
+                rdfProperty: 'hasContentAdaptation',
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Game' ] },
+                esotericWhen: { hasWorkType: [ 'Literature', 'Other', 'Film' ] },
+                multiple: true
+              },
               {
                 label: 'workRelationLabel',
                 multiple: true,
@@ -1134,6 +1155,7 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'hasSummary',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 type: 'input-string-large'
               },
               createdTimestamp(),
@@ -1188,6 +1210,7 @@ module.exports = (app) => {
             inputs: [
               {
                 includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
+                esotericWhen: { hasWorkType: [ 'Film' ] },
                 rdfProperty: 'hasCompositionType',
                 multiple: true,
                 addAnotherLabel: 'addAnotherCompositionType',
@@ -1215,6 +1238,7 @@ module.exports = (app) => {
               },
               {
                 includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
+                esotericWhen: { hasWorkType: [ 'Film' ] },
                 label: 'instrumentationLabel',
                 multiple: true,
                 addAnotherLabel: 'addAnotherInstrument',
@@ -1369,6 +1393,7 @@ module.exports = (app) => {
               {
                 rdfProperty: 'genre',
                 id: 'genreInput',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 multiple: true,
                 addAnotherLabel: 'addAnotherGenre',
                 type: 'searchable-with-result-in-side-panel',
