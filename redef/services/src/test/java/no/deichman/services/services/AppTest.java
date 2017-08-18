@@ -1313,7 +1313,7 @@ public class AppTest {
                         buildPatchStatement("del", corporationUri1, BaseURI.ontology("name"), "Bantam Publishing"),
                         buildPatchStatement("add", corporationUri1, BaseURI.ontology("name"), "Gakk Fontoy"))).asString();
 
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Gakk Fontoy", 4));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Gakk Fontoy", 40));
 
         // patch corporation, and verify that work gets reindexed
         buildPatchRequest(
