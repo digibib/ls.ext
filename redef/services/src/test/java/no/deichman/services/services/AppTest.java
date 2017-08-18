@@ -1295,7 +1295,7 @@ public class AppTest {
                         buildPatchStatement("add", subjUri, BaseURI.ontology("prefLabel"), "Drontheim"))).asString();
 
         //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 20));
 
         // 6) Patch work series, and verify that works get reindexed
         buildPatchRequest(
@@ -1304,7 +1304,7 @@ public class AppTest {
                         buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
                         buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
 
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 4));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 40));
 
         // patch corporation, and verify that publication gets reindexed
         buildPatchRequest(
