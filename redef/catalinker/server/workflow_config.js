@@ -1279,6 +1279,7 @@ module.exports = (app) => {
               {
                 rdfProperty: 'subject',
                 id: 'subjectInput',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 multiple: true,
                 addAnotherLabel: 'addAnotherSubject',
                 type: 'searchable-with-result-in-side-panel',
