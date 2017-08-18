@@ -7,8 +7,8 @@ relationType:partOf a duo:RelationType ;
   rdfs:label "Part of"@en .
 relationType:relatedWork a duo:relationType ;
   duo:code "bo" ;
-  rdfs:label "Relatert verk"@no ;
-  rdfs:label "Related to work"@en .
+  rdfs:label "Relatert til"@no ;
+  rdfs:label "Related to"@en .
 relationType:continuationOf a duo:relationType ;
   duo:code "co" ;
   rdfs:label "Fortsettelse av"@no ;
