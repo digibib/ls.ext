@@ -18,7 +18,7 @@
         <span class="panel-part pure-u-1-2 esoteric">
             <span class="field pure-u" data-support-panel-base-id="support_panel_base_{{values.0.uniqueId}}">
             </span>
-            <span class="support-panel no-offset show-esoterics" data-support-panel-base-ref="support_panel_base_{{values.0.uniqueId}}">
+            <span class="support-panel no-offset show-esoterics" data-support-panel-base-ref="support_panel_base_{{subInputs.0.input.values.0.uniqueId || values.0.uniqueId}}">
                 <div class="prop-search-results support-panel-content"
                      on-escape="cancelEdit">
                     <div class="search-result-box">
@@ -26,7 +26,7 @@
                         <ul as-esotericToggleGroup="input">
                         {{#each inputs}}
                             {{#if checkEsoteric(., allInputs)}}
-                                <li data-belongs-to-id-ref="support_panel_base_{{values.0.uniqueId}}" style="display: none;">
+                                <li data-belongs-to-id-ref="support_panel_base_{{this.values.0.uniqueId || this.subInputs.0.input.values.0.uniqueId}}" style="display: none;">
                                         {{#if labelKey}}
                                             {{>labelKey}}
                                         {{else}}

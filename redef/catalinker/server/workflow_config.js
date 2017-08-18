@@ -514,7 +514,7 @@ module.exports = (app) => {
                   checkExistingResource: {
                     url: 'services/publication',
                     queryParameter: 'hasEan',
-                    showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', , 'publicationYear' ],
+                    showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', 'publicationYear' ],
                     type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
@@ -909,6 +909,9 @@ module.exports = (app) => {
                       rdfProperty: 'issue'
                     }
                   ]
+                },
+                esotericWhen: {
+                  hasMediaType: [ 'MusicRecording' ]
                 }
               },
               { rdfProperty: 'locationFormat' },

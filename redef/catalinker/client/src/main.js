@@ -763,9 +763,6 @@
     }
 
     function checkEsoteric (input, allInputs) {
-      if (input.values && (((input.values[ 0 ].current.value || '') !== '') || ((input.values[ 0 ].old.value || '') !== ''))) {
-        input.showEsoteric = true
-      }
       let isEsoteric = false
       let handleInput = function (includeWhenValues, property) {
         return function (input) {
@@ -779,6 +776,17 @@
         }
       }
       if (input.esotericWhen) {
+        if (input.type === 'select-predefined-value') {
+          if (input.values && (input.values[ 0 ].current.value.length > 0 || input.values[ 0 ].old.value.length > 0)) {
+            input.showEsoteric = true
+          }
+        } else if (input.values && (((input.values[ 0 ].current.value || '') !== '') || ((input.values[ 0 ].old.value || '') !== ''))) {
+          input.showEsoteric = true
+        }
+        if (input.subInputs && input.subInputs[ 0 ].input.values && (((input.subInputs[ 0 ].input.values[ 0 ].current.value || '') !== '') ||
+            ((input.subInputs[ 0 ].input.values[ 0 ].old.value || '') !== ''))) {
+          input.showEsoteric = true
+        }
         _.each(_.keys(input.esotericWhen), function (property) {
           let includeWhenValues = _.flatten([ input.esotericWhen[ property ] ])
           if (allInputs) {
@@ -2064,14 +2072,15 @@
       _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, 'input') : [ mainInput ], visitor)
     }
 
-    function positionSupportPanels (applicationData) {
+    function positionSupportPanels (applicationData, tabId) {
       const dummyPanel = $('#right-dummy-panel')
       if (dummyPanel.length > 0) {
         const supportPanelLeftEdge = dummyPanel.position().left
         const supportPanelWidth = dummyPanel.width()
-        let lastShowEsotericLinksPanelBottom = 0
-        $('span.support-panel').each(function (index, panel) {
+        let lastShowEsotericLinksPanelBottom = { [tabId || 'all']: 0 }
+        $(`${tabId ? `#${tabId} ` : ''}span.support-panel`).each(function (index, panel) {
           const $panel = $(panel)
+          const _tabId = tabId || $panel.closest('.grid-panel').attr('id') || 'all'
           const supportPanelBaseId = $panel.attr('data-support-panel-base-ref')
           let supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
           if (supportPanelBase.length === 0) {
@@ -2091,8 +2100,8 @@
           }
           if (supportPanelBase.length > 0) {
             let top = _.last(_.flatten([ supportPanelBase ])).position().top - offset
-            if ($panel.hasClass('show-esoterics') && lastShowEsotericLinksPanelBottom > 0 && top < lastShowEsotericLinksPanelBottom + 10) {
-              top = Math.max(top, lastShowEsotericLinksPanelBottom + 10)
+            if ($panel.hasClass('show-esoterics') && lastShowEsotericLinksPanelBottom[ _tabId ] > 0 && top < lastShowEsotericLinksPanelBottom[ _tabId ] + 10) {
+              top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
             }
             if (top > 220) {
               $panel.css({
@@ -2103,7 +2112,7 @@
               })
             }
             if ($panel.hasClass('show-esoterics') && ($panel.css('display') !== 'none')) {
-              lastShowEsotericLinksPanelBottom = top + $panel.height()
+              lastShowEsotericLinksPanelBottom[ _tabId ] = top + $panel.height()
             }
           }
         })
@@ -2207,6 +2216,10 @@
       return { items, highestScoreIndex, exactMatchWasFound }
     }
 
+    function tabIdFromKeypath (keypath) {
+      return (keypath.match(/^inputGroups\.([0-9])/) || [])[ 1 ]
+    }
+
     function doSearch (event, searchString, preferredIndexType, secondaryIndexType) {
       searchString = stripHtml(searchString).trim()
 
@@ -2280,7 +2293,7 @@
             searchTerm: searchString,
             highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? highestScoreIndex - 1 : false
           })
-          positionSupportPanels()
+          positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
         })
       //    .catch(function (err) {
       //    console.log(err)
@@ -3369,8 +3382,8 @@
             }
           }
           const esotericToggleGroup = function (node, input) {
-            const inputRef = `support_panel_base_${input.values[ 0 ].uniqueId}`
-            $(`span[data-support-panel-base-id=${inputRef}]`)
+            const uniqueId = (input.subInputs ? input.subInputs[ 0 ].input : input).values[ 0 ].uniqueId
+            const inputRef = `support_panel_base_${uniqueId}`
             let group = [ inputRef ]
             _.find($(node).closest('.esoteric.input-panel').nextAll(), function (node) {
               const $node = $(node)
@@ -3752,7 +3765,7 @@
               toggleEsoteric: function (event) {
                 if (eventShouldBeIgnored(event)) return
                 this.toggle(`${event.keypath}.showEsoteric`)
-                positionSupportPanels()
+                positionSupportPanels(undefined, event.keypath)
               },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)
@@ -3780,7 +3793,7 @@
                 sequentialPromiseResolver(promises)
                 ractive.set(`${event.keypath}.allowAddNewButton`, false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
-                positionSupportPanels()
+                positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
                 copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
                 ractive.update().then(function () {
                   heightAligned(document.main.$(event.node).closest('.height-aligned'))
@@ -4118,7 +4131,7 @@
                     ractive.set(`${keyPath}.tabSelected`, false)
                   }
                 })
-                positionSupportPanels()
+                positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
               },
               deleteResource: function (event) {
                 var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
@@ -4364,7 +4377,7 @@
                 let searchUrl = ''
                 if (spec.queryParameter === 'hasEan') { // TODO : hasEAN should probably have separate route
                   searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
-                    return memo + '&@return=' + fieldName
+                    return memo + '&@return=' + fieldName.replace(/[^a-zA-Z_]/g, '')
                   }, '')}`)
                 } else {
                   searchUrl = proxyToServices(`${spec.url}/${queryValue}`)
@@ -4696,7 +4709,7 @@
                     }
                   })
                 }
-                positionSupportPanels()
+                positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
               }
             }
           )
@@ -5126,7 +5139,7 @@
         const initInputInterDependencies = function (applicationData) {
           let setInputVisibility = function (inputKeypath, visible) {
             ractive.set(`${inputKeypath}.visible`, Boolean(visible).valueOf())
-              .then(positionSupportPanels)
+              .then(positionSupportPanels.bind(null, undefined, tabIdFromKeypath(inputKeypath)))
               .then(Main.repositionSupportPanelsHorizontally)
           }
           const alternativeKeypathMap = {}
