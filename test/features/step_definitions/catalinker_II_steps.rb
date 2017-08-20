@@ -472,7 +472,7 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
 end
 
 When(/^får jeg ingen treff$/) do
-  empty_result_set_div = @browser.div(:class => 'support-panel-content').div(:class => 'search-result')
+  empty_result_set_div = @browser.div(:class => 'search-result')
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     empty_result_set_div.present?
   }

@@ -29,6 +29,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og velger verket fra lista tilkoplet forfatteren
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Så klikker jeg på lenkene for å vise mindre brukte felter
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og jeg venter litt
     Og legger inn opplysningene om utgivelsen
@@ -72,6 +73,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg fjerner valgt verdi for "Rolle"
     Så velger jeg aktørtype "Organisasjon" for "Aktør"
     Og jeg legger inn et nytt navn
+    Og jeg venter litt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen
     Så trykker jeg på "Opprett"-knappen
@@ -245,6 +247,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og jeg legger inn et nytt navn
+    Og jeg venter litt
     Så får jeg ingen treff
     Så trykker jeg på "Opprett ny organisasjon"-knappen
     Så trykker jeg på "Opprett"-knappen

@@ -2108,7 +2108,7 @@
                 top,
                 left: supportPanelLeftEdge,
                 width: supportPanelWidth,
-                'z-index': 100 - index
+                'z-index': ($panel.hasClass('show-esoterics') ? 100 : 200) - index
               })
             }
             if ($panel.hasClass('show-esoterics') && ($panel.css('display') !== 'none')) {
@@ -4131,7 +4131,7 @@
                     ractive.set(`${keyPath}.tabSelected`, false)
                   }
                 })
-                positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
+                positionSupportPanels()
               },
               deleteResource: function (event) {
                 var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
