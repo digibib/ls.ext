@@ -546,8 +546,9 @@ body {
                 max-width: 431px;
                 white-space: nowrap;
               }
-              padding: 0px 12px 15px 12px;
+              padding: 0 12px 15px 12px;
               background: $input-background;
+              margin-right: -5px;
 
               input[type=checkbox] {
                 width: auto;
