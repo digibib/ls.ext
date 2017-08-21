@@ -26,7 +26,7 @@
                         <ul as-esotericToggleGroup="input">
                         {{#each inputs}}
                             {{#if checkEsoteric(., allInputs)}}
-                                <li data-belongs-to-id-ref="support_panel_base_{{this.values.0.uniqueId || this.ssubInputs.0.input.values.0.uniqueId}}" style="display: none;">
+                                <li data-belongs-to-id-ref="support_panel_base_{{this.values.0.uniqueId || this.subInputs.0.input.values.0.uniqueId}}" style="display: none;">
                                         {{#if labelKey}}
                                             {{>labelKey}}
                                         {{else}}
