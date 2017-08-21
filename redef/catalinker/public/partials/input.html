@@ -2,8 +2,8 @@
         <span class="input-panel prop-input"
               class-pure-u-1-1="{{!compare}}"
               class-pure-u-1-2="{{compare}}"
-              class-esoteric-hidden="{{(!showEsoteric && checkEsoteric(input, allInputs))}}"
-              class-esoteric="{{(checkEsoteric(input, allInputs))}}"
+              class-esoteric-hidden="{{(inWorkflow===true && !showEsoteric && checkEsoteric(input, allInputs))}}"
+              class-esoteric="{{(inWorkflow===true && checkEsoteric(input, allInputs))}}"
               {{#if !compareMode}}
               as-dropZone="{inputIndex, input}"
               {{/if}}
@@ -14,11 +14,11 @@
               {{#if type != 'input-boolean' && !oneLiner}}as-heightAligned=".updateHeights"{{/if}}
               {{#if inputIndex === 0}}data-support-panel-base-id="support_panel_base_fixed"{{/if}}
         >
-        {{#if checkEsoteric(input, allInputs)}}
+        {{#if (inWorkflow===true && checkEsoteric(input, allInputs))}}
         <span class="panel-part pure-u-1-2 esoteric">
             <span class="field pure-u" data-support-panel-base-id="support_panel_base_{{values.0.uniqueId}}">
             </span>
-            <span class="support-panel no-offset show-esoterics" data-support-panel-base-ref="support_panel_base_{{subInputs.0.input.values.0.uniqueId || values.0.uniqueId}}">
+            <span class="support-panel no-offset show-esoterics {{~inWorkflow}}" data-support-panel-base-ref="support_panel_base_{{subInputs.0.input.values.0.uniqueId || values.0.uniqueId}}">
                 <div class="prop-search-results support-panel-content"
                      on-escape="cancelEdit">
                     <div class="search-result-box">
@@ -49,7 +49,7 @@
         </span>
         {{/if}}
 
-        {{#if (showEsoteric || !(checkEsoteric(input, allInputs)))}}
+        {{#if (inWorkflow!==true || showEsoteric || !(checkEsoteric(input, allInputs)))}}
         <span class-for-one-liner="{{type === 'input-boolean' || oneLiner}}"
               class-panel-part="{{type === 'input-boolean' || oneLiner}}"
               class-pure-u-1-2="{{(type === 'input-boolean' || oneLiner) && !compare}}"

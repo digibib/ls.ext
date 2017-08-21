@@ -2103,7 +2103,7 @@
             if ($panel.hasClass('show-esoterics') && lastShowEsotericLinksPanelBottom[ _tabId ] > 0 && top < lastShowEsotericLinksPanelBottom[ _tabId ] + 10) {
               top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
             }
-            if (top > 220) {
+            if (top > 50) {
               $panel.css({
                 top,
                 left: supportPanelLeftEdge,
