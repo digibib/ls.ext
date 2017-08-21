@@ -2103,7 +2103,7 @@
             if ($panel.hasClass('show-esoterics') && lastShowEsotericLinksPanelBottom[ _tabId ] > 0 && top < lastShowEsotericLinksPanelBottom[ _tabId ] + 10) {
               top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
             }
-            if (top > 50) {
+            if (top > 0) {
               $panel.css({
                 top,
                 left: supportPanelLeftEdge,
@@ -3764,8 +3764,7 @@
               },
               toggleEsoteric: function (event) {
                 if (eventShouldBeIgnored(event)) return
-                this.toggle(`${event.keypath}.showEsoteric`)
-                positionSupportPanels(undefined, event.keypath)
+                this.toggle(`${event.keypath}.showEsoteric`).then(positionSupportPanels.bind(undefined, event.keypath))
               },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)
@@ -4021,7 +4020,9 @@
                   fetchExistingResource(uri)
                     .then(function () {
                       updateInputsForDependentResources(typeFromUri(uri), uri)
-                    })
+                    }).then(function () {
+                    setTimeout(positionSupportPanels, 1000)
+                  })
                 } else {
                   ractive.set(`${origin}.old.value`, ractive.get(`${origin}.current.value`))
                   ractive.set(`${origin}.current.value`, uri)
@@ -4069,9 +4070,10 @@
               activateTab: function (event) {
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
                   var keyPath = `inputGroups.${groupIndex}`
-                  ractive.set(`${keyPath}.tabSelected`, keyPath === event.keypath)
+                  ractive
+                    .set(`${keyPath}.tabSelected`, keyPath === event.keypath)
+                    .then(positionSupportPanels)
                 })
-                setTimeout(positionSupportPanels)
               },
               nextStep: function (event) {
                 if (event.context.restart) {
@@ -4132,6 +4134,7 @@
                   }
                 })
                 positionSupportPanels()
+                setTimeout(positionSupportPanels)
               },
               deleteResource: function (event) {
                 var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
