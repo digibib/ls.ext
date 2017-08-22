@@ -1,0 +1,24 @@
+{
+  "@id" : "http://data.deichman.no/serial/s755809170436",
+  "@type" : "deichman:Serial",
+  "deichman:created" : {
+    "@type" : "http://www.w3.org/2001/XMLSchema#dateTime",
+    "@value" : "2017-06-26T16:13:35.168Z"
+  },
+  "deichman:mainTitle" : "Lompe i sentrum",
+  "deichman:modified" : {
+    "@type" : "http://www.w3.org/2001/XMLSchema#dateTime",
+    "@value" : "2017-06-26T16:13:35.674Z"
+  },
+  "deichman:partNumber" : "1",
+  "deichman:partTitle" : "Første del",
+  "deichman:publishedBy" : {
+    "@id" : "http://data.deichman.no/corporation/c992230760239"
+  },
+  "deichman:subtitle" : "Potetbakverk før og nå",
+  "@context" : {
+    "deichman" : "http://data.deichman.no/ontology#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#"
+  }
+}
+

@@ -1,4 +1,4 @@
-Given(/^at jeg har en bok$/) do
+Given(/^at jeg har en (bok|CD)$/) do |media_type|
   true
 end
 
@@ -21,7 +21,7 @@ When(/^jeg venter litt$/) do
   end
 end
 
-When(/^at det finnes et verk med forfatter$/) do
+When(/^at det finnes et verk med (forfatter|komponist)$/) do |createor_type|
   step "at jeg er i personregistergrensesnittet"
   step "leverer systemet en ny ID for den nye personen"
   step "jeg kan legge inn navn fødselsår og dødsår for personen"
@@ -37,12 +37,21 @@ When(/^at det finnes et verk med forfatter$/) do
   step "grensesnittet viser at endringene er lagret"
 end
 
-When(/^jeg legger inn forfatternavnet på startsida$/) do
-  @site.WorkFlow.visit
+def add_creator_name
   creator_name_field = @browser.elements(:xpath => "//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']//input|//span[@data-automation-id='Contribution_http://data.deichman.no/ontology#agent_0']//span[@contenteditable]").find(&:visible?)
   creator_name_field.click
   creator_name_field.send_keys (@context[:person_name])
   creator_name_field.send_keys :enter
+end
+
+When(/^jeg legger inn forfatternavnet på startsida$/) do
+  @site.WorkFlow.visit
+  add_creator_name
+end
+
+When(/^jeg legger inn komponistnavnet på startsida$/) do
+  @site.WorkFlow.visit_for_music
+  add_creator_name
 end
 
 
@@ -87,7 +96,10 @@ When(/^verifiserer verkets tilleggsopplysninger uten endringer er korrekte$/) do
   @browser.select(:data_automation_id => "Work_http://data.deichman.no/ontology#language_0").selected_options.include? @context[:work_language]
 end
 
-When(/^legger inn opplysningene om utgivelsen$/) do
+When(/^legger inn opplysningene om (CD-|)utgivelsen$/) do |media_type|
+  if media_type == ''
+    media_type = 'Bok'
+  end
   # TODO: Unify add_prop and select_prop in the page objects to avoid having to specify it.
   data = Hash.new
   data['publicationYear'] = [(1000 + rand(1015)).to_s, :add_prop]
@@ -97,12 +109,14 @@ When(/^legger inn opplysningene om utgivelsen$/) do
   data['variantTitle'] = [generateRandomString, :add_prop]
   data['partNumber'] = [generateRandomString, :add_prop]
   data['edition'] = [generateRandomString, :add_prop]
-  data['numberOfPages'] = [rand(999).to_s, :add_prop]
-  data['isbn'] = [generateRandomString, :add_prop]
-  data['illustrativeMatter'] = [:random, :select_prop]
-  data['hasFormatAdaptation'] = [:random, :select_prop]
-  data['binding'] = [:random, :select_prop]
-  data['writingSystem'] = [:first, :select_prop]
+  if media_type == 'Bok'
+    data['numberOfPages'] = [rand(999).to_s, :add_prop]
+    data['isbn'] = [generateRandomString, :add_prop]
+    data['illustrativeMatter'] = [:random, :select_prop]
+    data['hasFormatAdaptation'] = [:random, :select_prop]
+    data['binding'] = [:random, :select_prop]
+    data['writingSystem'] = [:first, :select_prop]
+  end
 
   workflow_batch_add_props 'Publication', data
 end
@@ -187,7 +201,7 @@ end
 
 def do_select_value(selectable_parameter_label, value)
   select = @browser.selects(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(selectable_parameter_label)}']//select")[0]
-  wait_for { select.present? }
+  wait_for {select.present?}
   select_id = select.attribute_value('data-automation-id')
   predicate = predicate_from_automation_id(select_id)
   domain = domain_of_automation_id(select_id)
@@ -499,7 +513,7 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.buttons(:text => link_label, :class => 'pure-button').select { |a| a.visible? && a.enabled? }.first.click
+  @browser.buttons(:text => link_label, :class => 'pure-button').select {|a| a.visible? && a.enabled?}.first.click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
@@ -522,8 +536,8 @@ When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
   button.click
 end
 
-When(/^velger jeg (emnetype|aktørtype) "([^"]*)"$/) do |dummy, subject_type|
-  @browser.element(:class => 'index-type-select').select().select(subject_type)
+When(/^velger jeg (.+) "([^"]*)" for "([^"]*)"$/) do |dummy, subject_type, label|
+  @browser.selects(:xpath => "//span[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(label)}']//*[#{contains_class('index-type-select')}]/select").find(&:visible?).select(subject_type)
 end
 
 When(/^at jeg vil opprette (en|et) (.*)$/) do |article, concept|
@@ -533,7 +547,7 @@ end
 When(/^at jeg vil slå sammen to personer$/) do
   s = TestSetup::Services.new()
   2.times do
-    s.add_work_with_publications_and_contributors(0,2)
+    s.add_work_with_publications_and_contributors(0, 2)
   end
   @context[:services] = s
 end
@@ -541,7 +555,7 @@ end
 When(/^at jeg vil slå sammen to verk$/) do
   s = TestSetup::Services.new()
   2.times do
-    s.add_work_with_publications_and_contributors(1,2)
+    s.add_work_with_publications_and_contributors(1, 2)
   end
   @context[:services] = s
 end
@@ -549,7 +563,7 @@ end
 When(/^at jeg vil slette et verk som er relatert til et annet$/) do
   s = TestSetup::Services.new()
   2.times do
-    s.add_work_with_publications_and_contributors(1,2)
+    s.add_work_with_publications_and_contributors(1, 2)
   end
   @context[:services] = s
 end
@@ -679,7 +693,7 @@ end
 
 When(/^trykker jeg på den (første|andre|tredje|fjerde|femte|sjette) trekanten for å søke opp personen i forslaget$/) do |ordinal|
   index = @site.translate(ordinal) - 1
-  @browser.elements(:class => 'support-panel-expander').select { |a| a.visible? }[index].click
+  @browser.elements(:class => 'support-panel-expander').select {|a| a.visible?}[index].click
 end
 
 When(/^noterer jeg ned navnet på personen$/) do
@@ -752,9 +766,9 @@ When(/^at jeg er i arbeidsflyten$/) do
 end
 
 
-When(/^sjekker jeg at den tilfeldige verdien jeg la inn for feltet "([^"]*)" stemmer med (.*)/) do |parameter_label, concept|
-  value_span = @browser.spans(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}'][#{contains_class 'value'}]/span").find(&:visible?)
-  value_span.text.should eq @context["random_#{@site.translate(concept)}".to_sym]
+When(/^sjekker jeg at den tilfeldige verdien jeg la inn for feltet "([^"]*)" stemmer med (.*) pluss "([^"]*)"/) do |parameter_label, concept, additionalText|
+  value_span = @browser.spans(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label = '#{URI::escape(parameter_label)}']//span[#{contains_class 'value'}]/span").find(&:visible?)
+  value_span.text.should eq @context["random_#{@site.translate(concept)}".to_sym] + additionalText
 end
 
 When(/^sjekker jeg at den verdien jeg la inn for "([^"]*)" inneholder (.*)/) do |parameter_label, concept|
@@ -842,4 +856,9 @@ end
 
 When(/^dialogen viser at verket ikke kan slettes$/) do
   @browser.span(:data_automation_id => 'undeleteable-work').should exist
+end
+
+When(/^klikker jeg på lenken for å vise mindre brukte felter$/) do
+  @browser.a(:text => 'Vis flere felter').click
+  sleep 1
 end

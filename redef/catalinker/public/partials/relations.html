@@ -45,12 +45,12 @@
                        href="{{getLinkfromUri({uri: .targetUri}, config.search[config.rdfTypeToIndexType[targetType]].linkFromUri)}}"
                        target="_blank"
                        title="{{config.search[targetType].linkFromUri.toolTip}}">
-                        {{getSearchResultItemLabel(., config.relationTargetLabels[targetType])}}
+                        {{getSearchResultItemLabel(., config.relationTargetLabels[targetType], @keypath)}}
                         {{#targetType && relationships[0].isRole}}<span class="work-type" >({{>(targetType+'Label')}})</span >{{/}}
                     </a >
                     {{else}}
                     <span class="pure-u-1-1" >
-                        {{getSearchResultItemLabel(., config.relationTargetLabels[targetType])}}
+                        {{getSearchResultItemLabel(., config.relationTargetLabels[targetType], @keypath)}}
                         {{#targetType && relationships[0].isRole}}<span class="work-type" >({{>(targetType+'Label')}})</span >{{/}}
                     </span >
                     {{/if}}

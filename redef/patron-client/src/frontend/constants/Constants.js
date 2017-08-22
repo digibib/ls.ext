@@ -1,3 +1,4 @@
+const title = true
 module.exports = {
   queryFieldTranslations: {
     'ag': 'ageLimit',
@@ -15,12 +16,12 @@ module.exports = {
     'bidragsyter': 'contributor',
     'biografi': 'bio',
     'biography': 'bio',
-    'delnummer': 'partNumber',
+    'delnummer': {translation: 'partNumber', title},
     'deltittel': 'partTitle',
     'dir': 'conductor',
     'dirigent': 'conductor',
-    'dn': 'partNumber',
-    'dt': 'partTitle',
+    'dn': {translation: 'partNumber', title},
+    'dt': {translation: 'partTitle', title},
     'em': 'subject',
     'emne': 'subject',
     'f': 'format',
@@ -32,8 +33,8 @@ module.exports = {
     'foto': 'photographer',
     'fotograf': 'photographer',
     'ge': 'genre',
-    'hovedtittel': 'mainTitle',
-    'ht': 'mainTitle',
+    'hovedtittel': {translation: 'mainTitle', title},
+    'ht': {translation: 'mainTitle', title},
     'ill': 'illustrator',
     'illustratør': 'illustrator',
     'innl': 'reader',
@@ -53,9 +54,9 @@ module.exports = {
     'medietype': 'mt',
     'nasj': 'nationality',
     'nasjonalitet': 'nationality',
-    'odn': 'workPartNumber',
-    'odt': 'workPartTitle',
-    'oht': 'workMainTitle',
+    'odn': {translation: 'workPartNumber', title},
+    'odt': {translation: 'workPartTitle', title},
+    'oht': {translation: 'workMainTitle', title},
     'originalDelnummer': 'workPartNumber',
     'originalDeltittel': 'workPartTitle',
     'originalHovedtittel': 'workMainTitle',
@@ -63,7 +64,7 @@ module.exports = {
     'originalUndertittel': 'workSubtitle',
     'originalÅr': 'firstPublicationYear',
     'ospr': 'origLang',
-    'out': 'workSubtitle',
+    'out': {translation: 'workSubtitle', title},
     'ov': 'translator',
     'oversetter': 'translator',
     'oår': 'firstPublicationYear',
@@ -84,15 +85,15 @@ module.exports = {
     'tekst': 'subtitles',
     'tekstforfatter': 'lyricist',
     'tfo': 'lyricist',
-    'ti': 'title',
+    'ti': {translation: 'title', title},
     'tilp': 'adaptation',
     'tilpasning': 'adaptation',
-    'tittel': 'title',
+    'tittel': {translation: 'title', title},
     'tittelnummer': 'recordId',
     'tnr': 'recordId',
     'undertekster': 'subtitles',
-    'undertittel': 'subtitle',
-    'ut': 'subtitle',
+    'undertittel': {translation: 'subtitle', title},
+    'ut': {translation: 'subtitle', title},
     'utg': 'publisher',
     'utgivelsesår': 'publicationYear',
     'utgiver': 'publisher',
@@ -102,32 +103,37 @@ module.exports = {
   },
   backendUri: '/services',
   maxVisibleFilterItems: 3,
-  maxSearchResults: 200,
   maxSearchResultsPerPage: 20,
   filterableFields: {
     branch: {
       name: 'branches',
-      prefix: ''
+      prefix: '',
+      domain: 'publication'
     },
     mediatype: {
       name: 'mediatype',
-      prefix: 'http://data.deichman.no/mediaType#'
+      prefix: 'http://data.deichman.no/mediaType#',
+      domain: 'publication'
     },
     format: {
       name: 'formats',
-      prefix: 'http://data.deichman.no/format#'
+      prefix: 'http://data.deichman.no/format#',
+      domain: 'publication'
     },
     language: {
       name: 'languages',
-      prefix: 'http://lexvo.org/id/iso639-3/'
+      prefix: 'http://lexvo.org/id/iso639-3/',
+      domain: 'publication'
     },
     audience: {
       name: 'audiences',
-      prefix: 'http://data.deichman.no/audience#'
+      prefix: 'http://data.deichman.no/audience#',
+      domain: 'work'
     },
     fictionNonfiction: {
       name: 'fictionNonfiction',
-      prefix: 'http://data.deichman.no/fictionNonfiction#'
+      prefix: 'http://data.deichman.no/fictionNonfiction#',
+      domain: 'work'
     }
   },
   mediaTypeIcons: {
@@ -157,12 +163,25 @@ module.exports = {
     'http://lexvo.org/id/iso639-3/nno',
     'http://lexvo.org/id/iso639-3/nor',
     'http://lexvo.org/id/iso639-3/eng',
+    'http://lexvo.org/id/iso639-3/sma',
+    'http://lexvo.org/id/iso639-3/smn',
+    'http://lexvo.org/id/iso639-3/sjk',
+    'http://lexvo.org/id/iso639-3/sjd',
+    'http://lexvo.org/id/iso639-3/sje',
+    'http://lexvo.org/id/iso639-3/smi',
+    'http://lexvo.org/id/iso639-3/sms',
+    'http://lexvo.org/id/iso639-3/sjt',
+    'http://lexvo.org/id/iso639-3/sju',
+    'http://lexvo.org/id/iso639-3/smj',
+    'http://lexvo.org/id/iso639-3/sme',
+    'http://lexvo.org/id/iso639-3/sia',
     'http://lexvo.org/id/iso639-3/swe',
     'http://lexvo.org/id/iso639-3/dan',
     'http://lexvo.org/id/iso639-3/ger',
     'http://lexvo.org/id/iso639-3/fre',
     'http://lexvo.org/id/iso639-3/spa',
-    'http://lexvo.org/id/iso639-3/ita'
+    'http://lexvo.org/id/iso639-3/ita',
+    'http://lexvo.org/id/iso639-3/rus'
   ],
   enabledParameter: null /* used to clarify url parameters without value, e.g. ?hideFilters */
 }

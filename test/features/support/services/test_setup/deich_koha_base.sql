@@ -38,6 +38,7 @@ UPDATE TABLE `systempreferences` SET `value` = '$(document).ready(function(){\r\
 
 UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'NorwegianPatronDBEnable';
 UPDATE TABLE `systempreferences` SET `value` = 'http://nlsink:9999' WHERE `variable` = 'NorwegianPatronDBEndpoint';
+UPDATE TABLE `systempreferences` SET `value` = '1' WHERE `variable` = 'ILLModule';
 
 /*!40000 ALTER TABLE `systempreferences` ENABLE KEYS */;
 
@@ -139,6 +140,7 @@ INSERT INTO `branches` VALUES
 ('ftor','Torshov',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ('hsko','Skoletjenesten',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ('hutl','Hovedbiblioteket',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('ILL','Fjernlån',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
 ('ukjent','Ukjent avdeling',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `branches` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -189,6 +191,7 @@ INSERT INTO `categories` VALUES
 ('BIB','Bibliotek',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),
 ('DOOR','Meråpent dørterminal',NULL,NULL,2999,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'S',-1,'default','inherit'),
 ('I','Institusjon',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),
+('IL','Fjernlån',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'I',-1,'default','inherit'),
 ('KL','Klasselåner',0,'2999-12-31',0,0,NULL,NULL,0.000000,0,NULL,0.000000,0,'P',-1,'default','inherit'),
 ('MDL','Midlertidig bosatt',0,'2999-12-31',999,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit'),
 ('PAS','Pasient',0,'2999-01-01',0,0,NULL,NULL,0.000000,1,NULL,0.000000,0,'A',-1,'default','inherit'),

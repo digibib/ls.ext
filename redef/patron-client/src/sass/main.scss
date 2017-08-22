@@ -1,41 +1,4353 @@
 @charset "UTF-8";
 
-// Import Breakpoint (local files in project) - Really Simple Media Queries with Sass
-// ==========================================================================
+// Imports
+// --------------------------------------------------------
+
+// Breakpoint - Really Simple Media Queries with Sass
 @import "../../node_modules/breakpoint-sass/stylesheets/breakpoint";
 
-// Import Datepicker styles
-// ==========================================================================
+// Datepicker styles
 @import "../../public/lib-css/react-datepicker";
 
-// Import Tooltip styles
-// ==========================================================================
+// Tooltip styles
 @import "../../public/lib-css/tooltip";
 
-// Import Susy (local files in project) - Responsive grid system for Compass
-// ==========================================================================
+// Susy - Responsive grid system
 @import "../../node_modules/susy/sass/susy";
-@import "compass";
-// <--
-//@import "compass/functions";
 
-// App Config - all settings
-// ==========================================================================
-@import "config";
-
-// Import Helpers
-// ==========================================================================
-@import "helpers/helpers";
+// print styles
+@media print { @import "print"; }
 
 
-// Import styles
-// ==========================================================================
+// Variables - colors
+// --------------------------------------------------------
 
-/* @import "reset.scss"; */
-@import "atomic/atoms/atoms";
-@import "atomic/molecules/molecules";
-@import "atomic/organisms/organisms";
-@import "atomic/pages/pages";
-@import "ie";
+$redColor: #D63814 !default;
+$redGreyColor: #916359 !default;
+$blackColor: #212121 !default;
+$greyColor: #F7F7F7 !default;
+$mediumGreyColor: #CACACA !default;
+$darkGreyColor: #767676 !default;
+$white: #FFF !default;
+$green: #0E8A17 !default;
+$yellow: #FFFACD !default;
 
-@media print {@import "print";}
+// Variables - rhythm (replacement for compass function)
+// --------------------------------------------------------
+$rhythm0_2: 0.075em;
+$rhythm0_5: 0.1875em;
+$rhythm0_9: 0.3375em;
+$rhythm1:   0.375em;
+$rhythm2:   0.75em;
+$rhythm2_5: 0.9375em;
+$rhythm2_7: 1.0125em;
+$rhythm3:   1.125em;
+$rhythm4:   1.5em;
+$rhythm5:   1.875em;
+$rhythm6:   2.25em;
+$rhythm10:  3.75em;
+
+// Variables - grid
+// --------------------------------------------------------
+$susy: (
+    columns: 12,
+);
+
+
+// Variables - breakpoints
+// --------------------------------------------------------
+
+//mobile
+$lt-small: max-width 667px;
+
+//tablet
+$small: min-width 668px;
+$lt-medium: max-width 991px;
+
+//desktop
+$medium: min-width 992px;
+$lt-large: max-width 1279px;
+
+//high res
+$large: min-width 1280px;
+$lt-xlarge: max-width 1439px;
+
+$xlarge: min-width 1440px;
+
+// Mixins
+// --------------------------------------------------------
+@mixin clearfix {
+  &:after {
+    content: " ";
+    display: block;
+    clear: both;
+  }
+}
+
+@mixin container {
+  float: left;
+  width: 100%;
+}
+
+// typography - vertical rhythm
+// --------------------------------------------------------
+html {
+  font-size: 100%;
+  line-height: $rhythm1;
+}
+
+// box-sizing
+// --------------------------------------------------------
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+// default helpers
+// --------------------------------------------------------
+img {
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+}
+
+::selection {
+  background: #3969ca;
+  text-shadow: none;
+  color: white;
+}
+
+.clearfix, .row {
+  zoom: 1;
+}
+
+.clearfix:before, .row:before, .clearfix:after, .row:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after, .row:after {
+  clear: both;
+}
+
+.is-hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+.is-vishidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.focusable.is-vishidden:active, .focusable.is-vishidden:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+.g-xup {
+  overflow: hidden;
+  clear: both;
+}
+
+// global styles - body
+// --------------------------------------------------------
+body {
+  font-family: open-sans, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: normal;
+  font-style: normal;
+  color: $blackColor;
+  background-color: $white;
+  margin: 0;
+}
+
+// global styles - html
+// --------------------------------------------------------
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  line-height: $rhythm4;
+}
+
+// global styles - hide
+// --------------------------------------------------------
+@include breakpoint($lt-small) {
+  .hidden-mobile {
+    display: none;
+  }
+}
+
+@include breakpoint($small) {
+  .hidden-tablet {
+    display: none;
+  }
+}
+
+@include breakpoint($medium) {
+  .hidden-tablet {
+    display: block;
+  }
+}
+
+@include breakpoint($medium) {
+  .hidden-desktop {
+    display: none;
+  }
+}
+
+// global styles - show
+// --------------------------------------------------------
+@include breakpoint($lt-small) {
+  .show-mobile {
+    display: block;
+  }
+}
+
+@include breakpoint($small) {
+  .show-tablet {
+    display: block;
+  }
+}
+
+@include breakpoint($medium) {
+  .show-desktop {
+    display: block;
+  }
+}
+
+// global styles - table
+// --------------------------------------------------------
+table {
+  @include container;
+  @include span(12);
+  border-collapse: collapse;
+}
+
+table thead {
+  border-bottom: 1px solid $blackColor;
+}
+
+table th, table tr {
+  padding: $rhythm1;
+}
+
+table th, table td {
+  padding: 0.5rem;
+}
+
+@include breakpoint($small) {
+  table th, table td {
+    padding: 0.5rem 1rem;
+  }
+}
+
+table th {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  text-align: left;
+  text-transform: capitalize;
+}
+
+table th button.sorter {
+  margin: 0px 0px -6px 3px;
+  position: relative;
+  top: -6px;
+  padding: 0px 1px 0px 1px;
+  cursor: pointer;
+}
+
+table th button.sorter span.sort-button {
+  display: block;
+  font-size: 60%;
+  opacity: 0.0;
+}
+
+table th button.sorter span.sort-button.visible {
+  opacity: 1.0;
+}
+
+table th button.sorter:focus {
+  outline: none;
+}
+
+table tr:nth-child(odd) {
+  background: $white;
+}
+
+table tr:nth-child(even) {
+  background: $greyColor;
+}
+
+// digibib icons
+// --------------------------------------------------------
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "digibib";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.icon-th-list:before                 { content: '\e819'; }
+.icon-th:before                      { content: '\e80e'; }
+.icon-calendar:before                { content: '\e800'; }
+.icon-play:before                    { content: '\e801'; }
+.icon-pause:before                   { content: '\e802'; }
+.icon-plus:before                    { content: '\e803'; }
+.icon-check:before                   { content: '\e804'; }
+.icon-right-open:before              { content: '\e805'; }
+.icon-down:before                    { content: '\e806'; }
+.icon-left:before                    { content: '\e807'; }
+.icon-right:before                   { content: '\e808'; }
+.icon-up:before                      { content: '\e809'; }
+.icon-cancel-1:before                { content: '\e80a'; }
+.icon-angle-wide:before              { content: '\e80b'; }
+.icon-attention:before               { content: '\e80c'; }
+.icon-help:before                    { content: '\e80d'; }
+.icon-btn-search-sorting:before      { content: '\e80f'; }
+.icon-btn-triangle-up:before         { content: '\e810'; }
+.icon-audiobook:before               { content: '\e811'; }
+.icon-book:before                    { content: '\e812'; }
+.icon-movie:before                   { content: '\e813'; }
+.icon-music-note:before              { content: '\e814'; }
+.icon-music:before                   { content: '\e815'; }
+.icon-minus:before                   { content: '\e816'; }
+.icon-plus-1:before                  { content: '\e817'; }
+.icon-cd:before                      { content: '\e818'; }
+.icon-btn-mobile:before              { content: '\e81a'; }
+.icon-btn-single-filter-close:before { content: '\e81b'; }
+.icon-btn-single-filter-open:before  { content: '\e81c'; }
+.icon-btn-x:before                   { content: '\e81d'; }
+.icon-icon-plus:before               { content: '\e81e'; }
+.icon-spin4:before                   { content: '\e834'; }
+.icon-down-open:before               { content: '\f004'; }
+.icon-up-open:before                 { content: '\f005'; }
+.icon-left-open:before               { content: '\f007'; }
+.icon-check-empty:before             { content: '\f096'; }
+.icon-angle-double-left:before       { content: '\f100'; }
+.icon-angle-double-right:before      { content: '\f101'; }
+.icon-angle-double-up:before         { content: '\f102'; }
+.icon-angle-double-down:before       { content: '\f103'; }
+.icon-ok-squared:before              { content: '\f14a'; }
+
+//  Hack to support slighlty wider icon
+.icon-movie:before { width: 1.3em; }
+
+// digibib icons - animations
+// --------------------------------------------------------
+.animate-spin {
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+// animations
+// --------------------------------------------------------
+
+.fade-in-appear {
+  opacity: 0.01;
+}
+
+.fade-in-appear.fade-in-appear-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.fade-in-leave {
+  opacity: 1;
+}
+
+.fade-in-leave.fade-in-leave-active {
+  opacity: 0.01;
+  transition: opacity 500ms ease-in;
+}
+
+.fade-in-enter {
+  opacity: 0.01;
+}
+
+.fade-in-enter.fade-in-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.loading-spinner i {
+  color: $redColor;
+}
+
+
+// atoms - buttons
+// --------------------------------------------------------
+
+button {
+  background: none;
+  border: none;
+}
+
+.black-btn {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  background: $blackColor;
+  padding-bottom: 0.5em;
+  padding: $rhythm2;
+  padding-top: 0.5em;
+  border-radius: 2px;
+  font-size: 1em;
+  color: $white;
+}
+
+.black-btn:hover, .black-btn:active, .black-btn:focus {
+  background: $darkGreyColor;
+  cursor: pointer;
+}
+
+.black-btn:disabled {
+  background: $mediumGreyColor;
+}
+
+.black-btn a, .black-btn a:hover {
+  text-decoration: none;
+  color: $white;
+}
+
+.black-btn .btn-icon {
+  position: relative;
+  margin-left: 17px;
+}
+
+.black-btn .btn-icon i {
+  font-size: 1.8em;
+  position: absolute;
+  top: -7px;
+}
+
+.black-btn .btn-icon .icon-pause {
+  left: -1.2em;
+}
+
+.black-btn .btn-icon .icon-play {
+  right: -0.2em;
+}
+
+.grey-btn {
+  padding: $rhythm2;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  background: $greyColor;
+  color: $blackColor;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 1em;
+  border-radius: 2px;
+}
+
+.grey-btn a, .grey-btn a:hover, .grey-btn span a span {
+  text-decoration: none;
+  color: $blackColor;
+}
+
+.red-btn {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  padding-bottom: 0.5em;
+  background: $redColor;
+  padding: $rhythm2;
+  border-radius: 2px;
+  font-size: 1em;
+  color: $white;
+}
+
+.red-btn:hover, .red-btn:active, .red-btn:focus {
+  background: $darkGreyColor;
+  cursor: pointer;
+}
+
+.red-btn:disabled {
+  background: $redGreyColor;
+}
+
+.red-btn a, .red-btn a:hover {
+  text-decoration: none;
+}
+
+.red-btn .btn-icon {
+  position: relative;
+  margin-left: 17px;
+}
+
+.red-btn .btn-icon i {
+  font-size: 1.8em;
+  position: absolute;
+  right: 3em;
+  top: -7px;
+}
+
+
+// atoms - checkbox
+// --------------------------------------------------------
+
+.white-btn-checkmark {
+  padding: $rhythm1;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  border: 3px solid $blackColor;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 1em;
+  border-radius: 2px;
+  margin: $rhythm3;
+}
+
+.white-btn-checkmark a, .white-btn-checkmark a:hover {
+  text-decoration: none;
+  color: $white;
+}
+
+.white-btn-checkmark:before {
+  content: url("/images/icon-plus.svg");
+  margin-right: $rhythm1;
+}
+
+
+// fonts
+// --------------------------------------------------------
+
+@font-face {
+  font-family: open-sans;
+  src: url("/fonts/open-sans/regular.eot");
+  src: url("/fonts/open-sans/regular.eot?#iefix") format("embedded-opentype"), url("/fonts/open-sans/regular.woff") format("woff"), url("/fonts/open-sans/regular.ttf") format("truetype"), url("/fonts/open-sans/regular.svg#open-sans") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: open-sans;
+  src: url("/fonts/open-sans/semibold.eot");
+  src: url("/fonts/open-sans/semibold.eot?#iefix") format("embedded-opentype"), url("/fonts/open-sans/semibold.woff") format("woff"), url("/fonts/open-sans/semibold.ttf") format("truetype"), url("/fonts/open-sans/semibold.svg#open-sans") format("svg");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: open-sans;
+  src: url("/fonts/open-sans/bold.eot");
+  src: url("/fonts/open-sans/bold.eot?#iefix") format("embedded-opentype"), url("/fonts/open-sans/bold.woff") format("woff"), url("/fonts/open-sans/bold.ttf") format("truetype"), url("/fonts/open-sans/bold.svg#open-sans") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'digibib';
+  src: url("/fonts/digibib/digibib.eot?60794899");
+  src: url("/fonts/digibib/digibib.eot?60794899#iefix") format("embedded-opentype"), url("/fonts/digibib/digibib.woff2?60794899") format("woff2"), url("/fonts/digibib/digibib.woff?60794899") format("woff"), url("/fonts/digibib/digibib.ttf?60794899") format("truetype"), url("/fonts/digibib.svg?60794899#digibib") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+// text - general
+// --------------------------------------------------------
+
+strong {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+}
+
+
+// text - links
+// --------------------------------------------------------
+
+a {
+  color: $redColor;
+  text-decoration: none;
+}
+
+a:hover, a:active {
+  text-decoration: underline;
+  color: $redColor;
+}
+
+.primary-menu a {
+  color: $blackColor;
+}
+
+.secondary-menu a {
+  color: $white;
+}
+
+// text - headings
+// --------------------------------------------------------
+
+h1, .alpha {
+  font-family: open-sans, Arial, sans-serif;
+  font-weight: bold;
+  font-style: normal;
+  font-size: 1.625em;
+  line-height: 1.15385em;
+  margin-bottom: 0.69231em;
+}
+
+@include breakpoint($medium) {
+  h1, .alpha {
+    font-size: $rhythm4;
+    line-height: 1.25em;
+    margin-bottom: 1em;
+  }
+}
+
+h2, .beta {
+  font-family: open-sans, Arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: $rhythm4;
+  line-height: 1.25em;
+  margin-bottom: $rhythm2;
+}
+
+@include breakpoint($medium) {
+  h2, .beta {
+    font-size: $rhythm3;
+    line-height: 1.33333em;
+    margin-bottom: 1.33333em;
+  }
+}
+
+h3, .gamma {
+  font-family: open-sans, Arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: $rhythm3;
+  line-height: 1.33333em;
+  margin-bottom: 1em;
+}
+
+@include breakpoint($medium) {
+  h3, .gamma {
+    font-size: 1.375em;
+    line-height: 1.36364em;
+    margin-bottom: 1.09091em;
+  }
+}
+
+h4, .delta {
+  font-family: open-sans, Arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1em;
+  line-height: $rhythm4;
+  margin-bottom: $rhythm3;
+}
+
+@include breakpoint($medium) {
+  h4, .delta {
+    font-size: $rhythm3;
+    line-height: 1.33333em;
+    margin-bottom: 1.33333em;
+  }
+}
+
+// text - tags
+// --------------------------------------------------------
+
+strong, b {
+  font-weight: bold;
+}
+
+i {
+  font-style: italic;
+}
+
+// used for higlighting search terms
+em {
+  background: $yellow;
+  font-style: normal;
+}
+
+// entry-content icon (arrow >)
+// --------------------------------------------------------
+
+.entry-content-icon-single {
+  display: inline-block;
+  color: $blackColor;
+  padding-right: 1em;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.entry-content-icon-single img {
+  float: left;
+  max-width: 0.8em;
+  margin-right: 0.25em;
+}
+
+.entry-content-icon-single span {
+  float: left;
+  line-height: 1em;
+}
+
+// atoms - input
+// --------------------------------------------------------
+
+input {
+  padding: $rhythm2;
+  border: 1px solid $blackColor;
+  border-radius: 2px;
+}
+
+input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+input:focus:-moz-placeholder {
+  color: transparent;
+}
+
+/* FF 4-18 */
+input:focus::-moz-placeholder {
+  color: transparent;
+}
+
+/* FF 19+ */
+input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+
+/* IE 10+ */
+input:focus::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+// forms - select
+// --------------------------------------------------------
+
+.select-container {
+  overflow: hidden;
+  background: url(/images/btn-search-sorting.svg) no-repeat right $white;
+  background-position: 95%;
+  border: 1px solid $blackColor;
+}
+
+.select-container select {
+  background: transparent;
+  width: 100%;
+  padding: 0 0 0 5px;
+  height: 34px;
+  font-size: 16px;
+  font-family: open-sans, sans-serif;
+  line-height: 1;
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+}
+
+// forms - error
+// --------------------------------------------------------
+
+.form-item.error input {
+  border-width: 2px;
+  border-color: $redColor;
+  background: rgba(255, 0, 0, 0.05);
+}
+
+// forms - checkbox
+// --------------------------------------------------------
+
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"] + label {
+  position: relative;
+  cursor: pointer;
+}
+
+input[type="checkbox"] + label i {
+  display: none;
+}
+
+input[type="checkbox"] + label i.checkbox-unchecked {
+  display: block;
+}
+
+input[type="checkbox"]:checked + label i.checkbox-checked {
+  display: block;
+}
+
+input[type="checkbox"]:checked + label i.checkbox-unchecked {
+  display: none;
+}
+
+// layout
+// --------------------------------------------------------
+
+.wrapper {
+  max-width: 100%;
+  padding: 1% 1.69492% 1.69492% 1.69492%;
+  @include clearfix;
+}
+
+@include breakpoint($small) {
+  .wrapper {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+@include breakpoint($medium) {
+  .wrapper {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+
+.row {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+// filters
+// --------------------------------------------------------
+
+.active-filters {
+  /* border-top: 1px solid $mediumGreyColor; */
+  margin-top: $rhythm1;
+  padding-top: $rhythm1;
+}
+
+.active-filters .label {
+  font-size: $rhythm2;
+  text-transform: uppercase;
+  color: $darkGreyColor;
+}
+
+.active-filters ul {
+  margin: 0;
+  padding: 0;
+}
+
+.active-filters .active-filter, .active-filters .remove-all-filters {
+  list-style: none;
+  display: inline-block;
+  margin-bottom: $rhythm2;
+  margin-right: $rhythm2;
+  border: 1px solid $darkGreyColor;
+  background: $greyColor;
+  border-radius: 0.2em;
+  cursor: pointer;
+}
+
+.active-filters .active-filter .filter-label, .active-filters .remove-all-filters .filter-label {
+  padding: $rhythm0_5 $rhythm1;
+  display: inline-block;
+}
+
+.active-filters .active-filter .remove, .active-filters .remove-all-filters .remove {
+  color: $redColor;
+  padding: $rhythm0_5 $rhythm1;
+  display: inline-block;
+  border-left: 1px solid $darkGreyColor;
+}
+
+.active-filters .active-filter:hover .remove, .active-filters .remove-all-filters:hover .remove {
+  background: $mediumGreyColor;
+  font-weight: bolder;
+}
+
+.active-filters .remove-all-filters {
+  background: #dedcdc;
+}
+
+.filters {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  margin-bottom: $rhythm4;
+}
+
+.filters .limit-filters {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  border-bottom: 2px solid $blackColor;
+  display: block;
+  color: $redColor;
+  margin-bottom: $rhythm3;
+  /* border-top: 1px solid $mediumGreyColor; */
+}
+
+@include breakpoint($small) {
+  .filters .limit-filters {
+    border-bottom: 3px solid $blackColor;
+  }
+}
+
+.filters .limit-filters a {
+  width: 100%;
+  display: inline-block;
+  background-image: url("/images/btn-limit-filter-close.svg");
+  background-position: right $rhythm5 center;
+  background-repeat: no-repeat;
+  padding: $rhythm2 0;
+  text-decoration: none;
+}
+
+.filters .limit-filters a:hover, .filters .limit-filters a:focus {
+  background-color: $greyColor;
+}
+
+.filters .limit-filters a.filters-hidden {
+  background-image: url("/images/btn-limit-filter-open.svg");
+}
+
+.filters .filter-wrapper {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.filters .filter-wrapper .filter-group {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.filters .filter-wrapper .filter-group header {
+  @include container;
+  @include span(12);
+  border-top: 1px solid $darkGreyColor;
+  padding-top: $rhythm2;
+}
+
+.filters .filter-wrapper .filter-group section {
+  @include container;
+  @include span(12);
+}
+
+.filters .filter-wrapper .filter-group footer {
+  @include container;
+  @include span(12);
+}
+
+.filters .filter-wrapper .filter-group-first {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.filters .filter-wrapper .filter-group-first header {
+  @include container;
+  @include span(12);
+  border-top: none;
+  padding-top: 0;
+}
+
+.filters .filter-wrapper .filter-group-first section {
+  @include container;
+  @include span(12);
+}
+
+.filters .filter-wrapper .filter-group-first footer {
+  @include container;
+  @include span(12);
+}
+
+.filters .limit-filters-header {
+  display: none;
+}
+
+@include breakpoint($small) {
+  .filters {
+    @include span(3);
+    border-top: 2px solid $blackColor;
+    margin-top: $rhythm5;
+  }
+}
+@media (min-width: 668px) and (min-width: 668px) {
+  .filters {
+    border-top: 3px solid $blackColor;
+  }
+}
+@include breakpoint($small) {
+  .filters .limit-filters-header {
+    @include span(12 first);
+    margin-left: 0;
+    margin-right: 0;
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    color: $darkGreyColor;
+    padding-bottom: $rhythm2;
+    margin-top: -$rhythm5;
+  }
+  .filters .limit-filters {
+    display: none;
+  }
+}
+
+.filterTitle {
+  @include clearfix;
+  max-width: 100%;
+  border-bottom: none;
+  margin-top: $rhythm4;
+  cursor: pointer;
+}
+
+.filterTitle h1 {
+  @include span(10);
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.1em;
+  font-weight: normal;
+  line-height: $rhythm4;
+}
+
+.filterTitle .single-filter-close {
+  width: 15.25424%;
+  float: right;
+  margin-right: 0;
+  cursor: pointer;
+  margin-top: 0.2em;
+}
+
+.filterTitle .single-filter-close i {
+  border: 1px solid $blackColor;
+  padding: 4px;
+  border-radius: 50%;
+}
+
+.filterTitle .single-filter-close i:hover {
+  background: $darkGreyColor;
+  cursor: pointer;
+  color: $white;
+}
+
+.filterTitle img {
+  max-height: 2em;
+}
+
+.filter-list {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.filter-list .searchfilters {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  list-style-type: none;
+  padding-left: 0;
+  margin: $rhythm1 0 0;
+  padding: 0;
+}
+
+.filter-list .searchfilters label {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.filter-list .searchfilters label .checkbox-wrapper {
+  @include span(1 of 12);
+  margin-top: 0.5625em;
+  line-height: $rhythm4;
+}
+
+.filter-list .searchfilters label h2 {
+  width: 91.52542%;
+  float: right;
+  margin-right: 0;
+  margin-top: 0.5625em;
+  overflow: hidden;
+  line-height: $rhythm4;
+}
+
+.filter-list .filter_label {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1em;
+  font-weight: normal;
+  display: inline-block;
+  margin-right: 4px;
+  margin-bottom: 0;
+}
+
+.filter_count {
+  color: $darkGreyColor;
+}
+
+.show-all, .show-less, .show-more {
+  font-weight: normal;
+  color: $redColor;
+}
+
+.show-all h3, .show-less h3, .show-more h3 {
+  font-size: 0.8em;
+  margin-bottom: 0;
+}
+
+.show-all h3 :hover, .show-less h3 :hover, .show-more h3 :hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.filter-group.dateRangeFilters header.filterTitle {
+  border-top: 1px solid $darkGreyColor;
+  padding-top: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  cursor: default;
+}
+
+.filter-group.dateRangeFilters .form-item {
+  display: inline-block;
+}
+
+.filter-group.dateRangeFilters input {
+  max-width: 4em;
+  margin-right: 1em;
+  font-size: 0.8em;
+  padding: 0.7em 0 0.5em 0.6em;
+}
+
+.filter-group.dateRangeFilters label {
+  margin-right: 0.4em;
+}
+
+.filter-group.dateRangeFilters button {
+  font-size: 0.9em;
+  padding: 0.5em;
+}
+
+.filter-group.dateRangeFilters .error {
+  position: relative;
+}
+
+.filter-group.dateRangeFilters .error .feedback {
+  position: absolute;
+  font-size: 0.8em;
+  top: 3em;
+  color: $redColor;
+  min-width: 200%;
+}
+
+@include breakpoint($small) {
+  .filterTitle h1 {
+    width: 74.57627%;
+    float: left;
+    margin-right: 1.69492%;
+  }
+  .filterTitle .single-filter-close {
+    width: 23.72881%;
+    float: right;
+    margin-right: 0;
+  }
+
+  .filter-list .searchfilters label .checkbox-wrapper {
+    width: 15.25424%;
+    float: left;
+    margin-right: 1.69492%;
+  }
+
+  .filter-list .searchfilters label h2 {
+    width: 83.05085%;
+    float: right;
+    margin-right: 0;
+  }
+}
+
+// search results
+// --------------------------------------------------------
+
+.search-wrapper {
+  margin-top: 1em;
+}
+
+.search-results {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  /* @include border-top;
+  padding-top: rhythm(2); */
+}
+
+.search-results .search-results-list {
+  border-top: 2px solid $blackColor;
+  padding-top: $rhythm2;
+}
+
+@include breakpoint($small) {
+  .search-results .search-results-list {
+    border-top: 3px solid $blackColor;
+  }
+}
+
+.search-results .search-results-number {
+  margin-top: $rhythm0_9;
+  font-size: 0.9em;
+  line-height: 1.8em;
+  position: absolute;
+  bottom: 0.1em;
+}
+
+.search-results-settings {
+  position: absolute;
+  bottom: 0.1em;
+  right: 0;
+}
+
+.search-results-settings button {
+  padding: 0;
+}
+
+.search-results-settings .search-results-settings-label {
+  display: block;
+  font-size: 0.59em;
+  padding-left: 0.3em;
+}
+
+.search-results-header-flex {
+  /* display: flex;
+  justify-content: space-between;
+  align-items: flex-end; */
+  position: relative;
+  margin-top: 1.85em;
+}
+
+.search-results-header {
+  @include clearfix;
+  max-width: 100%;
+}
+
+.search-results-header .search-results-summary {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  font-size: $rhythm3;
+  /* margin: rhythm(2) 0; */
+}
+
+.search-results-header .search-results-summary .search-results-number {
+  width: 23.72881%;
+  float: left;
+  margin-right: 1.69492%;
+}
+
+.search-results-header .search-results-summary .search-sorting-placeholder {
+  width: 74.57627%;
+  float: right;
+  margin-right: 0;
+  text-align: right;
+}
+
+.search-results-header .search-results-summary .search-sorting-placeholder p {
+  margin: 0;
+}
+
+.search-results-header .search-results-summary .search-sorting-placeholder span {
+  font-weight: bold;
+}
+
+.search-results-header .active-filters {
+  @include container;
+  @include span(12);
+}
+
+.search-sorting {
+  width: 49.15254%;
+  float: left;
+  margin-right: 1.69492%;
+  float: right;
+}
+
+.search-sorting p {
+  color: $darkGreyColor;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin-bottom: 5px;
+}
+
+.search-sorting-select-box {
+  overflow: hidden;
+  background: url(/images/btn-search-sorting.svg) no-repeat right;
+  background-position: 95%;
+  border: 3px solid $blackColor;
+}
+
+.search-sorting-select-box select {
+  background: transparent;
+  width: 100%;
+  padding: 0 0 0 5px;
+  height: 34px;
+  font-size: 16px;
+  font-family: open-sans, sans-serif;
+  line-height: 1;
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+}
+
+@include breakpoint($small) {
+  .search-results {
+    width: 74.57627%;
+    float: left;
+    margin-right: 1.69492%;
+    /* margin-top: rhythm(5);
+    padding-top: rhythm(4); */
+    margin-right: 0;
+  }
+
+  .search-results-header .search-results-summary .search-results-number {
+    @include span(8);
+  }
+
+  .search-results-header .search-results-summary .search-sorting-placeholder {
+    width: 32.20339%;
+    float: right;
+    margin-right: 0;
+  }
+
+  .search-results-header .active-filters {
+    width: 100%;
+    float: right;
+    margin-right: 0;
+  }
+
+  .search-sorting {
+    @include span(3);
+    float: right;
+  }
+}
+
+.single-entry {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  border-bottom: 2px solid $blackColor;
+  margin-bottom: $rhythm2;
+}
+
+@include breakpoint($small) {
+  .single-entry {
+    border-bottom: 3px solid $blackColor;
+  }
+}
+
+.single-entry .book-cover {
+  width: 23.72881%;
+  float: left;
+  margin-right: 1.69492%;
+  text-align: center;
+  float: none;
+}
+
+.single-entry .book-cover a {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.single-entry .book-cover img {
+  display: inline-block;
+  transition: all 0.5s;
+  margin-top: 10px;
+  max-width: 95%;
+}
+
+.single-entry .book-cover img:hover {
+  max-width: 100%;
+  margin-top: 0;
+}
+
+.single-entry .book-cover i {
+  font-size: 3em;
+  color: $mediumGreyColor;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  margin-top: 0.5em;
+}
+
+.single-entry .book-cover i:hover {
+  font-size: 3.5em;
+  margin-top: 0;
+}
+
+.entry-header {
+  display: flex;
+}
+
+.entry-content {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  font-size: $rhythm2;
+  margin-right: auto;
+  float: none;
+  margin-top: 1em;
+}
+
+.entry-content .entry-content-icon {
+  @include container;
+  @include span(12);
+}
+
+.entry-content .entry-content-icon .entry-content-icon-single {
+  opacity: 0.5;
+}
+
+.entry-content h1 {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  font-size: $rhythm4;
+  margin-top: 0;
+  margin-bottom: 0.075em;
+}
+
+.entry-content h1 .title-text {
+  width: 91.52542%;
+  float: left;
+  margin-right: 1.69492%;
+  color: #333;
+}
+
+.entry-content h1 .caret {
+  width: 6.77966%;
+  float: right;
+  margin-right: 0;
+  text-align: right;
+  font-size: 2.75em;
+  position: relative;
+  bottom: 0.3em;
+}
+
+.entry-content h1 .caret i {
+  position: absolute;
+  left: 0.1em;
+  margin-left: -0.25em;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.entry-content h1 .caret i:before {
+  margin: 0;
+}
+
+.entry-content ul.mediaTypeFormats {
+  list-style-type: none;
+  display: inline;
+  padding: 0;
+}
+
+.entry-content ul.mediaTypeFormats li {
+  display: inline;
+  padding: 0;
+  margin: 0 0.3em;
+  font-weight: normal;
+}
+
+.entry-content > a:hover h1 .title-text, .entry-content > a:active h1 .title-text, .entry-content > a:focus h1 .title-text {
+  text-decoration: underline;
+}
+
+.entry-content > a:hover h1 .caret i, .entry-content > a:active h1 .caret i, .entry-content > a:focus h1 .caret i {
+  margin-left: 0;
+}
+
+.entry-content > p {
+  @include container;
+  @include span(12);
+  margin-top: 0;
+  margin-bottom: $rhythm1;
+}
+
+.entry-content .abstract {
+  line-height: 1.65em;
+}
+
+.entry-content .subjects, .entry-content .genres {
+  margin-top: $rhythm2;
+}
+
+.entry-content .subjects strong, .entry-content .genres strong {
+  font-size: $rhythm2_5;
+}
+
+.show-more-content {
+  @include container;
+  @include span(12);
+  text-align: center;
+  /* margin-bottom: rhythm(1); */
+  margin-bottom: 0.2em;
+}
+
+.show-more-content:hover {
+  cursor: pointer;
+}
+
+.show-more-content p {
+  font-size: $rhythm2;
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  margin-top: 0;
+  color: $redColor;
+}
+
+.show-more-content img {
+  max-width: 1em;
+}
+
+.entry-content-more {
+  clear: both;
+}
+
+.items-by-branch {
+  margin-bottom: 0.5em;
+}
+
+.items-by-branch .media-type-items {
+  border-bottom: 1px solid #ada9a9;
+}
+
+.items-by-branch .media-type-items:not(last-child) {
+  margin-bottom: 2px;
+}
+
+.items-by-branch .branch-header {
+  background-color: #dedcdc;
+}
+
+.items-by-branch .media-header {
+  margin-left: -0.4em;
+}
+
+.items-by-branch .media-header .flex-item {
+  font-size: 1.12em;
+}
+
+.items-by-branch h1 {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 700;
+  font-weight: normal;
+  margin: 0.2em 1em 0.2em 0;
+  font-size: 1.2em;
+}
+
+.items-by-branch .entry-content-icon-single {
+  font-weight: normal;
+}
+
+.items-by-branch .header {
+  font-size: 0.88em;
+  font-weight: 700;
+  text-transform: capitalize;
+  border-bottom: 1px solid #ada9a9;
+}
+
+.items-by-branch .header .flex-item {
+  width: 50%;
+  padding-top: 0;
+}
+
+.items-by-branch .header .flex-item:first-child, .items-by-branch .header .flex-item:last-child {
+  width: 25%;
+}
+
+.items-by-branch .header .media-item {
+  display: none;
+}
+
+.items-by-branch .flex-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.items-by-branch .sub-wrapper {
+  padding: 0;
+  font-size: 0.88em;
+}
+
+.items-by-branch .sub-wrapper:nth-child(even) {
+  background: $greyColor;
+}
+
+.items-by-branch .sub-wrapper:nth-child(odd) {
+  background: #E8E8E8;
+}
+
+.items-by-branch .sub-wrapper:first-child {
+  padding-bottom: 0.5em;
+}
+
+.items-by-branch .flex-item {
+  flex: 1 1 auto;
+  padding: 0.5em 0.5em 0.5em 1.1em;
+}
+
+.items-by-branch .item-icon-button {
+  text-align: right;
+  align-self: center;
+}
+
+.items-by-branch .item-icon-button button {
+  font-size: 1.2em;
+  padding: 0;
+  margin: 0;
+}
+
+.items-by-branch .item-icon-button .icon-plus, .items-by-branch .item-icon-button .icon-minus {
+  border: 1px solid $blackColor;
+  padding: 4px;
+  border-radius: 50%;
+  font-size: 0.6em;
+}
+
+.items-by-branch .main-row-2 {
+  padding: 0.5em 0 0.5em 0;
+}
+
+.items-by-branch .main-row-1 {
+  width: 100%;
+}
+
+.items-by-branch .main-row-2 {
+  width: 75%;
+}
+
+.items-by-branch .sub-row {
+  width: 50%;
+}
+
+.items-by-branch .sub-row:first-child, .items-by-branch .sub-row:last-child {
+  width: 25%;
+}
+
+.items-by-branch .location-item {
+  background-color: #ddd;
+  padding: 0 0.5em;
+  border-radius: 0.2em;
+  margin: 0 0.3em 0 0.3em;
+  text-transform: uppercase;
+}
+
+@include breakpoint($small) {
+
+  .single-entry .book-cover {
+    @include span(3);
+  }
+
+  .entry-content {
+    min-height: 5.5em;
+    font-size: $rhythm2_5;
+    margin-left: 1em;
+  }
+
+  .entry-content h1 {
+    margin-bottom: $rhythm0_5;
+    font-weight: normal;
+  }
+
+  .entry-content > p {
+    margin-bottom: $rhythm1;
+  }
+
+  .entry-content .subjects, .entry-content .genres {
+    margin-top: 0em;
+  }
+
+  .items-by-branch .main-row-1 {
+    width: 25%;
+    margin-bottom: 0;
+    margin-top: 0.5em;
+  }
+
+  .items-by-branch .header .media-item {
+    display: block;
+  }
+
+  .show-more-content {
+    text-align: right;
+  }
+
+  .show-more-content p {
+    font-size: $rhythm2;
+  }
+}
+
+// work information
+// --------------------------------------------------------
+
+.work-information {
+  font-size: $rhythm2;
+}
+
+.work-information h1 {
+  @include container;
+  @include span(12);
+  font-size: $rhythm4;
+  margin: 0;
+}
+
+.work-information h2 {
+  @include container;
+  @include span(12);
+  font-size: $rhythm3;
+  margin: 0;
+  font-weight: bold;
+}
+
+.work-information .meta-label {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+}
+
+.work-information .author {
+  margin-top: $rhythm1;
+  margin-bottom: $rhythm1;
+}
+
+.work-information .contributors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.work-information .contributors li {
+  display: inline-block;
+}
+
+.work-information .contributors li:after {
+  content: '-';
+  display: inline-block;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.work-information .contributors li:last-child:after {
+  content: '';
+  display: none;
+  padding: 0;
+}
+
+.work-information .contributors li .content:after {
+  content: '/';
+  display: inline-block;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.work-information .contributors li .content:last-child:after {
+  content: '';
+  display: none;
+  padding: 0;
+}
+
+.work-information .contributors span:first-child {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+}
+
+.work-information .work-excerpt {
+  margin-top: $rhythm1;
+  margin-bottom: $rhythm1;
+}
+
+.work-information .additional-info {
+  margin-bottom: $rhythm2;
+}
+
+.work-information .additional-info-toggle {
+  padding: $rhythm1;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+@include breakpoint($small) {
+
+  .work-information {
+    font-size: $rhythm2_5;
+  }
+
+  .work-information h1 {
+    font-size: $rhythm5;
+    font-weight: normal;
+  }
+
+  .work-information h2 {
+    font-size: $rhythm4;
+    font-weight: normal;
+  }
+
+  .work-information .author {
+    font-weight: bold;
+    font-size: $rhythm4;
+    margin-bottom: $rhythm3;
+  }
+}
+
+@include breakpoint($medium) {
+
+  .additional-info {
+    margin-top: $rhythm5;
+  }
+
+  .additional-info .meta-item {
+    margin-bottom: $rhythm2;
+  }
+
+  .additional-info .meta-label {
+    font-family: 'open-sans', Arial, sans-serif;
+    font-weight: 600;
+  }
+
+  .additional-info .work-subjects, .additional-info .work-genres {
+    border-top: 1px solid $blackColor;
+    margin-bottom: $rhythm2;
+  }
+
+  .additional-info h2 {
+    margin-top: $rhythm1;
+  }
+}
+
+// work relations
+// --------------------------------------------------------
+
+.work-relations:first-of-type {
+  margin-top: $rhythm2;
+}
+
+.work-relations h2 {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  margin-bottom: 0;
+  font-size: $rhythm2_5;
+}
+
+.work-relations ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.work-relations li {
+  display: block;
+  padding: 0;
+}
+
+.work-relations li .content:after {
+  content: '|';
+  display: inline-block;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.work-relations li .content:last-child:after {
+  content: '';
+  display: none;
+  padding: 0;
+}
+
+// work - subjects
+// --------------------------------------------------------
+
+.work-subjects:first-of-type, .work-genres:first-of-type {
+  margin-top: $rhythm2;
+}
+
+.work-subjects h2, .work-genres h2 {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  margin-bottom: 0;
+  font-size: $rhythm2_5;
+}
+
+.work-subjects ul, .work-genres ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.work-subjects li, .work-genres li {
+  display: inline-block;
+  padding: 0;
+}
+
+.work-subjects li:after, .work-genres li:after {
+  content: '|';
+  display: inline-block;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.work-subjects li:last-child:after, .work-genres li:last-child:after {
+  content: '';
+  display: none;
+  padding: 0;
+}
+
+// work - other publications
+// --------------------------------------------------------
+
+.other-publications .mediatype-group {
+  border-top: 4px solid $blackColor;
+  margin-top: $rhythm4;
+}
+.other-publications .mediatype-group:first-of-type {
+  margin-top: 0;
+}
+.other-publications > header h2 {
+  font-size: $rhythm2_5;
+}
+.other-publications .toggle-all-publications {
+  margin-top: $rhythm4;
+  text-align: center;
+  color: $redColor;
+}
+.other-publications .toggle-all-publications span {
+  text-transform: lowercase;
+  padding-right: $rhythm2;
+  display: inline-block;
+}
+.other-publications .toggle-all-publications span:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.other-publications .toggle-all-publications span:first-letter {
+  text-transform: uppercase;
+}
+
+// work - single publication
+// --------------------------------------------------------
+.single-publication .red-btn {
+  padding: $rhythm1;
+}
+
+// work - publications
+// --------------------------------------------------------
+.other-publications {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications > header {
+  @include container;
+  @include span(12);
+  text-align: center;
+}
+.other-publications .mediatype-selector {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm2;
+  text-align: center;
+}
+.other-publications .mediatype-selector > div {
+  display: inline-block;
+  cursor: pointer;
+}
+.other-publications .mediatype-group {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications .mediatype-group h2 {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  font-size: $rhythm2_5;
+  margin-bottom: 0;
+}
+.other-publications .mediatype-group > header {
+  @include container;
+  @include span(12);
+}
+.other-publications .mediatype-group .other-publications-entry-content {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications .mediatype-group .work-publications {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications .mediatype-group .row {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications .mediatype-group .single-publication {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications .mediatype-group .publication-info {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications .mediatype-group .entry-items {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.other-publications .mediatype-group .toggle-all-publications {
+  @include container;
+  @include span(12);
+}
+
+.arrow-open, .arrow-close {
+  @include span(1 of 12);
+  float: right;
+}
+@include breakpoint($small) {
+  .arrow-open, .arrow-close {
+    width: 2.54237%;
+    float: left;
+    margin-right: 1.69492%;
+    float: right;
+  }
+}
+
+@include breakpoint($small) {
+  .other-publications .mediatype-group .single-publication {
+    @include span(6);
+  }
+  .other-publications .mediatype-group .single-publication:nth-child(even) {
+    @include span(6 last);
+  }
+}
+@include breakpoint($medium) {
+  .other-publications .mediatype-group .single-publication {
+    @include span(4);
+  }
+  .other-publications .mediatype-group .single-publication:nth-child(even) {
+    @include span(4);
+  }
+  .other-publications .mediatype-group .single-publication:nth-child(3) {
+    width: 32.20339%;
+    float: right;
+    margin-right: 0;
+  }
+}
+
+// work - publication info
+// --------------------------------------------------------
+
+.single-publication {
+  border: 1px solid $mediumGreyColor;
+  margin-bottom: $rhythm2;
+  padding: $rhythm2;
+}
+
+.single-publication.open {
+  border-bottom: none;
+}
+
+.single-publication .book-cover {
+  width: 23.72881%;
+  float: left;
+  margin-right: 1.69492%;
+  cursor: pointer;
+}
+
+.single-publication .book-cover img {
+  max-height: 7em;
+}
+
+.single-publication .book-cover.missing {
+  text-align: center;
+}
+
+.single-publication .book-cover.missing i {
+  color: $mediumGreyColor;
+  font-size: 3em;
+}
+
+.single-publication .meta-info {
+  @include clearfix;
+  width: 74.57627%;
+  float: right;
+  margin-right: 0;
+  max-width: 100%;
+}
+
+.single-publication .meta-info .numholds {
+  @include push(1);
+  font-weight: bold;
+  font-size: smaller;
+  color: $redColor;
+}
+
+.single-publication .publication-text-container {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.single-publication .availability {
+  @include container;
+  @include span(12);
+  text-transform: uppercase;
+  font-size: $rhythm2;
+}
+
+.single-publication h2 {
+  @include container;
+  @include span(12);
+  font-size: $rhythm2_5;
+  margin: $rhythm1 0;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.single-publication .meta-item {
+  @include container;
+  @include span(12);
+  font-size: $rhythm2;
+}
+
+.single-publication .reserve-button {
+  @include container;
+  @include span(12);
+  margin-top: $rhythm2;
+}
+
+.single-publication .show-status {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  margin-top: $rhythm4;
+}
+
+.single-publication .show-status button {
+  @include container;
+  @include span(12);
+  font-size: $rhythm2_5;
+  cursor: pointer;
+  width: 100%;
+}
+
+.single-publication .show-status span {
+  float: left;
+}
+
+.single-publication .show-status i {
+  color: $redColor;
+  float: right;
+}
+
+
+// work - publication info
+// --------------------------------------------------------
+
+.publication-info {
+  padding: $rhythm1 $rhythm1 $rhythm2 $rhythm1;
+  border-bottom: 1px solid $darkGreyColor;
+  margin-bottom: $rhythm4;
+  background: $greyColor;
+  font-size: $rhythm2;
+  margin-top: -1px;
+}
+
+.publication-info .left, .publication-info .right, .publication-info .wide {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.publication-info .meta-info {
+  @include container;
+  @include span(12);
+}
+
+.publication-info .meta-label {
+  padding-right: $rhythm1;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.publication-info .meta-content {
+  display: inline-block;
+}
+
+.publication-info .note {
+  margin-top: $rhythm1;
+}
+
+.publication-info .contributors {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.publication-info .contributors .label {
+  font-weight: bold;
+}
+
+.publication-info .contributors li {
+  display: inline-block;
+}
+
+.publication-info .contributors li:after {
+  content: '-';
+  display: inline-block;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.publication-info .contributors li:last-child:after {
+  content: '';
+  display: none;
+  padding: 0;
+}
+
+.publication-info .contributors li .content:after {
+  content: '/';
+  display: inline-block;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.publication-info .contributors li .content:last-child:after {
+  content: '';
+  display: none;
+  padding: 0;
+}
+
+.publication-info h2 {
+  @include container;
+  @include span(12);
+  font-size: $rhythm4;
+  font-weight: bold;
+}
+
+.publication-info .entry-items h2 {
+  margin-bottom: $rhythm2;
+  font-size: $rhythm4;
+}
+
+.publication-info .entry-items table {
+  border: 1px solid $mediumGreyColor;
+}
+
+.publication-info .entry-items th {
+  font-weight: bold;
+}
+
+.publication-info .entry-items tr.not-available td:last-child {
+  color: $redColor;
+}
+
+.publication-info .entry-items .item-location {
+  margin-left: 1em;
+  background-color: #ddd;
+  border-radius: 0.2em;
+  padding: 0 0.5em;
+}
+
+@include breakpoint($small) {
+
+  .single-publication {
+    margin-top: $rhythm4;
+    min-height: 11em;
+    margin-bottom: 0;
+  }
+
+  .single-publication.open {
+    border-bottom: 3px solid $redColor;
+  }
+
+
+  .publication-info {
+    border: 1px solid $mediumGreyColor;
+    padding: $rhythm4;
+    margin-bottom: 0;
+  }
+
+  .publication-info .left {
+    @include span(6);
+  }
+
+  .publication-info .right {
+    @include span(6 last);
+  }
+}
+
+// mypage - user loans
+// --------------------------------------------------------
+
+.postpone-reserve {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: $rhythm2;
+}
+
+.postpone-reserve label {
+  display: block;
+}
+
+.postpone-reserve .form-item {
+  display: inline-block;
+}
+
+.postpone-reserve .form-item input {
+  margin-top: $rhythm1;
+  margin-bottom: $rhythm1;
+  max-width: 13em;
+  max-height: 3em;
+}
+
+.postpone-reserve .postpone-aside {
+  width: 50%;
+}
+
+.postpone-reserve .react-datepicker__input-container {
+  display: inline-block;
+}
+
+.postpone-reserve .react-datepicker__input-container .date-picker-button {
+  padding: 0;
+  font-size: 2em;
+  position: relative;
+  top: 0.2em;
+}
+
+.postpone-reserve .feedback {
+  position: absolute;
+  font-size: 0.7em;
+  color: $redColor;
+}
+
+/* Prototype */
+
+.pickup, .reserve, .loan {
+  width: 100%;
+  margin-top: 2.5em;
+  /* Section title */
+  /* Line item */
+}
+
+.pickup > h1, .reserve > h1, .loan > h1 {
+  width: 100%;
+  font-size: $rhythm4;
+  font-weight: normal;
+  border-bottom: 4px solid $blackColor;
+  padding-bottom: $rhythm1;
+  margin-top: $rhythm2;
+}
+
+.pickup .single-entry, .reserve .single-entry, .loan .single-entry {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  float: none;
+  border-bottom: 1px solid $blackColor;
+  margin-bottom: 0.7em;
+  /* Column item */
+  /* Show cancel button and other buttons in one row */
+}
+
+.pickup .single-entry h1, .reserve .single-entry h1, .loan .single-entry h1 {
+  font-size: $rhythm2_7;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.pickup .single-entry h2, .reserve .single-entry h2, .loan .single-entry h2 {
+  font-size: $rhythm2_5;
+  margin-top: $rhythm1;
+  margin-bottom: 0.075em;
+}
+
+.pickup .single-entry .entry-details, .reserve .single-entry .entry-details, .loan .single-entry .entry-details {
+  width: 100%;
+}
+
+.pickup .single-entry p, .reserve .single-entry p, .loan .single-entry p {
+  width: 100%;
+  font-size: $rhythm2_5;
+  font-weight: bold;
+  margin: 0;
+}
+
+.pickup .single-entry button, .reserve .single-entry button, .loan .single-entry button {
+  font-size: $rhythm2;
+}
+
+.pickup .single-entry .flex-col, .reserve .single-entry .flex-col, .loan .single-entry .flex-col {
+  margin-bottom: 0.4em;
+}
+
+.pickup .single-entry .cancel-button, .pickup .single-entry .renew-button, .pickup .single-entry .reserve-cancel-button, .pickup .single-entry .resume-suspend-button, .reserve .single-entry .cancel-button, .reserve .single-entry .renew-button, .reserve .single-entry .reserve-cancel-button, .reserve .single-entry .resume-suspend-button, .loan .single-entry .cancel-button, .loan .single-entry .renew-button, .loan .single-entry .reserve-cancel-button, .loan .single-entry .resume-suspend-button {
+  text-align: right;
+  align-self: center;
+}
+
+.pickup .single-entry .cancel-button:disabled, .pickup .single-entry .renew-button:disabled, .pickup .single-entry .reserve-cancel-button:disabled, .pickup .single-entry .resume-suspend-button:disabled, .reserve .single-entry .cancel-button:disabled, .reserve .single-entry .renew-button:disabled, .reserve .single-entry .reserve-cancel-button:disabled, .reserve .single-entry .resume-suspend-button:disabled, .loan .single-entry .cancel-button:disabled, .loan .single-entry .renew-button:disabled, .loan .single-entry .reserve-cancel-button:disabled, .loan .single-entry .resume-suspend-button:disabled {
+  opacity: 0.4;
+}
+
+.pickup .single-entry .cancel-button, .pickup .single-entry .renew-button, .reserve .single-entry .cancel-button, .reserve .single-entry .renew-button, .loan .single-entry .cancel-button, .loan .single-entry .renew-button {
+  width: 100%;
+}
+
+.pickup .single-entry .resume-suspend-button, .reserve .single-entry .resume-suspend-button, .loan .single-entry .resume-suspend-button {
+  width: 74.57627%;
+}
+
+.pickup .single-entry .resume-suspend-button button.btn-red, .reserve .single-entry .resume-suspend-button button.btn-red, .loan .single-entry .resume-suspend-button button.btn-red {
+  background-color: $redColor;
+  width: 8.7em;
+}
+
+.pickup .single-entry .reserve-cancel-button, .reserve .single-entry .reserve-cancel-button, .loan .single-entry .reserve-cancel-button {
+  width: 23.72881%;
+}
+
+.pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.pickup .single-entry .feedback, .reserve .single-entry .feedback, .loan .single-entry .feedback {
+  color: $redColor;
+  font-weight: normal;
+}
+
+
+.pickup .loan-expire, .pickup .loan-pickup-number, .pickup .loan-pickup-location {
+  width: 49.15254%;
+}
+
+.pickup .loan-expire h2, .pickup .loan-pickup-number h2, .pickup .loan-pickup-location h2 {
+  text-transform: uppercase;
+}
+
+.pickup .loan-pickup-number {
+  width: 49.15254%;
+}
+
+
+.reserve .place-in-queue, .reserve .pickup-location {
+  width: 100%;
+}
+
+.reserve .place-in-queue h2, .reserve .pickup-location h2 {
+  text-transform: uppercase;
+}
+
+.reserve .pickup-location select {
+  font-size: $rhythm2_5;
+  font-weight: bold;
+}
+
+
+.loan {
+  margin-top: $rhythm4;
+}
+
+.loan .loan-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 4px solid $blackColor;
+  margin-bottom: $rhythm4;
+  height: auto;
+}
+
+.loan .loan-header h1 {
+  font-size: $rhythm4;
+  font-weight: normal;
+}
+
+.loan .loan-header .renew-all-button {
+  font-size: $rhythm2;
+  align-self: center;
+  background-color: $green;
+}
+
+.loan .loan-header .renew-all-button:disabled {
+  opacity: 0.4;
+}
+
+.loan .due-date h2 {
+  text-transform: uppercase;
+}
+
+.loan .fail p {
+  font-weight: normal;
+  color: $redColor;
+}
+
+.loan p.fail {
+  color: $redColor;
+}
+
+.loan .success p {
+  font-weight: normal;
+  color: $green;
+}
+
+@include breakpoint($small) {
+
+  .pickup .single-entry .flex-col, .reserve .single-entry .flex-col, .loan .single-entry .flex-col {
+    margin-bottom: 0.7em;
+  }
+
+  .pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type {
+    width: 11.01695%;
+  }
+
+  .pickup .single-entry .entry-details, .reserve .single-entry .entry-details, .loan .single-entry .entry-details {
+    width: 23.72881%;
+  }
+
+  .pickup .single-entry .cancel-button, .pickup .single-entry .reserve-cancel-button, .reserve .single-entry .cancel-button, .reserve .single-entry .reserve-cancel-button, .loan .single-entry .cancel-button, .loan .single-entry .reserve-cancel-button {
+    width: 6.77966%;
+  }
+
+  .pickup .single-entry h1, .reserve .single-entry h1, .loan .single-entry h1 {
+    margin-bottom: 0.075em;
+  }
+
+  .pickup .single-entry h2, .reserve .single-entry h2, .loan .single-entry h2 {
+    font-size: 0.8em;
+    margin-top: 0;
+    margin-bottom: 0.075em;
+  }
+
+
+  .pickup .single-entry .loan-expire {
+    width: 15.25424%;
+  }
+
+  .pickup .single-entry .loan-pickup-number {
+    width: 15.25424%;
+  }
+
+  .pickup .single-entry .placeholder-column {
+    width: 6.77966%;
+  }
+
+  .pickup .single-entry .loan-pickup-location {
+    width: 15.25424%;
+  }
+
+
+  .reserve .single-entry .place-in-queue {
+    width: 15.25424%;
+    position: relative;
+  }
+
+  .reserve .single-entry .place-in-queue .feedback {
+    position: absolute;
+    width: 150%;
+    top: 1.185em;
+  }
+
+  .reserve .single-entry .pickup-location {
+    width: 15.25424%;
+  }
+
+  .reserve .single-entry .placeholder-column {
+    width: 6.77966%;
+  }
+
+  .reserve .single-entry .resume-suspend-button {
+    width: 15.25424%;
+  }
+
+  .reserve .single-entry .resume-suspend-button .red-btn {
+    padding: 0.626em;
+  }
+
+  .reserve .single-entry .reserve-cancel-button {
+    width: 6.77966%;
+  }
+
+
+  .loan .single-entry .due-date {
+    width: 15.25424%;
+  }
+
+  .loan .single-entry .extend-msg {
+    width: 15.25424%;
+  }
+
+  .loan .single-entry .placeholder-column {
+    width: 15.25424%;
+  }
+
+  .loan .single-entry .renew-button {
+    width: 15.25424%;
+  }
+
+  .loan .loan-header {
+    max-height: 4em;
+  }
+
+  .loan .loan-header h1 {
+    width: 83.05085%;
+  }
+
+  .loan .loan-header .renew-all-button {
+    width: 15.25424%;
+  }
+}
+
+// mypage - user settings
+// --------------------------------------------------------
+
+.user-settings {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  margin-bottom: $rhythm4;
+}
+
+.user-settings header {
+  border: none;
+  @include container;
+  @include span(12);
+}
+
+.user-settings h1 {
+  @include container;
+  @include span(12);
+  margin-top: $rhythm4;
+  font-size: $rhythm3;
+  font-weight: normal;
+  border-bottom: 4px solid $blackColor;
+  padding-bottom: $rhythm1;
+}
+
+.user-settings h2 {
+  @include container;
+  @include span(12);
+  font-weight: bold;
+  font-size: $rhythm3;
+  margin-bottom: 0;
+}
+
+.user-settings .reminders-group {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.user-settings .reminder-item {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  margin-top: $rhythm2;
+}
+
+.user-settings .reminder-item label {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.user-settings .reminder-item span {
+  width: 91.52542%;
+  float: right;
+  margin-right: 0;
+}
+
+.user-settings .reminder-item span.checkbox-wrapper {
+  @include span(1 of 12);
+}
+
+.user-settings footer {
+  @include container;
+  @include span(12);
+  margin-top: $rhythm4;
+}
+
+.user-settings footer button {
+  @include container;
+  @include span(12);
+}
+
+.user-settings footer .disclaimer {
+  @include container;
+  @include span(12);
+  text-align: center;
+  margin-top: $rhythm2;
+  font-size: $rhythm2_5;
+}
+
+.user-settings .change-pin-container {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.user-settings .change-pin {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.user-settings .important p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.user-settings .change-contact-details {
+  @include container;
+  @include span(12);
+  margin-top: $rhythm4;
+}
+
+.user-settings .change-contact-details h2 {
+  color: $redColor;
+}
+
+.user-settings .change-contact-details .form-item {
+  margin-top: $rhythm2;
+  max-width: 100%;
+  @include clearfix;
+}
+
+.user-settings .change-contact-details label {
+  width: 15.25424%;
+  float: left;
+  margin-right: 1.69492%;
+  margin-top: $rhythm2;
+}
+
+.user-settings .change-contact-details input {
+  width: 32.20339%;
+  float: left;
+  margin-right: 1.69492%;
+  margin-top: $rhythm2;
+}
+
+.user-settings .change-contact-details .feedback {
+  @include container;
+  @include span(12);
+  color: $redColor;
+  font-size: $rhythm2_5;
+}
+
+.user-settings .change-pin-fields {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  margin-top: $rhythm4;
+}
+
+.user-settings .change-pin-fields .form-item {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.user-settings .change-pin-fields label {
+  @include container;
+  @include span(12);
+  margin-top: $rhythm2;
+}
+
+.user-settings .change-pin-fields input {
+  @include container;
+  @include span(12);
+  font-size: $rhythm3;
+  margin-top: $rhythm2;
+  max-width: 4em;
+}
+
+@include breakpoint($small) {
+
+  .user-settings footer button {
+    @include span(4);
+  }
+
+  .user-settings footer .disclaimer {
+    @include span(12 first);
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left;
+  }
+}
+@include breakpoint($medium) {
+
+  .user-settings .reminders-group {
+    @include span(4);
+  }
+
+  .user-settings .reminders-group:nth-child(3) {
+    width: 32.20339%;
+    float: right;
+    margin-right: 0;
+    float: left;
+  }
+
+  .user-settings footer button {
+    @include span(3);
+  }
+}
+
+// mypage - user-info
+// --------------------------------------------------------
+
+.user-info {
+  @include container;
+  @include clearfix;
+  @include span(12);
+}
+
+.user-info header {
+  border-bottom: 4px solid $blackColor;
+  padding-bottom: $rhythm1;
+  margin-bottom: $rhythm3;
+}
+
+.user-info h1 {
+  @include container;
+  @include span(12);
+  margin-top: $rhythm4;
+  font-size: $rhythm3;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding-bottom: $rhythm1;
+}
+
+.user-info .meta-item {
+  @include container;
+  @include span(12);
+  font-size: $rhythm2_5;
+  @include clearfix;
+}
+
+.user-info .meta-label {
+  @include container;
+  @include span(12);
+  font-weight: bold;
+}
+
+.user-info .meta-content {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm2;
+}
+
+.user-info footer {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.user-info footer button {
+  @include container;
+  @include span(12);
+}
+
+.user-info footer .last-updated {
+  @include container;
+  @include span(12);
+  text-align: center;
+  margin-top: $rhythm2;
+  font-size: $rhythm2;
+}
+
+.user-info footer .green-text {
+  color: $green;
+}
+
+@include breakpoint($small) {
+
+  .user-info footer {
+    @include span(5);
+    margin-right: 1.69492%;
+  }
+
+  .user-info footer .last-updated {
+    text-align: left;
+    font-size: $rhythm3;
+  }
+}
+
+.user-info-form form {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.user-info-form .form-item {
+  @include clearfix;
+  @include container;
+  @include span(12);
+  margin-top: $rhythm2;
+}
+
+
+.user-info-form .form-item:first-child {
+  @include container;
+  @include span(12);
+}
+
+.user-info-form .form-item:nth-child(2) {
+  width: 23.72881%;
+  float: left;
+  margin-right: 1.69492%;
+}
+
+.user-info-form .form-item:nth-child(3) {
+  width: 74.57627%;
+  float: right;
+  margin-right: 0;
+}
+
+.user-info-form label {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm1;
+}
+
+.user-info-form input {
+  @include container;
+  @include span(12);
+  font-size: $rhythm3;
+}
+
+.user-info-form .feedback {
+  @include container;
+  @include span(12);
+  color: $redColor;
+  font-size: $rhythm2_5;
+}
+
+.user-info-form + footer {
+  margin-top: $rhythm4;
+}
+
+
+// modal - default
+// --------------------------------------------------------
+
+.default-modal {
+  @include clearfix;
+  max-width: 100%;
+  position: relative;
+  padding: $rhythm4;
+  background: $greyColor;
+  border-radius: 0.5em;
+  border: 1px solid $mediumGreyColor;
+}
+
+.default-modal .error-msg {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm4;
+}
+
+.default-modal .error-msg p {
+  width: 100%;
+  margin: 0;
+}
+
+.default-modal .close-modal-button {
+  position: absolute;
+  background: $white;
+  border: 1px solid $blackColor;
+  border-radius: 1em;
+  width: 2em;
+  height: 2em;
+  top: -1em;
+  right: -1em;
+  font-size: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+.default-modal .close-modal-button:hover {
+  background: $darkGreyColor;
+  color: $white;
+  cursor: pointer;
+}
+
+.default-modal h1 {
+  @include container;
+  @include span(12);
+  text-align: center;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  margin: 0;
+  font-size: $rhythm4;
+  font-size: normal;
+}
+
+.default-modal .form-item, .default-modal p {
+  margin-top: $rhythm1;
+  margin-bottom: $rhythm1;
+}
+
+.default-modal a:hover {
+  cursor: pointer;
+}
+
+.default-modal .cancel-link {
+  margin-left: $rhythm5;
+}
+
+@include breakpoint($small) {
+
+  .modal-overlay .modal-content {
+    @include span(8);
+    @include push(2);
+  }
+}
+@include breakpoint($medium) {
+
+  .modal-overlay .modal-content {
+    @include span(6);
+    @include push(3);
+  }
+}
+@include breakpoint($large) {
+
+  .modal-overlay .modal-content {
+    @include span(4);
+    @include push(4);
+  }
+}
+
+// modal - login
+// --------------------------------------------------------
+
+
+.login-modal {
+  @include clearfix;
+  max-width: 100%;
+  position: relative;
+  padding: $rhythm4;
+  background: $greyColor;
+  border-radius: 0.5em;
+  border: 1px solid $mediumGreyColor;
+}
+
+.login-modal .error-msg {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm4;
+}
+
+.login-modal .error-msg p {
+  width: 100%;
+  margin: 0;
+}
+
+.login-modal .close-modal-button {
+  position: absolute;
+  background: $white;
+  border: 1px solid $blackColor;
+  border-radius: 1em;
+  width: 2em;
+  height: 2em;
+  top: -1em;
+  right: -1em;
+  font-size: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+.login-modal .close-modal-button:hover {
+  background: $darkGreyColor;
+  color: $white;
+  cursor: pointer;
+}
+
+.login-modal h1 {
+  @include container;
+  @include span(12);
+  text-align: center;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  margin: 0;
+  font-size: $rhythm4;
+  font-size: normal;
+}
+
+.login-modal .form-item, .login-modal p {
+  margin-top: $rhythm1;
+  margin-bottom: $rhythm1;
+}
+
+.login-modal a:hover {
+  cursor: pointer;
+}
+
+.login-modal .cancel-link {
+  margin-left: $rhythm5;
+}
+
+.login-modal .form-item {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.login-modal .form-item.error input {
+  border-width: 2px;
+  border-color: $redColor;
+  background: rgba(255, 0, 0, 0.05);
+}
+
+.login-modal label {
+  @include span(8);
+  @include push(2);
+}
+
+.login-modal input {
+  @include span(8);
+  @include push(2);
+  font-size: $rhythm3;
+}
+
+.login-modal p {
+  @include span(8);
+  @include push(2);
+}
+
+.login-modal .forgot-pin {
+  font-size: $rhythm2_5;
+}
+
+.login-modal .forgot-pin span:first-child {
+  font-weight: bold;
+  width: 100%;
+  display: block;
+}
+
+@include breakpoint($small) {
+
+  .login-modal-wrapper .modal-content {
+    @include span(8);
+    @include push(2);
+  }
+}
+@include breakpoint($medium) {
+
+  .login-modal-wrapper .modal-content {
+    @include span(6);
+    @include push(3);
+  }
+}
+@include breakpoint($large) {
+
+  .login-modal-wrapper .modal-content {
+    @include span(4);
+    @include push(4);
+  }
+}
+
+// modal - register
+// --------------------------------------------------------
+
+
+.register-modal {
+  @include clearfix;
+  max-width: 100%;
+  position: relative;
+  padding: $rhythm4;
+  background: $greyColor;
+  border-radius: 0.5em;
+  border: 1px solid $mediumGreyColor;
+  /**
+   * Max width for input fields
+   */
+}
+
+.register-modal .error-msg {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm4;
+}
+
+.register-modal .error-msg p {
+  width: 100%;
+  margin: 0;
+}
+
+.register-modal .close-modal-button {
+  position: absolute;
+  background: $white;
+  border: 1px solid $blackColor;
+  border-radius: 1em;
+  width: 2em;
+  height: 2em;
+  top: -1em;
+  right: -1em;
+  font-size: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+.register-modal .close-modal-button:hover {
+  background: $darkGreyColor;
+  color: $white;
+  cursor: pointer;
+}
+
+.register-modal h1 {
+  @include container;
+  @include span(12);
+  text-align: center;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  margin: 0;
+  font-size: $rhythm4;
+  font-size: normal;
+}
+
+.register-modal .form-item, .register-modal p {
+  margin-top: $rhythm1;
+  margin-bottom: $rhythm1;
+}
+
+.register-modal a:hover {
+  cursor: pointer;
+}
+
+.register-modal .cancel-link {
+  margin-left: $rhythm5;
+}
+
+.register-modal fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.register-modal fieldset:disabled label {
+  opacity: 0.35;
+}
+
+.register-modal fieldset:disabled input {
+  opacity: 0.35;
+}
+
+.register-modal .form-item {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.register-modal .form-item > label {
+  @include span(10);
+  @include push(1);
+}
+
+.register-modal .form-item > input, .register-modal .form-item > .select-container {
+  @include span(10);
+  @include push(1);
+  font-size: $rhythm3;
+}
+
+.register-modal p {
+  @include span(10);
+  @include push(1);
+}
+
+.register-modal legend {
+  @include span(10);
+  @include push(1);
+  margin-top: $rhythm2;
+  text-align: center;
+  font-size: $rhythm4;
+}
+
+.register-modal .feedback {
+  @include span(10);
+  @include push(1);
+  color: $redColor;
+  font-size: $rhythm2_5;
+}
+
+.register-modal .select-container {
+  padding: 0.5625em;
+  margin-bottom: $rhythm3;
+}
+
+.register-modal .terms_and_conditions {
+  @include clearfix;
+  @include span(10);
+  max-width: 100%;
+  @include push(1);
+}
+
+.register-modal .terms_and_conditions .checkbox-wrapper {
+  width: 15.25424%;
+  float: left;
+  margin-right: 1.69492%;
+}
+
+.register-modal .terms_and_conditions .checkbox-desc {
+  width: 83.05085%;
+  float: right;
+  margin-right: 0;
+}
+
+.register-modal .terms_and_conditions input[type="checkbox"] + label i {
+  font-size: $rhythm4;
+}
+
+.register-modal input#mobile, .register-modal input#ssn {
+  max-width: 8em;
+}
+
+.register-modal input#pin, .register-modal input#repeatPin {
+  max-width: 4em;
+}
+
+.register-modal input#day, .register-modal input#month, .register-modal input#year, .register-modal input#zipcode {
+  max-width: 5em;
+}
+
+@include breakpoint($small) {
+  .register-modal {
+   /**
+  * Max width for input fields
+  */
+  }
+
+  .register-modal address {
+    @include span(9);
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    @include push(1);
+  }
+
+
+  .register-modal address .form-item:first-child {
+    @include span(12 first);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .register-modal address .form-item:nth-child(2) {
+    @include span(3);
+  }
+
+  .register-modal address .form-item:nth-child(3) {
+    @include span(9 last);
+    margin-right: 0;
+  }
+
+  .register-modal address .form-item label, .register-modal address .form-item input, .register-modal address .form-item .feedback {
+    margin-left: 0%;
+    @include span(12 first);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .register-modal .date-of-birth {
+    @include span(9);
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    @include push(1);
+    @include clearfix;
+  }
+
+
+  .register-modal .date-of-birth .form-item {
+    @include span(4);
+  }
+
+  .register-modal .date-of-birth .form-item:nth-child(3) {
+    width: 32.20339%;
+    float: right;
+    margin-right: 0;
+  }
+
+  .register-modal .terms_and_conditions .checkbox-wrapper {
+    width: 6.77966%;
+    float: left;
+    margin-right: 1.69492%;
+  }
+
+  .register-modal .terms_and_conditions .checkbox-desc {
+    width: 91.52542%;
+    float: right;
+    margin-right: 0;
+    padding-top: 0.25em;
+  }
+
+  .register-modal input#mobile, .register-modal input#ssn {
+    max-width: 9em;
+  }
+
+  .register-modal input#pin, .register-modal input#repeatPin {
+    max-width: 4em;
+  }
+
+  .register-modal input#day, .register-modal input#month, .register-modal input#year, .register-modal input#zipcode {
+    max-width: inherit;
+  }
+}
+
+@include breakpoint($medium) {
+  .registration-modal-wrapper .modal-content {
+    @include span(8);
+    @include push(2);
+  }
+}
+
+@include breakpoint($large) {
+  .registration-modal-wrapper .modal-content {
+    @include span(6);
+    @include push(3);
+  }
+}
+
+.register-check-modal {
+  width: 95%;
+  height: auto;
+  padding: $rhythm6;
+  background: $white;
+  margin: 5% auto;
+  border-radius: 5px;
+}
+
+@include breakpoint($small) {
+  .register-check-modal {
+    width: 40%;
+  }
+}
+
+.register-check-modal h1 {
+  text-align: center;
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+}
+
+.register-check-modal h2 {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 700;
+  margin-bottom: $rhythm1;
+}
+
+.register-check-modal h3 {
+  font-size: 16px;
+  text-align: center;
+}
+
+.register-check-modal input[type=text] {
+  width: 100%;
+}
+
+.register-check-modal button {
+  width: 100%;
+}
+
+.register-check-modal .date-of-birth .item {
+  display: inline-block;
+}
+
+.register-check-modal .date-of-birth .item input {
+  margin-right: $rhythm4;
+  width: 80px;
+}
+
+
+// global - header
+// --------------------------------------------------------
+
+header {
+  @include clearfix;
+  max-width: 100%;
+  border-bottom: 2px solid $blackColor;
+}
+
+@include breakpoint($small) {
+  header {
+    border-bottom: 3px solid $blackColor;
+  }
+}
+
+header .logo {
+  @include span(5);
+  margin-right: 1.69492%;
+  padding: $rhythm2;
+}
+
+header .primary-menu {
+  @include span(7 last);
+  padding: $rhythm1;
+}
+
+header .mobile-menu-toggle {
+  @include span(7 last);
+  padding: $rhythm2;
+}
+
+header .logged-in-message {
+  @include container;
+  margin-right: 1.69492%;
+  padding: $rhythm2;
+}
+
+@include breakpoint($small) {
+  header {
+    border-bottom: none;
+  }
+
+  header.wrapper {
+    padding-bottom: 0;
+  }
+}
+
+@include breakpoint($medium) {
+
+  header .logo {
+    @include span(3);
+  }
+
+  header .primary-menu {
+    @include span(9 last);
+    margin-right: 0;
+  }
+
+  header .mobile-menu-toggle {
+    @include span(9 last);
+    margin-right: 0;
+  }
+
+  header .logged-in-message {
+    @include span(12 first);
+    margin-right: 1.69492%;
+  }
+}
+
+// global - footer
+// --------------------------------------------------------
+
+.main-footer {
+  @include clearfix;
+  max-width: 100%;
+  padding-bottom: $rhythm2;
+  background: $blackColor;
+  line-height: $rhythm4;
+  color: $white;
+  width: 100%;
+}
+
+.footer-content {
+  @include clearfix;
+  max-width: 100%;
+  padding: 1% 1.69492% 1.69492% 1.69492%;
+}
+
+@include breakpoint($small) {
+
+  .footer-content {
+    @include clearfix;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@include breakpoint($medium) {
+
+  .footer-content {
+    @include clearfix;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.footer-content .footer-text {
+  @include container;
+  @include span(12);
+}
+
+.footer-content .footer-right {
+  @include clearfix;
+  @include container;
+  @include span(12);
+  margin-top: $rhythm2;
+}
+
+.footer-content .feedback {
+  @include span(10);
+}
+
+.footer-content .feedback a {
+  color: $white;
+}
+
+.footer-content .footer-icon {
+  @include span(2 last);
+}
+
+@include breakpoint($small) {
+
+  .footer-content .footer-text {
+    @include span(6);
+  }
+
+  .footer-content .footer-right {
+    @include span(6 last);
+    text-align: right;
+  }
+}
+
+// global - pagination
+// --------------------------------------------------------
+
+
+.pagination-area {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm6;
+}
+
+.pagination-area .pagination {
+  float: right;
+}
+
+.pagination-area .pagination .previous span, .pagination-area .pagination .next span {
+  padding: 0;
+  margin: 0;
+}
+
+.pagination-area ul {
+  display: inline-block;
+  padding: 0;
+}
+
+.pagination-area .pagination li {
+  display: inline-block;
+}
+
+.pagination-area .pagination .break a {
+  cursor: default;
+}
+
+.pagination-area ul.pagination li a, .pagination-area ul.pagination li span {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination-area ul.pagination li.active a {
+  background-color: $darkGreyColor;
+  color: white;
+}
+
+.pagination-area ul.pagination li:not(.active) a:hover {
+  background-color: #eee;
+}
+
+// global - navigation
+// --------------------------------------------------------
+
+
+.primary-menu {
+  text-align: right;
+}
+
+.primary-menu ul {
+  padding-left: 0;
+  margin: 0;
+}
+
+.primary-menu li {
+  display: inline-block;
+  padding: $rhythm2;
+}
+
+.primary-menu li span:last-child {
+  display: none;
+}
+
+.primary-menu li span:first-child {
+  display: inline;
+}
+
+
+.btn-mobile-toggle {
+  height: $rhythm4;
+  width: $rhythm4;
+  cursor: pointer;
+  float: right;
+}
+
+
+.primary-mobile-menu {
+  transition: max-height 0.5s;
+  max-height: 250px;
+  overflow: hidden;
+}
+
+.primary-mobile-menu.collapsed {
+  max-height: 0;
+}
+
+.primary-mobile-menu ul {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.primary-mobile-menu ul li {
+  width: 100%;
+}
+
+.primary-mobile-menu ul li a {
+  border-bottom: 1px solid $darkGreyColor;
+  padding: $rhythm3 $rhythm6;
+  text-decoration: none;
+  color: $blackColor;
+  display: block;
+}
+
+.primary-mobile-menu ul li a:hover {
+  background-color: $darkGreyColor;
+  color: $white;
+}
+
+.primary-mobile-menu ul span:last-child {
+  float: right;
+}
+
+
+.secondary-navigation {
+  @include container;
+  @include span(12);
+}
+
+.secondary-navigation a, .secondary-navigation a:hover {
+  color: $white;
+}
+
+.secondary-navigation span:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+@include breakpoint($small) {
+
+  .secondary-navigation {
+    text-align: right;
+    float: right;
+  }
+}
+
+.secondary-navigation ul, .secondary-navigation li {
+  margin-bottom: $rhythm3;
+  list-style-type: none;
+}
+@include breakpoint($small) {
+
+  .secondary-navigation ul, .secondary-navigation li {
+    display: inline-block;
+    margin: $rhythm3;
+  }
+
+  .secondary-navigation ul:last-child, .secondary-navigation li:last-child {
+    margin-right: 0;
+  }
+}
+
+
+.tab-bar {
+  @include clearfix;
+  @include container;
+  @include span(12);
+  font-size: $rhythm2_5;
+  padding: 0;
+  margin: 0;
+}
+
+.tab-bar .tab-bar-tab {
+  display: inline-block;
+  float: left;
+}
+
+.tab-bar .tab-bar-tab:not(.tab-bar-tab-active) a {
+  cursor: pointer;
+}
+
+.tab-bar li {
+  list-style: none;
+}
+
+.tab-bar li.tab-bar-tab-active a {
+  border-bottom: 2px solid $blackColor;
+  color: $blackColor;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.tab-bar a {
+  border-bottom: 1px solid $greyColor;
+  margin-bottom: 1px;
+  display: inline-block;
+  padding: 0.5em;
+  text-align: center;
+}
+
+.tab-bar a:hover, .tab-bar a:active, .tab-bar a:focus {
+  border-bottom: 2px solid $blackColor;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.tab-bar a::after {
+  display: block;
+  content: attr(title);
+  font-weight: bold;
+  height: 1px;
+  color: transparent;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+// global - modal overlay
+// --------------------------------------------------------
+
+
+.modal-overlay {
+  @include clearfix;
+  max-width: 100%;
+  padding: 1% 1.69492% 1.69492% 1.69492%;
+  min-width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  overflow: scroll;
+}
+
+@include breakpoint($small) {
+
+  .modal-overlay {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+@include breakpoint($medium) {
+
+  .modal-overlay {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+
+.modal-content {
+  @include span(10);
+  @include push(1);
+  margin-top: $rhythm5;
+  border-radius: 0;
+  overflow: visible;
+  -webkit-overflow-scrolling: touch;
+  outline: none;
+}
+
+.modal-content .single-publication {
+  cursor: pointer;
+}
+
+
+.patron-placeholder {
+  display: none !important;
+}
+
+// work
+// --------------------------------------------------------
+
+
+.work-entry {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.work-entry.loading {
+  text-align: center;
+  font-size: $rhythm10;
+  color: $redColor;
+}
+
+.work-entry header {
+  @include container;
+  @include span(12);
+  border: none;
+}
+
+.work-entry header a {
+  width: 100%;
+  padding: $rhythm2 $rhythm2 $rhythm2 0;
+  display: inline-block;
+  font-size: $rhythm2_5;
+}
+
+.work-entry .work-information {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.work-entry .meta-item {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.work-entry .contributors,
+.work-entry .work-excerpt,
+.work-entry .additional-info,
+.work-entry .work-subjects,
+.work-entry .work-genres,
+.work-entry .active-filters,
+.work-entry .other-publications {
+  @include container;
+  @include span(12);
+}
+
+@include breakpoint($medium) {
+
+  .work-entry .work-information {
+    @include span(8);
+  }
+
+  .work-entry .additional-info {
+    width: 32.20339%;
+    float: right;
+    margin-right: 0;
+  }
+}
+
+// search-box
+// --------------------------------------------------------
+
+.search-box {
+  background: $greyColor;
+  padding: 0.5625em;
+  border-bottom: 1px solid $mediumGreyColor;
+}
+
+.search-box form label {
+  display: none;
+}
+
+.search-box form .search-field-wrapper {
+  @include clearfix;
+  max-width: 100%;
+  border: 1px solid $greyColor;
+  background: $white;
+  border-width: 1px 0 1px 1px;
+  border-style: solid;
+  border-color: $mediumGreyColor;
+  border-radius: 4px 4px;
+}
+
+.search-box form .search-field {
+  @include span(9);
+}
+
+.search-box form .search-button {
+  @include span(3 last);
+}
+
+.search-box input {
+  -webkit-appearance: none;
+  background-position: 0.5em center;
+  padding: $rhythm0_5 $rhythm1;
+  background-repeat: no-repeat;
+  font-size: $rhythm2_5;
+  color: $darkGreyColor;
+  border: none;
+  width: 100%;
+}
+
+.search-box button {
+  border-radius: 0px 4px 4px 0px;
+  letter-spacing: $rhythm0_2;
+  text-transform: uppercase;
+  border-color: $redColor;
+  font-size: $rhythm2_5;
+  background: $redColor;
+  padding: $rhythm0_5;
+  margin-bottom: -1px;
+  border-style: solid;
+  border-radius: 2px;
+  text-align: center;
+  border-width: 1px;
+  margin-top: -1px;
+  color: $white;
+  width: 100%;
+}
+
+.search-box button:hover, .search-box button:active, .search-box button:focus {
+  border-color: $darkGreyColor;
+  background: $darkGreyColor;
+  cursor: pointer;
+}
+
+@include breakpoint($small) {
+
+  .search-no-hits {
+    margin: auto;
+    width: 50%;
+  }
+
+  .logged-in-message {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1% 1.69492% 1.69492% 1.69492%;
+    padding-bottom: 0;
+    padding-left: $rhythm2;
+    @include clearfix;
+  }
+}
+
+@include breakpoint($small) {
+  .logged-in-message {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+@media (min-width: 668px) and (min-width: 992px) {
+
+  .logged-in-message {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+@include breakpoint($small) {
+
+  .search-box-wrapper {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1% 1.69492% 1.69492% 1.69492%;
+    padding-bottom: 0;
+    @include clearfix;
+  }
+}
+
+@include breakpoint($small) {
+  .search-box-wrapper {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+@media (min-width: 668px) and (min-width: 992px) {
+  .search-box-wrapper {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+@include breakpoint($small) {
+
+  .search-box {
+    padding: 0 $rhythm2 $rhythm2;
+    border-bottom: none;
+  }
+
+  .search-box form label {
+    position: relative;
+    font-size: $rhythm2;
+    text-transform: uppercase;
+    padding-left: $rhythm1;
+    color: $blackColor;
+    display: inline;
+  }
+
+  .search-box form .search-field-wrapper {
+    padding-right: none;
+  }
+
+  .search-box form .search-field {
+    @include span(9);
+  }
+
+  .search-box form .search-button {
+    width: 15.25424%;
+    float: right;
+    margin-right: 0;
+  }
+
+  .search-box input {
+    font-size: 1.4em;
+    /*font-size: rhythm(4);*/
+    /*padding: rhythm(1) rhythm(0.5) rhythm(1) rhythm(2);*/
+    padding: 0.4em;
+    background-position: 1em center;
+  }
+
+  .search-box button {
+    font-weight: bold;
+    padding: $rhythm1;
+    font-size: $rhythm4;
+  }
+}
+
+// mypage
+// --------------------------------------------------------
+
+/*IE11 fix*/
+main {
+  display: block;
+}
+
+.mypage-wrapper {
+  @include clearfix;
+  max-width: 100%;
+  padding: 1% 1.69492% 1.69492% 1.69492%;
+}
+
+@include breakpoint($small) {
+  .mypage-wrapper {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+@include breakpoint($medium) {
+  .mypage-wrapper {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    @include clearfix;
+  }
+}
+
+// person page
+// --------------------------------------------------------
+
+.person {
+  @include clearfix;
+  @include container;
+  @include span(12);
+  margin-top: $rhythm2;
+  font-size: $rhythm2;
+}
+
+.person header {
+  @include clearfix;
+  @include container;
+  @include span(12);
+  padding-bottom: $rhythm2;
+  margin-bottom: $rhythm2;
+}
+
+.person h1 {
+  @include container;
+  @include span(12);
+  font-size: $rhythm4;
+  margin: 0;
+}
+
+.person .lifespan {
+  @include container;
+  @include span(12);
+  font-size: $rhythm3;
+  font-weight: bold;
+  margin: 0;
+}
+
+.person .meta-item {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.person .meta-label {
+  font-family: 'open-sans', Arial, sans-serif;
+  font-weight: 600;
+  padding-right: $rhythm1;
+}
+
+.person .person-works {
+  @include clearfix;
+  @include container;
+  @include span(12);
+}
+
+.person .person-works header {
+  border: none;
+  margin: 0;
+}
+
+@include breakpoint($small) {
+
+  .person {
+    font-size: $rhythm2_5;
+  }
+
+  .person h1 {
+    font-size: $rhythm5;
+    font-weight: normal;
+  }
+
+  .person .lifespan {
+    font-size: $rhythm4;
+    font-weight: normal;
+  }
+}

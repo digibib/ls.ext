@@ -1,4 +1,5 @@
-var _ = require('underscore')
+const _ = require('underscore')
+
 function maintenanceInputs (label, type) {
   return {
     // this is an input type used to search for a main resource, e.g. Work. The rendered input field
@@ -73,7 +74,7 @@ module.exports = (app) => {
       'birthYear-', 'deathYear,',
       'nationality.fragment.'
     ]
-    var config =
+    const config =
       {
         kohaOpacUri: (process.env.KOHA_OPAC_PORT || 'http://192.168.50.12:8080').replace(/^tcp:\//, 'http:/'),
         kohaIntraUri: (process.env.KOHA_INTRA_PORT || 'http://192.168.50.12:8081').replace(/^tcp:\//, 'http:/'),
@@ -195,6 +196,10 @@ module.exports = (app) => {
                 type: 'searchable-authority-dropdown',
                 indexTypes: 'place',
                 indexDocumentFields: [ 'displayLine1' ]
+              },
+              {
+                rdfProperty: 'nationality',
+                multiple: true
               },
               {
                 rdfProperty: 'specification',
@@ -391,7 +396,7 @@ module.exports = (app) => {
                 rdfProperty: 'issn'
               },
               {
-                label: 'publisherLabel',
+                label: 'publishedByLabel',
                 rdfProperty: 'publishedBy',
                 type: 'searchable-authority-dropdown',
                 indexTypes: 'corporation',
@@ -509,7 +514,7 @@ module.exports = (app) => {
                   checkExistingResource: {
                     url: 'services/publication',
                     queryParameter: 'hasEan',
-                    showDetails: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle', 'publicationYear' ],
+                    showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', , 'publicationYear' ],
                     type: 'Publication',
                     legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
                     legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
@@ -679,9 +684,13 @@ module.exports = (app) => {
                   styleClass: 'title'
                 }
               },
-              { rdfProperty: 'partNumber' },
+              {
+                rdfProperty: 'partNumber',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] }
+              },
               {
                 rdfProperty: 'partTitle',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] },
                 headlinePart: {
                   order: 40,
                   styleClass: 'title'
@@ -689,10 +698,14 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'variantTitle',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] },
                 multiple: true,
                 addAnotherLabel: 'addAnotherVariantTitle',
               },
-              { rdfProperty: 'edition' },
+              {
+                rdfProperty: 'edition',
+                esotericWhen: { hasMediaType: [ 'MusicRecording', 'SheetMusic' ] }
+              },
               {
                 rdfProperty: 'publicationYear',
                 headlinePart: {
@@ -863,7 +876,7 @@ module.exports = (app) => {
                       rdfProperty: 'serial',
                       id: 'serialInput',
                       indexTypes: 'serial',
-                      nameProperties: [ 'mainTitle', 'subtitle' ],
+                      nameProperties: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', '(@publisherName)' ],
                       type: 'searchable-with-result-in-side-panel',
                       widgetOptions: {
                         showSelectItem: false, // show and enable select work radio button
@@ -1030,20 +1043,31 @@ module.exports = (app) => {
                       rdfProperty: 'work',
                       id: 'relatedToWorkInput',
                       required: true,
-                      indexTypes: [ 'workUnstructured' ],
+                      indexTypes: [ 'workUnstructured', 'workseries' ],
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
+                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
+                      preselectFirstIndexType: true,
                       widgetOptions: {
                         enableEditResource: {
                           formRefs: [
                             {
                               formId: 'create-work-form',
                               targetType: 'workUnstructured'
+                            },
+                            {
+                              formId: 'create-workseries-form',
+                              targetType: 'workseries'
                             }
                           ],
                           useAfterCreation: false
                         },
-                        enableInPlaceEditing: true
+                        enableInPlaceEditing: true,
+                        explanations: {
+                          patterns: [
+                            { match: '^.*\\/work\\/.*$', explanation: 'workExplanation' },
+                            { match: '^.*\\/workSeries\\/.*$', explanation: 'workSeriesExplanation' }
+                          ]
+                        }
                       }
                     },
                     {
@@ -1083,7 +1107,7 @@ module.exports = (app) => {
                       required: true,
                       indexTypes: [ 'workseries' ],
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ 'mainTitle', 'subtitle', 'partNumber' ],
+                      nameProperties: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
                       widgetOptions: {
                         enableEditResource: {
                           formRefs: [
@@ -1236,13 +1260,15 @@ module.exports = (app) => {
                   separateLines: true
                 },
                 authority: true, // this indicates it is an authorized entity
-                nameProperties: [ 'prefLabel', 'mainTitle:', 'subtitle', 'partNumber.', 'partTitle',
+                nameProperties: [ {
+                  work: '@mainEntryName.' // @ means use property extraction helper function
+                }, 'prefLabel', 'mainTitle:', 'subtitle', 'partNumber.', 'partTitle',
                   {
                     person: 'name,',
                     corporation: 'name.'
                   },
                   {
-                    person: '#ordinal,',
+                    person: '#ordinal,', // # means remove previous member's trailing comma
                     event: '(ordinal).'
                   },
                   'subdivision',
@@ -1304,12 +1330,12 @@ module.exports = (app) => {
                   enableInPlaceEditing: true,
                   explanations: {
                     patterns: [
-                      { match: '^.*\\/subject\\/.*$', explanation: '(Generelt emne)' },
-                      { match: '^.*\\/person\\/.*$', explanation: '(Person)' },
-                      { match: '^.*\\/work\\/.*$', explanation: '(Verk)' },
-                      { match: '^.*\\/place\\/.*$', explanation: '(Sted)' },
-                      { match: '^.*\\/corporation\\/.*$', explanation: '(Organisasjon)' },
-                      { match: '^.*\\/event\\/.*$', explanation: '(Hendelse)' }
+                      { match: '^.*\\/subject\\/.*$', explanation: 'generalSubjectExplanation' },
+                      { match: '^.*\\/person\\/.*$', explanation: 'personExplanation' },
+                      { match: '^.*\\/work\\/.*$', explanation: 'workExplanation' },
+                      { match: '^.*\\/place\\/.*$', explanation: 'placeExplanation' },
+                      { match: '^.*\\/corporation\\/.*$', explanation: 'corporationExplanation' },
+                      { match: '^.*\\/event\\/.*$', explanation: 'eventExplanation' }
                     ]
                   }
                 }
@@ -1442,7 +1468,7 @@ module.exports = (app) => {
                       id: 'publicationPartWorkInput',
                       rdfProperty: 'publicationOf',
                       type: 'searchable-with-result-in-side-panel',
-                      nameProperties: [ 'mainTitle', 'subtitle', 'partNumber', 'partTitle' ],
+                      nameProperties: [ '@mainEntryName.', 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.' ],
                       indexTypes: [ 'workUnstructured' ], // this is the name of the elasticsearch index type from which authorities are searched within
                       widgetOptions: {
                         enableEditResource: {
@@ -1467,7 +1493,6 @@ module.exports = (app) => {
                       rdfProperty: 'startsAtPage',
                       widgetOptions: {
                         isRangeStart: true,
-                        reportLabel: 'Sidetall fra'
                       }
                     },
                     {
@@ -1476,7 +1501,6 @@ module.exports = (app) => {
                       rdfProperty: 'endsAtPage',
                       widgetOptions: {
                         isRangeEnd: true,
-                        reportLabel: 'Sidetall til'
                       }
                     }
                   ]
@@ -1764,7 +1788,7 @@ module.exports = (app) => {
             resourceType: 'Serial',
             wrappedIn: 'SerialIssue',
             predicate: 'serial',
-            enableCreateNewResmource: true
+            enableEditResource: true
           },
           {
             resourceType: 'Person',

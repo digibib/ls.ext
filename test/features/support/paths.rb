@@ -93,6 +93,7 @@ module Paths
         :publication => "/publication",
         :person => "/person",
         :workflow => "/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Book&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no",
+        :workflow_music => "/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=MusicRecording&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no",
         :place => "/place",
         :serial => "/serial",
         :work_series=> "/workSeries",

@@ -202,7 +202,7 @@ public class AppTest {
     }
 
     private static HttpResponse<String> buildReplaceRequest(XURI replacee, XURI replacement) throws UnsupportedEncodingException, UnirestException {
-        return  Unirest
+        return Unirest
                 .put(appURI + replacement.getType() + "/" + replacement.getId() + "/merge")
                 .header("Content-type", "application/json")
                 .body("{\"replacee\": \"" + replacee.getUri() + "\"}")
@@ -369,7 +369,7 @@ public class AppTest {
 
         doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
 
-        
+
         // delete publication
         kohaAPIMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, "{\"items\":[]}");
         kohaAPIMock.addDeleteBibloExpectation(FIRST_BIBLIO_ID);
@@ -1046,7 +1046,7 @@ public class AppTest {
                 + "    }]"
                 + "}";
         embeddedElasticsearchServer.getClient().index("search", "work", source);
-     }
+    }
 
     @Test
     public void when_get_elasticsearch_work_without_query_parameter_should_get_bad_request_response() throws Exception {
@@ -1211,10 +1211,17 @@ public class AppTest {
     @Test
     public void when_index_is_cleared_and_reindexed_subjects_are_found() throws Exception {
         createSubjectInRdfStore("Hekling", BaseURI.ontology());
+        createSubjectInRdfStore("Strikking", BaseURI.ontology());
+        createSubjectInRdfStore("Sying", BaseURI.ontology());
+        createSubjectInRdfStore("Baking", BaseURI.ontology());
+        createSubjectInRdfStore("Hitler", BaseURI.ontology());
+        createSubjectInRdfStore("Trump", BaseURI.ontology());
         HttpResponse<String> response = Unirest.post(appURI + "search/clear_index").asString();
         assertEquals(HTTP_OK, response.getStatus());
+        LOG.error(response.getStatusText());
         Unirest.post(appURI + "search/subject/reindex_all").asString();
         doSearchForSubject("Hekling");
+        doSearchForSubject("Trump");
     }
 
 
@@ -1286,18 +1293,16 @@ public class AppTest {
                         buildPatchStatement("add", subjUri, BaseURI.ontology("prefLabel"), "Drontheim"))).asString();
 
         //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Drontheim", 2));
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Drontheim", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2));
 
-        // 6) Patch work series, and verify that publications get reindexed
+        // 6) Patch work series, and verify that works get reindexed
         buildPatchRequest(
                 resolveLocally(workSeriesUri),
                 buildLDPatch(
                         buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
                         buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
 
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Cosmicomics", 2));
-        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Cosmicomics", 2));
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 4));
     }
 
     @Test
@@ -1435,7 +1440,7 @@ public class AppTest {
                 break;
             }
         }
-       return found;
+        return found;
     }
 
     private Boolean resourceIsIndexedWithValue(String uri, String value) throws Exception {
@@ -1537,8 +1542,10 @@ public class AppTest {
         expandedRecord.setItems(items);
         expandedRecord.setLoanRecord(record);
 
-        String loansJson = gson.toJson(loans, new TypeToken<List<RawLoan>>(){}.getType());
-        String holdsJson = gson.toJson(holds, new TypeToken<List<RawHold>>(){}.getType());
+        String loansJson = gson.toJson(loans, new TypeToken<List<RawLoan>>() {
+        }.getType());
+        String holdsJson = gson.toJson(holds, new TypeToken<List<RawHold>>() {
+        }.getType());
         String expandedHolds = gson.toJson(expandedRecord, ExpandedRecord.class);
         kohaAPIMock.addLoginExpectation();
         kohaAPIMock.addGetCheckoutsExpectation(borrowerId, loansJson);

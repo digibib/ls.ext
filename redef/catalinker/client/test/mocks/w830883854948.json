@@ -1,0 +1,24 @@
+{
+  "@graph" : [ {
+    "@id" : "http://data.deichman.no/work/w830883854948",
+    "@type" : "deichman:Work",
+    "deichman:created" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#dateTime",
+      "@value" : "2017-06-26T09:25:14.178Z"
+    },
+    "deichman:hasWorkType" : {
+      "@id" : "http://data.deichman.no/workType#Literature"
+    },
+    "deichman:mainTitle" : "Den store lompefesten",
+    "deichman:modified" : {
+      "@type" : "http://www.w3.org/2001/XMLSchema#dateTime",
+      "@value" : "2017-06-26T11:30:32.699Z"
+    },
+    "deichman:partNumber" : "1",
+    "deichman:partTitle" : "Første del"
+  } ],
+  "@context" : {
+    "deichman" : "http://data.deichman.no/ontology#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#"
+  }
+}

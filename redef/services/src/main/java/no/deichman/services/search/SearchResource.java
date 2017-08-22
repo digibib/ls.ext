@@ -167,34 +167,22 @@ public class SearchResource extends ResourceBase {
             @FormParam("recordId") final String recordId,
             @FormParam("homeBranches") final String homeBranches,
             @FormParam("availableBranches") final String availableBranches,
-            @FormParam("numItems") final int numItems) throws Exception {
+            @FormParam("numItems") final int numItems,
+            @FormParam("deleted") boolean deleted)
+            throws Exception {
 
         if (recordId == null) {
             throw new BadRequestException("missing required queryparameter: recordId");
         }
 
         XURI pubUri = getEntityService().
-                updateAvailabilityData(recordId, homeBranches, availableBranches, numItems);
+                updateAvailabilityData(recordId, homeBranches, availableBranches, numItems, deleted);
 
         try {
             getSearchService().indexOnly(pubUri);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Response.accepted().build();
-    }
-
-    @POST
-    @Path("indexUrisOnlyOnce")
-    public final Response indexUrisOnlyOnce(){
-        getSearchService().indexUrisOnlyOnce(true);
-        return Response.accepted().build();
-    }
-
-    @POST
-    @Path("indexAllUris")
-    public final Response indexAllUris(){
-        getSearchService().indexUrisOnlyOnce(false);
         return Response.accepted().build();
     }
 

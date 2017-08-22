@@ -1,5 +1,8 @@
 {
   "publication": {
+    "_parent": {
+      "type": "work"
+    },
     "properties": {
       "displayLine1": {
         "type": "keyword"
@@ -21,7 +24,9 @@
                 "type": "keyword"
               },
               "name": {
-                "type": "text"
+                "type": "text",
+                "norms": false,
+                "index_options": "docs"
               },
               "birthYear": {
                 "type": "text",
@@ -52,7 +57,10 @@
                 "type": "keyword"
               },
               "name": {
-                "type": "text"
+                "type": "text",
+                "similarity": "boolean",
+                "norms": false,
+                "index_options": "docs"
               },
               "birthYear": {
                 "type": "text",
@@ -65,55 +73,69 @@
             }
           },
           "mainTitle": {
-            "type": "text"
+            "type": "text",
+            "similarity": "boolean",
+            "norms": false,
+            "index_options": "docs"
           }
         }
-      },
-      "bio": {
-        "type": "text",
-        "analyzer": "biography_analyzer"
-      },
-      "dewey": {
-        "type": "text"
-      },
-      "nationality": {
-        "type": "text"
       },
       "recordId": {
         "type": "keyword"
       },
       "contributorNames": {
-        "type": "text"
+        "type": "text",
+        "similarity": "boolean",
+        "norms": false
       },
       "title": {
-        "type": "text"
+        "type": "text",
+        "similarity": "boolean",
+        "norms": false,
+        "index_options": "docs"
       },
       "mainTitle": {
         "type": "text",
+        "similarity": "boolean",
+        "norms": false,
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },
       "partTitle": {
         "type": "text",
+        "similarity": "boolean",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "index_options": "docs",
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },
       "subtitle": {
         "type": "text",
+        "similarity": "boolean",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "index_options": "docs",
         "fields": {
           "raw": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "name_analyzer"
           }
         }
       },
       "partNumber": {
         "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "keyword"
@@ -122,7 +144,9 @@
       },
       "subtitles": {
         "type": "text",
-        "analyzer": "language_analyzer"
+        "analyzer": "language_analyzer",
+        "norms": false,
+        "index_options": "docs"
       },
       "norwegianTitle": {
         "type": "text",
@@ -138,12 +162,6 @@
       "publicationYear": {
         "type": "short"
       },
-      "firstPublicationYear": {
-        "type": "short"
-      },
-      "audiences": {
-        "type": "keyword"
-      },
       "homeBranches": {
         "type": "keyword"
       },
@@ -157,68 +175,66 @@
         "type": "text",
         "index": false
       },
-      "fictionNonfiction": {
-        "type": "keyword"
-      },
       "mediatype": {
         "type": "keyword"
       },
       "mt": {
         "type": "text",
-        "analyzer": "mediatype_analyzer"
+        "analyzer": "mediatype_analyzer",
+        "norms": false
       },
       "formats": {
         "type": "keyword"
       },
-      "litform": {
-        "type": "text",
-        "analyzer": "litform_analyzer"
-      },
       "format": {
         "type": "text",
-        "analyzer": "format_analyzer"
+        "analyzer": "format_analyzer",
+        "norms": false
       },
       "desc": {
-        "type": "text"
-      },
-      "inst": {
-        "type": "text"
+        "type": "text",
+        "similarity": "boolean",
+        "norms": false,
+        "index_options": "docs"
       },
       "formatAdaptation": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "language": {
         "type": "text",
         "analyzer": "language_analyzer",
-        "fielddata": true
+        "fielddata": true,
+        "norms": false
       },
       "languages": {
         "type": "keyword"
       },
       "writingSystem": {
         "type": "text",
-        "analyzer": "writing_system_analyzer"
+        "analyzer": "writing_system_analyzer",
+        "norms": false
       },
       "isbn": {
         "type": "text",
-        "analyzer": "isbn_analyzer"
+        "analyzer": "isbn_analyzer",
+        "norms": false
       },
       "ismn": {
         "type": "text",
-        "analyzer": "isbn_analyzer"
+        "analyzer": "isbn_analyzer",
+        "norms": false
       },
       "ean": {
         "type": "text",
-        "analyzer": "isbn_analyzer"
+        "analyzer": "isbn_analyzer",
+        "norms": false
       },
       "series": {
-        "type": "text"
-      },
-      "subject": {
-        "type": "text"
-      },
-      "genre": {
-        "type": "text"
+        "type": "text",
+        "similarity": "boolean",
+        "term_vector": "with_positions_offsets",
+        "norms": false
       },
       "ageLimit": {
         "type": "integer"
@@ -227,123 +243,138 @@
         "type": "keyword"
       },
       "scriptWriter": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "agents": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "actor": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "photographer": {
-        "type": "text"
+        "type": "text",
+        "similarity": "boolean",
+        "term_vector": "with_positions_offsets",
+        "norms": false
       },
       "lyricist": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "composer": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "director": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "performer": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "musicalArranger": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "reader": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "conductor": {
-        "type": "text"
+        "type": "text",
+        "norms": false,
+        "similarity": "boolean"
       },
       "author": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "translator": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "illustrator": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "editor": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "contributor": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "coreographer": {
-        "type": "text"
+        "term_vector": "with_positions_offsets",
+        "type": "text",
+        "norms": false,
+        "similarity": "boolean"
       },
       "producer": {
-        "type": "text"
+        "term_vector": "with_positions_offsets",
+        "type": "text",
+        "norms": false,
+        "similarity": "boolean"
       },
       "productionCompany": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "featuring": {
-        "type": "text"
-      },
-      "mainEntryName": {
         "type": "text",
-        "fields": {
-          "raw": {
-            "type": "keyword"
-          }
-        }
-      },
-      "summary": {
-        "type": "text",
-        "index": false
-      },
-      "compType": {
-        "type": "text"
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "similarity": "boolean"
       },
       "publishedBy": {
-        "type": "text"
-      },
-      "langTitles": {
-        "enabled": false
-      },
-      "mediatypesFromAllPublications": {
-        "type": "nested",
-        "properties": {
-          "uri": {
-            "type": "keyword"
-          },
-          "formats": {
-            "type": "text",
-            "index": false
-          }
-        }
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "similarity": "boolean",
+        "norms": false
       },
       "kd": {
-        "type": "text"
-      },
-      "workMainTitle": {
-        "type": "text"
-      },
-      "country": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "origLang": {
         "type": "text",
-        "analyzer": "language_analyzer"
-      },
-      "contentAdaptation": {
-        "type": "text",
-        "analyzer": "content_adaptation_analyzer"
-      },
-      "workSubtitle": {
-        "type": "text"
-      },
-      "workPartNumber": {
-        "type": "text"
-      },
-      "workPartTitle": {
-        "type": "text"
+        "analyzer": "language_analyzer",
+        "norms": false
       },
       "created": {
         "type": "date"

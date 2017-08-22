@@ -180,7 +180,7 @@ export default function profile (state = initialState, action) {
         }
       }
     case RECEIVE_LOGIN_STATUS:
-      return { ...state, borrowerName: action.payload.borrowerName }
+      return { ...state, borrowerName: action.payload.borrowerName, homeBranch: action.payload.homeBranch }
     default:
       return state
   }

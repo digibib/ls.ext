@@ -348,7 +348,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PUT
-    @Path("{id: (h|w)[a-zA-Z0-9_]+}/index")
+    @Path("{id: (p|h|w|)[a-zA-Z0-9_]+}/index")
     public Response index(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         getSearchService().index(xuri);

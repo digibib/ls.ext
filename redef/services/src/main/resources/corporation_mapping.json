@@ -4,20 +4,25 @@
     {
       "name": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": false
       },
       "subdivision": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": false
       },
       "alternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "placePrefLabel": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "placeAlternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "displayLine1": {
         "type": "keyword"

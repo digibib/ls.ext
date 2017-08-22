@@ -4,31 +4,61 @@
     {
       "serialMainTitle": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": false
       },
       "subtitle": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "similarity": "boolean",
+        "norms": false,
+        "fields": {
+          "raw": {
+            "type": "text",
+            "analyzer": "name_analyzer"
+          }
+        }
       },
       "uri": {
         "type": "keyword"
       },
       "publishedByName": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "publishedByAlternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "publishedByPlacePrefLabel": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "publishedByPlaceAlternativeName": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "partTitle": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "similarity": "boolean",
+        "norms": false,
+        "fields": {
+          "raw": {
+            "type": "text",
+            "analyzer": "name_analyzer"
+          }
+        }
       },
       "partNumber": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false,
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
       },
       "issn": {
         "type": "text",

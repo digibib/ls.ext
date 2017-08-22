@@ -1,8 +1,7 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import {defineMessages, FormattedMessage} from 'react-intl'
 import SearchResult from './SearchResult'
-import Constants from '../constants/Constants'
 import SearchResultsSettings from '../components/SearchResultsSettings'
 
 import SearchResultsText from '../components/SearchResultsText'
@@ -16,8 +15,6 @@ class SearchResults extends React.Component {
         </p>
       )
     }
-    const from = Constants.maxSearchResultsPerPage * (this.props.page - 1)
-    const to = from + Constants.maxSearchResultsPerPage
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -40,7 +37,7 @@ class SearchResults extends React.Component {
         </div>
         <div data-automation-id="search-result-entries" className="search-results-list">
           {this.props.locationQuery.query
-            ? this.props.searchResults.slice(from, to).map(result => (
+            ? this.props.searchResults.map(result => (
             <SearchResult key={result.relativeUri}
                           result={result}
                           locationQuery={this.props.locationQuery}

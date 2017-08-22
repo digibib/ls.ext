@@ -28,6 +28,9 @@
     by: 'by',
     selectThis: 'Select this',
     showHideRelations: 'Show/hide relations',
+    showEsotericFields: 'Show more fields',
+    showEsotericFieldsLegend: 'Click here to reveal more rarely used fields',
+    showEsotericFieldsSupportLegend: 'Some fields are hidden because they are rarely used in this context. Click on the link to the left to show them anyway.',
     selectWorkLabel: 'Catalogue publication of this work',
     autoNumber: 'Automatic numbering',
     searchWorkLegend: 'Search by title, main entry, work uri or work id',
@@ -72,7 +75,7 @@
     issueNumberLabel: 'Number in series',
     subSeriesTitle: 'Sub-series title',
     workTabLabel: 'Describe work',
-    workSeriesWorkLabel: 'Work',
+    workSeriesWorkLabel: 'Related to',
     relationTypeLabel: 'Relation type',
     publishedByLabel: 'Publisher',
     publicationYearLabel: 'Year',
@@ -95,7 +98,7 @@
                             `,
     additionalEntriesTabLabel: 'Additional entries',
     additionalEntryLabel: 'Additional entry',
-    workRelationLabel: 'Relation to other work',
+    workRelationLabel: 'Relation to other work or work series',
 
     // index type labels
     personLabel: 'Person',
@@ -110,6 +113,20 @@
     instrumentLabel: 'Instrument',
     workSeriesLabel: 'Work series',
     compositionTypeLabel: 'Composition type',
+
+    // type explanations
+    personExplanation: '(Person)',
+    generalSubjectExplanation: '(General subject)',
+    workExplanation: '(Work)',
+    genreExplanation: '(Genre)',
+    corporationExplanation: '(Corporation)',
+    placeExplanation: '(Place)',
+    eventExplanation: '(Event)',
+    serialExplanation: '(Serial)',
+    publicationExplanation: '(Publication)',
+    instrumentExplanation: '(Instrument)',
+    workSeriesExplanation: '(Work series)',
+    compositionTypeExplanation: '(Composition type)',
 
     // determinative
     PersonLabelDet: 'the person',
@@ -354,6 +371,14 @@
     inverseRoleRelation: 'Works/publications with {{>subjectType + "LabelDem"}} as {{role.toLowerCase()}}',
 
     // misc
-    partsLabel: 'Parts'
+    partsLabel: 'Parts',
+    inputTooLong: 'Please remove {{overChars}} characters',
+    inputTooShort: 'Please enter at least {{minimum}} character{{s}}',
+    loadingMore: 'Loading results…',
+    maximumOneCanBeSelected: 'You can only select one item here',
+    maximumSelected: 'You can select at most {{maximum}} values here',
+    noResults: 'No results',
+    searching: 'Searching…'
+
   }
 }));

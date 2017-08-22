@@ -1,10 +1,10 @@
 /* eslint-env mocha */
 import expect from 'expect'
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
-import SearchResult, { __RewireAPI__ as DefaultExportSearchResultRewireApi } from '../../src/frontend/components/SearchResult'
+import {IntlProvider} from 'react-intl'
+import SearchResult, {__RewireAPI__ as DefaultExportSearchResultRewireApi} from '../../src/frontend/components/SearchResult'
 import {Provider} from 'react-redux'
 import rootReducer from '../../src/frontend/reducers'
 import {createStore} from 'redux'
@@ -12,7 +12,7 @@ import {createStore} from 'redux'
 function setup (resultPropOverrides) {
   const props = {
     showStatus: () => {},
-    locationQuery: {showStatus: 'test_relativeUri'},
+    locationQuery: { showStatus: 'test_relativeUri' },
     result: {
       mediaTypes: [],
       displayTitle: 'test_mainTitle',
@@ -48,8 +48,8 @@ function setup (resultPropOverrides) {
     illustrator: 'illustrator'
   }
   const output = TestUtils.renderIntoDocument(
-    <Provider store={store}>
-      <IntlProvider locale="en" messages={messages}>
+    <Provider store={store} >
+      <IntlProvider locale="en" messages={messages} >
         <SearchResult {...props} />
       </IntlProvider>
     </Provider>
@@ -71,7 +71,7 @@ describe('components', () => {
       },
       render () {
         return (
-          <a href={this.props.to}>{this.props.children}</a>
+          <a href={this.props.to} >{this.props.children}</a>
         )
       }
     }))
@@ -83,51 +83,50 @@ describe('components', () => {
 
   describe('SearchResult', () => {
     /*
-    it('should render the result', () => {
-      const { node, props } = setup()
-      expect(node.querySelector("[data-automation-id='work-title']").textContent).toBe(props.result.displayTitle)
-      expect(node.querySelector("[data-automation-id='work_originaltitle']").textContent).toBe(`Original title: ${props.result.publication.originalTitle}`)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.name)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
-    })
-    */
+     it('should render the result', () => {
+     const { node, props } = setup()
+     expect(node.querySelector("[data-automation-id='work-title']").textContent).toBe(props.result.displayTitle)
+     expect(node.querySelector("[data-automation-id='work_originaltitle']").textContent).toBe(`Original title: ${props.result.publication.originalTitle}`)
+     expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.name)
+     expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
+     })
+     */
 
     it('should render multiple contributors', () => {
       const { node, props } = setup({
-        publication: {
-          contributors: [
-            {
-              role: 'author',
-              agent: {
-                name: 'creator_1',
-                relativeUri: 'relativeUri_1'
-              }
-            },
-            {
-              role: 'illustrator',
-              agent: {
-                name: 'creator_2',
-                relativeUri: 'relativeUri_2'
-              }
+        formats: [],
+        contributors: [
+          {
+            role: 'author',
+            agent: {
+              name: 'creator_1',
+              relativeUri: 'relativeUri_1'
             }
-          ]
-        }
+          },
+          {
+            role: 'illustrator',
+            agent: {
+              name: 'creator_2',
+              relativeUri: 'relativeUri_2'
+            }
+          }
+        ]
       })
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 0 ].agent.name)
       // expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
-      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 1 ].agent.name)
+      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.contributors[ 1 ].agent.name)
       // expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 1 ].agent.relativeUri)
     })
 
     it('should render formats', () => {
       const { node, props } = setup({
-        publication: { formats: [ 'format_1', 'format_2', 'format_3' ], contributors: [] }
+        formats: [ 'format_1', 'format_2', 'format_3' ], contributors: []
       })
 
       // TODO: Change back when search results render formats again
       /* expect(node.querySelector("[data-automation-id='work_formats']").innerHTML) */
       expect(node.getAttribute('data-formats'))
-        .toContain(props.result.publication.formats.join(', '))
+        .toContain(props.result.formats.join(', '))
     })
   })
 })

@@ -62,6 +62,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
+      - "9300:9300"
 
   smtp:
     ports:
@@ -111,17 +112,6 @@ services:
       - "/bin/sh"
       - "-c"
       - "mkfifo pipe; while true ; do { read line<pipe;echo -e 'HTTP/1.1 200 OK\\r\\n' ; } | nc -l -p 9999 > pipe; done"
-
-  migration:
-    container_name: migration
-    build:
-      context: "${LSEXTPATH:-..}/docker-compose/dockerfiles/migration"
-      args:
-        - MYSQL_DATABASE=koha_${KOHA_INSTANCE:-name}
-        - MYSQL_USER=${KOHA_ADMINUSER:-admin}
-        - MYSQL_PASSWORD=${KOHA_ADMINPASS:-secret}
-    networks:
-      - backend
 
   koha_indexer:
     ports:

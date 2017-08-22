@@ -9,6 +9,7 @@ module.exports = (app) => {
       return response.sendStatus(403)
     }
     let borrowerNumber
+    let homeBranch
     loginHandler(request.body.username)
       .then(res => {
         if (res.status === 200) {
@@ -23,6 +24,7 @@ module.exports = (app) => {
           return Promise.reject({ message: 'User not unique', status: 403 })
         } else {
           borrowerNumber = json[ 0 ].borrowernumber
+          homeBranch = json[ 0 ].branchcode
           return fetch('http://xkoha:8081/api/v1/auth/session', {
             method: 'POST',
             headers: {
@@ -36,6 +38,7 @@ module.exports = (app) => {
       .then(res => {
         if (res.status === 201) {
           request.session.borrowerNumber = borrowerNumber
+          request.session.homeBranch = homeBranch
           request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
           request.session.passwordHash = bcrypt.hashSync(request.body.password)
           return res.json()
@@ -48,7 +51,8 @@ module.exports = (app) => {
         response.send({
           isLoggedIn: true,
           borrowerNumber: request.session.borrowerNumber,
-          borrowerName: borrowerName
+          borrowerName: borrowerName,
+          homeBranch: request.session.homeBranch
         })
       })
       .catch(error => {
@@ -65,7 +69,8 @@ module.exports = (app) => {
     response.send({
       isLoggedIn: request.session.borrowerNumber !== undefined,
       borrowerNumber: request.session.borrowerNumber,
-      borrowerName: request.session.borrowerName
+      borrowerName: request.session.borrowerName,
+      homeBranch: request.session.homeBranch
     })
   })
 

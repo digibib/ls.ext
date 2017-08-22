@@ -90,16 +90,18 @@
                                 </div>
                             </div>
                             {{/enableSpecialInput}}
+                            {{#if rdfType === 'Work'}}
                                 <div class="pure-g">
                                     <div class="pure-u-1-2">
                                         <button
                                                 tabindex="-1"
                                                 class="pure-button pure-button-primary next-step-button"
                                                 title="{{./buttonLabel}}"
-                                                on-click="editResource:{template:'edit_authority', descriptionKey: 'compareWork', inputsKeypath: 'applicationData.inputsForDomainType.Work'},{{targetUri[rdfType]}}"
+                                                on-click="editResource:{template:'edit_authority', descriptionKey: 'compareWork', inputsKeypath: 'applicationData.inputsForDomainType.Work'},{{targetUri.Work}}"
                                         >{{>extendedEdit}}</button>
                                     </div>
                                 </div>
+                            {{/if}}
                             </div>
                             {{/if}}
                                 {{#if tools}}

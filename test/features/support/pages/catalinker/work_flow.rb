@@ -23,6 +23,17 @@ class WorkFlow < CatalinkerPage
     self
   end
 
+  def visit_for_music
+    retry_wait do
+      @browser.goto catalinker(:workflow_music)
+      Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
+        @browser.elements(:class => 'prop-input').size > 1
+      end # wait until dom-tree has been populated
+    end
+    self
+  end
+
+
   def next_step
     @browser.div(:class => 'grid-panel-selected').button(:class => 'next-step-button').click
   end

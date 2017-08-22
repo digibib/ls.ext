@@ -3,7 +3,8 @@
     "properties": {
       "name": {
         "type": "text",
-        "analyzer": "name_analyzer"
+        "analyzer": "name_analyzer",
+        "norms": false
       },
       "birthYear": {
         "type": "text"
@@ -12,10 +13,13 @@
         "type": "text"
       },
       "nationality": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets",
+        "norms": false
       },
       "specification": {
-        "type": "text"
+        "type": "text",
+        "norms": false
       },
       "uri": {
         "type": "keyword"

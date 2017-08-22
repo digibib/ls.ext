@@ -337,8 +337,14 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public XURI updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems) throws Exception {
+    public XURI updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems, boolean deleted) throws Exception {
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
+        if (deleted) {
+            XURI pub = repository.retrievePublicationXURIByRecordId(recordId);
+            String query = sqb.deleteBiblioReferences(recordId);
+            repository.updateResource(query);
+            return pub;
+        }
         String query = sqb.updateAvailabilityData(recordId, homeBranches, availableBranches, numItems);
         repository.updateResource(query);
 

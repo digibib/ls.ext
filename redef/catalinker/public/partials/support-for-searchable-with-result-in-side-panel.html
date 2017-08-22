@@ -66,20 +66,20 @@ on-escape="cancelEdit">
                                href="{{getLinkfromUri(., config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri)}}"
                                target="_blank"
                                title="{{config.search[current.accepted.selectedIndexType || selectedIndexType].linkFromUri.toolTip}}">
-                                {{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}
+                                {{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties, @keypath)}}
                             </a>
                             {{elseif config.search[current.accepted.selectedIndexType || selectedIndexType].publicationLink}}
                             <a class="search-result-item-label"
                                href="{{genPublicationLink(.)}}"
                                target="_blank"
                                title="Se utgivelsen på verkssiden">
-                                {{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}
+                                {{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties, @keypath)}}
                             </a>
                             {{else}}
-                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties)}}</p>
+                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties, @keypath)}}</p>
                             {{/if}}
-                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties2)}}</p>
-                            <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemDetailsLabelProperties)}}</p>
+                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemLabelProperties2, @keypath)}}</p>
+                            <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[current.accepted.selectedIndexType || selectedIndexType].resultItemDetailsLabelProperties, @keypath)}}</p>
                         </span>
 
                         <div class="pure-u-1-24 toggle-subitem">

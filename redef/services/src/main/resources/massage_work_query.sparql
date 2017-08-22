@@ -1,6 +1,8 @@
-PREFIX deich: <__ONTOLOGY__>
+PREFIX  deich: <__ONTOLOGY__>
 PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
+PREFIX  duo: <http://data.deichman.no/utility#>
+PREFIX  mediaType: <http://data.deichman.no/mediaType#>
 
 CONSTRUCT {
  <__WORKURI__> a deich:Work ;
@@ -11,15 +13,32 @@ CONSTRUCT {
                deich:publicationYear ?publicationYear ;
                deich:contributor ?workContrib ;
                deich:subject ?subject ;
+               deich:fictionNonfiction ?fictionNonfiction ;
+               deich:hasSummary ?hasSummary ;
+               deich:subjectName ?subjectName ;
                deich:hasWorkType ?hasWorkType ;
                deich:workTypeLabel ?workTypeLabel ;
+               deich:genre ?genreLabel ;
+               deich:compType ?compTypeLabel ;
                deich:mainEntryName ?mainEntryName ;
-               deich:literaryForm ?litform .
+               deich:agents ?contribAgentName ;
+               ?contribRoleURI ?contribAgentName ;
+               deich:audience ?audience ;
+               deich:dewey ?dewey ;
+               deich:inst ?inst ;
+               deich:bio ?bio ;
+               deich:country ?country ;
+               deich:nationality ?nationLabel ;
+               deich:contentAdaptation ?contentAdaptationCode ;
+               deich:series ?seriesTitle ;
+               deich:totalNumItems ?totalNumItems ;
+               deich:literaryForm ?litform ;
+               deich:created ?created .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
                deich:mainEntry ?mainEntry ;
-               deich:agent ?agent .
-      ?agent a deich:Agent ;
+               deich:agent ?contribAgent .
+      ?contribAgent a deich:Agent ;
                deich:name ?name ;
                deich:birthYear ?birthYear ;
                deich:deathYear ?deathYear .
@@ -37,10 +56,12 @@ WHERE {
              ?subject deich:mainTitle ?subjectName  . }
   UNION { <__WORKURI__> deich:subject ?subject .
             ?subject deich:name ?subjectName  . }
+  UNION { <__WORKURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
   UNION { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
   UNION { <__WORKURI__> deich:subtitle ?subtitleO . BIND(str(?subtitleO) as ?subtitle) }
   UNION { <__WORKURI__> deich:partTitle ?partTitleO . BIND(str(?partTitleO) as ?partTitle) }
   UNION { <__WORKURI__> deich:partNumber ?partNumberO . BIND(str(?partNumberO) as ?partNumber) }
+  UNION { <__WORKURI__> deich:hasSummary ?hasSummaryO . BIND(str(?hasSummaryO) as ?hasSummary) }
   UNION { <__WORKURI__> deich:hasWorkType ?hasWorkType .
         ?hasWorkType rdfs:label ?langWorkTypeLabel .
         FILTER(LANGMATCHES(LANG(?langWorkTypeLabel), "no")) .
@@ -49,17 +70,78 @@ WHERE {
   UNION { <__WORKURI__> deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
   UNION { <__WORKURI__> deich:contributor ?workContrib .
           ?workContrib a deich:Contribution ;
-             deich:agent ?agent ;
-             deich:role ?roleURI .
+             deich:agent ?contribAgent ;
+             deich:role ?contribRoleURI .
+             ?contribAgent deich:name ?contribAgentName .
           OPTIONAL {
                ?workContrib a deich:MainEntry.
                BIND(true AS ?mainEntry) .
-               ?agent deich:name ?mainEntryName .
+               ?contribAgent deich:name ?mainEntryName .
+               OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
+                 BIND(str(?nationLabelLang) AS ?nationLabel)
+                 FILTER(lang(?nationLabelLang) = "no")
+               }
            }
-          ?agent deich:name ?name .
-          BIND(str(?roleURI) AS ?role)
-          OPTIONAL { ?agent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
-          OPTIONAL { ?agent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
+          ?contribAgent deich:name ?name .
+          BIND(str(?contribRoleURI) AS ?role)
+          OPTIONAL { ?contribAgent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
+          OPTIONAL { ?contribAgent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
   }
-
+  UNION {
+      <__WORKURI__> deich:genre ?genre .
+      ?genre a deich:Genre ;
+            deich:prefLabel ?genreName  .
+      OPTIONAL { <__WORKURI__> deich:genre ?genre. ?genre deich:specification ?genreSpec }
+      BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
+  }
+  UNION {  <__WORKURI__> deich:hasCompositionType ?compType .
+           ?compType deich:prefLabel ?compTypeLabel .
+  }
+  UNION { <__WORKURI__>  deich:fictionNonfiction ?ficturi .
+            BIND(str(?ficturi) AS ?fictionNonfiction)
+  }
+  UNION {  <__WORKURI__> deich:audience ?audienceUri .
+           BIND(str(?audienceUri) AS ?audience)
+  }
+  UNION { <__WORKURI__> deich:hasClassification ?classEntry .
+          ?classEntry deich:hasClassificationNumber ?dewey .
+  }
+  UNION { <__WORKURI__> deich:hasInstrumentation ?instrumentation.
+           ?instrumentation deich:hasInstrument ?instrument .
+           ?instrument deich:prefLabel ?inst
+  }
+  UNION { <__WORKURI__> deich:biography ?b .
+           ?b rdfs:label ?bioLabel .
+           BIND(str(?bioLabel) AS ?bio)
+           FILTER(lang(?bioLabel) = "no")
+  }
+  UNION { <__WORKURI__> deich:nationality ?n .
+           ?n rdfs:label ?nLabel .
+           BIND(str(?nLabel) AS ?country)
+           FILTER(lang(?nLabel) = "no")
+  }
+  UNION { <__WORKURI__> deich:hasContentAdaptation ?contentAdaptation .
+           ?contentAdaptation duo:code ?contentAdaptationCode .
+  }
+  UNION { <__WORKURI__> deich:isPartOfWorkSeries ?wsBnode .
+          ?wsBnode deich:workSeries ?workSeries .
+          ?workSeries ?seriesPred ?seriesTitle .
+          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
+  }
+  UNION {
+    select ?totalNumItems
+    where {
+      {
+        select (sum(?items) as ?totalNumItems)
+        where {
+            ?publication deich:publicationOf <__WORKURI__> ;
+                         deich:hasNumItems ?items .
+                         optional {?publication deich:hasMediaType ?mediatype }
+            FILTER(!bound(?mediatype) || (bound(?mediatype) && ?mediatype != mediaType:Periodical))
+        }
+        having(sum(?items) > 0)
+      }
+      filter(?totalNumItems > 0)
+    }
+  }
 }

@@ -234,7 +234,7 @@ duo:Biography a rdfs:Class ;
 :work a rdfs:Property ;
   rdfs:label "Related to"@en ;
   rdfs:label "Relatert til"@no ;
-  rdfs:range :Work ;
+  rdfs:range :Work, :WorkSeries ;
   rdfs:domain :WorkRelation .
 
 :isRelatedTo a rdfs:Property ;

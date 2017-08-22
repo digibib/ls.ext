@@ -24,15 +24,23 @@
       "@id": "deichman:audience",
       "@container": "@set"
     },
+    "dewey": "deichman:dewey",
     "deichman": "__ONTOLOGY__",
     "mainTitle": "deichman:mainTitle",
     "subtitle": "deichman:subtitle",
     "partTitle": "deichman:partTitle",
     "partNumber": "deichman:partNumber",
+    "summary": "deichman:hasSummary",
+    "compositionType": "deichman:compType",
+    "totalNumItems": "deichman:totalNumItems",
     "publications": {
       "@id": "deichman:publication",
       "@container": "@set"
     },
+    "inst": "deichman:inst",
+    "bio": "deichman:bio",
+    "country": "deichman:country",
+    "contentAdaptation": "deichman:contentAdaptation",
     "name": "deichman:name",
     "Work": "deichman:Work",
     "publicationYear": "deichman:publicationYear",
@@ -42,16 +50,52 @@
       "@id": "deichman:subject",
       "@container": "@set"
     },
+    "series": {
+      "@id": "deichman:series",
+      "@container": "@set"
+    },
+    "subject": {
+      "@id": "deichman:subjectName",
+      "@container": "@set"
+    },
     "Subject": "deichman:Subject",
+    "genre": {
+      "@id": "deichman:genre",
+      "@container": "@set"
+    },
     "role": "deichman:role",
-    "mainEntry": "deichman:mainEntry",
+    "scriptWriter": "http://data.deichman.no/role#scriptWriter",
+    "actor": "http://data.deichman.no/role#actor",
+    "photographer": "http://data.deichman.no/role#photographer",
+    "adaptor": "http://data.deichman.no/role#adaptor",
+    "lyricist": "http://data.deichman.no/role#lyricist",
+    "composer": "http://data.deichman.no/role#composer",
+    "director": "http://data.deichman.no/role#director",
+    "performer": "http://data.deichman.no/role#performer",
+    "musicalArranger": "http://data.deichman.no/role#musicalArranger",
+    "reader": "http://data.deichman.no/role#reader",
+    "conductor": "http://data.deichman.no/role#conductor",
     "author": "http://data.deichman.no/role#author",
+    "translator": "http://data.deichman.no/role#translator",
+    "illustrator": "http://data.deichman.no/role#illustrator",
+    "editor": "http://data.deichman.no/role#editor",
+    "contributor": "http://data.deichman.no/role#contributor",
+    "coreographer": "http://data.deichman.no/role#coreographer",
+    "publisher": "http://data.deichman.no/role#publisher",
+    "producer": "http://data.deichman.no/role#producer",
+    "productionCompany": "http://data.deichman.no/role#productionCompany",
+    "featuring":"http://data.deichman.no/role#featuring",
     "agent": "deichman:agent",
+    "agents": "deichman:agents",
     "hasWorkType": "deichman:hasWorkType",
     "workTypeLabel": "deichman:workTypeLabel",
     "Contribution": "deichman:Contribution",
     "Agent": "deichman:Agent",
+    "mainEntry": "deichman:mainEntry",
     "mainEntryName": "deichman:mainEntryName",
-    "litform": "deichman:literaryForm"
+    "nationality": "deichman:nationality",
+    "litform": "deichman:literaryForm",
+    "fictionNonfiction": "deichman:fictionNonfiction",
+    "created": "deichman:created"
   }
 }

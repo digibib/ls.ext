@@ -55,8 +55,6 @@ public interface SearchService {
 
     Response searchWorkSeries(String query);
 
-    void indexUrisOnlyOnce(boolean indexOnce);
-
     void enqueueIndexingAllResources();
 
     void enqueueIndexingAllOfType(String type, Boolean ignoreConnectedResources);

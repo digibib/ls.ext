@@ -483,6 +483,8 @@
   "isRelatedTo": {
     "@embed": "@always",
     "work": {
+      "type": ["Work", "WorkSeries"],
+      "@omitDefault": true,
       "contributors": {
         "deichman:agent": {
           "@embed": "@always"

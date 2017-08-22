@@ -28,6 +28,9 @@
     by: 'av',
     selectThis: 'Velg',
     showHideRelations: 'Vis/skjul relasjoner',
+    showEsotericFields: 'Vis flere felter',
+    showEsotericFieldsLegend: 'Klikk her for å vise mindre brukte felter',
+    showEsotericFieldsSupportLegend: 'Noen felter vises ikke fordi de sjelden brukes i denne sammenhengen. Klikk på linken til venstre for å vise dem likevel.',
     selectWorkLabel: 'Katalogisér utgivelse av dette verket',
     autoNumber: 'Automatisk nummerering',
     searchWorkLegend: 'Søk etter tittel, hovedinnførsel, verksuri eller -id',
@@ -73,7 +76,7 @@
     issueNumberLabel: 'Nummer i serien',
     publishedByLabel: 'Utgiver',
     workTabLabel: 'Beskriv verk',
-    workSeriesWorkLabel: 'Verk',
+    workSeriesWorkLabel: 'Relatert til',
     relationTypeLabel: 'Type relasjon',
     publicationYearLabel: 'År',
     originCountryLabel: 'Opprinnelsesland',
@@ -97,7 +100,7 @@
                           `,
     additionalEntriesTabLabel: 'Biinnførsler',
     additionalEntryLabel: 'Biinnførsel',
-    workRelationLabel: 'Relasjon til annet verk',
+    workRelationLabel: 'Relasjon til annet verk eller verksserie',
 
     // index type labels
     personLabel: 'Person',
@@ -112,6 +115,20 @@
     instrumentLabel: 'Instrument',
     workSeriesLabel: 'Verksserie',
     compositionTypeLabel: 'Komposisjonstype',
+
+    // type explanations
+    personExplanation: '(Person)',
+    generalSubjectExplanation: '(Generelt emne)',
+    workExplanation: '(Verk)',
+    genreExplanation: '(Sjanger)',
+    corporationExplanation: '(Organisasjon)',
+    placeExplanation: '(Sted)',
+    eventExplanation: '(Hendelse)',
+    serialExplanation: '(Serie)',
+    publicationExplanation: '(Utgivelse)',
+    instrumentExplanation: '(Instrument)',
+    workSeriesExplanation: '(Verksserie)',
+    compositionTypeExplanation: '(Komposisjonstype)',
 
     // determinatives
     PersonLabelDet: 'personen',
@@ -356,6 +373,13 @@
     inverseRoleRelation: 'Verk/utgivelser med {{>subjectType + "LabelDem"}} som {{role.toLowerCase()}}',
 
     // misc
-    partsLabel: 'Deler'
+    partsLabel: 'Deler',
+    inputTooLong: 'Vennligst fjern {{overChars}} tegn',
+    inputTooShort: 'Vennligst skriv inn minst {{minimum}} tegn',
+    loadingMore: 'Laster flere resultater…',
+    maximumOneCanBeSelected: 'Du kan bare velge én verdi her',
+    maximumSelected: 'Du kan velge maks {{maximum}} verdier her',
+    noResults: 'Ingen treff',
+    searching: 'Søker…'
   }
 }))

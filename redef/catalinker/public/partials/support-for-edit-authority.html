@@ -58,13 +58,13 @@
                                href="{{getLinkfromUri(., config.search[applicationData.searchIndexForType[rdfType]].linkFromUri)}}"
                                target="_blank"
                                title="{{config.search[applicationData.searchIndexForType[rdfType]].linkFromUri.toolTip}}">
-                                {{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}}
+                                {{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties, @keypath)}}
                             </a>
                             {{else}}
-                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties)}}</p>
+                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties, @keypath)}}</p>
                             {{/if}}
-                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties2)}}</p>
-                            <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemDetailsLabelProperties)}}</p>
+                            <p class="search-result-item-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemLabelProperties2, @keypath)}}</p>
+                            <p class="search-result-item-detail-label">{{getSearchResultItemLabel(., config.search[applicationData.searchIndexForType[rdfType]].resultItemDetailsLabelProperties, @keypath)}}</p>
                         </div>
 
                         {{#if !(uri===targetUri[rdfType])}}

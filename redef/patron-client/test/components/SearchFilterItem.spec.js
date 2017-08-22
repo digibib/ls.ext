@@ -4,11 +4,11 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import SearchFilterItem from '../../src/frontend/components/SearchFilterItem'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
+import {IntlProvider} from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
-    filter: {id: 'test_id', active: false, bucket: 'test_bucket'},
+    filter: {id: 'test_id', active: false, bucket: 'test_bucket', count: 10},
     toggleFilter: expect.createSpy(),
     scrollTargetNode: {},
     ...propOverrides
@@ -34,7 +34,7 @@ describe('components', () => {
   describe('SearchFilterItem', () => {
     it('should render translated filter name', () => {
       const { node, messages, props } = setup()
-      expect(node.querySelector("[data-automation-id='filter_label']").textContent).toEqual(messages[props.filter.bucket])
+      expect(node.querySelector("[data-automation-id='filter_label']").textContent).toEqual(`${messages[ props.filter.bucket ]}`)
     })
 
     it('should have checked checkbox when active filter', () => {

@@ -40,7 +40,7 @@ configurations {
 }
 
 def version_jetty = '9.4.2.v20170220'
-def version_jersey = '2.25.1'
+def version_jersey = '2.22.1'
 def version_jackson = '2.8.7'
 def version_slf4j = '1.7.25'
 def version_jena = '3.2.0'
@@ -108,6 +108,8 @@ check.dependsOn test
 
 tasks.withType(Test) {
     reports.html.destination = file("${reporting.baseDir}/${name}")
+    reports.junitXml.enabled = false
+    reports.html.enabled = false
 }
 
 task allTestsExceptAppTest( type: Test ) {
@@ -161,5 +163,18 @@ buildscript {
             url '~/.m2/repository'
         }
         jcenter()
+    }
+}
+
+task resolveDependencies {
+    doLast {
+        project.rootProject.allprojects.each { subProject ->
+            subProject.buildscript.configurations.each { configuration ->
+                configuration.resolve()
+            }
+            subProject.configurations.each { configuration ->
+                configuration.resolve()
+            }
+        }
     }
 }

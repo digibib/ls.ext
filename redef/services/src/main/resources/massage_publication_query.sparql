@@ -15,32 +15,24 @@ CONSTRUCT {
                deich:format ?format ;
                deich:desc ?desc ;
                deich:publicationYear ?pubPublicationYear ;
-               deich:firstPublicationYear ?workPublicationYear ;
-               deich:audience ?audience ;
                deich:homeBranches ?homeBranch ;
                deich:availableBranches ?availBranch ;
                deich:numItems ?numItems ;
                deich:contributor ?contrib ;
-               deich:hasImage ?img ;
+               deich:hasImage  ?img ;
                deich:mediaType ?pubMediaType ;
                deich:mt ?mtNo ;
-               deich:hasMediaTypeAll ?mediaType ;
                deich:workUri ?workUri ;
-               deich:subject ?subjectLabel ;
-               deich:genre ?genreLabel ;
-               deich:audience ?audience ;
                deich:agents ?contribAgentName ;
                deich:agents ?pubPartAgentName ;
                ?contribRoleURI ?contribAgentName ;
                ?pubPartRoleURI ?pubPartAgentName ;
                deich:mainEntryName ?mainEntryName ;
                deich:recordId ?recordId ;
-               deich:summary ?summary ;
                deich:formatNo ?formatNo ;
                deich:formatAdaptation ?formatAdaptNo ;
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
-               deich:dewey ?dewey ;
                deich:nationality ?nationLabel ;
                deich:title ?pubMainTitle ;
                deich:title ?pubPartTitle ;
@@ -48,7 +40,6 @@ CONSTRUCT {
                deich:title ?pubPartNumber ;
                deich:title ?pubPartMainTitle ;
                deich:title ?pubVarTitle ;
-               deich:litform ?litform ;
                deich:subtitles ?subtitles ;
                deich:subtitle ?pubSubtitle ;
                deich:partNumber ?pubPartNumber ;
@@ -56,30 +47,11 @@ CONSTRUCT {
                deich:ismn ?ismn ;
                deich:ean ?ean ;
                deich:publishedBy ?publishedBy ;
-               deich:compType ?compTypeLabel ;
-               deich:fictionNonfiction ?fictionNonfiction ;
-               deich:langTitles <http://ignore> ;
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
-               deich:inst ?inst ;
-               deich:bio ?bio ;
-               deich:workMainTitle ?workMainTitle ;
                deich:summary ?summary ;
-               deich:country ?country ;
                deich:origLang ?origLang ;
-               deich:contentAdaptation ?contentAdaptationCode ;
-               deich:workSubtitle ?workSubtitle ;
-               deich:workPartNumber ?workPartNumber ;
-               deich:workPartTitle ?workPartTitle ;
                deich:created ?created .
- <http://ignore> ?anyLang [
-                deich:mainTitle ?anyMt;
-                deich:subtitle ?anySt ;
-                deich:variantTitle ?anyVt ;
-                deich:partNumber ?anyPn ;
-                deich:partTitle ?anyPt ;
-                deich:hasImage ?anyImage ;
-                deich:pubUri ?anyPub ]  .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -93,7 +65,6 @@ CONSTRUCT {
 }
 WHERE {
   # 1. Information from publication:
-
         { <__PUBLICATIONURI__> deich:recordId ?recordId ;
             deich:publicationOf ?work .
             BIND(str(?work) AS ?workUri ) }
@@ -149,114 +120,11 @@ WHERE {
              FILTER(lang(?wsNoLang) = "no") }
   UNION { <__PUBLICATIONURI__> deich:hasDescription ?desc }
 
-  # 2. Information from other publications:
-  UNION {
-    <__PUBLICATIONURI__> deich:publicationOf ?work  .
-    ?anyP deich:publicationOf ?work ;
-      deich:language ?anyLang ;
-      deich:mainTitle ?anyMt .
-    OPTIONAL { ?anyP deich:subtitle ?anySt }
-    OPTIONAL { ?anyP deich:partTitle ?anyPt }
-    OPTIONAL { ?anyP deich:variantTitle ?anyVt }
-    OPTIONAL { ?anyP deich:partNumber ?anyPn }
-    OPTIONAL { ?anyP deich:hasImage ?anyImage }
-    BIND(str(?anyP) AS ?anyPub)
-  }
-
-  UNION {
-        ?p4 deich:publicationOf ?work ;
-           deich:hasMediaType ?mediaType .
-        OPTIONAL {
-          ?p4 deich:format ?mtFormatO .
-          BIND(str(?mtFormatO) AS ?mtFormat)
-        }
-      }
-
   # 3. Information from work:
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:mainTitle ?workMainTitle. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:subtitle ?workSubtitle. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:partNumber ?workPartNumber. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:partTitle ?workPartTitle. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-            ?work a deich:Work ; deich:hasSummary ?summary. }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:hasCompositionType ?compType .
-           ?compType deich:prefLabel ?compTypeLabel . }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work deich:fictionNonfiction ?ficturi .BIND(str(?ficturi) AS ?fictionNonfiction) }
-  UNION {  <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:audience ?audienceO .
-           BIND(str(?audienceO) AS ?audience) }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-          ?work a deich:Work ; deich:publicationYear ?workYear .
-          BIND(str(?workYear) AS ?workPublicationYear) }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-          ?work a deich:Work ; deich:hasClassification ?classEntry .
-          ?classEntry deich:hasClassificationNumber ?dewey . }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:literaryForm ?l .
-           ?l rdfs:label ?litLabel .
-           BIND(str(?litLabel) AS ?litform)
-           FILTER(lang(?litLabel) = "no") }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:hasInstrumentation ?instrumentation.
-           ?instrumentation deich:hasInstrument ?instrument .
-           ?instrument deich:prefLabel ?inst }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:biography ?b .
-           ?b rdfs:label ?bioLabel .
-           BIND(str(?bioLabel) AS ?bio)
-           FILTER(lang(?bioLabel) = "no") }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:nationality ?n .
-           ?n rdfs:label ?nLabel .
-           BIND(str(?nLabel) AS ?country)
-           FILTER(lang(?nLabel) = "no") }
   UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
            ?work a deich:Work ; deich:language ?wLangO .
            BIND(str(?wLangO) AS ?wLang) .
            BIND(afn:substr(?wLang, 29) AS ?origLang) }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-           ?work a deich:Work ; deich:hasContentAdaptation ?contentAdaptation .
-           ?contentAdaptation duo:code ?contentAdaptationCode . }
-  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
-          ?work deich:isPartOfWorkSeries ?wsBnode .
-          ?wsBnode deich:workSeries ?workSeries .
-          ?workSeries ?seriesPred ?seriesTitle .
-          VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
-          }
-  UNION {
-    {
-      <__PUBLICATIONURI__> deich:publicationOf ?work .
-      ?work deich:subject ?subject .
-      ?subject deich:prefLabel ?subjectName  .
-      OPTIONAL { ?subject deich:specification ?subjectSpec }
-    } UNION {
-      <__PUBLICATIONURI__> deich:publicationOf ?work .
-      ?work deich:subject ?subject .
-      ?subject a deich:Work ;
-              deich:mainTitle ?subjectName  .
-    } UNION {
-      <__PUBLICATIONURI__> deich:publicationOf ?work .
-      ?work deich:subject ?subject .
-      ?subject deich:name ?subjectName  .
-      OPTIONAL { ?subject deich:specification ?subjectSpec }
-    }
-    BIND(IF(BOUND(?subjectSpec), CONCAT(?subjectName, " (", ?subjectSpec, ")"), ?subjectName) AS ?subjectLabel)
-  }
-
-  UNION {
-      <__PUBLICATIONURI__> deich:publicationOf ?work .
-      ?work deich:genre ?genre .
-      ?genre a deich:Genre ;
-            deich:prefLabel ?genreName  .
-      OPTIONAL { ?work deich:genre ?genre. ?genre deich:specification ?genreSpec }
-      BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
-    }
 
   # 4. Information from contributions on both publication and work:
 
@@ -270,6 +138,8 @@ WHERE {
         OPTIONAL { ?contribAgent deich:specification ?contribSpec }
         BIND(IF(BOUND(?contribSpec), CONCAT(?contribAgentOnlyName, " (", ?contribSpec, ")"), ?contribAgentOnlyName) AS ?contribAgentName)
         BIND(str(?contribRoleURI) AS ?contribRole)
+         # strictly, main entry does not belong to publication index document, but is kept in order to generate a displayLine
+         # that includes main entry name and nationality
          OPTIONAL {
            ?contrib a deich:MainEntry .
            BIND(true as ?mainEntry) .

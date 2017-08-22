@@ -2,9 +2,9 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import Publications, { __RewireAPI__ as DefaultExportPublicationsRewireApi } from '../../src/frontend/components/Publications'
+import Publications, {__RewireAPI__ as DefaultExportPublicationsRewireApi} from '../../src/frontend/components/Publications'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
+import {IntlProvider} from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
@@ -14,7 +14,6 @@ function setup (propOverrides) {
     toggleParameterValue: () => {},
     removePeriod: () => {},
     locationQuery: {},
-    audiences: [],
 
     publications: [
       {

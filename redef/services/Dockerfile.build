@@ -1,6 +1,6 @@
 FROM java:openjdk-8-jdk
 
-ENV GRADLE_VERSION 2.13
+ENV GRADLE_VERSION 3.4.1
 
 WORKDIR /usr/bin
 RUN curl -sLO https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip && \
