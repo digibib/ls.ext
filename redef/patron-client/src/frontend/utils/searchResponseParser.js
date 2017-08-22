@@ -58,6 +58,7 @@ export function processSearchResponse (response, locationQuery) {
         return Constants.preferredLanguages.filter(prefLang => (filteredLanguages || []).includes(prefLang)).some(lang => (pub._source.languages || []).includes(lang))
       })
 
+      // try to determine representative publication by matching displayline of publications in preferred language order
       let titleMatchTerms = []
       if (!selected) {
         // If  the title of any preferred language contains the search query, use that title.
@@ -75,11 +76,39 @@ export function processSearchResponse (response, locationQuery) {
         }
       }
 
+      // try to determine representative publication by matching displayline of publications in any language
       if (!selected) {
         selected = element.inner_hits.publications.hits.hits.find(pub => {
           return titleMatchTerms.every(term => { return pub._source.displayLine1.toLocaleLowerCase().includes(term) })
         })
       }
+
+      // try to determine representative publication with any title in preferred languages order favouring books
+      if (!selected) {
+        for (const prefLang of Constants.preferredLanguages) {
+          const selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
+            return (pub._source.languages || []).includes(prefLang) && (pub._source.mt === 'Bok')
+          })
+          if (selectedByPrefLang) {
+            selected = selectedByPrefLang
+            break
+          }
+        }
+      }
+
+      // try to determine representative publication by preferred languages in any media type
+      if (!selected) {
+        for (const prefLang of Constants.preferredLanguages) {
+          const selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
+            return (pub._source.languages || []).includes(prefLang)
+          })
+          if (selectedByPrefLang) {
+            selected = selectedByPrefLang
+            break
+          }
+        }
+      }
+
       if (selected) {
         result.publication = selected
         result.title = title({
