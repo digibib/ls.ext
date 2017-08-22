@@ -12,7 +12,7 @@ function titleTermsFromQuery (query) {
   // strip out all ccl prefixes like "ht:", "mainTitle:" etc. If prefix is not among ccl prefixes for title related fields,
   // remove following term as well. Strip leading and trailing double quotes
   // e.g.: hovedtittel:"På gjengrodde stier" forfatter:"Hamsun, Knut" => ["På gjengrodde stier"]
-  const keywords = query.toLocaleLowerCase().match(/\p{L}+|:|"(?:\\"|[^"])+"/g) || []
+  const keywords = query.toLocaleLowerCase().match(/[A-Za-zæøå]+|:|"(?:\\"|[^"])+"/g) || []
   for (let i = 0; i < keywords.length; i++) {
     if (keywords[ i ] === ':') {
       keywords[ i ] = undefined
@@ -58,14 +58,49 @@ export function processSearchResponse (response, locationQuery) {
         return Constants.preferredLanguages.filter(prefLang => (filteredLanguages || []).includes(prefLang)).some(lang => (pub._source.languages || []).includes(lang))
       })
 
+      // try to determine representative publication by matching displayline of publications in preferred language order
+      let titleMatchTerms = []
       if (!selected) {
         // If  the title of any preferred language contains the search query, use that title.
-        const titleMatchTerms = titleTermsFromQuery(locationQuery.query)
+        titleMatchTerms = titleTermsFromQuery(locationQuery.query)
 
         for (const prefLang of Constants.preferredLanguages) {
           const selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
             return (pub._source.languages || []).includes(prefLang) &&
               titleMatchTerms.every(term => { return pub._source.displayLine1.toLocaleLowerCase().includes(term) })
+          })
+          if (selectedByPrefLang) {
+            selected = selectedByPrefLang
+            break
+          }
+        }
+      }
+
+      // try to determine representative publication by matching displayline of publications in any language
+      if (!selected) {
+        selected = element.inner_hits.publications.hits.hits.find(pub => {
+          return titleMatchTerms.every(term => { return pub._source.displayLine1.toLocaleLowerCase().includes(term) })
+        })
+      }
+
+      // try to determine representative publication with any title in preferred languages order favouring books
+      if (!selected) {
+        for (const prefLang of Constants.preferredLanguages) {
+          const selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
+            return (pub._source.languages || []).includes(prefLang) && (pub._source.mt === 'Bok')
+          })
+          if (selectedByPrefLang) {
+            selected = selectedByPrefLang
+            break
+          }
+        }
+      }
+
+      // try to determine representative publication by preferred languages in any media type
+      if (!selected) {
+        for (const prefLang of Constants.preferredLanguages) {
+          const selectedByPrefLang = element.inner_hits.publications.hits.hits.find(pub => {
+            return (pub._source.languages || []).includes(prefLang)
           })
           if (selectedByPrefLang) {
             selected = selectedByPrefLang

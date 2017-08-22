@@ -45,8 +45,8 @@ function pubAggFilter (field, workFilters, publicationFilters) {
 function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 20, options) {
   options = Object.assign({
     explain: false,
-    ageGain: 10.0,
-    ageScale: 1000.0,
+    ageGain: 6.0,
+    ageScale: 30000.0,
     itemsGain: 0.0,
     itemsScale: 100,
     itemsCountLimit: 200,
@@ -105,7 +105,8 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
     return {
       function_score: {
         boost: options.childBoost, // general child boost
-        boost_mode: 'multiply',
+        boost_mode: 'replace',
+        score_mode: 'max',
         query: query,
         script_score: {
           script: {
@@ -158,23 +159,17 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
     return {
       function_score: {
         boost: options.childBoost, // general child boost
-        boost_mode: 'multiply',
+        boost_mode: 'replace',
         query: query,
         script_score: {
           script: {
             inline: `
                       def score = _score;
 
-                      def items_gain=params.itemsGain;
-                      def items_scale=params.itemsScale;
-                      if (doc.totalNumItems.value != null) {
-                        score *= (1 + (items_gain*(Math.min(doc.totalNumItems.value, params.itemsCountLimit)/items_scale)));
-                      }
-
                       def age_gain=params.ageGain;
                       def age_scale=params.ageScale;
                       if (!doc['created'].empty) {
-                        score *= (1.0 + age_gain * Math.min(1 - ((params.now - doc.created.date.getMillis())/86400000)/age_scale, 1.0));
+                        score *= (1.0 + age_gain * (1.0 - Math.min((params.now - (doc.created.date.getMillis()    ) * 1            )/86400000, age_scale)/age_scale));
                       } else if (!doc['publicationYear'].empty) {
                         score *= (1.0 + age_gain * (1.0 - Math.min((params.now - (doc.publicationYear.value - 1970) * 31536000*1000)/86400000, age_scale)/age_scale))
                       }
@@ -182,7 +177,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                       return score;`.replace('\n', ''),
             lang: 'painless',
             params: {
-              now: Date.now() - options.timeTravel ? Number(options.timeTravel) * 86400000 : 0,
+              now: Date.now() - (options.timeTravel ? Number(options.timeTravel) * 86400000 : 0),
               itemsGain: Number(options.itemsGain),
               itemsScale: Number(options.itemsScale),
               itemsCountLimit: Number(options.itemsCountLimit),
@@ -263,6 +258,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                   must: {
                     has_child: {
                       type: 'publication',
+                      score_mode: 'max',
                       query: {
                         match_all: {}
                       },
@@ -273,7 +269,6 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                     }
                   },
                   should: [
-                    workQuery,
                     workBoost(workQuery)
                   ]
                 }

@@ -17,7 +17,7 @@ function advancedQuery (queryWant, boolOperator) {
                   query: {
                     function_score: {
                       boost: 1,
-                      boost_mode: 'multiply',
+                      boost_mode: 'replace',
                       query: {
                         bool: {
                           must: [
@@ -30,6 +30,7 @@ function advancedQuery (queryWant, boolOperator) {
                           ]
                         }
                       },
+                      score_mode: 'max',
                       script_score: {
                         script: {
                           inline: 'deleted',
@@ -50,6 +51,7 @@ function advancedQuery (queryWant, boolOperator) {
                   must: {
                     has_child: {
                       type: 'publication',
+                      score_mode: 'max',
                       query: {
                         match_all: {}
                       },
@@ -61,15 +63,9 @@ function advancedQuery (queryWant, boolOperator) {
                   },
                   should: [
                     {
-                      query_string: {
-                        query: queryWant,
-                        default_operator: boolOperator
-                      }
-                    },
-                    {
                       function_score: {
                         boost: 1,
-                        boost_mode: 'multiply',
+                        boost_mode: 'replace',
                         query: {
                           query_string: {
                             query: queryWant,
@@ -85,8 +81,8 @@ function advancedQuery (queryWant, boolOperator) {
                               itemsGain: 0.0,
                               itemsScale: 100,
                               itemsCountLimit: 200,
-                              ageGain: 10.0,
-                              ageScale: 1000
+                              ageGain: 6.0,
+                              ageScale: 30000
                             }
                           }
                         }
@@ -160,8 +156,8 @@ describe('searchBuilder', () => {
       const urlQueryString = 'query=some+more+strings'
       const q = buildQuery(urlQueryString).query.bool.must
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.inline = 'deleted'
-      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.params.now = 'deleted'
-      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.inline = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.script_score.script.params.now = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.script_score.script.inline = 'deleted'
       expect(q).toEqual(
         {
           dis_max: {
@@ -173,7 +169,7 @@ describe('searchBuilder', () => {
                   query: {
                     function_score: {
                       boost: 1,
-                      boost_mode: 'multiply',
+                      boost_mode: 'replace',
                       query: {
                         bool: {
                           must: [
@@ -541,7 +537,7 @@ describe('searchBuilder', () => {
                                           }
                                         }
                                       },
-                                      boost: 1
+                                      boost: 10
                                     }
                                   },
                                   {
@@ -563,6 +559,7 @@ describe('searchBuilder', () => {
                           ]
                         }
                       },
+                      score_mode: 'max',
                       script_score: {
                         script: {
                           inline: 'deleted',
@@ -582,6 +579,7 @@ describe('searchBuilder', () => {
                 bool: {
                   must: {
                     has_child: {
+                      score_mode: 'max',
                       type: 'publication',
                       query: {
                         match_all: {}
@@ -594,340 +592,9 @@ describe('searchBuilder', () => {
                   },
                   should: [
                     {
-                      dis_max: {
-                        queries: [
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  agents: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  author: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 5
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  bio: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  compType: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  country: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  desc: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 0.1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  genre: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  inst: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  language: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  litform: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  mainTitle: {
-                                    query: 'some more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 5
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  mainTitle: {
-                                    query: 'some more',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 5
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  mainTitle: {
-                                    query: 'more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 5
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  'mainTitle.raw': {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 5
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  subtitle: {
-                                    query: 'some more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  subtitle: {
-                                    query: 'some more',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  subtitle: {
-                                    query: 'more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  'subtitle.raw': {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  partTitle: {
-                                    query: 'some more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  partTitle: {
-                                    query: 'some more',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  partTitle: {
-                                    query: 'more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 1
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match: {
-                                  series: {
-                                    query: 'some more strings',
-                                    minimum_should_match: '70%'
-                                  }
-                                }
-                              },
-                              boost: 2
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  subject: {
-                                    query: 'some more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 0.5
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  subject: {
-                                    query: 'some more',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 0.5
-                            }
-                          },
-                          {
-                            constant_score: {
-                              filter: {
-                                match_phrase: {
-                                  subject: {
-                                    query: 'more strings',
-                                    slop: 3
-                                  }
-                                }
-                              },
-                              boost: 0.5
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    {
                       function_score: {
                         boost: 1,
-                        boost_mode: 'multiply',
+                        boost_mode: 'replace',
                         query: {
                           dis_max: {
                             queries: [
@@ -1214,7 +881,7 @@ describe('searchBuilder', () => {
                                       }
                                     }
                                   },
-                                  boost: 2
+                                  boost: 10
                                 }
                               },
                               {
@@ -1255,6 +922,45 @@ describe('searchBuilder', () => {
                                   },
                                   boost: 0.5
                                 }
+                              },
+                              {
+                                constant_score: {
+                                  filter: {
+                                    match_phrase: {
+                                      'subject.raw': {
+                                        query: 'some more strings',
+                                        slop: 3
+                                      }
+                                    }
+                                  },
+                                  boost: 0.5
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  filter: {
+                                    match_phrase: {
+                                      'subject.raw': {
+                                        query: 'some more',
+                                        slop: 3
+                                      }
+                                    }
+                                  },
+                                  boost: 0.5
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  filter: {
+                                    match_phrase: {
+                                      'subject.raw': {
+                                        query: 'more strings',
+                                        slop: 3
+                                      }
+                                    }
+                                  },
+                                  boost: 0.5
+                                }
                               }
                             ]
                           }
@@ -1268,8 +974,8 @@ describe('searchBuilder', () => {
                               itemsGain: 0.0,
                               itemsScale: 100,
                               itemsCountLimit: 200,
-                              ageGain: 10.0,
-                              ageScale: 1000.0
+                              ageGain: 6.0,
+                              ageScale: 30000.0
                             }
                           }
                         }
@@ -1289,8 +995,8 @@ describe('searchBuilder', () => {
       const queryWant = 'author: Hamsun'
       const q = buildQuery(urlQueryString).query.bool.must
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.inline = 'deleted'
-      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.params.now = 'deleted'
-      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.inline = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.script_score.script.params.now = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.script_score.script.inline = 'deleted'
       expect(q).toEqual(
         advancedQuery(queryWant, 'and').query.bool.must)
     })
@@ -1299,11 +1005,10 @@ describe('searchBuilder', () => {
       const urlQueryString = 'query=82-05-30003-8'
       const q = buildQuery(urlQueryString).query.bool.must
       q.dis_max.queries[ 0 ].has_child.query.function_score.script_score.script.inline = 'deleted'
-      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.params.now = 'deleted'
-      q.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.script_score.script.inline = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.script_score.script.params.now = 'deleted'
+      q.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.script_score.script.inline = 'deleted'
       const expected = advancedQuery('isbn:82-05-30003-8', 'and').query.bool.must
-      expected.dis_max.queries[ 1 ].bool.should[ 0 ] = {}
-      expected.dis_max.queries[ 1 ].bool.should[ 1 ].function_score.query = {}
+      expected.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.query = {}
 
       expect(q).toEqual(
         expected
