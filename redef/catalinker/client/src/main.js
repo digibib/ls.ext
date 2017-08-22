@@ -2103,14 +2103,12 @@
             if ($panel.hasClass('show-esoterics') && lastShowEsotericLinksPanelBottom[ _tabId ] > 0 && top < lastShowEsotericLinksPanelBottom[ _tabId ] + 10) {
               top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
             }
-            if (top > 0) {
-              $panel.css({
-                top,
-                left: supportPanelLeftEdge,
-                width: supportPanelWidth,
-                'z-index': ($panel.hasClass('show-esoterics') ? 100 : 200) - index
-              })
-            }
+            $panel.css({
+              top,
+              left: supportPanelLeftEdge,
+              width: supportPanelWidth,
+              'z-index': ($panel.hasClass('show-esoterics') ? 100 : 200) - index
+            })
             if ($panel.hasClass('show-esoterics') && ($panel.css('display') !== 'none')) {
               lastShowEsotericLinksPanelBottom[ _tabId ] = top + $panel.height()
             }
@@ -4272,6 +4270,9 @@
                   .then(!maintenance ? setTargetUri : nop)
                   .then(clearInputsAndSearchResult)
                   .then(wait.cancel)
+                  .then(function(){
+                    setTimeout(positionSupportPanels)
+                  })
               },
               cancelEdit: function (event, origin) {
                 $(event.node).closest('.panel-part').find('span[contenteditable=true]').focus()
