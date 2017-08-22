@@ -4270,7 +4270,7 @@
                   .then(!maintenance ? setTargetUri : nop)
                   .then(clearInputsAndSearchResult)
                   .then(wait.cancel)
-                  .then(function(){
+                  .then(function () {
                     setTimeout(positionSupportPanels)
                   })
               },
