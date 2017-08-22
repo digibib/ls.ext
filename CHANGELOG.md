@@ -14,8 +14,8 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 ## 2017.48
 
-KOHA: 8e3b1c1814aaa079f33d4ed54fc22d30f5478c61
-GITREF: TODO
+KOHA: c637036b74dedc64be755d6b0ded330b4bb30f53
+GITREF: 4e55f1aaefef0fc25343702a4a887175d740b408
 
 - Koha
   - DEICH-855: Reintroduce expirationdate on HOLD_SLIP
