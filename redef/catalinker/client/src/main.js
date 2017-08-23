@@ -2219,6 +2219,7 @@
     }
 
     function doSearch (event, searchString, preferredIndexType, secondaryIndexType) {
+      positionSupportPanels()
       searchString = stripHtml(searchString).trim()
 
       if (!searchString) {
@@ -3020,6 +3021,7 @@
                   $(node).val(newvalue).trigger('change')
                   setting = false
                 }, 0)
+                setTimeout(positionSupportPanels, 500)
               }
             })
 
@@ -3863,7 +3865,7 @@
                   ractive.set(`${parentInput.keypath}.subInputs.${inputIndex}.input.values.${valueIndex}.nonEditable`, false)
                 })
                 ractive.set(`${parentInput.keypath}.edit`, true)
-                ractive.update()
+                ractive.update().then(setTimeout(positionSupportPanels))
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, options) {
                 options = options || {}
