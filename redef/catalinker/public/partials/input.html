@@ -4,6 +4,7 @@
               class-pure-u-1-2="{{compare}}"
               class-esoteric-hidden="{{(inWorkflow===true && !showEsoteric && checkEsoteric(input, allInputs))}}"
               class-esoteric="{{(inWorkflow===true && checkEsoteric(input, allInputs))}}"
+              class-last-one="{{!showEsoteric && firstAndLastVisibleInputs[groupIndex].last === inputIndex}}"
               {{#if !compareMode}}
               as-dropZone="{inputIndex, input}"
               {{/if}}
@@ -15,7 +16,7 @@
               {{#if inputIndex === 0}}data-support-panel-base-id="support_panel_base_fixed"{{/if}}
         >
         {{#if (inWorkflow===true && checkEsoteric(input, allInputs))}}
-        <span class="panel-part pure-u-1-2 esoteric">
+        <span class="panel-part pure-u-1-2 esoteric" class-last-one="{{!showEsoteric && firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
             <span class="field pure-u" data-support-panel-base-id="support_panel_base_{{values.0.uniqueId}}">
             </span>
             <span class="support-panel no-offset show-esoterics {{~inWorkflow}}" data-support-panel-base-ref="support_panel_base_{{subInputs.0.input.values.0.uniqueId || values.0.uniqueId}}">

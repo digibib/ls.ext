@@ -257,6 +257,9 @@ body {
       .grid-panel > .input-panel {
         &.esoteric-hidden {
           max-height: 0;
+          &.last-one {
+            margin-bottom: 38px;
+          }
         }
         &.esoteric+.esoteric .support-panel {
           display: none;

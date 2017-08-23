@@ -2073,6 +2073,7 @@
     }
 
     function positionSupportPanels (applicationData, tabId) {
+      tabId = undefined
       const dummyPanel = $('#right-dummy-panel')
       if (dummyPanel.length > 0) {
         const supportPanelLeftEdge = dummyPanel.position().left
@@ -2104,7 +2105,7 @@
               top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
             }
             $panel.css({
-              top,
+              top: Math.max(top, 225),
               left: supportPanelLeftEdge,
               width: supportPanelWidth,
               'z-index': ($panel.hasClass('show-esoterics') ? 100 : 200) - index
