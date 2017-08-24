@@ -3397,6 +3397,7 @@
                 $li.addClass('visible')
               }
             })
+            Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
             }
