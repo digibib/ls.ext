@@ -47,6 +47,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1226,6 +1227,7 @@ public class AppTest {
 
 
     @Test
+    @Ignore
     public void resources_are_reindexed_when_themself_or_connected_resources_are_changed() throws Exception {
         kohaAPIMock.addLoginExpectation(); // TODO understand why needed here
 
