@@ -2,7 +2,6 @@ import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
 import { showModal } from './ModalActions'
 import ModalComponents from '../constants/ModalComponents'
-import * as LoginActions from './LoginActions'
 
 export function startRegistration () {
   return showModal(ModalComponents.REGISTRATION, {})
@@ -41,7 +40,6 @@ export function postRegistrationSuccess (username, password, categoryCode) {
       categoryCode: categoryCode
     }))
     dispatch({ type: types.REGISTRATION_SUCCESS })
-    dispatch(LoginActions.login(username, password))
   }
 }
 
