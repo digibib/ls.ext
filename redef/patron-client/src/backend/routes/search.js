@@ -37,7 +37,7 @@ module.exports = (app) => {
 
     fetch('http://elasticsearch:9200/search/work/_search', {
       method: 'POST',
-      body: JSON.stringify(searchBuilder.buildQuery(queryString))
+      body: JSON.stringify(searchBuilder.buildQuery(queryString), null, 2)
     }).then(res => {
       if (res.ok) {
         return res.json()

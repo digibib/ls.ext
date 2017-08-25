@@ -159,7 +159,7 @@
       "uri": {
         "type": "keyword"
       },
-      "publicationYear": {
+      "publication'": {
         "type": "short"
       },
       "homeBranches": {
