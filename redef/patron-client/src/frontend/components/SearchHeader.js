@@ -57,7 +57,9 @@ class SearchHeader extends React.Component {
 
   handleSearch (event) {
     event.preventDefault()
-    if (!this.state.querySyntaxError && Object.keys(this.state.unknownFields).length === 0) {
+    if (!this.state.querySyntaxError) {
+
+      this.state.unknownFields = {}
 
       // Ensure that page-param is deleted on new search
       delete this.props.locationQuery[ 'page' ]
@@ -268,7 +270,7 @@ class SearchHeader extends React.Component {
                 </div >
                 <div className="search-button" >
                   <button onClick={this.handleSearch} type="button" className="search-submit"
-                          data-automation-id="search_button" disabled={this.state.querySyntaxError || Object.keys(this.state.unknownFields).length > 0} >
+                          data-automation-id="search_button" disabled={this.state.querySyntaxError} >
                     {!this.props.isSearching
                       ? <FormattedMessage {...messages.search} />
                       : <span data-automation-id="is_searching" className="loading-spinner" >
@@ -314,9 +316,7 @@ SearchHeader.propTypes = {
   searchActions: PropTypes.object.isRequired,
   isSearching: PropTypes.bool.isRequired,
   borrowerName: PropTypes.string,
-  path: PropTypes.string.isRequired,
-  querySyntaxError: PropTypes.boolean,
-  unknownFields: PropTypes.object
+  path: PropTypes.string.isRequired
 }
 
 export const messages = defineMessages({
