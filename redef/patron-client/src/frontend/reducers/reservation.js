@@ -11,7 +11,8 @@ import {
   REQUEST_CHANGE_RESERVATION_SUSPENSION,
   CHANGE_RESERVATION_SUSPENSION_SUCCESS,
   CHANGE_RESERVATION_SUSPENSION_FAILURE,
-  RECEIVE_PROFILE_INFO
+  RECEIVE_PROFILE_INFO,
+  RECEIVE_LOGIN_STATUS
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -52,6 +53,8 @@ export default function reservation (state = initialState, action) {
       return { ...state, isRequestingChangeReservationSuspension: false, changeReservationSuspensionError: false }
     case CHANGE_RESERVATION_SUSPENSION_FAILURE:
       return { ...state, isRequestingChangeReservationSuspension: false, changeReservationSuspensionError: action.payload.error }
+    case RECEIVE_LOGIN_STATUS:
+      return { ...state, pickupLocation: action.payload.homeBranch }
     case RECEIVE_PROFILE_INFO:
       return { ...state, pickupLocation: action.payload.info.homeBranch }
     default:
