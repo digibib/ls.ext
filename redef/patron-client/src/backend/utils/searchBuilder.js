@@ -381,7 +381,7 @@ function simpleQuery (query, fields, options) {
               match_phrase: {
                 [field.field.field]: {
                   query: field.query,
-                  slop: 3
+                  slop: 0
                 }
               }
             } : {
@@ -404,7 +404,8 @@ function initAdvancedQuery (query, scope, skipUnscoped) {
   return {
     query_string: {
       query: translateFieldTerms(query, Constants.queryFieldTranslations, scope, skipUnscoped).replace(/^$/, '*'),
-      default_operator: 'and'
+      default_operator: 'and',
+      lenient: true
     }
   }
 }
@@ -422,7 +423,8 @@ function translateFieldTerms (query, translations, scope, skipUnscoped) {
     }
 
     function quotedTerm () {
-      return node.term === '*' ? node.term : `${isNaN(node.term) ? '"' : ''}${node.term}${isNaN(node.term) ? '"' : ''}${node.boost ? `^${node.boost}` : ''}`
+      const needsQuotes = node.term.indexOf(' ') !== -1 || node.term.indexOf('-') !== -1
+      return node.term === '*' ? node.term : `${needsQuotes ? '"' : ''}${node.term}${needsQuotes ? '"' : ''}${node.boost ? `^${node.boost}` : ''}`
     }
 
     function field () {
@@ -533,9 +535,9 @@ function translateFieldTerms (query, translations, scope, skipUnscoped) {
 // parse query string to decide what kind of query we think this is
 function queryStringToQuery (queryString, workFilters, publicationFilters, excludeUnavailable, page, pageSize, options) {
   const escapedQueryString = escape(queryString)
-  const isbn10 = new RegExp('^[0-9Xx-]{10,13}$')
-  const isbn13 = new RegExp('^[0-9-]{13,17}$')
-  const advTriggers = new RegExp('[:+/\\-()*^]|AND|OR|NOT|TO')
+  const isbn10 = /^[0-9Xx-]{10,13}$/
+  const isbn13 = /^[0-9-]{13,17}$/
+  const advTriggers = /[:+\/\-()*^?]|AND|OR|NOT|TO/
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
     return initCommonQuery({},
@@ -643,8 +645,8 @@ module.exports.buildQuery = function (urlQueryString) {
   const workFilters = parseFilters(params.filter || [], 'work')
   const publicationFilters = createPublicationFilters(params, excludeUnavailable)
   const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
-  // console.log("**********************")
-  // console.log(JSON.stringify(query, null, 2))
+  console.log("**********************")
+  console.log(JSON.stringify(query, null, 2))
   return query
 }
 

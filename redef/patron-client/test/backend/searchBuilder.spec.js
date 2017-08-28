@@ -21,7 +21,8 @@ function advancedQuery (queryWantForWorkLevel, queryWantedForPubLevel, boolOpera
                       filter: options.withDefaultFilter ? [ {
                         query_string: {
                           default_operator: 'and',
-                          query: '*'
+                          query: '*',
+                          lenient: true
                         }
                       } ] : [],
                       must: [
@@ -35,7 +36,8 @@ function advancedQuery (queryWantForWorkLevel, queryWantedForPubLevel, boolOpera
                                   {
                                     query_string: {
                                       query: queryWantedForPubLevel,
-                                      default_operator: boolOperator
+                                      default_operator: boolOperator,
+                                      lenient: true
                                     }
                                   }
                                 ]
@@ -71,7 +73,8 @@ function advancedQuery (queryWantForWorkLevel, queryWantedForPubLevel, boolOpera
                           filter: options.withDefaultFilter ? [ {
                             query_string: {
                               default_operator: 'and',
-                              query: '*'
+                              query: '*',
+                              lenient: true
                             }
                           } ] : [],
                           must: [
@@ -95,7 +98,8 @@ function advancedQuery (queryWantForWorkLevel, queryWantedForPubLevel, boolOpera
                         query: {
                           query_string: {
                             query: queryWantForWorkLevel,
-                            default_operator: boolOperator
+                            default_operator: boolOperator,
+                            lenient: true
                           }
                         },
                         script_score: {
@@ -163,15 +167,15 @@ describe('searchBuilder', () => {
       const tests = [
         [ '', '' ],
         [ '*', '*' ],
-        [ 'hei', '"hei"' ],
-        [ 'abc æøå "123"', '("abc" AND ("æøå" AND 123))' ],
+        [ 'hei', 'hei' ],
+        [ 'abc æøå "123"', '(abc AND (æøå AND 123))' ],
         [ 'year:1999', 'year:1999' ],
-        [ 'forf:hamsun', 'author:"hamsun"' ],
+        [ 'forf:Hamsun', 'author:Hamsun' ],
         [ 'forf:"Knut Hamsun"', 'author:"Knut Hamsun"' ],
-        [ 'forf:"Knut Hamsun" sult', '(author:"Knut Hamsun" AND "sult")' ],
-        [ 'forf:hamsun sult', '(author:"hamsun" AND "sult")' ],
-        [ 'tittel:"slaktehus 55" tag:sf', '(title:"slaktehus 55" AND subject:"sf")' ],
-        [ 'title:"forf: hamsun"', 'title:"forf: hamsun"' ]
+        [ 'forf:"Knut Hamsun" sult', '(author:"Knut Hamsun" AND sult)' ],
+        [ 'forf:Hamsun sult', '(author:Hamsun AND sult)' ],
+        [ 'tittel:"slaktehus 55" tag:sf', '(title:"slaktehus 55" AND subject:sf)' ],
+        [ 'title:"forf: Hamsun"', 'title:"forf: Hamsun"' ]
       ]
       tests.forEach(test => {
         expect(translateFieldTerms(test[ 0 ], translations)).toEqual(test[ 1 ])
@@ -188,39 +192,39 @@ describe('searchBuilder', () => {
         'tag': 'subject'
       }
       const tests = [
-        [ 'Work', 'Publication.forf:"Hamsun"', '' ],
-        [ 'Publication', 'forf:"Hamsun"', '' ],
-        [ 'Publication', 'Publication.forf:Hamsun', 'author:"Hamsun"' ],
-        [ 'Work', 'forf:hamsun AND aldersgrense:12 AND title:"Sult"', '(author:"hamsun" AND title:"Sult")' ],
-        [ 'Work', 'forf:hamsun OR aldersgrense:12 AND title:"Sult"', '(author:"hamsun" OR title:"Sult")' ],
-        [ 'Publication', 'forf:hamsun AND aldersgrense:12 AND title:"Sult"', '(ageLimit:12 AND title:"Sult")' ],
-        [ 'Publication', 'forf:hamsun AND (aldersgrense:12 OR title:"Sult")', '(ageLimit:12 OR title:"Sult")' ],
-        [ 'Publication', 'forf:hamsun AND ag:12 AND title:"Sult"', '(ageLimit:12 AND title:"Sult")' ],
-        [ 'Publication', 'forf:hamsun AND aldersgrense:[12 TO 14] AND title:"Sult"', '(ageLimit:[12 TO 14] AND title:"Sult")' ],
-        [ 'Publication', 'forf:hamsun AND aldersgrense:{15 TO 16} AND title:"Sult"', '(ageLimit:{15 TO 16} AND title:"Sult")' ],
-        [ 'Publication', 'Publication.author:hamsun AND aldersgrense:{17 TO 18} AND title:"Sult"', '(author:"hamsun" AND (ageLimit:{17 TO 18} AND title:"Sult"))' ],
-        [ 'Publication', 'Publication.forf:hamsun AND aldersgrense:{19 TO 20} AND title:"Sult"', '(author:"hamsun" AND (ageLimit:{19 TO 20} AND title:"Sult"))' ],
-        [ 'Work', 'Publication.forf:hamsun AND aldersgrense:{21 TO 22} AND title:"Sult"', 'title:"Sult"' ],
-        [ undefined, 'forf:hamsun AND aldersgrense:{23 TO 24} AND title:"Sult"', '(author:"hamsun" AND (ageLimit:{23 TO 24} AND title:"Sult"))' ],
-        [ 'Work', 'Publication.forf:hamsun AND aldersgrense:{21 TO 22} AND title:-"Sult"', 'title:-"Sult"' ],
-        [ 'Work', 'Publication.forf:hamsun AND aldersgrense:{21 TO 22} AND title:-"Su?t"', 'title:-"Su?t"' ],
-        [ 'Work', 'title:"Sult"~5', 'title:"Sult"~5' ],
-        [ 'Work', 'title:"Sult"^5', 'title:"Sult"^5' ],
-        [ 'Work', 'title:("Sult" OR "Tørst")', 'title:("Sult" OR "Tørst")' ],
-        [ 'Work', 'title:"Sult" author:Hamsun', '(title:"Sult" AND author:"Hamsun")' ],
-        [ 'Work', 'title:"Sult" AND (author:Hamsun OR author:Ibsen)', '(title:"Sult" AND (author:"Hamsun" OR author:"Ibsen"))' ],
-        [ 'Work', 'title:"Sult" AND ((author:Hamsun OR (author:Ibsen AND publicationYear:1890)))', '(title:"Sult" AND (author:"Hamsun" OR (author:"Ibsen" AND publicationYear:1890)))' ],
-        [ 'Work', 'author:ibsen NOT aldersgrense:[12 TO 15]', 'author:"ibsen"' ],
-        [ 'Work', 'author:ibsen NOT title:Dukkehjem', '(author:"ibsen" NOT title:"Dukkehjem")' ],
+        [ 'Work', 'Publication.forf:Hamsun', '' ],
+        [ 'Publication', 'forf:Hamsun', '' ],
+        [ 'Publication', 'Publication.forf:Hamsun', 'author:Hamsun' ],
+        [ 'Work', 'forf:Hamsun AND aldersgrense:12 AND title:Sult', '(author:Hamsun AND title:Sult)' ],
+        [ 'Work', 'forf:Hamsun OR aldersgrense:12 AND title:Sult', '(author:Hamsun OR title:Sult)' ],
+        [ 'Publication', 'forf:Hamsun AND aldersgrense:12 AND title:Sult', '(ageLimit:12 AND title:Sult)' ],
+        [ 'Publication', 'forf:Hamsun AND (aldersgrense:12 OR title:Sult)', '(ageLimit:12 OR title:Sult)' ],
+        [ 'Publication', 'forf:Hamsun AND ag:12 AND title:Sult', '(ageLimit:12 AND title:Sult)' ],
+        [ 'Publication', 'forf:Hamsun AND aldersgrense:[12 TO 14] AND title:Sult', '(ageLimit:[12 TO 14] AND title:Sult)' ],
+        [ 'Publication', 'forf:Hamsun AND aldersgrense:{15 TO 16} AND title:Sult', '(ageLimit:{15 TO 16} AND title:Sult)' ],
+        [ 'Publication', 'Publication.author:Hamsun AND aldersgrense:{17 TO 18} AND title:Sult', '(author:Hamsun AND (ageLimit:{17 TO 18} AND title:Sult))' ],
+        [ 'Publication', 'Publication.forf:Hamsun AND aldersgrense:{19 TO 20} AND title:Sult', '(author:Hamsun AND (ageLimit:{19 TO 20} AND title:Sult))' ],
+        [ 'Work', 'Publication.forf:Hamsun AND aldersgrense:{21 TO 22} AND title:Sult', 'title:Sult' ],
+        [ undefined, 'forf:Hamsun AND aldersgrense:{23 TO 24} AND title:Sult', '(author:Hamsun AND (ageLimit:{23 TO 24} AND title:Sult))' ],
+        [ 'Work', 'Publication.forf:Hamsun AND aldersgrense:{21 TO 22} AND title:-Sult', 'title:-Sult' ],
+        [ 'Work', 'Publication.forf:Hamsun AND aldersgrense:{21 TO 22} AND title:-"Su?t"', 'title:-Su?t' ],
+        [ 'Work', 'title:"Sult"~5', 'title:Sult~5' ],
+        [ 'Work', 'title:Sult^5', 'title:Sult^5' ],
+        [ 'Work', 'title:(Sult OR "Tørst")', 'title:(Sult OR Tørst)' ],
+        [ 'Work', 'title:Sult author:Hamsun', '(title:Sult AND author:Hamsun)' ],
+        [ 'Work', 'title:Sult AND (author:Hamsun OR author:Ibsen)', '(title:Sult AND (author:Hamsun OR author:Ibsen))' ],
+        [ 'Work', 'title:Sult AND ((author:Hamsun OR (author:Ibsen AND publicationYear:1890)))', '(title:Sult AND (author:Hamsun OR (author:Ibsen AND publicationYear:1890)))' ],
+        [ 'Work', 'author:ibsen NOT aldersgrense:[12 TO 15]', 'author:ibsen' ],
+        [ 'Work', 'author:ibsen NOT title:Dukkehjem', '(author:ibsen NOT title:Dukkehjem)' ],
         [ 'Publication', 'author:ibsen NOT aldersgrense:[12 TO 15]', '(*:* NOT ageLimit:[12 TO 15])' ],
-        [ 'Publication', 'Work.ht:Brand AND format:Bok', 'format:"Bok"' ],
+        [ 'Publication', 'Work.ht:Brand AND format:Bok', 'format:Bok' ],
         [ 'Publication', 'title:Sult AND aldersgrense:12', 'ageLimit:12', true ], // when skipUnscoped is true, fields that are not associated with a scope or explicitly scoped in the expression are skipped
         [ 'Publication', 'Harry Potter og ildbegeret aldersgrense:12', 'ageLimit:12', true ]
       ]
-      tests.forEach(test => {
+      tests.forEach((test, index) => {
         const scoped = translateFieldTerms(test[ 1 ], translations, test[ 0 ], test[ 3 ])
 //        console.log(`[ '${test[ 0 ]}', '${test[ 1 ]}', '${scoped}' ],`)
-        expect(scoped).toEqual(test[ 2 ])
+        expect(scoped).toEqual(test[ 2 ], `Test ${index + 1} failed`)
       })
     })
 
@@ -388,7 +392,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 mainTitle: {
                                                   query: 'some more strings',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -401,7 +405,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 mainTitle: {
                                                   query: 'some more',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -414,7 +418,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 mainTitle: {
                                                   query: 'more strings',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -479,7 +483,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 subtitle: {
                                                   query: 'some more strings',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -492,7 +496,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 subtitle: {
                                                   query: 'some more',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -505,7 +509,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 subtitle: {
                                                   query: 'more strings',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -544,7 +548,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 partTitle: {
                                                   query: 'some more strings',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -557,7 +561,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 partTitle: {
                                                   query: 'some more',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -570,7 +574,7 @@ describe('searchBuilder', () => {
                                               match_phrase: {
                                                 partTitle: {
                                                   query: 'more strings',
-                                                  slop: 3
+                                                  slop: 0
                                                 }
                                               }
                                             },
@@ -820,7 +824,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       mainTitle: {
                                         query: 'some more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -833,7 +837,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       mainTitle: {
                                         query: 'some more',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -846,7 +850,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       mainTitle: {
                                         query: 'more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -872,7 +876,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       subtitle: {
                                         query: 'some more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -885,7 +889,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       subtitle: {
                                         query: 'some more',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -898,7 +902,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       subtitle: {
                                         query: 'more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -924,7 +928,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       partTitle: {
                                         query: 'some more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -937,7 +941,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       partTitle: {
                                         query: 'some more',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -950,7 +954,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       partTitle: {
                                         query: 'more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -976,7 +980,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       subject: {
                                         query: 'some more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -989,7 +993,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       subject: {
                                         query: 'some more',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -1002,7 +1006,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       subject: {
                                         query: 'more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -1015,7 +1019,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       'subject.raw': {
                                         query: 'some more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -1028,7 +1032,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       'subject.raw': {
                                         query: 'some more',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -1041,7 +1045,7 @@ describe('searchBuilder', () => {
                                     match_phrase: {
                                       'subject.raw': {
                                         query: 'more strings',
-                                        slop: 3
+                                        slop: 0
                                       }
                                     }
                                   },
@@ -1078,7 +1082,7 @@ describe('searchBuilder', () => {
 
     it('should build advanced query', () => {
       const urlQueryString = 'query=author%3AHamsun'
-      const queryWant = 'author:"Hamsun"'
+      const queryWant = 'author:Hamsun'
       const q = buildQuery(urlQueryString).query.bool.must
       q.dis_max.queries[ 0 ].has_child.query.bool.must[ 0 ].function_score.script_score.script.inline = 'deleted'
       q.dis_max.queries[ 1 ].bool.should[ 0 ].function_score.script_score.script.params.now = 'deleted'
