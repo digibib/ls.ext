@@ -4134,6 +4134,28 @@ header .logged-in-message {
   cursor: pointer;
 }
 
+.search-box button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.search-syntax-error {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  z-index: 100;
+  background: white;
+  .message {
+    background: $yellow;
+    padding: 7px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    max-width: 1150px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+  }
+}
+
 @include breakpoint($small) {
 
   .search-no-hits {
