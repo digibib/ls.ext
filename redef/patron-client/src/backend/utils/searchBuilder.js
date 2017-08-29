@@ -291,7 +291,13 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                   },
                   should: [
                     workBoost(workQuery)
-                  ]
+                  ],
+                  must_not: options.exclusionFilter ? {
+                    has_child: {
+                      type: 'publication',
+                      query: options.exclusionFilter
+                    }
+                  } : []
                 }
               }
             ]
@@ -312,6 +318,12 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                   }
                 }
               ],
+              must_not: options.exclusionFilter ? {
+                has_child: {
+                  type: 'publication',
+                  query: options.exclusionFilter
+                }
+              } : [],
               must: workFilters.concat([ {
                 has_child: {
                   type: 'publication',
@@ -400,17 +412,22 @@ function simpleQuery (query, fields, options) {
   }
 }
 
-function initAdvancedQuery (query, scope, skipUnscoped) {
-  return {
-    query_string: {
-      query: translateFieldTerms(query, Constants.queryFieldTranslations, scope, skipUnscoped).replace(/^$/, '*'),
-      default_operator: 'and',
-      lenient: true
+function initAdvancedQuery (query, scope, skipUnscoped, invert) {
+  const translatedQuery = translateFieldTerms(query, Constants.queryFieldTranslations, scope, skipUnscoped, invert)
+  if (translatedQuery === '' && invert) {
+    return undefined
+  } else {
+    return {
+      query_string: {
+        query: translatedQuery.replace(/^$/, '*'),
+        default_operator: 'and',
+        lenient: true
+      }
     }
   }
 }
 
-function translateFieldTerms (query, translations, scope, skipUnscoped) {
+function translateFieldTerms (query, translations, scope, skipUnscoped, returnExclusionOnly) {
   function serialize (node) {
     let result = ''
     if (typeof node !== 'object') {
@@ -431,7 +448,7 @@ function translateFieldTerms (query, translations, scope, skipUnscoped) {
       return node.field !== '<implicit>' ? `${node.field}:` : ''
     }
 
-    let leftParens = '('
+    let leftParens = node.operator === 'OR' ? '(' : ''
     if (node.field && node.left && node.right) {
       result += `${field()}(`
       leftParens = ''
@@ -445,9 +462,9 @@ function translateFieldTerms (query, translations, scope, skipUnscoped) {
     if (node.operator) {
       result += ` ${node.operator} `
     }
-    let rightParens = '('
+    let rightParens = node.operator === 'OR' ? ')' : ''
     if (node.right) {
-      result += `${serialize(node.right)})`
+      result += `${serialize(node.right)}${rightParens}`
       rightParens = ''
     } else if (!leafed && node.field) {
       result += `${field()}${node.prefix || ''}${node.term_min ? interval() : quotedTerm()}`
@@ -529,6 +546,14 @@ function translateFieldTerms (query, translations, scope, skipUnscoped) {
 
   let parsed = LuceneParser.parse(query)
   parsed = transform(parsed)
+  if (returnExclusionOnly) {
+    while (parsed && parsed.operator !== 'NOT') {
+      parsed = parsed.right
+    }
+    if (parsed && parsed.operator === 'NOT') {
+      parsed = parsed.right
+    }
+  }
   return serialize(parsed)
 }
 
@@ -558,7 +583,8 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
       excludeUnavailable,
       page, pageSize, Object.assign(options, {
         scopedWorkFilter: [ initAdvancedQuery(escapedQueryString, 'Work', true) ],
-        scopedPublicationFilter: [ initAdvancedQuery(escapedQueryString, 'Publication', true) ]
+        scopedPublicationFilter: [ initAdvancedQuery(escapedQueryString, 'Publication', true) ],
+        exclusionFilter: initAdvancedQuery(escapedQueryString, 'Publication', false, true)
       }))
   } else {
     const _allFilter = options.noAllFilter ? [] : [ {
@@ -645,7 +671,7 @@ module.exports.buildQuery = function (urlQueryString) {
   const workFilters = parseFilters(params.filter || [], 'work')
   const publicationFilters = createPublicationFilters(params, excludeUnavailable)
   const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
-  console.log("**********************")
+  console.log('**********************')
   console.log(JSON.stringify(query, null, 2))
   return query
 }

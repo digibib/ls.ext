@@ -15,18 +15,18 @@ class SearchHeader extends React.Component {
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
     this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
     this.checkQuery = this.checkQuery.bind(this)
-    this.state = { querySyntaxError: false, unknownFields:{} }
+    this.state = { querySyntaxError: false, unknownFields: {} }
   }
 
   checkQuery (event) {
-    let unknownFields = []
+    const unknownFields = []
 
     function traverse (node) {
       if (node.left) {
         traverse(node.left)
       }
       if (node.field && node.field !== '<implicit>') {
-        if (!{...queryFieldTranslations, '*':'*'}[ node.field ]) {
+        if (!{ ...queryFieldTranslations, '*': '*' }[ node.field ]) {
           unknownFields[ node.field ] = {}
         }
       }
@@ -37,28 +37,26 @@ class SearchHeader extends React.Component {
 
     try {
       traverse(LuceneParser.parse(this.searchFieldInput.value))
-
       this.setState(prevState => {
         return {
           ...prevState,
           querySyntaxError: false,
           unknownFields
         }
-      });
+      })
     } catch (err) {
       console.log(err)
       this.setState(prevState => ({
         ...prevState,
         querySyntaxError: true,
-        unknownFields:{}
-      }));
+        unknownFields: {}
+      }))
     }
   }
 
   handleSearch (event) {
     event.preventDefault()
     if (!this.state.querySyntaxError) {
-
       this.state.unknownFields = {}
 
       // Ensure that page-param is deleted on new search
@@ -258,7 +256,7 @@ class SearchHeader extends React.Component {
             <form onSubmit={this.handleSearch} >
               <label htmlFor="search" >{this.props.intl.formatMessage(messages.searchLabel)}:</label >
               <div className="search-field-wrapper" >
-                <div className='search-field' >
+                <div className="search-field" >
                   <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                          id="search"
                          type="text"
@@ -284,14 +282,16 @@ class SearchHeader extends React.Component {
           </div >
           {Object.keys(this.state.unknownFields).length > 0
             ? <div className="search-syntax-error" >
-              <div className="message"><FormattedMessage {...Object.assign(messages.unknownFields, {values:{unrecognizedFields:Object.keys(this.state.unknownFields).map(field => `"${field}"`).join(', ')}})}/></div>
-            </div>
+              <div className="message" >
+                <FormattedMessage {...Object.assign(messages.unknownFields, { values: { unrecognizedFields: Object.keys(this.state.unknownFields).map(field => `"${field}"`).join(', ') } })} />
+              </div >
+            </div >
             : ''
           }
           {this.state.querySyntaxError
             ? <div className="search-syntax-error" >
-                <div className="message"><FormattedMessage {...messages.luceneSyntaxError} /></div >
-            </div>
+              <div className="message" ><FormattedMessage {...messages.luceneSyntaxError} /></div >
+            </div >
             : ''
           }
         </NonIETransitionGroup >
@@ -395,7 +395,7 @@ export const messages = defineMessages({
   unknownFields: {
     id: 'Search.unknownField',
     description: 'Shown when an unknown field i specified',
-    defaultMessage:`It looks like you want to perform an advanced search with field codes, but you have specified one or more fields that are we don't recognize:{unrecognizedFields}
+    defaultMessage: `It looks like you want to perform an advanced search with field codes, but you have specified one or more fields that are we don't recognize:{unrecognizedFields}
     We suggest you replace these with recognized field codes, otherwise the search may turn up empty`
   }
 })
