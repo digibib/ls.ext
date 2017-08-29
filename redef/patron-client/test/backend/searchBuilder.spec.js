@@ -204,7 +204,8 @@ describe('searchBuilder', () => {
         'aldersgrense': { scope: 'Publication', translation: 'ageLimit' },
         'ag': '=aldersgrense',
         'tittel': 'title',
-        'tag': 'subject'
+        'tag': 'subject',
+        'serie': { scope: 'Publication', translation: 'series' }
       }
       const tests = [
         [ 'Work', 'Publication.forf:Hamsun', '' ],
@@ -231,6 +232,7 @@ describe('searchBuilder', () => {
         [ 'Work', 'title:Sult AND ((author:Hamsun OR (author:Ibsen AND publicationYear:1890)))', 'title:Sult AND (author:Hamsun OR author:Ibsen AND publicationYear:1890)' ],
         [ 'Work', 'author:ibsen NOT aldersgrense:[12 TO 15]', 'author:ibsen' ],
         [ 'Work', 'author:ibsen NOT title:Dukkehjem', 'author:ibsen NOT title:Dukkehjem' ],
+        [ 'Work', 'serie:"Harry Potter" NOT mysteriekammeret', '*:* NOT mysteriekammeret' ],
         [ 'Publication', 'author:ibsen NOT aldersgrense:[12 TO 15]', '*:* NOT ageLimit:[12 TO 15]' ],
         [ 'Publication', 'Work.ht:Brand AND format:Bok', 'format:Bok' ],
         [ 'Publication', 'title:Sult AND aldersgrense:12', 'ageLimit:12', true ], // when skipUnscoped is true, fields that are not associated with a scope or explicitly scoped in the expression are skipped
