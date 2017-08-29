@@ -345,6 +345,12 @@
                   fra utgivelsene som skal overføres til tilsvarende felt på de nye verkene.`,
     splitWorkDialogLegend: 'Velg hvilke verdier som skal kopieres fra de eksisterende utgivelsene til de nye verkene som skal opprettes:',
 
+    // copy publication
+    copyPublicationButtonLabel: 'Kopier utgivelse og verk',
+    copyPublicationWarningDialogLegend: 'Er du sikker på at du vil kopiere denne utgivelsen?',
+    copyPublicationWarningDialogExplanation: 'Dette vil opprette en ny utgivelse og et nytt verk',
+    copyPublicationDialogTitle: 'Kopiere utgivelse og verk',
+
     // links
     showWorkPageLink: 'Vis siden for verket',
     showTURTLEForWorkLink: 'Vis lenkede data i TURTLE-format for verket',

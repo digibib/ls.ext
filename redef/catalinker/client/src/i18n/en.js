@@ -343,6 +343,12 @@
                   to select which values from the publications should be copied to corresponding fields on the new works`,
     splitWorkDialogLegend: 'Select values to be copied from existing publications to the new works that will be created:',
 
+    // copy publication
+    copyPublicationButtonLabel: 'Copy publication and work',
+    copyPublicationWarningDialogLegend: 'Are yoy sure you want to copy this publication?',
+    copyPublicationWarningDialogExplanation: 'This will create a new publication and a new work',
+    copyPublicationDialogTitle: 'Copy publication and work',
+
     // links
     showWorkPageLink: 'Work page',
     showTURTLEForWorkLink: 'Work as TURTLE (linked data)',

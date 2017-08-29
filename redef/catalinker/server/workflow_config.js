@@ -967,7 +967,13 @@ module.exports = (app) => {
               inputId: 'publicationOfInput',
               buttonLabel: 'changeWorkOfPublication',
               confirmLabel: 'confirmChangeWorkOfPublication'
-            }
+            },
+            tools: [
+              {
+                template: 'copy-publication-and-work',
+                copyPublicationDialogTitle: 'copyPublicationDialogTitle'
+              }
+            ]
           },
           {
             id: 'describe-work',

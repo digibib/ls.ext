@@ -507,6 +507,34 @@
       })
     }
 
+    const copyPublication = function (copyPublicationSpec, proceed) {
+      $('#copy-publication-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        title: translate(copyPublicationSpec.copyPublicationDialogTitle),
+        buttons: [
+          {
+            text: translate('proceed'),
+            click: function () {
+              $(this).dialog('close')
+              proceed()
+            }
+          },
+          {
+            text: translate('cancel'),
+            class: 'default',
+            click: function () {
+              $(this).dialog('close')
+            }
+          }
+        ],
+        open: function () {
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        }
+      })
+    }
+
     function i18nLabelValue (label, lang) {
       lang = lang || 'no'
       if (ractive) {
@@ -2531,6 +2559,7 @@
           'suggestor-for-input-literal',
           'select-predefined-value',
           'inverse-one-to-many-relationship',
+          'copy-publication-and-work',
           'work',
           'relations',
           'publication',
@@ -4270,7 +4299,7 @@
                   .then(!maintenance ? setTargetUri : nop)
                   .then(clearInputsAndSearchResult)
                   .then(wait.cancel)
-                  .then(function(){
+                  .then(function () {
                     setTimeout(positionSupportPanels)
                   })
               },
@@ -4714,6 +4743,56 @@
                   })
                 }
                 positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
+              },
+              copyPublicationAndWork: function (event, oldWorkUri, oldPublicationUri) {
+                const headers = {
+                  headers: {
+                    Accept: 'application/ld+json',
+                    'Content-Type': 'application/ld+json'
+                  }
+                }
+                let clonedPublicationUri
+                copyPublication(event.context, function () {
+                  return axios.post(proxyToServices(`${oldPublicationUri}/clone`), {}, headers)
+                    .then(function (response) {
+                      clonedPublicationUri = response.headers.location
+                      return axios.post(proxyToServices(`${oldWorkUri}/clone`), {}, headers)
+                    }).then(function (response) {
+                      const clonedWorkUri = response.headers.location
+                      axios.patch(proxyToServices(clonedPublicationUri), [
+                        {
+                          op: 'del',
+                          s: clonedPublicationUri,
+                          p: 'http://data.deichman.no/ontology#publicationOf',
+                          o: {
+                            value: oldWorkUri,
+                            type: 'http://www.w3.org/2001/XMLSchema#anyURI'
+                          }
+                        },
+                        {
+                          op: 'add',
+                          s: clonedPublicationUri,
+                          p: 'http://data.deichman.no/ontology#publicationOf',
+                          o: {
+                            value: clonedWorkUri,
+                            type: 'http://www.w3.org/2001/XMLSchema#anyURI'
+                          }
+                        }
+                      ], {
+                        headers: {
+                          Accept: 'application/ld+json',
+                          'Content-Type': 'application/ldpatch+json'
+                        }
+                      })
+                    })
+                    .then(function () {
+                      updateBrowserLocationWithUri('Publication', clonedPublicationUri)
+                    })
+                    .then(Main.init)
+                    .catch(function () {
+                      alert("Noe gitt galt under kopiering")
+                    })
+                })
               }
             }
           )
