@@ -4790,7 +4790,7 @@
                     })
                     .then(Main.init)
                     .catch(function () {
-                      alert("Noe gitt galt under kopiering")
+                      alert("Noe gikk galt under kopiering")
                     })
                 })
               }
