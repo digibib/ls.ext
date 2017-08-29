@@ -100,7 +100,7 @@ module.exports = {
     'reg': 'director',
     'regissør': 'director',
     'se': '=serie',
-    'serie': { scope: 'Publication', translation: 'series' },
+    'serie': { scope: 'Work', translation: 'series' },
     'series': '=serie',
     'sjanger': '=ge',
     'sku': 'actor',
