@@ -352,6 +352,7 @@
     progressCopyingWork: 'Copying work...',
     progressConnectingPubToWork: 'Connecting publication and work...',
     progressCopyingDone: 'Click OK to open the new publication now or Cancel to continue with the original.<p>You can also <a target="_blank" href="/cataloguing?template=workflow&openTab=1&copy=true&Publication={{clonedPublicationUri}}">open the copy in a new tab.</a></p>',
+    copyPublicationFailed: 'Something went wrong when copying. Please try again later.',
 
     // links
     showWorkPageLink: 'Work page',

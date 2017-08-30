@@ -7,7 +7,7 @@
             <p>{{#if copyPublicationProgress}}{{>copyPublicationProgress {clonedPublicationUri}}}{{/if}}</p>
     {{/if}}
     {{#error}}
-            <h3>{{>copyAuthorityFailed}}</h3>
+            <h3>{{>copyPublicationFailed}}</h3>
             {{#with message}}
                 <p>{{.}}</p>
             {{/with}}

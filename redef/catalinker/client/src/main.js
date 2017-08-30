@@ -518,6 +518,7 @@
             text: translate('proceed'),
             id: `${idPrefix}-do-copy`,
             click: function () {
+              $(`#${idPrefix}-do-copy`).button('disable')
               proceed().then(function () {
                 $(`#${idPrefix}-ok-copy`).show()
                 $(`#${idPrefix}-do-copy`).hide()
@@ -551,6 +552,7 @@
         close: function () {
           ractive.set('copyPublicationProgress', null)
           ractive.set('clonedPublicationUri', null)
+          ractive.set('error', null)
         }
       })
     }
@@ -4813,10 +4815,17 @@
                       ractive.set('clonedPublicationUri', clonedPublicationUri)
                       return ractive
                         .set('copyPublicationProgress', 'progressCopyingDone')
+                    }).catch(function (message) {
+                      return ractive
+                        .set('error', {
+                          message
+                        })
                     })
                 }, function () {
-                  updateBrowserLocationWithUri('Publication', clonedPublicationUri)
-                  Main.init()
+                  if (ractive.get('error')) {
+                    updateBrowserLocationWithUri('Publication', clonedPublicationUri)
+                    Main.init()
+                  }
                 })
               }
             }
