@@ -4822,7 +4822,7 @@
                         })
                     })
                 }, function () {
-                  if (ractive.get('error')) {
+                  if (!ractive.get('error')) {
                     updateBrowserLocationWithUri('Publication', clonedPublicationUri)
                     Main.init()
                   }
