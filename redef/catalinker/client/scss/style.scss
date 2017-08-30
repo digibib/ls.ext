@@ -98,6 +98,20 @@ $mintgreen: #DCFC9F;
 }
 
 body {
+  &.copy:after {
+    content: "KOPI";
+    position: absolute;
+    font-size: 100px;
+    top: 37px;
+    transform: rotate(-45deg);
+    opacity: 0.3;
+    left: 0;
+  }
+  .ui-dialog {
+    a {
+      color: #3b8bba;
+    }
+  }
   margin: 0px auto;
   [class^='select2'] {
     border-radius: 2px !important;

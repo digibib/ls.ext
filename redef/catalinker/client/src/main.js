@@ -507,30 +507,50 @@
       })
     }
 
-    const copyPublication = function (copyPublicationSpec, proceed) {
-      $('#copy-publication-dialog').dialog({
+    const copyPublication = function (copyPublicationSpec, proceed, success) {
+      const idPrefix = _.uniqueId()
+      $('#copy-resource-dialog').dialog({
         resizable: false,
         modal: true,
         width: 450,
-        title: translate(copyPublicationSpec.copyPublicationDialogTitle),
         buttons: [
           {
             text: translate('proceed'),
+            id: `${idPrefix}-do-copy`,
             click: function () {
-              $(this).dialog('close')
-              proceed()
+              proceed().then(function () {
+                $(`#${idPrefix}-ok-copy`).show()
+                $(`#${idPrefix}-do-copy`).hide()
+              })
             }
           },
           {
             text: translate('cancel'),
+            id: `${idPrefix}-cancel-copy`,
             class: 'default',
             click: function () {
               $(this).dialog('close')
             }
+          },
+          {
+            text: 'Ok',
+            id: `${idPrefix}-ok-copy`,
+            click: function () {
+              $(this).dialog('close')
+              $('body').addClass('copy')
+              if (success) {
+                success()
+              }
+            }
           }
         ],
         open: function () {
+          $(`#${idPrefix}-ok-copy`).hide()
           $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        },
+        close: function () {
+          ractive.set('copyPublicationProgress', null)
+          ractive.set('clonedPublicationUri', null)
         }
       })
     }
@@ -2566,6 +2586,7 @@
           'delete-publication-dialog',
           'delete-work-dialog',
           'delete-resource-dialog',
+          'copy-resource-dialog',
           'confirm-enable-special-input-dialog',
           'alert-existing-resource-dialog',
           'additional-suggestions-dialog',
@@ -4753,13 +4774,17 @@
                 }
                 let clonedPublicationUri
                 copyPublication(event.context, function () {
+                  ractive.set('copyPublicationProgress', 'progressCopyingPublication')
                   return axios.post(proxyToServices(`${oldPublicationUri}/clone`), {}, headers)
                     .then(function (response) {
+                      ractive.set('copyPublicationProgress', 'progressCopyingWork')
                       clonedPublicationUri = response.headers.location
                       return axios.post(proxyToServices(`${oldWorkUri}/clone`), {}, headers)
-                    }).then(function (response) {
+                    })
+                    .then(function (response) {
+                      ractive.set('copyPublicationProgress', 'progressConnectingPubToWork')
                       const clonedWorkUri = response.headers.location
-                      axios.patch(proxyToServices(clonedPublicationUri), [
+                      return axios.patch(proxyToServices(clonedPublicationUri), [
                         {
                           op: 'del',
                           s: clonedPublicationUri,
@@ -4784,14 +4809,14 @@
                           'Content-Type': 'application/ldpatch+json'
                         }
                       })
+                    }).then(function () {
+                      ractive.set('clonedPublicationUri', clonedPublicationUri)
+                      return ractive
+                        .set('copyPublicationProgress', 'progressCopyingDone')
                     })
-                    .then(function () {
-                      updateBrowserLocationWithUri('Publication', clonedPublicationUri)
-                    })
-                    .then(Main.init)
-                    .catch(function () {
-                      alert("Noe gikk galt under kopiering")
-                    })
+                }, function () {
+                  updateBrowserLocationWithUri('Publication', clonedPublicationUri)
+                  Main.init()
                 })
               }
             }
@@ -5443,6 +5468,9 @@
             $('.focusguard-start').on('focus', function () {
               $('a:last').focus()
             })
+            if (query.copy) {
+              $('body').addClass('copy')
+            }
             return applicationData
           })
           .then(hideGrowler)

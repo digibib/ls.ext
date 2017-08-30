@@ -348,8 +348,12 @@
     // copy publication
     copyPublicationButtonLabel: 'Kopier utgivelse og verk',
     copyPublicationWarningDialogLegend: 'Er du sikker på at du vil kopiere denne utgivelsen?',
-    copyPublicationWarningDialogExplanation: 'Dette vil opprette en ny utgivelse og et nytt verk',
+    copyPublicationWarningDialogExplanation: 'Dette vil opprette en ny utgivelse og et nytt verk.',
     copyPublicationDialogTitle: 'Kopiere utgivelse og verk',
+    progressCopyingPublication: 'Kopierer utgivelse...',
+    progressCopyingWork: 'Kopierer verk...',
+    progressConnectingPubToWork: 'Kobler utgivelse til nytt verk...',
+    progressCopyingDone: 'Klikk OK for å åpne den nye kopien av utgivelsen nå eller Avbryt for å fortsette med originalen.<p>Du kan også <a target="_blank" href="/cataloguing?template=workflow&openTab=1&copy=true&Publication={{clonedPublicationUri}}">åpne kopien i en ny fane.</a></p>',
 
     // links
     showWorkPageLink: 'Vis siden for verket',
