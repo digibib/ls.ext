@@ -970,8 +970,7 @@ module.exports = (app) => {
             },
             tools: [
               {
-                template: 'copy-publication-and-work',
-                copyPublicationDialogTitle: 'copyPublicationDialogTitle'
+                template: 'copy-publication-and-work'
               }
             ]
           },
