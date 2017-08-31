@@ -96,7 +96,6 @@ public class AppTest {
     private static final String FIRST_BIBLIO_ID = "111111";
     private static final String SECOND_BIBLIO_ID = "222222";
     private static final String ANY_URI = "http://www.w3.org/2001/XMLSchema#anyURI";
-    private static final String ANOTHER_BIBLIO_ID = "333333";
     private static final String EMPTY_STRING = "";
     private static final String ADD = "ADD";
     private static final String DEL = "DEL";

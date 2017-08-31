@@ -64,8 +64,7 @@ public final class EmbeddedElasticsearchServer {
                 .start();
 
         try (CloseableHttpClient httpclient = createDefault()) {
-           httpclient.execute(new HttpPut("http://localhost:" + embeddedElastic.getHttpPort() + "/a/_alias/search"));
-
+            httpclient.execute(new HttpPut("http://localhost:" + embeddedElastic.getHttpPort() + "/a/_alias/search"));
         }
     }
 
