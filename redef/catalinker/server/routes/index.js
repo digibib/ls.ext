@@ -44,7 +44,7 @@ module.exports = (app) => {
   })
 
   app.get('/js/bundle.js',
-    babelify([{ './client/src/bootstrap': { run: true } }])
+    babelify([{ './client/src/bootstrap': { run: true } }, {'./public/': {transform: 'html2js-browserify'}}])
   )
 
   app.get('/js/bundle_for_old.js',

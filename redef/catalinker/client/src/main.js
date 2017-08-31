@@ -2503,61 +2503,6 @@
         options = options || {}
         let query = URI.parseQuery(URI.parse(document.location.href).query)
         let template = '/templates/' + (options.template || query.template || 'menu') + '.html'
-        var partials = [
-          'input',
-          'input-string',
-          'input-boolean',
-          'input-string-large',
-          'input-lang-string',
-          'input-gYear',
-          'input-duration',
-          'input-date-time',
-          'input-integer',
-          'input-nonNegativeInteger',
-          'searchable-with-result-in-side-panel',
-          'support-for-searchable-with-result-in-side-panel',
-          'support-for-select-predefined-value',
-          'support-for-input-string',
-          'support-for-edit-authority',
-          'searchable-authority-dropdown',
-          'searchable-for-value-suggestions',
-          'suggested-values',
-          'suggestor-for-searchable-with-result-in-side-panel',
-          'suggestor-for-select-predefined-value',
-          'suggestor-for-input-string',
-          'suggestor-for-input-gYear',
-          'suggestor-for-input-integer',
-          'suggestor-for-input-nonNegativeInteger',
-          'suggestor-for-input-literal',
-          'select-predefined-value',
-          'inverse-one-to-many-relationship',
-          'work',
-          'relations',
-          'publication',
-          'delete-publication-dialog',
-          'delete-work-dialog',
-          'delete-resource-dialog',
-          'confirm-enable-special-input-dialog',
-          'alert-existing-resource-dialog',
-          'additional-suggestions-dialog',
-          'merge-resources-dialog',
-          'edit-resource-warning-dialog',
-          'accordion-header-for-collection',
-          'readonly-input',
-          'readonly-input-string',
-          'readonly-input-boolean',
-          'readonly-input-string-large',
-          'readonly-input-gYear',
-          'readonly-input-duration',
-          'readonly-input-date-time',
-          'readonly-input-integer',
-          'readonly-input-nonNegativeInteger',
-          'readonly-select-predefined-value',
-          'readonly-hidden-url-query-value',
-          'readonly-searchable-with-result-in-side-panel',
-          'links',
-          'conditional-input-type'
-        ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
         //    // TODO remove this when everything works perfectly (as if...)
@@ -2581,18 +2526,61 @@
         }
 
         const loadPartials = function (applicationData) {
-          return Promise.all(_.map(partials, function (partial) {
-            return axios.get(`/partials/${partial}.html`).then(
-              function (response) {
-                applicationData.partials = applicationData.partials || {}
-                applicationData.partials[ partial ] = response.data
-                return applicationData
-              }).catch(function (error) {
-              throw new Error(error)
-            })
-          })).then(function (applicationDataArray) {
-            return applicationDataArray[ 0 ]
-          })
+          applicationData.partials = applicationData.partials || {}
+          applicationData.partials[ 'input' ] = require('../../public/partials/input.html')
+          applicationData.partials[ 'input-string' ] = require('../../public/partials/input-string.html')
+          applicationData.partials[ 'input-boolean' ] = require('../../public/partials/input-boolean.html')
+          applicationData.partials[ 'input-string-large' ] = require('../../public/partials/input-string-large.html')
+          applicationData.partials[ 'input-lang-string' ] = require('../../public/partials/input-lang-string.html')
+          applicationData.partials[ 'input-gYear' ] = require('../../public/partials/input-gYear.html')
+          applicationData.partials[ 'input-duration' ] = require('../../public/partials/input-duration.html')
+          applicationData.partials[ 'input-date-time' ] = require('../../public/partials/input-date-time.html')
+          applicationData.partials[ 'input-integer' ] = require('../../public/partials/input-integer.html')
+          applicationData.partials[ 'input-nonNegativeInteger' ] = require('../../public/partials/input-nonNegativeInteger.html')
+          applicationData.partials[ 'searchable-with-result-in-side-panel' ] = require('../../public/partials/searchable-with-result-in-side-panel.html')
+          applicationData.partials[ 'support-for-searchable-with-result-in-side-panel' ] = require('../../public/partials/support-for-searchable-with-result-in-side-panel.html')
+          applicationData.partials[ 'support-for-select-predefined-value' ] = require('../../public/partials/support-for-select-predefined-value.html')
+          applicationData.partials[ 'support-for-input-string' ] = require('../../public/partials/support-for-input-string.html')
+          applicationData.partials[ 'support-for-edit-authority' ] = require('../../public/partials/support-for-edit-authority.html')
+          applicationData.partials[ 'searchable-authority-dropdown' ] = require('../../public/partials/searchable-authority-dropdown.html')
+          applicationData.partials[ 'searchable-for-value-suggestions' ] = require('../../public/partials/searchable-for-value-suggestions.html')
+          applicationData.partials[ 'suggested-values' ] = require('../../public/partials/suggested-values.html')
+          applicationData.partials[ 'suggestor-for-searchable-with-result-in-side-panel' ] = require('../../public/partials/suggestor-for-searchable-with-result-in-side-panel.html')
+          applicationData.partials[ 'suggestor-for-select-predefined-value' ] = require('../../public/partials/suggestor-for-select-predefined-value.html')
+          applicationData.partials[ 'suggestor-for-input-string' ] = require('../../public/partials/suggestor-for-input-string.html')
+          applicationData.partials[ 'suggestor-for-input-gYear' ] = require('../../public/partials/suggestor-for-input-gYear.html')
+          applicationData.partials[ 'suggestor-for-input-integer' ] = require('../../public/partials/suggestor-for-input-integer.html')
+          applicationData.partials[ 'suggestor-for-input-nonNegativeInteger' ] = require('../../public/partials/suggestor-for-input-nonNegativeInteger.html')
+          applicationData.partials[ 'suggestor-for-input-literal' ] = require('../../public/partials/suggestor-for-input-literal.html')
+          applicationData.partials[ 'select-predefined-value' ] = require('../../public/partials/select-predefined-value.html')
+          applicationData.partials[ 'inverse-one-to-many-relationship' ] = require('../../public/partials/inverse-one-to-many-relationship.html')
+          applicationData.partials[ 'work' ] = require('../../public/partials/work.html')
+          applicationData.partials[ 'relations' ] = require('../../public/partials/relations.html')
+          applicationData.partials[ 'publication' ] = require('../../public/partials/publication.html')
+          applicationData.partials[ 'delete-publication-dialog' ] = require('../../public/partials/delete-publication-dialog.html')
+          applicationData.partials[ 'delete-work-dialog' ] = require('../../public/partials/delete-work-dialog.html')
+          applicationData.partials[ 'delete-resource-dialog' ] = require('../../public/partials/delete-resource-dialog.html')
+          applicationData.partials[ 'confirm-enable-special-input-dialog' ] = require('../../public/partials/confirm-enable-special-input-dialog.html')
+          applicationData.partials[ 'alert-existing-resource-dialog' ] = require('../../public/partials/alert-existing-resource-dialog.html')
+          applicationData.partials[ 'additional-suggestions-dialog' ] = require('../../public/partials/additional-suggestions-dialog.html')
+          applicationData.partials[ 'merge-resources-dialog' ] = require('../../public/partials/merge-resources-dialog.html')
+          applicationData.partials[ 'edit-resource-warning-dialog' ] = require('../../public/partials/edit-resource-warning-dialog.html')
+          applicationData.partials[ 'accordion-header-for-collection' ] = require('../../public/partials/accordion-header-for-collection.html')
+          applicationData.partials[ 'readonly-input' ] = require('../../public/partials/readonly-input.html')
+          applicationData.partials[ 'readonly-input-string' ] = require('../../public/partials/readonly-input-string.html')
+          applicationData.partials[ 'readonly-input-boolean' ] = require('../../public/partials/readonly-input-boolean.html')
+          applicationData.partials[ 'readonly-input-string-large' ] = require('../../public/partials/readonly-input-string-large.html')
+          applicationData.partials[ 'readonly-input-gYear' ] = require('../../public/partials/readonly-input-gYear.html')
+          applicationData.partials[ 'readonly-input-duration' ] = require('../../public/partials/readonly-input-duration.html')
+          applicationData.partials[ 'readonly-input-date-time' ] = require('../../public/partials/readonly-input-date-time.html')
+          applicationData.partials[ 'readonly-input-integer' ] = require('../../public/partials/readonly-input-integer.html')
+          applicationData.partials[ 'readonly-input-nonNegativeInteger' ] = require('../../public/partials/readonly-input-nonNegativeInteger.html')
+          applicationData.partials[ 'readonly-select-predefined-value' ] = require('../../public/partials/readonly-select-predefined-value.html')
+          applicationData.partials[ 'readonly-hidden-url-query-value' ] = require('../../public/partials/readonly-hidden-url-query-value.html')
+          applicationData.partials[ 'readonly-searchable-with-result-in-side-panel' ] = require('../../public/partials/readonly-searchable-with-result-in-side-panel.html')
+          applicationData.partials[ 'links' ] = require('../../public/partials/links.html')
+          applicationData.partials[ 'conditional-input-type' ] = require('../../public/partials/conditional-input-type.html')
+          return applicationData
         }
 
         const extractConfig = function (response) {
