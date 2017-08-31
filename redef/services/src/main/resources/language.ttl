@@ -618,6 +618,10 @@ language:arc	a	lvont:Language ;
 	rdfs:label	"Arameisk"@no ;
 	rdfs:label	"Aramaic"@en .
 
+language:yue	a	lvont:Language ;
+	rdfs:label	"Kantonesisk"@no ;
+	rdfs:label	"Cantonese"@en .
+
 language:ing	a	lvont:Language ;
 	rdfs:label	"Ingen"@no ;
 	rdfs:label	"None"@en .
