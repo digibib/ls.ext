@@ -522,6 +522,12 @@
               proceed().then(function () {
                 $(`#${idPrefix}-ok-copy`).show()
                 $(`#${idPrefix}-do-copy`).hide()
+                $('#copy-resource-dialog').find('a').click(function () {
+                  setTimeout(function () {
+                    $('#copy-resource-dialog').dialog('close')
+                  })
+                  return true
+                })
               })
             }
           },
