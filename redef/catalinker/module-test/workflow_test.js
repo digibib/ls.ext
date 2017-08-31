@@ -7,6 +7,7 @@ var chai = require("chai"),
   axios = require("axios"),
   fs = require("fs");
 
+/*
 describe("Catalinker", function () {
   describe("/Workflow", function () {
 
@@ -128,3 +129,4 @@ describe("Catalinker", function () {
     });
   });
 });
+*/
