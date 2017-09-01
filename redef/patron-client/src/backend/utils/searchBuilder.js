@@ -1,6 +1,7 @@
 const QueryParser = require('querystring')
 const Constants = require('../../frontend/constants/Constants')
 const Defaults = require('./queryConstants')
+const LuceneParser = require('lucene-query-parser')
 
 function escape (query) {
   return query.replace(/\//g, '\\/')
@@ -9,17 +10,17 @@ function escape (query) {
 function workAggFilter (field, workFilters, publicationFilters) {
   return {
     bool: {
-      must: workFilters.filter(f => { return !f.terms[field] })
-      .concat(
-        publicationFilters.filter(f => { return f.range || !f.terms[field] }).map(f => {
-          return {
-            has_child: {
-              type: 'publication',
-              query: f
+      must: workFilters.filter(f => { return !f.terms[ field ] })
+        .concat(
+          publicationFilters.filter(f => { return f.range || !f.terms[ field ] }).map(f => {
+            return {
+              has_child: {
+                type: 'publication',
+                query: f
+              }
             }
-          }
-        })
-      )
+          })
+        )
     }
   }
 }
@@ -27,17 +28,17 @@ function workAggFilter (field, workFilters, publicationFilters) {
 function pubAggFilter (field, workFilters, publicationFilters) {
   return {
     bool: {
-      must: publicationFilters.filter(f => { return f.range || !f.terms[field] })
-      .concat(
-        workFilters.filter(f => { return !f.terms[field] }).map(f => {
-          return {
-            has_parent: {
-              type: 'work',
-              query: f
+      must: publicationFilters.filter(f => { return f.range || !f.terms[ field ] })
+        .concat(
+          workFilters.filter(f => { return !f.terms[ field ] }).map(f => {
+            return {
+              has_parent: {
+                type: 'work',
+                query: f
+              }
             }
-          }
-        })
-      )
+          })
+        )
     }
   }
 }
@@ -128,6 +129,18 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                       def langscores = [
                         "nob": 1.5,
                         "nno": 1.5,
+                        "sma": 1.5,
+                        "smn": 1.5,
+                        "sjk": 1.5,
+                        "sjd": 1.5,
+                        "sje": 1.5,
+                        "smi": 1.5,
+                        "sms": 1.5,
+                        "sjt": 1.5,
+                        "sju": 1.5,
+                        "smj": 1.5,
+                        "sme": 1.5,
+                        "sia": 1.5,                        
                         "nor": 1.5,
                         "eng": 1.4,
                         "swe": 1.3,
@@ -209,11 +222,11 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
               bool: {
                 minimum_should_match: 1,
                 should: [
-                  allFilters[0],
+                  allFilters[ 0 ],
                   {
                     has_child: {
                       type: 'publication',
-                      query: allFilters[0]
+                      query: allFilters[ 1 ]
                     }
                   }
                 ]
@@ -244,7 +257,12 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                 has_child: {
                   score_mode: 'max',
                   type: 'publication',
-                  query: !options.skipScript ? publicationBoost(boostableQuery) : boostableQuery,
+                  query: {
+                    bool: {
+                      must: [ !options.skipScript ? publicationBoost(boostableQuery) : boostableQuery ],
+                      filter: [].concat(options.scopedPublicationFilter || [])
+                    }
+                  },
                   inner_hits: {
                     size: 100,
                     name: 'publications',
@@ -260,7 +278,10 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                       type: 'publication',
                       score_mode: 'max',
                       query: {
-                        match_all: {}
+                        bool: {
+                          must: [ { match_all: {} } ],
+                          filter: [].concat(options.scopedPublicationFilter || [])
+                        }
                       },
                       inner_hits: {
                         size: 100,
@@ -270,7 +291,13 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                   },
                   should: [
                     workBoost(workQuery)
-                  ]
+                  ],
+                  must_not: options.exclusionFilter ? {
+                    has_child: {
+                      type: 'publication',
+                      query: options.exclusionFilter
+                    }
+                  } : []
                 }
               }
             ]
@@ -281,32 +308,41 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
             bool: {
               minimum_should_match: 1,
               should: [
-                allFilters[0],
+                allFilters[ 0 ] || {
+                  match_all: {}
+                },
                 {
                   has_child: {
                     type: 'publication',
-                    query: allFilters[0]
+                    query: allFilters[ 1 ] || allFilters[ 0 ]
                   }
                 }
               ],
-              must: workFilters.concat(
-                publicationFilters.concat(
-                  excludeUnavailable
-                  ? [{
-                    exists: {
-                      field: 'availableBranches'
-                    }
-                  }]
-                  : []
-                ).map(filter => {
-                  return {
-                    has_child: {
-                      type: 'publication',
-                      query: filter
+              must_not: options.exclusionFilter ? {
+                has_child: {
+                  type: 'publication',
+                  query: options.exclusionFilter
+                }
+              } : [],
+              must: workFilters.concat([ {
+                has_child: {
+                  type: 'publication',
+                  query: {
+                    bool: {
+                      must:
+                        publicationFilters.concat(
+                          excludeUnavailable
+                            ? [ {
+                              exists: {
+                                field: 'availableBranches'
+                              }
+                            } ]
+                            : []
+                        ).concat(options.scopedPublicationFilter || [])
                     }
                   }
-                })
-              )
+                }
+              } ]).concat(options.scopedWorkFilter || [])
             }
           }
         ]
@@ -319,7 +355,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
 function simpleQuery (query, fields, options) {
   options = options || {}
   const terms = query.split(/\s+/)
-  let phrases = [query]
+  let phrases = [ query ]
   for (let i = 0; i < terms.length; i++) {
     const firstPart = terms.slice(0, i + 1)
     if (firstPart.length > 1) {
@@ -357,7 +393,7 @@ function simpleQuery (query, fields, options) {
               match_phrase: {
                 [field.field.field]: {
                   query: field.query,
-                  slop: 3
+                  slop: 0
                 }
               }
             } : {
@@ -376,60 +412,180 @@ function simpleQuery (query, fields, options) {
   }
 }
 
-function initAdvancedQuery (query) {
-  return {
-    query_string: {
-      query: translateFieldTerms(query, Constants.queryFieldTranslations),
-      default_operator: 'and'
+function initAdvancedQuery (query, scope, skipUnscoped, invert) {
+  const translatedQuery = translateFieldTerms(query, Constants.queryFieldTranslations, scope, skipUnscoped, invert)
+  if (translatedQuery === '' && invert) {
+    return undefined
+  } else {
+    return {
+      query_string: {
+        query: translatedQuery.replace(/^$/, '*'),
+        default_operator: 'and',
+        lenient: true
+      }
     }
   }
 }
 
-function translateFieldTerms (query, translations) {
-  const chars = [ ...query ]
-  let result = ''
-  let inQuote = false
-  let startField = 0
-  let startValue = 0
-  for (let i = 0; i < chars.length; i++) {
-    const c = chars[ i ]
-    if (c === ' ') {
-      if (i + 1 === chars.length) {
-        break
+function translateFieldTerms (query, translations, scope, skipUnscoped, returnExclusionOnly) {
+  function serialize (node) {
+    let result = ''
+    if (typeof node !== 'object') {
+      return result
+    }
+    let leafed = false
+
+    function interval () {
+      return `${node.inclusive ? '[' : '{'}${node.term_min} TO ${node.term_max}${node.inclusive ? ']' : '}'}`
+    }
+
+    function quotedTerm () {
+      const needsQuotes = node.term.indexOf(' ') !== -1 || node.term.indexOf('-') !== -1
+      return node.term === '*' ? node.term : `${needsQuotes ? '"' : ''}${node.term}${needsQuotes ? '"' : ''}${node.boost ? `^${node.boost}` : ''}`
+    }
+
+    function field () {
+      return node.field !== '<implicit>' ? `${node.field}:` : ''
+    }
+
+    let leftParens = node.operator === 'OR' ? '(' : ''
+    if (node.field && node.left && node.right) {
+      result += `${field()}(`
+      leftParens = ''
+    }
+    if (node.left) {
+      result += `${leftParens}${serialize(node.left)}`
+    } else {
+      result += `${field()}${node.prefix || ''}${node.term_min ? interval() : quotedTerm()}${node.proximity ? `~${node.proximity}` : ''}`
+      leafed = true
+    }
+    if (node.operator) {
+      result += ` ${node.operator} `
+    }
+    let rightParens = node.operator === 'OR' ? ')' : ''
+    if (node.right) {
+      result += `${serialize(node.right)}${rightParens}`
+      rightParens = ''
+    } else if (!leafed && node.field) {
+      result += `${field()}${node.prefix || ''}${node.term_min ? interval() : quotedTerm()}`
+    }
+    if (node.field && node.left && node.right) {
+      result += rightParens
+    }
+    return result
+  }
+
+  function transform (node) {
+    const result = {}
+    if (node.field) {
+      let field = node.field
+      const prefixedScope = (field.match(/^([a-zA-Z]+)\./) || [])[ 1 ]
+      field = field.replace(/^[a-zA-Z]+\./, '')
+      let translationSpec = translations[ field ]
+      if (typeof translationSpec === 'string' && translationSpec.startsWith('=')) {
+        translationSpec = translations[ translationSpec.substr(1) ]
       }
-      startField = i + 1
-    }
-    if (c === '"') {
-      inQuote = !inQuote
-    }
-    if (!inQuote && c === ':') {
-      result += chars.slice(startValue, startField).join('')
-      let field = chars.slice(startField, i).join('')
-      if (translations[ field ]) {
-        field = translations[ field ]
-        if (field instanceof Object) {
-          field = field.translation
+      if (translationSpec) {
+        if (translationSpec.translation) {
+          if (scope && translationSpec.scope && ((prefixedScope || translationSpec.scope) !== scope)) {
+            return undefined
+          }
+          field = translationSpec.translation
+        } else {
+          field = translationSpec
         }
       }
-      result += field
-      result += ':'
-      startValue = i + 1
+      if (skipUnscoped) {
+        if (translationSpec && !translationSpec.scope && !prefixedScope) {
+          return undefined
+        }
+        if (!translationSpec && !prefixedScope) {
+          return undefined
+        }
+      }
+      if (prefixedScope && prefixedScope !== scope) {
+        return undefined
+      }
+      return Object.assign(node, { field })
+    }
+    if (node.left) {
+      result.left = transform(node.left)
+      if (!result.left) {
+        delete result.left
+        if (node.operator === 'NOT') {
+          result.left = {
+            field: '*',
+            term: '*'
+          }
+        } else {
+          delete node.operator
+        }
+      }
+    }
+    if (node.right) {
+      result.right = transform(node.right)
+      if (!result.right) {
+        delete result.right
+        delete node.operator
+      }
+    }
+    if (!result.left && !result.right) {
+      return undefined
+    }
+    if (!result.left) {
+      return result.right
+    }
+    if (!result.right) {
+      return result.left
+    }
+    if (node.operator && result.left && result.right) {
+      result.operator = node.operator.replace('<implicit>', 'AND')
+    }
+    return result
+  }
+
+  let parsed = LuceneParser.parse(query)
+  parsed = transform(parsed)
+  if (returnExclusionOnly) {
+    while (parsed && parsed.operator !== 'NOT') {
+      parsed = parsed.right
+    }
+    if (parsed && parsed.operator === 'NOT') {
+      parsed = parsed.right
     }
   }
-  return result += chars.slice(startValue, chars.length).join('')
+  return serialize(parsed)
 }
 
 // parse query string to decide what kind of query we think this is
 function queryStringToQuery (queryString, workFilters, publicationFilters, excludeUnavailable, page, pageSize, options) {
   const escapedQueryString = escape(queryString)
-  const isbn10 = new RegExp('^[0-9Xx-]{10,13}$')
-  const isbn13 = new RegExp('^[0-9-]{13,17}$')
-  const advTriggers = new RegExp('[:+/\\-()*^]|AND|OR|NOT|TO')
+  const isbn10 = /^[0-9Xx-]{10,13}$/
+  const isbn13 = /^[0-9-]{13,17}$/
+  const advTriggers = /[:+\/\-()*^?]|AND|OR|NOT|TO/
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
-    return initCommonQuery({}, initAdvancedQuery(`isbn:${escapedQueryString}`), [initAdvancedQuery(`isbn:${escapedQueryString}`)], workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
+    return initCommonQuery({},
+      initAdvancedQuery(`isbn:"${escapedQueryString}"`, 'Publication'),
+      [ initAdvancedQuery(`isbn:"${escapedQueryString}"`, 'Publication') ],
+      workFilters,
+      publicationFilters,
+      excludeUnavailable,
+      page, pageSize, options)
   } else if (advTriggers.test(escapedQueryString)) {
-    return initCommonQuery(initAdvancedQuery(escapedQueryString), initAdvancedQuery(escapedQueryString), [initAdvancedQuery(escapedQueryString)], workFilters, publicationFilters, excludeUnavailable, page, pageSize, options)
+    const workQuery = initAdvancedQuery(escapedQueryString, 'Work')
+    const publicationQuery = initAdvancedQuery(escapedQueryString, 'Publication')
+    return initCommonQuery(workQuery,
+      publicationQuery,
+      [ workQuery, publicationQuery ],
+      workFilters,
+      publicationFilters,
+      excludeUnavailable,
+      page, pageSize, Object.assign(options, {
+        scopedWorkFilter: [ initAdvancedQuery(escapedQueryString, 'Work', true) ],
+        scopedPublicationFilter: [ initAdvancedQuery(escapedQueryString, 'Publication', true) ],
+        exclusionFilter: initAdvancedQuery(escapedQueryString, 'Publication', false, true)
+      }))
   } else {
     const _allFilter = options.noAllFilter ? [] : [ {
       match: {
@@ -515,6 +671,7 @@ module.exports.buildQuery = function (urlQueryString) {
   const workFilters = parseFilters(params.filter || [], 'work')
   const publicationFilters = createPublicationFilters(params, excludeUnavailable)
   const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
+//  console.log('**********************')
 //  console.log(JSON.stringify(query, null, 2))
   return query
 }
