@@ -12,6 +12,41 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.50
+
+KOHA: 8e3b1c1814aaa079f33d4ed54fc22d30f5478c61
+GITREF: TODO
+
+- Koha
+  - DEICH-864 Kopierer not for loan status fra back up
+  - DEICH-875 Sjekke meldingsinnstillinger på alle lånere
+  - DEICH-845 Fiks pregeverktøy
+- Catalinker:
+  - DEICH-792 Kopikatalogisering
+- Patron-client
+  - DEICH-871 Relatert verksserie i søk
+  - DEICH-881 Ikke automatisk log inn ved registrering av bruker.
+  - DEICH-880 Fix feltkodesøk på tvers av utgivelse og verk
+  - DEICH-867 Automatisk populert henteavdeling ved reservering feiler
+- Annet
+  - DEICH-730 Slette utgivelser uten eksemplarer
+
+## 2017.49 (bugfix release)
+
+KOHA: c637036b74dedc64be755d6b0ded330b4bb30f53
+GITREF: TODO
+
+- Koha
+  - Extend waiting period - allow overriding if other patrons have holds
+- Catalinker:
+  - DEICH-872: hide lesser used fields II
+  - DEICH-877: allow more than 10 parts in search hits from BS
+  - DEICH-876: fix wrong authority data on new persons
+  - DEICH-873: fix editing resources not triggering reindexing
+- patron-client
+  - DEICH-871: fix related work series display and link
+  - DEICH-878: fix wrongly displayed titles in search results
+
 ## 2017.48
 
 KOHA: c637036b74dedc64be755d6b0ded330b4bb30f53
