@@ -763,9 +763,6 @@
     }
 
     function checkEsoteric (input, allInputs) {
-      if (input.values && (((input.values[ 0 ].current.value || '') !== '') || ((input.values[ 0 ].old.value || '') !== ''))) {
-        return false
-      }
       let isEsoteric = false
       let handleInput = function (includeWhenValues, property) {
         return function (input) {
@@ -779,6 +776,17 @@
         }
       }
       if (input.esotericWhen) {
+        if (input.type === 'select-predefined-value') {
+          if (input.values && (input.values[ 0 ].current.value.length > 0 || input.values[ 0 ].old.value.length > 0)) {
+            input.showEsoteric = true
+          }
+        } else if (input.values && (((input.values[ 0 ].current.value || '') !== '') || ((input.values[ 0 ].old.value || '') !== ''))) {
+          input.showEsoteric = true
+        }
+        if (input.subInputs && input.subInputs[ 0 ].input.values && (((input.subInputs[ 0 ].input.values[ 0 ].current.value || '') !== '') ||
+            ((input.subInputs[ 0 ].input.values[ 0 ].old.value || '') !== ''))) {
+          input.showEsoteric = true
+        }
         _.each(_.keys(input.esotericWhen), function (property) {
           let includeWhenValues = _.flatten([ input.esotericWhen[ property ] ])
           if (allInputs) {
@@ -1154,10 +1162,9 @@
       }
     }
 
-    function updateInputsForResource (response, resourceUri, options, root, type) {
+    function updateInputsForResource (graphData, resourceUri, options, root, type) {
       options = options || {}
       const valuesField = options.compareValues ? 'compareValues' : 'values'
-      const graphData = ensureJSON(response.data)
       const offsetCrossTypes = { 'Work': 'Publication', 'Publication': 'Work' }
       type = type || typeFromUri(resourceUri)
       root = root || ldGraph.parse(graphData).byId(resourceUri)
@@ -1182,12 +1189,13 @@
               (unPrefix(ownerInput.domain) === options.wrappedIn || !options.wrappedIn) &&
               (options.wrapperObject && options.wrapperObject.isA(options.wrappedIn) || !options.wrapperObject)) {
               let inputParentOfCreateNewResourceFormKeypath = ractive.get(`inputLinks.${input.belongsToCreateResourceFormOfInput}`)
-              ractive.push(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource`, root)
+              let ownerValueIndex = ownerInput.values.map(value => value.current.value).indexOf(root.id)
+              ractive.set(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource.${ownerValueIndex}`, root)
               skipRest = true
             } else {
               if (!onlyDoSuggestionForCreateNewResource) {
                 const rangeStart = (options.range || {}).start || 0
-                const rangeLength = (options.range || {}).rangeLength || ((input.parentInput || {}).pagination || 10000)
+                const rangeLength = options.disablePagination ? 10000 : (options.range || {}).rangeLength || ((input.parentInput || {}).pagination || 10000)
                 const loadForRangeOfInputs = function (startIndex, rangeLength) {
                   return function (_root) {
                     _root = _root || root
@@ -1380,7 +1388,7 @@
         }
       )
         .then(function (response) {
-            updateInputsForResource(response, resourceUri, options)
+            updateInputsForResource(ensureJSON(response.data), resourceUri, options)
             if (!options.keepDocumentUrl) {
               ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
             }
@@ -2064,14 +2072,21 @@
       _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, 'input') : [ mainInput ], visitor)
     }
 
-    function positionSupportPanels (applicationData) {
+    function positionSupportPanels (applicationData, tabId) {
+      tabId = undefined
       const dummyPanel = $('#right-dummy-panel')
       if (dummyPanel.length > 0) {
         const supportPanelLeftEdge = dummyPanel.position().left
         const supportPanelWidth = dummyPanel.width()
-        $('span.support-panel').each(function (index, panel) {
-          const supportPanelBaseId = $(panel).attr('data-support-panel-base-ref')
+        let lastShowEsotericLinksPanelBottom = { [tabId || 'all']: 0 }
+        $(`${tabId ? `#${tabId} ` : ''}span.support-panel`).each(function (index, panel) {
+          const $panel = $(panel)
+          const _tabId = tabId || $panel.closest('.grid-panel').attr('id') || 'all'
+          const supportPanelBaseId = $panel.attr('data-support-panel-base-ref')
           let supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}] div.search-input`)
+          if (supportPanelBase.length === 0) {
+            supportPanelBase = $(`span[data-support-panel-base-id=${supportPanelBaseId}]`)
+          }
           let offset = 15
           if (supportPanelBase.length === 0) {
             supportPanelBase = $(`span:visible[data-support-panel-base-id=${supportPanelBaseId}]`)
@@ -2079,18 +2094,25 @@
               offset = Math.max(0, (80 - supportPanelBase.height()) / 2)
             }
           }
-          if ($(panel).hasClass('fixed')) {
+          if ($panel.hasClass('fixed')) {
             offset = 0
-          } else if ($(panel).hasClass('no-offset')) {
-            offset = 25
+          } else if ($panel.hasClass('no-offset')) {
+            offset = 40
           }
           if (supportPanelBase.length > 0) {
-            $(panel).css({
-              top: _.last(_.flatten([ supportPanelBase ])).position().top - offset,
+            let top = _.last(_.flatten([ supportPanelBase ])).position().top - offset
+            if ($panel.hasClass('show-esoterics') && lastShowEsotericLinksPanelBottom[ _tabId ] > 0 && top < lastShowEsotericLinksPanelBottom[ _tabId ] + 10) {
+              top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
+            }
+            $panel.css({
+              top: Math.max(top, 225),
               left: supportPanelLeftEdge,
               width: supportPanelWidth,
-              'z-index': 100 - index
+              'z-index': ($panel.hasClass('show-esoterics') ? 100 : 200) - index
             })
+            if ($panel.hasClass('show-esoterics') && ($panel.css('display') !== 'none')) {
+              lastShowEsotericLinksPanelBottom[ _tabId ] = top + $panel.height()
+            }
           }
         })
       }
@@ -2193,7 +2215,12 @@
       return { items, highestScoreIndex, exactMatchWasFound }
     }
 
+    function tabIdFromKeypath (keypath) {
+      return (keypath.match(/^inputGroups\.([0-9])/) || [])[ 1 ]
+    }
+
     function doSearch (event, searchString, preferredIndexType, secondaryIndexType) {
+      positionSupportPanels()
       searchString = stripHtml(searchString).trim()
 
       if (!searchString) {
@@ -2266,7 +2293,7 @@
             searchTerm: searchString,
             highestScoreIndex: exactMatchWasFound ? highestScoreIndex : config.search[ indexType ].scrollToMiddleOfResultSet ? highestScoreIndex - 1 : false
           })
-          positionSupportPanels()
+          positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
         })
       //    .catch(function (err) {
       //    console.log(err)
@@ -2309,7 +2336,7 @@
       })
         .then(function (response) {
           // successfully patched resource
-          updateInputsForResource(response, subject, {
+          updateInputsForResource(ensureJSON(response.data), subject, {
             keepDocumentUrl: true, inputs: [ _.find(allInputs(), function (input) {
               return input.predicate.indexOf('recordId') !== -1
             }) ]
@@ -2752,7 +2779,7 @@
               removeInputsForObject(input, index)()
               ractive.update()
               if (addedMultivalues > 1) {
-                updateInputsForResource(response, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
+                updateInputsForResource(response.data, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
               }
             }
             return response
@@ -2797,7 +2824,8 @@
         }
 
         function inputLabelWithContext (input) {
-          return input.isSubInput ? input.parentInput.label + ': ' + ractive.get(`${parentOf(input.keypath)}.label`) : input.label
+          let inputLabel = (input.labelKey ? translate(input.labelKey) : input.label)
+          return input.isSubInput ? (input.parentInput.labelKey ? translate(input.parentInput.labelKey) : input.parentInput.label) + ': ' + inputLabel : inputLabel
         }
 
         function tabIndexForNode (node) {
@@ -2994,6 +3022,7 @@
                   $(node).val(newvalue).trigger('change')
                   setting = false
                 }, 0)
+                setTimeout(positionSupportPanels, 500)
               }
             })
 
@@ -3353,6 +3382,26 @@
               }
             }
           }
+          const esotericToggleGroup = function (node, input) {
+            const uniqueId = (input.subInputs ? input.subInputs[ 0 ].input : input).values[ 0 ].uniqueId
+            const inputRef = `support_panel_base_${uniqueId}`
+            let group = [ inputRef ]
+            _.find($(node).closest('.esoteric.input-panel').nextAll(), function (node) {
+              const $node = $(node)
+              group.push($node.find('.field').attr('data-support-panel-base-id'))
+              return (!$node.hasClass('esoteric'))
+            })
+            _.each($(node).children(), function (li) {
+              const $li = $(li)
+              if (group.includes($li.attr('data-belongs-to-id-ref'))) {
+                $li.addClass('visible')
+              }
+            })
+            Main.repositionSupportPanelsHorizontally()
+            return {
+              teardown: function () {}
+            }
+          }
           titleRactive = new Ractive({
             el: 'title',
             template: '{{title.1 || title.2 || title.3 || "Katalogisering"}}',
@@ -3651,7 +3700,8 @@
               authorityEdit,
               draggable,
               dropZone,
-              setGlobalFlag
+              setGlobalFlag,
+              esotericToggleGroup
             },
             partials: applicationData.partials,
             transitions: {
@@ -3714,9 +3764,9 @@
                 if (eventShouldBeIgnored(event)) return
                 this.toggle(`${event.keypath}.expanded`)
               },
-              toggleEsoterics: function (event) {
+              toggleEsoteric: function (event) {
                 if (eventShouldBeIgnored(event)) return
-                this.toggle('showEsoterics')
+                this.toggle(`${event.keypath}.showEsoteric`).then(positionSupportPanels.bind(undefined, event.keypath))
               },
               updateBrowserLocationWithTab: function (event, tabId) {
                 updateBrowserLocationWithTab(tabId)
@@ -3744,7 +3794,7 @@
                 sequentialPromiseResolver(promises)
                 ractive.set(`${event.keypath}.allowAddNewButton`, false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
-                positionSupportPanels()
+                positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
                 copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
                 ractive.update().then(function () {
                   heightAligned(document.main.$(event.node).closest('.height-aligned'))
@@ -3817,7 +3867,7 @@
                   ractive.set(`${parentInput.keypath}.subInputs.${inputIndex}.input.values.${valueIndex}.nonEditable`, false)
                 })
                 ractive.set(`${parentInput.keypath}.edit`, true)
-                ractive.update()
+                ractive.update().then(setTimeout(positionSupportPanels))
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, options) {
                 options = options || {}
@@ -3972,7 +4022,9 @@
                   fetchExistingResource(uri)
                     .then(function () {
                       updateInputsForDependentResources(typeFromUri(uri), uri)
-                    })
+                    }).then(function () {
+                    setTimeout(positionSupportPanels, 1000)
+                  })
                 } else {
                   ractive.set(`${origin}.old.value`, ractive.get(`${origin}.current.value`))
                   ractive.set(`${origin}.current.value`, uri)
@@ -4020,9 +4072,10 @@
               activateTab: function (event) {
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
                   var keyPath = `inputGroups.${groupIndex}`
-                  ractive.set(`${keyPath}.tabSelected`, keyPath === event.keypath)
+                  ractive
+                    .set(`${keyPath}.tabSelected`, keyPath === event.keypath)
+                    .then(positionSupportPanels)
                 })
-                setTimeout(positionSupportPanels)
               },
               nextStep: function (event) {
                 if (event.context.restart) {
@@ -4083,6 +4136,7 @@
                   }
                 })
                 positionSupportPanels()
+                setTimeout(positionSupportPanels)
               },
               deleteResource: function (event) {
                 var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
@@ -4115,7 +4169,7 @@
                 ractive.set(`${grandParentOf(event.keypath)}.showInputs`, event.index.inputValueIndex || 0)
                 let suggestedValuesGraphNode = ractive.get(`${grandParentOf(grandParentOf(event.keypath))}.suggestedValuesForNewResource.${event.index.inputValueIndex}`)
                 if (suggestedValuesGraphNode) {
-                  updateInputsForResource({ data: {} }, null, {
+                  updateInputsForResource({}, null, {
                     keepDocumentUrl: true,
                     source: event.context.source,
                     inputs: event.context.inputs,
@@ -4220,6 +4274,9 @@
                   .then(!maintenance ? setTargetUri : nop)
                   .then(clearInputsAndSearchResult)
                   .then(wait.cancel)
+                  .then(function () {
+                    setTimeout(positionSupportPanels)
+                  })
               },
               cancelEdit: function (event, origin) {
                 $(event.node).closest('.panel-part').find('span[contenteditable=true]').focus()
@@ -4274,7 +4331,7 @@
                           }
                           _.each([ 'Work', 'Publication' ], function (domain) {
                             let byType = graph.byType(domain)
-                            updateInputsForResource({ data: {} }, null, options, byType[ 0 ], domain)
+                            updateInputsForResource({}, null, options, byType[ 0 ], domain)
                             resultStat.itemsFromOtherSources[ source ] = resultStat.itemsFromOtherSources[ source ] || 0
                             resultStat.itemsFromOtherSources[ source ]++
                           })
@@ -4328,7 +4385,7 @@
                 let searchUrl = ''
                 if (spec.queryParameter === 'hasEan') { // TODO : hasEAN should probably have separate route
                   searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
-                    return memo + '&@return=' + fieldName
+                    return memo + '&@return=' + fieldName.replace(/[^a-zA-Z_]/g, '')
                   }, '')}`)
                 } else {
                   searchUrl = proxyToServices(`${spec.url}/${queryValue}`)
@@ -4412,13 +4469,14 @@
                           nodes = node.outAll(suggestionSpec.predicate)
                         }
                         _.each(nodes, function (node) {
-                          updateInputsForResource({ data: {} }, null, {
+                          updateInputsForResource({}, null, {
                             keepDocumentUrl: true,
                             source: event.context.source,
                             sourceLabel: event.context.sourceLabel,
                             wrapperObject: wrapperObject,
                             wrappedIn: wrappedIn,
-                            deferUpdate: true
+                            deferUpdate: true,
+                            disablePagination: true
                           }, node, domain)
 
                           if (node.isA('TopBanana')) {
@@ -4439,66 +4497,71 @@
                       }
                     })
                   })
-                  let numberOfAdditionalSuggestions = []
-                  let sources = []
-                  let targets = []
-                  let suggestableMap = [] // an array of arrays with flags indicating which inputs may receive additional suggestion values
-                  let suggestedMap = []
-                  let warnWhenCopyingSubset = []
-                  forAllGroupInputs(function (targetInput, groupIndex, inputIndex, subInputIndex) {
-                    suggestableMap[ groupIndex ] = suggestableMap[ groupIndex ] || []
-                    suggestedMap[ groupIndex ] = suggestedMap[ groupIndex ] || []
-                    if (inputHasAcceptedSuggestions(targetInput, inputIndex) && inputCanReceiveAdditionalSuggestions(targetInput)) {
-                      suggestableMap[ groupIndex ][ subInputIndex ] = true
-                      _.each(targetInput.values, function (value, valueIndex) {
-                        if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
-                          (targetInput.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '')) {
-                          value.additionalSuggestion = {
-                            value: valueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0),
-                            displayValue: displayValueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0)
+                  ractive.update().then(function () {
+                    let numberOfAdditionalSuggestions = []
+                    let sources = []
+                    let targets = []
+                    let suggestableMap = [] // an array of arrays with flags indicating which inputs may receive additional suggestion values
+                    let suggestedMap = []
+                    let warnWhenCopyingSubset = []
+                    forAllGroupInputs(function (targetInput, groupIndex, inputIndex, subInputIndex) {
+                      suggestableMap[ groupIndex ] = suggestableMap[ groupIndex ] || []
+                      suggestedMap[ groupIndex ] = suggestedMap[ groupIndex ] || []
+                      if (inputHasAcceptedSuggestions(targetInput, inputIndex) && inputCanReceiveAdditionalSuggestions(targetInput)) {
+                        suggestableMap[ groupIndex ][ subInputIndex ] = true
+                        _.each(targetInput.values, function (value, valueIndex) {
+                          if (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                            (targetInput.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '')) {
+                            let suggestedValue = valueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0)
+                            if (suggestedValue && !(suggestedValue === '' || _.isEqual(suggestedValue, []))) {
+                              value.additionalSuggestion = {
+                                value: suggestedValue,
+                                displayValue: displayValueOfInputById(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef, 0)
+                              }
+                              suggestedMap[ groupIndex ][ subInputIndex ] = suggestedMap[ groupIndex ][ subInputIndex ] || []
+                              suggestedMap[ groupIndex ][ subInputIndex ][ valueIndex ] = true
+                              numberOfAdditionalSuggestions[ groupIndex ] = numberOfAdditionalSuggestions[ groupIndex ] || [ 0 ]
+                              numberOfAdditionalSuggestions[ groupIndex ]++
+                              var sourceInput = inputFromInputId(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
+                              sources[ groupIndex ] = sources[ groupIndex ] || []
+                              sources[ groupIndex ] = _.union(sources[ groupIndex ], [ inputLabelWithContext(sourceInput) ])
+                              targets[ groupIndex ] = targets[ groupIndex ] || []
+                              targets[ groupIndex ] = _.union(targets[ groupIndex ], [ inputLabelWithContext(targetInput) ])
+                            }
                           }
-                          suggestedMap[ groupIndex ][ subInputIndex ] = suggestedMap[ groupIndex ][ subInputIndex ] || []
-                          suggestedMap[ groupIndex ][ subInputIndex ][ valueIndex ] = true
-                          numberOfAdditionalSuggestions[ groupIndex ] = numberOfAdditionalSuggestions[ groupIndex ] || [ 0 ]
-                          numberOfAdditionalSuggestions[ groupIndex ]++
-                          var sourceInput = inputFromInputId(targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
-                          sources[ groupIndex ] = sources[ groupIndex ] || []
-                          sources[ groupIndex ] = _.union(sources[ groupIndex ], [ inputLabelWithContext(sourceInput) ])
-                          targets[ groupIndex ] = targets[ groupIndex ] || []
-                          targets[ groupIndex ] = _.union(targets[ groupIndex ], [ inputLabelWithContext(targetInput) ])
+                        })
+                        if (targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset) {
+                          warnWhenCopyingSubset[ groupIndex ] = targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset
                         }
-                      })
-                      if (targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset) {
-                        warnWhenCopyingSubset[ groupIndex ] = targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.warnWhenCopyingSubset
-                      }
-                    }
-                  })
-                  var incompleteSuggestions = []
-                  _.each(suggestedMap, function (suggestedForGroup, groupIndex) {
-                    _.each(suggestedForGroup, function (suggestedForInput, inputIndex) {
-                      if (!_.isEqual(suggestedForGroup[ inputIndex ], suggestableMap[ groupIndex ][ inputIndex ])) {
-                        incompleteSuggestions[ groupIndex ] = incompleteSuggestions[ groupIndex ] || []
-                        incompleteSuggestions[ groupIndex ][ inputIndex ] = true
                       }
                     })
-                  })
-                  _.each(numberOfAdditionalSuggestions, function (numberOfSuggestionsForGroup, groupIndex) {
-                    if (numberOfSuggestionsForGroup > 0) {
-                      ractive.set(`inputGroups.${groupIndex}.additionalSuggestions`, {
-                        numberOfSuggestionsForGroup: numberOfSuggestionsForGroup,
-                        numberOfInCompleteForGroup: _.reduce(incompleteSuggestions[ groupIndex ], function (count, isIncomplete) {
-                          return count + isIncomplete ? 1 : 0
-                        }, 0),
-                        sources: sources[ groupIndex ],
-                        targets: targets[ groupIndex ],
-                        incompleteSuggestions: incompleteSuggestions[ groupIndex ],
-                        warnWhenCopyingSubset: warnWhenCopyingSubset[ groupIndex ],
-                        allowPartialSuggestions: warnWhenCopyingSubset[ groupIndex ].allowByDefault,
-                        group: groupIndex
+                    var incompleteSuggestions = []
+                    _.each(suggestedMap, function (suggestedForGroup, groupIndex) {
+                      _.each(suggestedForGroup, function (suggestedForInput, inputIndex) {
+                        if (!_.isEqual(suggestedForGroup[ inputIndex ], suggestableMap[ groupIndex ][ inputIndex ])) {
+                          incompleteSuggestions[ groupIndex ] = incompleteSuggestions[ groupIndex ] || []
+                          incompleteSuggestions[ groupIndex ][ inputIndex ] = true
+                        }
                       })
-                    }
-                  })
-                  ractive.update().then(waiter.done)
+                    })
+                    _.each(numberOfAdditionalSuggestions, function (numberOfSuggestionsForGroup, groupIndex) {
+                      if (numberOfSuggestionsForGroup > 0) {
+                        ractive.set(`inputGroups.${groupIndex}.additionalSuggestions`, {
+                          numberOfSuggestionsForGroup: numberOfSuggestionsForGroup,
+                          numberOfInCompleteForGroup: _.reduce(incompleteSuggestions[ groupIndex ], function (count, isIncomplete) {
+                            return count + isIncomplete ? 1 : 0
+                          }, 0),
+                          sources: sources[ groupIndex ],
+                          targets: targets[ groupIndex ],
+                          incompleteSuggestions: incompleteSuggestions[ groupIndex ],
+                          warnWhenCopyingSubset: warnWhenCopyingSubset[ groupIndex ],
+                          allowPartialSuggestions: warnWhenCopyingSubset[ groupIndex ].allowByDefault,
+                          group: groupIndex
+                        })
+                      }
+                    })
+                    ractive.update()
+                  }).then(waiter.done)
                 })
               },
               useSuggestion: function (event) {
@@ -4654,7 +4717,7 @@
                     }
                   })
                 }
-                positionSupportPanels()
+                positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
               }
             }
           )
@@ -4769,7 +4832,9 @@
                       forAllGroupInputs(function (input, groupIndex1) {
                         if (groupIndex1 === Number(groupIndex)) {
                           _.each(input.values, function (value, valueIndex) {
-                            if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion) {
+                            if ((allowPartialSuggestions || !additionalSuggestionsForGroup.incompleteSuggestions[ valueIndex ]) && value.additionalSuggestion &&
+                              (value && (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
+                                (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '')))) {
                               ractive.set(`${input.keypath}.values.${valueIndex}.current`, value.additionalSuggestion)
                               ractive.set(`${input.keypath}.values.${valueIndex}.additionalSuggestion`, null)
                             }
@@ -5082,7 +5147,7 @@
         const initInputInterDependencies = function (applicationData) {
           let setInputVisibility = function (inputKeypath, visible) {
             ractive.set(`${inputKeypath}.visible`, Boolean(visible).valueOf())
-              .then(positionSupportPanels)
+              .then(positionSupportPanels.bind(null, undefined, tabIdFromKeypath(inputKeypath)))
               .then(Main.repositionSupportPanelsHorizontally)
           }
           const alternativeKeypathMap = {}

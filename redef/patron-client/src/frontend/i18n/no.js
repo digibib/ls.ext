@@ -365,6 +365,7 @@ export default {
   'Work.noWork': 'Inget verk',
   'Work.workInformation': 'Verksinformasjon',
   'WorkAgeLimit.seePublication': 'Se utgivelse',
+  'WorkSerie': 'Verksserie',
   'WorkSerie.labelWorkSerie': 'Inngår i serien',
   'Year.labelOriginalReleaseDate': 'Utgitt første gang'
 }

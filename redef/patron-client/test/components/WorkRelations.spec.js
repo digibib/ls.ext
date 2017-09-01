@@ -1,18 +1,19 @@
 /* eslint-env mocha */
 // Test of shallow rendering, without any supporting libraries.
 import expect from 'expect'
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
-import { IntlProvider } from 'react-intl'
-import WorkRelations, { __RewireAPI__ as DefaultExportWorkRelationsRewireApi } from '../../src/frontend/components/work/fields/WorkRelations'
+import {IntlProvider} from 'react-intl'
+import WorkRelations, {__RewireAPI__ as DefaultExportWorkRelationsRewireApi} from '../../src/frontend/components/work/fields/WorkRelations'
 
 function setup (propOverrides) {
   const props = { ...propOverrides }
 
   const messages = {
     'http://data.deichman.no/relationType#basedOn': 'basedOn',
-    'http://data.deichman.no/relationType#partOf': 'partOf'
+    'http://data.deichman.no/relationType#partOf': 'partOf',
+    'http://data.deichman.no/relationType#relatedTo': 'relatedTo'
   }
 
   const output = TestUtils.renderIntoDocument(
@@ -111,6 +112,24 @@ describe('components', () => {
 
       const link = node.querySelector("[data-automation-id='work_relation_link']")
       expect(link.textContent).toBe('mainTitle / mainContributor')
+    })
+
+    it('should render a relation to work series that alters the search', () => {
+      const { node } = setup({
+        workRelations: {
+          'http://data.deichman.no/relationType#relatedTo': [
+            {
+              mainTitle: 'serialMainTitle',
+              relativeUri: 'relativeUri',
+              type: 'WorkSeries'
+            }
+          ]
+        }
+      })
+
+      const link = node.querySelector("[data-automation-id='work_relation_link']")
+      expect(link.textContent).toBe('serialMainTitle')
+      expect(link.getAttribute('href')).toBe('/search?query=serie%3AserialMainTitle')
     })
   })
 })

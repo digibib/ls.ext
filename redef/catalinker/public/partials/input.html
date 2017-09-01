@@ -2,7 +2,9 @@
         <span class="input-panel prop-input"
               class-pure-u-1-1="{{!compare}}"
               class-pure-u-1-2="{{compare}}"
-              class-esoteric="{{(!showEsoterics && checkEsoteric(input, allInputs))}}"
+              class-esoteric-hidden="{{(inWorkflow===true && !showEsoteric && checkEsoteric(input, allInputs))}}"
+              class-esoteric="{{(inWorkflow===true && checkEsoteric(input, allInputs))}}"
+              class-last-one="{{!showEsoteric && firstAndLastVisibleInputs[groupIndex].last === inputIndex}}"
               {{#if !compareMode}}
               as-dropZone="{inputIndex, input}"
               {{/if}}
@@ -13,22 +15,42 @@
               {{#if type != 'input-boolean' && !oneLiner}}as-heightAligned=".updateHeights"{{/if}}
               {{#if inputIndex === 0}}data-support-panel-base-id="support_panel_base_fixed"{{/if}}
         >
-        {{#if !showEsoterics && checkEsoteric(input, allInputs)}}
-        <span class="panel-part pure-u-1-2">
-            <span class="field pure-u" data-support-panel-base-id="support_panel_base_{{uniqueId}}">
-                <a class="show-esoterics" on-keyup="toggleEsoterics" on-click='toggleEsoterics' title="{{>showEsotericFieldsLegend}}">{{>showEsotericFields}}</a>
+        {{#if (inWorkflow===true && checkEsoteric(input, allInputs))}}
+        <span class="panel-part pure-u-1-2 esoteric" class-last-one="{{!showEsoteric && firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
+            <span class="field pure-u" data-support-panel-base-id="support_panel_base_{{values.0.uniqueId}}">
             </span>
-            <span class="support-panel no-offset" data-support-panel-base-ref="support_panel_base_{{uniqueId}}">
+            <span class="support-panel no-offset show-esoterics {{~inWorkflow}}" data-support-panel-base-ref="support_panel_base_{{subInputs.0.input.values.0.uniqueId || values.0.uniqueId}}">
                 <div class="prop-search-results support-panel-content"
                      on-escape="cancelEdit">
                     <div class="search-result-box">
                     {{>showEsotericFieldsSupportLegend}}
+                        <ul as-esotericToggleGroup="input">
+                        {{#each inputs}}
+                            {{#if checkEsoteric(., allInputs)}}
+                                <li data-belongs-to-id-ref="support_panel_base_{{this.values.0.uniqueId || this.subInputs.0.input.values.0.uniqueId}}" style="display: none;">
+                                        {{#if labelKey}}
+                                            {{>labelKey}}
+                                        {{else}}
+                                            {{label}}
+                                        {{/if}}
+                                    <a on-click="toggleEsoteric" class="toggle-esoteric">
+                                        {{#if this.showEsoteric}}
+                                            {{>hide}}
+                                        {{else}}
+                                            {{>show}}
+                                        {{/if}}
+                                    </a>
+                                </li>
+                            {{/if}}
+                        {{/each}}
+                        </ul>
                     </div>
                 </div>
             </span>
         </span>
         {{/if}}
-        {{#if (showEsoterics || !(checkEsoteric(input, allInputs)))}}
+
+        {{#if (inWorkflow!==true || showEsoteric || !(checkEsoteric(input, allInputs)))}}
         <span class-for-one-liner="{{type === 'input-boolean' || oneLiner}}"
               class-panel-part="{{type === 'input-boolean' || oneLiner}}"
               class-pure-u-1-2="{{(type === 'input-boolean' || oneLiner) && !compare}}"
@@ -36,6 +58,7 @@
               class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"
               class-last-one="{{firstAndLastVisibleInputs[groupIndex].last === inputIndex}}">
         <span class="{{#if (type != 'input-boolean' && !oneLiner)}}pure-u-1-{{accordionHeader || compare ? '1' : '2'}}{{/if}} label"
+              class-esoteric="{{(checkEsoteric(input, allInputs))}}"
               class-for-one-liner="{{oneLiner == true || type == 'input-boolean'}}"
               class-panel-part="{{type !== 'input-boolean' && !oneLiner}}"
               class-first="{{firstAndLastVisibleInputs[groupIndex].first === inputIndex}}"

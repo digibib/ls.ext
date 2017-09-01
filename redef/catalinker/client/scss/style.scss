@@ -255,8 +255,23 @@ body {
 
     .tab-content {
       .grid-panel > .input-panel {
-        &.esoteric+.esoteric {
-          display: none !important;
+        &.esoteric-hidden {
+          max-height: 0;
+          &.last-one {
+            margin-bottom: 38px;
+          }
+        }
+        &.esoteric+.esoteric .support-panel {
+          display: none;
+        }
+        &.esoteric .support-panel {
+          ul {
+            margin-top: 0;
+            margin-bottom: 0;
+            li.visible {
+              display: list-item !important;
+            }
+          }
         }
         &:not(.first):first-child:before {
           background-color: lightgrey;
@@ -365,6 +380,9 @@ body {
             right: -39px;
           }
           .label {
+            &.esoteric {
+              margin-top: -23px;
+            }
             padding: 12px 12px 4px 12px;
             display: block;
             background: $input-background;
@@ -387,6 +405,9 @@ body {
             padding: 12px 12px 4px 0px;
           }
           .panel-part {
+            &.esoteric .field {
+              min-height: 0 !important;
+            }
             a.show-esoterics {
               margin-top: 5px;
               max-height: 20px;
@@ -484,12 +505,12 @@ body {
                   margin-top: 8px;
                 }
                 .add-new-btn-row {
-                  padding: 19px 0px 8px 8px;
+                  padding: 19px 0 8px 8px;
                 }
               }
               .field {
-                padding-left: 0px;
-                padding-right: 0px;
+                padding-left: 0;
+                padding-right: 0;
               }
             }
             .field {
@@ -528,8 +549,9 @@ body {
                 max-width: 431px;
                 white-space: nowrap;
               }
-              padding: 0px 12px 15px 12px;
+              padding: 0 12px 15px 12px;
               background: $input-background;
+              margin-right: -5px;
 
               input[type=checkbox] {
                 width: auto;
