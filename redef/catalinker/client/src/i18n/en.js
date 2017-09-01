@@ -343,6 +343,17 @@
                   to select which values from the publications should be copied to corresponding fields on the new works`,
     splitWorkDialogLegend: 'Select values to be copied from existing publications to the new works that will be created:',
 
+    // copy publication
+    copyPublicationButtonLabel: 'Copy publication and work',
+    copyPublicationWarningDialogLegend: 'Are yoy sure you want to copy this publication?',
+    copyPublicationWarningDialogExplanation: 'This will create a new publication and a new work.',
+    copyPublicationDialogTitle: 'Copy publication and work',
+    progressCopyingPublication: 'Copying publication...',
+    progressCopyingWork: 'Copying work...',
+    progressConnectingPubToWork: 'Connecting publication and work...',
+    progressCopyingDone: 'Click OK to open the new publication now or Cancel to continue with the original.<p>You can also <a target="_blank" href="/cataloguing?template=workflow&openTab=1&copy=true&Publication={{clonedPublicationUri}}">open the copy in a new tab.</a></p>',
+    copyPublicationFailed: 'Something went wrong when copying. Please try again later.',
+
     // links
     showWorkPageLink: 'Work page',
     showTURTLEForWorkLink: 'Work as TURTLE (linked data)',

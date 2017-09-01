@@ -507,6 +507,62 @@
       })
     }
 
+    const copyPublication = function (copyPublicationSpec, proceed, success) {
+      const idPrefix = _.uniqueId()
+      $('#copy-resource-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 450,
+        buttons: [
+          {
+            text: translate('proceed'),
+            id: `${idPrefix}-do-copy`,
+            click: function () {
+              $(`#${idPrefix}-do-copy`).button('disable')
+              proceed().then(function () {
+                $(`#${idPrefix}-ok-copy`).show()
+                $(`#${idPrefix}-do-copy`).hide()
+                $('#copy-resource-dialog').find('a').click(function () {
+                  setTimeout(function () {
+                    $('#copy-resource-dialog').dialog('close')
+                  })
+                  return true
+                })
+              })
+            }
+          },
+          {
+            text: translate('cancel'),
+            id: `${idPrefix}-cancel-copy`,
+            class: 'default',
+            click: function () {
+              $(this).dialog('close')
+            }
+          },
+          {
+            text: 'Ok',
+            id: `${idPrefix}-ok-copy`,
+            click: function () {
+              $(this).dialog('close')
+              $('body').addClass('copy')
+              if (success) {
+                success()
+              }
+            }
+          }
+        ],
+        open: function () {
+          $(`#${idPrefix}-ok-copy`).hide()
+          $(this).siblings('.ui-dialog-buttonpane').find('button.default').focus()
+        },
+        close: function () {
+          ractive.set('copyPublicationProgress', null)
+          ractive.set('clonedPublicationUri', null)
+          ractive.set('error', null)
+        }
+      })
+    }
+
     function i18nLabelValue (label, lang) {
       lang = lang || 'no'
       if (ractive) {
@@ -2503,6 +2559,61 @@
         options = options || {}
         let query = URI.parseQuery(URI.parse(document.location.href).query)
         let template = '/templates/' + (options.template || query.template || 'menu') + '.html'
+        var partials = [
+          'input',
+          'input-string',
+          'input-boolean',
+          'input-string-large',
+          'input-lang-string',
+          'input-gYear',
+          'input-duration',
+          'input-date-time',
+          'input-integer',
+          'input-nonNegativeInteger',
+          'searchable-with-result-in-side-panel',
+          'support-for-searchable-with-result-in-side-panel',
+          'support-for-select-predefined-value',
+          'support-for-input-string',
+          'support-for-edit-authority',
+          'searchable-authority-dropdown',
+          'searchable-for-value-suggestions',
+          'suggested-values',
+          'suggestor-for-searchable-with-result-in-side-panel',
+          'suggestor-for-select-predefined-value',
+          'suggestor-for-input-string',
+          'suggestor-for-input-gYear',
+          'suggestor-for-input-integer',
+          'suggestor-for-input-nonNegativeInteger',
+          'suggestor-for-input-literal',
+          'select-predefined-value',
+          'inverse-one-to-many-relationship',
+          'work',
+          'relations',
+          'publication',
+          'delete-publication-dialog',
+          'delete-work-dialog',
+          'delete-resource-dialog',
+          'confirm-enable-special-input-dialog',
+          'alert-existing-resource-dialog',
+          'additional-suggestions-dialog',
+          'merge-resources-dialog',
+          'edit-resource-warning-dialog',
+          'accordion-header-for-collection',
+          'readonly-input',
+          'readonly-input-string',
+          'readonly-input-boolean',
+          'readonly-input-string-large',
+          'readonly-input-gYear',
+          'readonly-input-duration',
+          'readonly-input-date-time',
+          'readonly-input-integer',
+          'readonly-input-nonNegativeInteger',
+          'readonly-select-predefined-value',
+          'readonly-hidden-url-query-value',
+          'readonly-searchable-with-result-in-side-panel',
+          'links',
+          'conditional-input-type'
+        ]
         // window.onerror = function (message, url, line) {
         //    // Log any uncaught exceptions to assist debugging tests.
         //    // TODO remove this when everything works perfectly (as if...)
@@ -4702,6 +4813,67 @@
                   })
                 }
                 positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
+              },
+              copyPublicationAndWork: function (event, oldWorkUri, oldPublicationUri) {
+                const headers = {
+                  headers: {
+                    Accept: 'application/ld+json',
+                    'Content-Type': 'application/ld+json'
+                  }
+                }
+                let clonedPublicationUri
+                copyPublication(event.context, function () {
+                  ractive.set('copyPublicationProgress', 'progressCopyingPublication')
+                  return axios.post(proxyToServices(`${oldPublicationUri}/clone`), {}, headers)
+                    .then(function (response) {
+                      ractive.set('copyPublicationProgress', 'progressCopyingWork')
+                      clonedPublicationUri = response.headers.location
+                      return axios.post(proxyToServices(`${oldWorkUri}/clone`), {}, headers)
+                    })
+                    .then(function (response) {
+                      ractive.set('copyPublicationProgress', 'progressConnectingPubToWork')
+                      const clonedWorkUri = response.headers.location
+                      return axios.patch(proxyToServices(clonedPublicationUri), [
+                        {
+                          op: 'del',
+                          s: clonedPublicationUri,
+                          p: 'http://data.deichman.no/ontology#publicationOf',
+                          o: {
+                            value: oldWorkUri,
+                            type: 'http://www.w3.org/2001/XMLSchema#anyURI'
+                          }
+                        },
+                        {
+                          op: 'add',
+                          s: clonedPublicationUri,
+                          p: 'http://data.deichman.no/ontology#publicationOf',
+                          o: {
+                            value: clonedWorkUri,
+                            type: 'http://www.w3.org/2001/XMLSchema#anyURI'
+                          }
+                        }
+                      ], {
+                        headers: {
+                          Accept: 'application/ld+json',
+                          'Content-Type': 'application/ldpatch+json'
+                        }
+                      })
+                    }).then(function () {
+                      ractive.set('clonedPublicationUri', clonedPublicationUri)
+                      return ractive
+                        .set('copyPublicationProgress', 'progressCopyingDone')
+                    }).catch(function (message) {
+                      return ractive
+                        .set('error', {
+                          message
+                        })
+                    })
+                }, function () {
+                  if (!ractive.get('error')) {
+                    updateBrowserLocationWithUri('Publication', clonedPublicationUri)
+                    Main.init()
+                  }
+                })
               }
             }
           )
@@ -5352,6 +5524,9 @@
             $('.focusguard-start').on('focus', function () {
               $('a:last').focus()
             })
+            if (query.copy) {
+              $('body').addClass('copy')
+            }
             return applicationData
           })
           .then(hideGrowler)

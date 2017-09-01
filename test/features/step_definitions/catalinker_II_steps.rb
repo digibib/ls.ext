@@ -866,3 +866,7 @@ When(/^klikker jeg på lenkene for å vise mindre brukte felter$/) do
   end
   sleep 1
 end
+
+When(/^viser brukergrensenittet at jeg har åpnet en kopi$/) do
+  @browser.body(:class => 'copy').should exist
+end
