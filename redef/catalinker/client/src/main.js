@@ -2129,6 +2129,7 @@
     }
 
     function positionSupportPanels (applicationData, tabId) {
+      tabId = undefined
       const dummyPanel = $('#right-dummy-panel')
       if (dummyPanel.length > 0) {
         const supportPanelLeftEdge = dummyPanel.position().left
@@ -2160,7 +2161,7 @@
               top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
             }
             $panel.css({
-              top,
+              top: Math.max(top, 225),
               left: supportPanelLeftEdge,
               width: supportPanelWidth,
               'z-index': ($panel.hasClass('show-esoterics') ? 100 : 200) - index
@@ -2275,6 +2276,7 @@
     }
 
     function doSearch (event, searchString, preferredIndexType, secondaryIndexType) {
+      positionSupportPanels()
       searchString = stripHtml(searchString).trim()
 
       if (!searchString) {
@@ -3070,6 +3072,7 @@
                   $(node).val(newvalue).trigger('change')
                   setting = false
                 }, 0)
+                setTimeout(positionSupportPanels, 500)
               }
             })
 
@@ -3444,6 +3447,7 @@
                 $li.addClass('visible')
               }
             })
+            Main.repositionSupportPanelsHorizontally()
             return {
               teardown: function () {}
             }
@@ -3913,7 +3917,7 @@
                   ractive.set(`${parentInput.keypath}.subInputs.${inputIndex}.input.values.${valueIndex}.nonEditable`, false)
                 })
                 ractive.set(`${parentInput.keypath}.edit`, true)
-                ractive.update()
+                ractive.update().then(setTimeout(positionSupportPanels))
               },
               searchResource: function (event, searchString, preferredIndexType, secondaryIndexType, options) {
                 options = options || {}
