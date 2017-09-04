@@ -190,6 +190,9 @@
     "partNumber": {
       "@id": "deichman:partNumber"
     },
+    "untranscribedTitle": {
+      "@id": "deichman:untranscribedTitle"
+    },
     "edition": {
       "@id": "deichman:edition"
     },

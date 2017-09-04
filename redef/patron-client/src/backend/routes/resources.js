@@ -227,7 +227,8 @@ function transformPublications (publications) {
       serialIssues: transformSerialIssues(publication.serialIssues),
       subtitle: publication.subtitle,
       subtitles: publication.subtitles,
-      uri: publication.id
+      uri: publication.id,
+      untranscribedTitle: publication.untranscribedTitle
     }
   })
 }

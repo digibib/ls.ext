@@ -105,6 +105,7 @@
     "writingSystem": "deichman:writingSystem",
     "desc": "deichman:desc",
     "origLang": "deichman:origLang",
-    "created": "deichman:created"
+    "created": "deichman:created",
+    "untranscribedTitle": "deichman:untranscribedTitle"
   }
 }

@@ -40,6 +40,8 @@ CONSTRUCT {
                deich:title ?pubPartNumber ;
                deich:title ?pubPartMainTitle ;
                deich:title ?pubVarTitle ;
+               deich:title ?untranscribedTitle ;
+               deich:untranscribedTitle ?untranscribedTitle ;
                deich:subtitles ?subtitles ;
                deich:subtitle ?pubSubtitle ;
                deich:partNumber ?pubPartNumber ;
@@ -79,6 +81,7 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:subtitle ?pubSubtitle }
   UNION { <__PUBLICATIONURI__> deich:variantTitle ?pubVarTitle }
   UNION { <__PUBLICATIONURI__> deich:partNumber ?pubPartNumber }
+  UNION { <__PUBLICATIONURI__> deich:untranscribedTitle ?untranscribedTitle }
   UNION { <__PUBLICATIONURI__> deich:hasHomeBranch ?homeBranch }
   UNION { <__PUBLICATIONURI__> deich:hasAvailableBranch ?availBranch }
   UNION { <__PUBLICATIONURI__> deich:hasNumItems ?numItems }

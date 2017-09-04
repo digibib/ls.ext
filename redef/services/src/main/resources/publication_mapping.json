@@ -142,6 +142,17 @@
           }
         }
       },
+      "untranscribedTitle": {
+        "type": "text",
+        "similarity": "boolean",
+        "norms": false,
+        "fields": {
+          "raw": {
+            "type": "text",
+            "analyzer": "name_analyzer"
+          }
+        }
+      },
       "subtitles": {
         "type": "text",
         "analyzer": "language_analyzer",

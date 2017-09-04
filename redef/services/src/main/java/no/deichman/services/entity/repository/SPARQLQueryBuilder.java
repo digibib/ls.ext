@@ -450,7 +450,6 @@ public final class SPARQLQueryBuilder {
     public Query constructInformationForMARC(XURI publication) {
         String q = ""
                 + "PREFIX deichman: <http://data.deichman.no/ontology#>\n"
-                + "PREFIX raw: <http://data.deichman.no/raw#>\n"
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "CONSTRUCT {\n"
                 + " <__PUBLICATIONURI__> deichman:mainTitle ?mainTitle ;\n"
@@ -483,10 +482,8 @@ public final class SPARQLQueryBuilder {
                 + "       deichman:cataloguingSourceIdentifier ?CSIdentifier .\n"
                 + "}\n"
                 + "WHERE {\n"
-                + "  <__PUBLICATIONURI__> deichman:mainTitle ?mainTitleUntranscribed .\n"
-                + "  OPTIONAL { <__PUBLICATIONURI__> deichman:subtitle ?subtitleUntranscribed }\n"
-                + "  OPTIONAL { <__PUBLICATIONURI__> raw:transcribedTitle ?mainTitleTranscribed }\n"
-                + "  OPTIONAL { <__PUBLICATIONURI__> raw:transcribedSubtitle ?subtitleTranscribed }\n"
+                + "  <__PUBLICATIONURI__> deichman:mainTitle ?mainTitle .\n"
+                + "  OPTIONAL { <__PUBLICATIONURI__> deichman:subtitle ?subtitle }\n"
                 + "  { <__PUBLICATIONURI__> deichman:partTitle ?partTitle }\n"
                 + "  UNION { <__PUBLICATIONURI__> deichman:hasSummary ?summary }\n"
                 + "  UNION { <__PUBLICATIONURI__> deichman:partNumber ?partNumber }\n"
@@ -572,8 +569,6 @@ public final class SPARQLQueryBuilder {
                 + "    FILTER(lang(?literaryFormLabel) = \"no\")\n"
                 + "  }\n"
                 + "  UNION { <__PUBLICATIONURI__>  deichman:publicationOf ?work . ?work  deichman:fictionNonfiction ?fictionNonfiction }"
-                + "  BIND(IF(BOUND(?mainTitleTranscribed), ?mainTitleTranscribed, ?mainTitleUntranscribed) AS ?mainTitle)\n"
-                + "  BIND(IF(BOUND(?subtitleTranscribed), ?subtitleTranscribed, ?subtitleUntranscribed) AS ?subtitle)\n"
                 + "}";
         q = q.replaceAll("__PUBLICATIONURI__", publication.getUri());
 
