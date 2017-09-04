@@ -2161,7 +2161,7 @@
               top = Math.max(top, lastShowEsotericLinksPanelBottom[ _tabId ] + 10)
             }
             $panel.css({
-              top: Math.max(top, 225),
+              top: (top > 0 ? top : 217) + ($panel.closest('.esoteric-hidden').length > 0 ? 33 : 0),
               left: supportPanelLeftEdge,
               width: supportPanelWidth,
               'z-index': ($panel.hasClass('show-esoterics') ? 100 : 200) - index
