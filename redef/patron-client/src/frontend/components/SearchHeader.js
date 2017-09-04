@@ -15,7 +15,13 @@ class SearchHeader extends React.Component {
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
     this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
     this.checkQuery = this.checkQuery.bind(this)
-    this.state = { querySyntaxError: false, unknownFields: {} }
+    this.state = { querySyntaxError: false, unknownFields: {}, searchFieldInput: '' }
+  }
+
+  componentDidUpdate (prevprops, prevState) {
+    if (this.state.searchFieldInput === '' || prevprops.locationQuery.query !== this.props.locationQuery.query) {
+      this.state.searchFieldInput = this.props.locationQuery.query || ''
+    }
   }
 
   checkQuery (event) {
@@ -35,13 +41,15 @@ class SearchHeader extends React.Component {
       }
     }
 
+    const searchFieldInput = event.target.value
     try {
-      traverse(LuceneParser.parse(this.searchFieldInput.value))
+      traverse(LuceneParser.parse(event.target.value))
       this.setState(prevState => {
         return {
           ...prevState,
           querySyntaxError: false,
-          unknownFields
+          unknownFields,
+          searchFieldInput
         }
       })
     } catch (err) {
@@ -49,7 +57,8 @@ class SearchHeader extends React.Component {
       this.setState(prevState => ({
         ...prevState,
         querySyntaxError: true,
-        unknownFields: {}
+        unknownFields: {},
+        searchFieldInput
       }))
     }
   }
@@ -65,10 +74,10 @@ class SearchHeader extends React.Component {
 
       /* Active filters are removed on new query */
       if (this.props.path.includes('/work')) {
-        this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
+        this.props.dispatch(push({ pathname: '/search', query: { query: this.state.searchFieldInput } }))
       } else {
         /* Active filters are NOT removed on new query */
-        this.props.locationQuery.query = this.searchFieldInput.value
+        this.props.locationQuery.query = this.state.searchFieldInput
         this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
       }
       this.props.searchActions.search()
@@ -261,7 +270,7 @@ class SearchHeader extends React.Component {
                          id="search"
                          type="text"
                          defaultValue={this.props.locationQuery.query || ''}
-                         ref={e => this.searchFieldInput = e}
+                         value={this.state.searchFieldInput}
                          onChange={this.checkQuery}
                          data-automation-id="search_input_field"
                   />

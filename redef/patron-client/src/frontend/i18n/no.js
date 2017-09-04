@@ -206,7 +206,7 @@ export default {
   'Search.paginationPrevious': 'Forrige',
   'Search.querySyntaxError': `Det ser ut som du ønsker å utføre et avansert søk, men det er ikke utformet helt riktig.
   Pass på at parenteser og anførselstegn er balansert. Merk at kolon (":") brukes for å angi feltspesifikt søk.
-  Hvis du vil søke etter noe med spesialtegn (for eksempel kolon) i seg, kan du sette teksten i anførselstegn (").`,
+  Hvis du vil søke etter noe med spesialtegn i seg, f.eks kolon, kan du sette teksten i anførselstegn (").`,
   'Search.unknownField': `Det ser ut som du ønsker å utføre et feltspesifikt søk, men ett eller fler av feltene du har brukt, kjenner vi ikke igjen: {unrecognizedFields}.
   Hvis du bruker felt vi ikke kjenner igjen, kan du få tomt søkeresultat.`,
   'SearchFilterAvailabilityBoxItem.label': 'Vis kun ledige',
