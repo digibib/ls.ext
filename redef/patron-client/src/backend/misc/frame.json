@@ -484,7 +484,7 @@
     "@embed": "@always",
     "work": {
       "type": ["Work", "WorkSeries"],
-      "@omitDefault": true,
+      "@embed": "@always",
       "contributors": {
         "deichman:agent": {
           "@embed": "@always"
