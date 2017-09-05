@@ -4168,10 +4168,10 @@
                       if (targetInput) {
                         copyValues(targetInput, sourceInput)
                       } else {
-                        throw Error(`Unknown input id ${copyToInputId} in target source input in copyInputValues spec`)
+                        throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
                       }
                     } else {
-                      throw Error(`Unknown input id ${copyFromInputId} in input source input in copyInputValues spec`)
+                      throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
                     }
                   })
                   saveNewResourceFromInputs(newResourceType.type)
