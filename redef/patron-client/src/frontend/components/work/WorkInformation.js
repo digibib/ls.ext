@@ -20,7 +20,7 @@ const WorkInformation = ({ work, publicationId, showAdditionalInformation, toggl
   const partNumber = chosenPublication ? chosenPublication.partNumber : work.partNumber
   const subtitle = chosenPublication ? chosenPublication.subtitle : work.subtitle
   const completeTitle = title({mainTitle, subtitle, partNumber, partTitle})
-  const untranscribedTitle = chosenPublication.untranscribedTitle
+  const untranscribedTitle = chosenPublication ? chosenPublication.untranscribedTitle : undefined
 
   return (
     <section className="work-information">
