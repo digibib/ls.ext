@@ -486,6 +486,7 @@
       "type": ["Work", "WorkSeries"],
       "@embed": "@always",
       "contributors": {
+        "@embed": "@always",
         "deichman:agent": {
           "@embed": "@always"
         }
