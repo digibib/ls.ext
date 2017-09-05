@@ -2498,6 +2498,30 @@
       return targetInput.widgetOptions && targetInput.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom
     }
 
+    function copyValues (targetInput, sourceInput) {
+      targetInput.datatypes = sourceInput.datatypes
+      if (targetInput.type === 'select-predefined-value') {
+        sourceInput.values[ 0 ].current.value = _.union(sourceInput.values[ 0 ].current.value, targetInput.values[ 0 ].current.value)
+      } else {
+        _.each(sourceInput.values, function (sourceValue) {
+          if (!_.some(targetInput.values, function (targetValue) {
+              return targetValue.current.value === sourceValue.current.value
+            })) {
+            targetInput.values = targetInput.values || []
+            if (targetInput.values.length === 1 && targetInput.values[ 0 ].current.value === '' || targetInput.values[ 0 ].current.value === null || targetInput.values[ 0 ].current.value === undefined) {
+              targetInput.values[ 0 ] = deepClone(sourceValue)
+              targetInput.values[ 0 ].copiedFromType = unPrefix(sourceInput.domain)
+              targetInput.values[ 0 ].copiedFromLabel = sourceInput.label
+            } else {
+              if (targetInput.multiple) {
+                targetInput.values.push(deepClone(sourceValue))
+              }
+            }
+          }
+        })
+      }
+    }
+
     var Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -3859,6 +3883,8 @@
                 const proceed = function () {
                   const subject = input.belongsToForm ? input.belongsToForm.targetUri : ractive.get(`targetUri.${rdfType}`)
                   if (subject) {
+                    delete inputValue.copiedFromType
+                    delete inputValue.copiedFromLabelKey
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, input.datatypes[ 0 ], errors, event.keypath)
                     event.context.domain = rdfType
@@ -4135,39 +4161,18 @@
                 waitHandler.newWaitable(event.original.target)
                 var newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get(`targetUri.${newResourceType.type}`))) {
-                  var inputs = allInputs()
-                  _.each(_.keys(newResourceType.prefillValuesFromResource), function (copyFromType) {
-                    _.each(newResourceType.prefillValuesFromResource[ copyFromType ], function (fragment) {
-                      var sourceInput = _.find(inputs, function (input) {
-                        return (input.fragment === fragment && unPrefix(input.domain) === copyFromType)
-                      })
-                      if (sourceInput) {
-                        var targetInput = _.find(inputs, function (input) {
-                          return (input.fragment === fragment && unPrefix(input.domain) === newResourceType.type)
-                        })
-                        if (targetInput) {
-                          targetInput.datatypes = sourceInput.datatypes
-                          if (targetInput.type === 'select-predefined-value') {
-                            sourceInput.values[ 0 ].current.value = _.union(sourceInput.values[ 0 ].current.value, targetInput.values[ 0 ].current.value)
-                          } else {
-                            _.each(sourceInput.values, function (sourceValue) {
-                              if (!_.some(targetInput.values, function (targetValue) {
-                                  return targetValue.current.value === sourceValue.current.value
-                                })) {
-                                targetInput.values = targetInput.values || []
-                                if (targetInput.values.length === 1 && targetInput.values[ 0 ].current.value === '' || targetInput.values[ 0 ].current.value === null) {
-                                  targetInput.values[ 0 ] = deepClone(sourceValue)
-                                } else {
-                                  if (targetInput.multiple) {
-                                    targetInput.values.push(deepClone(sourceValue))
-                                  }
-                                }
-                              }
-                            })
-                          }
-                        }
+                  _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
+                    const sourceInput = inputFromInputId(copyFromInputId)
+                    if (sourceInput) {
+                      const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
+                      if (targetInput) {
+                        copyValues(targetInput, sourceInput)
+                      } else {
+                        throw Error(`Unknown input id ${copyToInputId} in target source input in copyInputValues spec`)
                       }
-                    })
+                    } else {
+                      throw Error(`Unknown input id ${copyFromInputId} in input source input in copyInputValues spec`)
+                    }
                   })
                   saveNewResourceFromInputs(newResourceType.type)
                   ractive.update()

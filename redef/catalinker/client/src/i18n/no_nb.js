@@ -392,6 +392,8 @@
     maximumOneCanBeSelected: 'Du kan bare velge én verdi her',
     maximumSelected: 'Du kan velge maks {{maximum}} verdier her',
     noResults: 'Ingen treff',
-    searching: 'Søker…'
+    searching: 'Søker…',
+    copiedFrom: 'Fra {{>copiedFromType + "LabelDet"}}',
+    copiedFromLegend: 'Verdien i dette feltet er kopiert fra {{copiedFromLabel}} på {{>copiedFromType + "LabelDet"}}'
   }
 }))

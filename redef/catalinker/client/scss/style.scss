@@ -781,10 +781,17 @@ body {
             float: right;
             font-style: italic;
             background: lightgray;
-            padding: 1px 4px 1px 7px;
+            padding: 1px 7px 1px 5px;
             border-radius: 9px;
             display: inline-block;
             margin-top: -24px;
+            &.copied-from {
+              right: 6px;
+              .ui-icon {
+                display: inline-block;
+                height: 14px;
+              }
+            }
           }
           .support-panel-expander {
             left: calc(100% - 20px);
