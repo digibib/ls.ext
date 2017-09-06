@@ -201,7 +201,8 @@
       "@container": "@set"
     },
     "numberOfPages": {
-      "@id": "deichman:numberOfPages"
+      "@id": "deichman:numberOfPages",
+      "@container": "@set"
     },
     "isbn": {
       "@id": "deichman:isbn",

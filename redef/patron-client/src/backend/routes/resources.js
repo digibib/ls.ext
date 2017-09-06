@@ -215,7 +215,7 @@ function transformPublications (publications) {
       languages: publication.languages,
       mainTitle: publication.mainTitle,
       mediaTypes: publication.mediaTypes,
-      numberOfPages: publication.numberOfPages,
+      numberOfPages: publication.numberOfPages || [],
       partNumber: publication.partNumber,
       partTitle: publication.partTitle,
       placeOfPublication: publication.hasPlaceOfPublication ? publication.hasPlaceOfPublication.prefLabel : undefined,
