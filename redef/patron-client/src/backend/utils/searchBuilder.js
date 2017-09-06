@@ -226,7 +226,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                   {
                     has_child: {
                       type: 'publication',
-                      query: allFilters[ 1 ]
+                      query: allFilters[ 0 ]
                     }
                   }
                 ]
