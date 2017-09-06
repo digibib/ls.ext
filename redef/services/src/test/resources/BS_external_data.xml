@@ -24,6 +24,9 @@
         <datafield tag="035" ind1=" " ind2=" ">
             <subfield code="a">0250080</subfield>
         </datafield>
+        <datafield tag="041" ind1=" " ind2=" ">
+            <subfield code="a">swe</subfield>
+        </datafield>
         <datafield tag="082" ind1="3" ind2="1">
             <subfield code="a">839.823</subfield>
             <subfield code="2">5</subfield>

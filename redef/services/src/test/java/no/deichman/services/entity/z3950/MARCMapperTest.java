@@ -33,6 +33,7 @@ public class MARCMapperTest extends MappingTester {
         String marc = new ResourceReader().readFile("BS_external_data.xml");
         List<Object> mapping = new MARCMapper().getMapping(marc);
         assertNotNull(mapping);
+        checkMapping("BS_external_data.xml", "BS_external_data.json");
     }
 
     @Test

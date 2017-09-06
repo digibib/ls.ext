@@ -131,6 +131,9 @@ public class MARCMapper {
                     setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
                     setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
                     setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
+                    if (dataField.getSubfields('h').isEmpty()) {
+                        setUriObjectFixedValueWidth(dataField, 'a', THREE, work::addLanguage, this::languagePrefix);
+                    }
                     break;
                 case "082":
                     getSubfieldValue(dataField, 'a').ifPresent(extractClassificationAndSource(work, graphList, dataField));
