@@ -89,6 +89,7 @@ export default {
   'Navigation.logIn': 'Logg inn',
   'Navigation.logout': 'Logg ut',
   'Navigation.register': 'Registrer deg',
+  'NoItemsFilter.label': 'Vis kun treff med eksemplarer',
   'NumberOfPages.numberOfPages': 'Sidetall',
   'OriginalLanguage.labelOriginalLanguage': 'Originalspråk',
   'OriginalTitle.labelOriginalTitle': 'Originaltittel',

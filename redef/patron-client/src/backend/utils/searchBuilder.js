@@ -43,7 +43,7 @@ function pubAggFilter (field, workFilters, publicationFilters) {
   }
 }
 
-function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, publicationFilters, excludeUnavailable, page, pageSize = 20, options) {
+function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, publicationFilters, excludeUnavailable, includeWithoutItems, page, pageSize = 20, options) {
   options = Object.assign({
     explain: false,
     ageGain: 6.0,
@@ -339,6 +339,16 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                             } ]
                             : []
                         ).concat(options.scopedPublicationFilter || [])
+                        .concat(
+                          includeWithoutItems
+                          ? []
+                          : [ {
+                            exists: {
+                              field: 'homeBranches'
+                            }
+                          }
+                          ]
+                        )
                     }
                   }
                 }
@@ -558,7 +568,7 @@ function translateFieldTerms (query, translations, scope, skipUnscoped, returnEx
 }
 
 // parse query string to decide what kind of query we think this is
-function queryStringToQuery (queryString, workFilters, publicationFilters, excludeUnavailable, page, pageSize, options) {
+function queryStringToQuery (queryString, workFilters, publicationFilters, excludeUnavailable, includeWithoutItems, page, pageSize, options) {
   const escapedQueryString = escape(queryString)
   const isbn10 = /^[0-9Xx-]{10,13}$/
   const isbn13 = /^[0-9-]{13,17}$/
@@ -571,6 +581,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
       workFilters,
       publicationFilters,
       excludeUnavailable,
+      includeWithoutItems,
       page, pageSize, options)
   } else if (advTriggers.test(escapedQueryString)) {
     const workQuery = initAdvancedQuery(escapedQueryString, 'Work')
@@ -581,6 +592,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
       workFilters,
       publicationFilters,
       excludeUnavailable,
+      includeWithoutItems,
       page, pageSize, Object.assign(options, {
         scopedWorkFilter: [ initAdvancedQuery(escapedQueryString, 'Work', true) ],
         scopedPublicationFilter: [ initAdvancedQuery(escapedQueryString, 'Publication', true) ],
@@ -601,11 +613,12 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
       _allFilter,
       workFilters,
       publicationFilters,
-      excludeUnavailable, page, pageSize, options)
+      excludeUnavailable,
+      includeWithoutItems, page, pageSize, options)
   }
 }
 
-function parseFilters (filtersFromLocationQuery, domain, excludeUnavailable) {
+function parseFilters (filtersFromLocationQuery, domain, excludeUnavailable, includeWithoutItems) {
   const filterableFields = Constants.filterableFields
   const terms = {}
   if (!Array.isArray(filtersFromLocationQuery)) {
@@ -651,7 +664,7 @@ function yearRangeFilter (yearFrom, yearTo) {
   }
 }
 
-function createPublicationFilters (params, excludeUnavailable) {
+function createPublicationFilters (params, excludeUnavailable, includeWithoutItems) {
   const publicationFilters = parseFilters(params.filter || [], 'publication', excludeUnavailable)
 
   let yearRange
@@ -668,11 +681,12 @@ function createPublicationFilters (params, excludeUnavailable) {
 module.exports.buildQuery = function (urlQueryString) {
   const params = QueryParser.parse(urlQueryString)
   const excludeUnavailable = Object.hasOwnProperty.call(params, 'excludeUnavailable')
+  const includeWithoutItems = Object.hasOwnProperty.call(params, 'includeWithoutItems')
   const workFilters = parseFilters(params.filter || [], 'work')
-  const publicationFilters = createPublicationFilters(params, excludeUnavailable)
-  const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, params.page, params.pageSize, params)
-//  console.log('**********************')
-//  console.log(JSON.stringify(query, null, 2))
+  const publicationFilters = createPublicationFilters(params, excludeUnavailable, includeWithoutItems)
+  const query = queryStringToQuery(params.query, workFilters, publicationFilters, excludeUnavailable, includeWithoutItems, params.page, params.pageSize, params)
+  // console.log('**********************')
+  // console.log(JSON.stringify(query, null, 2))
   return query
 }
 

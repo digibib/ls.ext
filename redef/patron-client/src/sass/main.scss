@@ -1204,7 +1204,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   text-decoration: underline;
 }
 
-.filter-group.dateRangeFilters header.filterTitle {
+.filter-group.dateRangeFilters header.filterTitle, .filter-group.noitemsfilter {
   border-top: 1px solid $darkGreyColor;
   padding-top: 1em;
   margin-top: 1em;
