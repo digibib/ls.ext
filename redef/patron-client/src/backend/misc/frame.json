@@ -99,9 +99,6 @@
     "prefLabel": {
       "@id": "deichman:prefLabel"
     },
-    "altLabel": {
-      "@id": "deichman:altLabel"
-    },
     "name": {
       "@id": "deichman:name"
     },
