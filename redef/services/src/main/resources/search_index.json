@@ -18,6 +18,9 @@
         "type": "custom"
       },
       "default": {
+        "char_filter": [
+          "character_mappings"
+        ],
         "filter": [
           "norwegian_folding",
           "lowercase"
@@ -77,6 +80,15 @@
         ],
         "tokenizer": "keyword",
         "type": "custom"
+      }
+    },
+    "char_filter": {
+      "character_mappings": {
+        "type": "mapping",
+        "mappings": [
+          "ö => ø",
+          "Ö => Ø"
+        ]
       }
     },
     "filter": {
