@@ -55,9 +55,11 @@ export function processSearchResponse (response, locationQuery) {
       let selected // will be our selected publication for display, based on language criteria
       // If there is an active language filter, choose a publication that matches language
       // according to the preferred list.
-      selected = element.inner_hits.publications.hits.hits.find(pub => {
-        return Constants.preferredLanguages.filter(prefLang => (filteredLanguages || []).includes(prefLang)).some(lang => (pub._source.languages || []).includes(lang))
-      })
+      if (filteredLanguages.length > 0) {
+        selected = element.inner_hits.publications.hits.hits.find(pub => {
+          return filteredLanguages.some(lang => (pub._source.languages || []).includes(lang))
+        })
+      }
 
       // try to determine representative publication by matching displayline of publications in preferred language order
       let titleMatchTerms = []
