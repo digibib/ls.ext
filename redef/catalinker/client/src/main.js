@@ -563,6 +563,35 @@
       })
     }
 
+    const showAddedTemplateValueDialog = function () {
+      $('#alert-added-template-values-dialog').dialog({
+        resizable: false,
+        modal: true,
+        width: 550,
+        title: translate('addedTemplateValuesDialogTitle'),
+        buttons: [
+          {
+            text: translate('acknowledge'),
+            class: 'default',
+            id: 'ackAddTemplateValuesBtn',
+            click: function () {
+              $(this).dialog('close')
+              ractive.set('addedTemplateValues', null)
+            }
+          }
+        ],
+        close: function () {
+          ractive.set('addedTemplateValues', null)
+        },
+        open: function () {
+          const focusNagger = setInterval(function () {
+            $('#ackAddTemplateValuesBtn').focus()
+          }, 100)
+          setTimeout(focusNagger.cancel, 5000)
+        }
+      })
+    }
+
     function i18nLabelValue (label, lang) {
       lang = lang || 'no'
       if (ractive) {
@@ -624,6 +653,8 @@
         let valuesKey = options.compareValues ? 'compareValues' : 'values'
         if (!input[ valuesKey ][ index ]) {
           input[ valuesKey ][ index ] = {}
+        } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value.length > 0) {
+          return
         }
         input[ valuesKey ][ index ].old = {
           value: valuesAsArray
@@ -639,6 +670,12 @@
         } else if (options.source) {
           input[ valuesKey ][ index ].current.accepted = { source: options.source }
           setSuggestionsAreAcceptedForParentInput(input, index)
+        }
+        if (options.source && options.source === 'template') {
+          ractive.push('addedTemplateValues.values', {
+            label: input.label,
+            value: Main.predefinedLabelValue(input.fragment, input[ valuesKey ][ index ].current.value)
+          })
         }
         ractive.update(`${input.keypath}.values.${index}`)
         return valuesAsArray
@@ -670,10 +707,13 @@
       }
     }
 
-    function setIdValue (id, input, index, valuesField) {
+    function setIdValue (id, input, index, valuesField, options) {
+      options = options || {}
       input[ valuesField ] = input[ valuesField ] || []
       if (!input[ valuesField ][ index ]) {
         input[ valuesField ][ index ] = {}
+      } else if (options.noOverwrite) {
+        return
       }
       input[ valuesField ][ index ].old = {
         value: id
@@ -1285,13 +1325,13 @@
                       if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
                         if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
                           index = 0
-                          let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
+                          let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex, options)
                           promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
                         } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
                           if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                             _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                               index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField)
+                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField, options)
                               if (options.source && node.id !== '') {
                                 setPreviewValues(input, node, index)
                               }
@@ -1444,9 +1484,11 @@
         }
       )
         .then(function (response) {
-            updateInputsForResource(ensureJSON(response.data), resourceUri, options)
-            if (!options.keepDocumentUrl) {
-              ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+            if (response.status === 200) {
+              updateInputsForResource(ensureJSON(response.data), resourceUri, options)
+              if (!options.keepDocumentUrl) {
+                ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+              }
             }
           }
         )
@@ -1895,7 +1937,8 @@
               rdfType: resourceForm.rdfType,
               labelForCreateButton: resourceForm.labelForCreateButton,
               prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource,
-              popupForm: true
+              popupForm: true,
+              templateResourcePartsFrom: resourceForm.templateResourcePartsFrom
             }
             const form = input.widgetOptions.enableEditResource.forms[ formRef.targetType ]
             _.each(form.inputs, function (input) {
@@ -2522,7 +2565,31 @@
       }
     }
 
-    var Main = {
+    function fetchResourceTemplate (templateResourcePartsFrom, newResourceType, inputs) {
+      if (templateResourcePartsFrom) {
+        let templateUri = URI(`http://data.deichman.no/${newResourceType.type.toLowerCase()}/template`)
+        let abortFetchTemplate
+        _.each(templateResourcePartsFrom, function (templateIdentifierPart) {
+          const input = inputFromInputId(templateIdentifierPart)
+          const value = input.values[ 0 ].current.value
+          if (!value) {
+            abortFetchTemplate = true
+          }
+          templateUri.addQuery(input.predicate, value)
+        })
+
+        if (!abortFetchTemplate) {
+          fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
+            .then(function () {
+              if (ractive.get('addedTemplateValues')) {
+                ractive.set('addedTemplateValues.type', newResourceType.type)
+              }
+            })
+        }
+      }
+    }
+
+    const Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -2650,6 +2717,7 @@
             applicationData.partials[ 'additional-suggestions-dialog' ] = require('../../public/partials/additional-suggestions-dialog.html')
             applicationData.partials[ 'merge-resources-dialog' ] = require('../../public/partials/merge-resources-dialog.html')
             applicationData.partials[ 'edit-resource-warning-dialog' ] = require('../../public/partials/edit-resource-warning-dialog.html')
+            applicationData.partials[ 'alert-added-template-values-dialog' ] = require('../../public/partials/alert-added-template-values-dialog.html')
             applicationData.partials[ 'accordion-header-for-collection' ] = require('../../public/partials/accordion-header-for-collection.html')
             applicationData.partials[ 'readonly-input' ] = require('../../public/partials/readonly-input.html')
             applicationData.partials[ 'readonly-input-string' ] = require('../../public/partials/readonly-input-string.html')
@@ -4159,8 +4227,9 @@
                 }
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
-                var newResourceType = event.context.createNewResource
+                const newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get(`targetUri.${newResourceType.type}`))) {
+                  fetchResourceTemplate(newResourceType.templateResourcePartsFrom, newResourceType)
                   _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
                     const sourceInput = inputFromInputId(copyFromInputId)
                     if (sourceInput) {
@@ -4241,6 +4310,7 @@
                   })
                   ractive.update(event.keypath)
                 }
+                fetchResourceTemplate(event.context.templateResourcePartsFrom, { type: event.context.rdfType }, event.context.inputs)
               },
               createNewResource: function (event, origin) {
                 let maintenance = origin.indexOf('maintenanceInputs') !== -1
@@ -4973,7 +5043,15 @@
                 openInputForms = _.without(openInputForms, keypath)
               }
               ractive.set('openInputForms', openInputForms)
-            }, { init: false }) ])
+            }, { init: false }),
+
+            ractive.observe('addedTemplateValues', function (newValue, oldValue, keypath) {
+              if (newValue) {
+                showAddedTemplateValueDialog()
+              }
+            }, { init: false })
+          ])
+
           return applicationData
         }
 
