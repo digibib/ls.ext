@@ -5,7 +5,7 @@ const LuceneParser = require('lucene-query-parser')
 
 function escape (query) {
   // escape forward slash '/' and enclose hyphenated compound words with quotes
-  return query.replace(/\//g, '\\/').replace(/[\wæøåÆØÅ]+-[\wæøåÆØÅ]+/, '"$&"')
+  return query.replace(/\//g, '\\/').replace(/[a-zA-ZæøåÆØÅ]+-[a-zA-ZæøåÆØÅ]+/, '"$&"')
 }
 
 function workAggFilter (field, workFilters, publicationFilters) {
