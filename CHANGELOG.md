@@ -12,6 +12,24 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.51
+
+KOHA: Uendret
+GITREF: TODO
+
+- Koha
+  - DEICH-882 Anonymisering i Koha er endret etter siste oppdatering i Koha ( ny versjon)
+  - DEICH-782 Identifisere DFB-poster
+- Patron-client
+  - DEICH-894 Bestill-knappen er fortsatt synlig ved hurtiglån og dagslån
+  - DEICH-890 Tilgjengelighesfilter fungere ikke sammen med filialfilter
+  - DEICH-898 Bindestrek som forbinder søkeord tolkes som NOT
+  - DEICH-900 Fjerne gul boks med "søkestøtte" og gjøre det mulig å utføre søk med tegn.
+  - DEICH-891 Skjule verk og utgivelser uten eksemplarer
+  - DEICH-560 Mapping av spesielle tegn
+  - DEICH-672 Transkribert tittel må vises og være søkbar
+  - DEICH-879 Feil visning ved flere sidetall
+
 ## 2017.50
 
 KOHA: 8e3b1c1814aaa079f33d4ed54fc22d30f5478c61
