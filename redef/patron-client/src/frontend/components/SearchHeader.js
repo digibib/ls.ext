@@ -16,7 +16,7 @@ class SearchHeader extends React.Component {
 
   componentDidUpdate (prevprops, prevState) {
     if (prevprops.locationQuery.query !== this.props.locationQuery.query) {
-       this.searchFieldInput.value = this.props.locationQuery.query || ''
+      this.searchFieldInput.value = this.props.locationQuery.query || ''
     }
   }
 
