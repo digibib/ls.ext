@@ -28,8 +28,8 @@ class SearchHeader extends React.Component {
       /* Active filters are NOT removed on new query */
       this.props.locationQuery.query = this.searchFieldInput.value
       this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
+      this.props.searchActions.search()
     }
-    this.props.searchActions.search()
   }
 
   handleLoginClick (event) {
