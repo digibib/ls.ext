@@ -1068,6 +1068,7 @@ module.exports = (app) => {
                 label: 'workRelationLabel',
                 multiple: true,
                 addAnotherLabel: 'addAnotherRelation',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 reportFormat: {
                   list: true
                 },
@@ -1130,6 +1131,7 @@ module.exports = (app) => {
                 label: 'workSeriesLabel',
                 multiple: true,
                 addAnotherLabel: 'addAnotherWorkSeries',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 reportFormat: {
                   list: true
                 },
