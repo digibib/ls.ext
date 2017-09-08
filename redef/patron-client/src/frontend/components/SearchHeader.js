@@ -4,8 +4,6 @@ import {Link} from 'react-router'
 import {push} from 'react-router-redux'
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
 import MediaQuery from 'react-responsive'
-import LuceneParser from 'lucene-query-parser'
-import {queryFieldTranslations} from '../constants/Constants'
 
 class SearchHeader extends React.Component {
   constructor (props) {
@@ -14,65 +12,24 @@ class SearchHeader extends React.Component {
     this.handleLoginClick = this.handleLoginClick.bind(this)
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
     this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
-    this.checkQuery = this.checkQuery.bind(this)
-    this.state = { querySyntaxError: false, unknownFields: {} }
-  }
-
-  checkQuery (event) {
-    const unknownFields = []
-
-    function traverse (node) {
-      if (node.left) {
-        traverse(node.left)
-      }
-      if (node.field && node.field !== '<implicit>') {
-        if (!{ ...queryFieldTranslations, '*': '*' }[ node.field ]) {
-          unknownFields[ node.field ] = {}
-        }
-      }
-      if (node.right) {
-        traverse(node.right)
-      }
-    }
-
-    try {
-      traverse(LuceneParser.parse(this.searchFieldInput.value))
-      this.setState(prevState => {
-        return {
-          ...prevState,
-          querySyntaxError: false,
-          unknownFields
-        }
-      })
-    } catch (err) {
-      console.log(err)
-      this.setState(prevState => ({
-        ...prevState,
-        querySyntaxError: true,
-        unknownFields: {}
-      }))
-    }
   }
 
   handleSearch (event) {
     event.preventDefault()
-    if (!this.state.querySyntaxError) {
-      this.state.unknownFields = {}
 
-      // Ensure that page-param is deleted on new search
-      delete this.props.locationQuery[ 'page' ]
-      this.props.mobileNavigationActions.hideMobileNavigation()
+    // Ensure that page-param is deleted on new search
+    delete this.props.locationQuery[ 'page' ]
+    this.props.mobileNavigationActions.hideMobileNavigation()
 
-      /* Active filters are removed on new query */
-      if (this.props.path.includes('/work')) {
-        this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
-      } else {
-        /* Active filters are NOT removed on new query */
-        this.props.locationQuery.query = this.searchFieldInput.value
-        this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
-      }
-      this.props.searchActions.search()
+    /* Active filters are removed on new query */
+    if (this.props.path.includes('/work')) {
+      this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
+    } else {
+      /* Active filters are NOT removed on new query */
+      this.props.locationQuery.query = this.searchFieldInput.value
+      this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
     }
+    this.props.searchActions.search()
   }
 
   handleLoginClick (event) {
@@ -262,13 +219,12 @@ class SearchHeader extends React.Component {
                          type="text"
                          defaultValue={this.props.locationQuery.query || ''}
                          ref={e => this.searchFieldInput = e}
-                         onChange={this.checkQuery}
                          data-automation-id="search_input_field"
                   />
                 </div >
                 <div className="search-button" >
                   <button onClick={this.handleSearch} type="button" className="search-submit"
-                          data-automation-id="search_button" disabled={this.state.querySyntaxError} >
+                          data-automation-id="search_button" >
                     {!this.props.isSearching
                       ? <FormattedMessage {...messages.search} />
                       : <span data-automation-id="is_searching" className="loading-spinner" >
@@ -280,20 +236,6 @@ class SearchHeader extends React.Component {
               </div >
             </form >
           </div >
-          {Object.keys(this.state.unknownFields).length > 0
-            ? <div className="search-syntax-error" >
-              <div className="message" >
-                <FormattedMessage {...Object.assign(messages.unknownFields, { values: { unrecognizedFields: Object.keys(this.state.unknownFields).map(field => `"${field}"`).join(', ') } })} />
-              </div >
-            </div >
-            : ''
-          }
-          {this.state.querySyntaxError
-            ? <div className="search-syntax-error" >
-              <div className="message" ><FormattedMessage {...messages.luceneSyntaxError} /></div >
-            </div >
-            : ''
-          }
         </NonIETransitionGroup >
       </div >
     )
@@ -384,19 +326,6 @@ export const messages = defineMessages({
     id: 'Navigation.loggedInAs',
     description: 'Shown then logged',
     defaultMessage: 'Logged in as:'
-  },
-  luceneSyntaxError: {
-    id: 'Search.querySyntaxError',
-    description: 'Shown when search query does not conform to lucene syntax',
-    defaultMessage: `It looks like you want to perform an advanced search with field codes, but the query is not quite right. 
-    Check that any parentheses and quotes match and note that colon (":") is meant to be used to specify a field. 
-    If you want to search for anything with a colon or any other special symbols, try enclosing it in quotes (")`
-  },
-  unknownFields: {
-    id: 'Search.unknownField',
-    description: 'Shown when an unknown field i specified',
-    defaultMessage: `It looks like you want to perform an advanced search with field codes, but you have specified one or more fields that are we don't recognize:{unrecognizedFields}
-    We suggest you replace these with recognized field codes, otherwise the search may turn up empty`
   }
 })
 
