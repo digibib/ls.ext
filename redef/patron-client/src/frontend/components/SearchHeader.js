@@ -14,6 +14,12 @@ class SearchHeader extends React.Component {
     this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
   }
 
+  componentDidUpdate (prevprops, prevState) {
+    if (prevprops.locationQuery.query !== this.props.locationQuery.query) {
+       this.searchFieldInput.value = this.props.locationQuery.query || ''
+    }
+  }
+
   handleSearch (event) {
     event.preventDefault()
 
