@@ -21,6 +21,7 @@ import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.entity.patch.PatchParser;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.entity.repository.SPARQLQueryBuilder;
+import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -440,6 +441,14 @@ public final class EntityServiceImpl implements EntityService {
                 publication = new XURI(subject.toString());
             }
         }
+
+        List<Statement> removeStatements = newArrayList();
+        inputModel.listStatements().forEachRemaining(s -> {
+            if (s.getPredicate().equals(ResourceFactory.createProperty(BaseURI.ontology("recordId")))) {
+                removeStatements.add(s);
+            }
+        });
+        inputModel.remove(removeStatements);
 
         MarcRecord marcRecord;
         if (inputModel.contains(null, publicationOfProperty)) {

@@ -1,9 +1,11 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
-import { Link } from 'react-router'
-import { push } from 'react-router-redux'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import {Link} from 'react-router'
+import {push} from 'react-router-redux'
+import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
 import MediaQuery from 'react-responsive'
+import LuceneParser from 'lucene-query-parser'
+import {queryFieldTranslations} from '../constants/Constants'
 
 class SearchHeader extends React.Component {
   constructor (props) {
@@ -12,27 +14,74 @@ class SearchHeader extends React.Component {
     this.handleLoginClick = this.handleLoginClick.bind(this)
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
     this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
+    this.checkQuery = this.checkQuery.bind(this)
+    this.state = { querySyntaxError: false, unknownFields: {}, searchFieldInput: '' }
   }
 
-  componentDidUpdate () {
-    this.searchFieldInput.value = this.props.locationQuery.query || ''
+  componentDidUpdate (prevprops, prevState) {
+    if (this.state.searchFieldInput === '' || prevprops.locationQuery.query !== this.props.locationQuery.query) {
+      this.state.searchFieldInput = this.props.locationQuery.query || ''
+    }
+  }
+
+  checkQuery (event) {
+    const unknownFields = []
+
+    function traverse (node) {
+      if (node.left) {
+        traverse(node.left)
+      }
+      if (node.field && node.field !== '<implicit>') {
+        if (!{ ...queryFieldTranslations, '*': '*' }[ node.field ]) {
+          unknownFields[ node.field ] = {}
+        }
+      }
+      if (node.right) {
+        traverse(node.right)
+      }
+    }
+
+    const searchFieldInput = event.target.value
+    try {
+      traverse(LuceneParser.parse(event.target.value))
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          querySyntaxError: false,
+          unknownFields,
+          searchFieldInput
+        }
+      })
+    } catch (err) {
+      console.log(err)
+      this.setState(prevState => ({
+        ...prevState,
+        querySyntaxError: true,
+        unknownFields: {},
+        searchFieldInput
+      }))
+    }
   }
 
   handleSearch (event) {
     event.preventDefault()
-    // Ensure that page-param is deleted on new search
-    delete this.props.locationQuery['page']
-    this.props.mobileNavigationActions.hideMobileNavigation()
+    if (!this.state.querySyntaxError) {
+      this.state.unknownFields = {}
 
-    /* Active filters are removed on new query */
-    if (this.props.path.includes('/work')) {
-      this.props.dispatch(push({ pathname: '/search', query: { query: this.searchFieldInput.value } }))
-    } else {
-      /* Active filters are NOT removed on new query */
-      this.props.locationQuery.query = this.searchFieldInput.value
-      this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
+      // Ensure that page-param is deleted on new search
+      delete this.props.locationQuery[ 'page' ]
+      this.props.mobileNavigationActions.hideMobileNavigation()
+
+      /* Active filters are removed on new query */
+      if (this.props.path.includes('/work')) {
+        this.props.dispatch(push({ pathname: '/search', query: { query: this.state.searchFieldInput } }))
+      } else {
+        /* Active filters are NOT removed on new query */
+        this.props.locationQuery.query = this.state.searchFieldInput
+        this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
+      }
+      this.props.searchActions.search()
     }
-    this.props.searchActions.search()
   }
 
   handleLoginClick (event) {
@@ -56,11 +105,11 @@ class SearchHeader extends React.Component {
   loginLink () {
     if (!this.props.isLoggedIn) {
       return [
-        <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick}>
-          <Link to="/">
-            <FormattedMessage {...messages.logIn} /> <span>&raquo;</span>
-          </Link>
-        </li>
+        <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick} >
+          <Link to="/" >
+            <FormattedMessage {...messages.logIn} /> <span >&raquo;</span >
+          </Link >
+        </li >
       ]
     }
   }
@@ -68,11 +117,11 @@ class SearchHeader extends React.Component {
   logoutLink () {
     if (this.props.isLoggedIn) {
       return [
-        <li key={1} data-automation-id="logout_element" onClick={this.props.logout}>
-          <Link to="/">
-            <FormattedMessage {...messages.logout} /> <span>&raquo;</span>
-          </Link>
-        </li>
+        <li key={1} data-automation-id="logout_element" onClick={this.props.logout} >
+          <Link to="/" >
+            <FormattedMessage {...messages.logout} /> <span >&raquo;</span >
+          </Link >
+        </li >
       ]
     }
   }
@@ -80,9 +129,9 @@ class SearchHeader extends React.Component {
   profileLink () {
     if (this.props.isLoggedIn) {
       return [
-        <li key={3}>
-          <Link to="/profile/loans"><FormattedMessage {...messages.myProfile} /> <span>&raquo;</span></Link>
-        </li>
+        <li key={3} >
+          <Link to="/profile/loans" ><FormattedMessage {...messages.myProfile} /> <span >&raquo;</span ></Link >
+        </li >
       ]
     }
   }
@@ -90,31 +139,32 @@ class SearchHeader extends React.Component {
   registrationLink () {
     if (!this.props.isLoggedIn) {
       return (
-        <li data-automation-id="registration_element">
+        <li data-automation-id="registration_element" >
           <a href="#" onClick={this.handleRegistrationClick}
-             title="register"><FormattedMessage {...messages.register} /><span>&raquo;</span></a>
-        </li>
+             title="register" ><FormattedMessage {...messages.register} /><span >&raquo;</span ></a >
+        </li >
       )
     }
   }
 
   faqLink () {
     return (
-      <li>
-        <a href="https://www.deichman.no/sp%C3%B8rsm%C3%A5l_og_svar_nytt_biblioteksystem">
+      <li >
+        <a href="https://www.deichman.no/sp%C3%B8rsm%C3%A5l_og_svar_nytt_biblioteksystem" >
           <FormattedMessage {...messages.faq} />
-          <span>&raquo;</span>
-        </a>
-      </li>
+          <span >&raquo;</span >
+        </a >
+      </li >
     )
   }
 
   loggedInMessage () {
     const { borrowerName } = this.props
     return (
-      <span>
-        <FormattedMessage {...messages.loggedInAs} /> <strong><span data-automation-id="borrowerName">{borrowerName}</span></strong>
-      </span>
+      <span >
+        <FormattedMessage {...messages.loggedInAs} /> <strong ><span
+        data-automation-id="borrowerName" >{borrowerName}</span ></strong >
+      </span >
     )
   }
 
@@ -124,32 +174,32 @@ class SearchHeader extends React.Component {
   renderNavigationLinks () {
     const { borrowerName } = this.props
     return (
-      <ul>
+      <ul >
         {this.faqLink()}
         {this.profileLink()}
         {this.registrationLink()}
         {borrowerName
           ? (
-          <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
-            <li>{this.loggedInMessage()}</li>
-          </MediaQuery>
-        )
+            <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }} >
+              <li >{this.loggedInMessage()}</li >
+            </MediaQuery >
+          )
           : null}
         {this.loginLink()}
         {this.logoutLink()}
-      </ul>
+      </ul >
     )
   }
 
   renderMobileNavigationLinks () {
     return (
-      <ul>
+      <ul >
         {this.faqLink()}
         {this.profileLink()}
         {this.registrationLink()}
         {this.loginLink()}
         {this.logoutLink()}
-      </ul>
+      </ul >
     )
   }
 
@@ -157,7 +207,7 @@ class SearchHeader extends React.Component {
     const { borrowerName } = this.props
     const mobileNavClass = this.props.showMobileNavigation ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
-      <div>
+      <div >
         <NonIETransitionGroup
           transitionName="fade-in"
           transitionAppear
@@ -165,42 +215,42 @@ class SearchHeader extends React.Component {
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="header"
-          className="wrapper">
+          className="wrapper" >
 
-          <div className="logo">
-            <a href="https://www.deichman.no/">
+          <div className="logo" >
+            <a href="https://www.deichman.no/" >
               <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
-            </a>
-          </div>
+            </a >
+          </div >
 
-          <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
-            <div className="mobile-menu-toggle">
+          <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }} >
+            <div className="mobile-menu-toggle" >
               <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars"
                    onClick={this.toggleMobileNav} />
-            </div>
-          </MediaQuery>
+            </div >
+          </MediaQuery >
 
-          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
-            <nav className="primary-menu">
+          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+            <nav className="primary-menu" >
               {this.renderNavigationLinks()}
-            </nav>
-          </MediaQuery>
+            </nav >
+          </MediaQuery >
 
           {borrowerName
-            ? (<MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
-            <div className="logged-in-message">
-              {this.loggedInMessage()}
-            </div>
-          </MediaQuery>)
+            ? (<MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }} >
+              <div className="logged-in-message" >
+                {this.loggedInMessage()}
+              </div >
+            </MediaQuery >)
             : null}
 
-        </NonIETransitionGroup>
+        </NonIETransitionGroup >
 
-        <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }}>
-          <nav className={mobileNavClass}>
+        <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }} >
+          <nav className={mobileNavClass} >
             {this.renderMobileNavigationLinks()}
-          </nav>
-        </MediaQuery>
+          </nav >
+        </MediaQuery >
 
         <NonIETransitionGroup
           transitionName="fade-in"
@@ -210,36 +260,51 @@ class SearchHeader extends React.Component {
           transitionLeaveTimeout={500}
           component="section"
           className="search-box-wrapper"
-          role="search">
-          <div className="search-box">
-            <form onSubmit={this.handleSearch}>
-              <label htmlFor="search">{this.props.intl.formatMessage(messages.searchLabel)}:</label>
-              <div className="search-field-wrapper">
-                <div className="search-field">
+          role="search" >
+          <div className="search-box" >
+            <form onSubmit={this.handleSearch} >
+              <label htmlFor="search" >{this.props.intl.formatMessage(messages.searchLabel)}:</label >
+              <div className="search-field-wrapper" >
+                <div className="search-field" >
                   <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
                          id="search"
                          type="text"
                          defaultValue={this.props.locationQuery.query || ''}
-                         ref={e => this.searchFieldInput = e}
+                         value={this.state.searchFieldInput}
+                         onChange={this.checkQuery}
                          data-automation-id="search_input_field"
                   />
-                </div>
-                <div className="search-button">
+                </div >
+                <div className="search-button" >
                   <button onClick={this.handleSearch} type="button" className="search-submit"
-                          data-automation-id="search_button">
+                          data-automation-id="search_button" disabled={this.state.querySyntaxError} >
                     {!this.props.isSearching
                       ? <FormattedMessage {...messages.search} />
-                      : <span data-automation-id="is_searching" className="loading-spinner">
-                          <i className="icon-spin4 animate-spin" style={{color: '#fff'}} />
-                        </span>
+                      : <span data-automation-id="is_searching" className="loading-spinner" >
+                          <i className="icon-spin4 animate-spin" style={{ color: '#fff' }} />
+                        </span >
                     }
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </NonIETransitionGroup>
-      </div>
+                  </button >
+                </div >
+              </div >
+            </form >
+          </div >
+          {Object.keys(this.state.unknownFields).length > 0
+            ? <div className="search-syntax-error" >
+              <div className="message" >
+                <FormattedMessage {...Object.assign(messages.unknownFields, { values: { unrecognizedFields: Object.keys(this.state.unknownFields).map(field => `"${field}"`).join(', ') } })} />
+              </div >
+            </div >
+            : ''
+          }
+          {this.state.querySyntaxError
+            ? <div className="search-syntax-error" >
+              <div className="message" ><FormattedMessage {...messages.luceneSyntaxError} /></div >
+            </div >
+            : ''
+          }
+        </NonIETransitionGroup >
+      </div >
     )
   }
 }
@@ -328,6 +393,19 @@ export const messages = defineMessages({
     id: 'Navigation.loggedInAs',
     description: 'Shown then logged',
     defaultMessage: 'Logged in as:'
+  },
+  luceneSyntaxError: {
+    id: 'Search.querySyntaxError',
+    description: 'Shown when search query does not conform to lucene syntax',
+    defaultMessage: `It looks like you want to perform an advanced search with field codes, but the query is not quite right. 
+    Check that any parentheses and quotes match and note that colon (":") is meant to be used to specify a field. 
+    If you want to search for anything with a colon or any other special symbols, try enclosing it in quotes (")`
+  },
+  unknownFields: {
+    id: 'Search.unknownField',
+    description: 'Shown when an unknown field i specified',
+    defaultMessage: `It looks like you want to perform an advanced search with field codes, but you have specified one or more fields that are we don't recognize:{unrecognizedFields}
+    We suggest you replace these with recognized field codes, otherwise the search may turn up empty`
   }
 })
 

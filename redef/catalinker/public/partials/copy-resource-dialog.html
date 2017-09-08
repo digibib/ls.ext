@@ -1,0 +1,15 @@
+<div id="copy-resource-dialog" title="{{>copyPublicationDialogTitle}}">
+    {{#if !error}}
+            {{#if !clonedPublicationUri}}
+            <h3>{{>copyPublicationWarningDialogLegend}}</h3>
+            <p>{{>copyPublicationWarningDialogExplanation}}</p>
+            {{/if}}
+            <p>{{#if copyPublicationProgress}}{{>copyPublicationProgress {clonedPublicationUri}}}{{/if}}</p>
+    {{/if}}
+    {{#error}}
+            <h3>{{>copyPublicationFailed}}</h3>
+            {{#with message}}
+                <p>{{.}}</p>
+            {{/with}}
+    {{/}}
+</div>

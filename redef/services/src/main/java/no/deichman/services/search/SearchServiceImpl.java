@@ -19,7 +19,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -305,9 +304,8 @@ public class SearchServiceImpl implements SearchService {
         // Check if index A is aliased to 'search'
         try (CloseableHttpClient httpclient = createDefault()) {
             URI uri = getIndexUriBuilder().setPath("/a/_alias/search").build();
-            try (CloseableHttpResponse res = httpclient.execute(new HttpHead(uri))) {
-                int statusCode = res.getStatusLine().getStatusCode();
-                if (statusCode == HTTP_OK){
+            try (CloseableHttpResponse res = httpclient.execute(new HttpGet(uri))) {
+                if (res.getEntity().toString().contains("search")) {
                     return "a";
                 }
             }
@@ -320,7 +318,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private String getInactiveIndex() {
-        if (getActiveIndex() == "a") {
+        if (getActiveIndex().equals("a")) {
             return "b";
         } else {
             return "a";

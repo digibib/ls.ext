@@ -762,4 +762,20 @@ public class EntityResourceTest {
         assertTrue(originalModel.isIsomorphicWith(cloneModel));
         assertThat(cloneModel.size(), is(numberOfStatementsInCloneModelBefore - 2));
     }
+
+    @Test
+    public void should_return_cloned_publication_with_new_record_id() throws Exception {
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(any())).thenReturn(A_BIBLIO_ID);
+        entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("work_w87654.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);
+        XURI oldPubUri = new XURI("http://data.deichman.no/publication/p80002");
+        Response result = entityResource.cloneResource(oldPubUri.getType(), oldPubUri.getId());
+        final String clonedUri = result.getHeaderString(LOCATION);
+        String cloneId = new XURI(clonedUri).getId();
+
+        final Response clonedResponse = entityResource.get(oldPubUri.getType(), cloneId);
+
+        String cloneContent = clonedResponse.getEntity().toString();
+        Model cloneModel = RDFModelUtil.modelFrom(cloneContent.replace(cloneId, new XURI(clonedUri).getId()), Lang.JSONLD);
+        assertThat(cloneModel.getProperty(ResourceFactory.createResource(clonedUri), ResourceFactory.createProperty(BaseURI.ontology("recordId"))).getString(), is(A_BIBLIO_ID));
+    }
 }

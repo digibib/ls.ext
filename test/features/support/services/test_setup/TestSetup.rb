@@ -28,7 +28,7 @@ module TestSetup
     end
 
     # make sure koha is populated with neccessary tables and api user and sip user in place
-    def setup_db(dbversion="17.0500000")
+    def setup_db(dbversion="17.0501000")
       apipassenc = BCrypt::Password.create(@apipass, cost: 8)
       sippassenc = BCrypt::Password.create(@sippass, cost: 8)
       @dbversion = dbversion
@@ -86,6 +86,10 @@ module TestSetup
         req = Net::HTTP::Post.new(@api.request_uri + "patrons", @headers)
         req.body = params.to_json
         res = http.request(req)
+        if (res.code.to_i < 200 || res.code.to_i > 399)
+          STDOUT.puts("Attempting to create user gave status code: #{res.code}")
+          raise
+        end
         patron = JSON.parse(res.body)
         @patrons << patron
       end

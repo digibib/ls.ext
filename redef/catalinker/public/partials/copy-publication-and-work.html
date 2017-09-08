@@ -1,0 +1,20 @@
+{{#if targetUri[domain]}}
+{{#if toolMode}}
+{{else}}
+<div class="pure-u-1-1">
+    <div class="pure-g">
+        <div class="pure-u-1-2">
+            <button
+                    tabindex="-1"
+                    class="pure-button pure-button-primary next-step-button"
+                    title="{{>copyPublicationButtonLabel}}"
+                    on-click="copyPublicationAndWork:{{targetUri.Work}},{{targetUri.Publication}}">{{>copyPublicationButtonLabel}}
+            </button>
+        </div>
+    </div>
+</div>
+{{/if}}
+{{/if}}
+<span style="display: none;">
+ {{>copy-resource-dialog}}
+</span>

@@ -128,7 +128,7 @@
     serialExplanation: '(Serie)',
     publicationExplanation: '(Utgivelse)',
     instrumentExplanation: '(Instrument)',
-    workSeriesExplanation: '(Verksserie)',
+    workSeriesExplanation: '(Serie)',
     compositionTypeExplanation: '(Komposisjonstype)',
 
     // determinatives
@@ -344,6 +344,17 @@
                   deretter til sitt nye verk som utgivelse av det verket. Før verket splittes blir du bedt om å angi hvilke verdier
                   fra utgivelsene som skal overføres til tilsvarende felt på de nye verkene.`,
     splitWorkDialogLegend: 'Velg hvilke verdier som skal kopieres fra de eksisterende utgivelsene til de nye verkene som skal opprettes:',
+
+    // copy publication
+    copyPublicationButtonLabel: 'Kopier utgivelse og verk',
+    copyPublicationWarningDialogLegend: 'Er du sikker på at du vil kopiere denne utgivelsen?',
+    copyPublicationWarningDialogExplanation: 'Dette vil opprette en ny utgivelse og et nytt verk.',
+    copyPublicationDialogTitle: 'Kopiere utgivelse og verk',
+    progressCopyingPublication: 'Kopierer utgivelse...',
+    progressCopyingWork: 'Kopierer verk...',
+    progressConnectingPubToWork: 'Kobler utgivelse til nytt verk...',
+    progressCopyingDone: 'Klikk OK for å åpne den nye kopien av utgivelsen nå eller Avbryt for å fortsette med originalen.<p>Du kan også <a target="_blank" href="/cataloguing?template=workflow&openTab=1&copy=true&Publication={{clonedPublicationUri}}">åpne kopien i en ny fane.</a></p>',
+    copyPublicationFailed: 'Noe gikk galt under kopiering. Forsøk igjen senere.',
 
     // links
     showWorkPageLink: 'Vis siden for verket',

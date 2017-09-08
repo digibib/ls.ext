@@ -110,10 +110,6 @@ ifeq ($(LSDEVMODE),ci)
 endif
 	$(call rebuild,patron_client)
 
-rebuild_overview:					## Force rebuilds overview
-	@echo "======= FORCE RECREATING OVERVIEW ======\n"
-	$(call rebuild,overview)
-
 rebuild_cuke_tests:					## Force rebuilds cuke_tests
 	@echo "======= FORCE RECREATING CUKE_TESTS ======\n"
 	$(call rebuild,cuke_tests)

@@ -521,7 +521,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og jeg venter litt
     Og jeg venter litt
-    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksserienavnet pluss "(Verksserie)"
+    Så sjekker jeg at den tilfeldige verdien jeg la inn for feltet "Relasjon til annet verk eller verksserie" stemmer med verksserienavnet pluss "(Serie)"
 
   Scenario: katalogisere verk med nasjonalitet
     Gitt jeg kan dikte opp en verkstittel
@@ -729,3 +729,19 @@ Egenskap: Katalogisere i arbeidsflyt
     Så klikker jeg på lenkene for å vise mindre brukte felter
     Og legger inn opplysningene om CD-utgivelsen
 
+  Scenario: Kopiere utgivelse og verk
+    Gitt jeg kan dikte opp en verkstittel
+    Og at jeg legger navnet på verket inn på startsiden for arbeidsflyt og trykker enter
+    Så får jeg ingen treff
+    Så trykker jeg på "Opprett nytt verk"-knappen
+    Så trykker jeg på "Opprett"-knappen
+    Og jeg venter litt
+    Så krysser jeg av i avkrysningboksen for "Verket har ikke hovedansvarlig"
+    Og jeg venter litt
+    Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
+    Og jeg trykker på "Kopier utgivelse og verk"-knappen
+    Så trykker jeg på "Fortsett"-knappen i dialogen
+    Så trykker jeg på "Ok"-knappen i dialogen
+    Og jeg venter litt
+    Så viser brukergrensenittet at jeg har åpnet en kopi

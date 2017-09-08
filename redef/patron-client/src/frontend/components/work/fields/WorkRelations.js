@@ -88,7 +88,7 @@ export const messages = defineMessages({
   workSerie: {
     id: 'WorkSerie',
     description: 'Label for work series',
-    defaultMessage: 'Work series'
+    defaultMessage: 'Series'
   }
 })
 

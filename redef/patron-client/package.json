@@ -116,6 +116,7 @@
     "express-session": "1.14.2",
     "express-static-gzip": "0.2.2",
     "jsonld": "0.4.11",
+    "lucene-query-parser": "^1.0.1",
     "moment": "^2.17.1",
     "node-mysql": "0.4.2",
     "node-uuid": "1.4.7",
