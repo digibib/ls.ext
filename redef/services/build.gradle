@@ -43,7 +43,7 @@ def version_jetty = '9.4.2.v20170220'
 def version_jersey = '2.22.1'
 def version_jackson = '2.8.7'
 def version_slf4j = '1.7.25'
-def version_jena = '3.2.0'
+def version_jena = '3.4.0'
 def version_commons_lang = '3.5'
 def version_commons_io = '2.5'
 

@@ -19,6 +19,7 @@
     ignore: 'Ignore',
     create: 'Create',
     done: 'Done',
+    acknowledge: 'Okay!',
     part: 'Part',
     pageNumbers: 'Pages',
     save: 'Save',
@@ -157,6 +158,20 @@
     WorkSeriesLabelDem: 'this work series',
     CompositionTypeLabelDem: 'this composition type',
 
+    // demonstratives with firt letter uppercase
+    PersonLabelDemCap: 'This person',
+    GeneralSubjectLabelDemCap: 'This subject',
+    WorkLabelDemCap: 'This work',
+    GenreLabelDemCap: 'This genre',
+    CorporationLabelDemCap: 'This corporation',
+    PlaceLabelDemCap: 'This place',
+    EventLabelDemCap: 'This event',
+    SerialLabelDemCap: 'This serial',
+    PublicationLabelDemCap: 'This publication',
+    InstrumentLabelDemCap: 'This instrument',
+    WorkSeriesLabelDemCap: 'This work series',
+    CompositionTypeLabelDemCap: 'This composition type',
+
     // indeterminative
     PersonLabel: 'person',
     GeneralSubjectLabel: 'subject',
@@ -260,6 +275,10 @@
 
     // edit authority
     confirmEditResource: 'Are you sure you wish to edit {{fieldLabel}} of {{rdfType + \'LabelDet\'}}',
+
+    // added template values alert
+    addedTemplateValuesDialogTitle: 'Standard values',
+    addedTemplateValues: '{{>type + "LabelDemCap"}} was created with{{numberOfValues}} standard value{{#numberOfValues > 1}}s{{/}}:',
 
     // task descriptions
     filmPub: 'Cataloguing film',
