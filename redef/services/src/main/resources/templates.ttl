@@ -43,5 +43,10 @@ publication:musicRecordingTemplate a :Publication ;
         :hasMediaType mediaType:MusicRecording
     ] ;
     :format format:CompactDisc ;
-    :audience audience:adult ;
     :locationFormat "CD" .
+
+work:musicWorkTemplate a :Work ;
+    duo:templateMatch [
+        :hasWorkType workType:Music
+    ] ;
+    :audience audience:adult .
