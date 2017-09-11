@@ -687,8 +687,12 @@
       if (options.compareValues) {
         input.compareValues = input.compareValues || emptyValues()
       }
+      const valuesKey = options.compareValues ? 'compareValues' : 'values'
       if (value) {
-        input[ options.compareValues ? 'compareValues' : 'values' ][ index ] = {
+        if (options.noOverwrite && input[ valuesKey ][ index ] && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value) {
+          return
+        }
+        input[ valuesKey ][ index ] = {
           old: options.keepOld ? input.values[ index ].old : {
             value: value.value,
             lang: value.lang
@@ -700,10 +704,18 @@
           },
           uniqueId: _.uniqueId()
         }
-        if (input[ options.compareValues ? 'compareValues' : 'values' ][ index ].current.accepted) {
+
+        if (input[ valuesKey ][ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        ractive.update(`${input.keypath}.${options.compareValues ? 'compareValues' : 'values'}.${index}`)
+        if (options.source && options.source === 'template') {
+          ractive.push('addedTemplateValues.values', {
+            label: input.label,
+            value: value.value
+          })
+        }
+
+        ractive.update(`${input.keypath}.${valuesKey}.${index}`)
       }
     }
 
@@ -2579,7 +2591,7 @@
         })
 
         if (!abortFetchTemplate) {
-          fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
+          return fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
             .then(function () {
               if (ractive.get('addedTemplateValues')) {
                 ractive.set('addedTemplateValues.type', newResourceType.type)
@@ -4230,21 +4242,23 @@
                 const newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get(`targetUri.${newResourceType.type}`))) {
                   fetchResourceTemplate(newResourceType.templateResourcePartsFrom, newResourceType)
-                  _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
-                    const sourceInput = inputFromInputId(copyFromInputId)
-                    if (sourceInput) {
-                      const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
-                      if (targetInput) {
-                        copyValues(targetInput, sourceInput)
-                      } else {
-                        throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
-                      }
-                    } else {
-                      throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
-                    }
-                  })
-                  saveNewResourceFromInputs(newResourceType.type)
-                  ractive.update()
+                    .then(function () {
+                      _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
+                        const sourceInput = inputFromInputId(copyFromInputId)
+                        if (sourceInput) {
+                          const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
+                          if (targetInput) {
+                            copyValues(targetInput, sourceInput)
+                          } else {
+                            throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
+                          }
+                        } else {
+                          throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
+                        }
+                      })
+                      saveNewResourceFromInputs(newResourceType.type)
+                      ractive.update()
+                    })
                 }
                 var foundSelectedTab = false
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
@@ -4310,7 +4324,6 @@
                   })
                   ractive.update(event.keypath)
                 }
-                fetchResourceTemplate(event.context.templateResourcePartsFrom, { type: event.context.rdfType }, event.context.inputs)
               },
               createNewResource: function (event, origin) {
                 let maintenance = origin.indexOf('maintenanceInputs') !== -1
@@ -4393,14 +4406,18 @@
                   }
                   setCreatedResourceValuesInMainInputs()
                 }
-                saveInputs((!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(domainType) : inputs, domainType)
-                  .then(setCreatedResourceUriInSearchInput)
-                  .then(!maintenance ? patchMotherResource : nop)
-                  .then(!maintenance ? setTargetUri : nop)
-                  .then(clearInputsAndSearchResult)
-                  .then(wait.cancel)
+                const inputsToSave = (!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(domainType) : inputs
+                fetchResourceTemplate(event.context.templateResourcePartsFrom, { type: event.context.rdfType }, inputsToSave)
                   .then(function () {
-                    setTimeout(positionSupportPanels)
+                    saveInputs(inputsToSave, domainType)
+                      .then(setCreatedResourceUriInSearchInput)
+                      .then(!maintenance ? patchMotherResource : nop)
+                      .then(!maintenance ? setTargetUri : nop)
+                      .then(clearInputsAndSearchResult)
+                      .then(wait.cancel)
+                      .then(function () {
+                        setTimeout(positionSupportPanels)
+                      })
                   })
               },
               cancelEdit: function (event, origin) {
