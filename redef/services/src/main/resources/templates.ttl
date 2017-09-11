@@ -5,6 +5,7 @@
 #
 @prefix : <__BASE_URI_ONTOLOGY__> .
 @prefix format: <__BASE_URI_ROOT__format#> .
+@prefix audience: <__BASE_URI_ROOT__audience#> .
 @prefix publication: <__BASE_URI_ROOT__publication/> .
 @prefix work: <__BASE_URI_ROOT__work/> .
 @prefix person: <__BASE_URI_ROOT__person/> .
@@ -41,10 +42,6 @@ publication:musicRecordingTemplate a :Publication ;
     duo:templateMatch [
         :hasMediaType mediaType:MusicRecording
     ] ;
-    :format format:CompactDisc .
-
-
-
-
-
-
+    :format format:CompactDisc ;
+    :audience audience:adult ;
+    :locationFormat "CD" .
