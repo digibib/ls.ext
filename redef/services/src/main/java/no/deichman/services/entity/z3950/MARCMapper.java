@@ -100,6 +100,7 @@ public class MARCMapper {
             }
         }
 
+        boolean foundWorkLanguage = false;
         for (DataField dataField : r.getDataFields()) {
             String tag = dataField.getTag();
             switch (tag) {
@@ -133,11 +134,14 @@ public class MARCMapper {
                     setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
                     if (dataField.getSubfields('h').isEmpty()) {
                         setUriObjectFixedValueWidth(dataField, 'a', THREE, work::addLanguage, this::languagePrefix);
-                        r.getControlFields()
-                                .stream()
-                                .filter(f -> f.getTag().equals("008"))
-                                .findFirst()
-                                .ifPresent(s -> setUriObject(s, THIRTY_FIVE, THIRTY_SEVEN, work::addLanguage, MUL_FILTER, this::languagePrefix));
+                        if (!foundWorkLanguage) {
+                            r.getControlFields()
+                                    .stream()
+                                    .filter(f -> f.getTag().equals("008"))
+                                    .findFirst()
+                                    .ifPresent(s -> setUriObject(s, THIRTY_FIVE, THIRTY_SEVEN, work::addLanguage, MUL_FILTER, this::languagePrefix));
+                        }
+                        foundWorkLanguage = true;
                     }
                     break;
                 case "082":
@@ -395,6 +399,14 @@ public class MARCMapper {
                     //we're not interested in the content so we do nothing -- checkstyle requires default.
                     break;
             }
+        }
+
+        if (!foundWorkLanguage) {
+            r.getControlFields()
+                    .stream()
+                    .filter(f -> f.getTag().equals("008"))
+                    .findFirst()
+                    .ifPresent(s -> setUriObject(s, THIRTY_FIVE, THIRTY_SEVEN, work::addLanguage, MUL_FILTER, this::languagePrefix));
         }
 
         graphList.addAll(persons);
