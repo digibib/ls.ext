@@ -563,35 +563,6 @@
       })
     }
 
-    const showAddedTemplateValueDialog = function () {
-      $('#alert-added-template-values-dialog').dialog({
-        resizable: false,
-        modal: true,
-        width: 550,
-        title: translate('addedTemplateValuesDialogTitle'),
-        buttons: [
-          {
-            text: translate('acknowledge'),
-            class: 'default',
-            id: 'ackAddTemplateValuesBtn',
-            click: function () {
-              $(this).dialog('close')
-              ractive.set('addedTemplateValues', null)
-            }
-          }
-        ],
-        close: function () {
-          ractive.set('addedTemplateValues', null)
-        },
-        open: function () {
-          const focusNagger = setInterval(function () {
-            $('#ackAddTemplateValuesBtn').focus()
-          }, 100)
-          setTimeout(focusNagger.cancel, 5000)
-        }
-      })
-    }
-
     function i18nLabelValue (label, lang) {
       lang = lang || 'no'
       if (ractive) {
@@ -671,12 +642,6 @@
           input[ valuesKey ][ index ].current.accepted = { source: options.source }
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        if (options.source && options.source === 'template') {
-          ractive.push('addedTemplateValues.values', {
-            label: input.label,
-            value: Main.predefinedLabelValue(input.fragment, input[ valuesKey ][ index ].current.value)
-          })
-        }
         ractive.update(`${input.keypath}.values.${index}`)
         return valuesAsArray
       }
@@ -704,17 +669,9 @@
           },
           uniqueId: _.uniqueId()
         }
-
         if (input[ valuesKey ][ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        if (options.source && options.source === 'template') {
-          ractive.push('addedTemplateValues.values', {
-            label: input.label,
-            value: value.value
-          })
-        }
-
         ractive.update(`${input.keypath}.${valuesKey}.${index}`)
       }
     }
@@ -2592,11 +2549,6 @@
 
         if (!abortFetchTemplate) {
           return fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
-            .then(function () {
-              if (ractive.get('addedTemplateValues')) {
-                ractive.set('addedTemplateValues.type', newResourceType.type)
-              }
-            })
         }
       }
     }
@@ -2729,7 +2681,6 @@
             applicationData.partials[ 'additional-suggestions-dialog' ] = require('../../public/partials/additional-suggestions-dialog.html')
             applicationData.partials[ 'merge-resources-dialog' ] = require('../../public/partials/merge-resources-dialog.html')
             applicationData.partials[ 'edit-resource-warning-dialog' ] = require('../../public/partials/edit-resource-warning-dialog.html')
-            applicationData.partials[ 'alert-added-template-values-dialog' ] = require('../../public/partials/alert-added-template-values-dialog.html')
             applicationData.partials[ 'accordion-header-for-collection' ] = require('../../public/partials/accordion-header-for-collection.html')
             applicationData.partials[ 'readonly-input' ] = require('../../public/partials/readonly-input.html')
             applicationData.partials[ 'readonly-input-string' ] = require('../../public/partials/readonly-input-string.html')
@@ -5060,15 +5011,7 @@
                 openInputForms = _.without(openInputForms, keypath)
               }
               ractive.set('openInputForms', openInputForms)
-            }, { init: false }),
-
-            ractive.observe('addedTemplateValues', function (newValue, oldValue, keypath) {
-              if (newValue) {
-                showAddedTemplateValueDialog()
-              }
-            }, { init: false })
-          ])
-
+            }, { init: false }) ])
           return applicationData
         }
 

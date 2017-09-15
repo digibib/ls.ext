@@ -19,7 +19,6 @@
     ignore: 'Ignorer',
     create: 'Opprett',
     done: 'Ferdig',
-    acknowledge: 'Den er grei!',
     part: 'Del',
     pageNumbers: 'Sidetall',
     save: 'Lagre',
@@ -160,20 +159,6 @@
     WorkSeriesLabelDem: 'denne verksserien',
     CompositionTypeLabelDem: 'komposisjonstypen',
 
-    // demonstratives with firt letter uppercase
-    PersonLabelDemCap: 'Denne personen',
-    GeneralSubjectLabelDemCap: 'Dette emnet',
-    WorkLabelDemCap: 'Dette verket',
-    GenreLabelDemCap: 'Denne sjangeren',
-    CorporationLabelDemCap: 'Denne organisasjonen',
-    PlaceLabelDemCap: 'Dette stedet',
-    EventLabelDemCap: 'Denne hendelsen',
-    SerialLabelDemCap: 'Denne serien',
-    PublicationLabelDemCap: 'Denne utgivelsen',
-    InstrumentLabelDemCap: 'Dette instrumentet',
-    WorkSeriesLabelDemCap: 'Denne verksserien',
-    CompositionTypeLabelDemCap: 'Komposisjonstypen',
-
     // indeterminativ
     PersonLabel: 'person',
     GeneralSubjectLabel: 'emne',
@@ -277,10 +262,6 @@
 
     // edit authority
     confirmEditResource: 'Er du sikker på at du vil endre {{fieldLabel}} på  {{rdfType + \'LabelDet\'}}',
-
-    // added template values alert
-    addedTemplateValuesDialogTitle: 'Standardverdier',
-    addedTemplateValues: '{{>type + "LabelDemCap"}} ble opprettet med {{numberOfValues}} standardverdi{{#numberOfValues > 1}}er{{/}}:',
 
     // task descriptions
     filmPub: 'Katalogisering av filmutgivelse',
