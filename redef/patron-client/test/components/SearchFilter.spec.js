@@ -20,6 +20,7 @@ function setup (propOverrides) {
     toggleFilter: () => {},
     toggleFilterVisibility: () => {},
     toggleCollapseFilter: () => {},
+    toggleHideNoItems: () => {},
     scrollTargetNode: {},
     ...propOverrides
   }

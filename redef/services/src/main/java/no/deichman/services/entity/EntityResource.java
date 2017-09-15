@@ -254,8 +254,8 @@ public final class EntityResource extends ResourceBase {
             throw new NotFoundException();
         }
         if (xuri.getTypeAsEntityType() == PUBLICATION) {
-            String recordId = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordId"))).next().asLiteral().getString();
             try {
+                String recordId = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordId"))).next().asLiteral().getString();
                 getKohaAdapter().deleteBiblio(recordId);
             } catch (Exception e) {
                 // We abort if biblio has items, but we want to continue deleting publication

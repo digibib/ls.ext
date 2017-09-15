@@ -99,9 +99,6 @@
     "prefLabel": {
       "@id": "deichman:prefLabel"
     },
-    "altLabel": {
-      "@id": "deichman:altLabel"
-    },
     "name": {
       "@id": "deichman:name"
     },
@@ -190,6 +187,9 @@
     "partNumber": {
       "@id": "deichman:partNumber"
     },
+    "untranscribedTitle": {
+      "@id": "deichman:untranscribedTitle"
+    },
     "edition": {
       "@id": "deichman:edition"
     },
@@ -198,7 +198,8 @@
       "@container": "@set"
     },
     "numberOfPages": {
-      "@id": "deichman:numberOfPages"
+      "@id": "deichman:numberOfPages",
+      "@container": "@set"
     },
     "isbn": {
       "@id": "deichman:isbn",

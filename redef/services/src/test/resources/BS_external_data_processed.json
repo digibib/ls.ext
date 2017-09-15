@@ -55,6 +55,14 @@
           "deichman:partNumber": "Andre bok",
           "deichman:mainTitle": "Et eksempel",
           "deichman:subtitle": "roman",
+          "deichman:language": [
+            {
+              "@id": "http://lexvo.org/id/iso639-3/swe"
+            },
+            {
+              "@id": "http://lexvo.org/id/iso639-3/nob"
+            }
+          ],
           "@type": [
             "deichman:Work",
             "deichman:TopBanana"
@@ -103,6 +111,9 @@
           "deichman:language": [
             {
               "@id": "http://lexvo.org/id/iso639-3/nob"
+            },
+            {
+              "@id": "http://lexvo.org/id/iso639-3/swe"
             }
           ],
           "@type": [

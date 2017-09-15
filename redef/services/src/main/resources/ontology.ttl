@@ -249,11 +249,6 @@ duo:Biography a rdfs:Class ;
   rdfs:range xsd:string ;
   rdfs:domain :Place, :Subject, :Genre, :CompositionType, :Instrument, :Event.
 
-:altLabel a rdfs:Property ;
-  rdfs:label "Alternative label"@en ;
-  rdfs:label "Alternativ betegnelse"@no ;
-  rdfs:range xsd:string .
-
 :name a rdfs:Property ;
   rdfs:label "Name"@en ;
   rdfs:label "Navn"@no ;

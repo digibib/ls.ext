@@ -1,0 +1,245 @@
+[
+  {
+    "@graph": [
+      {
+        "deichman:hasSummary": "Eksempel Eksempelsens tredje, selv-biografisk roman, sørger for tung lesing samt behov for suppe. Det er ingen tvil om at denne blir en norsk klassiker som kan måles opp mot blant annet Karsten og Petra har Lucia-fest.",
+        "deichman:audience": [
+          {
+            "@id": "http://data.deichman.no/audience#adult"
+          }
+        ],
+        "deichman:literaryForm": [
+          {
+            "@id": "http://data.deichman.no/literaryForm#novel"
+          }
+        ],
+        "deichman:subject": [
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:genre": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:biography": {
+          "@id": "http://data.deichman.no/biography#biographicalContent"
+        },
+        "deichman:hasContentAdaptation": [
+          {
+            "@id": "http://data.deichman.no/contentAdaptation#easyLanguage"
+          }
+        ],
+        "deichman:hasClassification": [
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:fictionNonfiction": {
+          "@id": "http://data.deichman.no/fictionNonfiction#fiction"
+        },
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:partNumber": "Andre bok",
+        "deichman:mainTitle": "Et eksempel",
+        "deichman:subtitle": "roman",
+        "deichman:language": [
+          {
+            "@id": "http://lexvo.org/id/iso639-3/swe"
+          },
+          {
+            "@id": "http://lexvo.org/id/iso639-3/nob"
+          }
+        ],
+        "@type": [
+          "deichman:Work",
+          "deichman:TopBanana"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:isbn": "000-12-345-678-9",
+        "deichman:binding": {
+          "@id": "http://data.deichman.no/binding#innbundet"
+        },
+        "deichman:hasPlaceOfPublication": {
+          "@id": "_:0000000"
+        },
+        "deichman:publishedBy": {
+          "@id": "_:0000000"
+        },
+        "deichman:numberOfPages": "191 s.",
+        "deichman:publicationOf": {
+          "@id": "_:0000000"
+        },
+        "deichman:hasMediaType": {
+          "@id": "http://data.deichman.no/mediaType#Book"
+        },
+        "deichman:hasFormatAdaptation": [
+          {
+            "@id": "http://data.deichman.no/formatAdaptation#capitalLetters"
+          }
+        ],
+        "deichman:hasPrimaryCataloguingSource": {
+          "@id": "http://data.deichman.no/cataloguingSource#BS"
+        },
+        "deichman:hasIdentifierInPrimaryCataloguingSource": "0250080",
+        "deichman:contributor": [
+          {
+            "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
+          }
+        ],
+        "deichman:publicationYear": "2007",
+        "deichman:partNumber": "Andre bok",
+        "deichman:mainTitle": "Et eksempel",
+        "deichman:subtitle": "roman",
+        "deichman:language": [
+          {
+            "@id": "http://lexvo.org/id/iso639-3/nob"
+          },
+          {
+            "@id": "http://lexvo.org/id/iso639-3/swe"
+          }
+        ],
+        "@type": [
+          "deichman:Publication"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:hasClassificationNumber": "839.823",
+        "deichman:hasClassificationSource": {
+          "@id": "http://data.deichman.no/classificationSource#ddk5"
+        },
+        "@id": "_:0000000"
+      },
+      {
+        "@type": [
+          "deichman:Place"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Oslo"
+      },
+      {
+        "deichman:name": "Oktober",
+        "@type": [
+          "deichman:Corporation"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:hasClassificationNumber": "839.823",
+        "@id": "_:0000000"
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Fortellinger"
+      },
+      {
+        "@type": [
+          "deichman:Genre"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Biografisk"
+      },
+      {
+        "deichman:birthYear": "1931",
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#n"
+          }
+        ],
+        "deichman:name": "Eksempelsen, Eksempel",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:birthYear": "1931",
+        "deichman:nationality": [
+          {
+            "@id": "http://data.deichman.no/nationality#n"
+          }
+        ],
+        "deichman:name": "Eksempelsen, Eksempel",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Jimson Jimson",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:name": "Connie Contributor",
+        "@type": [
+          "deichman:Person"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#author"
+        },
+        "@type": [
+          "deichman:Contribution",
+          "deichman:MainEntry"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#illustrator"
+        },
+        "@type": [
+          "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      },
+      {
+        "deichman:agent": {
+          "@id": "_:0000000"
+        },
+        "deichman:role": {
+          "@id": "http://data.deichman.no/role#author"
+        },
+        "@type": [
+          "deichman:Contribution"
+        ],
+        "@id": "_:0000000"
+      }
+    ],
+    "@context": {
+      "deichman": "http://deichman.no/ontology#",
+      "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "duo": "http://deichman.no/utility#"
+    }
+  }
+]

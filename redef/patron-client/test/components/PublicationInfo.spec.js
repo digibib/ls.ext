@@ -20,7 +20,8 @@ function setup (propOverrides) {
       subtitles: [],
       serialIssues: [],
       notes: [],
-      extents: []
+      extents: [],
+      numberOfPages: []
     },
     expandSubResource: expect.createSpy(),
     startReservation: () => {},

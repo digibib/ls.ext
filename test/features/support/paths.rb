@@ -119,7 +119,7 @@ module Paths
   end
 
   def patron_client_search_page()
-    "http://patron_client:#{port(:patron_client)}/"
+    "http://patron_client:#{port(:patron_client)}/?includeWithoutItems"
   end
 
   def services(path=nil)

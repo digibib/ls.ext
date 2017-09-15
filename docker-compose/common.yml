@@ -285,7 +285,7 @@ services:
 
   koha_indexer:
     container_name: koha_indexer
-    image: "digibib/koha-indexer:f6e418637effba0a979c1805466d4a4f2b02639c"
+    image: "digibib/koha-indexer:8fe76d382ea8333a7392a7c6f22ae181da28fd99"
     networks:
       - backend
     command:

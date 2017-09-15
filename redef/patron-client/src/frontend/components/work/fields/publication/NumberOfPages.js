@@ -3,9 +3,9 @@ import { defineMessages } from 'react-intl'
 import MetaItem from '../../../MetaItem'
 
 const NumberOfPages = ({ numberOfPages }) => {
-  if (numberOfPages) {
+  if (numberOfPages.length > 0) {
     return (
-      <MetaItem label={messages.numberOfPages} data-automation-id="publication_numberOfPages">{numberOfPages}</MetaItem>
+      <MetaItem label={messages.numberOfPages} data-automation-id="publication_numberOfPages">{numberOfPages.join(', ')}</MetaItem>
     )
   } else {
     return null
@@ -13,7 +13,7 @@ const NumberOfPages = ({ numberOfPages }) => {
 }
 
 NumberOfPages.propTypes = {
-  numberOfPages: PropTypes.string
+  numberOfPages: PropTypes.array
 }
 
 export const messages = defineMessages({

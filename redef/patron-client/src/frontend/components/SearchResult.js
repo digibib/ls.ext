@@ -51,6 +51,10 @@ class SearchResult extends React.Component {
     return (
       <Link data-automation-id="work-link" to={this.getResultUrl(result)} >
         <h1 className="workTitle" data-automation-id="work-title" >
+          { result.untranscribedTitle
+            ? <span className="title-text" >{result.untranscribedTitle}</span>
+            : null
+          }
           <span className="title-text" >{result.title}</span>
           {this.shouldShowFullList()
             ? <span className="caret" ><i className="icon-angle-wide" aria-hidden="true" /></span>

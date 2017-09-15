@@ -1,6 +1,12 @@
 {{#if nonEditable === true}}
 <span data-automation-id="{{../../dataAutomationId}}">{{./current.value}}</span>
 {{else}}
+{{#copiedFromType}}
+<span class="explainable copied-from" title="{{>copiedFromLegend}}">
+    <span class="ui-icon ui-icon-info"/>
+    {{>copiedFrom}}
+</span>
+{{/}}
 <input {{#disabled}} disabled="true" {{/}}
 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 type="number" min="0"

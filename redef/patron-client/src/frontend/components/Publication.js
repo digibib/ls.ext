@@ -54,7 +54,13 @@ class Publication extends React.Component {
             </div>
             <ClickableElement onClickAction={this.props.expandSubResource}
                               onClickArguments={[ this.props.publication.id, true ]}>
-              <h2 data-automation-id="publication_title">{title(publication)}</h2>
+              <div>
+                { publication.untranscribedTitle
+                  ? <h2>{publication.untranscribedTitle}</h2>
+                  : null
+                }
+                <h2 data-automation-id="publication_title">{title(publication)}</h2>
+              </div>
             </ClickableElement>
             <div className="meta-item">
               <span data-automation-id="publication_year">{publication.publicationYear}</span>

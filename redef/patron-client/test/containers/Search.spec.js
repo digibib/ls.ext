@@ -31,6 +31,7 @@ function setup (propOverrides) {
       toggleAllFiltersVisibility: () => {},
       toggleAvailability: () => {},
       toggleCollapseFilter: () => {},
+      toggleHideNoItems: () => {},
       removePeriod: () => {},
       togglePeriod: () => {}
     },
@@ -49,7 +50,8 @@ function setup (propOverrides) {
 
   const messages = {
     'AvailableFilter.availability': 'Tilgjengelighet',
-    'AvailableFilter.availabilityLabel': 'Inkludér kun tilgjengelige'
+    'AvailableFilter.availabilityLabel': 'Inkludér kun tilgjengelige',
+    'NoItemsFilter.label': 'Vis kun treff med eksemplarer'
   }
 
   const output = TestUtils.renderIntoDocument(

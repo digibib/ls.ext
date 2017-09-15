@@ -7,6 +7,7 @@ import Constants from '../constants/Constants'
 
 import DataRangeFilter from '../components/DateRangeFilter'
 import AvailableFilter from '../components/AvailableFilter'
+import NoItemsFilter from '../components/NoItemsFilter'
 
 class SearchFilters extends React.Component {
   constructor (props) {
@@ -133,6 +134,14 @@ class SearchFilters extends React.Component {
                 />
               )
             })}
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <NoItemsFilter
+                toggleHideNoItems={this.props.toggleHideNoItems}
+                isChecked={!this.props.locationQuery.hasOwnProperty('includeWithoutItems')}
+                scrollTargetNode={this.props.scrollTargetNode}
+              />
+            }
           </section>
         </NonIETransitionGroup>
       )
@@ -150,6 +159,7 @@ SearchFilters.propTypes = {
   toggleAllFiltersVisibility: PropTypes.func.isRequired,
   toggleCollapseFilter: PropTypes.func.isRequired,
   toggleAvailability: PropTypes.func.isRequired,
+  toggleHideNoItems: PropTypes.func.isRequired,
   scrollTargetNode: PropTypes.object.isRequired,
   isSearching: PropTypes.bool,
   windowWidth: PropTypes.number.isRequired,

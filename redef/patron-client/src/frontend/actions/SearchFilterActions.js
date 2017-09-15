@@ -61,6 +61,17 @@ export function toggleAvailability () {
   }
 }
 
+export function toggleHideNoItems () {
+  return (dispatch, getState) => {
+    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
+
+    // Toggling a filter implies a new search, so we discard any pagination parameter
+    delete locationQuery.page
+
+    dispatch(toggleParameter('includeWithoutItems'))
+  }
+}
+
 export function removeAvailabilityInBackUrl () {
   return (dispatch, getState) => {
     const locationQuery = { ...getState().routing.locationBeforeTransitions.query }

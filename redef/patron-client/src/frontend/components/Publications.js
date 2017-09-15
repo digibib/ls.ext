@@ -97,6 +97,7 @@ class Publications extends React.Component {
     const filters = getCategorizedFilters(this.props.locationQuery)
     const dateRange = []
     const availabilityFilterOn = this.props.query.back && this.props.query.back.includes('excludeUnavailable')
+    const hideResultWithoutItemsFilterOn = this.props.query.back && !this.props.query.back.includes('includeWithoutItems')
 
     if (getDateRange(this.props.locationQuery, 'yearFrom') !== null) {
       dateRange.push({ yearFrom: getDateRange(this.props.locationQuery, 'yearFrom') })
@@ -106,7 +107,7 @@ class Publications extends React.Component {
       dateRange.push({ yearTo: getDateRange(this.props.locationQuery, 'yearTo') })
     }
 
-    if (filters.branch || filters.language || filters.format || filters.mediatype || dateRange.length !== 0 || availabilityFilterOn) {
+    if (filters.branch || filters.language || filters.format || filters.mediatype || dateRange.length !== 0 || availabilityFilterOn || hideResultWithoutItemsFilterOn) {
       publicationsCopy.forEach(publication => {
         const withinDateRange = this.checkIfWithinDateRange(dateRange, publication.publicationYear)
         const formats = filters.format
@@ -127,7 +128,8 @@ class Publications extends React.Component {
           (languages ? this.isArraysIntersecting(languages, publication.languages) : true) &&
           (branches.length > 0 ? this.isArraysIntersecting(branches, branchesFromPublication) : true)) &&
           withinDateRange &&
-          (availabilityFilterOn ? publication.available : true)
+          (availabilityFilterOn ? publication.available : true) &&
+          (hideResultWithoutItemsFilterOn ? publication.items.length > 0 : true)
           ? filteredPublications.push(publication) : filteredPublicationsRest.push(publication)
       })
     } else {

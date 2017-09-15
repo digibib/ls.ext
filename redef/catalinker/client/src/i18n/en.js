@@ -132,7 +132,7 @@
     // determinative
     PersonLabelDet: 'the person',
     GeneralSubjectLabelDet: 'the subject',
-    WorkLabelDet: 'this work',
+    WorkLabelDet: 'the work',
     GenreLabelDet: 'the genre',
     CorporationLabelDet: 'the corporation',
     PlaceLabelDet: 'the place',
@@ -390,7 +390,8 @@
     maximumOneCanBeSelected: 'You can only select one item here',
     maximumSelected: 'You can select at most {{maximum}} values here',
     noResults: 'No results',
-    searching: 'Searching…'
-
+    searching: 'Searching…',
+    copiedFrom: 'From {{>copiedFromType + "LabelDet"}}',
+    copiedFromLegend: 'The value in this fields has been copied from {{copiedFromLabel}} of {{>copiedFromType + "LabelDet"}}'
   }
 }));

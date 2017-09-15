@@ -1204,7 +1204,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   text-decoration: underline;
 }
 
-.filter-group.dateRangeFilters header.filterTitle {
+.filter-group.dateRangeFilters header.filterTitle, .filter-group.noitemsfilter {
   border-top: 1px solid $darkGreyColor;
   padding-top: 1em;
   margin-top: 1em;
@@ -4132,30 +4132,6 @@ header .logged-in-message {
   border-color: $darkGreyColor;
   background: $darkGreyColor;
   cursor: pointer;
-}
-
-.search-box button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.search-syntax-error {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  z-index: 100;
-  background: white;
-  padding-left: 0.8em;
-  padding-right: 0.8em;
-  .message {
-    background: $yellow;
-    padding: 7px 18px 7px 18px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    max-width: 1138px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-  }
 }
 
 @include breakpoint($small) {

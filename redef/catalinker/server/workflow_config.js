@@ -651,8 +651,11 @@ module.exports = (app) => {
               },
               createNewResource: {
                 type: 'Publication',
-                prefillValuesFromResource: {
-                  'Work': [ 'mainTitle', 'subtitle', 'partTitle', 'partNumber' ]
+                copyInputValues: {
+                  workMainTitle: 'publicationMainTitle',
+                  workSubtitle: 'publicationSubtitle',
+                  workPartNumber: 'publicationPartNumber',
+                  workPartTitle: 'publicationPartTitle'
                 }
               }
             }
@@ -679,6 +682,7 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'subtitle',
+                id: 'publicationSubtitle',
                 headlinePart: {
                   order: 30,
                   styleClass: 'title'
@@ -686,10 +690,12 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'partNumber',
+                id: 'publicationPartNumber',
                 esotericWhen: { hasMediaType: [ 'MusicRecording', 'Book', 'Audiobook', 'LanguageCourse', 'Film' ] }
               },
               {
                 rdfProperty: 'partTitle',
+                id: 'publicationPartTitle',
                 esotericWhen: { hasMediaType: [ 'MusicRecording', 'Book', 'Audiobook', 'LanguageCourse', 'Film' ] },
                 headlinePart: {
                   order: 40,

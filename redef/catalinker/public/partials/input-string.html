@@ -11,6 +11,12 @@ class-valid="{{!error}}"
 data-automation-id="{{../../dataAutomationId}}"
 value="{{./current.value}}" />
 {{else}}
+{{#copiedFromType}}
+<span class="explainable copied-from" title="{{>copiedFromLegend}}">
+    <span class="ui-icon ui-icon-info"/>
+    {{>copiedFrom}}
+</span>
+{{/}}
 <input {{#disabled}} disabled="true" {{/}}
 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 class="pure-u-1-1"

@@ -215,7 +215,7 @@ function transformPublications (publications) {
       languages: publication.languages,
       mainTitle: publication.mainTitle,
       mediaTypes: publication.mediaTypes,
-      numberOfPages: publication.numberOfPages,
+      numberOfPages: publication.numberOfPages || [],
       partNumber: publication.partNumber,
       partTitle: publication.partTitle,
       placeOfPublication: publication.hasPlaceOfPublication ? publication.hasPlaceOfPublication.prefLabel : undefined,
@@ -227,7 +227,8 @@ function transformPublications (publications) {
       serialIssues: transformSerialIssues(publication.serialIssues),
       subtitle: publication.subtitle,
       subtitles: publication.subtitles,
-      uri: publication.id
+      uri: publication.id,
+      untranscribedTitle: publication.untranscribedTitle
     }
   })
 }
