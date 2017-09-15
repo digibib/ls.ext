@@ -1,0 +1,52 @@
+#
+# This file contains suggested templates for new resources i.e. in effect default values for certain properties.
+# Each template consists of a set of triples with a common subject which is a fixed URI. The triples in the templateMatch
+# blank node describe under which conditions the templates is suitable, e.g. for publications of certain media types
+#
+@prefix : <__BASE_URI_ONTOLOGY__> .
+@prefix format: <__BASE_URI_ROOT__format#> .
+@prefix audience: <__BASE_URI_ROOT__audience#> .
+@prefix publication: <__BASE_URI_ROOT__publication/> .
+@prefix work: <__BASE_URI_ROOT__work/> .
+@prefix person: <__BASE_URI_ROOT__person/> .
+@prefix mediaType: <__BASE_URI_ROOT__mediaType#> .
+@prefix workType: <__BASE_URI_ROOT__workType#> .
+@prefix duo: <http://data.deichman.no/utility#> .
+
+# Examples:
+# DVD as default format for films
+#publication:filmTemplate a :Publication ;
+#    duo:templateMatch [
+#        :hasMediaType mediaType:Film
+#    ] ;
+#    :format format:DVD .
+
+# All new persons are from arabic
+#person:arabicPersonTemplate a :Person ;
+#      :nationality <http://data.deichman.no/nationality#arab> ;
+#      duo:templateMatch [
+#          # match empty criteras
+#      ] .
+
+# New works should have same work type as the work they were created in context of:
+#work:literatureTemplate a :Work ;
+#    duo:templateMatch [
+#        :hasWorkType workType:Literature
+#    ] ;
+#    :hasWorkType workType:Literature .
+#
+#  repeat for other work types
+
+# CD is default format for musical recordings
+publication:musicRecordingTemplate a :Publication ;
+    duo:templateMatch [
+        :hasMediaType mediaType:MusicRecording
+    ] ;
+    :format format:CompactDisc ;
+    :locationFormat "CD" .
+
+work:musicWorkTemplate a :Work ;
+    duo:templateMatch [
+        :hasWorkType workType:Music
+    ] ;
+    :audience audience:adult .

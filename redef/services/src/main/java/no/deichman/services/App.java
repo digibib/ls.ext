@@ -9,6 +9,7 @@ import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.marc.MarcResource;
 import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
+import no.deichman.services.ontology.TemplateResource;
 import no.deichman.services.ontology.TranslationResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
@@ -146,7 +147,8 @@ public final class App {
                         TranslationResource.class.getCanonicalName(),
                         Datasource.class.getCanonicalName(),
                         CirculationResource.class.getCanonicalName(),
-                        ImmediateFeature.class.getCanonicalName()
+                        ImmediateFeature.class.getCanonicalName(),
+                        TemplateResource.class.getCanonicalName()
                 )));
 
 

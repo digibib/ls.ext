@@ -624,6 +624,8 @@
         let valuesKey = options.compareValues ? 'compareValues' : 'values'
         if (!input[ valuesKey ][ index ]) {
           input[ valuesKey ][ index ] = {}
+        } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value.length > 0) {
+          return
         }
         input[ valuesKey ][ index ].old = {
           value: valuesAsArray
@@ -650,8 +652,12 @@
       if (options.compareValues) {
         input.compareValues = input.compareValues || emptyValues()
       }
+      const valuesKey = options.compareValues ? 'compareValues' : 'values'
       if (value) {
-        input[ options.compareValues ? 'compareValues' : 'values' ][ index ] = {
+        if (options.noOverwrite && input[ valuesKey ][ index ] && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value) {
+          return
+        }
+        input[ valuesKey ][ index ] = {
           old: options.keepOld ? input.values[ index ].old : {
             value: value.value,
             lang: value.lang
@@ -663,17 +669,20 @@
           },
           uniqueId: _.uniqueId()
         }
-        if (input[ options.compareValues ? 'compareValues' : 'values' ][ index ].current.accepted) {
+        if (input[ valuesKey ][ index ].current.accepted) {
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        ractive.update(`${input.keypath}.${options.compareValues ? 'compareValues' : 'values'}.${index}`)
+        ractive.update(`${input.keypath}.${valuesKey}.${index}`)
       }
     }
 
-    function setIdValue (id, input, index, valuesField) {
+    function setIdValue (id, input, index, valuesField, options) {
+      options = options || {}
       input[ valuesField ] = input[ valuesField ] || []
       if (!input[ valuesField ][ index ]) {
         input[ valuesField ][ index ] = {}
+      } else if (options.noOverwrite) {
+        return
       }
       input[ valuesField ][ index ].old = {
         value: id
@@ -1285,13 +1294,13 @@
                       if (options.overrideMainEntry || mainEntryInput === mainEntryNode) {
                         if (_.contains([ 'select-authorized-value', 'entity' ], input.type)) {
                           index = 0
-                          let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex)
+                          let values = setMultiValues(root.outAll(fragmentPartOf(predicate)), input, rootIndex, options)
                           promises = promises.concat(loadLabelsForAuthorizedValues(values, input, 0, root))
                         } else if (input.type === 'searchable-with-result-in-side-panel' || input.type === 'searchable-authority-dropdown') {
                           if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                             _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                               index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField)
+                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField, options)
                               if (options.source && node.id !== '') {
                                 setPreviewValues(input, node, index)
                               }
@@ -1444,9 +1453,11 @@
         }
       )
         .then(function (response) {
-            updateInputsForResource(ensureJSON(response.data), resourceUri, options)
-            if (!options.keepDocumentUrl) {
-              ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+            if (response.status === 200) {
+              updateInputsForResource(ensureJSON(response.data), resourceUri, options)
+              if (!options.keepDocumentUrl) {
+                ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
+              }
             }
           }
         )
@@ -1895,7 +1906,8 @@
               rdfType: resourceForm.rdfType,
               labelForCreateButton: resourceForm.labelForCreateButton,
               prefillFromAcceptedSource: resourceForm.prefillFromAcceptedSource,
-              popupForm: true
+              popupForm: true,
+              templateResourcePartsFrom: resourceForm.templateResourcePartsFrom
             }
             const form = input.widgetOptions.enableEditResource.forms[ formRef.targetType ]
             _.each(form.inputs, function (input) {
@@ -2522,7 +2534,26 @@
       }
     }
 
-    var Main = {
+    function fetchResourceTemplate (templateResourcePartsFrom, newResourceType, inputs) {
+      if (templateResourcePartsFrom) {
+        let templateUri = URI(`http://data.deichman.no/${newResourceType.type.toLowerCase()}/template`)
+        let abortFetchTemplate
+        _.each(templateResourcePartsFrom, function (templateIdentifierPart) {
+          const input = inputFromInputId(templateIdentifierPart)
+          const value = input.values[ 0 ].current.value
+          if (!value) {
+            abortFetchTemplate = true
+          }
+          templateUri.addQuery(input.predicate, value)
+        })
+
+        if (!abortFetchTemplate) {
+          return fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
+        }
+      }
+    }
+
+    const Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
           return item
@@ -4159,23 +4190,26 @@
                 }
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
-                var newResourceType = event.context.createNewResource
+                const newResourceType = event.context.createNewResource
                 if (newResourceType && (!ractive.get(`targetUri.${newResourceType.type}`))) {
-                  _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
-                    const sourceInput = inputFromInputId(copyFromInputId)
-                    if (sourceInput) {
-                      const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
-                      if (targetInput) {
-                        copyValues(targetInput, sourceInput)
-                      } else {
-                        throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
-                      }
-                    } else {
-                      throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
-                    }
-                  })
-                  saveNewResourceFromInputs(newResourceType.type)
-                  ractive.update()
+                  fetchResourceTemplate(newResourceType.templateResourcePartsFrom, newResourceType)
+                    .then(function () {
+                      _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
+                        const sourceInput = inputFromInputId(copyFromInputId)
+                        if (sourceInput) {
+                          const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
+                          if (targetInput) {
+                            copyValues(targetInput, sourceInput)
+                          } else {
+                            throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
+                          }
+                        } else {
+                          throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
+                        }
+                      })
+                      saveNewResourceFromInputs(newResourceType.type)
+                      ractive.update()
+                    })
                 }
                 var foundSelectedTab = false
                 _.each(ractive.get('inputGroups'), function (group, groupIndex) {
@@ -4323,14 +4357,18 @@
                   }
                   setCreatedResourceValuesInMainInputs()
                 }
-                saveInputs((!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(domainType) : inputs, domainType)
-                  .then(setCreatedResourceUriInSearchInput)
-                  .then(!maintenance ? patchMotherResource : nop)
-                  .then(!maintenance ? setTargetUri : nop)
-                  .then(clearInputsAndSearchResult)
-                  .then(wait.cancel)
+                const inputsToSave = (!maintenance && targetInput.searchMainResource) ? allTopLevelGroupInputsForDomain(domainType) : inputs
+                fetchResourceTemplate(event.context.templateResourcePartsFrom, { type: event.context.rdfType }, inputsToSave)
                   .then(function () {
-                    setTimeout(positionSupportPanels)
+                    saveInputs(inputsToSave, domainType)
+                      .then(setCreatedResourceUriInSearchInput)
+                      .then(!maintenance ? patchMotherResource : nop)
+                      .then(!maintenance ? setTargetUri : nop)
+                      .then(clearInputsAndSearchResult)
+                      .then(wait.cancel)
+                      .then(function () {
+                        setTimeout(positionSupportPanels)
+                      })
                   })
               },
               cancelEdit: function (event, origin) {
