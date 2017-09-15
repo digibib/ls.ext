@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.ResourceBase;
+import no.deichman.services.entity.repository.SPARQLQueryBuilder;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.utils.ResourceReader;
-import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -30,8 +30,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
@@ -65,6 +65,10 @@ public class TemplateResource extends ResourceBase {
                 .replace("__BASE_URI_ROOT__", BaseURI.root()), Lang.TURTLE));
     }
 
+    private static String firstValue(Entry<String, List<String>> stringListEntry) {
+        return stringListEntry.getValue().stream().findFirst().get();
+    }
+
     @Override
     protected final ServletConfig getConfig() {
         return servletConfig;
@@ -74,26 +78,18 @@ public class TemplateResource extends ResourceBase {
     @Path("/template")
     @Produces({LD_JSON + UTF_8, JSON + UTF_8})
     public final Response getTemplateForResourceType(@PathParam("type") String type, @Context UriInfo uriInfo) {
-        Map<String, List<String>> queryParameters = uriInfo.getQueryParameters().entrySet().stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-        String query = format(""
-                + "PREFIX : <%s>\n"
-                + "PREFIX duo: <http://data.deichman.no/utility#> \n"
-                + "DESCRIBE ?template \n"
-                + "WHERE { \n"
-                + "   ?template a :%s ;\n"
-                + "     duo:templateMatch [ \n"
-                + "      %s\n"
-                + "   ]\n"
-                + "}\n", BaseURI.ontology(), EntityType.get(type).getRdfType(), queryParameters
+        Map<String, String> queryParameters = uriInfo
+                .getQueryParameters()
                 .entrySet()
                 .stream()
-                .map(entry -> format("<%s> <%s> ", entry.getKey(), entry.getValue().get(0)))
-                .collect(Collectors.joining(";\n")));
+                .collect(toMap(Entry::getKey, TemplateResource::firstValue));
+        final Model model = QueryExecutionFactory.create(new SPARQLQueryBuilder().resourceTemplateQuery(type, queryParameters), MODEL).execDescribe();
 
-        QueryExecution qe = QueryExecutionFactory.create(query, MODEL);
-        final Model model = qe.execDescribe();
-
-        final long count = model.listSubjects().toList().stream().filter(RDFNode::isURIResource).count();
+        final long count = model.listSubjects()
+                .toList()
+                .stream()
+                .filter(RDFNode::isURIResource)
+                .count();
         if (count > 1) {
             log.warn(format("Template requested for %s with query %s resulted in %d templates.", type, uriInfo.getRequestUri().getRawQuery(), count));
         }
@@ -124,4 +120,5 @@ public class TemplateResource extends ResourceBase {
             return ok().entity(getJsonldCreator().asJSONLD(model)).build();
         }).orElseGet(noContent()::build);
     }
+
 }
