@@ -22,6 +22,11 @@
         "deichman:partTitle": "NT",
         "deichman:mainTitle": "Det Nye testamentet",
         "deichman:subtitle": "ny oversettelse : tekstene slik de opprinnelig ble skrevet",
+        "deichman:language": [
+          {
+            "@id": "http://lexvo.org/id/iso639-3/nob"
+          }
+        ],
         "@type": [
           "deichman:Work",
           "deichman:TopBanana"
