@@ -472,10 +472,7 @@ When(/^bekrefter for å gå videre til "([^"]*)"$/) do |tab_label|
 end
 
 When(/^får jeg ingen treff$/) do
-  empty_result_set_div = @browser.div(:class => 'search-result')
-  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
-    empty_result_set_div.present?
-  }
+  empty_result_set_div = @browser.div(:xpath => "//div[@data-fong='sere']|//div[#{contains_class('search-result')}]")
   @browser.div(:class => 'support-panel-content').div(:class => 'search-result').span(:class => 'exact-match').should_not exist
 end
 
@@ -526,13 +523,13 @@ end
 
 
 When(/^trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
-  @browser.element(:text => button_label, :class => 'pure-button').wait_until_present(timeout: BROWSER_WAIT_TIMEOUT*5)
-  @browser.element(:text => button_label, :class => 'pure-button').click
+  sleep 1
+  @browser.elements(:text => button_label, :class => 'pure-button').find(&:visible?).click
 end
 
 When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
   button = @browser.button(:xpath => "//button[span[@class='ui-button-text'][normalize-space()='#{button_label}']]")
-  button.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT)
+#  button.wait_until_present(timeout: BROWSER_WAIT_TIMEOUT)
   button.click
 end
 
