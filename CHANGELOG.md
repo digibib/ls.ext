@@ -12,6 +12,20 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.52
+
+KOHA: f29d0bb2995dd00c18c10b8c47947b1e566c1509
+GITREF: TODO
+
+- Koha
+  - DEICH-905 Bug i sett på vent funksjonalitet
+  - DEICH-899 Overføringslapp
+  - DEICH-882 Anonymisér siste låner av ex etter 72 timer
+- Patron-client
+  - DEICH-673 Bug i filter på språk
+- Catalinker
+  - DEICH-838 Angi forvalgte standardverdier
+
 ## 2017.51
 
 KOHA: Uendret
