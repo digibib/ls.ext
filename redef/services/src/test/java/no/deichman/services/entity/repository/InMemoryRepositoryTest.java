@@ -109,7 +109,7 @@ public class InMemoryRepositoryTest {
     @Test
     public void test_retrieve_work_by_id() throws Exception {
         repository.addData(ModelFactory.createDefaultModel().add(workWithPublicationStatements));
-        Model testModel = repository.retrieveResourceByURI(new XURI(workUri));
+        Model testModel = repository.retrieveResourceByURI(new XURI(workUri), true);
         assertTrue("Work <" + workUri + "> should be a Work", testModel.contains(workIsAWorkStmt));
         assertTrue("Work <" + workUri + "> should should have name", testModel.contains(workHasNameStmt));
     }
@@ -131,7 +131,7 @@ public class InMemoryRepositoryTest {
         Model temp = ModelFactory.createDefaultModel();
         temp.add(publHasANameStmt);
         repository.addData(temp);
-        Model testModel = repository.retrieveResourceByURI(new XURI(publicationUri));
+        Model testModel = repository.retrieveResourceByURI(new XURI(publicationUri),true);
         assertTrue(testModel.contains(publHasANameStmt));
     }
 
@@ -178,7 +178,7 @@ public class InMemoryRepositoryTest {
     public void shouldNotReturnBlacklistedPredicates() throws Exception {
         repository = repositoryWithDataFrom("work_w87654.ttl");
         XURI test = new XURI("http://data.deichman.no/publication/p80002");
-        Model data = repository.retrieveResourceByURI(test);
+        Model data = repository.retrieveResourceByURI(test, true);
         assertFalse(data.toString().contains("359"));
         assertFalse(data.toString().contains("360"));
     }

@@ -72,4 +72,5 @@ public interface EntityService {
 
     void deleteIncomingRelations(XURI xuri);
 
+    Model retrieveCompleteResourceById(XURI xuri);
 }

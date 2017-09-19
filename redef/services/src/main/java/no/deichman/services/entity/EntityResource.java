@@ -248,7 +248,7 @@ public final class EntityResource extends ResourceBase {
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
 
-        Model model = getEntityService().retrieveById(xuri);
+        Model model = getEntityService().retrieveCompleteResourceById(xuri);
 
         if (model.isEmpty()) {
             throw new NotFoundException();
