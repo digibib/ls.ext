@@ -30,7 +30,6 @@ RUN wget --quiet https://github.com/Medium/phantomjs/releases/download/v2.1.1/ph
 RUN gem install \
     rspec \
     pry \
-    pry-nav \
     rdf \
     json-ld \
     rest-client \
