@@ -1,0 +1,134 @@
+{
+  "source": "dfb",
+  "hits": [
+    {
+      "@graph": [
+        {
+          "deichman:hasSummary": "Romanen handler om de tre brødrene Karamasov, som representerer\n                            tre ulike typer av ungdommer: Aljosja, den fromme troende, Ivan, den intellektuelle og\n                            tvilende og til slutt livsnyteren Dmitrij. Mordet på deres far, Fjodor Karamasov, danner\n                            rammen for romanen\n                        ",
+          "deichman:literaryForm": [
+            {
+              "@id": "http://data.deichman.no/literaryForm#novel"
+            }
+          ],
+          "deichman:contributor": [
+            {
+              "@id": "_:0000000"
+            }
+          ],
+          "deichman:mainTitle": "Brat\u0027ja Karamazovy",
+          "@type": [
+            "deichman:Work",
+            "deichman:TopBanana"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:isbn": "978-5-7793-2118-1",
+          "deichman:hasEan": "9785779321181",
+          "deichman:hasPlaceOfPublication": {
+            "@id": "_:0000000"
+          },
+          "deichman:publishedBy": {
+            "@id": "_:0000000"
+          },
+          "deichman:numberOfPages": "761 s.",
+          "deichman:publicationOf": {
+            "@id": "_:0000000"
+          },
+          "deichman:hasMediaType": {
+            "@id": "http://data.deichman.no/mediaType#Book"
+          },
+          "deichman:locationClassNumber": "RUS",
+          "deichman:locationSignature": "Dos/3+4",
+          "deichman:hasIdentifierInPrimaryCataloguingSource": "9816696",
+          "deichman:contributor": [
+            {
+              "@id": "_:0000000"
+            }
+          ],
+          "deichman:publicationYear": "[2011]",
+          "deichman:partNumber": "B 3 og 4",
+          "deichman:mainTitle": "Bratja Karamazovy",
+          "deichman:subtitle": "roman v tsjetyrjokh tsjastjakh s epilogom",
+          "deichman:untranscribedTitle": "Братья Карамазовы",
+          "@type": [
+            "deichman:Publication"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "@type": [
+            "deichman:Place"
+          ],
+          "@id": "_:0000000",
+          "deichman:prefLabel": "Moskva"
+        },
+        {
+          "deichman:name": "Belyj gorod",
+          "@type": [
+            "deichman:Corporation"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:birthYear": "1821",
+          "deichman:deathYear": "1881",
+          "deichman:nationality": [
+            {
+              "@id": "http://data.deichman.no/nationality#r"
+            }
+          ],
+          "deichman:name": "Dostojevskij, Fjodor Mikhajlovitsj",
+          "@type": [
+            "deichman:Person"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:nationality": [
+            {
+              "@id": "http://data.deichman.no/nationality#r"
+            }
+          ],
+          "deichman:name": "Kazantseva, E.",
+          "@type": [
+            "deichman:Person"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:agent": {
+            "@id": "_:0000000"
+          },
+          "deichman:role": {
+            "@id": "http://data.deichman.no/role#author"
+          },
+          "@type": [
+            "deichman:Contribution",
+            "deichman:MainEntry"
+          ],
+          "@id": "_:0000000"
+        },
+        {
+          "deichman:agent": {
+            "@id": "_:0000000"
+          },
+          "deichman:role": {
+            "@id": "http://data.deichman.no/role#author"
+          },
+          "@type": [
+            "deichman:Contribution"
+          ],
+          "@id": "_:0000000"
+        }
+      ],
+      "@context": {
+        "deichman": "http://deichman.no/ontology#",
+        "rdfs": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "duo": "http://deichman.no/utility#"
+      }
+    }
+  ],
+  "totalHits": 1,
+  "nextRecordPosition": 1
+}

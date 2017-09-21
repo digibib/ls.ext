@@ -42,6 +42,11 @@
             <subfield code="c">Eksempel Eksempelsen</subfield>
             <subfield code="n">Andre bok</subfield>
         </datafield>
+        <datafield tag="245" ind1="3" ind2="0">
+            <subfield code="a">Братья Карамазовы</subfield>
+            <subfield code="c">Фёдор Достоевский</subfield>
+            <subfield code="9">rus</subfield>
+        </datafield>
         <datafield tag="260" ind1=" " ind2=" ">
             <subfield code="a">Oslo</subfield>
             <subfield code="b">Oktober</subfield>

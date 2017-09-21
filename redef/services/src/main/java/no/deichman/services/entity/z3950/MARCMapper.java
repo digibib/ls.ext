@@ -134,11 +134,11 @@ public class MARCMapper {
                     setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
                     if (dataField.getSubfields('h').isEmpty()) {
                         setUriObjectFixedValueWidth(dataField, 'a', THREE, work::addLanguage, this::languagePrefix);
-                                 r.getControlFields()
-                                    .stream()
-                                    .filter(f -> f.getTag().equals("008"))
-                                    .findFirst()
-                                    .ifPresent(s -> setUriObject(s, THIRTY_FIVE, THIRTY_SEVEN, work::addLanguage, MUL_FILTER, this::languagePrefix));
+                        r.getControlFields()
+                                .stream()
+                                .filter(f -> f.getTag().equals("008"))
+                                .findFirst()
+                                .ifPresent(s -> setUriObject(s, THIRTY_FIVE, THIRTY_SEVEN, work::addLanguage, MUL_FILTER, this::languagePrefix));
                     }
                     foundWorkLanguage = true;
                     break;
@@ -481,7 +481,9 @@ public class MARCMapper {
     }
 
     private void setBibliographicDataFromDataField(DataField dataField, BibliographicObjectExternal bibliographicObjectExternal) {
-        getSubfieldValue(dataField, 'a').ifPresent(bibliographicObjectExternal::setMainTitle);
+        getSubfieldValue(dataField, 'a')
+                .ifPresent(getSubfieldValue(dataField, '9')
+                        .isPresent() ? bibliographicObjectExternal::setUntranscribedTitle : bibliographicObjectExternal::setMainTitle);
         getSubfieldValue(dataField, 'b').ifPresent(bibliographicObjectExternal::setSubtitle);
         getSubfieldValue(dataField, 'f').ifPresent(bibliographicObjectExternal::setPublicationYear);
         getSubfieldValue(dataField, 'n').ifPresent(bibliographicObjectExternal::setPartNumber);

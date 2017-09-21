@@ -13,6 +13,20 @@ final class Result {
     @SerializedName("hits")
     private List<Object> hits;
 
+    @SerializedName("totalHits")
+    private Long numberOfRecords;
+
+    @SerializedName("nextRecordPosition")
+    private Long nextRecordPosition;
+
+    Result(SearchResultInfo recordSet) {
+        numberOfRecords = recordSet.getNumberOfRecords();
+        nextRecordPosition = recordSet.getNextRecordPosition();
+    }
+
+    Result() {
+
+    }
 
     String getSource() {
         return source;

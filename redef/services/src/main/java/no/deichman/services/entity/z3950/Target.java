@@ -1,15 +1,35 @@
 package no.deichman.services.entity.z3950;
 
+import java.util.Map;
+
+import static com.google.common.collect.ImmutableMap.of;
+import static java.util.Collections.EMPTY_MAP;
+
 /**
  * Responsibility: Provide details of Z39.50 targets.
  */
 public enum Target {
     BIBBI("bibbi", "normarc"),
     LOC("loc", "marc21"),
-    DFB("dfb", "normarc");
+    DFB("dfb", "bibliofilmarc",
+            of("local_id", "rec.identifier",
+                    "isbn", "dc.identifier",
+                    "title", "dc.title",
+                    "author", "dc.creator"));
 
+    private final Map<String, String> parameterMap;
     private String databaseName;
     private String dataFormat;
+
+    Target(String databaseName, String dataFormat) {
+        this(databaseName, dataFormat, EMPTY_MAP);
+    }
+
+    Target(String databaseName, String dataFormat, Map<String, String> parameterMap) {
+        this.databaseName = databaseName;
+        this.dataFormat = dataFormat;
+        this.parameterMap = parameterMap;
+    }
 
     public String getDatabaseName() {
         return databaseName;
@@ -19,9 +39,7 @@ public enum Target {
         return dataFormat;
     }
 
-
-    Target(String databaseName, String dataFormat) {
-        this.databaseName = databaseName;
-        this.dataFormat = dataFormat;
+    public Map<String, String> getParameterMap() {
+        return parameterMap;
     }
 }

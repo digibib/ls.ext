@@ -390,11 +390,17 @@ duo:Biography a rdfs:Class ;
   rdfs:domain :Person ;
   rdfs:range xsd:string .
 
-# ToDo: Erstattes med :hasMainTitle
+# ToDo: Erstattes med :has'
 :mainTitle a rdfs:Property ;
   rdfs:label "Main title"@en ;
   rdfs:label "Hovedtittel"@no ;
   rdfs:domain :Work, :Publication, :PublicationPart, :Serial, :WorkSeries ;
+  rdfs:range xsd:string .
+
+:untranscribedTitle a rdfs:Property ;
+  rdfs:label "Untranscribed title"@en ;
+  rdfs:label "Utranskribert tittel"@no ;
+  rdfs:domain :Publication ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartTitle

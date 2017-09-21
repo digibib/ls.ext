@@ -16,7 +16,7 @@ import java.net.URL;
 /**
  * Responsibility: connect to z3950 proxy.
  */
-public class Z3950HttpClient {
+public class Z3950HttpClient implements ExternalCatalogue {
 
     private static final String Z3950_PROXY_PORT = System.getProperty("Z3950_ENDPOINT", "http://z3950proxy:3000");
     public static final String ISBN = "isbn";
@@ -56,20 +56,13 @@ public class Z3950HttpClient {
         this.proxyPort = proxyPort;
     }
 
-    public final String getByIsbn(String targetString, String isbn) throws IOException {
-        return doGet(targetString, isbn, ISBN);
-    }
-
-    public final String getByEan(String target, String ean) throws IOException {
-        return doGet(target, ean, EAN);
-    }
-
-    private String doGet(String targetString, String searhTerm, String parameter) throws IOException {
+    @Override
+    public final SearchResultInfo getByField(String targetString, String term, String parameter) throws IOException {
         Target target = Target.valueOf(targetString.toUpperCase());
         String response = null;
         try (
                 CloseableHttpClient httpClient = HttpClients.createDefault();
-                CloseableHttpResponse httpResponse = httpClient.execute(new HttpGet(getURL(target, searhTerm, parameter)))
+                CloseableHttpResponse httpResponse = httpClient.execute(new HttpGet(getURL(target, term, parameter)))
         ) {
             if (httpResponse.getStatusLine().getStatusCode() == Response.Status.OK.getStatusCode()) {
                 HttpEntity httpEntity = httpResponse.getEntity();
@@ -77,7 +70,7 @@ public class Z3950HttpClient {
                 EntityUtils.consume(httpEntity);
             }
         }
-        return response;
+        return new SearchResultInfo(response);
     }
 
     private String getURL(Target target, String isbn, final String searchTerm) {

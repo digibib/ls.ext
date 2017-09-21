@@ -61,6 +61,7 @@
             "@id": "http://lexvo.org/id/iso639-3/nob"
           }
         ],
+        "deichman:untranscribedTitle": "Братья Карамазовы",
         "@type": [
           "deichman:Work",
           "deichman:TopBanana"
@@ -114,6 +115,7 @@
             "@id": "http://lexvo.org/id/iso639-3/swe"
           }
         ],
+        "deichman:untranscribedTitle": "Братья Карамазовы",
         "@type": [
           "deichman:Publication"
         ],

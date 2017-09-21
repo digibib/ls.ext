@@ -38,12 +38,12 @@ public class MapperTest extends MappingTester {
 
         Mapper mapper = new Mapper();
 
-        assertEquals(simplifyBNodes(json), simplifyBNodes(gson.toJson(mapper.map(sourceName, record))));
+        assertEquals(simplifyBNodes(json), simplifyBNodes(gson.toJson(mapper.map(sourceName, new SearchResultInfo(record)))));
         assertThat(simplifyBNodes(json),
-                SameJSONAs.sameJSONAs(simplifyBNodes(gson.toJson(mapper.map(sourceName, record))))
+                SameJSONAs.sameJSONAs(simplifyBNodes(gson.toJson(mapper.map(sourceName, new SearchResultInfo(record)))))
                         .allowingAnyArrayOrdering()
                         .allowingExtraUnexpectedFields());
-        assertEquals(sourceName, mapper.map(sourceName, record).getSource());
+        assertEquals(sourceName, mapper.map(sourceName, new SearchResultInfo(record)).getSource());
     }
 
     @Test(expected = Exception.class)
