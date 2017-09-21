@@ -52,7 +52,7 @@ public class Z3950HttpClientTest {
         z3950ServiceMock.getSingleMarcRecordExpectation();
         Z3950HttpClient z3950HttpClient = new Z3950HttpClient("http://localhost", z3950ServiceMock.getPort());
         SearchResultInfo response = z3950HttpClient.getByField("bibbi", "123123123", "isbn");
-        assertTrue(response.getMarxXmlContent().contains("Eksempel Eksempelsen"));
+        assertTrue(response.getMarcXmlContent().contains("Eksempel Eksempelsen"));
     }
 
     @Test
@@ -60,6 +60,6 @@ public class Z3950HttpClientTest {
         z3950ServiceMock.getSingleMarcRecordExpectation();
         Z3950HttpClient z3950HttpClient = new Z3950HttpClient("http://localhost", z3950ServiceMock.getPort());
         SearchResultInfo response = z3950HttpClient.getByField("bibbi", "123123123", "ean");
-        assertTrue(response.getMarxXmlContent().contains("Eksempel Eksempelsen"));
+        assertTrue(response.getMarcXmlContent().contains("Eksempel Eksempelsen"));
     }
 }

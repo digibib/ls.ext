@@ -5,14 +5,14 @@ package no.deichman.services.entity.z3950;
  */
 public final class Mapper {
 
-    public Result map(String sourceName, SearchResultInfo recordSet) throws Exception {
+    public Result map(String sourceName, SearchResultInfo resultInfo) throws Exception {
         Target target = Target.valueOf(sourceName.toUpperCase());
-        Result result = new Result(recordSet);
+        Result result = new Result(resultInfo);
         MARCMapper marcMapper = new MARCMapper(true);
         result.setSource(target.getDatabaseName());
 
         if (target.getDataFormat().contains("marc")) {
-            result.setHits(marcMapper.getMapping(recordSet.getMarxXmlContent()));
+            result.setHits(marcMapper.getMapping(resultInfo.getMarcXmlContent()));
         } else {
             throw new Exception("No mapper identified for this resource");
         }

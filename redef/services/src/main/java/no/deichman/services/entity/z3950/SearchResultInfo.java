@@ -20,7 +20,7 @@ public final class SearchResultInfo {
         nextRecordPosition = null;
     }
 
-    String getMarxXmlContent() {
+    String getMarcXmlContent() {
         return marxXmlContent;
     }
 

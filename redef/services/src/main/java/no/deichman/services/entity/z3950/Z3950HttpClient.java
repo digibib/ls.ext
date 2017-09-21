@@ -59,7 +59,7 @@ public class Z3950HttpClient implements ExternalCatalogue {
     @Override
     public final SearchResultInfo getByField(String targetString, String term, String parameter) throws IOException {
         Target target = Target.valueOf(targetString.toUpperCase());
-        String response = null;
+        String response = "";
         try (
                 CloseableHttpClient httpClient = HttpClients.createDefault();
                 CloseableHttpResponse httpResponse = httpClient.execute(new HttpGet(getURL(target, term, parameter)))

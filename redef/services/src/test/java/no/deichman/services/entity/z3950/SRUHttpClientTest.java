@@ -28,7 +28,7 @@ public class SRUHttpClientTest {
         sruServiceMock.getSingleMarcRecordExpectation();
         SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/sru?version=1.1", sruServiceMock.getPort()));
         SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "isbn");
-        assertTrue(response.getMarxXmlContent().contains("Dostojevskij, Fjodor Mikhajlovitsj"));
+        assertTrue(response.getMarcXmlContent().contains("Dostojevskij, Fjodor Mikhajlovitsj"));
     }
 
     @Test
@@ -36,6 +36,6 @@ public class SRUHttpClientTest {
         sruServiceMock.getSingleMarcRecordExpectation();
         SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/sru?version=1.1", sruServiceMock.getPort()));
         SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "ean");
-        assertTrue(response.getMarxXmlContent().contains("Dostojevskij, Fjodor Mikhajlovitsj"));
+        assertTrue(response.getMarcXmlContent().contains("Dostojevskij, Fjodor Mikhajlovitsj"));
     }
 }
