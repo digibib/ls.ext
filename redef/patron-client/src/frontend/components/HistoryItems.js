@@ -9,12 +9,7 @@ class HistoryItems extends React.Component {
   render () {
     const items = this.props.historyItems.map((el, i) => <HistoryItem key={i} historyItem={el} />)
     return (
-      <NonIETransitionGroup
-        transitionName="fade-in"
-        transitionAppear
-        transitionAppearTimeout={500}
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={500}
+      <section
         component="section"
         className="history"
         style={{ marginTop: '1em' }}>
@@ -29,7 +24,7 @@ class HistoryItems extends React.Component {
             {items}
           </div>
         </InfiniteScroll>
-      </NonIETransitionGroup>
+      </section>
     )
   }
 }
@@ -37,7 +32,7 @@ class HistoryItems extends React.Component {
 HistoryItems.propTypes = {
   historyItems: PropTypes.array.isRequired,
   loadItems: PropTypes.func.isRequired,
-  hasMoreItems: PropTypes.func.isRequired
+  hasMoreItems: PropTypes.bool.isRequired
 }
 
 export const messages = defineMessages({
