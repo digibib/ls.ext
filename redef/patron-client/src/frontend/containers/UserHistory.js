@@ -7,7 +7,7 @@ import * as HistoryActions from '../actions/HistoryActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import HistoryItems from '../components/HistoryItems'
 
-const limit = 4
+const limit = 20
 
 class UserHistory extends React.Component {
   constructor (props) {
@@ -26,6 +26,10 @@ class UserHistory extends React.Component {
   }
 
   loadItems () {
+    if (this.props.isRequestingHistory) {
+      // We don't want to send multiple requests at a time
+      return
+    }
     this.props.historyActions.fetchHistory({ limit: limit, offset: parseInt(this.props.loadedHistoryItems) })
   }
 
@@ -80,7 +84,7 @@ UserHistory.propTypes = {
   historyActions: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
   profileActions: PropTypes.object.isRequired,
-  loadedHistoryItems: PropTypes.string.isRequired,
+  loadedHistoryItems: PropTypes.number.isRequired,
   allLoadedHistory: PropTypes.array.isRequired,
   hasMoreItems: PropTypes.bool.isRequired
 }
@@ -100,6 +104,7 @@ export const messages = defineMessages({
 
 function mapStateToProps (state) {
   return {
+    isRequestingHistory: state.history.isRequestingHistory,
     historyItems: state.history.historyData,
     allLoadedHistory: state.history.allLoadedHistory,
     loadedHistoryItems: state.history.loadedHistoryItems,
