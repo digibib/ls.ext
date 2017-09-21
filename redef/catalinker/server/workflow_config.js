@@ -480,14 +480,14 @@ module.exports = (app) => {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
-                  label: 'ISBNLabel',
+                  label: 'BSSearchLabelISBN',
                   pattern: '^[ 0-9\\-]+[xX]?\\s*$',
                   formatter: 'isbn',
-                  patternMismatchMessage: 'Dette ser ikke ut som et gyldig ISBN-nummer',
+                  patternMismatchMessage: 'invalidIsbnNumber',
                   parameterName: 'isbn',
                   automationId: 'searchValueSuggestions',
                   showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
-                  sources: [ 'bibbi', 'dfb' ],
+                  sources: [ 'bibbi' ],
                   preferredSource: {
                     id: 'bibbi',
                     name: 'Biblioteksentralen'
@@ -506,15 +506,78 @@ module.exports = (app) => {
                 }
               },
               {
+                id: 'dfbInputISBN',
+                includeOnlyWhen: {
+                  hasMediaType: [ 'Book', 'Audiobook', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ]
+                },
+                // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+                // will not be tied to a particular subject and predicate
+                searchForValueSuggestions: {
+                  label: 'DFBLabel',
+                  formatter: 'isbn',
+                  patternMismatchMessage: 'invalidIsbnNumber',
+                  searchParameterSpecs: [
+                    {
+                      ccl: 'isbn',
+                      labelKey: 'ISBNLabel',
+                      pattern: '^(isbn:)?\s*([0-9\-]{10,}[xX]?)\s*$',
+                      parameter: 'isbn',
+                      groupNumber: 2,
+                      validatePattern: '^[ 0-9\\-]+[xX]?\\s*$',
+                      verifyExists: 'isbn',
+                      checkExistingResource: {
+                        url: 'services/publication/isbn',
+                        queryParameter: 'isbn',
+                        type: 'Publication',
+                        legendSingular: 'alreadyRegisteredISBNSingular',
+                        legendPlural: 'alreadyRegisteredISBNPlural',
+                        editWithTemplate: {
+                          template: 'workflow',
+                          descriptionKey: 'maintPub'
+                        }
+                      }
+                    },
+                    {
+                      ccl: 'id',
+                      labelKey: 'localIdlabel',
+                      pattern: '^(id:)?\s*([0-9^\\-]+)\s*$',
+                      groupNumber: 2,
+                      parameter: 'local_id'
+                    },
+                    {
+                      ccl: 'ti',
+                      labelKey: 'titleLabel',
+                      pattern: '^(ti:)?\s*([^,]+)\s*$',
+                      groupNumber: 2,
+                      parameter: 'title'
+                    },
+                    {
+                      ccl: 'fo',
+                      labelKey: 'authorLabel',
+                      pattern: '^(fo:)?\s*(.+)\s*$',
+                      groupNumber: 2,
+                      parameter: 'author'
+                    }
+                  ],
+                  automationId: 'searchValueSuggestions',
+                  showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+                  sources: [ 'dfb' ],
+                  preferredSource: {
+                    id: 'dfb',
+                    name: 'Det flerspråklige bibliotek'
+                  }
+                }
+              },
+              {
                 includeOnlyWhen: {
                   hasMediaType: [ 'Film', 'MusicRecording', 'Game' ]
                 },
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
-                  label: 'EANLabel',
+                  label: 'BSSearchLabelEAN',
                   pattern: '[0-9]{12,14}',
-                  patternMismatchMessage: 'Dette ser ikke ut som et gyldig EAN-nummer',
+                  patternMismatchMessage: 'invalidEanNumber',
                   parameterName: 'ean',
                   automationId: 'searchEanValueSuggestions',
                   showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
@@ -528,12 +591,73 @@ module.exports = (app) => {
                     queryParameter: 'hasEan',
                     showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', 'publicationYear' ],
                     type: 'Publication',
-                    legendSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
-                    legendPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+                    legendSingular: 'alreadyRegisteredEANSingular',
+                    legendPlural: 'alreadyRegisteredEANSingular',
                     editWithTemplate: {
                       template: 'workflow',
                       descriptionKey: 'maintPub'
                     }
+                  }
+                }
+              },
+              {
+                id: 'dfbInputEAN',
+                includeOnlyWhen: {
+                  hasMediaType: [ 'Film', 'MusicRecording', 'Game' ]
+                },
+                // this is an input type used to search for a main resource, e.g. Work. The rendered input field
+                // will not be tied to a particular subject and predicate
+                searchForValueSuggestions: {
+                  label: 'DFBLabel',
+                  patternMismatchMessage: 'invalidEanNumber',
+                  searchParameterSpecs: [
+                    {
+                      ccl: 'ean',
+                      labelKey: 'EANLabel',
+                      pattern: '^(ean:)?\s*([0-9\-]{10,}[xX]?)\s*$',
+                      parameter: 'ean',
+                      groupNumber: 2,
+                      validatePattern: '^[ 0-9\\-]+[xX]?\\s*$',
+                      checkExistingResource: {
+                        url: 'services/publication',
+                        queryParameter: 'hasEan',
+                        type: 'Publication',
+                        legendSingular: 'alreadyRegisteredEANSingular',
+                        legendPlural: 'alreadyRegisteredEANPlural',
+                        editWithTemplate: {
+                          template: 'workflow',
+                          descriptionKey: 'maintPub'
+                        }
+                      }
+                    },
+                    {
+                      ccl: 'id',
+                      labelKey: 'localIdlabel',
+                      pattern: '^(id:)?\s*([0-9^\\-]+)\s*$',
+                      groupNumber: 2,
+                      parameter: 'local_id'
+                    },
+                    {
+                      ccl: 'ti',
+                      labelKey: 'titleLabel',
+                      pattern: '^(ti:)?\s*([^,]+)\s*$',
+                      groupNumber: 2,
+                      parameter: 'title'
+                    },
+                    {
+                      ccl: 'fo',
+                      labelKey: 'authorLabel',
+                      pattern: '^(fo:)?\s*(.+)\s*$',
+                      groupNumber: 2,
+                      parameter: 'author'
+                    }
+                  ],
+                  automationId: 'searchValueSuggestions',
+                  showOnlyWhenMissingTargetUri: 'Work', // only show this search field if a work has not been loaded or created
+                  sources: [ 'dfb' ],
+                  preferredSource: {
+                    id: 'dfb',
+                    name: 'Det flerspråklige bibliotek'
                   }
                 }
               },
@@ -700,6 +824,11 @@ module.exports = (app) => {
                   order: 30,
                   styleClass: 'title'
                 }
+              },
+              {
+                rdfProperty: 'untranscribedTitle',
+                id: 'untranscribedTitleInput',
+                esotericWhen: 'always',
               },
               {
                 rdfProperty: 'partNumber',

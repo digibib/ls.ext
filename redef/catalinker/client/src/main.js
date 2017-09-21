@@ -828,7 +828,7 @@
     }
 
     function checkEsoteric (input, allInputs) {
-      let isEsoteric = false
+      let isEsoteric = 'always' === input.esotericWhen
       let handleInput = function (includeWhenValues, property) {
         return function (input) {
           if (input.fragment === property && _.contains(includeWhenValues, _.flatten([
@@ -2193,12 +2193,16 @@
         throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om verket.`)
       }
       let mainHitLine = []
+      let supplHitLine = []
       let detailsHitLine = []
       let publicationGraph = graph.byType('Publication')[ 0 ]
       if (!publicationGraph) {
         throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om utgivelsen.`)
       }
       mainHitLine = _.map(publicationGraph.getAll('mainTitle'), function (prop) {
+        return prop.value
+      })
+      supplHitLine = _.map(publicationGraph.getAll('untranscribedTitle'), function (prop) {
         return prop.value
       })
       detailsHitLine = _.map(publicationGraph.getAll('publicationYear'), function (prop) {
@@ -2213,6 +2217,7 @@
       })
       return {
         main: mainHitLine.join(' - '),
+        supplementary: supplHitLine.join(' - '),
         details: detailsHitLine.join(' - '),
         graph,
         source,
@@ -2655,6 +2660,7 @@
             applicationData.partials[ 'support-for-searchable-with-result-in-side-panel' ] = require('../../public/partials/support-for-searchable-with-result-in-side-panel.html')
             applicationData.partials[ 'support-for-select-predefined-value' ] = require('../../public/partials/support-for-select-predefined-value.html')
             applicationData.partials[ 'support-for-input-string' ] = require('../../public/partials/support-for-input-string.html')
+            applicationData.partials[ 'support-for-searchable-for-value-suggestions' ] = require('../../public/partials/support-for-searchable-for-value-suggestions.html')
             applicationData.partials[ 'support-for-edit-authority' ] = require('../../public/partials/support-for-edit-authority.html')
             applicationData.partials[ 'searchable-authority-dropdown' ] = require('../../public/partials/searchable-authority-dropdown.html')
             applicationData.partials[ 'searchable-for-value-suggestions' ] = require('../../public/partials/searchable-for-value-suggestions.html')
@@ -3262,24 +3268,53 @@
             }
           }
           const formatter = function (node, formatter) {
+            let handler
             if (formatter === 'isbn') {
-              $(node).on('input', function () {
-                let value = $(node).val().replace(/[^\dXx]*/g, '') // ISBN.parse not 100% with hyphens
+              handler = function () {
+                const origVal = $(node).val()
+                const isbnPrefix=/isbn:/.test(origVal) ? 'isbn:' : ''
+                let value = origVal.replace(/[^\dXx]*/g, '').replace(/^isbn:/, '') // ISBN.parse not 100% with hyphens
                 let parsedIsbn = ISBN.parse(value)
                 if (parsedIsbn) {
                   if (parsedIsbn.isIsbn10()) {
-                    $(node).val(parsedIsbn.asIsbn10(true))
+                    $(node).val(isbnPrefix + parsedIsbn.asIsbn10(true))
                   } else {
                     if (parsedIsbn.isIsbn13()) {
-                      $(node).val(parsedIsbn.asIsbn13(true))
+                      $(node).val(isbnPrefix + parsedIsbn.asIsbn13(true))
                     }
                   }
                   ractive.updateModel()
                 }
-              })
+              }
+              $(node).on('input', handler)
             }
             return {
-              teardown: function () {}
+              teardown: function () {
+                if (handler) {
+                  $(node).off('input', handler)
+                }
+              }
+            }
+          }
+          const searchFieldGuesser = function (node, input) {
+            input.cclCodes = _.map(input.searchForValueSuggestions.searchParameterSpecs, (p) => {return p.ccl}).join(', ')
+            const keypath = Ractive.getNodeInfo(node).keypath
+            let handler = function () {
+              let value = $(node).val()
+              let guessedParamSpec = _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                return value.startsWith(`${spec.ccl}:`)
+              }) || _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                return RegExp(spec.pattern).test(value)
+              })
+              ractive.set(`${keypath}.supportable`, guessedParamSpec)
+              ractive.push('searchParameterGuessSupportsToClose', `${keypath}.supportable`)
+              positionSupportPanels()
+            }
+            $(node).on('input', handler)
+            return {
+              teardown: function () {
+                $(node).off('input', handler)
+              }
             }
           }
           const relations = function (node, uri) {
@@ -3806,7 +3841,8 @@
               draggable,
               dropZone,
               setGlobalFlag,
-              esotericToggleGroup
+              esotericToggleGroup,
+              searchFieldGuesser
             },
             partials: applicationData.partials,
             transitions: {
@@ -4387,6 +4423,7 @@
               fetchValueSuggestions: function (event) {
                 ractive.get('waitHandler').newWaitable(event.original.target)
                 var searchValue = event.context.current.value
+                let parameterName
 
                 function doExternalSearch () {
                   let wait = ractive.get('waitHandler').thisMayTakeSomTime()
@@ -4403,14 +4440,14 @@
                     itemsFromOtherSources: {}
                   }
                   _.each(sources, function (source) {
-                    promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`, {
+                    promises.push(axios.get(`/valueSuggestions/${source}?${parameterName}=${encodeURIComponent(searchValue.replace(',', ''))}`, {
                         headers: {
                           Accept: 'application/ld+json'
                         }
                       }
                     ).then(function (response) {
                       var fromPreferredSource = response.data.source === (ractive.get('applicationData.preferredSource') || searchExternalSourceInput.searchForValueSuggestions.preferredSource.id)
-                      var hitsFromPreferredSource = { source: response.data.source, items: [] }
+                      var hitsFromPreferredSource = { source: response.data.source, items: [], totalHits:response.data.totalHits }
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
                         if (fromPreferredSource) {
@@ -4466,16 +4503,28 @@
 
                 if (searchValue && searchValue !== '') {
                   var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
+                  const searchParameterSpec = _(searchExternalSourceInput.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                    return searchValue.startsWith(`${spec.ccl}:`)
+                  }) || _(searchExternalSourceInput.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                    return RegExp(spec.pattern).test(searchValue)
+                  })
+                  parameterName = searchParameterSpec ? searchParameterSpec.parameter : searchExternalSourceInput.searchForValueSuggestions.parameterName || event.context.supportable.checkExistingResource.queryParameter
+                  searchValue = searchParameterSpec ? (searchValue.match(searchParameterSpec.pattern) || [])[ searchParameterSpec.groupNumber
+                    ] : searchValue
                   if (searchExternalSourceInput.searchForValueSuggestions.pattern && !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
                     return
                   }
-                  if (searchExternalSourceInput.searchForValueSuggestions.checkExistingResource) {
-                    ractive.fire('checkExistingResource', event.context.current.value, searchExternalSourceInput.searchForValueSuggestions.checkExistingResource, doExternalSearch)
+                  const checkExistingResource = searchExternalSourceInput.searchForValueSuggestions.checkExistingResource || (event.context.supportable ? event.context.supportable.checkExistingResource : searchParameterSpec.checkExistingResource)
+                  if (checkExistingResource) {
+                    ractive.fire('checkExistingResource', searchValue, checkExistingResource, doExternalSearch.bind(null, parameterName, searchValue), parameterName)
+                  } else {
+                    doExternalSearch(parameterName, searchValue)
                   }
                 }
               },
-              checkExistingResource: function (queryValue, spec, proceed) {
+              checkExistingResource: function (queryValue, spec, proceed, parameterName) {
                 let searchUrl = ''
+                const queryParameter = parameterName || spec.queryParameter
                 if (spec.queryParameter === 'hasEan') { // TODO : hasEAN should probably have separate route
                   searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
                     return memo + '&@return=' + fieldName.replace(/[^a-zA-Z_]/g, '')
@@ -4540,6 +4589,9 @@
               },
               acceptExternalItem: function (event) {
                 ractive.set('primarySuggestionAccepted', true)
+                _.each(ractive.get('searchParameterGuessSupportsToClose'), function (keypath) {
+                    ractive.set(keypath, null)
+                })
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
@@ -4654,6 +4706,8 @@
                       }
                     })
                     ractive.update()
+                  }).then(function () {
+                    ractive.splice(parentOf(grandParentOf(event.keypath)))
                   }).then(waiter.done)
                 })
               },

@@ -4,6 +4,7 @@ const apicache = require('apicache')
 const cache = apicache.options({ debug: true }).middleware
 const services = (process.env.SERVICES_PORT || 'http://services:8005').replace(/^tcp:\//, 'http:/')
 const URI = require('urijs')
+const _ = require('underscore')
 
 module.exports = (app) => {
   app.use('/search', cache('2 minutes', cacheableRequestsFilter), requestProxy(services, {
@@ -11,8 +12,8 @@ module.exports = (app) => {
       return '/search' + url.parse(req.url).pathname
     },
     decorateRequest: (proxyReq, req) => {
-      proxyReq.headers['Content-Type'] = 'application/json'
-      proxyReq.headers['Accept'] = 'application/json'
+      proxyReq.headers[ 'Content-Type' ] = 'application/json'
+      proxyReq.headers[ 'Accept' ] = 'application/json'
       return proxyReq
     }
   }))
@@ -22,7 +23,7 @@ module.exports = (app) => {
       return url.parse(req.url).path
     },
     intercept: (rsp, data, req, res, callback) => {
-      if (['PUT', 'PATCH', 'DELETE'].indexOf(rsp.req.method) !== -1) {
+      if ([ 'PUT', 'PATCH', 'DELETE' ].indexOf(rsp.req.method) !== -1) {
         apicache.clear(req.originalUrl)
         apicache.clear(req.originalUrl + '/references')
         apicache.clear(req.originalUrl + '/relations')
@@ -32,16 +33,20 @@ module.exports = (app) => {
     },
     decorateRequest: (proxyReq, req) => {
       if (req.method === 'GET' && URI.parseQuery(URI.parse(req.originalUrl).query).format === 'TURTLE') {
-        proxyReq.headers['Accept'] = 'text/turtle'
+        proxyReq.headers[ 'Accept' ] = 'text/turtle'
       }
       return proxyReq
     }
   }))
 
-  app.get('/valueSuggestions/:source/:type/:id', cache('1 hour'), requestProxy(services, {
+  app.get('/valueSuggestions/:source', cache('1 second'), requestProxy(services, {
     forwardPath: (req, res) => {
-      const reqUrl = services + '/datasource/' + req.params.source + '/' + req.params.type + '/' + req.params.id.replace(/-/g, '')
-      console.log(reqUrl)
+      var param = _(req.query).keys().find((key)=>{return _.contains(['isbn','ean', 'title', 'author', 'local_id'],key)})
+      var paramValue = req.query[param]
+      if (param === 'isbn') {
+        paramValue = paramValue.replace(/-/g,'')
+      }
+      const reqUrl = services + '/datasource/' + req.params.source + '?' + param + '=' + encodeURIComponent(paramValue)
       return url.parse(reqUrl).path
     }
   }))

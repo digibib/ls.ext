@@ -587,6 +587,9 @@ body {
               margin-top: 7px;
               ul {
                 margin-top: 3px;
+                max-height: 300px;
+                overflow-y: auto;
+                overflow-x: hidden;
                 list-style: none;
                 padding: 0px;
                 li {
