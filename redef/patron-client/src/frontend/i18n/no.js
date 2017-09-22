@@ -91,6 +91,7 @@ export default {
   'History.deleteHistoryTitle': 'Fjern min historikk?',
   'History.deleteHistoryExplainer': 'Din historikk blir anonymisert/slettet i løpet av natten.',
   'History.checkedIn': 'Levert',
+  'History.loading': 'Laster flere...',
   'Navigation.faq': 'Ofte stilte spørsmål',
   'Navigation.loggedInAs': 'Logget inn som:',
   'Navigation.logIn': 'Logg inn',
