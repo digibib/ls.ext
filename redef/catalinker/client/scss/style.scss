@@ -370,6 +370,7 @@ body {
         .prop-input {
           &.boolean-separator {
             height: 2px;
+            margin-top: 16px;
             &.last-one {
               display: none;
             }
@@ -697,6 +698,7 @@ body {
           }
           input {
             padding-left: 6px;
+            float: left;
             &:not([type=search]) {
               height: 36px;
               padding: 6px;
@@ -1050,7 +1052,6 @@ body {
                 }
                 .label {
                   background: inherit;
-                  display: inline-block;
                 }
                 .field {
                   padding: 0;

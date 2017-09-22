@@ -828,7 +828,7 @@
     }
 
     function checkEsoteric (input, allInputs) {
-      let isEsoteric = 'always' === input.esotericWhen
+      let isEsoteric = (input.esotericWhen || undefined) === 'always'
       let handleInput = function (includeWhenValues, property) {
         return function (input) {
           if (input.fragment === property && _.contains(includeWhenValues, _.flatten([
@@ -3272,7 +3272,7 @@
             if (formatter === 'isbn') {
               handler = function () {
                 const origVal = $(node).val()
-                const isbnPrefix=/isbn:/.test(origVal) ? 'isbn:' : ''
+                const isbnPrefix = /isbn:/.test(origVal) ? 'isbn:' : ''
                 let value = origVal.replace(/[^\dXx]*/g, '').replace(/^isbn:/, '') // ISBN.parse not 100% with hyphens
                 let parsedIsbn = ISBN.parse(value)
                 if (parsedIsbn) {
@@ -3297,7 +3297,7 @@
             }
           }
           const searchFieldGuesser = function (node, input) {
-            input.cclCodes = _.map(input.searchForValueSuggestions.searchParameterSpecs, (p) => {return p.ccl}).join(', ')
+            input.cclCodes = _.map(input.searchForValueSuggestions.searchParameterSpecs, (p) => { return p.ccl }).join(', ')
             const keypath = Ractive.getNodeInfo(node).keypath
             let handler = function () {
               let value = $(node).val()
@@ -4447,7 +4447,11 @@
                       }
                     ).then(function (response) {
                       var fromPreferredSource = response.data.source === (ractive.get('applicationData.preferredSource') || searchExternalSourceInput.searchForValueSuggestions.preferredSource.id)
-                      var hitsFromPreferredSource = { source: response.data.source, items: [], totalHits:response.data.totalHits }
+                      var hitsFromPreferredSource = {
+                        source: response.data.source,
+                        items: [],
+                        totalHits: response.data.totalHits
+                      }
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
                         if (fromPreferredSource) {
@@ -4508,9 +4512,12 @@
                   }) || _(searchExternalSourceInput.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
                     return RegExp(spec.pattern).test(searchValue)
                   })
-                  parameterName = searchParameterSpec ? searchParameterSpec.parameter : searchExternalSourceInput.searchForValueSuggestions.parameterName || event.context.supportable.checkExistingResource.queryParameter
-                  searchValue = searchParameterSpec ? (searchValue.match(searchParameterSpec.pattern) || [])[ searchParameterSpec.groupNumber
-                    ] : searchValue
+                  parameterName = searchParameterSpec
+                    ? searchParameterSpec.parameter
+                    : searchExternalSourceInput.searchForValueSuggestions.parameterName || event.context.supportable.checkExistingResource.queryParameter
+                  searchValue = searchParameterSpec
+                    ? (searchValue.match(searchParameterSpec.pattern) || [])[ searchParameterSpec.groupNumber ]
+                    : searchValue
                   if (searchExternalSourceInput.searchForValueSuggestions.pattern && !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
                     return
                   }
@@ -4524,7 +4531,6 @@
               },
               checkExistingResource: function (queryValue, spec, proceed, parameterName) {
                 let searchUrl = ''
-                const queryParameter = parameterName || spec.queryParameter
                 if (spec.queryParameter === 'hasEan') { // TODO : hasEAN should probably have separate route
                   searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
                     return memo + '&@return=' + fieldName.replace(/[^a-zA-Z_]/g, '')
@@ -4590,7 +4596,7 @@
               acceptExternalItem: function (event) {
                 ractive.set('primarySuggestionAccepted', true)
                 _.each(ractive.get('searchParameterGuessSupportsToClose'), function (keypath) {
-                    ractive.set(keypath, null)
+                  ractive.set(keypath, null)
                 })
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
