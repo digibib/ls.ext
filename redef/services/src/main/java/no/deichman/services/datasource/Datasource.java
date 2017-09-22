@@ -83,7 +83,7 @@ public class Datasource {
 
         String result = "";
 
-        if (searchResultInfo != null) {
+        if (searchResultInfo != null && !searchResultInfo.isEmpty()) {
             result = gson.toJson(mapper.map(datasource, searchResultInfo));
         }
 

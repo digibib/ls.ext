@@ -31,4 +31,8 @@ public final class SearchResultInfo {
     Long getNextRecordPosition() {
         return nextRecordPosition;
     }
+
+    public boolean isEmpty() {
+        return this.marxXmlContent == null || this.marxXmlContent.length() == 0 || (numberOfRecords != null && 0L == numberOfRecords);
+    }
 }

@@ -19,8 +19,6 @@ import java.net.URL;
 public class Z3950HttpClient implements ExternalCatalogue {
 
     private static final String Z3950_PROXY_PORT = System.getProperty("Z3950_ENDPOINT", "http://z3950proxy:3000");
-    public static final String ISBN = "isbn";
-    private static final String EAN = "ean";
 
     private String baseURI;
     private int proxyPort;
@@ -59,7 +57,7 @@ public class Z3950HttpClient implements ExternalCatalogue {
     @Override
     public final SearchResultInfo getByField(String targetString, String term, String parameter) throws IOException {
         Target target = Target.valueOf(targetString.toUpperCase());
-        String response = "";
+        String response = null;
         try (
                 CloseableHttpClient httpClient = HttpClients.createDefault();
                 CloseableHttpResponse httpResponse = httpClient.execute(new HttpGet(getURL(target, term, parameter)))
@@ -70,7 +68,7 @@ public class Z3950HttpClient implements ExternalCatalogue {
                 EntityUtils.consume(httpEntity);
             }
         }
-        return new SearchResultInfo(response);
+        return new SearchResultInfo(response != null ? response : "");
     }
 
     private String getURL(Target target, String isbn, final String searchTerm) {
