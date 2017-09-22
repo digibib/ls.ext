@@ -827,7 +827,7 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'untranscribedTitle',
-                id: 'untranscribedTitleInput',
+                id: 'untranscribedPublicationTitleInput',
                 esotericWhen: 'always',
               },
               {
@@ -1139,6 +1139,11 @@ module.exports = (app) => {
               {
                 rdfProperty: 'subtitle',
                 id: 'workSubtitle'
+              },
+              {
+                rdfProperty: 'untranscribedTitle',
+                id: 'untranscribedWorkTitleInput',
+                esotericWhen: 'always',
               },
               {
                 rdfProperty: 'partNumber',

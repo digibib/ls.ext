@@ -400,7 +400,7 @@ duo:Biography a rdfs:Class ;
 :untranscribedTitle a rdfs:Property ;
   rdfs:label "Untranscribed title"@en ;
   rdfs:label "Utranskribert tittel"@no ;
-  rdfs:domain :Publication ;
+  rdfs:domain :Publication, :Work ;
   rdfs:range xsd:string .
 
 # ToDo: Erstattes med :hasPartTitle
