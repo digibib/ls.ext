@@ -50,7 +50,7 @@ class BibliographicObjectExternal extends ExternalDataObject {
     private String untranscribedTitle;
 
     private void  setUntranscribedTitle() {
-        untranscribedTitle = join(new String[]{untranscribedMainTitle, untranscribedSubTitle}, " ");
+        untranscribedTitle = join(new String[]{untranscribedMainTitle, untranscribedSubTitle}, " : ");
     }
 
     BibliographicObjectExternal(String id) {
