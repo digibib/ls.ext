@@ -38,10 +38,6 @@ import java.net.URLEncoder;
  * Responsibility: connect to SRU.
  */
 public class SRUHttpClient implements ExternalCatalogue{
-
-    private static final String SRU_ENDPOINT = System.getProperty("SRU_ENDPOINT", "https://dfbbib.bib.no/cgi-bin/sru");
-    public static final String ISBN = "isbn";
-    private static final String EAN = "ean";
     private static Transformer t;
 
     static {
@@ -52,29 +48,21 @@ public class SRUHttpClient implements ExternalCatalogue{
             t.setOutputProperty(OutputKeys.INDENT, "yes");
             t.setOutputProperty("{http://xml.apache.org/xslt}i‌​ndent-amount", "2");
         } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     private String endpoint;
 
-    public SRUHttpClient() throws MalformedURLException {
-        this(SRU_ENDPOINT);
-    }
-
-    public SRUHttpClient(String endpoint, int port) {
-        this.endpoint = endpoint;
-    }
-
     public SRUHttpClient(String url) throws MalformedURLException {
         this.endpoint = url;
     }
 
-    public final String getEndpoint() {
+    final String getEndpoint() {
         return endpoint;
     }
 
-    public final void setEndpoint(String endpoint) {
+    final void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
     }
 

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<searchRetrieveResponse xmlns="http://docs.oasis-open.org/ns/search-ws/sruResponse">
+    <version>2.0</version>
+    <numberOfRecords>1</numberOfRecords>
+    <records>
+        <record>
+            <recordSchema>info:lc/xmlns/marcxchange-v1</recordSchema>
+            <recordXMLEscaping>xml</recordXMLEscaping>
+            <recordData>
+                <record format="NORMARC" type="Bibliographic" xmlns="info:lc/xmlns/marcxchange-v1">
+                    <leader>     nam         1      </leader>
+                    <controlfield tag="001">517490</controlfield>
+                    <controlfield tag="008">                      a          10nob 2</controlfield>
+                    <datafield tag="015" ind1=" " ind2=" ">
+                        <subfield code="a">0342691</subfield>
+                        <subfield code="b">BIBBI</subfield>
+                    </datafield>
+                    <datafield tag="019" ind1=" " ind2=" ">
+                        <subfield code="b">l</subfield>
+                        <subfield code="d">AN</subfield>
+                    </datafield>
+                    <datafield tag="020" ind1=" " ind2=" ">
+                        <subfield code="a">978-82-8169-269-5</subfield>
+                        <subfield code="b">ib.</subfield>
+                        <subfield code="c">Nkr 349.00</subfield>
+                    </datafield>
+                    <datafield tag="082" ind1="3" ind2="1">
+                        <subfield code="a">394.2663</subfield>
+                        <subfield code="2">5</subfield>
+                    </datafield>
+                    <datafield tag="090" ind1=" " ind2=" ">
+                        <subfield code="b">q</subfield>
+                    </datafield>
+                    <datafield tag="245" ind1="1" ind2="0">
+                        <subfield code="a">Verdens fineste julefortellinger</subfield>
+                        <subfield code="c">Anne B. Bull-Gundersen (red.)</subfield>
+                    </datafield>
+                    <datafield tag="260" ind1=" " ind2=" ">
+                        <subfield code="a">[Oslo]</subfield>
+                        <subfield code="b">Font</subfield>
+                        <subfield code="c">cop. 2013</subfield>
+                    </datafield>
+                    <datafield tag="300" ind1=" " ind2=" ">
+                        <subfield code="a">189 s.</subfield>
+                        <subfield code="b">kol. ill.</subfield>
+                    </datafield>
+                    <datafield tag="505" ind1=" " ind2=" ">
+                        <subfield code="a">Har innholdsfortegnelse</subfield>
+                    </datafield>
+                    <datafield tag="505" ind1=" " ind2=" ">
+                        <subfield code="a">Inneholder 17 fortellinger</subfield>
+                    </datafield>
+                    <datafield tag="520" ind1=" " ind2=" ">
+                        <subfield code="a">Boken inneholder tjue kjente og kjære julefortellinger som skal gjøre ventetiden frem til jul hyggelig for liten og stor. Boken er rikt illustrert og inneholder fortellinger som: J.R.R. Tolkiens "Brev fra julenissen", Charles Dickens "En julefortelling", Leo Tolstojs "Papa Panovs juledag", Alf Prøysens "Snekker Andersen", Mark Twains "Brevet fra julenissen", H. C. Andersens "Piken med svovelstikkene", Selma Lagerlöfs "Den hellige natten", Oscar Wildes "The Selfish Giant", Kjell Aukrusts "Ludvigs jul", Asbjørnsen og Moes "En Gammeldags Julaften", Brødrene Grimms "Nissene", Pearl S. Bucks "Christmas Day in the Morning" og Astrid Lindgrens "Jul i stallen" m. fl.</subfield>
+                    </datafield>
+                    <datafield tag="650" ind1=" " ind2="2">
+                        <subfield code="a">Jul</subfield>
+                        <subfield code="x">Fortellinger</subfield>
+                        <subfield code="2">BS</subfield>
+                        <subfield code="2">BS</subfield>
+                        <subfield code="9">nob</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="0">
+                        <subfield code="a">Bull-Gundersen, Anne B.</subfield>
+                        <subfield code="d">1957-</subfield>
+                        <subfield code="e">red.</subfield>
+                        <subfield code="j">n.</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Asbjørnsen, Peter Christen</subfield>
+                        <subfield code="d">1812-1885</subfield>
+                        <subfield code="j">n.</subfield>
+                        <subfield code="t">En gammeldags julaften</subfield>
+                        <subfield code="u">gammeldags julaften</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Dickens, Charles</subfield>
+                        <subfield code="d">1812-1870</subfield>
+                        <subfield code="j">eng.</subfield>
+                        <subfield code="t">En julefortelling</subfield>
+                        <subfield code="u">julefortelling</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Thomas, Dylan</subfield>
+                        <subfield code="d">1914-1953</subfield>
+                        <subfield code="j">wal.</subfield>
+                        <subfield code="t">Et barns jul i Wales</subfield>
+                        <subfield code="u">barns jul i Wales</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Tolstoj, Lev Nikolajevitsj</subfield>
+                        <subfield code="d">1828-1910</subfield>
+                        <subfield code="j">r.</subfield>
+                        <subfield code="t">Pappa Panovs juledag</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Hoffmann, Ernst Theodor Amadeus</subfield>
+                        <subfield code="d">1776-1822</subfield>
+                        <subfield code="j">t.</subfield>
+                        <subfield code="t">Nøtteknekkeren</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Prøysen, Alf</subfield>
+                        <subfield code="d">1914-1970</subfield>
+                        <subfield code="j">n.</subfield>
+                        <subfield code="t">Julegaven hans Simen</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Lindgren, Astrid</subfield>
+                        <subfield code="d">1907-2002</subfield>
+                        <subfield code="j">sv.</subfield>
+                        <subfield code="t">Jul i stallen</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Normann, Regine</subfield>
+                        <subfield code="d">1867-1939</subfield>
+                        <subfield code="j">n.</subfield>
+                        <subfield code="t">Juletreet fra havet</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Ring, Barbra</subfield>
+                        <subfield code="d">1870-1955</subfield>
+                        <subfield code="j">n.</subfield>
+                        <subfield code="t">Itte noe knussel</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Winsnes, Hanna</subfield>
+                        <subfield code="d">1789-1872</subfield>
+                        <subfield code="j">n.</subfield>
+                        <subfield code="t">Julegaven</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Beskow, Elsa</subfield>
+                        <subfield code="d">1874-1953</subfield>
+                        <subfield code="j">sv.</subfield>
+                        <subfield code="t">Nissen i butikkvinduet</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Grimm, Jacob</subfield>
+                        <subfield code="d">1785-1863</subfield>
+                        <subfield code="j">t.</subfield>
+                        <subfield code="t">Nissene</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Lagerlöf, Selma</subfield>
+                        <subfield code="d">1858-1940</subfield>
+                        <subfield code="j">sv.</subfield>
+                        <subfield code="t">Den hellige natten</subfield>
+                        <subfield code="u">hellige natten</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Andersen, Hans Christian</subfield>
+                        <subfield code="d">1805-1875</subfield>
+                        <subfield code="j">d.</subfield>
+                        <subfield code="t">Grantreet</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Jansson, Tove</subfield>
+                        <subfield code="d">1914-2001</subfield>
+                        <subfield code="j">fi.</subfield>
+                        <subfield code="t">Grantreet</subfield>
+                    </datafield>
+                    <datafield tag="700" ind1=" " ind2="2">
+                        <subfield code="a">Capote, Truman</subfield>
+                        <subfield code="c">egentlig navn Truman Streckfus Persons</subfield>
+                        <subfield code="d">1924-1984</subfield>
+                        <subfield code="j">am.</subfield>
+                        <subfield code="t">En julefortelling</subfield>
+                        <subfield code="u">julefortelling</subfield>
+                    </datafield>
+                    <datafield tag="740" ind1="0" ind2="2">
+                        <subfield code="a">Juleevangeliet</subfield>
+                    </datafield>
+                    <datafield tag="900" ind1=" " ind2="0">
+                        <subfield code="a">Gundersen, Anne B. Bull-</subfield>
+                        <subfield code="z">Bull-Gundersen, Anne B.</subfield>
+                        <subfield code="9">nor</subfield>
+                    </datafield>
+                    <datafield tag="900" ind1=" " ind2="0">
+                        <subfield code="a">Asbjørnsen, Peter Christen</subfield>
+                        <subfield code="d">1812-1885</subfield>
+                        <subfield code="j">n.</subfield>
+                        <subfield code="t">En gammeldags juleaften</subfield>
+                        <subfield code="u">gammeldags juelaften</subfield>
+                        <subfield code="z">Asbjørnsen, Peter Christen</subfield>
+                        <subfield code="9">nor</subfield>
+                    </datafield>
+                    <datafield tag="900" ind1=" " ind2="0">
+                        <subfield code="a">Grimm, Jacob</subfield>
+                        <subfield code="d">1785-1863</subfield>
+                        <subfield code="j">t.</subfield>
+                        <subfield code="t">Alvene og skomakeren</subfield>
+                        <subfield code="z">Grimm, Jacob</subfield>
+                        <subfield code="9">nor</subfield>
+                    </datafield>
+                    <datafield tag="900" ind1=" " ind2="0">
+                        <subfield code="a">Jansson, Tove</subfield>
+                        <subfield code="d">1914-2001</subfield>
+                        <subfield code="j">fi.</subfield>
+                        <subfield code="t">Granen</subfield>
+                        <subfield code="z">Jansson, Tove</subfield>
+                        <subfield code="9">nor</subfield>
+                    </datafield>
+                    <datafield tag="900" ind1=" " ind2="0">
+                        <subfield code="a">Capote, Truman</subfield>
+                        <subfield code="c">egentlig navn Truman Streckfus Persons</subfield>
+                        <subfield code="d">1924-1984</subfield>
+                        <subfield code="j">am.</subfield>
+                        <subfield code="t">Et juleminne</subfield>
+                        <subfield code="u">juleminne</subfield>
+                        <subfield code="z">Capote, Truman</subfield>
+                        <subfield code="9">nor</subfield>
+                    </datafield>
+                    <datafield tag="996" ind1="" ind2="">
+                        <subfield code="u">http://bibbi.mikromarc.no:80/Detail.aspx?Unit=6475&amp;db=data source=10.55.1.16;initial catalog=bibbi;User Id=dba;Password=Mjpjt179;MultipleActiveResultSets=True;App=EntityFramework&amp;ID=517490&amp;SU=6477%2c6475</subfield>
+                        <subfield code="z">local</subfield>
+                    </datafield>
+                </record>
+            </recordData>
+            <recordPosition>1</recordPosition>
+        </record>
+    </records>
+</searchRetrieveResponse>

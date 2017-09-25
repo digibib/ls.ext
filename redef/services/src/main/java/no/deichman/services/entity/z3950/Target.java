@@ -1,5 +1,7 @@
 package no.deichman.services.entity.z3950;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
@@ -9,13 +11,9 @@ import static java.util.Collections.EMPTY_MAP;
  * Responsibility: Provide details of Z39.50 targets.
  */
 public enum Target {
-    BIBBI("bibbi", "normarc"),
+    BIBBI("bibbi", "normarc", SRU.FIELD_MAPPING),
     LOC("loc", "marc21"),
-    DFB("dfb", "bibliofilmarc",
-            of("local_id", "rec.identifier",
-                    "isbn", "dc.identifier",
-                    "title", "dc.title",
-                    "author", "dc.creator"));
+    DFB("dfb", "bibliofilmarc", SRU.FIELD_MAPPING);
 
     private final Map<String, String> parameterMap;
     private String databaseName;
@@ -41,5 +39,16 @@ public enum Target {
 
     public Map<String, String> getParameterMap() {
         return parameterMap;
+    }
+
+    /**
+     * responsibility: Map local search fields to NorZig SRU profile ones.
+     */
+    private static class SRU {
+        static final ImmutableMap<String, String> FIELD_MAPPING = of(
+                "local_id", "rec.identifier",
+                "isbn", "dc.identifier",
+                "title", "dc.title",
+                "author", "dc.creator");
     }
 }

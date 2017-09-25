@@ -1349,23 +1349,6 @@ public class AppTest {
         assertEquals(comparisonJson, resultJson);
     }
 
-
-    @Test
-    public void test_z3950_resource_is_retrieved_and_mapped() throws UnirestException {
-        z3950ServiceMock.getSingleMarcRecordExpectation();
-
-        String url = appURI + "/datasource/bibbi?isbn=912312312312";
-
-        HttpResponse<String> result = Unirest.get(url).asString();
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        MappingTester mappingTester = new MappingTester();
-        String resultJson = mappingTester.simplifyBNodes(gson.toJson(new JsonParser().parse(result.getBody()).getAsJsonObject()));
-        String comparisonJson = mappingTester.simplifyBNodes(new ResourceReader().readFile("BS_external_data_processed.json"));
-
-        assertEquals(comparisonJson, resultJson);
-    }
-
     @Test
     public void test_returns_record_ids_by_work() throws UnirestException {
         kohaAPIMock.addLoginExpectation();

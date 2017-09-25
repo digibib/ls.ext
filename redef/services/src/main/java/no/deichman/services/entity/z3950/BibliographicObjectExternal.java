@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.ImmutableMap.of;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  * Responsibility: create a basic bibliographic object.
@@ -41,8 +42,16 @@ class BibliographicObjectExternal extends ExternalDataObject {
     @SerializedName("deichman:language")
     private List<ExternalDataObject> language;
 
+    private transient String untranscribedMainTitle = "";
+
+    private transient String untranscribedSubTitle = "";
+
     @SerializedName("deichman:untranscribedTitle")
     private String untranscribedTitle;
+
+    private void  setUntranscribedTitle() {
+        untranscribedTitle = join(new String[]{untranscribedMainTitle, untranscribedSubTitle}, " ");
+    }
 
     BibliographicObjectExternal(String id) {
         setId(id);
@@ -57,7 +66,8 @@ class BibliographicObjectExternal extends ExternalDataObject {
     }
 
 
-    BibliographicObjectExternal() {}
+    BibliographicObjectExternal() {
+    }
 
     BibliographicObjectExternal(String mainTitle, String subtitle) {
         this.mainTitle = mainTitle;
@@ -122,7 +132,13 @@ class BibliographicObjectExternal extends ExternalDataObject {
         this.language.add(language);
     }
 
-    public void setUntranscribedTitle(String untranscribedTitle) {
-        this.untranscribedTitle = untranscribedTitle;
+    public void setUntranscribedMainTitle(String untranscribedMainTitle) {
+        this.untranscribedMainTitle = untranscribedMainTitle;
+        setUntranscribedTitle();
+    }
+
+    public void setUntranscribedSubTitle(String untranscribedSubTitle) {
+        this.untranscribedSubTitle = untranscribedSubTitle;
+        setUntranscribedTitle();
     }
 }

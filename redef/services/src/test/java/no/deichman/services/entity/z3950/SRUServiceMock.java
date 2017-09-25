@@ -35,4 +35,15 @@ public class SRUServiceMock {
                 giveResponse(responseData, "text/xml").withStatus(OK.getStatusCode()));
     }
 
+    public final void getMicroMarcSingleMarcRecordExpectation() {
+        ResourceReader resourceReader = new ResourceReader();
+        String responseData = resourceReader.readFile("BS_external_sru_data_micromarc.xml");
+
+        clientDriver.addExpectation(
+                onRequestTo("/mmwebapi/bibbi/6475/SRU")
+                        .withAnyParams()
+                        .withMethod(GET),
+                giveResponse(responseData, "text/xml").withStatus(OK.getStatusCode()));
+    }
+
 }

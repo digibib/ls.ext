@@ -7,7 +7,6 @@ import no.deichman.services.entity.z3950.ExternalCatalogue;
 import no.deichman.services.entity.z3950.Mapper;
 import no.deichman.services.entity.z3950.SRUHttpClient;
 import no.deichman.services.entity.z3950.SearchResultInfo;
-import no.deichman.services.entity.z3950.Z3950HttpClient;
 import no.deichman.services.restutils.MimeType;
 
 import javax.inject.Singleton;
@@ -20,6 +19,7 @@ import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import static java.lang.System.getProperty;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
 
 /**
@@ -35,9 +35,13 @@ public class Datasource {
     static {
         try {
             EXTERNAL_CATALOGUES = ImmutableMap
-                    .of("dfb", new SRUHttpClient(System.getProperty("DFB_SRU_ENDPOINT", "https://dfbbib.bib.no/cgi-bin/sru?version=1.2")),
-                            "loc", new SRUHttpClient(System.getProperty("LOC_SRU_ENDPOINT", "http://www.loc.gov/z39voy?version=1.1")),
-                            "bibbi", new Z3950HttpClient());
+                    .of("dfb", new SRUHttpClient(getProperty("DFB_SRU_ENDPOINT", "https://dfbbib.bib.no/cgi-bin/sru?version=1.2")),
+                            "loc", new SRUHttpClient(getProperty("LOC_SRU_ENDPOINT", "http://www.loc.gov/z39voy?version=1.1")),
+                            "bibbi", new SRUHttpClient(
+                                    getProperty(
+                                            "BIBBI_SRU_ENDPOINT",
+                                            "https://sru.mikromarc.no/mmwebapi/bibbi/6475/SRU?httpAccept=text/xml&version=2.0"
+                                    )));
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -68,7 +72,7 @@ public class Datasource {
         } else if (ean != null) {
             idType = "ean";
             term = ean;
-        } else if (localId!= null) {
+        } else if (localId != null) {
             idType = "local_id";
             term = localId;
         } else if (title != null) {

@@ -2,16 +2,17 @@
 <xsl:stylesheet version="2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:SRU="http://www.loc.gov/zing/sru/"
+                xmlns:SRUalt="http://docs.oasis-open.org/ns/search-ws/sruResponse"
                 xmlns:slim="http://www.loc.gov/MARC21/slim"
                 xmlns:marcxchange="info:lc/xmlns/marcxchange-v1"
                 xpath-default-namespace="http://www.loc.gov/MARC21/slim">
-    <xsl:template match="SRU:searchRetrieveResponse/SRU:records">
+    <xsl:template match="SRU:searchRetrieveResponse/SRU:records|SRUalt:searchRetrieveResponse/SRUalt:records">
         <slim:collection>
             <xsl:apply-templates/>
         </slim:collection>
     </xsl:template>
 
-    <xsl:template match="SRU:record/SRU:recordData/marcxchange:record">
+    <xsl:template match="SRU:record/SRU:recordData/marcxchange:record|SRUalt:record/SRUalt:recordData/marcxchange:record">
         <slim:record>
             <xsl:apply-templates/>
         </slim:record>

@@ -296,6 +296,7 @@ public class MARCMapper {
                     getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                     break;
                 case "650":
+                case "690":
                     mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE);
                     getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                     break;
@@ -483,8 +484,10 @@ public class MARCMapper {
     private void setBibliographicDataFromDataField(DataField dataField, BibliographicObjectExternal bibliographicObjectExternal) {
         getSubfieldValue(dataField, 'a')
                 .ifPresent(getSubfieldValue(dataField, '9')
-                        .isPresent() ? bibliographicObjectExternal::setUntranscribedTitle : bibliographicObjectExternal::setMainTitle);
-        getSubfieldValue(dataField, 'b').ifPresent(bibliographicObjectExternal::setSubtitle);
+                        .isPresent() ? bibliographicObjectExternal::setUntranscribedMainTitle : bibliographicObjectExternal::setMainTitle);
+        getSubfieldValue(dataField, 'b')
+                .ifPresent(getSubfieldValue(dataField, '9')
+                        .isPresent() ? bibliographicObjectExternal::setUntranscribedSubTitle : bibliographicObjectExternal::setSubtitle);
         getSubfieldValue(dataField, 'f').ifPresent(bibliographicObjectExternal::setPublicationYear);
         getSubfieldValue(dataField, 'n').ifPresent(bibliographicObjectExternal::setPartNumber);
         getSubfieldValue(dataField, 'p').ifPresent(bibliographicObjectExternal::setPartTitle);
