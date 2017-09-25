@@ -1,9 +1,11 @@
 package no.deichman.services.entity.z3950;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.vocabulary.RDF;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ class BibliographicObjectExternal extends ExternalDataObject {
 
     @SerializedName("deichman:subtitle")
     private String subtitle;
+
     @SerializedName("deichman:ordinal")
     private String ordinal;
 
@@ -42,15 +45,15 @@ class BibliographicObjectExternal extends ExternalDataObject {
     @SerializedName("deichman:language")
     private List<ExternalDataObject> language;
 
-    private transient String untranscribedMainTitle = "";
+    private transient String untranscribedMainTitle;
 
-    private transient String untranscribedSubTitle = "";
+    private transient String untranscribedSubTitle;
 
     @SerializedName("deichman:untranscribedTitle")
     private String untranscribedTitle;
 
     private void  setUntranscribedTitle() {
-        untranscribedTitle = join(new String[]{untranscribedMainTitle, untranscribedSubTitle}, " : ");
+        untranscribedTitle = join(Arrays.stream(new String[]{untranscribedMainTitle, untranscribedSubTitle}).filter(StringUtils::isNotBlank).toArray(), " : ");
     }
 
     BibliographicObjectExternal(String id) {
