@@ -2551,6 +2551,7 @@
           return fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
         }
       }
+      return Promise.resolve()
     }
 
     const Main = {
