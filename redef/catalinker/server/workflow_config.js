@@ -592,7 +592,7 @@ module.exports = (app) => {
                     showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', 'publicationYear' ],
                     type: 'Publication',
                     legendSingular: 'alreadyRegisteredEANSingular',
-                    legendPlural: 'alreadyRegisteredEANSingular',
+                    legendPlural: 'alreadyRegisteredEANPlural',
                     editWithTemplate: {
                       template: 'workflow',
                       descriptionKey: 'maintPub'
