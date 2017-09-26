@@ -301,7 +301,7 @@
     guessedSearchParameterLegend: 'It looks like you wish to search by <b>{{>parameterGuess}}</b>.<br/>You can use one of these ccl-prefixes if you want: {{cclCodes}}.',
     DFBLabel: 'Search in "Det flerspråklige bibliotek"',
     BSSearchLabelISBN: 'Search in Biblioteksentralen by ISBN',
-    BSSearchLabelEAN: 'Søk in Biblioteksentralen by EAN',
+    BSSearchLabelEAN: 'Search in Biblioteksentralen by EAN',
     titleLabel: 'Title',
     localIdlabel: 'Local identifier',
     hitsFromExternalSource: '{{items.length}}{{#if items.length !== totalHits}} of {{totalHits}}{{/if}} hits from external source - {{../../preferredSource.name}}',
