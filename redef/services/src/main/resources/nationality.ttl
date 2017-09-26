@@ -810,10 +810,6 @@ nationality:cshh a duo:Nationality ;
 	rdfs:label	"Tsjekkoslovakia"@no ;
 	rdfs:label	"Czechoslovakia"@en .
 
-nationality:yucs a duo:Nationality ;
-	rdfs:label	"Jugoslavia"@no ;
-	rdfs:label	"Yugoslavia"@en .
-
 nationality:suhh a duo:Nationality ;
 	rdfs:label	"Sovjetunionen"@no ;
 	rdfs:label	"Soviet Union"@en .
