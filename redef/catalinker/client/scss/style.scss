@@ -645,6 +645,7 @@ html {
                 margin-bottom: 25px;&.suggestion-source-bibbi {
                   @include source-logo-bibbi;
                   background-position: calc(100% - 130px);
+                  background-position-y: bottom;
                   &.searchable {
                     background-position: 87%;
                   }
@@ -652,6 +653,7 @@ html {
                 &.suggestion-source-loc {
                   @include source-logo-loc;
                   background-position: calc(100% - 130px);
+                  background-position-y: bottom;
                   &.searchable {
                     background-position: 86% 0;
                   }
