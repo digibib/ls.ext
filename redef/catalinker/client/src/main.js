@@ -150,7 +150,7 @@
           _.each(realInputs, function (input, subInputIndex) {
             if (!unIdentifiedAuthorities && input.type === 'searchable-with-result-in-side-panel') {
               _.each(input.values, (value) => {
-                if (value.current.displayValue.length > 0 && (!value.current.value || value.current.value.length == 0)) {
+                if (value.current.displayValue.length > 0 && (!value.current.value || value.current.value.length === 0)) {
                   unIdentifiedAuthorities = true
                 }
               })
