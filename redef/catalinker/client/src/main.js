@@ -136,7 +136,7 @@
       }
     }
 
-    function saveSuggestionData () {
+    function saveSuggestionData (event) {
       let suggestionData = []
       let acceptedData = []
       let unknownPredefinedValues = []
