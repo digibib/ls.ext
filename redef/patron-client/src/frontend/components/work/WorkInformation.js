@@ -19,15 +19,21 @@ const WorkInformation = ({ work, publicationId, showAdditionalInformation, toggl
   const partTitle = chosenPublication ? chosenPublication.partTitle : work.partTitle
   const partNumber = chosenPublication ? chosenPublication.partNumber : work.partNumber
   const subtitle = chosenPublication ? chosenPublication.subtitle : work.subtitle
-  const completeTitle = title({mainTitle, subtitle, partNumber, partTitle})
-  const untranscribedTitle = chosenPublication ? chosenPublication.untranscribedTitle : undefined
+  let completeTitle = title({mainTitle, subtitle, partNumber, partTitle})
+  let untranscribedTitle = chosenPublication ? chosenPublication.untranscribedTitle : undefined
+  if (!untranscribedTitle) {
+    const pubWithUntranscribedTitle = work.publications.find(publication => publication.untranscribedTitle && publication.untranscribedTitle === completeTitle)
+    if (pubWithUntranscribedTitle) {
+      completeTitle = pubWithUntranscribedTitle.mainTitle
+      untranscribedTitle = pubWithUntranscribedTitle.untranscribedTitle
+    }
+  }
 
   return (
     <section className="work-information">
       <Title title={completeTitle} untranscribedTitle={untranscribedTitle} />
       <Author by={work.by} />
-      <OriginalTitle mainTitle={work.mainTitle} subtitle={work.subtitle} partNumber={work.partNumber}
-                     partTitle={work.partTitle} />
+      <OriginalTitle title={completeTitle} untranscribedTitle={untranscribedTitle} />
       <OriginalLanguage languages={work.languages} />
       <CountryOfOrigin country={work.countryOfOrigin} />
       <Year year={work.publicationYear} />
