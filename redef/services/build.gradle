@@ -83,7 +83,6 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: version_jetty
     compile group: 'org.eclipse.jetty', name: 'jetty-annotations', version: version_jetty
     compile group: 'org.eclipse.jetty', name: 'apache-jsp', version: version_jetty
-    compile group: 'net.sf.xss-html-filter', name: 'xss-html-filter', version: '1.5'
     compile group: 'com.jamonapi', name: 'fdsapi', version: '1.2'
     compile group: 'joda-time', name: 'joda-time', version: '2.9.7'
 
