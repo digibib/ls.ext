@@ -317,6 +317,7 @@
         value{{#if (allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup) > 1}}s{{/if}}.</p>
         `,
     externalSuggestionsAlreadyUsed: 'Suggestions from main external source have already been used',
+    showHideFromExternalSources: '{{#if expanded}}Hide{{else}}Show{{/if}} suggestions from {{#if !suggestionsAreDemoted}}other {{/if}} external sources',
     useValuesFromThis: 'Use values from this source',
     thisPublicationIsAlreadyRegistered: 'This publication is already registered',
     alreadyRegisteredISBNSingular: 'There is already a registered a publication with the same ISBN number. Do you want to open that one, continue registering a new one or cancel?',

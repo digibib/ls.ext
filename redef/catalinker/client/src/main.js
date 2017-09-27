@@ -597,7 +597,7 @@
 
     function setMultiValues (values, input, index, options) {
       options = options || {}
-      if (values && values.length > 0) {
+      if (values) {
         const valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
           if (isBlankNodeUri(value.id)) {
             let valuesForInput = ractive.get(`applicationData.predefinedValues.${input.fragment}`)
@@ -627,22 +627,46 @@
         } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value.length > 0) {
           return
         }
-        input[ valuesKey ][ index ].old = {
+        if (options.demoteAcceptedSuggestions) {
+          _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').compact().first().pairs().each(function (valueAndSource) {
+            const value = valueAndSource[ 0 ]
+            const source = valueAndSource[ 1 ]
+            input.suggestedValues = input.suggestedValues || []
+            input.suggestedValues.push({
+              source,
+              value: {
+                value,
+                label: Main.predefinedLabelValue(input.fragment, value)
+              }
+            })
+            input.suggestionsAreDemoted = true
+            delete input[ valuesKey ][ index ].current.accepted[ value ]
+          })
+        }
+        input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old || {
           value: valuesAsArray
         }
-        input[ valuesKey ][ index ].current = {
-          value: valuesAsArray,
-          uniqueId: _.uniqueId()
-        }
+        input[ valuesKey ][ index ].current = input[ valuesKey ][ index ].current || {}
+        input[ valuesKey ][ index ].current.value = valuesAsArray
+        input[ valuesKey ][ index ].current.uniqueId = _.uniqueId()
+
+        _.chain(values).filter((value) => { return value.source }).each((acceptedValueAndSource) => {
+          input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
+          input[ valuesKey ][ index ].current.accepted[ acceptedValueAndSource.id ] = acceptedValueAndSource.source
+        })
+
         input[ valuesKey ][ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
           input[ valuesKey ][ index ].suggested = { source: options.source }
           input.suggestedValues = valuesAsArray
         } else if (options.source) {
-          input[ valuesKey ][ index ].current.accepted = { source: options.source }
+          input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
+          _.chain(valuesAsArray).filter((val) => { return val }).each((value) => {
+            input[ valuesKey ][ index ].current.accepted[ value ] = options.source
+          })
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        ractive.update(`${input.keypath}.values.${index}`)
+        ractive.update(`${input.keypath}.${valuesKey}.${index}`)
         return valuesAsArray
       }
     }
@@ -653,27 +677,36 @@
         input.compareValues = input.compareValues || emptyValues()
       }
       const valuesKey = options.compareValues ? 'compareValues' : 'values'
-      if (value) {
-        if (options.noOverwrite && input[ valuesKey ][ index ] && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value) {
-          return
-        }
-        input[ valuesKey ][ index ] = {
-          old: options.keepOld ? input.values[ index ].old : {
-            value: value.value,
-            lang: value.lang
-          },
-          current: {
-            value: value.value,
-            lang: value.lang,
-            accepted: options.source ? { source: options.source } : undefined
-          },
-          uniqueId: _.uniqueId()
-        }
-        if (input[ valuesKey ][ index ].current.accepted) {
-          setSuggestionsAreAcceptedForParentInput(input, index)
-        }
-        ractive.update(`${input.keypath}.${valuesKey}.${index}`)
+      if (options.noOverwrite && input[ valuesKey ][ index ] && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value) {
+        return
       }
+      if (options.demoteAcceptedSuggestions) {
+        const acceptedSource = _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').pluck('source').compact().first().value()
+        if (acceptedSource) {
+          input.suggestedValues = input.suggestedValues || []
+          input.suggestedValues.push({
+            source: acceptedSource,
+            value: input[ valuesKey ][ index ].current.value
+          })
+          input.suggestionsAreDemoted = true
+        }
+      }
+      input[ valuesKey ][ index ] = {
+        old: options.keepOld ? input.values[ index ].old : {
+          value: value.value,
+          lang: value.lang
+        },
+        current: {
+          value: value.value,
+          lang: value.lang,
+          accepted: options.source ? { source: options.source } : undefined
+        },
+        uniqueId: _.uniqueId()
+      }
+      if (input[ valuesKey ][ index ].current.accepted) {
+        setSuggestionsAreAcceptedForParentInput(input, index)
+      }
+      ractive.update(`${input.keypath}.${valuesKey}.${index}`)
     }
 
     function setIdValue (id, input, index, valuesField, options) {
@@ -714,6 +747,9 @@
       let uri = input[ valuesField ][ index ].current.value
       if (input.type === 'searchable-authority-dropdown') {
         uri = uri[ 0 ]
+      }
+      if (!uri || uri === '') {
+        return
       }
 
       function fromRoot (root) {
@@ -759,13 +795,15 @@
               }
               input[ valuesField ][ index ].current.displayValue = values
             } else {
-              input.suggestedValues = input.suggestedValues || []
-              input.suggestedValues[ index ] = {
-                value: values,
-                displayValue: getValues(),
-                source: options.source,
-                selectedIndexType: selectedIndexType
-              }
+              getValues().then(function (value) {
+                ractive.set(`${input.keypath}.suggestedValues.${index}`, {
+                    value: values,
+                    displayValue: value,
+                    source: options.source,
+                    selectedIndexType: selectedIndexType
+                  }
+                )
+              })
             }
           } else {
             input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
@@ -1119,37 +1157,39 @@
         if (propName) {
           var propNameCore = propName.split(/\.fragment|[#\.,:\(\)-]/).join('')
           const propValue = valueFromPropertyFunc(propNameCore)
-          const handleValue = propVal => {
-            const displayProperties = []
-            if (propVal && propVal !== '') {
-              let property = { prop: propNameCore }
-              let ornamented
-              if (propName.indexOf('.fragment') !== -1) {
-                ornamented = ornament(fragmentPartOf(propVal), propName)
+          if (propValue) {
+            const handleValue = propVal => {
+              const displayProperties = []
+              if (propVal && propVal !== '') {
+                let property = { prop: propNameCore }
+                let ornamented
+                if (propName.indexOf('.fragment') !== -1) {
+                  ornamented = ornament(fragmentPartOf(propVal), propName)
+                } else {
+                  ornamented = ornament(propVal, propName)
+                }
+                if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
+                  let previousPropVal = _.last(displayProperties).val
+                  _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
+                }
+                property.val = ornamented
+                displayProperties.push(property)
               } else {
-                ornamented = ornament(propVal, propName)
+                let endParensVal = checkEndParens(propName, '')
+                if (endParensVal !== '') {
+                  displayProperties.push({ val: endParensVal })
+                }
               }
-              if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
-                let previousPropVal = _.last(displayProperties).val
-                _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
-              }
-              property.val = ornamented
-              displayProperties.push(property)
-            } else {
-              let endParensVal = checkEndParens(propName, '')
-              if (endParensVal !== '') {
-                displayProperties.push({ val: endParensVal })
-              }
+              return displayProperties
             }
-            return displayProperties
-          }
-          if (isPromise(propValue)) {
-            realPromisesWereMade = true
-            promises.push(propValue.then(handleValue))
-          } else {
-            const value = handleValue(propValue)
-            promises.push(Promise.resolve(value))
-            values.push(value)
+            if (isPromise(propValue)) {
+              realPromisesWereMade = true
+              promises.push(propValue.then(handleValue))
+            } else {
+              const value = handleValue(propValue)
+              promises.push(Promise.resolve(value))
+              values.push(value)
+            }
           }
         }
       })
@@ -1339,11 +1379,14 @@
                             })
                           } else {
                             _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
-                              input.suggestedValues = input.suggestedValues || []
-                              input.suggestedValues.push({
-                                value: node.value,
-                                source: options.source
-                              })
+                              if (node.type === 'string') {
+                                input.suggestedValues = input.suggestedValues || []
+                                input.suggestedValues.push({
+                                  value: node.value,
+                                  displayValue: node.value,
+                                  source: options.source
+                                })
+                              }
                             })
                           }
                         } else if (input.type === 'select-predefined-value') {
@@ -2932,8 +2975,12 @@
         }
 
         let templateSelection = function (selection) {
-          var source = $(selection.element.parentElement).attr('data-accepted-source')
-          var sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+          const acceptedSourcekeypath = $(selection.element.parentElement).attr('data-accepted-source-keypath')
+          let sourceSpan = ''
+          if (acceptedSourcekeypath) {
+            var source = (ractive.get(`${acceptedSourcekeypath}.current.accepted`) || {})[ selection.id ]
+            sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+          }
           return $(`<span>${selection.text}${sourceSpan}</span>`)
         }
 
@@ -3120,8 +3167,10 @@
                 var inputNode = ractive.get(grandParentOf(keypath))
                 let target = ractive.get(grandParentOf(grandParentOf(keypath))).targetUri || ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
                 if (target && !inputNode.isSubInput && shouldExecPatchImmediately(keypath)) {
+                  let waiter = ractive.get('waitHandler').newWaitable(e.target)
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
+                  waiter.cancel()
                 }
                 setting = false
               }
@@ -3130,7 +3179,11 @@
 
             let keypath = `${this.getNodeInfo(node).resolve()}.current.value`
             const observer = ractive.observe(keypath, function (newvalue, oldValue) {
-              if (!setting && (newvalue || [])[ 0 ] !== (oldValue || [])[ 0 ]) {
+              function valuesAsString (values) {
+                return _(values || []).sort().reduce(function (memo, value) { return `${memo}|${value}` }, '')
+              }
+
+              if (!setting && (valuesAsString(newvalue) !== valuesAsString(oldValue))) {
                 setting = true
                 window.setTimeout(function () {
                   $(node).val(newvalue).trigger('change')
@@ -3958,7 +4011,9 @@
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, input.datatypes[ 0 ], errors, event.keypath)
                     event.context.domain = rdfType
-                    input.allowAddNewButton = true
+                    if (input.multiple && input.type !== 'select-predefined-value') {
+                      input.allowAddNewButton = true
+                    }
                     waiter.cancel()
                   }
                   ractive.update()
@@ -4165,7 +4220,7 @@
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.mode`, 'edit')
                   form.targetUri = uri
                 } else if (input.isMainEntry || options.subItem) {
-                  fetchExistingResource(uri)
+                  fetchExistingResource(uri, { demoteAcceptedSuggestions: true })
                     .then(function () {
                       updateInputsForDependentResources(typeFromUri(uri), uri)
                     }).then(function () {
@@ -4566,15 +4621,18 @@
                 if (!input.multiple) {
                   setMultiValues([ { id: value.value } ], input, 0, { source: source })
                 } else {
-                  var oldValues = _.map(input.values[ 0 ].current.value, function (value) {
+                  var values = _.map(input.values[ 0 ].current.value, function (value) {
                     return { id: value }
                   })
-                  oldValues.push({ id: value.value })
-                  setMultiValues(oldValues, input, 0, { source: source })
+                  values.push({ id: value.value, source })
+                  setMultiValues(values, input, 0)
                 }
-                ractive.update()
-                ractive.fire('patchResource',
-                  { keypath: `${grandParentOf(event.keypath)}.values.0`, context: input.values[ 0 ] },
+                const selectField = $(`span[data-support-panel-base-id="support_panel_base_${input.values[ 0 ].uniqueId}"] span.select2.select2-container`)
+                ractive.fire('patchResource', {
+                    original: { target: selectField },
+                    keypath: `${grandParentOf(event.keypath)}.values.0`,
+                    context: input.values[ 0 ]
+                  },
                   input.predicate,
                   unPrefix(input.domain))
               },
@@ -4588,10 +4646,12 @@
                 }
                 ractive.update()
                 var valueIndex = oldValues ? oldValues.length - 1 : 0
+                const selectField = $(`span[data-support-panel-base-id="support_panel_base_${input.values[ input.multiple ? oldValues.length - 1 : 0 ].uniqueId}"] input`)
                 ractive.fire('patchResource',
                   {
                     keypath: `${grandParentOf(event.keypath)}.values.${valueIndex}`,
-                    context: input.values[ valueIndex ]
+                    context: input.values[ valueIndex ],
+                    original: { target: selectField }
                   },
                   input.predicate,
                   unPrefix(input.domain))
@@ -5168,14 +5228,17 @@
               let showingWaiting = false
               let cancelled = false
               let spinner = new Spinner({ scale: 1.0 }).spin()
+              let disabledInput
               let waiter = {
                 showWaiting: function () {
                   if (!showingWaiting && !cancelled) {
                     showingWaiting = true
                     target.addClass('saving')
-                    const next = target.nextAll('.save-placeholder')
-                    if (next.length > 0) {
-                      next.append(spinner.el)
+                    const savePlaceholder = target.nextAll('.save-placeholder')
+                    if (savePlaceholder.length > 0) {
+                      savePlaceholder.append(spinner.el)
+                      disabledInput = savePlaceholder.prevAll('input,select')
+                      disabledInput.attr('disabled', 'disabled')
                     } else {
                       $('#growler').show()
                     }
@@ -5184,6 +5247,9 @@
                 },
                 done: function () {
                   if (showingWaiting) {
+                    if (disabledInput) {
+                      disabledInput.attr('disabled', false)
+                    }
                     spinner.stop()
                     target.removeClass('saving')
                     $('#growler').hide()
