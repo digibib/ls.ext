@@ -163,7 +163,7 @@ body {
               background-position: 6px 0 !important;
             }
             &.suggestion-source-loc {
-              padding: 0 65px 2px 0;
+              padding: 0 24px 2px 0;
               background-position: 6px 0 !important;
             }
           }
@@ -395,6 +395,10 @@ body {
             top: 16px;
             right: -39px;
           }
+          span.select2.select2-container + .save-placeholder {
+            right: 40px;
+            top: -21px;
+          }
           .label {
             &.esoteric {
               margin-top: -23px;
@@ -565,7 +569,7 @@ body {
                 max-width: 431px;
                 white-space: nowrap;
               }
-              padding: 0 12px 15px 12px;
+              padding: 0 12px 10px 12px;
               background: $input-background;
               margin-right: -5px;
 
@@ -615,7 +619,6 @@ body {
               }
             }
             div.external-sources {
-              margin-top: 10px;
               padding: 13px;
               & > span {
                 background-repeat: no-repeat;
@@ -635,16 +638,17 @@ body {
               margin-top: 10px;
               .suggested-value {
                 clear: both;
+                margin-bottom: 25px;
                 &.suggestion-source-bibbi {
                   @include source-logo-bibbi;
-                  background-position: 58%;
+                  background-position: calc(100% - 130px);
                   &.searchable {
                     background-position: 87%;
                   }
                 }
                 &.suggestion-source-loc {
                   @include source-logo-loc;
-                  background-position: 68%;
+                  background-position: calc(100% - 130px);
                   &.searchable {
                     background-position: 86% 0;
                   }
@@ -653,7 +657,7 @@ body {
                   float: right;
                 }
                 .support-panel-expander {
-                  margin-top: 2px;
+                  margin-top: -25px;
                 }
               }
             }
