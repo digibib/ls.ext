@@ -725,6 +725,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
+    Så sjekker jeg at "CD" er blant verdiene som er valgt for Format
     Og jeg venter litt
     Så klikker jeg på lenkene for å vise mindre brukte felter
     Og legger inn opplysningene om CD-utgivelsen

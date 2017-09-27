@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SRU:searchRetrieveResponse xmlns:SRU="http://www.loc.gov/zing/sru/"
+>
+    <SRU:version>1.2</SRU:version>
+    <SRU:numberOfRecords>1</SRU:numberOfRecords>
+    <SRU:resultSetId>42</SRU:resultSetId>
+    <SRU:nextRecordPosition>1</SRU:nextRecordPosition>
+    <SRU:records>
+        <SRU:record>
+            <SRU:recordSchema>info:lc/xmlns/marcxchange-v1</SRU:recordSchema>
+            <SRU:recordPacking>xml</SRU:recordPacking>
+            <SRU:recordData>
+                <marcxchange:record format="bibliofilmarc" type="Bibliographic"
+                                    xmlns:marcxchange="info:lc/xmlns/marcxchange-v1">
+                    <marcxchange:leader>01070nam 2200265 4500</marcxchange:leader>
+                    <marcxchange:controlfield tag="001">1387778</marcxchange:controlfield>
+                    <marcxchange:controlfield tag="008">130305 a 10rus</marcxchange:controlfield>
+                    <marcxchange:datafield tag="015" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">9816696</marcxchange:subfield>
+                        <marcxchange:subfield code="b">BibliofilID</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="015" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="b">DFB</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="019" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="d">R</marcxchange:subfield>
+                        <marcxchange:subfield code="b">l</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="020" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">978-5-7793-2118-1</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="025" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">9785779321181</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="082" ind1="3" ind2=" ">
+                        <marcxchange:subfield code="z">h</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="090" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="c">RUS</marcxchange:subfield>
+                        <marcxchange:subfield code="d">Dos/3+4</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="099" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">xrusv130310</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="100" ind1="1" ind2="0">
+                        <marcxchange:subfield code="a">Dostojevskij, Fjodor Mikhajlovitsj</marcxchange:subfield>
+                        <marcxchange:subfield code="d">1821-1881</marcxchange:subfield>
+                        <marcxchange:subfield code="j">r.</marcxchange:subfield>
+                        <marcxchange:subfield code="1">891.73</marcxchange:subfield>
+                        <marcxchange:subfield code="6">891.7 x</marcxchange:subfield>
+                        <marcxchange:subfield code="3">2051623900</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="240" ind1="1" ind2="0">
+                        <marcxchange:subfield code="a">Brat'ja Karamazovy</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="245" ind1="1" ind2="0">
+                        <marcxchange:subfield code="a">Bratja Karamazovy</marcxchange:subfield>
+                        <marcxchange:subfield code="b">roman v tsjetyrjokh tsjastjakh s epilogom</marcxchange:subfield>
+                        <marcxchange:subfield code="n">B 3 og 4</marcxchange:subfield>
+                        <marcxchange:subfield code="c">Fjodor Mikhajlovitsj Dostojevskij ; [ill. av] E. Kazantseva
+                        </marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="245" ind1="1" ind2="0">
+                        <marcxchange:subfield code="a">Братья Карамазовы</marcxchange:subfield>
+                        <marcxchange:subfield code="c">Фёдор Достоевский</marcxchange:subfield>
+                        <marcxchange:subfield code="9">rus</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="260" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">Moskva</marcxchange:subfield>
+                        <marcxchange:subfield code="b">Belyj gorod</marcxchange:subfield>
+                        <marcxchange:subfield code="c">[2011]</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="300" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">761 s.</marcxchange:subfield>
+                        <marcxchange:subfield code="b">ill. noen kol.</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="520" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">Romanen handler om de tre brødrene Karamasov, som representerer
+                            tre ulike typer av ungdommer: Aljosja, den fromme troende, Ivan, den intellektuelle og
+                            tvilende og til slutt livsnyteren Dmitrij. Mordet på deres far, Fjodor Karamasov, danner
+                            rammen for romanen
+                        </marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="572" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">Norsk tittel: Brødrene Karamasov</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="700" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">Kazantseva, E.</marcxchange:subfield>
+                        <marcxchange:subfield code="j">r.</marcxchange:subfield>
+                        <marcxchange:subfield code="3">2047477800</marcxchange:subfield>
+                    </marcxchange:datafield>
+                    <marcxchange:datafield tag="850" ind1=" " ind2=" ">
+                        <marcxchange:subfield code="a">2030001</marcxchange:subfield>
+                        <marcxchange:subfield code="b">Det flerspråklige bibliotek</marcxchange:subfield>
+                        <marcxchange:subfield code="c">m</marcxchange:subfield>
+                        <marcxchange:subfield code="f">9</marcxchange:subfield>
+                        <marcxchange:subfield code="h">0</marcxchange:subfield>
+                        <marcxchange:subfield code="x">2017-09-19T10:02+0200</marcxchange:subfield>
+                    </marcxchange:datafield>
+                </marcxchange:record>
+            </SRU:recordData>
+            <SRU:recordPosition>1</SRU:recordPosition>
+        </SRU:record>
+    </SRU:records>
+</SRU:searchRetrieveResponse>
+

@@ -19,10 +19,11 @@ import no.deichman.services.circulation.RawLoan;
 import no.deichman.services.circulation.Record;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.ResourceBase;
+import no.deichman.services.entity.external.MappingTester;
+import no.deichman.services.entity.external.SRUServiceMock;
+import no.deichman.services.entity.external.Z3950ServiceMock;
 import no.deichman.services.entity.kohaadapter.KohaAPIMock;
 import no.deichman.services.entity.repository.InMemoryRepository;
-import no.deichman.services.entity.z3950.MappingTester;
-import no.deichman.services.entity.z3950.Z3950ServiceMock;
 import no.deichman.services.ontology.AuthorizedValue;
 import no.deichman.services.rdf.MediaType;
 import no.deichman.services.rdf.RDFModelUtil;
@@ -107,6 +108,7 @@ public class AppTest {
     private static EmbeddedElasticsearchServer embeddedElasticsearchServer;
     private static int appPort;
     private static Z3950ServiceMock z3950ServiceMock;
+    private static SRUServiceMock sruServiceMock;
 
     private String resolveLocally(String uri) {
         return uri.replaceAll(BaseURI.root(), "");
@@ -119,6 +121,11 @@ public class AppTest {
         int jamonAppPort = PortSelector.randomFree();
         kohaAPIMock = new KohaAPIMock();
         String kohaAPIEndpoint = LOCALHOST + ":" + kohaAPIMock.getPort();
+        sruServiceMock = new SRUServiceMock();
+        String sruEndpoint = LOCALHOST + ":" + sruServiceMock.getPort() + "/sru?version=1.2";
+        System.setProperty("DFB_SRU_ENDPOINT", sruEndpoint);
+        System.setProperty("LOC_SRU_ENDPOINT", sruEndpoint);
+
         z3950ServiceMock = new Z3950ServiceMock();
         String z3950Endpoint = LOCALHOST + ":" + z3950ServiceMock.getPort();
         System.setProperty("Z3950_ENDPOINT", z3950Endpoint);
@@ -1327,17 +1334,17 @@ public class AppTest {
     }
 
     @Test
-    public void test_z3950_resource_is_retrieved_and_mapped() throws UnirestException {
-        z3950ServiceMock.getSingleMarcRecordExpectation();
+    public void test_sru_resource_is_retrieved_and_mapped() throws UnirestException {
+        sruServiceMock.getSingleMarcRecordExpectation();
 
-        String url = appURI + "/datasource/bibbi/isbn/912312312312";
+        String url = appURI + "/datasource/dfb?isbn=912312312312";
 
         HttpResponse<String> result = Unirest.get(url).asString();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         MappingTester mappingTester = new MappingTester();
         String resultJson = mappingTester.simplifyBNodes(gson.toJson(new JsonParser().parse(result.getBody()).getAsJsonObject()));
-        String comparisonJson = mappingTester.simplifyBNodes(new ResourceReader().readFile("BS_external_data_processed.json"));
+        String comparisonJson = mappingTester.simplifyBNodes(new ResourceReader().readFile("BS_external_sru_data_processed.json"));
 
         assertEquals(comparisonJson, resultJson);
     }

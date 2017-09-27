@@ -42,6 +42,12 @@
             <subfield code="c">Eksempel Eksempelsen</subfield>
             <subfield code="n">Andre bok</subfield>
         </datafield>
+        <datafield tag="245" ind1="3" ind2="0">
+            <subfield code="a">Братья Карамазовы</subfield>
+            <subfield code="b">Музы отложенного самоубийства</subfield>
+            <subfield code="c">Фёдор Достоевский</subfield>
+            <subfield code="9">rus</subfield>
+        </datafield>
         <datafield tag="260" ind1=" " ind2=" ">
             <subfield code="a">Oslo</subfield>
             <subfield code="b">Oktober</subfield>
@@ -66,6 +72,9 @@
             <subfield code="a">Biografisk</subfield>
             <subfield code="2">BS</subfield>
             <subfield code="9">nor</subfield>
+        </datafield>
+        <datafield tag="690" ind1=" " ind2=" ">
+            <subfield code="a">Russland</subfield>
         </datafield>
         <datafield tag="700" ind1=" " ind2="0">
             <subfield code="a">Jimson Jimson</subfield>

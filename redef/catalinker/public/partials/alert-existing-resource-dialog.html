@@ -3,9 +3,9 @@
     {{#if existingResourcesDialog.existingResources}}
         <div class="search-result">
         {{#each existingResourcesDialog.existingResources}}
-            <div class="item">
-                <a class="edit-resource" on-click="editResource:{{existingResourcesDialog.editResourceConfig}},{{uri}}, {{existingResourcesDialog.dialogCloser}}" title="Rediger"/>
-                <span class="details">
+            <div class="item  pure-g">
+                <a class="edit-resource pure-u-1-12" on-click="editResource:{{existingResourcesDialog.editResourceConfig}},{{uri}}, {{existingResourcesDialog.dialogCloser}}" title="Rediger"/>
+                <span class="details pure-u-11-12">
                     {{details}}
                 </span>
             </div>

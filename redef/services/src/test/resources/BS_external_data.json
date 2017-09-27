@@ -19,6 +19,9 @@
           },
           {
             "@id": "_:0000000"
+          },
+          {
+            "@id": "_:0000000"
           }
         ],
         "deichman:genre": [
@@ -61,6 +64,7 @@
             "@id": "http://lexvo.org/id/iso639-3/nob"
           }
         ],
+        "deichman:untranscribedTitle": "Братья Карамазовы : Музы отложенного самоубийства",
         "@type": [
           "deichman:Work",
           "deichman:TopBanana"
@@ -114,6 +118,7 @@
             "@id": "http://lexvo.org/id/iso639-3/swe"
           }
         ],
+        "deichman:untranscribedTitle": "Братья Карамазовы : Музы отложенного самоубийства",
         "@type": [
           "deichman:Publication"
         ],
@@ -157,6 +162,13 @@
         ],
         "@id": "_:0000000",
         "deichman:prefLabel": "Biografisk"
+      },
+      {
+        "@type": [
+          "deichman:Subject"
+        ],
+        "@id": "_:0000000",
+        "deichman:prefLabel": "Russland"
       },
       {
         "deichman:birthYear": "1931",

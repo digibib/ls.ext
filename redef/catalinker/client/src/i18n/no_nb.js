@@ -62,6 +62,7 @@
     cannotSelectRelationBeforeResourceTypeIsLoaded: 'Denne knytningen kan ikke velges før tilhørende ressurstype er lastet',
     nameLabel: 'Navn',
     mainEntryLabel: 'Hovedinnførsel',
+    authorLabel: 'Forfatter',
     ISBNLabel: 'ISBN',
     EANLabel: 'EAN',
     missingMainEntryLabel: 'Verket har ikke hovedansvarlig',
@@ -299,7 +300,18 @@
     authorityMaintenance: 'Vedlikehold av autoriteter',
 
     // external data
-    hitsFromExternalSource: 'Treff i ekstern kilde - {{../../preferredSource.name}}',
+    guessedSearchParameterLegend: 'Det ser ut som du ønsker å søke etter <b>{{>parameterGuess}}</b>.<br/>Du kan presisere søkebegrepet ved å prefikse med én av disse ccl-kodene: {{cclCodes}}.',
+    DFBLabel: 'Søk i det flerspråklige bibliotek',
+    BSSearchLabelISBN: 'Søk i Biblioteksentralen med ISBN',
+    BSSearchLabelEAN: 'Søk i Biblioteksentralen med EAN',
+    titleLabel: 'Tittel',
+    localIdlabel: 'Lokalt postnummer',
+    hitsFromExternalSource: '{{items.length}}{{#if items.length !== totalHits}} av {{totalHits}}{{/if}} treff i ekstern kilde - {{../../preferredSource.name}}',
+    invalidEanNumber: 'Dette ser ikke ut som et gyldig EAN-nummer',
+    invalidIsbnNumber: 'Dette ser ikke ut som et gyldig ISBN-nummer',
+    alreadyRegisteredEANPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+    alreadyRegisteredEANSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+    searchUnavailableBecauseOfAcceptedExternalItem: 'Du kan ikke utføre nytt eksternt søk etter at et forslag er tatt i bruk',
     noHitsInExternalSource: 'Ingen treff i eksterne kilder',
     additionalSuggestionsLegend: `
         <p>Klikk <b>Bruk forslag</b> for å fylle inn {{allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup}}
