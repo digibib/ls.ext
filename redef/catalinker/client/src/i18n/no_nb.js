@@ -320,6 +320,7 @@
         verdi{{#if (allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup) > 1}}er{{/if}}.</p>
         `,
     externalSuggestionsAlreadyUsed: 'Forslag fra ekstern hovedkilde er allerede hentet inn',
+    showHideFromExternalSources: '{{#if expanded}}Skjul{{else}}Se{{/if}} forslag fra {{#if !suggestionsAreDemoted}}andre {{/if}} eksterne kilder',
     useValuesFromThis: 'Bruk verdiene fra denne',
     thisPublicationIsAlreadyRegistered: 'Denne utgivelsen finnes fra før',
     alreadyRegisteredISBNSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',

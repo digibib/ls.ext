@@ -1,4 +1,8 @@
 <div class="suggested-value suggestion-source-{{source}}">
     <span class="pure-u-4-6">{{value}}</span>
-    <span class="pure-u-2-6"><button class="pure-button pure-button-primary suggested-value" on-click='acceptSuggestedLiteralValue:{{this}}'>Bruk forslag</button></span>
+    <span class="pure-u-2-6">
+        <button class="pure-button pure-button-primary suggested-value"
+                disabled={{../../values.0.current.value === value}}
+                on-click='acceptSuggestedLiteralValue:{{this}}'>{{>useSuggestion}}</button></span>
+    <span class="save-placeholder"></span>
 </div>
