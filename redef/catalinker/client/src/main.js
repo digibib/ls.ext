@@ -136,18 +136,25 @@
       }
     }
 
-    function saveSuggestionData () {
+    function saveSuggestionData (event) {
       let suggestionData = []
       let acceptedData = []
       let unknownPredefinedValues = []
       let supportableInputs = []
+      let unIdentifiedAuthorities = false
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           const realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
             return subInput.input
           }) : [ input ]
-
           _.each(realInputs, function (input, subInputIndex) {
+            if (!unIdentifiedAuthorities && input.type === 'searchable-with-result-in-side-panel') {
+              _.each(input.values, (value) => {
+                if (value.current.displayValue.length > 0 && (!value.current.value || value.current.value.length == 0)) {
+                  unIdentifiedAuthorities = true
+                }
+              })
+            }
             const subInputFragment = input.isSubInput ? `subInputs.${subInputIndex}.input.` : ''
             suggestionData.push({
               keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.${subInputFragment}suggestedValues`,
@@ -187,6 +194,9 @@
       let suggestedValueSearchInput = getSuggestedValuesSearchInput()
       if (suggestedValueSearchInput) {
         window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
+      }
+      if (unIdentifiedAuthorities) {
+        return false
       }
     }
 
