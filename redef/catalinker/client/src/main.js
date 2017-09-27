@@ -641,7 +641,7 @@
           return
         }
         if (options.demoteAcceptedSuggestions) {
-          _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').compact().first().pairs().each(function (valueAndSource) {
+          _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').compact().first().pairs().each(valueAndSource => {
             const value = valueAndSource[ 0 ]
             const source = valueAndSource[ 1 ]
             input.suggestedValues = input.suggestedValues || []
@@ -663,7 +663,7 @@
         input[ valuesKey ][ index ].current.value = valuesAsArray
         input[ valuesKey ][ index ].current.uniqueId = _.uniqueId()
 
-        _.chain(values).filter((value) => { return value.source }).each((acceptedValueAndSource) => {
+        _.chain(values).filter(value => value.source).each(acceptedValueAndSource => {
           input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
           input[ valuesKey ][ index ].current.accepted[ acceptedValueAndSource.id ] = acceptedValueAndSource.source
         })
@@ -674,7 +674,7 @@
           input.suggestedValues = valuesAsArray
         } else if (options.source) {
           input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
-          _.chain(valuesAsArray).filter((val) => { return val }).each((value) => {
+          _.chain(valuesAsArray).filter(val => val).each((value) => {
             input[ valuesKey ][ index ].current.accepted[ value ] = options.source
           })
           setSuggestionsAreAcceptedForParentInput(input, index)
