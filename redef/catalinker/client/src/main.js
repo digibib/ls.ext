@@ -2712,6 +2712,7 @@
             applicationData.partials[ 'suggestor-for-searchable-with-result-in-side-panel' ] = require('../../public/partials/suggestor-for-searchable-with-result-in-side-panel.html')
             applicationData.partials[ 'suggestor-for-select-predefined-value' ] = require('../../public/partials/suggestor-for-select-predefined-value.html')
             applicationData.partials[ 'suggestor-for-input-string' ] = require('../../public/partials/suggestor-for-input-string.html')
+            applicationData.partials[ 'suggestor-for-input-string-large' ] = require('../../public/partials/suggestor-for-input-string-large.html')
             applicationData.partials[ 'suggestor-for-input-gYear' ] = require('../../public/partials/suggestor-for-input-gYear.html')
             applicationData.partials[ 'suggestor-for-input-integer' ] = require('../../public/partials/suggestor-for-input-integer.html')
             applicationData.partials[ 'suggestor-for-input-nonNegativeInteger' ] = require('../../public/partials/suggestor-for-input-nonNegativeInteger.html')
