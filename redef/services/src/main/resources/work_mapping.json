@@ -289,8 +289,7 @@
         }
       },
       "summary": {
-        "type": "text",
-        "index": false
+        "type": "text"
       },
       "fictionNonfiction": {
         "type": "keyword"
