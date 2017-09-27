@@ -3,10 +3,10 @@ package no.deichman.services.datasource;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import no.deichman.services.entity.z3950.ExternalCatalogue;
-import no.deichman.services.entity.z3950.Mapper;
-import no.deichman.services.entity.z3950.SRUHttpClient;
-import no.deichman.services.entity.z3950.SearchResultInfo;
+import no.deichman.services.entity.external.ExternalCatalogue;
+import no.deichman.services.entity.external.Mapper;
+import no.deichman.services.entity.external.SRUHttpClient;
+import no.deichman.services.entity.external.SearchResultInfo;
 import no.deichman.services.restutils.MimeType;
 
 import javax.inject.Singleton;
