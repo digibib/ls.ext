@@ -608,26 +608,29 @@
     function setMultiValues (values, input, index, options) {
       options = options || {}
       if (values) {
-        const valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
-          if (isBlankNodeUri(value.id)) {
-            let valuesForInput = ractive.get(`applicationData.predefinedValues.${input.fragment}`)
-            let matchedPredefValue = _.find(valuesForInput, function (predefValue) {
-              return _.some(predefValue.label, function (label) {
-                return label[ '@language' ] === value.get('label').lang && label[ '@value' ] === value.get('label').value
+        const valuesAsArray = values.length === 0 ? [] : _.chain(values)
+          .map(value => {
+            if (isBlankNodeUri(value.id)) {
+              let valuesForInput = ractive.get(`applicationData.predefinedValues.${input.fragment}`)
+              let matchedPredefValue = _.find(valuesForInput, function (predefValue) {
+                return _.some(predefValue.label, function (label) {
+                  return label[ '@language' ] === value.get('label').lang && label[ '@value' ] === value.get('label').value
+                })
               })
-            })
-            if (matchedPredefValue) {
-              return matchedPredefValue[ '@id' ]
-            } else {
-              input.supportable = true
-              input.unknownPredefinedValues = input.unknownPredefinedValues || {}
-              input.unknownPredefinedValues.values = input.unknownPredefinedValues.values || []
-              input.unknownPredefinedValues.values.push((value.get('label') || {}).value)
-              input.unknownPredefinedValues.sourceLabel = input.unknownPredefinedValues.sourceLabel || options.sourceLabel
+              if (matchedPredefValue) {
+                return matchedPredefValue[ '@id' ]
+              } else {
+                input.supportable = true
+                input.unknownPredefinedValues = input.unknownPredefinedValues || {}
+                input.unknownPredefinedValues.values = input.unknownPredefinedValues.values || []
+                input.unknownPredefinedValues.values.push((value.get('label') || {}).value)
+                input.unknownPredefinedValues.sourceLabel = input.unknownPredefinedValues.sourceLabel || options.sourceLabel
+              }
             }
-          }
-          return value.id
-        })
+            return value.id
+          })
+          .filter(id => !isBlankNodeUri(id))
+          .value()
         if (options.compareValues) {
           input.compareValues = input.compareValues || emptyValues()
         }
@@ -638,7 +641,7 @@
           return
         }
         if (options.demoteAcceptedSuggestions) {
-          _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').compact().first().pairs().each(function (valueAndSource) {
+          _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').compact().first().pairs().each(valueAndSource => {
             const value = valueAndSource[ 0 ]
             const source = valueAndSource[ 1 ]
             input.suggestedValues = input.suggestedValues || []
@@ -660,7 +663,7 @@
         input[ valuesKey ][ index ].current.value = valuesAsArray
         input[ valuesKey ][ index ].current.uniqueId = _.uniqueId()
 
-        _.chain(values).filter((value) => { return value.source }).each((acceptedValueAndSource) => {
+        _.chain(values).filter(value => value.source).each(acceptedValueAndSource => {
           input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
           input[ valuesKey ][ index ].current.accepted[ acceptedValueAndSource.id ] = acceptedValueAndSource.source
         })
@@ -671,7 +674,7 @@
           input.suggestedValues = valuesAsArray
         } else if (options.source) {
           input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
-          _.chain(valuesAsArray).filter((val) => { return val }).each((value) => {
+          _.chain(valuesAsArray).filter(val => val).each((value) => {
             input[ valuesKey ][ index ].current.accepted[ value ] = options.source
           })
           setSuggestionsAreAcceptedForParentInput(input, index)
@@ -1409,24 +1412,27 @@
                             }
                           } else {
                             var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-                            _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                              if (input.isSubInput && multiple) {
-                                setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                                input[ valuesField ][ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
-                              } else {
-                                input.suggestedValues = input.suggestedValues || []
-                                input.suggestedValues.push({
-                                  value: {
-                                    value: value.id,
-                                    label: Main.predefinedLabelValue(input.fragment, value.id)
-                                  },
-                                  source: options.source
-                                })
-                              }
-                            })
+                            _
+                              .chain(root.outAll(fragmentPartOf(predicate)))
+                              .filter(value => !isBlankNodeUri(value.id))
+                              .each(value => {
+                                if (input.isSubInput && multiple) {
+                                  setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                                  input[ valuesField ][ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                                } else {
+                                  input.suggestedValues = input.suggestedValues || []
+                                  input.suggestedValues.push({
+                                    value: {
+                                      value: value.id,
+                                      label: Main.predefinedLabelValue(input.fragment, value.id)
+                                    },
+                                    source: options.source
+                                  })
+                                }
+                              })
                           }
                         } else {
-                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
+                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), (value, index) => {
                             if (!options.onlyValueSuggestions) {
                               let valueIndex = input.isSubInput ? rootIndex : index
                               setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
