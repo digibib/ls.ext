@@ -28,7 +28,8 @@ public class InMemoryNameIndexer implements NameIndexer {
     private Map<String, Set<String>> uriToNameList;
     private Collator coll;
     private static final String SORTING_RULES = ""
-            + "< ' ' < ',' < '-' < '.'"
+            + " ',' < ' ' < '-' < '.'"
+            + "< '(' < ')'"
             + "< 0 < 1 < 2 < 3 < 4 < 5 < 6 < 7 < 8 < 9"
             + "< a, á, à, ã, ä, A, Á, À, Ã, Ä < b, B < c, C < ð, Ð < d, D < e, é, è, ê, ë, E, É, È, Ê, Ë < f, F "
             + "< g, G < h, H < i, í, ï, I, Í, Ï"
@@ -38,10 +39,8 @@ public class InMemoryNameIndexer implements NameIndexer {
             + "< ø, ö, Ø, Ö"
             + "< å = a\u030A = aa, "
             + "  Å = A\u030A = Aa";
-    private boolean sorting;
-    private boolean needsSorting;
 
-    public InMemoryNameIndexer() {
+    InMemoryNameIndexer() {
         try {
             coll = new RuleBasedCollator(SORTING_RULES);
         } catch (ParseException e) {
@@ -52,7 +51,7 @@ public class InMemoryNameIndexer implements NameIndexer {
         uriToNameList = newHashMap();
     }
 
-    public InMemoryNameIndexer(Reader reader) {
+    InMemoryNameIndexer(Reader reader) {
         this();
         GsonBuilder gsonBuilder = new GsonBuilder();
         JsonElement jsonElement = gsonBuilder.create().fromJson(reader, JsonElement.class);
@@ -65,7 +64,7 @@ public class InMemoryNameIndexer implements NameIndexer {
         sort();
     }
 
-    public InMemoryNameIndexer(Map<String, String> labelToURI) {
+    InMemoryNameIndexer(Map<String, String> labelToURI) {
         this();
         for (Map.Entry<String, String> entry : labelToURI.entrySet()) {
             alphabeticalList.add(new NameEntry(entry.getKey(), entry.getValue()));
