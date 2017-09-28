@@ -365,7 +365,26 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
 
 function simpleQuery (query, fields, options) {
   options = options || {}
-  const terms = query.split(/\s+/)
+
+  // Split terms by whitespace & punctuation, but keep phrases in quotes
+  const terms = []
+  let inQuotes = false
+  let currentPart = ''
+  for (let c of query) {
+    if (!inQuotes && c === ' ' || c === ',' || c === '.' ) {
+      terms.push(currentPart)
+      currentPart = ''
+    } else {
+      currentPart += c
+    }
+    if (c === '"') {
+      inQuotes = !inQuotes
+    }
+  }
+  if (currentPart.length > 0) {
+    terms.push(currentPart)
+  }
+
   let phrases = [ query ]
   for (let i = 0; i < terms.length; i++) {
     const firstPart = terms.slice(0, i + 1)
