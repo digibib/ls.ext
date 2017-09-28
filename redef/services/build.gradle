@@ -191,6 +191,7 @@ task copyJar(type: Copy) {
 
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
+    ignoreExitValue = true
     exec {
         commandLine 'git', 'rev-parse', 'HEAD'
         standardOutput = stdout
