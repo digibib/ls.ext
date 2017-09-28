@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -6,10 +8,10 @@ apply plugin: 'pmd'
 apply plugin: 'cpd'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'gradle-one-jar'
+apply plugin: 'com.bmuschko.docker-remote-api'
 
 group = 'no.deichman.services'
 version = '1.0-SNAPSHOT'
-
 description = "services"
 
 sourceCompatibility = 1.8
@@ -63,11 +65,11 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: version_commons_io
     compile group: 'org.apache.commons', name: 'commons-lang3', version: version_commons_lang
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-    compile ('info.freelibrary:freelib-marc4j:2.6.12') {
+    compile('info.freelibrary:freelib-marc4j:2.6.12') {
         transitive = false
     }
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
-    compile group: 'com.google.code.gson',name: 'gson', version: '2.8.0'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
 
     compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4+' // unirest has issues with 4.2
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4+' // unirest has issues with 4.2
@@ -86,7 +88,7 @@ dependencies {
     compile group: 'com.jamonapi', name: 'fdsapi', version: '1.2'
     compile group: 'joda-time', name: 'joda-time', version: '2.9.7'
 
-    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.7.19'
     testCompile group: 'com.github.rest-driver', name: 'rest-client-driver', version: '2.0.0'
     testCompile group: 'uk.co.datumedge', name: 'hamcrest-json', version: '0.2'
@@ -111,11 +113,11 @@ tasks.withType(Test) {
     reports.html.enabled = false
 }
 
-task allTestsExceptAppTest( type: Test ) {
+task allTestsExceptAppTest(type: Test) {
     exclude 'no/deichman/services/services/AppTest.class'
 }
 
-task testAppTest( type: Test ) {
+task testAppTest(type: Test) {
     include 'no/deichman/services/services/AppTest.class'
 }
 
@@ -123,7 +125,7 @@ test {
     exclude '**'
 }
 
-test .dependsOn allTestsExceptAppTest, testAppTest
+test.dependsOn allTestsExceptAppTest, testAppTest
 
 checkstyle {
     configProperties = [samedir: "${rootDir}"]
@@ -151,17 +153,17 @@ cpdCheck {
 }
 
 buildscript {
+    repositories {
+        mavenCentral()
+        maven { url '~/.m2/repository' }
+        maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
+    }
     dependencies {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath 'de.aaschmid:gradle-cpd-plugin:1.0'
-    }
-    repositories {
-        mavenCentral()
-        maven {
-            url '~/.m2/repository'
-        }
-        jcenter()
+        classpath 'com.bmuschko:gradle-docker-plugin:3.1.0'
     }
 }
 
@@ -177,3 +179,30 @@ task resolveDependencies {
         }
     }
 }
+
+task copyJar(type: Copy) {
+    dependsOn 'oneJar'
+    from "build/libs/services-${project.version}-standalone.jar"
+    into 'build/docker'
+    rename { String fileName ->
+        fileName.replace("-${project.version}", "")
+    }
+}
+
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+task buildDockerImage(type: DockerBuildImage) {
+    dependsOn copyJar
+    inputDir = file('.')
+    tag = "digibib/redef-services:${getGitHash()}"
+}
+
+buildDockerImage.dependsOn copyJar
+
