@@ -48,6 +48,7 @@ public enum Target {
         static final ImmutableMap<String, String> FIELD_MAPPING = of(
                 "local_id", "rec.identifier",
                 "isbn", "dc.identifier",
+                "ean", "dc.identifier",
                 "title", "dc.title",
                 "author", "dc.creator");
     }
