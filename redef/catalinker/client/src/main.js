@@ -4336,6 +4336,7 @@
                 })
                 positionSupportPanels()
                 setTimeout(positionSupportPanels)
+                $('body').scrollTo(0, 100)
               },
               deleteResource: function (event) {
                 var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
