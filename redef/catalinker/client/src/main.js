@@ -726,7 +726,6 @@
                 .join(' ')
                 .replace(/[,\.:]\s*$/g, '')
                 .replace(/- /, '-')
-                .replace(/-(?=[^0-9])/, '- ')
                 .replace(/: /g, ' : '))
             }
             if (isPromise(displayProperties)) {
