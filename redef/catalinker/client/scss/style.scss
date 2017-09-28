@@ -670,6 +670,10 @@ html {
               background-color: white;
               border: 1px solid lightgrey;
               .search-term {
+                &:empty:not(:focus):before{
+                  content:attr(data-text);
+                  opacity: 0.5;
+                }
                 min-height: 37px;
                 vertical-align: middle;
                 padding-left: 7px;

@@ -480,7 +480,8 @@ module.exports = (app) => {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
-                  label: 'BSSearchLabelISBN',
+                  label: 'BSSearchLabel',
+                  placeHolder: 'ISBNLabel',
                   pattern: '^[ 0-9\\-]+[xX]?\\s*$',
                   formatter: 'isbn',
                   patternMismatchMessage: 'invalidIsbnNumber',
@@ -513,7 +514,8 @@ module.exports = (app) => {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
-                  label: 'DFBLabel',
+                  label: 'DFBSearchLabel',
+                  placeHolder: 'DFBPlaceHolderISBN',
                   formatter: 'isbn',
                   patternMismatchMessage: 'invalidIsbnNumber',
                   searchParameterSpecs: [
@@ -575,7 +577,8 @@ module.exports = (app) => {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
-                  label: 'BSSearchLabelEAN',
+                  label: 'BSSearchLabel',
+                  placeHolder: 'EANLabel',
                   pattern: '[0-9]{12,14}',
                   patternMismatchMessage: 'invalidEanNumber',
                   parameterName: 'ean',
@@ -608,7 +611,8 @@ module.exports = (app) => {
                 // this is an input type used to search for a main resource, e.g. Work. The rendered input field
                 // will not be tied to a particular subject and predicate
                 searchForValueSuggestions: {
-                  label: 'DFBLabel',
+                  label: 'DFBSearchLabel',
+                  placeHolder: 'DFBPlaceHolderEAN',
                   patternMismatchMessage: 'invalidEanNumber',
                   searchParameterSpecs: [
                     {
@@ -747,6 +751,7 @@ module.exports = (app) => {
                 },
                 searchMainResource: {
                   label: 'searchWorkAsMainResourceLabel',
+                  placeHolder: 'workTitlePlaceHolder',
                   indexType: 'work',
                   automationId: 'searchWorkAsMainResource',
                   showOnlyWhenMissingTargetUri: 'Work' // only show this search field if a work has not been loaded or created

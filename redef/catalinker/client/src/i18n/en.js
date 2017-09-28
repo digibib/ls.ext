@@ -34,6 +34,7 @@
     selectWorkLabel: 'Catalogue publication of this work',
     autoNumber: 'Automatic numbering',
     searchWorkLegend: 'Search by title, main entry, work uri or work id',
+    workTitlePlaceHolder: 'Work title/work ID',
     searchPublicationLegend: 'Search by title or record id',
     advancedSearchLegend: 'You are using <span class="more-info" title="Search containg any of these characters: {{advancedSearchCharacters()}}. You can also use AND, OR og NOT.">advanced search</span>. Press Enter to search.',
     useSuggestion: 'Use suggestion',
@@ -299,9 +300,10 @@
 
     // external data
     guessedSearchParameterLegend: 'It looks like you wish to search by <b>{{>parameterGuess}}</b>.<br/>You can use one of these ccl-prefixes if you want: {{cclCodes}}.',
-    DFBLabel: 'Search in "Det flerspråklige bibliotek"',
-    BSSearchLabelISBN: 'Search in Biblioteksentralen by ISBN',
-    BSSearchLabelEAN: 'Search in Biblioteksentralen by EAN',
+    DFBSearchLabel: 'Search Det flerspråklige bibliotek',
+    DFBPlaceHolderISBN: 'ISBN/title/author/local record id',
+    DFBPlaceHolderEAN: 'EAN/title/author/local record id',
+    BSSearchLabel: 'Search Biblioteksentralen',
     titleLabel: 'Title',
     localIdlabel: 'Local identifier',
     hitsFromExternalSource: '{{items.length}}{{#if items.length !== totalHits}} of {{totalHits}}{{/if}} hits from external source - {{../../preferredSource.name}}',

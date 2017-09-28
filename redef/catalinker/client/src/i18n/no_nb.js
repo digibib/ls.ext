@@ -34,6 +34,7 @@
     selectWorkLabel: 'Katalogisér utgivelse av dette verket',
     autoNumber: 'Automatisk nummerering',
     searchWorkLegend: 'Søk etter tittel, hovedinnførsel, verksuri eller -id',
+    workTitlePlaceHolder: 'Verkstittel/verksID',
     searchPublicationLegend: 'Søk etter tittel eller tittelnummer',
     advancedSearchLegend: 'Du bruker nå <span class="more-info" title="Søk som inneholder et av disse tegnene {{advancedSearchCharacters()}}. Du kan også bruke AND, OR og NOT.">avansert søk</span>. Trykk Enter for å søke.',
     useSuggestion: 'Bruk forslag',
@@ -301,9 +302,10 @@
 
     // external data
     guessedSearchParameterLegend: 'Det ser ut som du ønsker å søke etter <b>{{>parameterGuess}}</b>.<br/>Du kan presisere søkebegrepet ved å prefikse med én av disse ccl-kodene: {{cclCodes}}.',
-    DFBLabel: 'Søk i det flerspråklige bibliotek',
-    BSSearchLabelISBN: 'Søk i Biblioteksentralen med ISBN',
-    BSSearchLabelEAN: 'Søk i Biblioteksentralen med EAN',
+    DFBSearchLabel: 'Søk i Det flerspråklige bibliotek',
+    DFBPlaceHolderISBN: 'ISBN/tittel/forfatter/lokalt postnummer',
+    DFBPlaceHolderEAN: 'EAN/tittel/forfatter/lokalt postnummer',
+    BSSearchLabel: 'Søk i Biblioteksentralen',
     titleLabel: 'Tittel',
     localIdlabel: 'Lokalt postnummer',
     hitsFromExternalSource: '{{items.length}}{{#if items.length !== totalHits}} av {{totalHits}}{{/if}} treff i ekstern kilde - {{../../preferredSource.name}}',

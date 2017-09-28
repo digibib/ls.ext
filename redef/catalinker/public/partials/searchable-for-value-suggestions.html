@@ -1,4 +1,5 @@
 <input autofocus {{#disabled}} disabled="true" {{/}}
+{{#with placeHolder}}placeholder="{{>this}}"{{/with}}
 {{#with searchForValueSuggestions.pattern}}pattern="{{this}}"{{/with}}
 class="pure-u-1-1 simple-searchable"
 class-invalid-input="{{error}}"

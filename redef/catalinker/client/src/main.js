@@ -1924,6 +1924,7 @@
           if (input.searchMainResource) {
             groupInputs.push({
               labelKey: input.searchMainResource.label,
+              placeHolder: input.searchMainResource.placeHolder,
               values: emptyValues(false, true),
               type: 'searchable-with-result-in-side-panel',
               visible: true,
@@ -1945,6 +1946,7 @@
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
               labelKey: input.searchForValueSuggestions.label,
+              placeHolder: input.searchForValueSuggestions.placeHolder,
               values: emptyValues(false, true),
               type: 'searchable-for-value-suggestions',
               visible: true,
