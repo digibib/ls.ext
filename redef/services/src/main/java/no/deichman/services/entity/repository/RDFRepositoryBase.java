@@ -8,7 +8,6 @@ import no.deichman.services.entity.patch.PatchParserException;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -53,14 +52,17 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.stream;
 import static no.deichman.services.entity.patch.Patch.addPatch;
 import static org.apache.commons.lang3.tuple.Pair.of;
+import static org.apache.jena.datatypes.xsd.XSDDatatype.XSDdateTime;
+import static org.apache.jena.datatypes.xsd.XSDDatatype.XSDstring;
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 
 /**
  * Responsibility: TODO.
  */
 public abstract class RDFRepositoryBase implements RDFRepository {
 
-    public static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
-    public static final SimpleSelector WITH_MIGRATION_FILTER = new SimpleSelector() {
+    static final Resource PLACEHOLDER_RESOURCE = ResourceFactory.createResource("#");
+    private static final SimpleSelector WITH_MIGRATION_FILTER = new SimpleSelector() {
         @Override
         public boolean test(Statement s) {
             switch (s.getPredicate().getNameSpace()) {
@@ -73,8 +75,10 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         }
     };
     private static final Set<Property> PROVENANCE_PROPERTIES = ImmutableSet.of(
-            ResourceFactory.createProperty(BaseURI.ontology("created")),
-            ResourceFactory.createProperty(BaseURI.ontology("modified"))
+            createProperty(BaseURI.ontology("created")),
+            createProperty(BaseURI.ontology("modified")),
+            createProperty(BaseURI.ontology("hasPrimaryCataloguingSource")),
+            createProperty(BaseURI.ontology("hasIdentifierInPrimaryCataloguingSource"))
     );
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
@@ -254,8 +258,8 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     private static Statement simpleStatement(String fragment, String value) {
         return ResourceFactory.createStatement(
                 PLACEHOLDER_RESOURCE,
-                ResourceFactory.createProperty(BaseURI.ontology() + fragment),
-                ResourceFactory.createTypedLiteral(value, XSDDatatype.XSDstring));
+                createProperty(BaseURI.ontology() + fragment),
+                ResourceFactory.createTypedLiteral(value, XSDstring));
     }
 
     private Statement tempTypeStatement(String clazz) {
@@ -277,8 +281,8 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         XSDDateTime xsdDateTime = new XSDDateTime(GregorianCalendar.getInstance());
         return ResourceFactory.createStatement(
                 subject,
-                ResourceFactory.createProperty(BaseURI.ontology() + predicate),
-                ResourceFactory.createTypedLiteral(xsdDateTime.toString(), XSDDatatype.XSDdateTime));
+                createProperty(BaseURI.ontology() + predicate),
+                ResourceFactory.createTypedLiteral(xsdDateTime.toString(), XSDdateTime));
     }
 
     @Override
