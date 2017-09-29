@@ -306,6 +306,10 @@ language:may	a	lvont:Language ;
 	rdfs:label	"Malayisk"@no ;
 	rdfs:label	"Malay"@en .
 
+language:mlt	a	lvont:Language ;
+	rdfs:label	"Maltesisk"@no ;
+	rdfs:label	"Maltese"@en .
+
 language:mnk	a	lvont:Language ;
 	rdfs:label	"Mandinka"@no ;
 	rdfs:label	"Mandinka"@en .

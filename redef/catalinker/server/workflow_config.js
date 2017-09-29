@@ -122,7 +122,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-subject-form',
@@ -147,7 +148,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: [ ]
           },
           {
             id: 'create-genre-form',
@@ -172,7 +174,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: [ ]
           },
           {
             id: 'create-corporation-form',
@@ -211,7 +214,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: [ ]
           },
           {
             id: 'create-main-work-form',
@@ -245,7 +249,8 @@ module.exports = (app) => {
                   prefix: 'http://data.deichman.no/workType#'
                 }
               }
-            ]
+            ],
+            templateResourcePartsFrom: [ ]
           },
           {
             id: 'create-work-form',
@@ -273,7 +278,8 @@ module.exports = (app) => {
               {
                 rdfProperty: 'hasWorkType'
               }
-            ]
+            ],
+            templateResourcePartsFrom: [ 'workTypeInput' ]
           },
           {
             id: 'create-workseries-form',
@@ -300,7 +306,8 @@ module.exports = (app) => {
                 type: 'input-string', // input type must be defined explicitly, otherwise it will inherit from the search field above
                 rdfProperty: 'partTitle'
               }
-            ]
+            ],
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-place-form',
@@ -325,7 +332,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-event-form',
@@ -363,7 +371,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-serial-form',
@@ -405,7 +414,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: [ ]
           },
           {
             id: 'create-instrument-form',
@@ -428,7 +438,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: [ ]
           },
           {
             id: 'create-compositiontype-form',
@@ -451,7 +462,8 @@ module.exports = (app) => {
               },
               createdTimestamp(),
               modifiedTimestamp()
-            ]
+            ],
+            templateResourcePartsFrom: [ ]
           }
         ],
         tabs: [
@@ -656,7 +668,8 @@ module.exports = (app) => {
                   workSubtitle: 'publicationSubtitle',
                   workPartNumber: 'publicationPartNumber',
                   workPartTitle: 'publicationPartTitle'
-                }
+                },
+                templateResourcePartsFrom: [ 'mediaTypeInput' ]
               }
             }
           },
@@ -1068,6 +1081,7 @@ module.exports = (app) => {
                 label: 'workRelationLabel',
                 multiple: true,
                 addAnotherLabel: 'addAnotherRelation',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 reportFormat: {
                   list: true
                 },
@@ -1130,6 +1144,7 @@ module.exports = (app) => {
                 label: 'workSeriesLabel',
                 multiple: true,
                 addAnotherLabel: 'addAnotherWorkSeries',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 reportFormat: {
                   list: true
                 },

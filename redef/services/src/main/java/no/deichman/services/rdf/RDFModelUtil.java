@@ -20,7 +20,7 @@ public final class RDFModelUtil {
     private RDFModelUtil() {}
 
     public static Model modelFrom(String input, Lang lang) {
-        InputStream is = new TypedInputStream(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        InputStream is = new TypedInputStream(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)), lang.getContentType());
         Model m = ModelFactory.createDefaultModel();
         RDFDataMgr.read(m, is, lang);
         return m;

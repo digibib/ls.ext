@@ -997,4 +997,23 @@ public final class SPARQLQueryBuilder {
 
         return QueryFactory.create(queryString.replaceAll("__URI__", xuri.getUri()));
     }
+
+    public Query resourceTemplateQuery(String type, Map<String, String> queryParameters) {
+        String query = format(""
+                + "PREFIX : <%s>\n"
+                + "PREFIX duo: <http://data.deichman.no/utility#> \n"
+                + "DESCRIBE ?template \n"
+                + "WHERE { \n"
+                + "   ?template a :%s ;\n"
+                + "     duo:templateMatch [ \n"
+                + "      %s\n"
+                + "   ]\n"
+                + "}\n", BaseURI.ontology(), EntityType.get(type).getRdfType(), queryParameters
+                .entrySet()
+                .stream()
+                .map(entry -> format("<%s> <%s> ", entry.getKey(), entry.getValue()))
+                .collect(joining(";\n")));
+
+        return QueryFactory.create(query);
+    }
 }

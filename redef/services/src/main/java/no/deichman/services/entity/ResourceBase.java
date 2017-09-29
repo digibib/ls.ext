@@ -85,7 +85,7 @@ public abstract class ResourceBase {
         return kohaAdapter;
     }
 
-    final JSONLDCreator getJsonldCreator() {
+    protected final JSONLDCreator getJsonldCreator() {
         if (jsonldCreator == null) {
             jsonldCreator = new JSONLDCreator();
         }
