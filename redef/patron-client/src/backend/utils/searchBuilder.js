@@ -2,8 +2,7 @@ const QueryParser = require('querystring')
 const Constants = require('../../frontend/constants/Constants')
 const Defaults = require('./queryConstants')
 const LuceneParser = require('lucene-query-parser')
-
-function isDigit(c) {
+function isDigit (c) {
   return c >= '0' && c <= '9'
 }
 
@@ -14,10 +13,30 @@ function escape (query) {
   let currentPart = ''
   for (const c of query) {
     switch (c) {
+      case '+':
+      case '|':
+      case ',':
+        if (inQuotes) {
+          currentPart += c
+        } else {
+          if (currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+            currentPart += ' '
+          }
+        }
+        break
       case ':':
-        if (!inQuotes) {
-          escaped = `${escaped}${currentPart}:`
-          currentPart = ''
+        if (inQuotes) {
+          currentPart += ':'
+          break
+        }
+        if (currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+          if (Constants.knownFields[currentPart.substring(currentPart.lastIndexOf(' ') + 1)]) {
+            escaped = `${escaped}${currentPart}:`
+            currentPart = ''
+          } else {
+            // Treat ':' after a term which is not a query field-term as whitespace
+            currentPart += ' '
+          }
         }
         break
       case '"':
@@ -25,11 +44,15 @@ function escape (query) {
         currentPart += c
         break
       case '-':
-        if (!inQuotes && currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ' && !isDigit(currentPart[currentPart.length - 1] !== ' ')) {
-          inCompound = true
-          currentPart += '\\-'
+        if (!inQuotes && currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+          if (isDigit(currentPart[currentPart.length - 1])) {
+            currentPart += '-'
+          } else {
+            inCompound = true
+            currentPart += '\\-'
+          }
         } else {
-          currentPart += '-'
+          currentPart += ' '
         }
         break
       case '/':
@@ -414,28 +437,33 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
   }
 }
 
-function simpleQuery (query, fields, options) {
-  options = options || {}
-
-  // Split terms by whitespace & punctuation, but keep phrases in quotes
+// Split terms by whitespace & punctuation, but keep phrases in quotes
+function split (query) {
   const terms = []
   let inQuotes = false
   let currentPart = ''
   for (const c of query) {
-    if (!inQuotes && c === ' ' || c === ',' || c === '.') {
+    if (c === '"' || c === '“' || c === '”') {
+      inQuotes = !inQuotes
+      currentPart += '"'
+      continue
+    }
+    if (!inQuotes && (c === ' ' || c === ',' || c === '.')) {
       terms.push(currentPart)
       currentPart = ''
     } else {
       currentPart += c
     }
-    if (c === '"') {
-      inQuotes = !inQuotes
-    }
   }
   if (currentPart.length > 0) {
     terms.push(currentPart)
   }
+  return terms
+}
 
+function simpleQuery (query, fields, options) {
+  options = options || {}
+  const terms = split(query)
   let phrases = [ query ]
   for (let i = 0; i < terms.length; i++) {
     const firstPart = terms.slice(0, i + 1)
@@ -529,7 +557,11 @@ function translateFieldTerms (query, translations, scope, skipUnscoped, returnEx
       return node.field !== '<implicit>' ? `${node.field}:` : ''
     }
 
-    let leftParens = node.operator === 'OR' ? '(' : ''
+    if (node.operator === '<implicit>') {
+      node.operator = 'AND'
+    }
+
+    let leftParens = (node.operator === 'OR' || node.operator === 'AND') ? '(' : ''
     if (node.field && node.left && node.right) {
       result += `${field()}(`
       leftParens = ''
@@ -543,7 +575,7 @@ function translateFieldTerms (query, translations, scope, skipUnscoped, returnEx
     if (node.operator) {
       result += ` ${node.operator} `
     }
-    let rightParens = node.operator === 'OR' ? ')' : ''
+    let rightParens = (node.operator === 'OR' || node.operator === 'AND') ? ')' : ''
     if (node.right) {
       result += `${serialize(node.right)}${rightParens}`
       rightParens = ''
@@ -642,7 +674,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   const escapedQueryString = escape(queryString)
   const isbn10 = /^[0-9Xx-]{10,13}$/
   const isbn13 = /^[0-9-]{13,17}$/
-  const advTriggers = /[:+\/\-()*^?]|AND|OR|NOT|TO/
+  const advTriggers = /[:()*^?]|AND|OR|NOT|TO/
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
     return initCommonQuery({},
