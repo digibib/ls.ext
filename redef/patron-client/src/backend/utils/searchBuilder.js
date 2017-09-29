@@ -3,6 +3,10 @@ const Constants = require('../../frontend/constants/Constants')
 const Defaults = require('./queryConstants')
 const LuceneParser = require('lucene-query-parser')
 
+function isDigit(c) {
+  return c >= '0' && c <= '9'
+}
+
 function escape (query) {
   let inQuotes = false
   let inCompound = false
@@ -21,7 +25,7 @@ function escape (query) {
         currentPart += c
         break
       case '-':
-        if (!inQuotes && currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+        if (!inQuotes && currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ' && !isDigit(currentPart[currentPart.length - 1] !== ' ')) {
           inCompound = true
           currentPart += '\\-'
         } else {
@@ -166,14 +170,14 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                         "Film": 0.3,
                         "Språkkurs": 0.2
                       ];
-                      
+
                       if (doc['_type'] === 'publication') {
                         def mtScore = mtScores.get(doc.mt.value);
                         if (mtScore !== null) {
                           score = score * mtScore;
                         }
                       }
-                      
+
                       def langscores = [
                         "nob": 1.5,
                         "nno": 1.5,
@@ -188,7 +192,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                         "sju": 1.5,
                         "smj": 1.5,
                         "sme": 1.5,
-                        "sia": 1.5,                        
+                        "sia": 1.5,
                         "nor": 1.5,
                         "eng": 1.4,
                         "swe": 1.3,
@@ -198,7 +202,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                         "spa": 1.1,
                         "ita": 1.1
                       ];
-                      
+
                       def langscore = langscores.get(doc.language.value);
                       if (langscore == null) {
                         langscore = 1;
@@ -207,7 +211,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                       if (doc['_type'] === 'publication' && doc.mt === 'Bok') {
                         score = _score * langscore;
                       }
-                      
+
                       return score;`.replace('\n', ''),
             lang: 'painless'
           }
@@ -620,7 +624,6 @@ function translateFieldTerms (query, translations, scope, skipUnscoped, returnEx
     }
     return result
   }
-
   let parsed = LuceneParser.parse(query)
   parsed = transform(parsed)
   if (returnExclusionOnly) {
