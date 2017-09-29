@@ -3370,23 +3370,25 @@
             }
           }
           const searchFieldGuesser = function (node, input) {
-            input.cclCodes = _.map(input.searchForValueSuggestions.searchParameterSpecs, (p) => { return p.ccl }).join(', ')
-            const keypath = Ractive.getNodeInfo(node).keypath
-            let handler = function () {
-              let value = $(node).val()
-              let guessedParamSpec = _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
-                return value.startsWith(`${spec.ccl}:`)
-              }) || _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
-                return RegExp(spec.pattern).test(value)
-              })
-              ractive.set(`${keypath}.supportable`, guessedParamSpec)
-              ractive.push('searchParameterGuessSupportsToClose', `${keypath}.supportable`)
-              positionSupportPanels()
+            if (!$(node).attr('data-guess')) {
+              input.cclCodes = _.map(input.searchForValueSuggestions.searchParameterSpecs, (p) => { return p.ccl }).join(', ')
+              const keypath = Ractive.getNodeInfo(node).keypath
+              let handler = function () {
+                let value = $(node).val()
+                let guessedParamSpec = _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                  return value.startsWith(`${spec.ccl}:`)
+                }) || _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                  return RegExp(spec.pattern).test(value)
+                })
+                ractive.set(`${keypath}.supportable`, guessedParamSpec)
+                ractive.push('searchParameterGuessSupportsToClose', `${keypath}.supportable`)
+                positionSupportPanels()
+              }
+              $(node).on('input', handler)
+              $(node).attr('data-guess', true)
             }
-            $(node).on('input', handler)
             return {
               teardown: function () {
-                $(node).off('input', handler)
               }
             }
           }
