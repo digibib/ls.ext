@@ -4,8 +4,55 @@ const Defaults = require('./queryConstants')
 const LuceneParser = require('lucene-query-parser')
 
 function escape (query) {
-  // escape forward slash '/' and enclose hyphenated compound words with quotes
-  return query.replace(/\//g, '\\/').replace(/[a-zA-ZæøåÆØÅ]+-[a-zA-ZæøåÆØÅ]+/, '"$&"').replace(/""/g, '"')
+  let inQuotes = false
+  let inCompound = false
+  let escaped = ''
+  let currentPart = ''
+  for (const c of query) {
+    switch (c) {
+      case ':':
+        if (!inQuotes) {
+          escaped = `${escaped}${currentPart}:`
+          currentPart = ''
+        }
+        break
+      case '"':
+        inQuotes = !inQuotes
+        currentPart += c
+        break
+      case '-':
+        if (!inQuotes && currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+          inCompound = true
+          currentPart += '\\-'
+        } else {
+          currentPart += '-'
+        }
+        break
+      case '/':
+        currentPart += '\\/'
+        break
+      case ' ':
+        if (inCompound && !inQuotes) {
+          escaped = `${escaped}"${currentPart}" `
+          currentPart = ''
+          inCompound = false
+        } else {
+          escaped = `${escaped}${currentPart} `
+          currentPart = ''
+        }
+        break
+      default:
+        currentPart += c
+    }
+  }
+  if (currentPart !== '') {
+    if (inCompound || inQuotes) {
+      escaped = `${escaped}"${currentPart}"`
+    } else {
+      escaped = `${escaped}${currentPart}`
+    }
+  }
+  return escaped
 }
 
 function workAggFilter (field, workFilters, publicationFilters) {
@@ -370,8 +417,8 @@ function simpleQuery (query, fields, options) {
   const terms = []
   let inQuotes = false
   let currentPart = ''
-  for (let c of query) {
-    if (!inQuotes && c === ' ' || c === ',' || c === '.' ) {
+  for (const c of query) {
+    if (!inQuotes && c === ' ' || c === ',' || c === '.') {
       terms.push(currentPart)
       currentPart = ''
     } else {
