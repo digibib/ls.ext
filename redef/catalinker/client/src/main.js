@@ -656,8 +656,9 @@
             delete input[ valuesKey ][ index ].current.accepted[ value ]
           })
         }
-        input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old || {
-          value: valuesAsArray
+        if (options.initialLoad) {
+          input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old
+          input[ valuesKey ][ index ].old.value = valuesAsArray
         }
         input[ valuesKey ][ index ].current = input[ valuesKey ][ index ].current || {}
         input[ valuesKey ][ index ].current.value = valuesAsArray
@@ -1513,7 +1514,7 @@
       )
         .then(function (response) {
             if (response.status === 200) {
-              updateInputsForResource(ensureJSON(response.data), resourceUri, options)
+              updateInputsForResource(ensureJSON(response.data), resourceUri, Object.assign(options, { initialLoad: true }))
               if (!options.keepDocumentUrl) {
                 ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
               }
@@ -4637,13 +4638,13 @@
                 var input = ractive.get(grandParentOf(event.keypath))
                 var source = $(event.node).attr('data-accepted-source')
                 if (!input.multiple) {
-                  setMultiValues([ { id: value.value } ], input, 0, { source: source })
+                  setMultiValues([ { id: value.value } ], input, 0, { source: source, intitalLoad: true })
                 } else {
                   var values = _.map(input.values[ 0 ].current.value, function (value) {
                     return { id: value }
                   })
                   values.push({ id: value.value, source })
-                  setMultiValues(values, input, 0)
+                  setMultiValues(values, input, 0, { source: source, intitalLoad: true })
                 }
                 const selectField = $(`span[data-support-panel-base-id="support_panel_base_${input.values[ 0 ].uniqueId}"] span.select2.select2-container`)
                 ractive.fire('patchResource', {
