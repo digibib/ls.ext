@@ -3803,7 +3803,7 @@
               resourceIsLoaded: function (type) {
                 return typeof ractive.get(`targetUri.${type}`) !== 'undefined'
               },
-              getSearchResultItemLabel: function (item, itemLabelProperties, keypath) {
+              getSearchResultItemLabel: function (item, itemLabelProperties) {
                 let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
                   return item[ prop ]
                 })
@@ -4619,14 +4619,14 @@
                   let existingResources = parsed.byType(spec.type)
                   if (existingResources.length > 0) {
                     alertAboutExistingResource(spec, _.map(existingResources, function (resource) {
-                      var detailsForResource = []
-                      _.each(spec.showDetails, function (detail) {
-                        let detailValue = resource.getAll(detail)[ 0 ]
-                        if (detailValue) {
-                          detailsForResource.push(detailValue.value)
-                        }
-                      })
-                      return { uri: resource.id, details: detailsForResource.join(' ') }
+                      const displayProperties = _.map(getDisplayProperties(spec.showDetails, valuePropertyFromNode(resource), indexTypeFromNode(resource)), (prop) => prop.val)
+                      const details = displayProperties.join(' ')
+                        .replace(/[,\.:]\s*$/g, '')
+                        .replace(/- /, '-')
+                        .replace(/-(?=[^0-9])/, '- ')
+                        .replace(/: /g, ' : ')
+                        .replace(/ {2}/g, ' ')
+                      return { uri: resource.id, details }
                     }), proceed)
                   } else {
                     proceed()

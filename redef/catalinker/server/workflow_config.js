@@ -496,6 +496,7 @@ module.exports = (app) => {
                   checkExistingResource: {
                     url: 'services/publication/isbn',
                     queryParameter: 'isbn',
+                    showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', 'publicationYear' ],
                     type: 'Publication',
                     legendSingular: 'alreadyRegisteredISBNSingular',
                     legendPlural: 'alreadyRegisteredISBNPlural',
@@ -522,13 +523,14 @@ module.exports = (app) => {
                     {
                       ccl: 'isbn',
                       labelKey: 'ISBNLabel',
-                      pattern: '^(isbn:)?\s*([0-9\-]{10,}[xX]?)\s*$',
+                      pattern: '^(isbn:\s*)?([0-9\-]{10,}[xX]?)\s*$',
                       parameter: 'isbn',
                       groupNumber: 2,
                       validatePattern: '^[ 0-9\\-]+[xX]?\\s*$',
                       verifyExists: 'isbn',
                       checkExistingResource: {
                         url: 'services/publication/isbn',
+                        showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', 'publicationYear' ],
                         queryParameter: 'isbn',
                         type: 'Publication',
                         legendSingular: 'alreadyRegisteredISBNSingular',
@@ -542,21 +544,21 @@ module.exports = (app) => {
                     {
                       ccl: 'id',
                       labelKey: 'localIdlabel',
-                      pattern: '^(id:)?\s*([0-9^\\-]+)\s*$',
+                      pattern: '^(id:\s*)?([0-9^\\-]+)\s*$',
                       groupNumber: 2,
                       parameter: 'local_id'
                     },
                     {
                       ccl: 'ti',
                       labelKey: 'titleLabel',
-                      pattern: '^(ti:)?\s*([^,]+)\s*$',
+                      pattern: '^(ti:\s*)?([^,]+)\s*$',
                       groupNumber: 2,
                       parameter: 'title'
                     },
                     {
                       ccl: 'fo',
                       labelKey: 'authorLabel',
-                      pattern: '^(fo:)?\s*(.+)\s*$',
+                      pattern: '^(fo:\s*)?(.+)\s*$',
                       groupNumber: 2,
                       parameter: 'author'
                     }
@@ -618,7 +620,7 @@ module.exports = (app) => {
                     {
                       ccl: 'ean',
                       labelKey: 'EANLabel',
-                      pattern: '^(ean:)?\s*([0-9\-]{10,}[xX]?)\s*$',
+                      pattern: '^(ean:\\s*)?([0-9\-]{10,}[xX]?)\\s*$',
                       parameter: 'ean',
                       groupNumber: 2,
                       validatePattern: '^[ 0-9\\-]+[xX]?\\s*$',
@@ -626,6 +628,7 @@ module.exports = (app) => {
                         url: 'services/publication',
                         queryParameter: 'hasEan',
                         type: 'Publication',
+                        showDetails: [ 'mainTitle:', 'subtitle.', 'partNumber.', 'partTitle.', 'publicationYear' ],
                         legendSingular: 'alreadyRegisteredEANSingular',
                         legendPlural: 'alreadyRegisteredEANPlural',
                         editWithTemplate: {
@@ -637,21 +640,21 @@ module.exports = (app) => {
                     {
                       ccl: 'id',
                       labelKey: 'localIdlabel',
-                      pattern: '^(id:)?\s*([0-9^\\-]+)\s*$',
+                      pattern: '^(id:\\s*)?([0-9^\\-]+)\\s*$',
                       groupNumber: 2,
                       parameter: 'local_id'
                     },
                     {
                       ccl: 'ti',
                       labelKey: 'titleLabel',
-                      pattern: '^(ti:)?\s*([^,]+)\s*$',
+                      pattern: '^(ti:\\s*)?([^,]+)\\s*$',
                       groupNumber: 2,
                       parameter: 'title'
                     },
                     {
                       ccl: 'fo',
                       labelKey: 'authorLabel',
-                      pattern: '^(fo:)?\s*(.+)\s*$',
+                      pattern: '^(fo:\\s*)?(.+)\\s*$',
                       groupNumber: 2,
                       parameter: 'author'
                     }
