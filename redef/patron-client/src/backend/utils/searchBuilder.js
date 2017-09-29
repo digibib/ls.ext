@@ -2,6 +2,7 @@ const QueryParser = require('querystring')
 const Constants = require('../../frontend/constants/Constants')
 const Defaults = require('./queryConstants')
 const LuceneParser = require('lucene-query-parser')
+
 function isDigit (c) {
   return c >= '0' && c <= '9'
 }
