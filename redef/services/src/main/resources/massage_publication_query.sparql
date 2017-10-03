@@ -8,8 +8,6 @@ CONSTRUCT {
         <__PUBLICATIONURI__> a deich:Publication ;
                deich:mainTitle ?pubMainTitle ;
                deich:partTitle ?pubPartTitle ;
-               deich:norwegianTitle ?norwegianTitle ;
-               deich:englishTitle ?englishTitle ;
                deich:languages ?language ;
                deich:language ?langCode ;
                deich:format ?format ;
