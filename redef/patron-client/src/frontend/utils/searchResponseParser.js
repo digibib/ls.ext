@@ -116,6 +116,11 @@ export function processSearchResponse (response, locationQuery) {
         }
       }
 
+      // If there is just one publication on this work, use it
+      if (!selected && element.inner_hits.publications.hits.hits.length === 1) {
+        selected = element.inner_hits.publications.hits.hits[0]
+      }
+
       if (selected) {
         result.publication = selected
         result.title = title({

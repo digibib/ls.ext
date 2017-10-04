@@ -61,8 +61,6 @@
     "Agent": "deichman:Agent",
     "image": "deichman:hasImage",
     "mediatype": "deichman:mediaType",
-    "norwegianTitle": "deichman:norwegianTitle",
-    "englishTitle": "deichman:englishTitle",
     "scriptWriter": "http://data.deichman.no/role#scriptWriter",
     "actor": "http://data.deichman.no/role#actor",
     "photographer": "http://data.deichman.no/role#photographer",

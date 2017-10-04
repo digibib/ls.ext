@@ -151,14 +151,6 @@
         "analyzer": "language_analyzer",
         "norms": false
       },
-      "norwegianTitle": {
-        "type": "text",
-        "index": false
-      },
-      "englishTitle": {
-        "type": "text",
-        "index": false
-      },
       "uri": {
         "type": "keyword"
       },
