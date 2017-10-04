@@ -136,18 +136,25 @@
       }
     }
 
-    function saveSuggestionData () {
+    function saveSuggestionData (event) {
       let suggestionData = []
       let acceptedData = []
       let unknownPredefinedValues = []
       let supportableInputs = []
+      let unIdentifiedAuthorities = false
       _.each(ractive.get('inputGroups'), function (group, groupIndex) {
         _.each(group.inputs, function (input, inputIndex) {
           const realInputs = input.subInputs ? _.map(input.subInputs, function (subInput) {
             return subInput.input
           }) : [ input ]
-
           _.each(realInputs, function (input, subInputIndex) {
+            if (!unIdentifiedAuthorities && input.type === 'searchable-with-result-in-side-panel') {
+              _.each(input.values, (value) => {
+                if (value.current.displayValue.length > 0 && (!value.current.value || value.current.value.length === 0)) {
+                  unIdentifiedAuthorities = true
+                }
+              })
+            }
             const subInputFragment = input.isSubInput ? `subInputs.${subInputIndex}.input.` : ''
             suggestionData.push({
               keypath: `inputGroups.${groupIndex}.inputs.${inputIndex}.${subInputFragment}suggestedValues`,
@@ -187,6 +194,9 @@
       let suggestedValueSearchInput = getSuggestedValuesSearchInput()
       if (suggestedValueSearchInput) {
         window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
+      }
+      if (unIdentifiedAuthorities) {
+        return false
       }
     }
 
@@ -597,27 +607,30 @@
 
     function setMultiValues (values, input, index, options) {
       options = options || {}
-      if (values && values.length > 0) {
-        const valuesAsArray = values.length === 0 ? [] : _.map(values, function (value) {
-          if (isBlankNodeUri(value.id)) {
-            let valuesForInput = ractive.get(`applicationData.predefinedValues.${input.fragment}`)
-            let matchedPredefValue = _.find(valuesForInput, function (predefValue) {
-              return _.some(predefValue.label, function (label) {
-                return label[ '@language' ] === value.get('label').lang && label[ '@value' ] === value.get('label').value
+      if (values) {
+        const valuesAsArray = values.length === 0 ? [] : _.chain(values)
+          .map(value => {
+            if (isBlankNodeUri(value.id)) {
+              let valuesForInput = ractive.get(`applicationData.predefinedValues.${input.fragment}`)
+              let matchedPredefValue = _.find(valuesForInput, function (predefValue) {
+                return _.some(predefValue.label, function (label) {
+                  return label[ '@language' ] === value.get('label').lang && label[ '@value' ] === value.get('label').value
+                })
               })
-            })
-            if (matchedPredefValue) {
-              return matchedPredefValue[ '@id' ]
-            } else {
-              input.supportable = true
-              input.unknownPredefinedValues = input.unknownPredefinedValues || {}
-              input.unknownPredefinedValues.values = input.unknownPredefinedValues.values || []
-              input.unknownPredefinedValues.values.push((value.get('label') || {}).value)
-              input.unknownPredefinedValues.sourceLabel = input.unknownPredefinedValues.sourceLabel || options.sourceLabel
+              if (matchedPredefValue) {
+                return matchedPredefValue[ '@id' ]
+              } else {
+                input.supportable = true
+                input.unknownPredefinedValues = input.unknownPredefinedValues || {}
+                input.unknownPredefinedValues.values = input.unknownPredefinedValues.values || []
+                input.unknownPredefinedValues.values.push((value.get('label') || {}).value)
+                input.unknownPredefinedValues.sourceLabel = input.unknownPredefinedValues.sourceLabel || options.sourceLabel
+              }
             }
-          }
-          return value.id
-        })
+            return value.id
+          })
+          .filter(id => !isBlankNodeUri(id))
+          .value()
         if (options.compareValues) {
           input.compareValues = input.compareValues || emptyValues()
         }
@@ -627,22 +640,47 @@
         } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value.length > 0) {
           return
         }
-        input[ valuesKey ][ index ].old = {
-          value: valuesAsArray
+        if (options.demoteAcceptedSuggestions) {
+          _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').compact().first().pairs().each(valueAndSource => {
+            const value = valueAndSource[ 0 ]
+            const source = valueAndSource[ 1 ]
+            input.suggestedValues = input.suggestedValues || []
+            input.suggestedValues.push({
+              source,
+              value: {
+                value,
+                label: Main.predefinedLabelValue(input.fragment, value)
+              }
+            })
+            input.suggestionsAreDemoted = true
+            delete input[ valuesKey ][ index ].current.accepted[ value ]
+          })
         }
-        input[ valuesKey ][ index ].current = {
-          value: valuesAsArray,
-          uniqueId: _.uniqueId()
+        if (options.initialLoad) {
+          input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old
+          input[ valuesKey ][ index ].old.value = valuesAsArray
         }
+        input[ valuesKey ][ index ].current = input[ valuesKey ][ index ].current || {}
+        input[ valuesKey ][ index ].current.value = valuesAsArray
+        input[ valuesKey ][ index ].current.uniqueId = _.uniqueId()
+
+        _.chain(values).filter(value => value.source).each(acceptedValueAndSource => {
+          input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
+          input[ valuesKey ][ index ].current.accepted[ acceptedValueAndSource.id ] = acceptedValueAndSource.source
+        })
+
         input[ valuesKey ][ index ].uniqueId = _.uniqueId()
         if (options.onlyValueSuggestions) {
           input[ valuesKey ][ index ].suggested = { source: options.source }
           input.suggestedValues = valuesAsArray
         } else if (options.source) {
-          input[ valuesKey ][ index ].current.accepted = { source: options.source }
+          input[ valuesKey ][ index ].current.accepted = input[ valuesKey ][ index ].current.accepted || {}
+          _.chain(valuesAsArray).filter(val => val).each((value) => {
+            input[ valuesKey ][ index ].current.accepted[ value ] = options.source
+          })
           setSuggestionsAreAcceptedForParentInput(input, index)
         }
-        ractive.update(`${input.keypath}.values.${index}`)
+        ractive.update(`${input.keypath}.${valuesKey}.${index}`)
         return valuesAsArray
       }
     }
@@ -653,27 +691,36 @@
         input.compareValues = input.compareValues || emptyValues()
       }
       const valuesKey = options.compareValues ? 'compareValues' : 'values'
-      if (value) {
-        if (options.noOverwrite && input[ valuesKey ][ index ] && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value) {
-          return
-        }
-        input[ valuesKey ][ index ] = {
-          old: options.keepOld ? input.values[ index ].old : {
-            value: value.value,
-            lang: value.lang
-          },
-          current: {
-            value: value.value,
-            lang: value.lang,
-            accepted: options.source ? { source: options.source } : undefined
-          },
-          uniqueId: _.uniqueId()
-        }
-        if (input[ valuesKey ][ index ].current.accepted) {
-          setSuggestionsAreAcceptedForParentInput(input, index)
-        }
-        ractive.update(`${input.keypath}.${valuesKey}.${index}`)
+      if (options.noOverwrite && input[ valuesKey ][ index ] && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value) {
+        return
       }
+      if (options.demoteAcceptedSuggestions) {
+        const acceptedSource = _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').pluck('source').compact().first().value()
+        if (acceptedSource) {
+          input.suggestedValues = input.suggestedValues || []
+          input.suggestedValues.push({
+            source: acceptedSource,
+            value: input[ valuesKey ][ index ].current.value
+          })
+          input.suggestionsAreDemoted = true
+        }
+      }
+      input[ valuesKey ][ index ] = {
+        old: options.keepOld ? input.values[ index ].old : {
+          value: value.value,
+          lang: value.lang
+        },
+        current: {
+          value: value.value,
+          lang: value.lang,
+          accepted: options.source ? { source: options.source } : undefined
+        },
+        uniqueId: _.uniqueId()
+      }
+      if (input[ valuesKey ][ index ].current.accepted) {
+        setSuggestionsAreAcceptedForParentInput(input, index)
+      }
+      ractive.update(`${input.keypath}.${valuesKey}.${index}`)
     }
 
     function setIdValue (id, input, index, valuesField, options) {
@@ -715,6 +762,9 @@
       if (input.type === 'searchable-authority-dropdown') {
         uri = uri[ 0 ]
       }
+      if (!uri || uri === '') {
+        return
+      }
 
       function fromRoot (root) {
         function getValues (onlyFirstField) {
@@ -726,7 +776,6 @@
                 .join(' ')
                 .replace(/[,\.:]\s*$/g, '')
                 .replace(/- /, '-')
-                .replace(/-(?=[^0-9])/, '- ')
                 .replace(/: /g, ' : '))
             }
             if (isPromise(displayProperties)) {
@@ -759,13 +808,15 @@
               }
               input[ valuesField ][ index ].current.displayValue = values
             } else {
-              input.suggestedValues = input.suggestedValues || []
-              input.suggestedValues[ index ] = {
-                value: values,
-                displayValue: getValues(),
-                source: options.source,
-                selectedIndexType: selectedIndexType
-              }
+              getValues().then(function (value) {
+                ractive.set(`${input.keypath}.suggestedValues.${index}`, {
+                    value: values,
+                    displayValue: value,
+                    source: options.source,
+                    selectedIndexType: selectedIndexType
+                  }
+                )
+              })
             }
           } else {
             input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
@@ -828,7 +879,7 @@
     }
 
     function checkEsoteric (input, allInputs) {
-      let isEsoteric = false
+      let isEsoteric = (input.esotericWhen || undefined) === 'always'
       let handleInput = function (includeWhenValues, property) {
         return function (input) {
           if (input.fragment === property && _.contains(includeWhenValues, _.flatten([
@@ -1119,37 +1170,39 @@
         if (propName) {
           var propNameCore = propName.split(/\.fragment|[#\.,:\(\)-]/).join('')
           const propValue = valueFromPropertyFunc(propNameCore)
-          const handleValue = propVal => {
-            const displayProperties = []
-            if (propVal && propVal !== '') {
-              let property = { prop: propNameCore }
-              let ornamented
-              if (propName.indexOf('.fragment') !== -1) {
-                ornamented = ornament(fragmentPartOf(propVal), propName)
+          if (propValue) {
+            const handleValue = propVal => {
+              const displayProperties = []
+              if (propVal && propVal !== '') {
+                let property = { prop: propNameCore }
+                let ornamented
+                if (propName.indexOf('.fragment') !== -1) {
+                  ornamented = ornament(fragmentPartOf(propVal), propName)
+                } else {
+                  ornamented = ornament(propVal, propName)
+                }
+                if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
+                  let previousPropVal = _.last(displayProperties).val
+                  _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
+                }
+                property.val = ornamented
+                displayProperties.push(property)
               } else {
-                ornamented = ornament(propVal, propName)
+                let endParensVal = checkEndParens(propName, '')
+                if (endParensVal !== '') {
+                  displayProperties.push({ val: endParensVal })
+                }
               }
-              if (propName.indexOf('#') === 0 && displayProperties.length > 0) {
-                let previousPropVal = _.last(displayProperties).val
-                _.last(displayProperties).val = previousPropVal.replace(/,$/, '')
-              }
-              property.val = ornamented
-              displayProperties.push(property)
-            } else {
-              let endParensVal = checkEndParens(propName, '')
-              if (endParensVal !== '') {
-                displayProperties.push({ val: endParensVal })
-              }
+              return displayProperties
             }
-            return displayProperties
-          }
-          if (isPromise(propValue)) {
-            realPromisesWereMade = true
-            promises.push(propValue.then(handleValue))
-          } else {
-            const value = handleValue(propValue)
-            promises.push(Promise.resolve(value))
-            values.push(value)
+            if (isPromise(propValue)) {
+              realPromisesWereMade = true
+              promises.push(propValue.then(handleValue))
+            } else {
+              const value = handleValue(propValue)
+              promises.push(Promise.resolve(value))
+              values.push(value)
+            }
           }
         }
       })
@@ -1339,11 +1392,14 @@
                             })
                           } else {
                             _.each(root.getAll(fragmentPartOf(predicate)), function (node, multiValueIndex) {
-                              input.suggestedValues = input.suggestedValues || []
-                              input.suggestedValues.push({
-                                value: node.value,
-                                source: options.source
-                              })
+                              if (node.type === 'string') {
+                                input.suggestedValues = input.suggestedValues || []
+                                input.suggestedValues.push({
+                                  value: node.value,
+                                  displayValue: node.value,
+                                  source: options.source
+                                })
+                              }
                             })
                           }
                         } else if (input.type === 'select-predefined-value') {
@@ -1356,24 +1412,27 @@
                             }
                           } else {
                             var multiple = input.isSubInput ? input.parentInput.multiple : input.multiple
-                            _.each(root.outAll(fragmentPartOf(predicate)), function (value) {
-                              if (input.isSubInput && multiple) {
-                                setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
-                                input[ valuesField ][ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
-                              } else {
-                                input.suggestedValues = input.suggestedValues || []
-                                input.suggestedValues.push({
-                                  value: {
-                                    value: value.id,
-                                    label: Main.predefinedLabelValue(input.fragment, value.id)
-                                  },
-                                  source: options.source
-                                })
-                              }
-                            })
+                            _
+                              .chain(root.outAll(fragmentPartOf(predicate)))
+                              .filter(value => !isBlankNodeUri(value.id))
+                              .each(value => {
+                                if (input.isSubInput && multiple) {
+                                  setMultiValues(root.outAll(fragmentPartOf(predicate)), input, (input.isSubInput ? rootIndex : 0) + (offset), options)
+                                  input[ valuesField ][ (input.isSubInput ? rootIndex : 0) + (offset) ].nonEditable = true
+                                } else {
+                                  input.suggestedValues = input.suggestedValues || []
+                                  input.suggestedValues.push({
+                                    value: {
+                                      value: value.id,
+                                      label: Main.predefinedLabelValue(input.fragment, value.id)
+                                    },
+                                    source: options.source
+                                  })
+                                }
+                              })
                           }
                         } else {
-                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), function (value, index) {
+                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), (value, index) => {
                             if (!options.onlyValueSuggestions) {
                               let valueIndex = input.isSubInput ? rootIndex : index
                               setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
@@ -1454,7 +1513,7 @@
       )
         .then(function (response) {
             if (response.status === 200) {
-              updateInputsForResource(ensureJSON(response.data), resourceUri, options)
+              updateInputsForResource(ensureJSON(response.data), resourceUri, Object.assign(options, { initialLoad: true }))
               if (!options.keepDocumentUrl) {
                 ractive.set(`targetUri.${options.compareValues ? 'compare_with_' : ''}${typeFromUri(resourceUri)}`, resourceUri)
               }
@@ -1924,6 +1983,7 @@
           if (input.searchMainResource) {
             groupInputs.push({
               labelKey: input.searchMainResource.label,
+              placeHolder: input.searchMainResource.placeHolder,
               values: emptyValues(false, true),
               type: 'searchable-with-result-in-side-panel',
               visible: true,
@@ -1945,6 +2005,7 @@
           } else if (input.searchForValueSuggestions) {
             groupInputs.push({
               labelKey: input.searchForValueSuggestions.label,
+              placeHolder: input.searchForValueSuggestions.placeHolder,
               values: emptyValues(false, true),
               type: 'searchable-for-value-suggestions',
               visible: true,
@@ -2193,12 +2254,16 @@
         throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om verket.`)
       }
       let mainHitLine = []
+      let supplHitLine = []
       let detailsHitLine = []
       let publicationGraph = graph.byType('Publication')[ 0 ]
       if (!publicationGraph) {
         throw new Error(`Feil i data fra ekstern kilde (${source}). Mangler data om utgivelsen.`)
       }
       mainHitLine = _.map(publicationGraph.getAll('mainTitle'), function (prop) {
+        return prop.value
+      })
+      supplHitLine = _.map(publicationGraph.getAll('untranscribedTitle'), function (prop) {
         return prop.value
       })
       detailsHitLine = _.map(publicationGraph.getAll('publicationYear'), function (prop) {
@@ -2213,6 +2278,7 @@
       })
       return {
         main: mainHitLine.join(' - '),
+        supplementary: supplHitLine.join(' - '),
         details: detailsHitLine.join(' - '),
         graph,
         source,
@@ -2551,6 +2617,7 @@
           return fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
         }
       }
+      return Promise.resolve()
     }
 
     const Main = {
@@ -2655,6 +2722,7 @@
             applicationData.partials[ 'support-for-searchable-with-result-in-side-panel' ] = require('../../public/partials/support-for-searchable-with-result-in-side-panel.html')
             applicationData.partials[ 'support-for-select-predefined-value' ] = require('../../public/partials/support-for-select-predefined-value.html')
             applicationData.partials[ 'support-for-input-string' ] = require('../../public/partials/support-for-input-string.html')
+            applicationData.partials[ 'support-for-searchable-for-value-suggestions' ] = require('../../public/partials/support-for-searchable-for-value-suggestions.html')
             applicationData.partials[ 'support-for-edit-authority' ] = require('../../public/partials/support-for-edit-authority.html')
             applicationData.partials[ 'searchable-authority-dropdown' ] = require('../../public/partials/searchable-authority-dropdown.html')
             applicationData.partials[ 'searchable-for-value-suggestions' ] = require('../../public/partials/searchable-for-value-suggestions.html')
@@ -2662,6 +2730,7 @@
             applicationData.partials[ 'suggestor-for-searchable-with-result-in-side-panel' ] = require('../../public/partials/suggestor-for-searchable-with-result-in-side-panel.html')
             applicationData.partials[ 'suggestor-for-select-predefined-value' ] = require('../../public/partials/suggestor-for-select-predefined-value.html')
             applicationData.partials[ 'suggestor-for-input-string' ] = require('../../public/partials/suggestor-for-input-string.html')
+            applicationData.partials[ 'suggestor-for-input-string-large' ] = require('../../public/partials/suggestor-for-input-string-large.html')
             applicationData.partials[ 'suggestor-for-input-gYear' ] = require('../../public/partials/suggestor-for-input-gYear.html')
             applicationData.partials[ 'suggestor-for-input-integer' ] = require('../../public/partials/suggestor-for-input-integer.html')
             applicationData.partials[ 'suggestor-for-input-nonNegativeInteger' ] = require('../../public/partials/suggestor-for-input-nonNegativeInteger.html')
@@ -2923,8 +2992,12 @@
         }
 
         let templateSelection = function (selection) {
-          var source = $(selection.element.parentElement).attr('data-accepted-source')
-          var sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+          const acceptedSourcekeypath = $(selection.element.parentElement).attr('data-accepted-source-keypath')
+          let sourceSpan = ''
+          if (acceptedSourcekeypath) {
+            var source = (ractive.get(`${acceptedSourcekeypath}.current.accepted`) || {})[ selection.id ]
+            sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+          }
           return $(`<span>${selection.text}${sourceSpan}</span>`)
         }
 
@@ -3111,8 +3184,10 @@
                 var inputNode = ractive.get(grandParentOf(keypath))
                 let target = ractive.get(grandParentOf(grandParentOf(keypath))).targetUri || ractive.get(`targetUri.${unPrefix(inputNode.domain)}`)
                 if (target && !inputNode.isSubInput && shouldExecPatchImmediately(keypath)) {
+                  let waiter = ractive.get('waitHandler').newWaitable(e.target)
                   Main.patchResourceFromValue(target, inputNode.predicate,
                     ractive.get(keypath), inputNode.datatypes[ 0 ], errors, keypath)
+                  waiter.cancel()
                 }
                 setting = false
               }
@@ -3121,7 +3196,11 @@
 
             let keypath = `${this.getNodeInfo(node).resolve()}.current.value`
             const observer = ractive.observe(keypath, function (newvalue, oldValue) {
-              if (!setting && (newvalue || [])[ 0 ] !== (oldValue || [])[ 0 ]) {
+              function valuesAsString (values) {
+                return _(values || []).sort().reduce(function (memo, value) { return `${memo}|${value}` }, '')
+              }
+
+              if (!setting && (valuesAsString(newvalue) !== valuesAsString(oldValue))) {
                 setting = true
                 window.setTimeout(function () {
                   $(node).val(newvalue).trigger('change')
@@ -3262,24 +3341,55 @@
             }
           }
           const formatter = function (node, formatter) {
+            let handler
             if (formatter === 'isbn') {
-              $(node).on('input', function () {
-                let value = $(node).val().replace(/[^\dXx]*/g, '') // ISBN.parse not 100% with hyphens
+              handler = function () {
+                const origVal = $(node).val()
+                const isbnPrefix = /isbn:/.test(origVal) ? 'isbn:' : ''
+                let value = origVal.replace(/[^\dXx]*/g, '').replace(/^isbn:/, '') // ISBN.parse not 100% with hyphens
                 let parsedIsbn = ISBN.parse(value)
                 if (parsedIsbn) {
                   if (parsedIsbn.isIsbn10()) {
-                    $(node).val(parsedIsbn.asIsbn10(true))
+                    $(node).val(isbnPrefix + parsedIsbn.asIsbn10(true))
                   } else {
                     if (parsedIsbn.isIsbn13()) {
-                      $(node).val(parsedIsbn.asIsbn13(true))
+                      $(node).val(isbnPrefix + parsedIsbn.asIsbn13(true))
                     }
                   }
                   ractive.updateModel()
                 }
-              })
+              }
+              $(node).on('input', handler)
             }
             return {
-              teardown: function () {}
+              teardown: function () {
+                if (handler) {
+                  $(node).off('input', handler)
+                }
+              }
+            }
+          }
+          const searchFieldGuesser = function (node, input) {
+            if (!$(node).attr('data-guess')) {
+              input.cclCodes = _.map(input.searchForValueSuggestions.searchParameterSpecs, (p) => { return p.ccl }).join(', ')
+              const keypath = Ractive.getNodeInfo(node).keypath
+              let handler = function () {
+                let value = $(node).val()
+                let guessedParamSpec = _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                  return value.startsWith(`${spec.ccl}:`)
+                }) || _(input.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                  return RegExp(spec.pattern).test(value)
+                })
+                ractive.set(`${keypath}.supportable`, guessedParamSpec)
+                ractive.push('searchParameterGuessSupportsToClose', `${keypath}.supportable`)
+                positionSupportPanels()
+              }
+              $(node).on('input', handler)
+              $(node).attr('data-guess', true)
+            }
+            return {
+              teardown: function () {
+              }
             }
           }
           const relations = function (node, uri) {
@@ -3695,7 +3805,7 @@
               resourceIsLoaded: function (type) {
                 return typeof ractive.get(`targetUri.${type}`) !== 'undefined'
               },
-              getSearchResultItemLabel: function (item, itemLabelProperties, keypath) {
+              getSearchResultItemLabel: function (item, itemLabelProperties) {
                 let searchResultItems = getDisplayProperties(itemLabelProperties, function (prop) {
                   return item[ prop ]
                 })
@@ -3806,7 +3916,8 @@
               draggable,
               dropZone,
               setGlobalFlag,
-              esotericToggleGroup
+              esotericToggleGroup,
+              searchFieldGuesser
             },
             partials: applicationData.partials,
             transitions: {
@@ -3919,7 +4030,9 @@
                     let waiter = ractive.get('waitHandler').newWaitable(event.original.target)
                     Main.patchResourceFromValue(subject, predicate, inputValue, input.datatypes[ 0 ], errors, event.keypath)
                     event.context.domain = rdfType
-                    input.allowAddNewButton = true
+                    if (input.multiple && input.type !== 'select-predefined-value') {
+                      input.allowAddNewButton = true
+                    }
                     waiter.cancel()
                   }
                   ractive.update()
@@ -4126,7 +4239,7 @@
                   ractive.set(`${inputKeyPath}.widgetOptions.enableEditResource.mode`, 'edit')
                   form.targetUri = uri
                 } else if (input.isMainEntry || options.subItem) {
-                  fetchExistingResource(uri)
+                  fetchExistingResource(uri, { demoteAcceptedSuggestions: true })
                     .then(function () {
                       updateInputsForDependentResources(typeFromUri(uri), uri)
                     }).then(function () {
@@ -4226,6 +4339,7 @@
                 })
                 positionSupportPanels()
                 setTimeout(positionSupportPanels)
+                $('body').scrollTo(0, 100)
               },
               deleteResource: function (event) {
                 var uriToDelete = event.context.targetUri || ractive.get(`targetUri.${event.context.rdfType}`)
@@ -4387,6 +4501,7 @@
               fetchValueSuggestions: function (event) {
                 ractive.get('waitHandler').newWaitable(event.original.target)
                 var searchValue = event.context.current.value
+                let parameterName
 
                 function doExternalSearch () {
                   let wait = ractive.get('waitHandler').thisMayTakeSomTime()
@@ -4403,14 +4518,18 @@
                     itemsFromOtherSources: {}
                   }
                   _.each(sources, function (source) {
-                    promises.push(axios.get(`/valueSuggestions/${source}/${searchExternalSourceInput.searchForValueSuggestions.parameterName}/${searchValue}`, {
+                    promises.push(axios.get(`/valueSuggestions/${source}?${parameterName}=${encodeURIComponent(searchValue.replace(',', ''))}`, {
                         headers: {
                           Accept: 'application/ld+json'
                         }
                       }
                     ).then(function (response) {
                       var fromPreferredSource = response.data.source === (ractive.get('applicationData.preferredSource') || searchExternalSourceInput.searchForValueSuggestions.preferredSource.id)
-                      var hitsFromPreferredSource = { source: response.data.source, items: [] }
+                      var hitsFromPreferredSource = {
+                        source: response.data.source,
+                        items: [],
+                        totalHits: response.data.totalHits
+                      }
                       _.each(response.data.hits, function (hit) {
                         var graph = ldGraph.parse(hit)
                         if (fromPreferredSource) {
@@ -4466,15 +4585,29 @@
 
                 if (searchValue && searchValue !== '') {
                   var searchExternalSourceInput = ractive.get(grandParentOf(event.keypath))
+                  const searchParameterSpec = _(searchExternalSourceInput.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                    return searchValue.startsWith(`${spec.ccl}:`)
+                  }) || _(searchExternalSourceInput.searchForValueSuggestions.searchParameterSpecs).find((spec) => {
+                    return RegExp(spec.pattern).test(searchValue)
+                  })
+                  parameterName = searchParameterSpec
+                    ? searchParameterSpec.parameter
+                    : searchExternalSourceInput.searchForValueSuggestions.parameterName || event.context.supportable.checkExistingResource.queryParameter
+                  searchValue = searchParameterSpec
+                    ? (searchValue.match(searchParameterSpec.pattern) || [])[ searchParameterSpec.groupNumber ]
+                    : searchValue
                   if (searchExternalSourceInput.searchForValueSuggestions.pattern && !(new RegExp(searchExternalSourceInput.searchForValueSuggestions.pattern).test(searchValue))) {
                     return
                   }
-                  if (searchExternalSourceInput.searchForValueSuggestions.checkExistingResource) {
-                    ractive.fire('checkExistingResource', event.context.current.value, searchExternalSourceInput.searchForValueSuggestions.checkExistingResource, doExternalSearch)
+                  const checkExistingResource = searchExternalSourceInput.searchForValueSuggestions.checkExistingResource || (event.context.supportable ? event.context.supportable.checkExistingResource : searchParameterSpec.checkExistingResource)
+                  if (checkExistingResource) {
+                    ractive.fire('checkExistingResource', searchValue, checkExistingResource, doExternalSearch.bind(null, parameterName, searchValue), parameterName)
+                  } else {
+                    doExternalSearch(parameterName, searchValue)
                   }
                 }
               },
-              checkExistingResource: function (queryValue, spec, proceed) {
+              checkExistingResource: function (queryValue, spec, proceed, parameterName) {
                 let searchUrl = ''
                 if (spec.queryParameter === 'hasEan') { // TODO : hasEAN should probably have separate route
                   searchUrl = proxyToServices(`${spec.url}?${spec.queryParameter}=${queryValue}${_.reduce(spec.showDetails, function (memo, fieldName) {
@@ -4488,14 +4621,14 @@
                   let existingResources = parsed.byType(spec.type)
                   if (existingResources.length > 0) {
                     alertAboutExistingResource(spec, _.map(existingResources, function (resource) {
-                      var detailsForResource = []
-                      _.each(spec.showDetails, function (detail) {
-                        let detailValue = resource.getAll(detail)[ 0 ]
-                        if (detailValue) {
-                          detailsForResource.push(detailValue.value)
-                        }
-                      })
-                      return { uri: resource.id, details: detailsForResource.join(' ') }
+                      const displayProperties = _.map(getDisplayProperties(spec.showDetails, valuePropertyFromNode(resource), indexTypeFromNode(resource)), (prop) => prop.val)
+                      const details = displayProperties.join(' ')
+                        .replace(/[,\.:]\s*$/g, '')
+                        .replace(/- /, '-')
+                        .replace(/-(?=[^0-9])/, '- ')
+                        .replace(/: /g, ' : ')
+                        .replace(/ {2}/g, ' ')
+                      return { uri: resource.id, details }
                     }), proceed)
                   } else {
                     proceed()
@@ -4506,17 +4639,20 @@
                 var input = ractive.get(grandParentOf(event.keypath))
                 var source = $(event.node).attr('data-accepted-source')
                 if (!input.multiple) {
-                  setMultiValues([ { id: value.value } ], input, 0, { source: source })
+                  setMultiValues([ { id: value.value } ], input, 0, { source: source, intitalLoad: true })
                 } else {
-                  var oldValues = _.map(input.values[ 0 ].current.value, function (value) {
+                  var values = _.map(input.values[ 0 ].current.value, function (value) {
                     return { id: value }
                   })
-                  oldValues.push({ id: value.value })
-                  setMultiValues(oldValues, input, 0, { source: source })
+                  values.push({ id: value.value, source })
+                  setMultiValues(values, input, 0, { source: source, intitalLoad: true })
                 }
-                ractive.update()
-                ractive.fire('patchResource',
-                  { keypath: `${grandParentOf(event.keypath)}.values.0`, context: input.values[ 0 ] },
+                const selectField = $(`span[data-support-panel-base-id="support_panel_base_${input.values[ 0 ].uniqueId}"] span.select2.select2-container`)
+                ractive.fire('patchResource', {
+                    original: { target: selectField },
+                    keypath: `${grandParentOf(event.keypath)}.values.0`,
+                    context: input.values[ 0 ]
+                  },
                   input.predicate,
                   unPrefix(input.domain))
               },
@@ -4530,16 +4666,21 @@
                 }
                 ractive.update()
                 var valueIndex = oldValues ? oldValues.length - 1 : 0
+                const selectField = $(`span[data-support-panel-base-id="support_panel_base_${input.values[ input.multiple ? oldValues.length - 1 : 0 ].uniqueId}"] input`)
                 ractive.fire('patchResource',
                   {
                     keypath: `${grandParentOf(event.keypath)}.values.${valueIndex}`,
-                    context: input.values[ valueIndex ]
+                    context: input.values[ valueIndex ],
+                    original: { target: selectField }
                   },
                   input.predicate,
                   unPrefix(input.domain))
               },
               acceptExternalItem: function (event) {
                 ractive.set('primarySuggestionAccepted', true)
+                _.each(ractive.get('searchParameterGuessSupportsToClose'), function (keypath) {
+                  ractive.set(keypath, null)
+                })
                 let waitHandler = ractive.get('waitHandler')
                 waitHandler.newWaitable(event.original.target)
                 let waiter = waitHandler.thisMayTakeSomTime()
@@ -4654,6 +4795,8 @@
                       }
                     })
                     ractive.update()
+                  }).then(function () {
+                    ractive.splice(parentOf(grandParentOf(event.keypath)))
                   }).then(waiter.done)
                 })
               },
@@ -5105,14 +5248,17 @@
               let showingWaiting = false
               let cancelled = false
               let spinner = new Spinner({ scale: 1.0 }).spin()
+              let disabledInput
               let waiter = {
                 showWaiting: function () {
                   if (!showingWaiting && !cancelled) {
                     showingWaiting = true
                     target.addClass('saving')
-                    const next = target.nextAll('.save-placeholder')
-                    if (next.length > 0) {
-                      next.append(spinner.el)
+                    const savePlaceholder = target.nextAll('.save-placeholder')
+                    if (savePlaceholder.length > 0) {
+                      savePlaceholder.append(spinner.el)
+                      disabledInput = savePlaceholder.prevAll('input,select')
+                      disabledInput.attr('disabled', 'disabled')
                     } else {
                       $('#growler').show()
                     }
@@ -5121,6 +5267,9 @@
                 },
                 done: function () {
                   if (showingWaiting) {
+                    if (disabledInput) {
+                      disabledInput.attr('disabled', false)
+                    }
                     spinner.stop()
                     target.removeClass('saving')
                     $('#growler').hide()

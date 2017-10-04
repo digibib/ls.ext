@@ -182,15 +182,16 @@ describe('searchBuilder', () => {
         [ '', '' ],
         [ '*', '*' ],
         [ 'hei', 'hei' ],
-        [ 'abc æøå "123"', 'abc AND æøå AND 123' ],
+        [ 'abc æøå "123"', '(abc AND (æøå AND 123))' ],
         [ 'year:1999', 'year:1999' ],
         [ 'forf:Hamsun', 'author:Hamsun' ],
         [ 'forf:"Knut Hamsun"', 'author:"Knut Hamsun"' ],
-        [ 'forf:"Knut Hamsun" sult', 'author:"Knut Hamsun" AND sult' ],
+        [ 'forf:"Knut Hamsun" sult', '(author:"Knut Hamsun" AND sult)' ],
         [ 'forf:"Knut Hamsun" OR sult', '(author:"Knut Hamsun" OR sult)' ],
-        [ 'forf:Hamsun sult', 'author:Hamsun AND sult' ],
-        [ 'tittel:"slaktehus 55" tag:sf', 'title:"slaktehus 55" AND subject:sf' ],
-        [ 'title:"forf: Hamsun"', 'title:"forf: Hamsun"' ]
+        [ 'forf:Hamsun sult', '(author:Hamsun AND sult)' ],
+        [ 'tittel:"slaktehus 55" tag:sf', '(title:"slaktehus 55" AND subject:sf)' ],
+        [ 'title:"forf: Hamsun"', 'title:"forf: Hamsun"' ],
+        [ 'genre:(hørespill kriminal)', 'genre:(hørespill AND kriminal)' ]
       ]
       tests.forEach((test, index) => {
         expect(translateFieldTerms(test[ 0 ], translations)).toEqual(test[ 1 ], `Failed test no ${index}`)
@@ -211,25 +212,25 @@ describe('searchBuilder', () => {
         [ 'Work', 'Publication.forf:Hamsun', '' ],
         [ 'Publication', 'forf:Hamsun', '' ],
         [ 'Publication', 'Publication.forf:Hamsun', 'author:Hamsun' ],
-        [ 'Work', 'forf:Hamsun AND aldersgrense:12 AND title:Sult', 'author:Hamsun AND title:Sult' ],
+        [ 'Work', 'forf:Hamsun AND aldersgrense:12 AND title:Sult', '(author:Hamsun AND title:Sult)' ],
         [ 'Work', 'forf:Hamsun OR aldersgrense:12 AND title:Sult', '(author:Hamsun OR title:Sult)' ],
-        [ 'Publication', 'forf:Hamsun AND aldersgrense:12 AND title:Sult', 'ageLimit:12 AND title:Sult' ],
+        [ 'Publication', 'forf:Hamsun AND aldersgrense:12 AND title:Sult', '(ageLimit:12 AND title:Sult)' ],
         [ 'Publication', 'forf:Hamsun AND (aldersgrense:12 OR title:Sult)', '(ageLimit:12 OR title:Sult)' ],
-        [ 'Publication', 'forf:Hamsun AND ag:12 AND title:Sult', 'ageLimit:12 AND title:Sult' ],
-        [ 'Publication', 'forf:Hamsun AND aldersgrense:[12 TO 14] AND title:Sult', 'ageLimit:[12 TO 14] AND title:Sult' ],
-        [ 'Publication', 'forf:Hamsun AND aldersgrense:{15 TO 16} AND title:Sult', 'ageLimit:{15 TO 16} AND title:Sult' ],
-        [ 'Publication', 'Publication.author:Hamsun AND aldersgrense:{17 TO 18} AND title:Sult', 'author:Hamsun AND ageLimit:{17 TO 18} AND title:Sult' ],
-        [ 'Publication', 'Publication.forf:Hamsun AND aldersgrense:{19 TO 20} AND title:Sult', 'author:Hamsun AND ageLimit:{19 TO 20} AND title:Sult' ],
+        [ 'Publication', 'forf:Hamsun AND ag:12 AND title:Sult', '(ageLimit:12 AND title:Sult)' ],
+        [ 'Publication', 'forf:Hamsun AND aldersgrense:[12 TO 14] AND title:Sult', '(ageLimit:[12 TO 14] AND title:Sult)' ],
+        [ 'Publication', 'forf:Hamsun AND aldersgrense:{15 TO 16} AND title:Sult', '(ageLimit:{15 TO 16} AND title:Sult)' ],
+        [ 'Publication', 'Publication.author:Hamsun AND aldersgrense:{17 TO 18} AND title:Sult', '(author:Hamsun AND (ageLimit:{17 TO 18} AND title:Sult))' ],
+        [ 'Publication', 'Publication.forf:Hamsun AND aldersgrense:{19 TO 20} AND title:Sult', '(author:Hamsun AND (ageLimit:{19 TO 20} AND title:Sult))' ],
         [ 'Work', 'Publication.forf:Hamsun AND aldersgrense:{21 TO 22} AND title:Sult', 'title:Sult' ],
-        [ undefined, 'forf:Hamsun AND aldersgrense:{23 TO 24} AND title:Sult', 'author:Hamsun AND ageLimit:{23 TO 24} AND title:Sult' ],
+        [ undefined, 'forf:Hamsun AND aldersgrense:{23 TO 24} AND title:Sult', '(author:Hamsun AND (ageLimit:{23 TO 24} AND title:Sult))' ],
         [ 'Work', 'Publication.forf:Hamsun AND aldersgrense:{21 TO 22} AND title:-Sult', 'title:-Sult' ],
         [ 'Work', 'Publication.forf:Hamsun AND aldersgrense:{21 TO 22} AND title:-"Su?t"', 'title:-Su?t' ],
         [ 'Work', 'title:"Sult"~5', 'title:Sult~5' ],
         [ 'Work', 'title:Sult^5', 'title:Sult^5' ],
         [ 'Work', 'title:(Sult OR "Tørst")', 'title:(Sult OR Tørst)' ],
-        [ 'Work', 'title:Sult author:Hamsun', 'title:Sult AND author:Hamsun' ],
-        [ 'Work', 'title:Sult AND (author:Hamsun OR author:Ibsen)', 'title:Sult AND (author:Hamsun OR author:Ibsen)' ],
-        [ 'Work', 'title:Sult AND ((author:Hamsun OR (author:Ibsen AND publicationYear:1890)))', 'title:Sult AND (author:Hamsun OR author:Ibsen AND publicationYear:1890)' ],
+        [ 'Work', 'title:Sult author:Hamsun', '(title:Sult AND author:Hamsun)' ],
+        [ 'Work', 'title:Sult AND (author:Hamsun OR author:Ibsen)', '(title:Sult AND (author:Hamsun OR author:Ibsen))' ],
+        [ 'Work', 'title:Sult AND ((author:Hamsun OR (author:Ibsen AND publicationYear:1890)))', '(title:Sult AND (author:Hamsun OR (author:Ibsen AND publicationYear:1890)))' ],
         [ 'Work', 'author:ibsen NOT aldersgrense:[12 TO 15]', 'author:ibsen' ],
         [ 'Work', 'author:ibsen NOT title:Dukkehjem', 'author:ibsen NOT title:Dukkehjem' ],
         [ 'Work', 'serie:"Harry Potter" NOT mysteriekammeret', '*:* NOT mysteriekammeret' ],
@@ -1071,6 +1072,45 @@ describe('searchBuilder', () => {
                                     }
                                   },
                                   boost: 0.5
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  boost: 1,
+                                  filter: {
+                                    match_phrase: {
+                                      summary: {
+                                        query: 'some more strings',
+                                        slop: 0
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  boost: 1,
+                                  filter: {
+                                    match_phrase: {
+                                      summary: {
+                                        query: 'some more',
+                                        slop: 0
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  boost: 1,
+                                  filter: {
+                                    match_phrase: {
+                                      summary: {
+                                        query: 'more strings',
+                                        slop: 0
+                                      }
+                                    }
+                                  }
                                 }
                               }
                             ]

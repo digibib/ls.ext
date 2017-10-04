@@ -1,16 +1,13 @@
 {{#if primarySuggestionAccepted && (!input.isSubInput || !multiple)}}
 {{#if../../suggestedValues}}
-{{#../../suggestedValues}}
 <div class="external-sources" as-slideDown slideIn-in>
-    <span tabindex="{{tabSelected ? '0' : '-1'}}" on-keyup="toggle" on-click='toggle' class-unexpanded="{{!expanded}}" class-expanded="{{expanded}}">{{expanded ? 'Skjul' : 'Se'}} forslag fra andre eksterne kilder</span>
+    <span tabindex="{{tabSelected ? '0' : '-1'}}" on-keyup="toggle" on-click='toggle' class-unexpanded="{{!expanded}}" class-expanded="{{expanded}}">{{>showHideFromExternalSources}}</span>
     <div class="suggested-values pure-u-1-1">
         {{#each ../../suggestedValues}}
         {{>'suggestor-for-' + input.type}}
-        {{>'suggestor-for-' + type}}
         {{/each}}
     </div>
 </div>
-{{/}}
 {{/if}}
 {{/if}}
 

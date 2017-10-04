@@ -8,8 +8,6 @@ CONSTRUCT {
         <__PUBLICATIONURI__> a deich:Publication ;
                deich:mainTitle ?pubMainTitle ;
                deich:partTitle ?pubPartTitle ;
-               deich:norwegianTitle ?norwegianTitle ;
-               deich:englishTitle ?englishTitle ;
                deich:languages ?language ;
                deich:language ?langCode ;
                deich:format ?format ;
@@ -51,7 +49,6 @@ CONSTRUCT {
                deich:publishedBy ?publishedBy ;
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
-               deich:summary ?summary ;
                deich:origLang ?origLang ;
                deich:created ?created .
   ?mediaType a deich:Mediatype ;
@@ -101,7 +98,6 @@ WHERE {
           FILTER(lang(?formatNoLang) = "no") }
   UNION { <__PUBLICATIONURI__> deich:publicationYear ?pubPublicationYearO . BIND(str(?pubPublicationYearO) AS ?pubPublicationYear) }
   UNION { <__PUBLICATIONURI__> deich:hasImage ?img }
-  UNION { <__PUBLICATIONURI__> deich:hasSummary ?summary }
   UNION { <__PUBLICATIONURI__> deich:ageLimit ?maybeAgeLimit . BIND(IF(BOUND(?maybeAgeLimit), ?maybeAgeLimit, "0") AS ?ageLimit) }
 
   UNION { <__PUBLICATIONURI__> deich:inSerial ?serialBnode .

@@ -49,6 +49,7 @@ module.exports = {
     { field: 'partTitle', phrase: true },
     { field: 'series', boost: 10 },
     { field: 'subject', boost: 0.5, phrase: true },
-    { field: 'subject.raw', boost: 0.5, phrase: true }
+    { field: 'subject.raw', boost: 0.5, phrase: true },
+    { field: 'summary', phrase: true }
   ]
 }

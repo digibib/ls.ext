@@ -51,6 +51,7 @@
                                    aria-autocomplete="list"
                                    placeholder=""
                                    style="width: 0.75em;"
+                                   {{#with placeHolder}}placeholder="{{>this}}"{{/with}}
                                    on-backspace="unselectEntity"></li >
                     </ul>
                 </span>
@@ -70,6 +71,7 @@
                  class-searchable="{{./searchable}}"
             >
                 <span contenteditable="true" {{#if openInputForms.length > 0 }}disabled{{/if}} {{#./deletable}}readonly {{/deletable}}
+                    {{#with placeHolder}}data-text="{{>this}}"{{/with}}
                     tabindex="{{tabSelected || ../../widgetOptions.maintenance ? '0' : '-1'}}"
                     on-click="{{#deletable}}unselectEntity{{/deletable}}"
                     class="search-term"

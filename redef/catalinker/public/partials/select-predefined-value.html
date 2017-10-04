@@ -17,11 +17,12 @@
             value="{{./current.value}}"
             data-automation-id="{{dataAutomationId || ../../dataAutomationId}}"
             multiple="multiple"
-            {{#if ./current.accepted.source}}data-accepted-source="{{./current.accepted.source}}"{{/if}}>
+            {{#if ./current.accepted}}data-accepted-source-keypath="{{@keypath}}"{{/if}}>
         {{#each predefinedValues[../../fragment]}}
         <option value='{{.["@id"]}}'>{{getRdfsLabelValue(.["label"])}}</option>
         {{/each}}
     </select>
+    <span class="save-placeholder"></span>
 </span>
 {{/if}}
 </span>

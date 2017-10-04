@@ -34,6 +34,7 @@
     selectWorkLabel: 'Katalogisér utgivelse av dette verket',
     autoNumber: 'Automatisk nummerering',
     searchWorkLegend: 'Søk etter tittel, hovedinnførsel, verksuri eller -id',
+    workTitlePlaceHolder: 'Verkstittel/verksID',
     searchPublicationLegend: 'Søk etter tittel eller tittelnummer',
     advancedSearchLegend: 'Du bruker nå <span class="more-info" title="Søk som inneholder et av disse tegnene {{advancedSearchCharacters()}}. Du kan også bruke AND, OR og NOT.">avansert søk</span>. Trykk Enter for å søke.',
     useSuggestion: 'Bruk forslag',
@@ -62,6 +63,7 @@
     cannotSelectRelationBeforeResourceTypeIsLoaded: 'Denne knytningen kan ikke velges før tilhørende ressurstype er lastet',
     nameLabel: 'Navn',
     mainEntryLabel: 'Hovedinnførsel',
+    authorLabel: 'Forfatter',
     ISBNLabel: 'ISBN',
     EANLabel: 'EAN',
     missingMainEntryLabel: 'Verket har ikke hovedansvarlig',
@@ -299,13 +301,26 @@
     authorityMaintenance: 'Vedlikehold av autoriteter',
 
     // external data
-    hitsFromExternalSource: 'Treff i ekstern kilde - {{../../preferredSource.name}}',
+    guessedSearchParameterLegend: 'Det ser ut som du ønsker å søke etter <b>{{>parameterGuess}}</b>.<br/>Du kan presisere søkebegrepet ved å prefikse med én av disse ccl-kodene: {{cclCodes}}.',
+    DFBSearchLabel: 'Søk i Det flerspråklige bibliotek',
+    DFBPlaceHolderISBN: 'ISBN/tittel/forfatter/lokalt postnummer',
+    DFBPlaceHolderEAN: 'EAN/tittel/forfatter/lokalt postnummer',
+    BSSearchLabel: 'Søk i Biblioteksentralen',
+    titleLabel: 'Tittel',
+    localIdlabel: 'Lokalt postnummer',
+    hitsFromExternalSource: '{{items.length}}{{#if items.length !== totalHits}} av {{totalHits}}{{/if}} treff i ekstern kilde - {{../../preferredSource.name}}',
+    invalidEanNumber: 'Dette ser ikke ut som et gyldig EAN-nummer',
+    invalidIsbnNumber: 'Dette ser ikke ut som et gyldig ISBN-nummer',
+    alreadyRegisteredEANPlural: 'Det finnes allerede ${numberOfResources} registrerte utgivelser med samme EAN-nummer. Vil du åpne en av disse, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+    alreadyRegisteredEANSingular: 'Det finnes allerede en registrert utgivelse med samme EAN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',
+    searchUnavailableBecauseOfAcceptedExternalItem: 'Du kan ikke utføre nytt eksternt søk etter at et forslag er tatt i bruk',
     noHitsInExternalSource: 'Ingen treff i eksterne kilder',
     additionalSuggestionsLegend: `
         <p>Klikk <b>Bruk forslag</b> for å fylle inn {{allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup}}
         verdi{{#if (allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup) > 1}}er{{/if}}.</p>
         `,
     externalSuggestionsAlreadyUsed: 'Forslag fra ekstern hovedkilde er allerede hentet inn',
+    showHideFromExternalSources: '{{#if expanded}}Skjul{{else}}Se{{/if}} forslag fra {{#if !suggestionsAreDemoted}}andre {{/if}} eksterne kilder',
     useValuesFromThis: 'Bruk verdiene fra denne',
     thisPublicationIsAlreadyRegistered: 'Denne utgivelsen finnes fra før',
     alreadyRegisteredISBNSingular: 'Det finnes allerede en registrert utgivelse med samme ISBN-nummer. Vil du åpne den, fortsette med nyregistrering likevel, eller avbryte registreringen?',

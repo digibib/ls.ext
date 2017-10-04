@@ -43,8 +43,7 @@
           "name": {
             "type": "text",
             "term_vector": "with_positions_offsets",
-              "norms": false,
-            "index_options": "docs"
+              "norms": false
           }
         }
       },
@@ -63,8 +62,7 @@
               },
               "name": {
                 "type": "text",
-                "norms": false,
-                "index_options": "docs"
+                "norms": false
               },
               "birthYear": {
                 "type": "text",
@@ -215,7 +213,6 @@
         "term_vector": "with_positions_offsets",
         "norms": false,
         "similarity": "boolean",
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "text",
@@ -228,7 +225,6 @@
         "term_vector": "with_positions_offsets",
         "norms": false,
         "similarity": "boolean",
-        "index_options": "docs",
         "fields": {
           "raw": {
             "type": "text",
@@ -289,8 +285,7 @@
         }
       },
       "summary": {
-        "type": "text",
-        "index": false
+        "type": "text"
       },
       "fictionNonfiction": {
         "type": "keyword"

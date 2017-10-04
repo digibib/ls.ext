@@ -1,4 +1,5 @@
 <input autofocus {{#disabled}} disabled="true" {{/}}
+{{#with placeHolder}}placeholder="{{>this}}"{{/with}}
 {{#with searchForValueSuggestions.pattern}}pattern="{{this}}"{{/with}}
 class="pure-u-1-1 simple-searchable"
 class-invalid-input="{{error}}"
@@ -7,19 +8,22 @@ on-enter='fetchValueSuggestions'
 data-automation-id="{{dataAutomationId}}"
 value="{{current.value}}"
 as-formatter="format: {{searchForValueSuggestions.formatter}}"
-{{#if searchForValueSuggestions.hitsFromPreferredSource}} disabled="disabled"{{/if}}/><span class="save-placeholder"></span>
+as-searchFieldGuesser="input: {{input}}"
+{{#if primarySuggestionAccepted}} disabled="disabled" title={{>searchUnavailableBecauseOfAcceptedExternalItem}} style="cursor: help;" {{/if}}
+/>
+<span class="save-placeholder"></span>
 <span class="legend">
     {{#if current.value && !../../searchForValueSuggestions.hitsFromPreferredSource.length > 0 }}
         {{#if !searchForValueSuggestions.pattern || RegExp(searchForValueSuggestions.pattern).test(current.value) }}
             <span class="advanced-search-legend"><span class="ui-icon ui-icon-info"/>Trykk Enter for å søke.</span>
         {{else}}
-            <span class="advanced-search-legend"><span class="ui-icon ui-icon-alert"/>{{searchForValueSuggestions.patternMismatchMessage || 'Formatet på søketeksten er ikke gyldig.'}}</span>
+            <span class="advanced-search-legend"><span class="ui-icon ui-icon-alert"/>{{>searchForValueSuggestions.patternMismatchMessage}}</span>
         {{/if}}
     {{/if}}
 </span>
 <div class="external-source-results">
     {{#each searchForValueSuggestions.hitsFromPreferredSource}}
-    <span intro="slideIn">
+    <span intro="slideIn" outro="slideOut">
         <div class="external-source">
             {{>hitsFromExternalSource}}
         </div>
@@ -28,9 +32,10 @@ as-formatter="format: {{searchForValueSuggestions.formatter}}"
             <li class="external-hit">
                 <span>
                     <div class="main-line">{{main}}</div>
+                    <div class="main-line">{{supplementary}}</div>
                     <div class="details-line">{{details}}</div>
                 </span>
-                <button {{#if primarySuggestionAccepted}}style="opacity:0;" title="{{>externalSuggestionsAlreadyUsed}}"{{else}} title="{{>useValuesFromThis}}"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem:{{input}}">{{>useSuggestion}}</button>
+                <button {{#if primarySuggestionAccepted}}style="opacity:0;" title="{{>externalSuggestionsAlreadyUsed}}"{{else}} title="{{>useValuesFromThis}}"{{/if}} class="pure-button pure-button-primary" on-click="acceptExternalItem">{{>useSuggestion}}</button>
                 <span class="save-placeholder"></span>
             </li>
             {{/each}}

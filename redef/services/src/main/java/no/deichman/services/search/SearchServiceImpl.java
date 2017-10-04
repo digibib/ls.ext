@@ -61,6 +61,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.URLEncoder.encode;
 import static java.util.Arrays.stream;
@@ -205,42 +206,62 @@ public class SearchServiceImpl implements SearchService {
         return Response.status(Response.Status.OK).build();
     }
 
-    private void clearIndex(String idx) {
-        try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = getIndexUriBuilder().setPath("/"+idx).build();
-
-            try (CloseableHttpResponse getExistingIndex = httpclient.execute(new HttpGet(uri))) {
-                if (getExistingIndex.getStatusLine().getStatusCode() == HTTP_OK) {
-                    try (CloseableHttpResponse delete = httpclient.execute(new HttpDelete(uri))) {
-                        int statusCode = delete.getStatusLine().getStatusCode();
-                        LOG.info("Delete index request returned status " + statusCode);
-                        if (statusCode != HTTP_OK) {
-                            throw new ServerErrorException("Failed to delete elasticsearch index", HTTP_INTERNAL_ERROR);
-                        }
-                    }
+    private void deleteIndex(CloseableHttpClient closeableHttpClient, String index) {
+        try {
+            URI uri = getIndexUriBuilder().setPath("/" + index).build();
+            HttpDelete httpDelete = new HttpDelete(uri);
+            try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpDelete)) {
+                int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+                // Delete can potentially return 200, 204 or 404, all indicating the resource is deleted as expected
+                if (statusCode == HTTP_OK || statusCode == HTTP_NO_CONTENT || statusCode == HTTP_NOT_FOUND) {
+                    LOG.info("Deleting index {} was successful, request returned code {}", index, statusCode);
+                } else {
+                    LOG.error("Deleting index {} was not successful, request returned code {}", index, statusCode);
+                    throw new ServerErrorException("Failed to delete elasticsearch index", HTTP_INTERNAL_ERROR);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void putNewIndex(CloseableHttpClient closeableHttpClient, String index) {
+        try {
+            URI uri = getIndexUriBuilder().setPath("/" + index).build();
             HttpPut createIndexRequest = new HttpPut(uri);
             createIndexRequest.setEntity(new InputStreamEntity(getClass().getResourceAsStream("/search_index.json"), APPLICATION_JSON));
-            try (CloseableHttpResponse create = httpclient.execute(createIndexRequest)) {
+            try (CloseableHttpResponse create = closeableHttpClient.execute(createIndexRequest)) {
                 int statusCode = create.getStatusLine().getStatusCode();
                 LOG.info("Create index request returned status " + statusCode);
                 if (statusCode != HTTP_OK) {
                     throw new ServerErrorException("Failed to create elasticsearch index", HTTP_INTERNAL_ERROR);
                 }
             }
-            putIndexMapping(httpclient, idx,"publication");
-            putIndexMapping(httpclient, idx,"work");
-            putIndexMapping(httpclient, idx,"person");
-            putIndexMapping(httpclient, idx,"serial");
-            putIndexMapping(httpclient, idx,"corporation");
-            putIndexMapping(httpclient, idx,"place");
-            putIndexMapping(httpclient, idx,"subject");
-            putIndexMapping(httpclient, idx,"genre");
-            putIndexMapping(httpclient, idx,"instrument");
-            putIndexMapping(httpclient, idx,"compositionType");
-            putIndexMapping(httpclient, idx,"event");
-            putIndexMapping(httpclient, idx,"workSeries");
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void clearIndex(String index) {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            deleteIndex(httpclient, index);
+            putNewIndex(httpclient, index);
+
+            putIndexMapping(httpclient, index, "publication");
+            putIndexMapping(httpclient, index, "work");
+            putIndexMapping(httpclient, index, "person");
+            putIndexMapping(httpclient, index, "serial");
+            putIndexMapping(httpclient, index, "corporation");
+            putIndexMapping(httpclient, index, "place");
+            putIndexMapping(httpclient, index, "subject");
+            putIndexMapping(httpclient, index, "genre");
+            putIndexMapping(httpclient, index, "instrument");
+            putIndexMapping(httpclient, index, "compositionType");
+            putIndexMapping(httpclient, index, "event");
+            putIndexMapping(httpclient, index, "workSeries");
 
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -262,41 +283,107 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void toggleActiveIndex(String idx) {
+        initialiseElasticsearch();
         removeAliases();
         addAlias(idx, "search");
     }
 
     private void addAlias(String from, String to) {
-        try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = getIndexUriBuilder().setPath("/" + from + "/_alias/" + to).build();
-            try (CloseableHttpResponse res = httpclient.execute(new HttpPut(uri))) {
-                int statusCode = res.getStatusLine().getStatusCode();
-                LOG.info("Create index aliase returned status " + statusCode);
-                if (statusCode != HTTP_OK){
-                    throw new ServerErrorException("Failed to create index alias", HTTP_INTERNAL_ERROR);
+        if (isIndexOrAlias(from)) {
+            try (CloseableHttpClient httpclient = createDefault()) {
+                URI uri = getIndexUriBuilder().setPath("/" + from + "/_alias/" + to).build();
+                try (CloseableHttpResponse res = httpclient.execute(new HttpPut(uri))) {
+                    int statusCode = res.getStatusLine().getStatusCode();
+                    LOG.info("Create index alias returned status " + statusCode);
+                    if (statusCode != HTTP_OK) {
+                        LOG.error("Creating index alias failed, cause: " + IOUtils.toString(res.getEntity().getContent(), StandardCharsets.UTF_8));
+                        throw new ServerErrorException("Failed to create index alias", HTTP_INTERNAL_ERROR);
+                    }
                 }
-            }
 
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+                throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
-    private void removeAliases() {
-        try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = getIndexUriBuilder().setPath("/_all/_aliases/search").build();
-            try (CloseableHttpResponse res = httpclient.execute(new HttpDelete(uri))) {
-                int statusCode = res.getStatusLine().getStatusCode();
-                LOG.info("Delete index aliases returned status " + statusCode);
-                if (statusCode != HTTP_OK && statusCode != HTTP_NOT_FOUND){
-                    throw new ServerErrorException("Failed to delete index aliases", HTTP_INTERNAL_ERROR);
+    private boolean aliasesExist() {
+        return aliasExists("*");
+    }
+
+    private void initialiseElasticsearch() {
+        String aliasName = "search";
+        try (CloseableHttpClient closeableHttpClient = createDefault()) {
+            if (!aliasExists(aliasName) && isIndexOrAlias(aliasName)) {
+                URI searchUri = getIndexUriBuilder().setPath("/" + aliasName).build();
+                try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(new HttpDelete(searchUri))) {
+                    int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+                    if (statusCode == 200) {
+                        LOG.info("Deleting index \"" + aliasName + "\" so alias with same name can be created");
+                    }
                 }
             }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+    private boolean aliasExists(String aliasName) {
+        String logString = (aliasName.equals("*")) ? "Inspecting Elasticsearch while initialising shows at least one"
+                : "Inspecting Elasticsearch while initialising shows \"" + aliasName + "\"";
+        boolean searchAliasExists = false;
+        try (CloseableHttpClient closeableHttpClient = createDefault()) {
+            URI uri1 = getIndexUriBuilder().setPath("/_alias/" + aliasName).build();
+            try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(new HttpGet(uri1))) {
+                int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    LOG.info(logString + " alias exists");
+                    searchAliasExists = true;
+                } else {
+                    LOG.info(" alias does not exist");
+                }
+            }
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
+        return searchAliasExists;
+    }
+
+    private boolean isIndexOrAlias(String aliasOrIndexName) {
+        boolean indexOrAliasExists = false;
+        try (CloseableHttpClient closeableHttpClient = createDefault()) {
+            URI uri2 = getIndexUriBuilder().setPath("/" + aliasOrIndexName + "").build();
+            try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(new HttpGet(uri2))) {
+                int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    LOG.info("Inspecting Elasticsearch while initialising shows \"" + aliasOrIndexName + "\" alias or index already exists");
+                    indexOrAliasExists = true;
+                } else {
+                    LOG.info("Inspecting Elasticsearch while initialising shows \"" + aliasOrIndexName + "\" alias or index does not exist");
+                }
+            }
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
+        return indexOrAliasExists;
+    }
+
+    private void removeAliases() {
+        if (aliasesExist()) {
+            try (CloseableHttpClient httpclient = createDefault()) {
+                URI uri = getIndexUriBuilder().setPath("/_all/_aliases/search").build();
+                try (CloseableHttpResponse res = httpclient.execute(new HttpDelete(uri))) {
+                    int statusCode = res.getStatusLine().getStatusCode();
+                    LOG.info("Delete index aliases returned status " + statusCode);
+                    if (statusCode != HTTP_OK && statusCode != HTTP_NOT_FOUND) {
+                        throw new ServerErrorException("Failed to delete index aliases", HTTP_INTERNAL_ERROR);
+                    }
+                }
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+                throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
@@ -596,7 +683,7 @@ public class SearchServiceImpl implements SearchService {
                 while (true) {
                     try {
                         Thread.sleep(1000);
-                    } catch(InterruptedException e) {
+                    } catch (InterruptedException e) {
                         // no-op
                     }
                     if (INDEX_QUEUE.size() == 0) {

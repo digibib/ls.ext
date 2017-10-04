@@ -34,6 +34,7 @@
     selectWorkLabel: 'Catalogue publication of this work',
     autoNumber: 'Automatic numbering',
     searchWorkLegend: 'Search by title, main entry, work uri or work id',
+    workTitlePlaceHolder: 'Work title/work ID',
     searchPublicationLegend: 'Search by title or record id',
     advancedSearchLegend: 'You are using <span class="more-info" title="Search containg any of these characters: {{advancedSearchCharacters()}}. You can also use AND, OR og NOT.">advanced search</span>. Press Enter to search.',
     useSuggestion: 'Use suggestion',
@@ -62,6 +63,7 @@
     cannotSelectRelationBeforeResourceTypeIsLoaded: 'Cannot select relation until relevant resource type is loaded', //Denne knytningen kan ikke velges før tilhørende ressurstype er lastet
     nameLabel: 'Name', // Navn
     mainEntryLabel: 'Main entry', // Hovedinnførsel
+    authorLabel: 'Author',
     ISBNLabel: 'ISBN',
     EANLabel: 'EAN',
     missingMainEntryLabel: 'Work has no main contributor',
@@ -297,12 +299,25 @@
     authorityMaintenance: 'Authority maintenance',
 
     // external data
-    hitsFromExternalSource: 'Hits in external source - {{../../preferredSource.name}}',
+    guessedSearchParameterLegend: 'It looks like you wish to search by <b>{{>parameterGuess}}</b>.<br/>You can use one of these ccl-prefixes if you want: {{cclCodes}}.',
+    DFBSearchLabel: 'Search Det flerspråklige bibliotek',
+    DFBPlaceHolderISBN: 'ISBN/title/author/local record id',
+    DFBPlaceHolderEAN: 'EAN/title/author/local record id',
+    BSSearchLabel: 'Search Biblioteksentralen',
+    titleLabel: 'Title',
+    localIdlabel: 'Local identifier',
+    hitsFromExternalSource: '{{items.length}}{{#if items.length !== totalHits}} of {{totalHits}}{{/if}} hits from external source - {{../../preferredSource.name}}',
+    invalidEanNumber: 'This doesn\'t look like a valid EAN number',
+    invalidIsbnNumber: 'This doesn\'t look like a valid ISBN number',
+    alreadyRegisteredEANSingular: 'There is already a registered a publication with the same EAN number. Do you want to open that one, continue registering a new one or cancel?',
+    alreadyRegisteredEANPlural: 'There are already registered {{numberOfResources}} publications with the same EAN number. Do you want to open one of these, continue registering a new one or cancel?',
+    searchUnavailableBecauseOfAcceptedExternalItem: 'You can\'t perform another search when a suggestion has been accepted',
     additionalSuggestionsLegend: `
         <p>Click <b>{{useSuggestion}}</b> to fill in {{allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup}}
         value{{#if (allowPartialSuggestions ? numberOfSuggestionsForGroup : numberOfSuggestionsForGroup - numberOfInCompleteForGroup) > 1}}s{{/if}}.</p>
         `,
     externalSuggestionsAlreadyUsed: 'Suggestions from main external source have already been used',
+    showHideFromExternalSources: '{{#if expanded}}Hide{{else}}Show{{/if}} suggestions from {{#if !suggestionsAreDemoted}}other {{/if}} external sources',
     useValuesFromThis: 'Use values from this source',
     thisPublicationIsAlreadyRegistered: 'This publication is already registered',
     alreadyRegisteredISBNSingular: 'There is already a registered a publication with the same ISBN number. Do you want to open that one, continue registering a new one or cancel?',

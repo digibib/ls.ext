@@ -1,13 +1,12 @@
 import React, { PropTypes } from 'react'
 import { defineMessages } from 'react-intl'
 import MetaItem from '../../MetaItem'
-import title from '../../../utils/title'
 
-const OriginalTitle = ({ mainTitle, subtitle, partNumber, partTitle }) => {
-  if (mainTitle) {
+const OriginalTitle = ({ title, untranscribedTitle }) => {
+  if (title) {
     return (
       <MetaItem label={messages.labelOriginalTitle} data-automation-id="work_originalTitle">
-        {title({ mainTitle, subtitle, partNumber, partTitle })}
+        { untranscribedTitle ? `${untranscribedTitle} ${title}` : title }
       </MetaItem>
     )
   } else {
@@ -16,10 +15,8 @@ const OriginalTitle = ({ mainTitle, subtitle, partNumber, partTitle }) => {
 }
 
 OriginalTitle.propTypes = {
-  mainTitle: PropTypes.string,
-  subtitle: PropTypes.string,
-  partNumber: PropTypes.string,
-  partTitle: PropTypes.string
+  title: PropTypes.string,
+  untranscribedTitle: PropTypes.string
 }
 
 export const messages = defineMessages({

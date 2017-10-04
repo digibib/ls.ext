@@ -3,6 +3,7 @@
     <span class="pure-u-2-6">
         <button tabindex="{{tabSelected ? '0' : '-1'}}" class="pure-button pure-button-primary suggested-value"
            on-click='acceptSuggestedPredefinedValue:{{this.value}}'
-           {{#if source}}data-accepted-source="{{source}}"{{/if}}>Bruk forslag</button>
+                disabled={{../../values.0.current.value.includes(value.value)}}
+           {{#if source}}data-accepted-source="{{source}}"{{/if}}>{{>useSuggestion}}</button>
     </span>
 </div>

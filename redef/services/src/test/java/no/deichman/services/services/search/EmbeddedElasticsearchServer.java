@@ -31,22 +31,27 @@ public final class EmbeddedElasticsearchServer {
     private EmbeddedElasticsearchServer(String dataDirectory) throws Exception {
         this.dataDirectory = dataDirectory;
         this.port = PortSelector.randomFree();
+        File dataDirectoryFile = new File(dataDirectory);
+        if (dataDirectoryFile.exists()) {
+            FileUtils.deleteDirectory(dataDirectoryFile);
+        }
+
         new File(dataDirectory).mkdirs();
 
         IndexSettings idx = IndexSettings.builder()
-                        .withSettings(getSystemResourceAsStream("search_index.json"))
-                        .withType("person", getSystemResourceAsStream("person_mapping.json"))
-                        .withType("publication", getSystemResourceAsStream("publication_mapping.json"))
-                        .withType("work", getSystemResourceAsStream("work_mapping.json"))
-                        .withType("corporation", getSystemResourceAsStream("corporation_mapping.json"))
-                        .withType("serial", getSystemResourceAsStream("serial_mapping.json"))
-                        .withType("workSeries", getSystemResourceAsStream("workSeries_mapping.json"))
-                        .withType("subject", getSystemResourceAsStream("subject_mapping.json"))
-                        .withType("genre", getSystemResourceAsStream("genre_mapping.json"))
-                        .withType("instrument", getSystemResourceAsStream("instrument_mapping.json"))
-                        .withType("compositionType", getSystemResourceAsStream("compositionType_mapping.json"))
-                        .withType("event", getSystemResourceAsStream("event_mapping.json"))
-                        .build();
+                .withSettings(getSystemResourceAsStream("search_index.json"))
+                .withType("person", getSystemResourceAsStream("person_mapping.json"))
+                .withType("publication", getSystemResourceAsStream("publication_mapping.json"))
+                .withType("work", getSystemResourceAsStream("work_mapping.json"))
+                .withType("corporation", getSystemResourceAsStream("corporation_mapping.json"))
+                .withType("serial", getSystemResourceAsStream("serial_mapping.json"))
+                .withType("workSeries", getSystemResourceAsStream("workSeries_mapping.json"))
+                .withType("subject", getSystemResourceAsStream("subject_mapping.json"))
+                .withType("genre", getSystemResourceAsStream("genre_mapping.json"))
+                .withType("instrument", getSystemResourceAsStream("instrument_mapping.json"))
+                .withType("compositionType", getSystemResourceAsStream("compositionType_mapping.json"))
+                .withType("event", getSystemResourceAsStream("event_mapping.json"))
+                .build();
 
         embeddedElastic = EmbeddedElastic.builder()
                 .withElasticVersion("5.4.1")
@@ -55,6 +60,7 @@ public final class EmbeddedElasticsearchServer {
                 .withSetting("path.home", ".")
                 .withSetting("path.data", dataDirectory)
                 .withSetting("cluster.name", "test")
+                .withSetting("discovery.zen.ping.unicast.hosts", "localhost:" + port)
                 .withStartTimeout(2, TimeUnit.MINUTES)
                 .withEsJavaOpts("-Xms512m -Xmx512m")
                 .withPlugin(getenv().getOrDefault("ES_ICU_PLUGIN_URL", "analysis-icu"))
@@ -64,8 +70,7 @@ public final class EmbeddedElasticsearchServer {
                 .start();
 
         try (CloseableHttpClient httpclient = createDefault()) {
-           httpclient.execute(new HttpPut("http://localhost:" + embeddedElastic.getHttpPort() + "/a/_alias/search"));
-
+            httpclient.execute(new HttpPut("http://localhost:" + embeddedElastic.getHttpPort() + "/a/_alias/search"));
         }
     }
 

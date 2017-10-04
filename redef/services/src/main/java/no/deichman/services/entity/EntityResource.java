@@ -248,14 +248,15 @@ public final class EntityResource extends ResourceBase {
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
 
-        Model model = getEntityService().retrieveById(xuri);
+        Model model = getEntityService().retrieveCompleteResourceById(xuri);
 
         if (model.isEmpty()) {
             throw new NotFoundException();
         }
         if (xuri.getTypeAsEntityType() == PUBLICATION) {
+            String recordId = "";
             try {
-                String recordId = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordId"))).next().asLiteral().getString();
+                recordId = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("recordId"))).next().asLiteral().getString();
                 getKohaAdapter().deleteBiblio(recordId);
             } catch (Exception e) {
                 // We abort if biblio has items, but we want to continue deleting publication
@@ -263,6 +264,7 @@ public final class EntityResource extends ResourceBase {
                 if (e instanceof PublicationHasItemsException) {
                     throw e;
                 }
+                log.error("Failed to delete biblio in Koha " + recordId, e);
             }
             getEntityService().delete(model);
             Set<String> connectedResources = getEntityService().retrieveResourcesConnectedTo(xuri);

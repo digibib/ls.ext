@@ -3,9 +3,84 @@ const Constants = require('../../frontend/constants/Constants')
 const Defaults = require('./queryConstants')
 const LuceneParser = require('lucene-query-parser')
 
+function isDigit (c) {
+  return c >= '0' && c <= '9'
+}
+
 function escape (query) {
-  // escape forward slash '/' and enclose hyphenated compound words with quotes
-  return query.replace(/\//g, '\\/').replace(/[a-zA-ZæøåÆØÅ]+-[a-zA-ZæøåÆØÅ]+/, '"$&"').replace(/""/g, '"')
+  let inQuotes = false
+  let inCompound = false
+  let escaped = ''
+  let currentPart = ''
+  for (const c of query) {
+    switch (c) {
+      case '+':
+      case '|':
+      case ',':
+        if (inQuotes) {
+          currentPart += c
+        } else {
+          if (currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+            currentPart += ' '
+          }
+        }
+        break
+      case ':':
+        if (inQuotes) {
+          currentPart += ':'
+          break
+        }
+        if (currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+          if (Constants.knownFields[currentPart.substring(currentPart.lastIndexOf(' ') + 1)]) {
+            escaped = `${escaped}${currentPart}:`
+            currentPart = ''
+          } else {
+            // Treat ':' after a term which is not a query field-term as whitespace
+            currentPart += ' '
+          }
+        }
+        break
+      case '"':
+        inQuotes = !inQuotes
+        currentPart += c
+        break
+      case '-':
+        if (!inQuotes && currentPart.length > 0 && currentPart[currentPart.length - 1] !== ' ') {
+          if (isDigit(currentPart[currentPart.length - 1])) {
+            currentPart += '-'
+          } else {
+            inCompound = true
+            currentPart += '\\-'
+          }
+        } else {
+          currentPart += ' '
+        }
+        break
+      case '/':
+        currentPart += '\\/'
+        break
+      case ' ':
+        if (inCompound && !inQuotes) {
+          escaped = `${escaped}"${currentPart}" `
+          currentPart = ''
+          inCompound = false
+        } else {
+          escaped = `${escaped}${currentPart} `
+          currentPart = ''
+        }
+        break
+      default:
+        currentPart += c
+    }
+  }
+  if (currentPart !== '') {
+    if (inCompound || inQuotes) {
+      escaped = `${escaped}"${currentPart}"`
+    } else {
+      escaped = `${escaped}${currentPart}`
+    }
+  }
+  return escaped
 }
 
 function workAggFilter (field, workFilters, publicationFilters) {
@@ -119,14 +194,14 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                         "Film": 0.3,
                         "Språkkurs": 0.2
                       ];
-                      
+
                       if (doc['_type'] === 'publication') {
                         def mtScore = mtScores.get(doc.mt.value);
                         if (mtScore !== null) {
                           score = score * mtScore;
                         }
                       }
-                      
+
                       def langscores = [
                         "nob": 1.5,
                         "nno": 1.5,
@@ -141,7 +216,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                         "sju": 1.5,
                         "smj": 1.5,
                         "sme": 1.5,
-                        "sia": 1.5,                        
+                        "sia": 1.5,
                         "nor": 1.5,
                         "eng": 1.4,
                         "swe": 1.3,
@@ -151,7 +226,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                         "spa": 1.1,
                         "ita": 1.1
                       ];
-                      
+
                       def langscore = langscores.get(doc.language.value);
                       if (langscore == null) {
                         langscore = 1;
@@ -160,7 +235,7 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
                       if (doc['_type'] === 'publication' && doc.mt === 'Bok') {
                         score = _score * langscore;
                       }
-                      
+
                       return score;`.replace('\n', ''),
             lang: 'painless'
           }
@@ -363,9 +438,33 @@ function initCommonQuery (workQuery, publicationQuery, allFilters, workFilters, 
   }
 }
 
+// Split terms by whitespace & punctuation, but keep phrases in quotes
+function split (query) {
+  const terms = []
+  let inQuotes = false
+  let currentPart = ''
+  for (const c of query) {
+    if (c === '"' || c === '“' || c === '”') {
+      inQuotes = !inQuotes
+      currentPart += '"'
+      continue
+    }
+    if (!inQuotes && (c === ' ' || c === ',' || c === '.')) {
+      terms.push(currentPart)
+      currentPart = ''
+    } else {
+      currentPart += c
+    }
+  }
+  if (currentPart.length > 0) {
+    terms.push(currentPart)
+  }
+  return terms
+}
+
 function simpleQuery (query, fields, options) {
   options = options || {}
-  const terms = query.split(/\s+/)
+  const terms = split(query)
   let phrases = [ query ]
   for (let i = 0; i < terms.length; i++) {
     const firstPart = terms.slice(0, i + 1)
@@ -459,7 +558,11 @@ function translateFieldTerms (query, translations, scope, skipUnscoped, returnEx
       return node.field !== '<implicit>' ? `${node.field}:` : ''
     }
 
-    let leftParens = node.operator === 'OR' ? '(' : ''
+    if (node.operator === '<implicit>') {
+      node.operator = 'AND'
+    }
+
+    let leftParens = (node.operator === 'OR' || node.operator === 'AND') ? '(' : ''
     if (node.field && node.left && node.right) {
       result += `${field()}(`
       leftParens = ''
@@ -473,7 +576,7 @@ function translateFieldTerms (query, translations, scope, skipUnscoped, returnEx
     if (node.operator) {
       result += ` ${node.operator} `
     }
-    let rightParens = node.operator === 'OR' ? ')' : ''
+    let rightParens = (node.operator === 'OR' || node.operator === 'AND') ? ')' : ''
     if (node.right) {
       result += `${serialize(node.right)}${rightParens}`
       rightParens = ''
@@ -554,7 +657,6 @@ function translateFieldTerms (query, translations, scope, skipUnscoped, returnEx
     }
     return result
   }
-
   let parsed = LuceneParser.parse(query)
   parsed = transform(parsed)
   if (returnExclusionOnly) {
@@ -573,7 +675,7 @@ function queryStringToQuery (queryString, workFilters, publicationFilters, exclu
   const escapedQueryString = escape(queryString)
   const isbn10 = /^[0-9Xx-]{10,13}$/
   const isbn13 = /^[0-9-]{13,17}$/
-  const advTriggers = /[:+\/\-()*^?]|AND|OR|NOT|TO/
+  const advTriggers = /[:()*^?]|AND|OR|NOT|TO/
 
   if (isbn10.test(escapedQueryString) || isbn13.test(escapedQueryString)) {
     return initCommonQuery({},

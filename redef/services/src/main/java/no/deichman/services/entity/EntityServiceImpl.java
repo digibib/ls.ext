@@ -283,7 +283,14 @@ public final class EntityServiceImpl implements EntityService {
     @Override
     public Model retrieveById(XURI xuri) {
         Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrieveResourceByURI(xuri));
+        m.add(repository.retrieveResourceByURI(xuri, true));
+        return m;
+    }
+
+    @Override
+    public Model retrieveCompleteResourceById(XURI xuri){
+        Model m = ModelFactory.createDefaultModel();
+        m.add(repository.retrieveResourceByURI(xuri, false));
         return m;
     }
 
