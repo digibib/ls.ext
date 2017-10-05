@@ -78,7 +78,8 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             createProperty(BaseURI.ontology("created")),
             createProperty(BaseURI.ontology("modified")),
             createProperty(BaseURI.ontology("hasPrimaryCataloguingSource")),
-            createProperty(BaseURI.ontology("hasIdentifierInPrimaryCataloguingSource"))
+            createProperty(BaseURI.ontology("hasIdentifierInPrimaryCataloguingSource")),
+            createProperty(BaseURI.ontology("hasImage"))
     );
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
