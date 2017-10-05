@@ -45,8 +45,8 @@ publication:musicRecordingTemplate a :Publication ;
     :format format:CompactDisc ;
     :locationFormat "CD" .
 
-work:musicWorkTemplate a :Work ;
-    duo:templateMatch [
-        :hasWorkType workType:Music
-    ] ;
-    :audience audience:adult .
+#work:musicWorkTemplate a :Work ;
+#    duo:templateMatch [
+#        :hasWorkType workType:Music
+#    ] ;
+#    :audience audience:adult .
