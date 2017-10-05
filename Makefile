@@ -78,6 +78,7 @@ ifeq ($(LSDEVMODE),ci)
 	$(DOCKER_COMPOSE_INIT) &&\
 	$(DOCKER_COMPOSE) stop build_services || true &&\
 	$(DOCKER_COMPOSE) rm -f build_services || true &&\
+	docker volume rm dockercompose_services_build || true &&\
 	$(DOCKER_COMPOSE) build build_services &&\
 	$(DOCKER_COMPOSE) run build_services
 	docker run --rm \
