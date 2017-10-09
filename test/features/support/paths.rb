@@ -92,14 +92,14 @@ module Paths
         :work => "/work",
         :publication => "/publication",
         :person => "/person",
-        :workflow => "/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Book&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no",
-        :workflow_music => "/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=MusicRecording&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no",
+        :workflow => "/cataloguing?template=workflow&hasWorkType=Literature&hasMediaType=Book&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no&noOnloadWarning=true",
+        :workflow_music => "/cataloguing?template=workflow&hasWorkType=Music&hasMediaType=MusicRecording&openTab=0&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no&noOnloadWarning=true",
         :place => "/place",
         :serial => "/serial",
         :work_series=> "/workSeries",
         :corporation => "/corporation",
         :subject => "/subject",
-        :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no"
+        :landing_page_auth_maintenance => "/cataloguing?template=menu&openTab=1&externalSource=random_bibbi&externalSource=random_loc&noStartGrowl=true&language=no&noOnloadWarning=true"
     }
     raise ArgumentError, "Invalid or missing path argument" unless path && paths[path.to_sym]
     "http://#{ENV['CATALINKER_HOST'] || 'catalinker'}:#{port(:catalinker)}#{paths[path.to_sym]}"

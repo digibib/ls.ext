@@ -46,7 +46,7 @@ module.exports = (app) => {
                   },
                   'deichman:isbn': term,
                   'deichman:language': {
-                    '@id': 'http://lexvo.org/id/iso639-3/swe'
+                    '@id': source === 'bibbi' ? 'http://lexvo.org/id/iso639-3/hrv' : 'http://lexvo.org/id/iso639-3/swe'
                   },
                   'deichman:literaryForm': [
                     {

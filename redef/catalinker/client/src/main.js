@@ -196,7 +196,9 @@
         window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
       }
       if (unIdentifiedAuthorities) {
-        return false
+        if (!URI.parseQuery(URI.parse(document.location.href).query).noOnloadWarning) {
+          return false
+        }
       }
     }
 
@@ -637,7 +639,7 @@
         let valuesKey = options.compareValues ? 'compareValues' : 'values'
         if (!input[ valuesKey ][ index ]) {
           input[ valuesKey ][ index ] = {}
-        } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value.length > 0) {
+        } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value && input[ valuesKey ][ index ].current.value.length > 0) {
           return
         }
         if (options.demoteAcceptedSuggestions) {
@@ -2614,7 +2616,12 @@
         })
 
         if (!abortFetchTemplate) {
-          return fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
+          return fetchExistingResource(templateUri.toString(), {
+            noOverwrite: true,
+            source: 'template',
+            keepDocumentUrl: true,
+            inputs
+          })
         }
       }
       return Promise.resolve()
@@ -2975,6 +2982,7 @@
               ractive.set('save_status', 'alle endringer er lagret')
               if (input.subInputs) {
                 _.each(input.subInputs, function (subInput) {
+                  subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
                   subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
                 })
               } else {

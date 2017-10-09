@@ -9,6 +9,7 @@ class WorkFlow < CatalinkerPage
       Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
         @browser.elements(:class => 'prop-input').size > 1
       end # wait until dom-tree has been populated
+      @browser.execute_script("window.onbeforeunload = function() {};")
     end
     self
   end
@@ -19,6 +20,7 @@ class WorkFlow < CatalinkerPage
       Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
         @browser.elements(:class => 'prop-input').size > 1
       end # wait until dom-tree has been populated
+      @browser.execute_script("window.onbeforeunload = function() {};")
     end
     self
   end
@@ -29,13 +31,14 @@ class WorkFlow < CatalinkerPage
       Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) do
         @browser.elements(:class => 'prop-input').size > 1
       end # wait until dom-tree has been populated
+      @browser.execute_script("window.onbeforeunload = function() {};")
     end
     self
   end
 
 
   def next_step
-    @browser.div(:class => 'grid-panel-selected').button(:class => 'next-step-button').click
+    @browser.div(:class => 'grid-panel-selected').button(:class => 'next-step-button').fire_event('click')
   end
 
   def assert_selected_tab(name_of_visible_tag)
@@ -49,7 +52,7 @@ class WorkFlow < CatalinkerPage
   end
 
   def select_prop(domain, predicate, value, nr=0, skip_wait=false)
-    @browser.inputs(:xpath => "//span[@data-automation-id='#{domain}_#{predicate}_#{nr}']//input[@type='search']")[0].click
+    @browser.inputs(:xpath => "//span[@data-automation-id='#{domain}_#{predicate}_#{nr}']//input[@type='search']")[0].fire_event('click')
     @browser.elements(:xpath => "//span[@class='select2-results']/ul/li[text()='#{value}']")[0].click
   end
 
@@ -119,6 +122,6 @@ class WorkFlow < CatalinkerPage
   end
 
   def finish
-    @browser.elements(:text => "Avslutt registrering av utgivelsen").first.click
+    @browser.elements(:text => "Avslutt registrering av utgivelsen").first.fire_event('click')
   end
 end

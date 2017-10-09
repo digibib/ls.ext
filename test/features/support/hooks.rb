@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'pp'
 require_relative './services/test_setup/TestSetup.rb'
+require 'watir-scroll'
 
 # TODO: Should pull report dir (if any) from cucumber command options
 REPORT_DIR = 'report'

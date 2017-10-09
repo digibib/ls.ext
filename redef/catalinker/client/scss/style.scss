@@ -711,7 +711,6 @@ html {
             }
             input {
               padding-left: 6px;
-              float: left;
               &:not([type=search]) {
                 height: 36px;
                 padding: 6px;
@@ -721,6 +720,7 @@ html {
                 margin-top: 12px;
               }
               &[type=search] {
+                float: left;
                 height: 28px;
                 margin-right: 16px;
               }
