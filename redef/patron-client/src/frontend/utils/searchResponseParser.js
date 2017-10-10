@@ -172,7 +172,6 @@ export function processSearchResponse (response, locationQuery) {
         }
       }
 
-
       result.mediaTypes = [ ...new Set(element.inner_hits.publications.hits.hits.filter(pub => pub._source.mediatype).map(pub => (pub._source.mediatype))) ].map(uri => ({ uri }))
 
       return result
