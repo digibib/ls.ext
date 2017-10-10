@@ -69,7 +69,8 @@ public class WorkModelToIndexMapperTest {
             + "        ],\n"
             + "        \"hasWorkType\": {\n"
             + "              \"uri\": \"http://data.deichman.no/workType#Literature\"\n"
-            + "         }\n"
+            + "         },"
+            + "        \"untranscribedTitle\": \"김치\"\n"
             + "}";
 
     @Test
@@ -97,12 +98,12 @@ public class WorkModelToIndexMapperTest {
                 + "            ns2:role ns5:author ] ;\n"
                 + "    ns2:hasClassification [ rdf:type ns2:ClassificationEntry ; \n"
                 + "            ns2:hasClassificationNumber \"123.456\" ] ;\n"
-                + "    ns2:language <http://lexvo.org/id/iso639-3/nob> ;\n"
                 + "    ns2:literaryForm <http://data.deichman.no/literaryForm#novel> ;\n"
                 + "    ns2:genre <http://deichman.no/genre/g1> ;\n"
                 + "    ns2:hasCompositionType <http://deichman.no/compositionType/c1> ;\n"
                 + "    ns2:mainTitle \"Berlinerpoplene\" ;\n"
                 + "    ns2:subtitle \"Hvit uke i Trondheim\" ;\n"
+                + "    ns2:untranscribedTitle \"김치\" ;\n"
                 + "    ns2:partTitle \"Tredje del\" ;\n"
                 + "    ns2:partNumber \"3\" ;\n"
                 + "    ns2:hasSummary \"In the end, everybody dies\" ;\n"

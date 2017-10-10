@@ -122,6 +122,7 @@ module.exports = {
     'tnr': true,
     'undertekster': true,
     'undertittel': true,
+    'untranscribedTitle': true,
     'ut': true,
     'utg': true,
     'utgivelsesår': true,

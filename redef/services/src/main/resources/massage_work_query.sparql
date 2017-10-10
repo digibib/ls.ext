@@ -33,7 +33,8 @@ CONSTRUCT {
                deich:series ?seriesTitle ;
                deich:totalNumItems ?totalNumItems ;
                deich:literaryForm ?litform ;
-               deich:created ?created .
+               deich:created ?created ;
+               deich:untranscribedTitle ?untranscribedTitle .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
                deich:mainEntry ?mainEntry ;
@@ -56,6 +57,7 @@ WHERE {
              ?subject deich:mainTitle ?subjectName  . }
   UNION { <__WORKURI__> deich:subject ?subject .
             ?subject deich:name ?subjectName  . }
+  UNION { <__WORKURI__> deich:untranscribedTitle ?untranscribedTitle }
   UNION { <__WORKURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
   UNION { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
   UNION { <__WORKURI__> deich:subtitle ?subtitleO . BIND(str(?subtitleO) as ?subtitle) }

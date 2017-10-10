@@ -29,7 +29,8 @@ module.exports = {
     { field: 'publishedBy' },
     { field: 'recordId' },
     { field: 'series', boost: 10 },
-    { field: 'title', boost: 0.1 }
+    { field: 'title', boost: 0.1 },
+    { field: 'untranscribedTitle', phrase: true }
   ],
   defaultWorkFields: [
     { field: 'agents', boost: 1 },
@@ -50,6 +51,7 @@ module.exports = {
     { field: 'series', boost: 10 },
     { field: 'subject', boost: 0.5, phrase: true },
     { field: 'subject.raw', boost: 0.5, phrase: true },
-    { field: 'summary', phrase: true }
+    { field: 'summary', phrase: true },
+    { field: 'untranscribedTitle', phrase: true }
   ]
 }
