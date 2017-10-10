@@ -19,7 +19,7 @@ value="{{./current.value}}" />
 {{/}}
 <input {{#disabled}} disabled="true" {{/}}
 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
-class="pure-u-1-1"
+class="pure-u-1-1 string{{#if ./current.accepted}} suggestion-source suggestion-source-{{./current.accepted.source}}{{/if}}"
 class-invalid-input="{{error}}"
 class-valid="{{!error}}"
 on-blur='patchResource:{{predicate}},{{rdfType}},{{supportAuthorityComparison}}'

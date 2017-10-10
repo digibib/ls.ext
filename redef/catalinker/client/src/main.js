@@ -150,7 +150,7 @@
           _.each(realInputs, function (input, subInputIndex) {
             if (!unIdentifiedAuthorities && input.type === 'searchable-with-result-in-side-panel') {
               _.each(input.values, (value) => {
-                if (value.current.displayValue.length > 0 && (!value.current.value || value.current.value.length === 0)) {
+                if ((value.current.displayValue || '').length > 0 && (!value.current.value || value.current.value.length === 0)) {
                   unIdentifiedAuthorities = true
                 }
               })
@@ -656,10 +656,11 @@
             })
             input.suggestionsAreDemoted = true
             delete input[ valuesKey ][ index ].current.accepted[ value ]
+            ractive.update(`${input}.${valuesKey}.current.accepted`)
           })
         }
         if (options.initialLoad) {
-          input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old
+          input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old || {}
           input[ valuesKey ][ index ].old.value = valuesAsArray
         }
         input[ valuesKey ][ index ].current = input[ valuesKey ][ index ].current || {}
@@ -1320,7 +1321,10 @@
                   return function (_root) {
                     _root = _root || root
                     input.offset = input.offset || {}
-                    let offset = 0
+                    let offset = (input.type !== 'select-predefined-value' && input.multiple) ? (_.filter(input.values || [], (val) => ![ undefined, '', null ].includes(val.current.value))).length : 0
+                    if (input.isSubInput) {
+                      offset = 0
+                    }
                     if (input.offset[ offsetCrossTypes[ type ] ]) {
                       offset = input.offset[ offsetCrossTypes[ type ] ]
                     }
@@ -3004,7 +3008,14 @@
           let sourceSpan = ''
           if (acceptedSourcekeypath) {
             var source = (ractive.get(`${acceptedSourcekeypath}.current.accepted`) || {})[ selection.id ]
-            sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+            const uniqueId = _.uniqueId()
+            sourceSpan = source ? `<span id="${uniqueId}" class='suggestion-source suggestion-source-${source}'/>` : ''
+            const removeSuggestionSourceObserver = ractive.observe(`${acceptedSourcekeypath}.current.accepted`, function (newValue, oldValue, keypath) {
+              if (_.keys(newValue).length === 0) {
+                $(`#${uniqueId}`).remove()
+                removeSuggestionSourceObserver.cancel()
+              }
+            }, { init: false })
           }
           return $(`<span>${selection.text}${sourceSpan}</span>`)
         }
@@ -4315,19 +4326,21 @@
                 if (newResourceType && (!ractive.get(`targetUri.${newResourceType.type}`))) {
                   fetchResourceTemplate(newResourceType.templateResourcePartsFrom, newResourceType)
                     .then(function () {
-                      _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
-                        const sourceInput = inputFromInputId(copyFromInputId)
-                        if (sourceInput) {
-                          const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
-                          if (targetInput) {
-                            copyValues(targetInput, sourceInput)
+                      if (!ractive.get('primarySuggestionAccepted')) {
+                        _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
+                          const sourceInput = inputFromInputId(copyFromInputId)
+                          if (sourceInput) {
+                            const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
+                            if (targetInput) {
+                              copyValues(targetInput, sourceInput)
+                            } else {
+                              throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
+                            }
                           } else {
-                            throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
+                            throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
                           }
-                        } else {
-                          throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
-                        }
-                      })
+                        })
+                      }
                       saveNewResourceFromInputs(newResourceType.type)
                       ractive.update()
                     })
@@ -4653,7 +4666,7 @@
                     return { id: value }
                   })
                   values.push({ id: value.value, source })
-                  setMultiValues(values, input, 0, { source: source, intitalLoad: true })
+                  setMultiValues(values, input, 0, { intitalLoad: true })
                 }
                 const selectField = $(`span[data-support-panel-base-id="support_panel_base_${input.values[ 0 ].uniqueId}"] span.select2.select2-container`)
                 ractive.fire('patchResource', {
