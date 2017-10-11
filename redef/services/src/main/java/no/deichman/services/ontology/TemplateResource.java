@@ -16,6 +16,7 @@ import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.Lang;
+import org.apache.jena.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 @Singleton
 @Path("/{type: " + EntityType.ALL_TYPES_PATTERN + " }")
 public class TemplateResource extends ResourceBase {
+    public static final SPARQLQueryBuilder SPARQL_QUERY_BUILDER = new SPARQLQueryBuilder();
     private final Logger log = LoggerFactory.getLogger(TemplateResource.class);
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final Model MODEL = ModelFactory.createDefaultModel();
@@ -83,8 +85,8 @@ public class TemplateResource extends ResourceBase {
                 .entrySet()
                 .stream()
                 .collect(toMap(Entry::getKey, TemplateResource::firstValue));
-        final Model model = QueryExecutionFactory.create(new SPARQLQueryBuilder().resourceTemplateQuery(type, queryParameters), MODEL).execDescribe();
-
+        final Model model = QueryExecutionFactory.create(SPARQL_QUERY_BUILDER.resourceTemplateQuery(type, queryParameters), MODEL).execDescribe();
+        UpdateAction.parseExecute(SPARQL_QUERY_BUILDER.removeTemplateMatchTriples(), model);
         final long count = model.listSubjects()
                 .toList()
                 .stream()

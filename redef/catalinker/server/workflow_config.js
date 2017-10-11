@@ -279,7 +279,7 @@ module.exports = (app) => {
                 rdfProperty: 'hasWorkType'
               }
             ],
-            templateResourcePartsFrom: [ 'workTypeInput' ]
+            templateResourcePartsFrom: [ 'workTypeInput', 'mediaTypeInput' ]
           },
           {
             id: 'create-workseries-form',
@@ -1094,7 +1094,7 @@ module.exports = (app) => {
                       formId: 'create-work-form',
                       targetType: 'work'
                     } ],
-                    useAfterCreation: true
+                    useAfterCreation: false
                   }
                 }
               },
