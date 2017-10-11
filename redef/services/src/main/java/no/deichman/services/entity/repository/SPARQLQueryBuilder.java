@@ -1,5 +1,6 @@
 package no.deichman.services.entity.repository;
 
+import com.google.common.collect.ImmutableMap;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.entity.patch.Patch;
 import no.deichman.services.rdf.RDFModelUtil;
@@ -1008,7 +1009,8 @@ public final class SPARQLQueryBuilder {
                 + "     duo:templateMatch [ \n"
                 + "      %s\n"
                 + "   ]\n"
-                + "}\n", BaseURI.ontology(), EntityType.get(type).getRdfType(), queryParameters
+                + "}\n", BaseURI.ontology(), EntityType.get(type).getRdfType(),
+                (queryParameters.isEmpty() ? ImmutableMap.of("http://dummy/", "empty") : queryParameters)
                 .entrySet()
                 .stream()
                 .map(entry -> format("<%s> <%s> ", entry.getKey(), entry.getValue()))

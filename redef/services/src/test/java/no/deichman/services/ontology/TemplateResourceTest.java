@@ -66,7 +66,15 @@ public class TemplateResourceTest {
     public void should_get_204_for_unknown_template() throws Exception {
         templateResource = new TemplateResource();
         final UriInfo uriInfo = createMockUriInfo(PUBLICATION, MEDIA_TYPE, TELEPATHIC_TRANSFER);
-        final Response response = templateResource.getTemplateForResourceType("publication", uriInfo);
+        final Response response = templateResource.getTemplateForResourceType(PUBLICATION, uriInfo);
+        assertEquals(204, response.getStatus());
+    }
+
+    @Test
+    public void should_get_204_when_no_parameters() throws Exception {
+        templateResource = new TemplateResource();
+        final UriInfo uriInfo = createEmptyMockUriInfo(WORK);
+        final Response response = templateResource.getTemplateForResourceType(WORK, uriInfo);
         assertEquals(204, response.getStatus());
     }
 
@@ -130,4 +138,11 @@ public class TemplateResourceTest {
         return uriInfo;
     }
 
+    private UriInfo createEmptyMockUriInfo(String resourceType) throws UnsupportedEncodingException {
+        final UriInfo uriInfo = Mockito.mock(UriInfo.class);
+        when(uriInfo.getQueryParameters()).thenReturn(new MultivaluedHashMap<>());
+        final URI uri = URI.create(String.format("http://data.deichman.no/%s/template", resourceType));
+        when(uriInfo.getRequestUri()).thenReturn(uri);
+        return uriInfo;
+    }
 }
