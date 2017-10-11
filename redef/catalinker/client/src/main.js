@@ -1438,27 +1438,30 @@
                               })
                           }
                         } else {
-                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), (value, index) => {
-                            if (!options.onlyValueSuggestions) {
-                              let valueIndex = input.isSubInput ? rootIndex : index
-                              setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
-                              input[ valuesField ][ valueIndex ].subjectType = type
-                              input[ valuesField ][ valueIndex ].oldSubjectType = type
-                              if (input.isSubInput && !options.source) {
-                                input[ valuesField ][ valueIndex ].nonEditable = true
-                                ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
-                                input.parentInput.allowAddNewButton = true
-                              } else if (input.multiple) {
-                                input.allowAddNewButton = true
+                          _.each(
+                            these(_.union(root.getAll(fragmentPartOf(predicate)), _.map(root.outAll(fragmentPartOf(predicate)), (node) => ({value: node.id}))))
+                              .orIf(input.isSubInput || options.compareValues)
+                              .atLeast([ { value: '' } ]), (value, index) => {
+                              if (!options.onlyValueSuggestions) {
+                                let valueIndex = input.isSubInput ? rootIndex : index
+                                setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
+                                input[ valuesField ][ valueIndex ].subjectType = type
+                                input[ valuesField ][ valueIndex ].oldSubjectType = type
+                                if (input.isSubInput && !options.source) {
+                                  input[ valuesField ][ valueIndex ].nonEditable = true
+                                  ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
+                                  input.parentInput.allowAddNewButton = true
+                                } else if (input.multiple) {
+                                  input.allowAddNewButton = true
+                                }
+                              } else {
+                                input.suggestedValues = input.suggestedValues || []
+                                input.suggestedValues.push({
+                                  value: value.value,
+                                  source: options.source
+                                })
                               }
-                            } else {
-                              input.suggestedValues = input.suggestedValues || []
-                              input.suggestedValues.push({
-                                value: value.value,
-                                source: options.source
-                              })
-                            }
-                          })
+                            })
                         }
                         rootIndex++
                       }
@@ -4443,6 +4446,7 @@
                 let patchMotherResource = function (resourceUri) {
                   if (!useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
                     Main.patchResourceFromValue(ractive.get(`targetUri.${targetInput.rdfType}`), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
+                    ractive.set(`${origin}.old.value`, resourceUri)
                   }
                   return resourceUri
                 }
