@@ -30,9 +30,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 public class TemplateResourceTest {
+
     private static final String PUBLICATION = "publication";
     private static final String WORK = "work";
     private static final String MEDIA_TYPE = "http://data.deichman.no/ontology#hasMediaType";
+    private static final String WORK_TYPE = "http://data.deichman.no/ontology#hasWorkType";
     private static final String BOOK = "http://data.deichman.no/mediaType#Book";
     private static final String E_BOOK = "http://data.deichman.no/mediaType#E-Book";
     private static final String AUDIO_BOOK = "http://data.deichman.no/mediaType#Audiobook";
@@ -44,6 +46,7 @@ public class TemplateResourceTest {
     private static final String GAME = "http://data.deichman.no/mediaType#Game";
     private static final String OTHER = "http://data.deichman.no/mediaType#Other";
     private static final String PERIODICAL = "http://data.deichman.no/mediaType#Periodical";
+    private static final String MUSIC = "http://data.deichman.no/workType#Music";
     private static final String TELEPATHIC_TRANSFER = "http://data.deichman.no/mediaType#TelepathicTransfer";
 
     private TemplateResource templateResource;
@@ -71,6 +74,12 @@ public class TemplateResourceTest {
     public void should_find_template_for_musical_recording() throws Exception {
         templateResource = new TemplateResource();
         checkTemplateExistsForResource(PUBLICATION, MEDIA_TYPE, MUSIC_RECORDING);
+    }
+
+    @Test
+    public void should_find_template_for_musical_work() throws Exception {
+        templateResource = new TemplateResource();
+        checkTemplateExistsForResource(WORK, WORK_TYPE, MUSIC);
     }
 
     @Test

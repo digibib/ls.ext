@@ -68,16 +68,14 @@ work:musicWorkTemplate a :Work ;
     duo:templateMatch [
         :hasMediaType mediaType:MusicRecording, mediaType:SheetMusic
     ] ;
-    :hasWorkType workType:Music .
+    duo:templateMatch [
+        :hasWorkType workType:Music
+    ] ;
+    :hasWorkType workType:Music ;
+    :audience audience:adult .
 
 work:gameWorkTemplate a :Work ;
     duo:templateMatch [
         :hasMediaType mediaType:Game
     ] ;
     :hasWorkType workType:Game .
-
-#work:musicWorkTemplate a :Work ;
-#    duo:templateMatch [
-#        :hasWorkType workType:Music
-#    ] ;
-#    :audience audience:adult .
