@@ -28,7 +28,7 @@ public class InMemoryNameIndexer implements NameIndexer {
     private Map<String, Set<String>> uriToNameList;
     private Collator coll;
     private static final String SORTING_RULES = ""
-            + " ',' < ' ' < '-' < '.'"
+            + " < ' (' < ',' < ' ' < '-' < '.'"
             + "< '(' < ')'"
             + "< 0 < 1 < 2 < 3 < 4 < 5 < 6 < 7 < 8 < 9"
             + "< a, á, à, ã, ä, A, Á, À, Ã, Ä < b, B < c, C < ð, Ð < d, D < e, é, è, ê, ë, E, É, È, Ê, Ë < f, F "
