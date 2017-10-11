@@ -98,6 +98,23 @@ public final class KohaAdapterImpl implements KohaAdapter {
         return response;
     }
 
+    private Response getHistoricalCheckoutsFromAPI(String userId, int offset, int limit) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(kohaPort + "/api/v1/patrons/" + userId + "/history?offset=" + offset + "&limit=" + limit);
+        if (sessionCookie == null) {
+            login();
+        }
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.cookie(sessionCookie.toCookie());
+        Response response = invocationBuilder.get();
+        if (response.getStatus() == FORBIDDEN.getStatusCode() || response.getStatus() == UNAUTHORIZED.getStatusCode()) {
+            // Session has expired; try login again
+            login();
+            response = invocationBuilder.get();
+        }
+        return response;
+    }
+
     private Response requestExpandedBiblio(String id) {
         Client client = ClientBuilder.newClient();
         String url = kohaPort + "/api/v1/biblios/" + id + "/expanded";
@@ -225,6 +242,12 @@ public final class KohaAdapterImpl implements KohaAdapter {
     @Override
     public String getCheckouts(String userId) {
         Response response = getCheckoutsFromAPI(userId);
+        return response.readEntity(String.class);
+    }
+
+    @Override
+    public String getHistoricalCheckouts(String userId, int offset, int limit) {
+        Response response = getHistoricalCheckoutsFromAPI(userId, offset, limit);
         return response.readEntity(String.class);
     }
 

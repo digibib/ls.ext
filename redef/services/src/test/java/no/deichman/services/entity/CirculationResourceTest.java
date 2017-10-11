@@ -89,6 +89,7 @@ public class CirculationResourceTest {
                 + "    {\n"
                 + "      \"itemNumber\": \"65443\",\n"
                 + "      \"dueDate\": \"IT_DOES_NOT_MATTER\",\n"
+                + "      \"returnDate\": null,\n"
                 + "      \"recordId\": \"54312\",\n"
                 + "      \"workURI\": \"http://data.deichman.no/work/%5$s\",\n"
                 + "      \"publicationURI\": \"http://data.deichman.no/publication/%1$s\",\n"

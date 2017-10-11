@@ -2457,7 +2457,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   /* Line item */
 }
 
-.pickup > h1, .reserve > h1, .loan > h1 {
+.pickup > h1, .reserve > h1, .loan > h1, .history > h1 {
   width: 100%;
   font-size: $rhythm4;
   font-weight: normal;
@@ -2466,7 +2466,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   margin-top: $rhythm2;
 }
 
-.pickup .single-entry, .reserve .single-entry, .loan .single-entry {
+.pickup .single-entry, .reserve .single-entry, .loan .single-entry, .history .single-entry {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -2534,7 +2534,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   width: 23.72881%;
 }
 
-.pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type {
+.pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type, .history .single-entry .media-type {
   font-size: 0.8em;
   text-transform: uppercase;
   width: 100%;
@@ -2550,7 +2550,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   width: 49.15254%;
 }
 
-.pickup .loan-expire h2, .pickup .loan-pickup-number h2, .pickup .loan-pickup-location h2 {
+.pickup .loan-expire h2, .pickup .loan-pickup-number h2, .pickup .loan-pickup-location h2, .history .return-date h2 {
   text-transform: uppercase;
 }
 
@@ -2625,11 +2625,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
     margin-bottom: 0.7em;
   }
 
-  .pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type {
+  .pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type, .history .single-entry .media-type {
     width: 11.01695%;
   }
 
-  .pickup .single-entry .entry-details, .reserve .single-entry .entry-details, .loan .single-entry .entry-details{
+  .pickup .single-entry .entry-details, .reserve .single-entry .entry-details, .loan .single-entry .entry-details, .history .single-entry .entry-details{
     width: 23.72881%;
   }
 
@@ -2697,7 +2697,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 
 
-  .loan .single-entry .due-date {
+  .loan .single-entry .due-date, .history .single-entry .return-date {
     width: 15.25424%;
   }
 

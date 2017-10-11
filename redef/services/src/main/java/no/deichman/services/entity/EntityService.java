@@ -1,6 +1,7 @@
 package no.deichman.services.entity;
 
 import no.deichman.services.circulation.CirculationProfile;
+import no.deichman.services.circulation.Loan;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -67,6 +68,8 @@ public interface EntityService {
     List<XURI> retrieveResourceRelationshipsUris(XURI uri);
 
     CirculationProfile getProfile(String borrowerId) throws Exception;
+
+    List<Loan> getHistoricalLoans(String borrowerId, int offset, int limit) throws Exception;
 
     List<ResourceSummary> retrieveInverseRelations(XURI xuri, String predicate, List<String> projections);
 

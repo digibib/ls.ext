@@ -1588,6 +1588,7 @@ public class AppTest {
                 + "    {\n"
                 + "      \"itemNumber\": \"" + rawLoan.getItemNumber() + "\",\n"
                 + "      \"dueDate\": \"" + rawLoan.getDueDate() + "\",\n"
+                + "      \"returnDate\": null,\n"
                 + "      \"recordId\": \"" + recordId + "\",\n"
                 + "      \"workURI\": \"" + workUri + "\",\n"
                 + "      \"publicationURI\": \"" + publicationUri + "\",\n"

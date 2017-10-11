@@ -5,6 +5,7 @@ import com.jamonapi.MonitorFactory;
 import no.deichman.services.datasource.Datasource;
 import no.deichman.services.entity.CirculationResource;
 import no.deichman.services.entity.EntityResource;
+import no.deichman.services.entity.History;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.marc.MarcResource;
 import no.deichman.services.ontology.AuthorizedValuesResource;
@@ -147,6 +148,7 @@ public final class App {
                         TranslationResource.class.getCanonicalName(),
                         Datasource.class.getCanonicalName(),
                         CirculationResource.class.getCanonicalName(),
+                        History.class.getCanonicalName(),
                         ImmediateFeature.class.getCanonicalName(),
                         TemplateResource.class.getCanonicalName()
                 )));

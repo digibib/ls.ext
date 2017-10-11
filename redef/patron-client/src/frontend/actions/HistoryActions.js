@@ -59,12 +59,10 @@ export function fetchHistory (args) {
 export function updateHistory () {
   return (dispatch, getState) => {
     const { historyData, allLoadedHistory, loadedHistoryItems } = getState().history
-    const mergedHistory = merge(allLoadedHistory, historyData, 'issue_id')
+    const mergedHistory = merge(allLoadedHistory, historyData, 'id')
     dispatch(requestUpdateHistory(mergedHistory))
     dispatch(setCurrentLoadedNumber(mergedHistory.length))
-    if (historyData.length === 0 ) {
-      dispatch(setNoHistoryToFetch())
-    } else if (mergedHistory.length === loadedHistoryItems) {
+    if (historyData.length === 0 || mergedHistory.length === loadedHistoryItems) {
       dispatch(setNoHistoryToFetch())
     }
   }

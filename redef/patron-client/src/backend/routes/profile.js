@@ -38,7 +38,7 @@ module.exports = (app) => {
       offset: request.body.offset,
       limit: request.body.limit
     }
-    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/history?${querystring.stringify(params)}`)
+    fetch(`http://services:8005/history/${request.session.borrowerNumber}?${querystring.stringify(params)}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()

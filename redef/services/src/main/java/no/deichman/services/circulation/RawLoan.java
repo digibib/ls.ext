@@ -11,6 +11,9 @@ public final class RawLoan {
     @SerializedName("issue_id")
     private String id;
     @Expose
+    @SerializedName("biblionumber")
+    private String biblionumber;
+    @Expose
     @SerializedName("borrowernumber")
     private String borrowerId;
     @Expose
@@ -43,6 +46,9 @@ public final class RawLoan {
     @Expose
     @SerializedName("branchcode")
     private String branchCode;
+    @Expose
+    @SerializedName("title")
+    private String title;
 
     public RawLoan() {
     }
@@ -50,6 +56,15 @@ public final class RawLoan {
     public String getItemNumber() {
         return itemNumber;
     }
+
+    public String getBiblionumber() {
+        return biblionumber;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
 
     public void setItemNumber(String itemNumber) {
         this.itemNumber = itemNumber;

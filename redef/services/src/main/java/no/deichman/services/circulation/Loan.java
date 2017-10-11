@@ -20,6 +20,7 @@ public final class Loan extends CirculationObjectBase {
     private int renewals;
     @SerializedName("timestamp")
     private String timestamp;
+    @Expose
     @SerializedName(value = "returnDate", alternate = "returndate")
     private String returnDate;
     @SerializedName("auto_renew")
@@ -39,5 +40,9 @@ public final class Loan extends CirculationObjectBase {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
     }
 }

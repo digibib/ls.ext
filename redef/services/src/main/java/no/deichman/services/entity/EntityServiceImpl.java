@@ -786,6 +786,30 @@ public final class EntityServiceImpl implements EntityService {
         return circulationProfile;
     }
 
+    @Override
+    public List<Loan> getHistoricalLoans(String borrowerId, int offset, int limit) throws Exception {
+        String checkouts = kohaAdapter.getHistoricalCheckouts(borrowerId, offset, limit);
+        RawLoan[] rawLoans = GSON.fromJson(checkouts, RawLoan[].class);
+        List<Loan> loans = new ArrayList<>();
+        for (RawLoan rawLoan : rawLoans) {
+            Loan loan = new Loan();
+            loan.setId(rawLoan.getId());
+            loan.setItemNumber(rawLoan.getItemNumber());
+            loan.setBranchCode(rawLoan.getBranchCode());
+            loan.setBorrowerNumber(rawLoan.getBorrowerId());
+            loan.setDueDate(rawLoan.getDueDate());
+            loan.setReturnDate(rawLoan.getReturnDate());
+            loan.setItemNumber(rawLoan.getItemNumber());
+            loan.setRecordId(rawLoan.getBiblionumber());
+            loan.decorateWithPublicationData(getPublicationMetadataByRecordId(loan.getRecordId()));
+            if (loan.getTitle() == null) {
+                loan.setTitle(Optional.of(rawLoan.getTitle()).orElse("No title/Uten tittel"));
+            }
+            loans.add(loan);
+        }
+        return loans;
+    }
+
     private CirculationObject rawHoldToCirculationObject(RawHold rawHold) {
         CirculationObject circulationObject;
         Expectation expectation = new Expectation();

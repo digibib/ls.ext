@@ -29,5 +29,7 @@ public interface KohaAdapter {
 
     String getCheckouts(String userId);
 
+    String getHistoricalCheckouts(String userId, int offset, int limit);
+
     String getHolds(String userId);
 }
