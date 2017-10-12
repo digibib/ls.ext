@@ -4330,6 +4330,9 @@
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, editAuthorityMode) {
+                if (!event.original.target.validity.valid) {
+                  return
+                }
                 const inputValue = event.context
                 const eventKeypath = event.keypath
                 const input = event.input || ractive.get(grandParentOf(eventKeypath))
@@ -5364,15 +5367,17 @@
             }
           }
 
-          function checkRequiredSubInput (newValue, keypath) {
+          function checkRequiredSubInput (newValue, oldvalue, keypath) {
             newValue = _.flatten([ newValue ]).join('')
             const valueIndex = _.last(grandParentOf(keypath).split('.'))
             const inputKeypath = grandParentOf(grandParentOf(keypath))
             const inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
             const input = ractive.get(inputKeypath)
-            if (input.required) {
+            const newStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(newValue))
+            const oldStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(oldvalue))
+            if (input.required || !newStringValid || (newStringValid && !oldStringValid)) {
               const voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
-              const veto = !(typeof newValue === 'string' && newValue.length > 0) ||
+              const veto = !newStringValid ||
                 (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
               castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
             }
@@ -5384,9 +5389,7 @@
               ractive.set(`${parentOf(keypath)}.oldSubjectType`, oldValue)
             }, { init: false }),
 
-            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, function (newValue, oldValue, keypath) {
-              checkRequiredSubInput(newValue, keypath)
-            }, { init: true }),
+            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, checkRequiredSubInput, { init: true }),
 
             ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.nonEditable`, function (newValue, oldValue, keypath) {
               let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))

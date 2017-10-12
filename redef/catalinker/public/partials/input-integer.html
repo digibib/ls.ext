@@ -8,6 +8,8 @@
 </span>
 {{/}}
 <input {{#disabled}} disabled="true" {{/}}
+pattern="^\S+.*\S$|^\S$"
+title="{{>acceptedStringFormat}}"
 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 type="number" min="0"
 class-invalid-input="{{error}}"

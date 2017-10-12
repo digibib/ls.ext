@@ -18,6 +18,8 @@ value="{{./current.value}}" />
 </span>
 {{/}}
 <input {{#disabled}} disabled="true" {{/}}
+pattern="^\S+.*\S$|^\S$"
+title="{{>acceptedStringFormat}}"
 tabindex="{{tabSelected || popupForm ? '0' : '-1'}}"
 class="pure-u-1-1 string{{#if ./current.accepted}} suggestion-source suggestion-source-{{./current.accepted.source}}{{/if}}"
 class-invalid-input="{{error}}"
