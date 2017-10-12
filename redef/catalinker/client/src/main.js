@@ -4330,7 +4330,7 @@
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, editAuthorityMode) {
-                if (!event.original.target.validity.valid) {
+                if (event.original.target.validity && !event.original.target.validity.valid) {
                   return
                 }
                 const inputValue = event.context
