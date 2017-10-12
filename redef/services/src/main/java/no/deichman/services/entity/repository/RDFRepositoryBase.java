@@ -96,7 +96,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     protected abstract void executeUpdate(UpdateRequest updateRequest);
 
     @Override
-    public final Model retrieveResourceByURI(XURI xuri, Boolean withMigrationFilter) {
+    public final Model retrieveResourceByURI(XURI xuri, boolean withMigrationFilter) {
         log.debug("Attempting to retrieve resource <" + xuri.getUri() + ">");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(xuri.getUri()))) {
             disableCompression(qexec);
