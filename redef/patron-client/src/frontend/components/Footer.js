@@ -59,7 +59,7 @@ class Footer extends React.Component {
             </div>
 
             <div className="footer-icon">
-              <img src="/images/footer-icon.svg" alt="White box with black circle" aria-hidden="true" />
+              <img src="/images/footer-icon.svg" alt="Kulturetaten logo" aria-hidden="true" />
             </div>
 
           </div>

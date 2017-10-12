@@ -230,7 +230,7 @@ export default {
   'SearchFilterBoxItem.removeAll.title': 'Fjern alle',
   'SearchFilters.limit': 'Avgrens søket ditt',
   'SearchHeader.contactUs': 'Kontakt oss',
-  'SearchHeader.logoAlt': 'Sort logo med tekst',
+  'SearchHeader.logoAlt': 'Deichmanske bibliotek logo',
   'SearchHeader.more': 'Mer',
   'SearchHeader.myLoans': 'Mine lån',
   'SearchHeader.myProfile': 'Min side',
