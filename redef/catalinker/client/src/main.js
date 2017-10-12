@@ -5373,8 +5373,8 @@
             const inputKeypath = grandParentOf(grandParentOf(keypath))
             const inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
             const input = ractive.get(inputKeypath)
-            const newStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(newValue))
-            const oldStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(oldvalue))
+            const newStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(newValue.replace(/\n/g, '')))
+            const oldStringValid = (typeof oldvalue === 'string' && /^\S+.*\S$|^\S?$/.test(oldvalue.replace(/\n/g, '')))
             if (input.required || !newStringValid || (newStringValid && !oldStringValid)) {
               const voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
               const veto = !newStringValid ||
