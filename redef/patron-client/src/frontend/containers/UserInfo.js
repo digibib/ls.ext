@@ -95,6 +95,12 @@ class UserInfo extends React.Component {
           </div>
         </div>
         <div className="meta-item">
+          <div className="meta-label"><FormattedMessage {...messages.telephone} /></div>
+          <div className="meta-content" data-automation-id="UserInfo_telephone">
+            {personalInformation.telephone}
+          </div>
+        </div>
+        <div className="meta-item">
           <div className="meta-label"><FormattedMessage {...messages.email} /></div>
           <div className="meta-content" data-automation-id="UserInfo_email">
             {personalInformation.email}

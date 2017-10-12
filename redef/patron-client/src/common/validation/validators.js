@@ -19,6 +19,11 @@ module.exports = {
       return 'invalidPhoneNumber'
     }
   },
+  telephone: telephone => {
+    if (!/^((0047)?|(\+47)?|(47)?)\d{8}$/.test(telephone)) {
+      return 'invalidPhoneNumber'
+    }
+  },
   city: city => {
     if (!/^[A-Za-z-øæåÆØÅ]{2,}$/.test(city)) {
       return 'invalidCity'

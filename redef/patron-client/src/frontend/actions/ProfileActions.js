@@ -88,14 +88,15 @@ export const postProfileInfoSuccess = () => action(types.POST_PROFILE_INFO_SUCCE
 export function postProfileInfo (successAction) {
   const url = '/api/v1/profile/info'
   return (dispatch, getState) => {
-    const { userInfo: { values: { address, zipcode, city, country, mobile, email } } } = getState().form
+    const { userInfo: { values: { address, zipcode, city, country, mobile, email, telephone } } } = getState().form
     const profileInfo = {
       address: address,
       zipcode: zipcode,
       city: city,
       country: country,
       mobile: mobile,
-      email: email
+      email: email,
+      telephone: telephone
     }
     dispatch(requestPostProfileInfo())
     return fetch(url, {
