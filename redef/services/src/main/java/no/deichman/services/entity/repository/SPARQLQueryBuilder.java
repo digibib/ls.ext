@@ -591,12 +591,15 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query getNumberOfRelationsForResource(XURI xuri) {
-        String queryString = format("PREFIX deich: <http://data.deichman.no/ontology#>\n"
+        String queryString = format(""
+                + "PREFIX deich: <http://data.deichman.no/ontology#>\n"
+                + "PREFIX migration: <http://migration.deichman.no/>\n"
                 + "SELECT ?type (COUNT(?a) as ?references)\n"
                 + "WHERE {\n"
-                + "  ?a ?b <%s> ;\n"
+                + "  ?a ?relation <%s> ;\n"
                 + "     a ?type .\n"
                 + "  FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
+                + "  FILTER(?relation != migration:clonedFrom)"
                 + "}\n"
                 + "GROUP BY ?type ", xuri.getUri());
         return QueryFactory.create(queryString);

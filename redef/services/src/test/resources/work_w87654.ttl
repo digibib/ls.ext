@@ -16,3 +16,6 @@
   deichman:subtitle "Hey nonny nonny" ;
   deichman:isbn "978-82-02-48040-0" ;
   deichman:recordId "80002" .
+
+<http://data.deichman.no/work/w1111> a deichman:Work ;
+  migration:clonedFrom <http://data.deichman.no/work/w87654> .
