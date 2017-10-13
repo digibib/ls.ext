@@ -2039,10 +2039,10 @@
       })
     }
 
-  /**
-   * Sets up the input group structure
-   * @param applicationData
-   * @returns {Promise.<TResult>|*}
+    /**
+     * Sets up the input group structure
+     * @param applicationData
+     * @returns {Promise.<TResult>|*}
      */
     function createInputGroups (applicationData) {
       const props = Ontology.allProps(applicationData.ontology)
@@ -2447,10 +2447,10 @@
       })
     }
 
-  /**
-   * Utility that returns gradnparent of supplid keypath i.e. two dots up
-   * @param keypath
-   */
+    /**
+     * Utility that returns gradnparent of supplid keypath i.e. two dots up
+     * @param keypath
+     */
     function grandParentOf (keypath) {
       return _.initial(_.initial(keypath.split('.'))).join('.')
     }
@@ -2463,11 +2463,11 @@
       _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, 'input') : [ mainInput ], visitor)
     }
 
-  /**
-   * Positions support panels to align with inputs they are supposed to support.
-   * @param applicationData
-   * @param tabId
-   * @returns {*}
+    /**
+     * Positions support panels to align with inputs they are supposed to support.
+     * @param applicationData
+     * @param tabId
+     * @returns {*}
      */
     function positionSupportPanels (applicationData, tabId) {
       tabId = undefined
@@ -2791,10 +2791,10 @@
       })
     }
 
-  /**
-   * Shows overlay with TURTLE data
-   * @param uri
-   */
+    /**
+     * Shows overlay with TURTLE data
+     * @param uri
+     */
     function showTurtle (uri) {
       const openTabTargets = {
         publication: 1,
@@ -2823,10 +2823,10 @@
       })
     }
 
-  /**
-   * Close the compare section (right column) of the compare resources tool
-   * @param type
-   */
+    /**
+     * Close the compare section (right column) of the compare resources tool
+     * @param type
+     */
     function closeCompare (type) {
       ractive.set('compare', null)
       ractive.set('duplicateSearchTerm', undefined)
@@ -2876,12 +2876,12 @@
       }
     }
 
-  /**
-   * Fetches a resource (some triples) to be used as template for new resource
-   * @param templateResourcePartsFrom list of inputIds to use as query parameters when asking for tenmplate
-   * @param newResourceType
-   * @param inputs Which inputs to update with new temnplate data.
-   * @returns {Promise.<T>}
+    /**
+     * Fetches a resource (some triples) to be used as template for new resource
+     * @param templateResourcePartsFrom list of inputIds to use as query parameters when asking for tenmplate
+     * @param newResourceType
+     * @param inputs Which inputs to update with new temnplate data.
+     * @returns {Promise.<T>}
      */
     function fetchResourceTemplate (templateResourcePartsFrom, newResourceType, inputs) {
       if (templateResourcePartsFrom) {
@@ -2908,9 +2908,9 @@
       return Promise.resolve()
     }
 
-  /**
-   * Main exported object
-   */
+    /**
+     * Main exported object
+     */
     const Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -4703,6 +4703,14 @@
                     }
                   })
                   ractive.update(event.keypath)
+                }
+              },
+              checkValidity: function (event) {
+                const form = $(event.node)
+                if (_.any(form.find('input:invalid'))) {
+                  form.find('button.disable-when-invalid').attr('disabled', 'disabled')
+                } else {
+                  form.find('button.disable-when-invalid').removeAttr('disabled')
                 }
               },
               createNewResource: function (event, origin) {
