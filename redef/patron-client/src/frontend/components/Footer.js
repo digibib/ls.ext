@@ -12,6 +12,10 @@ class Footer extends React.Component {
     this.props.loadLanguage(this.props.locale === 'no' ? 'en' : 'no')
   }
 
+  ignore(event){
+    event.prevent.default();
+  }
+
   render () {
     return (
       <footer className="main-footer">
@@ -37,7 +41,12 @@ class Footer extends React.Component {
               </li>
               <li data-automation-id="change_language_element"
                   data-current-language={this.props.intl.formatMessage(messages.currentLanguage)}
-                  onClick={this.handleChangeLanguage}><FormattedMessage {...messages.languageChoice} /></li>
+                  onClick={this.handleChangeLanguage}>
+                  <a href="" onClick="{this.ignore()}">
+                  <FormattedMessage {...messages.languageChoice} />
+                  </a>
+                </li>
+
               <li>
                 <a href="https://www.deichman.no/om-oss">
                   <FormattedMessage {...messages.aboutUs} />
