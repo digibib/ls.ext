@@ -5139,7 +5139,7 @@
                 showTurtle(`${proxyToServices(resourceUri)}?format=TURTLE`)
               },
               showReport: function (event, resourceUri) {
-                let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`
+                let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true&disablePagination=true`
                 let query = URI.parseQuery(URI.parse(document.location.href).query)
                 if (query.hasMediaType) {
                   targetUrl += `&hasMediaType=${query.hasMediaType}`
@@ -5618,7 +5618,7 @@
         }
 
         function loadPublication (query, tab) {
-          fetchExistingResource(query.Publication)
+          fetchExistingResource(query.Publication, query)
             .then(loadWorkOfPublication)
             .then(function () {
               ractive.set('rdfType', 'Publication')
