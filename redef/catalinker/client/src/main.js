@@ -5527,9 +5527,13 @@
           withPublicationOfWorkInput(function (publicationOfInput) {
             const workUri = _.flatten([ publicationOfInput.values[ 0 ].current.value ])[ 0 ]
             if (workUri) {
-              return fetchExistingResource(workUri, options).then(function () {
-                ractive.set('targetUri.Work', workUri)
-              })
+              return fetchExistingResource(workUri, options)
+                .then(function () {
+                  ractive.set('targetUri.Work', workUri)
+                })
+                .then(function () {
+                  setTimeout(updateHeadline())
+                })
             }
           })
         }
