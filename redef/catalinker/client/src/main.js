@@ -899,6 +899,7 @@
     function setIdValue (id, input, index, valuesField, options) {
       options = options || {}
       input[ valuesField ] = input[ valuesField ] || []
+
       if (!input[ valuesField ][ index ]) {
         input[ valuesField ][ index ] = {}
       } else if (options.noOverwrite) {
@@ -1580,7 +1581,13 @@
                           if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                             _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                               index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField, options)
+                              const id = input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id
+                              // check if value ia already present
+                              if (_.chain(input[ valuesField ]).pluck('current').pluck('value').filter((value) => value === id).any().value()) {
+                                return
+                              }
+
+                              setIdValue(id, input, index, valuesField, options)
                               if (options.source && node.id !== '') {
                                 setPreviewValues(input, node, index)
                               }
@@ -5796,19 +5803,21 @@
                 setInputVisibility(inputLink, false)
               }
             }
+
             _.each(input.dependentResourceTypes, function (type) {
-              ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
+              ractive.push('observers', ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
                 if (typeof newValue === 'string' && newValue !== '') {
                   fetchExistingResource(newValue, { inputs: [ input ] })
                 }
-              })
-              ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
-                if (typeof newValue === 'string' && newValue !== '') {
-                  if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
-                    fetchExistingResource(newValue)
+              }, { init: false }))
+              ractive.push('observers', ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
+                  if (typeof newValue === 'string' && newValue !== '') {
+                    if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
+                      fetchExistingResource(newValue)
+                    }
                   }
-                }
-              }, { init: false })
+                }, { init: false })
+              )
             })
           }
           forAllGroupInputs(handleVisibility, { handleInputGroups: true })
