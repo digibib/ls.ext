@@ -1029,7 +1029,7 @@
           const graphData = ensureJSON(response.data)
           const root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
-        })
+        }).then(updateHeadline)
       }
     }
 
