@@ -54,4 +54,37 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 
   koha_mysql:
-    ports:
+    container_name: koha_mysql
+    image: mysql:5.6.20
+    networks:
+      - backend
+    cap_add:
+      - MKNOD
+    command:
+      - mysqld
+      - "--datadir=/var/lib/mysql"
+      - "--user=mysql"
+      - "--max_allowed_packet=64M"
+      - "--wait_timeout=6000"
+      - "--bind-address=0.0.0.0"
+      - "--server-id=101"
+      - "--log_bin=mysql-bin"
+      - "--sync_binlog=1"
+      - "--binlog-format=row"
+      - "--max_binlog_size=100M"
+      - "--log_bin_trust_function_creators=true"
+      - "--slow-query-log=1"
+      - "--slow-query-log-file=/var/lib/mysql/slow-query.log"
+      - "--long-query-time=10"
+    environment:
+      MYSQL_DATABASE: "koha_${KOHA_INSTANCE:-name}"
+      MYSQL_PASSWORD: "${KOHA_ADMINPASS:-secret}"
+      MYSQL_ROOT_PASSWORD: "${KOHA_ADMINPASS:-secret}"
+      MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
+    volumes:
+      - "koha_mysql_data:/var/lib/mysql"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
