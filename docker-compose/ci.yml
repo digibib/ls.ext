@@ -52,3 +52,6 @@ services:
   elasticsearch:
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+
+  koha_mysql:
+    ports:
