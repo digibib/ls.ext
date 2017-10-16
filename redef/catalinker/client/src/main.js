@@ -951,13 +951,14 @@
         function getValues (onlyFirstField) {
           return new Promise((resolve, reject) => {
             const displayProperties = getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
+            const headLineDisplayProperties = getDisplayProperties(input.headlineNameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
             const handleDisplayProperties = () => {
-              resolve(_.pluck(displayProperties || [], 'val')
+              resolve({values:_.pluck(displayProperties || [], 'val')
                 .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
                 .join(' ')
                 .replace(/[,\.:]\s*$/g, '')
                 .replace(/- /, '-')
-                .replace(/: /g, ' : '))
+                .replace(/: /g, ' : '), headlineDisplayValue: _.pluck(headLineDisplayProperties || [], 'val')})
             }
             if (isPromise(displayProperties)) {
               return displayProperties.then(handleDisplayProperties)
@@ -967,7 +968,8 @@
           })
         }
 
-        getValues(options.onlyFirstField).then((values) => {
+        getValues(options.onlyFirstField).then((valuesWrapper) => {
+          let values = valuesWrapper.values
           const typeMap = ractive.get('applicationData.config.typeMap')
           let selectedIndexType
           _.each(input.indexTypes, function (indexType) {
@@ -989,10 +991,10 @@
               }
               input[ valuesField ][ index ].current.displayValue = values
             } else {
-              getValues().then(function (value) {
+              getValues().then(function (valuesWrapper) {
                 ractive.set(`${input.keypath}.suggestedValues.${index}`, {
                     value: values,
-                    displayValue: value,
+                    displayValue: valuesWrapper.displayValue,
                     source: options.source,
                     selectedIndexType: selectedIndexType
                   }
@@ -1003,6 +1005,7 @@
             input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
             input[ valuesField ][ index ].current = input[ valuesField ][ index ].current || {}
             input[ valuesField ][ index ].current.displayValue = values
+            input[ valuesField ][ index ].current.headlineDisplayValue = valuesWrapper.headlineDisplayValue
             if (options.source) {
               input[ valuesField ][ index ].current.accepted = {
                 source: options.source,
@@ -1910,6 +1913,9 @@
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
       }
+      if (prop.headlineNameProperties) {
+        input.headlineNameProperties = prop.headlineNameProperties
+      }
       if (prop.previewProperties) {
         input.previewProperties = prop.previewProperties
       }
@@ -2159,6 +2165,7 @@
               selectedIndexType: indexTypes.length === 1 ? indexTypes[ 0 ] : undefined,
               indexDocumentFields: subInput.indexDocumentFields,
               nameProperties: subInput.nameProperties,
+              headlineNameProperties: subInput.headlineNameProperties,
               dataAutomationId: inputFromOntology.dataAutomationId,
               widgetOptions: subInput.widgetOptions,
               suggestValueFrom: subInput.suggestValueFrom,
@@ -5769,7 +5776,7 @@
                   partial += `{{#if ${leftKeypath} || ${rightKeypath}}}<span >{{'${part.postfix}'}}</span>{{/if}}\n`
                 }
               } else {
-                const valueKeypath = `${inputKeypath}.values.0.current.${input.type === 'searchable-with-result-in-side-panel' ? 'displayValue' : 'value'}`
+                const valueKeypath = `${inputKeypath}.values.0.current.${input.type === 'searchable-with-result-in-side-panel' ? (input.headlineNameProperties ? 'headlineDisplayValue' : 'displayValue') : 'value'}`
                 const subInputCondition = (input.type === 'searchable-with-result-in-side-panel') ? ` && ${inputKeypath}.values.0.nonEditable` : ''
                 partial += `{{#if ${valueKeypath}${subInputCondition}}}`
                 if (part.prefix) {
@@ -5783,6 +5790,7 @@
               }
             })
             partial += '\n{{/if}}\n'
+            console.log(partial)
             let titleRactive = new Ractive({
               el: 'headline_' + index,
               template: partial,

@@ -694,6 +694,7 @@ module.exports = (app) => {
                       type: 'searchable-with-result-in-side-panel',
                       required: true,
                       nameProperties: personCorpNameProperties,
+                      headlineNameProperties: [ 'name', 'prefLabel'],
                       previewProperties: [ {
                         person: '#ordinal,',
                         event: '(ordinal).'
