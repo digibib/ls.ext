@@ -149,7 +149,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-genre-form',
@@ -175,7 +175,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-corporation-form',
@@ -215,7 +215,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-main-work-form',
@@ -250,7 +250,7 @@ module.exports = (app) => {
                 }
               }
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-work-form',
@@ -415,7 +415,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-instrument-form',
@@ -439,7 +439,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-compositiontype-form',
@@ -463,7 +463,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           }
         ],
         tabs: [
@@ -722,9 +722,6 @@ module.exports = (app) => {
                           useAfterCreation: false
                         },
                         enableInPlaceEditing: true
-                      },
-                      headlinePart: {
-                        order: 10
                       }
                     },
                     {
@@ -819,19 +816,11 @@ module.exports = (app) => {
                 isTitleSource: {
                   priority: 1,
                   qualifier: ' - utgivelse'
-                },
-                headlinePart: {
-                  order: 20,
-                  styleClass: 'title'
                 }
               },
               {
                 rdfProperty: 'subtitle',
-                id: 'publicationSubtitle',
-                headlinePart: {
-                  order: 30,
-                  styleClass: 'title'
-                }
+                id: 'publicationSubtitle'
               },
               {
                 rdfProperty: 'untranscribedTitle',
@@ -847,10 +836,6 @@ module.exports = (app) => {
                 rdfProperty: 'partTitle',
                 id: 'publicationPartTitle',
                 esotericWhen: { hasMediaType: [ 'MusicRecording', 'Book', 'Audiobook', 'LanguageCourse', 'Film' ] },
-                headlinePart: {
-                  order: 40,
-                  styleClass: 'title'
-                }
               },
               {
                 rdfProperty: 'variantTitle',
@@ -864,11 +849,7 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'publicationYear',
-                headlinePart: {
-                  order: 60,
-                  prefix: '(',
-                  postfix: ')'
-                }
+                id: 'publicationYearInput',
               },
               {
                 includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'ComicBook', 'LanguageCourse', 'SheetMusic' ] },
@@ -1007,9 +988,6 @@ module.exports = (app) => {
                   },
                   enableInPlaceEditing: true
                 },
-                headlinePart: {
-                  order: 50
-                }
               },
               {
                 id: 'hasPlaceOfPublicationInput',
@@ -1097,6 +1075,11 @@ module.exports = (app) => {
                     useAfterCreation: false
                   }
                 }
+              },
+              {
+                rdfProperty: 'recordId',
+                id: 'recordIdInput',
+                type: 'hidden-url-query-value',
               },
               createdTimestamp(),
               modifiedTimestamp()
@@ -1198,10 +1181,7 @@ module.exports = (app) => {
               {
                 rdfProperty: 'literaryForm',
                 includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Game' ] },
-                multiple: true,
-                headlinePart: {
-                  order: 45
-                }
+                multiple: true
               },
               {
                 includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
@@ -2091,6 +2071,61 @@ module.exports = (app) => {
           'Part of work series': 'Other works in same series',
           'Genre': 'I this genre',
           'Place of publication': 'Published at this place'
+        },
+        headlines: {
+          Work: [
+            {
+              input: 'mainEntryPersonInput',
+              postfix: '. '
+            },
+            {
+              input: 'workMainTitle',
+              joinBy: {
+                input: 'workSubtitle',
+                separator: ' : '
+              },
+              postfix: '. '
+            },
+            {
+              input: 'workPartNumber',
+              postfix: '. '
+            },
+            {
+              input: 'workPartTitle',
+              postfix: '. '
+            },
+          ],
+          Publication: [
+            {
+              input: 'mainEntryPersonInput',
+              postfix: '. '
+            },
+            {
+              input: 'publicationMainTitle',
+              joinBy: {
+                input: 'publicationSubtitle',
+                separator: ' : '
+              },
+              postfix: '. '
+            },
+            {
+              input: [ 'publicationPartNumber' ],
+              postfix: '. '
+            },
+            {
+              input: [ 'publicationPartTitle' ],
+              postfix: '. '
+            },
+            {
+              input: [ 'publicationYearInput' ],
+              postfix: ' '
+            },
+            {
+              input: [ 'recordIdInput' ],
+              prefix: '(',
+              postfix: ') '
+            }
+          ]
         }
       }
     response.json(config)
