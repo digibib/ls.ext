@@ -156,7 +156,7 @@ test_catalinker:					## Run unit and module-tests for catalinker
 	cd $(LSEXTPATH)/redef/catalinker && make test
 
 login: 							## Login to docker, needs EMAIL, PASSWORD, USER env variables
-	sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)
+	sudo docker login --username=$(USER) --password=$(PASSWORD)
 
 TAG = "$(shell git rev-parse HEAD)"
 push:							## Push services,catalinker & patron-client containers to dockerhub
