@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Reservation from './modals/ReservationModal'
+import RemoteReservation from './modals/RemoteReservationModal'
 import Login from './modals/LoginModal'
 import Modal from 'react-modal'
 import * as ModalActions from '../actions/ModalActions'
@@ -14,7 +15,8 @@ const MODAL_COMPONENTS = {
   'CANCEL_RESERVATION': CancelReservation,
   'LOGIN': Login,
   'REGISTRATION': Registration,
-  'RESERVATION': Reservation
+  'RESERVATION': Reservation,
+  'REMOTE_RESERVATION': RemoteReservation
 }
 
 class ModalRoot extends React.Component {

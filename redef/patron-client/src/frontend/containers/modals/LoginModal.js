@@ -87,7 +87,6 @@ export const messages = defineMessages({
 LoginModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
-  successAction: PropTypes.object,
   loginError: PropTypes.string,
   intl: intlShape.isRequired
 }

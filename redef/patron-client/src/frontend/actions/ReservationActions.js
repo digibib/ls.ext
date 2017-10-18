@@ -103,8 +103,21 @@ export const changeReservationSuspensionSuccess = (reserveId, suspended, suspend
 export const changeReservationSuspensionFailure = error => errorAction(types.CHANGE_PICKUP_LOCATION_FAILURE, error)
 
 export function startReservation (publication) {
-  return requireLoginBeforeAction(showModal(ModalComponents.RESERVATION, { publication: publication }))
+  return requireLoginBeforeAction(chooseReservationDialogue(publication))
 }
+
+export function chooseReservationDialogue (publication) {
+  return (dispatch, getState) => {
+    dispatch({ type: types.REQUEST_RESERVATION_DIALOGUE })
+    const profile = getState().profile
+    if (profile.category === "IL") { // remote libraries with categorycode IL are remote libraries
+      dispatch(showModal(ModalComponents.REMOTE_RESERVATION, { publication: publication }))
+    } else {
+      dispatch(showModal(ModalComponents.RESERVATION, { publication: publication }))
+    }
+  }
+}
+
 
 export function requestReservePublication (recordId, branchCode) {
   return {
@@ -246,5 +259,78 @@ export function cancelReservation (reserveId) {
         }
       })
       .catch(error => dispatch(cancelReservationFailure(error, reserveId)))
+  }
+}
+
+export function requestRemoteReservePublication (recordId, userId, reservationComment) {
+  return {
+    type: types.REQUEST_REMOTE_RESERVE_PUBLICATION,
+    payload: {
+      recordId: recordId,
+      userId: userId,
+      reservationComment: reservationComment
+    }
+  }
+}
+
+export function remoteReservePublicationSuccess (recordId, userId) {
+  // TODO: what to do if success? go to loans page?
+  return dispatch => {
+    dispatch(showModal(ModalComponents.REMOTE_RESERVATION, { isSuccess: true, recordId: recordId, userId: userId }))
+    dispatch(ProfileActions.fetchProfileLoans())
+    dispatch({
+      type: types.REMOTE_RESERVE_PUBLICATION_SUCCESS,
+      payload: {
+        recordId: recordId,
+        userId: userId
+      }
+    })
+  }
+}
+
+export function remoteReservePublicationFailure (error, recordId, userId) {
+  // TODO: what to do if failure?
+  return dispatch => {
+    dispatch(showModal(ModalComponents.REMOTE_RESERVATION, {
+      isError: true,
+      message: error.message,
+      recordId: recordId,
+      userId: userId
+    }))
+    dispatch(ProfileActions.fetchProfileLoans())
+    dispatch({
+      type: types.REMOTE_RESERVE_PUBLICATION_FAILURE,
+      payload: error,
+      error: true
+    })
+  }
+}
+
+export function remoteReservePublication (recordId, userId, reservationComment) {
+  const url = '/api/v1/illrequests'
+  return dispatch => {
+    dispatch(requestRemoteReservePublication(recordId, userId, reservationComment))
+    return fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ recordId: recordId, userId: userId, reservationComment: reservationComment })
+    })
+    .then(response => {
+      if (response.status === 201) {
+        return dispatch(remoteReservePublicationSuccess(recordId, userId))
+      } else if (response.status === 400) {
+        return response.json().then(err => {
+          // TODO: handler various errors from a 400 response?
+          console.log(err)
+          throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
+        })
+      } else {
+        throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
+      }
+    })
+    .catch(error => dispatch(remoteReservePublicationFailure(error, recordId, userId)))
   }
 }
