@@ -888,7 +888,8 @@
           lang: value.lang,
           accepted: options.source ? { source: options.source } : undefined
         },
-        uniqueId: _.uniqueId()
+        uniqueId: _.uniqueId(),
+        expanded: value.value === ''
       }
       if (input[ valuesKey ][ index ].current.accepted) {
         setSuggestionsAreAcceptedForParentInput(input, index)
@@ -1668,7 +1669,7 @@
                         } else {
                           _.each(
                             these(_.union(root.getAll(fragmentPartOf(predicate)), _.map(root.outAll(fragmentPartOf(predicate)), (node) => ({ value: node.id }))))
-                              .orIf(input.isSubInput || options.compareValues)
+                              .orIf(input.isSubInput || options.compareValues || ['input-string-large', 'input-string', 'input-duration'].includes(input.type))
                               .atLeast([ { value: '' } ]), (value, index) => {
                               if (!options.onlyValueSuggestions) {
                                 let valueIndex = input.isSubInput ? rootIndex : index
@@ -3613,9 +3614,11 @@
               teardown: function () {}
             }
           }
-          const slideDown = function (node) {
+          const slideDown = function (node, expand) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
-            $(suggestedValues).hide()
+            if (!expand) {
+              $(suggestedValues).hide()
+            }
             let toggle = function () {
               $(suggestedValues).slideToggle()
             }
