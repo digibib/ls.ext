@@ -40,7 +40,10 @@
           },
           "deichman:locationClassNumber": "RUS",
           "deichman:locationSignature": "Dos/3+4",
-          "deichman:hasIdentifierInPrimaryCataloguingSource": "9816696",
+          "deichman:hasPrimaryCataloguingSource": {
+            "@id": "http://data.deichman.no/cataloguingSource#DFB"
+          },
+          "deichman:hasIdentifierInPrimaryCataloguingSource": "1387778",
           "deichman:contributor": [
             {
               "@id": "_:0000000"
