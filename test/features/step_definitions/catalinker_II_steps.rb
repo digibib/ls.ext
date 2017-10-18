@@ -72,12 +72,20 @@ When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|serie|emne|sjan
   end
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|serie|emne|sjanger|hendelse|sted|verksserie) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verksserie)registeret$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|serie|emne|sjanger|hendelse|sted|verksserie|verk) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verksserie|verks)registeret$/) do |art, type_1, type_2|
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT*5) {
     @browser.div(:class => 'exact-match').present?
   }
   @browser.div(:class => 'exact-match').scroll.to
   @browser.div(:class => 'exact-match').spans(:class => /select-result-item|edit-resource/).first.fire_event('click')
+end
+
+When(/^velger jeg første (person|organisasjon|utgivelse|utgiver|serie|emne|sjanger|hendelse|sted|verksserie|verk) i trefflisten fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verksserie|verks)registeret$/) do |type_1, type_2|
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT*5) {
+    @browser.span(:class => 'select-result-item').present?
+  }
+  @browser.span(:class => 'select-result-item').scroll.to
+  @browser.spans(:class => 'select-result-item').first.fire_event('click')
 end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
@@ -569,6 +577,14 @@ When(/^at jeg vil slå sammen to verk$/) do
   @context[:services] = s
 end
 
+When(/^at jeg vil relatere to verk til hverandre$/) do
+  s = TestSetup::Services.new()
+  2.times do
+    s.add_work_with_publications_and_contributors(1, 2)
+  end
+  @context[:services] = s
+end
+
 When(/^at jeg vil slette et verk som er relatert til et annet$/) do
   s = TestSetup::Services.new()
   2.times do
@@ -894,4 +910,10 @@ end
 
 When(/^viser brukergrensenittet at jeg har åpnet en kopi$/) do
   @browser.body(:class => 'copy').should exist
+end
+
+When(/^sletter jeg den første forekomsten under (.*)$/) do |parameter_label|
+    first_delete = @browser.as(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//a[@class='delete']").first
+    first_delete.scroll.to
+    first_delete.click
 end
