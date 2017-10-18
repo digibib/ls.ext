@@ -1669,7 +1669,7 @@
                         } else {
                           _.each(
                             these(_.union(root.getAll(fragmentPartOf(predicate)), _.map(root.outAll(fragmentPartOf(predicate)), (node) => ({ value: node.id }))))
-                              .orIf(input.isSubInput || options.compareValues || ['input-string-large', 'input-string', 'input-duration'].includes(input.type))
+                              .orIf(input.isSubInput || options.compareValues || [ 'input-string-large', 'input-string', 'input-duration' ].includes(input.type))
                               .atLeast([ { value: '' } ]), (value, index) => {
                               if (!options.onlyValueSuggestions) {
                                 let valueIndex = input.isSubInput ? rootIndex : index
@@ -3614,9 +3614,10 @@
               teardown: function () {}
             }
           }
-          const slideDown = function (node, expand) {
+          const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
-            if (!expand) {
+            let keypath = Ractive.getNodeInfo(node).keypath
+            if (ractive.get(`${keypath}.current.value`) !== '') {
               $(suggestedValues).hide()
             }
             let toggle = function () {
