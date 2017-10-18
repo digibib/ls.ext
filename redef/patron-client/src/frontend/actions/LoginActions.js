@@ -140,7 +140,7 @@ export function updateLoginStatusBeforeAction (successAction) {
       credentials: 'same-origin'
     }).then(response => response.json())
       .then(json => {
-        dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName, json.homeBranch))
+        dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName, json.homeBranch, json.category))
         dispatch(successAction)
       })
       .catch(error => dispatch(loginStatusFailure(error)))
