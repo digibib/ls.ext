@@ -878,21 +878,23 @@
           input.suggestionsAreDemoted = true
         }
       }
-      input[ valuesKey ][ index ] = {
-        old: options.keepOld ? input.values[ index ].old : {
-          value: value.value,
-          lang: value.lang
-        },
-        current: {
-          value: value.value,
-          lang: value.lang,
-          accepted: options.source ? { source: options.source } : undefined
-        },
-        uniqueId: _.uniqueId(),
-        expanded: value.value === ''
-      }
-      if (input[ valuesKey ][ index ].current.accepted) {
-        setSuggestionsAreAcceptedForParentInput(input, index)
+      if (value.value && value.value.length > 0) {
+        input[ valuesKey ][ index ] = {
+          old: options.keepOld ? input.values[ index ].old : {
+            value: value.value,
+            lang: value.lang
+          },
+          current: {
+            value: value.value,
+            lang: value.lang,
+            accepted: options.source ? { source: options.source } : undefined
+          },
+          uniqueId: _.uniqueId(),
+          expanded: value.value === ''
+        }
+        if (input[ valuesKey ][ index ].current.accepted) {
+          setSuggestionsAreAcceptedForParentInput(input, index)
+        }
       }
       ractive.update(`${input.keypath}.${valuesKey}.${index}`)
     }
@@ -1583,8 +1585,8 @@
                             _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                               index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
                               const id = input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id
-                              // check if value ia already present
-                              if (_.chain(input[ valuesField ]).pluck('current').pluck('value').filter((value) => value === id).any().value()) {
+                              // for regular non-sub inputs, check if value is already present
+                              if (!input.isSubInput && _.chain(input[ valuesField ]).pluck('current').pluck('value').filter((value) => value === id).any().value()) {
                                 return
                               }
 
@@ -1674,16 +1676,19 @@
                               if (!options.onlyValueSuggestions) {
                                 let valueIndex = input.isSubInput ? rootIndex : index
                                 setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
-                                input[ valuesField ][ valueIndex ].subjectType = type
-                                input[ valuesField ][ valueIndex ].oldSubjectType = type
-                                if (input.isSubInput && !options.source) {
-                                  input[ valuesField ][ valueIndex ].nonEditable = true
-                                  ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
-                                  input.parentInput.allowAddNewButton = true
-                                } else if (input.multiple) {
-                                  input.allowAddNewButton = true
+                                if (input[ valuesField ][ valueIndex ]) {
+                                  input[ valuesField ][ valueIndex ].subjectType = type
+                                  input[ valuesField ][ valueIndex ].oldSubjectType = type
+                                  if (input.isSubInput && !options.source) {
+                                    input[ valuesField ][ valueIndex ].nonEditable = true
+                                    ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
+                                    input.parentInput.allowAddNewButton = true
+                                  } else if (input.multiple) {
+                                    input.allowAddNewButton = true
+                                  }
                                 }
-                              } else {
+                              } else
+                                if (value.value && value.value.length > 0) {
                                 input.suggestedValues = input.suggestedValues || []
                                 input.suggestedValues.push({
                                   value: value.value,
@@ -3617,7 +3622,7 @@
           const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
             let keypath = Ractive.getNodeInfo(node).keypath
-            if (ractive.get(`${keypath}.current.value`) !== '') {
+            if (!ractive.get(`${keypath}.current.value`) !== '') {
               $(suggestedValues).hide()
             }
             let toggle = function () {
