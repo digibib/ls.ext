@@ -60,7 +60,7 @@ export function login (username, password, successActions = []) {
         }
       })
       .then(json => {
-        dispatch(loginSuccess(username, json.borrowerNumber, json.borrowerName))
+        dispatch(loginSuccess(username, json.borrowerNumber, json.borrowerName, json.category))
         return dispatch(fetchProfileInfo())
       })
       .then(() => {
