@@ -71,14 +71,15 @@ export default function application (state = initialState, action) {
         isRequestingLogin: false,
         isLoggedIn: true,
         loginError: null,
-        borrowerNumber: action.payload.borrowerNumber
+        borrowerNumber: action.payload.borrowerNumber,
+        category: action.payload.category
       }
     case REQUEST_LOGOUT:
       return { ...state, isRequestingLogout: true }
     case LOGOUT_FAILURE:
       return { ...state, isRequestingLogout: false, logoutError: action.payload.message }
     case LOGOUT_SUCCESS:
-      return { ...state, isRequestingLogout: false, isLoggedIn: false, logoutError: false, borrowerNumber: null }
+      return { ...state, isRequestingLogout: false, isLoggedIn: false, logoutError: false, borrowerNumber: null, category: null }
     case REQUEST_LOGIN_STATUS:
       return { ...state, isRequestingLoginStatus: true }
     case LOGIN_STATUS_FAILURE:
@@ -89,7 +90,8 @@ export default function application (state = initialState, action) {
         isRequestingLoginStatus: false,
         isLoggedIn: action.payload.isLoggedIn,
         loginStatusError: false,
-        borrowerNumber: action.payload.borrowerNumber
+        borrowerNumber: action.payload.borrowerNumber,
+        category: action.payload.category
       }
     case REQUEST_LIBRARIES:
       return { ...state, isRequestingLibraries: true }

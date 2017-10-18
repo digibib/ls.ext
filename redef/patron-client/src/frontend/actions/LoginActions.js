@@ -9,10 +9,11 @@ import { fetchProfileInfo } from './ProfileActions'
 
 export const requestLogin = (username) => action(types.REQUEST_LOGIN, { username })
 
-export const loginSuccess = (username, borrowerNumber, borrowerName) => action(types.LOGIN_SUCCESS, {
+export const loginSuccess = (username, borrowerNumber, borrowerName, category) => action(types.LOGIN_SUCCESS, {
   username,
   borrowerNumber,
-  borrowerName
+  borrowerName,
+  category
 })
 
 export function loginFailure (username, error) {
@@ -95,11 +96,12 @@ export function logout () {
 
 export const requestLoginStatus = () => action(types.REQUEST_LOGIN_STATUS)
 
-export const receiveLoginStatus = (isLoggedIn, borrowerNumber, borrowerName, homeBranch) => action(types.RECEIVE_LOGIN_STATUS, {
+export const receiveLoginStatus = (isLoggedIn, borrowerNumber, borrowerName, homeBranch, category) => action(types.RECEIVE_LOGIN_STATUS, {
   isLoggedIn,
   borrowerNumber,
   borrowerName,
-  homeBranch
+  homeBranch,
+  category
 })
 
 export const loginStatusFailure = (error) => action(types.LOGIN_STATUS_FAILURE, error)
@@ -116,7 +118,7 @@ export function updateLoginStatus () {
       },
       credentials: 'same-origin'
     }).then(response => response.json())
-      .then(json => dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName, json.homeBranch)))
+      .then(json => dispatch(receiveLoginStatus(json.isLoggedIn, json.borrowerNumber, json.borrowerName, json.homeBranch, json.category)))
       .catch(error => dispatch(loginStatusFailure(error)))
   }
 }

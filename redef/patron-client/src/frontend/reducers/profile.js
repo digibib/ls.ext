@@ -31,6 +31,7 @@ import {
 
 const initialState = {
   borrowerName: null,
+  category: null,
   isRequestingLoansAndReservations: false,
   loansAndReservationsError: null,
   loansAndReservations: {
@@ -122,7 +123,7 @@ export default function profile (state = initialState, action) {
         changePasswordSuccess: false
       }
     case LOGIN_SUCCESS:
-      return { ...initialState, borrowerName: action.payload.borrowerName }
+      return { ...initialState, borrowerName: action.payload.borrowerName, category: action.payload.category }
     case LOGOUT_SUCCESS:
       return initialState
     case CHANGE_PICKUP_LOCATION_SUCCESS:
@@ -180,7 +181,7 @@ export default function profile (state = initialState, action) {
         }
       }
     case RECEIVE_LOGIN_STATUS:
-      return { ...state, borrowerName: action.payload.borrowerName, homeBranch: action.payload.homeBranch }
+      return { ...state, borrowerName: action.payload.borrowerName, homeBranch: action.payload.homeBranch, category: action.payload.category }
     default:
       return state
   }
