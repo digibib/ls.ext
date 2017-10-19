@@ -1671,7 +1671,7 @@
                         } else {
                           _.each(
                             these(_.union(root.getAll(fragmentPartOf(predicate)), _.map(root.outAll(fragmentPartOf(predicate)), (node) => ({ value: node.id }))))
-                              .orIf(input.isSubInput || options.compareValues || [ 'input-string-large', 'input-string', 'input-duration' ].includes(input.type))
+                              .orIf(input.isSubInput || options.compareValues || input.literal)
                               .atLeast([ { value: '' } ]), (value, index) => {
                               if (!options.onlyValueSuggestions) {
                                 let valueIndex = input.isSubInput ? rootIndex : index
@@ -2176,6 +2176,7 @@
               required: subInput.required,
               searchable: type === 'searchable-with-result-in-side-panel',
               supportable: type === 'searchable-with-result-in-side-panel',
+              literal: [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(type),
               showOnlyWhen: subInput.showOnlyWhen,
               isTitleSource: subInput.isTitleSource,
               subInputIndex: subInputIndex,
@@ -2305,6 +2306,7 @@
               if (input.type === 'searchable-with-result-in-side-panel') {
                 ontologyInput.values[ 0 ].searchable = true
               }
+              input.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(input.type)
             } else if (input.subInputs) {
               input.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput = createInputForCompoundInput(input, inputGroup, ontologyUri, inputMap)
@@ -3287,8 +3289,10 @@
               ractive.set('save_status', 'alle endringer er lagret')
               if (input.subInputs) {
                 _.each(input.subInputs, function (subInput) {
-                  subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
-                  subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                  if (subInput.input.values[ index ].current) {
+                    subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
+                    subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                  }
                 })
               } else {
                 input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
