@@ -149,7 +149,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-genre-form',
@@ -175,7 +175,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-corporation-form',
@@ -215,7 +215,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-main-work-form',
@@ -250,7 +250,7 @@ module.exports = (app) => {
                 }
               }
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-work-form',
@@ -415,7 +415,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-instrument-form',
@@ -439,7 +439,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           },
           {
             id: 'create-compositiontype-form',
@@ -463,7 +463,7 @@ module.exports = (app) => {
               createdTimestamp(),
               modifiedTimestamp()
             ],
-            templateResourcePartsFrom: [ ]
+            templateResourcePartsFrom: []
           }
         ],
         tabs: [
@@ -1228,6 +1228,24 @@ module.exports = (app) => {
                   list: true
                 },
                 subInputs: {
+                  maintainInverseRelation: {
+                    inverseSubjectInput: 'relatedToWorkInput',
+                    onlyWhenAll: [
+                      {
+                        inputId: 'relationTypeInput',
+                        valueAsStringMatches: '^.*continuedIn$|^.*continuationOf$'
+                      },
+                      {
+                        inputId: 'relatedToWorkInput',
+                        valueAsStringMatches: '^.*\\/work\\/.*$'
+                      } ],
+                    valueMapping: {
+                      relationTypeInput: {
+                        'http://data.deichman.no/relationType#continuedIn': 'http://data.deichman.no/relationType#continuationOf',
+                        'http://data.deichman.no/relationType#continuationOf': 'http://data.deichman.no/relationType#continuedIn'
+                      }
+                    }
+                  },
                   rdfProperty: 'isRelatedTo',
                   range: 'WorkRelation',
                   inputs: [
@@ -1278,7 +1296,7 @@ module.exports = (app) => {
                         initial: 'hide'
                       }
                     }
-                  ]
+                  ],
                 },
                 subjects: [ 'Work' ] // blank node can be attached to the the loaded resource of one of these types
               },
