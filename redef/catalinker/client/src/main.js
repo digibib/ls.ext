@@ -3159,7 +3159,7 @@
           }
 
           function subInputChainById (inputId) {
-            return _.chain(input.subInputs).pluck('input').filter((i) => i.id === inputId)
+            return _.chain(input.subInputs).pluck('input').filter((input) => input.id === inputId)
           }
 
           // this function generates operations specs that generates patch for inverse relation
@@ -3227,14 +3227,14 @@
           _.each(opSpecs, function (spec, opIndex) {
             const subject = spec.alternativeSubject || (spec.operation === 'del' ? deleteSubject : mainSubject)
             let patch = []
-            let existingAddPathesForSubject
+            let existingAddPatchesForSubject
             if (spec.operation === 'add') {
-              existingAddPathesForSubject = _.find(patches, (patch) => patch.operation === 'add' && patch.subject === subject)
-              if (existingAddPathesForSubject) {
-                patch = existingAddPathesForSubject.patch
+              existingAddPatchesForSubject = _.find(patches, (patch) => patch.operation === 'add' && patch.subject === subject)
+              if (existingAddPatchesForSubject) {
+                patch = existingAddPatchesForSubject.patch
               }
             }
-            if (!existingAddPathesForSubject) {
+            if (!existingAddPatchesForSubject) {
               patches.push({ subject, patch, operation: spec.operation })
             }
             patch.push({
