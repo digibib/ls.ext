@@ -878,23 +878,21 @@
           input.suggestionsAreDemoted = true
         }
       }
-      if (value.value && value.value.length > 0) {
-        input[ valuesKey ][ index ] = {
-          old: options.keepOld ? input.values[ index ].old : {
-            value: value.value,
-            lang: value.lang
-          },
-          current: {
-            value: value.value,
-            lang: value.lang,
-            accepted: options.source ? { source: options.source } : undefined
-          },
-          uniqueId: _.uniqueId(),
-          expanded: value.value === ''
-        }
-        if (input[ valuesKey ][ index ].current.accepted) {
-          setSuggestionsAreAcceptedForParentInput(input, index)
-        }
+      input[ valuesKey ][ index ] = {
+        old: options.keepOld ? input.values[ index ].old : {
+          value: value.value,
+          lang: value.lang
+        },
+        current: {
+          value: value.value,
+          lang: value.lang,
+          accepted: options.source ? { source: options.source } : undefined
+        },
+        uniqueId: _.uniqueId(),
+        expanded: (input[ valuesKey ][ index ] || {}).expanded || value.value === ''
+      }
+      if (input[ valuesKey ][ index ].current.accepted) {
+        setSuggestionsAreAcceptedForParentInput(input, index)
       }
       ractive.update(`${input.keypath}.${valuesKey}.${index}`)
     }
@@ -1687,8 +1685,7 @@
                                     input.allowAddNewButton = true
                                   }
                                 }
-                              } else
-                                if (value.value && value.value.length > 0) {
+                              } else if (value.value && value.value.length > 0) {
                                 input.suggestedValues = input.suggestedValues || []
                                 input.suggestedValues.push({
                                   value: value.value,
@@ -2176,7 +2173,6 @@
               required: subInput.required,
               searchable: type === 'searchable-with-result-in-side-panel',
               supportable: type === 'searchable-with-result-in-side-panel',
-              literal: [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(type),
               showOnlyWhen: subInput.showOnlyWhen,
               isTitleSource: subInput.isTitleSource,
               subInputIndex: subInputIndex,
@@ -2218,7 +2214,7 @@
               if (formInput.label) {
                 formInput.labelkey = formInput.label
               }
-              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
+              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', 'keypath'))
               formInput.values = emptyValues(false)
               formInput.rdfType = resourceForm.rdfType
               if (targetResourceIsMainEntry) {
@@ -2306,7 +2302,6 @@
               if (input.type === 'searchable-with-result-in-side-panel') {
                 ontologyInput.values[ 0 ].searchable = true
               }
-              input.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(input.type)
             } else if (input.subInputs) {
               input.keypath = `inputGroups.${groupIndex}.inputs.${index}`
               ontologyInput = createInputForCompoundInput(input, inputGroup, ontologyUri, inputMap)
@@ -2349,6 +2344,8 @@
             if (input.showOnlyWhenInputHasValue) {
               ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
+            ontologyInput.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(ontologyInput.type)
+            ontologyInput.oink = ontologyInput.type
           }
           copyResourceForms(input)
         })
@@ -3626,8 +3623,11 @@
           const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
             let keypath = Ractive.getNodeInfo(node).keypath
-            if (!ractive.get(`${keypath}.current.value`) !== '') {
+            if (_.flatten([ ractive.get(`${keypath}.current.value`) ])[ 0 ] !== '') {
               $(suggestedValues).hide()
+              ractive.set(`${keypath}.expanded`, false)
+            } else {
+              ractive.set(`${keypath}.expanded`, true)
             }
             let toggle = function () {
               $(suggestedValues).slideToggle()
