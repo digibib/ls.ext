@@ -2347,7 +2347,7 @@
             if (input.showOnlyWhenInputHasValue) {
               ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
-            ontologyInput.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(ontologyInput.type)
+            ontologyInput.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].indexOf(ontologyInput.type) !== -1
           }
           copyResourceForms(input)
         })
