@@ -8,14 +8,11 @@
      as-unload>
     <h2 data-automation-id="page-heading">{{>currentTaskDescription}}</h2>
     <h3 class="headline" data-automation-id="headline">
-        {{#each applicationData.headlineParts}}
-        {{#headlinePart(.)}}
-        {{#if value.length > 0}}
-        <span class="{{#if styleClass}}{{styleClass}}{{/if}} {{#if ! postfix}}default-postfix{{/if}}" style="order: {{order || 0}}">{{prefix}}{{value}}{{postfix}}</span>
-        {{/if}}
-        {{/with}}
-        {{/each}}
-        </h3>
+        <span id="headline_0"></span>
+        <span id="headline_1"></span>
+        <span id="headline_2"></span>
+    </h3>
+
 
     <div class="grid-input">
         <div class="pure-g" style="height: 0px;">

@@ -953,13 +953,14 @@
         function getValues (onlyFirstField) {
           return new Promise((resolve, reject) => {
             const displayProperties = getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
+            const headLineDisplayProperties = getDisplayProperties(input.headlineNameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
             const handleDisplayProperties = () => {
-              resolve(_.pluck(displayProperties || [], 'val')
+              resolve({values:_.pluck(displayProperties || [], 'val')
                 .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
                 .join(' ')
                 .replace(/[,\.:]\s*$/g, '')
                 .replace(/- /, '-')
-                .replace(/: /g, ' : '))
+                .replace(/: /g, ' : '), headlineDisplayValue: _.pluck(headLineDisplayProperties || [], 'val')})
             }
             if (isPromise(displayProperties)) {
               return displayProperties.then(handleDisplayProperties)
@@ -969,7 +970,8 @@
           })
         }
 
-        getValues(options.onlyFirstField).then((values) => {
+        getValues(options.onlyFirstField).then((valuesWrapper) => {
+          let values = valuesWrapper.values
           const typeMap = ractive.get('applicationData.config.typeMap')
           let selectedIndexType
           _.each(input.indexTypes, function (indexType) {
@@ -991,10 +993,10 @@
               }
               input[ valuesField ][ index ].current.displayValue = values
             } else {
-              getValues().then(function (value) {
+              getValues().then(function (valuesWrapper) {
                 ractive.set(`${input.keypath}.suggestedValues.${index}`, {
                     value: values,
-                    displayValue: value,
+                    displayValue: valuesWrapper.displayValue,
                     source: options.source,
                     selectedIndexType: selectedIndexType
                   }
@@ -1005,6 +1007,7 @@
             input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
             input[ valuesField ][ index ].current = input[ valuesField ][ index ].current || {}
             input[ valuesField ][ index ].current.displayValue = values
+            input[ valuesField ][ index ].current.headlineDisplayValue = valuesWrapper.headlineDisplayValue
             if (options.source) {
               input[ valuesField ][ index ].current.accepted = {
                 source: options.source,
@@ -1031,7 +1034,7 @@
           const graphData = ensureJSON(response.data)
           const root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
-        })
+        }).then(updateHeadline)
       }
     }
 
@@ -1129,6 +1132,7 @@
         oldUri.query = URI.buildQuery(_.pick(queryParameters, _.identity))
         history.replaceState('', '', URI.build(oldUri))
       }
+      ractive.set('rdfType', triumph)
     }
 
     function updateBrowserLocationWithTab (tabNumber) {
@@ -1760,6 +1764,7 @@
             }
           }
         )
+        .then(updateHeadline)
         .catch(function (err) {
           console.log(`HTTP GET ${resourceUri} existing resource failed with:`)
           console.log(err)
@@ -1805,11 +1810,13 @@
           if (patchBatch.length > 0) {
             executePatch(resourceUri, patchBatch, undefined, errors)
           }
-          ractive.update().then(function () {
-            if (wait) {
-              wait.done()
-            }
-          })
+          ractive.update()
+            .then(updateHeadline)
+            .then(function () {
+              if (wait) {
+                wait.done()
+              }
+            })
           return resourceUri
         })
       // .catch(function (err) {
@@ -1915,6 +1922,9 @@
       input.visible = (prop.type !== 'entity' && !prop.initiallyHidden)
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
+      }
+      if (prop.headlineNameProperties) {
+        input.headlineNameProperties = prop.headlineNameProperties
       }
       if (prop.previewProperties) {
         input.previewProperties = prop.previewProperties
@@ -2168,9 +2178,9 @@
               selectedIndexType: indexTypes.length === 1 ? indexTypes[ 0 ] : undefined,
               indexDocumentFields: subInput.indexDocumentFields,
               nameProperties: subInput.nameProperties,
+              headlineNameProperties: subInput.headlineNameProperties,
               dataAutomationId: inputFromOntology.dataAutomationId,
               widgetOptions: subInput.widgetOptions,
-              headlinePart: subInput.headlinePart,
               suggestValueFrom: subInput.suggestValueFrom,
               id: subInput.id,
               required: subInput.required,
@@ -2319,9 +2329,6 @@
             transferInputGroupOptions(input, ontologyInput)
             if (input.widgetOptions) {
               ontologyInput.widgetOptions = input.widgetOptions
-            }
-            if (input.headlinePart) {
-              ontologyInput.headlinePart = input.headlinePart
             }
             if (input.suggestValueFrom) {
               ontologyInput.suggestValueFrom = input.suggestValueFrom
@@ -2727,6 +2734,10 @@
       })
     }
 
+    function updateHeadline () {
+      _.each(ractive.get('applicationData.headlineRactives'), (titleRactive) => titleRactive.update())
+    }
+
     function executePatch (subject, patches, keypath, errors) {
       let waiter = ractive.get('waitHandler').thisMayTakeSomTime()
       ractive.set('save_status', translate('statusWorking'))
@@ -2773,6 +2784,7 @@
             }
           })
         })
+        .then(updateHeadline)
         .catch(function (response) {
           // failed to patch resource
           console.log('HTTP PATCH failed with: ')
@@ -3159,6 +3171,7 @@
                 }
               })
             }
+            promises.push(new Promise(updateHeadline))
             promises.push(new Promise(waiter.done))
             sequentialPromiseResolver(promises)
           })
@@ -4083,13 +4096,6 @@
               authorityLabels: {},
               compare: false,
               compareValues: {},
-              headlinePart: function (headlinePart) {
-                return {
-                  value: headlinePart.predefinedValue
-                    ? Main.predefinedLabelValue(headlinePart.fragment, this.get(headlinePart.keypath))
-                    : this.get(headlinePart.keypath)
-                }
-              },
               checkDisabledNextStep (disabledUnlessSpec) {
                 var enabled = true
                 if (disabledUnlessSpec.presentTargetUri) {
@@ -4461,6 +4467,7 @@
                   .then(function () {
                     heightAligned(heightAlignedTarget)
                   })
+                  .then(updateHeadline)
                   .then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
@@ -4509,6 +4516,9 @@
                   updateBrowserLocationWithTab(2)
                 }
                 Main.init(initOptions)
+                  .then(function () {
+                    setTimeout(updateHeadline)
+                  })
               },
               focusEditItem: function (event, itemIndex) {
                 $(`#ed-item-${itemIndex}`).focus()
@@ -5544,6 +5554,10 @@
                 openInputForms = _.without(openInputForms, keypath)
               }
               ractive.set('openInputForms', openInputForms)
+            }, { init: false }),
+
+            ractive.observe('rdfType', function (newValue) {
+              ractive.set('applicationData.showHeadlineForType', newValue).then(updateHeadline)
             }, { init: false }) ])
           return applicationData
         }
@@ -5586,9 +5600,13 @@
           withPublicationOfWorkInput(function (publicationOfInput) {
             const workUri = _.flatten([ publicationOfInput.values[ 0 ].current.value ])[ 0 ]
             if (workUri) {
-              return fetchExistingResource(workUri, options).then(function () {
-                ractive.set('targetUri.Work', workUri)
-              })
+              return fetchExistingResource(workUri, options)
+                .then(function () {
+                  ractive.set('targetUri.Work', workUri)
+                })
+                .then(function () {
+                  setTimeout(updateHeadline())
+                })
             }
           })
         }
@@ -5802,27 +5820,60 @@
           return applicationData
         }
 
-        const initHeadlineParts = function (applicationData) {
-          const headlineParts = []
-          forAllGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
-            if (input.headlinePart) {
-              const subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
-              let keypath
-              const headlinePart = {}
-              if (input.type === 'select-predefined-value') {
-                headlinePart.predefinedValue = true
-                keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.value[0]`
-              } else {
-                const valuePart = input.type === 'searchable-with-result-in-side-panel' ? 'displayValue' : 'value'
-                keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.${valuePart}`
+        const initHeadLine = function (applicationData) {
+          _.chain(applicationData.config.headlines).pairs().each(function (headlineSpec, index) {
+            const forDomainType = headlineSpec[ 0 ]
+            let partial = `{{#if showHeadlineForType == '${forDomainType}'}}\n`
+            _.each(headlineSpec[ 1 ], (part) => {
+              const inputId = part.input
+              const input = inputFromInputId(inputId)
+              if (!input) {
+                throw Error(`Unknown input id in headline definition for ${forDomainType}: ${inputId}`)
               }
-              headlinePart.keypath = keypath
-              headlinePart.fragment = input.fragment
-              ractive.set(`${input.keypath}.headlinePart`, headlinePart)
-              headlineParts.push(headlinePart)
-            }
+              const inputKeypath = input.keypath
+              if (part.joinBy) {
+                const rightInputId = part.joinBy.input
+                const rightInput = inputFromInputId(rightInputId)
+                if (!rightInput) {
+                  throw Error(`Unknown input id in headline definition for ${forDomainType}: ${rightInputId}`)
+                }
+                const leftKeypath = inputKeypath + '.values.0.current.value'
+                const rightKeypath = rightInput.keypath + '.values.0.current.value'
+                if (part.prefix) {
+                  partial += `{{#if ${leftKeypath} || ${rightKeypath}}}<span>{{'${part.prefix}'}}</span>{{/if}}\n`
+                }
+                partial += `{{>join{left: ${leftKeypath}, right: ${rightKeypath}, separator: '${part.joinBy.separator}'}}}\n`
+                if (part.postfix) {
+                  partial += `{{#if ${leftKeypath} || ${rightKeypath}}}<span >{{'${part.postfix}'}}</span>{{/if}}\n`
+                }
+              } else {
+                const valueKeypath = `${inputKeypath}.values.0.current.${input.type === 'searchable-with-result-in-side-panel' ? (input.headlineNameProperties ? 'headlineDisplayValue' : 'displayValue') : 'value'}`
+                const subInputCondition = (input.type === 'searchable-with-result-in-side-panel') ? ` && ${inputKeypath}.values.0.nonEditable` : ''
+                partial += `{{#if ${valueKeypath}${subInputCondition}}}`
+                if (part.prefix) {
+                  partial += `<span>{{'${part.prefix}'}}</span>`
+                }
+                partial += `<span>{{${valueKeypath}}}</span>`
+                if (part.postfix) {
+                  partial += `<span>{{'${part.postfix}'}}</span>`
+                }
+                partial += '{{/if}}\n'
+              }
+            })
+            partial += '\n{{/if}}\n'
+            console.log(partial)
+            let titleRactive = new Ractive({
+              el: 'headline_' + index,
+              template: partial,
+              data: applicationData,
+              partials: {
+                join: '<span>{{left}}</span>{{#if left && right}}<span>{{separator}}</span>{{/if}}<span style="margin-right:-2px;">{{right}}</span>'
+              }
+            })
+            applicationData.headlineRactives = applicationData.headlineRactives || []
+            applicationData.headlineRactives.push(titleRactive)
           })
-          ractive.set('applicationData.headlineParts', headlineParts)
+          ractive.update()
           return applicationData
         }
 
@@ -6040,9 +6091,9 @@
           .then(enableObservers)
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
-          .then(initHeadlineParts)
           .then(initInputLinks)
           .then(initInputInterDependencies)
+          .then(initHeadLine)
           .then(initTitle)
           .then(initValuesFromQuery)
           .then(workaroundContentEditableBugs)
@@ -6074,6 +6125,7 @@
             return applicationData
           })
           .then(hideGrowler)
+          .then(updateHeadline)
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)
         // })
