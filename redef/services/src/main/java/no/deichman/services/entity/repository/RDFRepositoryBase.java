@@ -74,12 +74,14 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             }
         }
     };
-    private static final Set<Property> PROVENANCE_PROPERTIES = ImmutableSet.of(
+    private static final Set<Property> UNCOPYABLE_PROPERTIES = ImmutableSet.of(
             createProperty(BaseURI.ontology("created")),
             createProperty(BaseURI.ontology("modified")),
             createProperty(BaseURI.ontology("hasPrimaryCataloguingSource")),
             createProperty(BaseURI.ontology("hasIdentifierInPrimaryCataloguingSource")),
-            createProperty(BaseURI.ontology("hasImage"))
+            createProperty(BaseURI.ontology("hasImage")),
+            createProperty(BaseURI.ontology("hasHomeBranch")),
+            createProperty(BaseURI.ontology("hasNumItems"))
     );
 
     private final Logger log = LoggerFactory.getLogger(RDFRepositoryBase.class);
@@ -184,7 +186,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     private String createResource(Model inputModel, String type, Pair<String, String>... additionalProperties) throws Exception {
         List<Statement> removeStatements = newArrayList();
         inputModel.listStatements().forEachRemaining(s -> {
-            if (PROVENANCE_PROPERTIES.contains(s.getPredicate())) {
+            if (UNCOPYABLE_PROPERTIES.contains(s.getPredicate())) {
                 removeStatements.add(s);
             }
         });
