@@ -5647,7 +5647,7 @@
                     const savePlaceholder = target.nextAll('.save-placeholder')
                     if (savePlaceholder.length > 0) {
                       savePlaceholder.append(spinner.el)
-                      disabledInput = savePlaceholder.prevAll('input,select')
+                      disabledInput = savePlaceholder.prevAll('select')
                       disabledInput.attr('disabled', 'disabled')
                     } else {
                       $('#growler').show()
@@ -5659,6 +5659,11 @@
                   if (showingWaiting) {
                     if (disabledInput) {
                       disabledInput.attr('disabled', false)
+                      setTimeout(function () {
+                        if (disabledInput) {
+                          disabledInput.nextAll('span.select2.select2-container').first().find('input').focus()
+                        }
+                      })
                     }
                     spinner.stop()
                     target.removeClass('saving')
