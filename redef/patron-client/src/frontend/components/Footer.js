@@ -13,7 +13,7 @@ class Footer extends React.Component {
   }
 
   ignore (event) {
-  event.preventDefault
+    event.preventDefault()
   }
 
   render () {
@@ -41,7 +41,11 @@ class Footer extends React.Component {
               </li>
               <li data-automation-id="change_language_element"
                   data-current-language={this.props.intl.formatMessage(messages.currentLanguage)}
-                  onClick={this.handleChangeLanguage}><FormattedMessage {...messages.languageChoice} /></li>
+                  onClick={this.handleChangeLanguage}>
+                  <a href="" onClick={this.ignore}>
+                  <FormattedMessage {...messages.languageChoice} />
+                  </a>
+              </li>
               <li>
                 <a href="https://www.deichman.no/om-oss">
                   <FormattedMessage {...messages.aboutUs} />
