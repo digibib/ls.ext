@@ -59,11 +59,12 @@ def contains_class(class_name)
   "contains(concat(' ',normalize-space(@class),' '),' #{class_name} ')"
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted|verk) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verks)indeksen$/) do |art, type_1, type_2|
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|serie|emne|sjanger|hendelse|sted|verk) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verks)indeksen$/) do |art, type_1, type_2|
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT*5) {
     @browser.element(:xpath => "//span[#{contains_class('edit-resource')}]|//span[#{contains_class('select-result-item')}]").present?
   }
   if @browser.span(:class => 'edit-resource').present?
+    @browser.execute_script("window.onbeforeunload = function() {};")
     @browser.spans(:class => 'edit-resource').first.click
   end
   if @browser.span(:class => "select-result-item").present?
@@ -71,19 +72,21 @@ When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne
   end
 end
 
-When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|sted|serie|emne|sjanger|hendelse|sted|verksserie) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verksserie)registeret$/) do |art, type_1, type_2|
-  sleep 1
-  wait_for {
+When(/^velger jeg (en|et) (person|organisasjon|utgivelse|utgiver|serie|emne|sjanger|hendelse|sted|verksserie) fra treffliste fra (person|organisasjons|utgivelses|utgiver|sted|serie|emne|sjanger|hendelses|steds|verksserie)registeret$/) do |art, type_1, type_2|
+  Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT*5) {
     @browser.div(:class => 'exact-match').present?
   }
-  @browser.div(:class => 'exact-match').spans(:class => /select-result-item|edit-resource/).first.click
+  @browser.div(:class => 'exact-match').scroll.to
+  @browser.div(:class => 'exact-match').spans(:class => /select-result-item|edit-resource/).first.fire_event('click')
 end
 
 When(/^velger verket fra lista tilkoplet forfatteren$/) do
   wait_for {
     @browser.div(:class => 'exact-match').a(:class => "toggle-show-sub-items").present?
   }
-  @browser.div(:class => 'exact-match').a(:class => "toggle-show-sub-items").click
+  toggle_show_subitems = @browser.div(:class => 'exact-match').a(:class => "toggle-show-sub-items")
+  toggle_show_subitems.scroll.to
+  toggle_show_subitems.click
   sleep 1
   @browser.inputs(:class => "select-work-radio").find(&:visible?).click
 end
@@ -128,7 +131,7 @@ def workflow_batch_add_props(domain, data)
       textualValue = value;
       if value.eql?(:random) && method.eql?(:select_prop)
         choices = @site.WorkFlow.get_available_select_choices(domain, predicate)
-        sampleNr = rand(choices.length)
+        sampleNr = rand([choices.length, 5].min)
         value = choices[sampleNr].value
         textualValue = choices[sampleNr].text
       end
@@ -240,6 +243,7 @@ end
 When(/^at jeg skriver inn sted i feltet for utgivelsessted og trykker enter$/) do
   data_automation_id = "Publication_http://data.deichman.no/ontology#hasPlaceOfPublication_0"
   publication_place_field = @browser.element(:xpath => "//span[@data-automation-id='#{data_automation_id}']//input[@type='search']|//span[@data-automation-id='#{data_automation_id}']//span[@contenteditable]")
+  publication_place_field.scroll.to
   publication_place_field.click
   publication_place_field.send_keys @context[:placeofpublication_place]
   publication_place_field.send_keys :enter
@@ -247,8 +251,9 @@ end
 
 When(/^at jeg skriver inn (tilfeldig |)([a-z]*) i feltet "([^"]*)" og trykker enter$/) do |is_random, concept, label|
   field = @site.WorkFlow.get_text_field_from_label(label)
+  field.scroll.to
   field.click
-  if (is_random == 'tilfeldig ')
+  if is_random == 'tilfeldig '
     @context[("random_#{@site.translate(concept)}_name").to_sym] = generateRandomString
     field.send_keys (@context[("random_#{@site.translate(concept)}_name").to_sym])
   else
@@ -272,6 +277,7 @@ When(/^at jeg skriver inn tittelen på verk nr ([0-9]) i feltet "([^"]*)" og try
   work = @context[:services].works[index.to_i-1]
   workTitle = @context[:services].get_value(work, 'mainTitle')
   field = @site.WorkFlow.get_text_field_from_label(label)
+  field.scroll.to
   field.click
   field.send_keys (workTitle)
   field.send_keys :enter
@@ -328,7 +334,9 @@ When(/^jeg velger rollen "([^"]*)"$/) do |role_name|
 end
 
 When(/^trykker jeg på knappen for legge til biinnførselen$/) do
-  @browser.elements(:xpath => "//*[@id='confirm-addedentry']//span[@class='subject-type-association']//*[text()='Legg til']").first.click
+  add_button = @browser.elements(:xpath => "//*[@id='confirm-addedentry']//span[@class='subject-type-association']//*[text()='Legg til']").first
+  add_button.scroll.to
+  add_button.click
 end
 
 When(/^trykker jeg på knappen for legge til serieinformasjon$/) do
@@ -346,7 +354,7 @@ When(/^sjekker jeg at det finnes en (bi|hoved)innførsel hvor (personen|organisa
   else
     name_line = "#{@context[:person_name]}"
   end
-  name = @browser.span(:xpath => "//span[@data-automation-id='#{data_automation_id_agent}'][starts-with(normalize-space(), '#{name_line}')]")
+  name = @browser.span(:xpath => "//span[starts-with(normalize-space(), '#{name_line}')]")
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     name.exists?
   }
@@ -510,7 +518,9 @@ When(/^legger jeg inn fødselsår og dødsår og velger "([^"]*)" som nasjonalit
 end
 
 When(/^jeg trykker på "([^"]*)"\-knappen$/) do |link_label|
-  @browser.buttons(:text => link_label, :class => 'pure-button').select {|a| a.visible? && a.enabled?}.first.click
+  del_button = @browser.buttons(:text => link_label, :class => 'pure-button').select {|a| a.visible? && a.enabled?}.first
+  del_button.scroll.to
+  del_button.click
 end
 
 When(/^legger jeg inn et verksnavn i søkefeltet for å søke etter det$/) do
@@ -524,7 +534,9 @@ end
 
 When(/^trykker jeg på "([^"]*)"\-knappen$/) do |button_label|
   sleep 1
-  @browser.elements(:text => button_label, :class => 'pure-button').find(&:visible?).click
+  button = @browser.elements(:text => button_label, :class => 'pure-button').find(&:visible?)
+  button.scroll.to
+  button.click
 end
 
 When(/^trykker jeg på "([^"]*)"\-knappen i dialogen$/) do |button_label|
@@ -567,7 +579,9 @@ end
 
 When(/^trykker jeg på knappen for å slå sammen to autoriteter$/) do
   @browser.button(:data_automation_id => 'merge_authorities').wait_until_present(timeout: BROWSER_WAIT_TIMEOUT*5)
-  @browser.button(:data_automation_id => 'merge_authorities').click
+  button = @browser.button(:data_automation_id => 'merge_authorities')
+  button.scroll.to
+  button.click
   sleep 1
 end
 
@@ -590,6 +604,7 @@ end
 
 When(/^at jeg legger navnet på verket og trykker enter$/) do
   search_work_as_main_resource = @browser.element(:xpath => "//span[@data-automation-id='searchWorkAsMainResource']//span[@contenteditable]")
+  search_work_as_main_resource.scroll.to
   search_work_as_main_resource.click
   search_work_as_main_resource.send_keys @context[:work_maintitle]
   search_work_as_main_resource.send_keys :enter
@@ -601,7 +616,9 @@ When(/^ser jeg at det står forfatter med navn i resultatlisten$/) do
 end
 
 When(/^så trykker jeg på Legg til ny biinnførsel\-knappen$/) do
-  @browser.buttons(:text, /Legg til ny biinn.*/).first.click
+  add_button = @browser.buttons(:text, /Legg til ny biinn.*/).first
+  add_button.scroll.to
+  add_button.click
 end
 
 When(/^ser jeg at det er (ett|to) treff i resultatlisten$/) do |one_or_two|
@@ -664,7 +681,10 @@ When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
     suggestion_list.span(:class => 'unexpanded').present?
   }
-  suggestion_list.span(:class => 'unexpanded').click
+  expander = suggestion_list.span(:class => 'unexpanded')
+  expander.scroll.to
+  expander.click
+
   support_panel_expander_link = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").span(:class => 'support-panel-expander')
   use_suggestion_button = suggestion_list.div(:class => "suggested-values").div(:class => "suggested-value").button(:class => 'suggested-value')
   Watir::Wait.until(timeout: BROWSER_WAIT_TIMEOUT) {
@@ -673,7 +693,10 @@ When(/^åpner jeg listen med eksterne forslag fra andre kilder for (.*) som skal
   if support_panel_expander_link.exists?
     support_panel_expander_link.click
   else
-    use_suggestion_button.click if use_suggestion_button.exists?
+    if use_suggestion_button.exists?
+      use_suggestion_button.scroll.to
+      use_suggestion_button.click
+    end
   end
 end
 
@@ -690,7 +713,7 @@ end
 
 When(/^trykker jeg på den (første|andre|tredje|fjerde|femte|sjette) trekanten for å søke opp personen i forslaget$/) do |ordinal|
   index = @site.translate(ordinal) - 1
-  @browser.elements(:class => 'support-panel-expander').select {|a| a.visible?}[index].click
+  @browser.elements(:class => 'support-panel-expander').select {|a| a.visible?}[index].fire_event('click')
 end
 
 When(/^noterer jeg ned navnet på personen$/) do
@@ -818,7 +841,10 @@ When(/^klikker jeg på linken for masseregistrering$/) do
 end
 
 When(/^sjekker jeg at antall relasjoner er ([0-9]*)$/) do |number_of_relations|
-  @browser.a(:class => 'toggle-show-sub-items').click
+  @browser.a(:class => 'toggle-show-sub-items') do |a|
+    a.scroll.to
+    a.click
+  end
   @browser.lis(:class => 'rel-entry').length.should equal? (number_of_relations.to_i)
 end
 
@@ -841,6 +867,7 @@ end
 
 When(/^drar jeg et element fra "([^"]*)" på høyre side til venstre side$/) do |label|
   draggable = @site.WorkFlow.get_draggable_from_label(label)
+  draggable.scroll.to
   drop_zone = @site.WorkFlow.get_dropzone_from_label(label)
   draggable.fire_event("onmousedown")
   driver=@browser.driver
@@ -858,6 +885,7 @@ end
 When(/^klikker jeg på lenkene for å vise mindre brukte felter$/) do
   @browser.as(:class => 'toggle-esoteric').each do |a|
     if a.visible?
+      a.scroll.to
       a.click
     end
   end

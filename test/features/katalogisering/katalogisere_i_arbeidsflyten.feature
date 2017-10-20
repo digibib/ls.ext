@@ -29,6 +29,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Og velger verket fra lista tilkoplet forfatteren
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv utgivelse"
+    Og jeg venter litt
     Så klikker jeg på lenkene for å vise mindre brukte felter
     Og verifiserer at verkets basisopplysninger uten endringer er korrekte
     Og jeg venter litt

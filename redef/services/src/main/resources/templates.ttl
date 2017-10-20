@@ -45,8 +45,35 @@ publication:musicRecordingTemplate a :Publication ;
     :format format:CompactDisc ;
     :locationFormat "CD" .
 
+# work types based on publication's media type
+work:literatureWorkTemplate a :Work ;
+    duo:templateMatch [
+        :hasMediaType mediaType:Book, mediaType:E-Book, mediaType:Audiobook, mediaType:ComicBook, mediaType:Periodical
+    ] ;
+    :hasWorkType workType:Literature .
+
+work:otherWorkTemplate a :Work ;
+    duo:templateMatch [
+        :hasMediaType mediaType:LanguageCourse, mediaType:Other
+    ] ;
+    :hasWorkType workType:Other .
+
+work:filmWorkTemplate a :Work ;
+    duo:templateMatch [
+        :hasMediaType mediaType:Film
+    ] ;
+    :hasWorkType workType:Film .
+
 work:musicWorkTemplate a :Work ;
     duo:templateMatch [
+        :hasMediaType mediaType:MusicRecording, mediaType:SheetMusic ;
         :hasWorkType workType:Music
     ] ;
+    :hasWorkType workType:Music ;
     :audience audience:adult .
+
+work:gameWorkTemplate a :Work ;
+    duo:templateMatch [
+        :hasMediaType mediaType:Game
+    ] ;
+    :hasWorkType workType:Game .

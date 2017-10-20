@@ -78,6 +78,7 @@ ifeq ($(LSDEVMODE),ci)
 	$(DOCKER_COMPOSE_INIT) &&\
 	$(DOCKER_COMPOSE) stop build_services || true &&\
 	$(DOCKER_COMPOSE) rm -f build_services || true &&\
+	docker volume rm dockercompose_services_build || true &&\
 	$(DOCKER_COMPOSE) build build_services &&\
 	$(DOCKER_COMPOSE) run build_services
 	docker run --rm \
@@ -155,7 +156,7 @@ test_catalinker:					## Run unit and module-tests for catalinker
 	cd $(LSEXTPATH)/redef/catalinker && make test
 
 login: 							## Login to docker, needs EMAIL, PASSWORD, USER env variables
-	sudo docker login --email=$(EMAIL) --username=$(USER) --password=$(PASSWORD)
+	sudo docker login --username=$(USER) --password=$(PASSWORD)
 
 TAG = "$(shell git rev-parse HEAD)"
 push:							## Push services,catalinker & patron-client containers to dockerhub

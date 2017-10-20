@@ -61,6 +61,22 @@ public class InMemoryNameIndexerTest {
             "Historien om Ragnar Herlaugsson|http://data.deichman.no/workSeries/s123453"
     };
 
+    private static final String[] EXPECTED_TEST_DATA_5 = {
+            "Arthur (britannisk sagnkonge)|http://data.deichman.no/person/p123456",
+            "Arthur, Charles|http://data.deichman.no/person/p123456",
+            "Arthur, David|http://data.deichman.no/person/p123456",
+            "Arthur, Donald|http://data.deichman.no/person/p123456",
+            "Arthur, Dorothy|http://data.deichman.no/person/p123456",
+            "Arthur, Gael|http://data.deichman.no/person/p123456",
+            "Arthur, Gillian|http://data.deichman.no/person/p123456",
+            "Arthur, Jean, 1900-1991|http://data.deichman.no/person/p123456",
+            "Arthur, Robert|http://data.deichman.no/person/p123456",
+            "Arthur, Robert, 1925-|http://data.deichman.no/person/p123456",
+            "Arthur, Sam|http://data.deichman.no/person/p123456",
+            "Arthur-Nilson, Kerstin|http://data.deichman.no/person/p123456",
+            "Arthurs, Tom|http://data.deichman.no/person/p123456"
+    };
+
     private static final int LENGTH = 100;
     private static final int SMALL_LENGTH = 10;
 
@@ -134,6 +150,26 @@ public class InMemoryNameIndexerTest {
         nameIndexer.addNamedItem("Historien om det moderne Norge 1945-2000", "http://data.deichman.no/workSeries/s123453");
         List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", LENGTH);
         assertThat(nameEntriesAsArray(nameEntries), equalTo(stream(EXPECTED_TEST_DATA_4).collect(joining("\n"))));
+    }
+
+    @Test
+    public void when_even_more_names_with_additional_fields_are_added_to_empty_index_the_list_is_sorted_correctly() throws Exception {
+        InMemoryNameIndexer nameIndexer = new InMemoryNameIndexer();
+        nameIndexer.addNamedItem("Arthur, Charles", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Donald", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Dorothy", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur (britannisk sagnkonge)", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Gael", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Jean, 1900-1991", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Robert", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, David", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Robert, 1925-", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Gillian", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur, Sam", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthur-Nilson, Kerstin", "http://data.deichman.no/person/p123456");
+        nameIndexer.addNamedItem("Arthurs, Tom", "http://data.deichman.no/person/p123456");
+        List<NameEntry> nameEntries = nameIndexer.neighbourhoodOf("Hansen, T.", LENGTH);
+        assertThat(nameEntriesAsArray(nameEntries), equalTo(stream(EXPECTED_TEST_DATA_5).collect(joining("\n"))));
     }
 
     @Test

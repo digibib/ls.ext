@@ -15,6 +15,12 @@ $mintgreen: #DCFC9F;
   background-size: auto 17px;
 }
 
+@mixin source-logo-dfb {
+  background-image: url('/images/logos/ident-dfb-small.svg');
+  background-repeat: no-repeat;
+  background-size: auto 22px;
+}
+
 @mixin focus {
   outline: auto 2px Highlight;
   outline: auto 5px -webkit-focus-ring-color;
@@ -167,6 +173,10 @@ html {
                 background-position: 6px 0 !important;
               }
               &.suggestion-source-loc {
+                padding: 0 24px 2px 0;
+                background-position: 6px 0 !important;
+              }
+              &.suggestion-source-dfb {
                 padding: 0 24px 2px 0;
                 background-position: 6px 0 !important;
               }
@@ -549,6 +559,10 @@ html {
                 top: 17px;
                 right: 18px;
               }
+              input[type=search] + .save-placeholder {
+                top: -17px;
+                right: 18px;
+              }
               a.support-panel-expander.saving {
                 display: none;
               }
@@ -642,7 +656,8 @@ html {
               margin-top: 10px;
               .suggested-value {
                 clear: both;
-                margin-bottom: 25px;&.suggestion-source-bibbi {
+                margin-bottom: 25px;
+                &.suggestion-source-bibbi {
                   @include source-logo-bibbi;
                   background-position: calc(100% - 130px);
                   background-position-y: bottom;
@@ -652,6 +667,14 @@ html {
                 }
                 &.suggestion-source-loc {
                   @include source-logo-loc;
+                  background-position: calc(100% - 130px);
+                  background-position-y: bottom;
+                  &.searchable {
+                    background-position: 86% 0;
+                  }
+                }
+                &.suggestion-source-dfb {
+                  @include source-logo-dfb;
                   background-position: calc(100% - 130px);
                   background-position-y: bottom;
                   &.searchable {
@@ -711,7 +734,6 @@ html {
             }
             input {
               padding-left: 6px;
-              float: left;
               &:not([type=search]) {
                 height: 36px;
                 padding: 6px;
@@ -721,8 +743,10 @@ html {
                 margin-top: 12px;
               }
               &[type=search] {
+                float: left;
                 height: 28px;
                 margin-right: 16px;
+                width: calc(100% - 10px);
               }
               &[type=number] {
                 text-align: right;
@@ -867,10 +891,20 @@ html {
             .suggestion-source-bibbi {
               @include source-logo-bibbi;
               background-position: calc(100% - 21px) 8px;
+              &.string {
+                background-position: calc(100% - 3px) 8px;
+              }
             }
             .suggestion-source-loc {
               @include source-logo-loc;
               background-position: calc(100% - 26px) 8px;
+            }
+            .suggestion-source-dfb {
+              @include source-logo-dfb;
+              background-position: calc(100% - 25px) 8px;
+              &.string {
+                background-position: calc(100% - 3px) 8px;
+              }
             }
 
             .search-result {
@@ -1176,6 +1210,10 @@ html {
                 }
                 .suggestion-source-loc {
                   @include source-logo-loc;
+                  background-position: left;
+                }
+                .suggestion-source-dfb {
+                  @include source-logo-dfb;
                   background-position: left;
                 }
                 .use-suggestion-button {

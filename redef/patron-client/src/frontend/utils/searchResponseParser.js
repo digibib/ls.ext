@@ -48,6 +48,8 @@ export function processSearchResponse (response, locationQuery) {
       result.contributors.forEach(contributor => {
         contributor.agent.relativeUri = relativeUri(contributor.agent.uri)
       })
+      result.workUntranscribedTitle = element._source.untranscribedTitle
+
       if (element.inner_hits.publications.hits.hits.length > 0) {
         result.formats = [].concat.apply([], element.inner_hits.publications.hits.hits.map(pub => { return pub._source.formats || [] }))
       }
@@ -84,7 +86,7 @@ export function processSearchResponse (response, locationQuery) {
         selected = element.inner_hits.publications.hits.hits.find(pub => {
           let title = pub._source.displayLine1.toLocaleLowerCase()
           if (pub._source.untranscribedTitle) {
-            title += pub._source.untranscribedTitle
+            title += pub._source.untranscribedTitle.toLocaleLowerCase()
           }
           return titleMatchTerms.every(term => { return title.includes(term) })
         })
@@ -157,6 +159,17 @@ export function processSearchResponse (response, locationQuery) {
           partNumber: element._source.partNumber,
           partTitle: element._source.partTitle
         })
+      }
+
+      if (result.workUntranscribedTitle) {
+        // We only want to show untranscribed title from work if there is a match in the search terms
+        if (titleMatchTerms.length === 0 || !titleMatchTerms.every(term => { return result.workUntranscribedTitle.toLocaleLowerCase().includes(term) })) {
+          result.workUntranscribedTitle = false
+        }
+
+        if (!result.untranscribedTitle) {
+          result.untranscribedTitle = result.workUntranscribedTitle
+        }
       }
 
       result.mediaTypes = [ ...new Set(element.inner_hits.publications.hits.hits.filter(pub => pub._source.mediatype).map(pub => (pub._source.mediatype))) ].map(uri => ({ uri }))

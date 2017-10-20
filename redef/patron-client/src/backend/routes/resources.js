@@ -174,6 +174,7 @@ function transformWork (input) {
       mainTitle: input.mainTitle,
       partNumber: input.partNumber,
       partTitle: input.partTitle,
+      untranscribedTitle: input.untranscribedTitle,
       publicationYear: input.publicationYear,
       publications: transformPublications(input.publications),
       serials: transformSerials(input),

@@ -14,26 +14,21 @@ import Title from './fields/Title'
 import title from '../../utils/title'
 
 const WorkInformation = ({ work, publicationId, showAdditionalInformation, toggleShowAdditionalInformation, mediaQueryValues }) => {
+  const originalTitle = title({mainTitle: work.mainTitle, subtitle: work.subtitle, partTitle: work.partTitle, partNumber: work.partNumber})
+  const untranscribedOriginalTitle = work.untranscribedTitle
   const chosenPublication = work.publications.find(publication => publication.id === publicationId)
-  const mainTitle = chosenPublication ? chosenPublication.mainTitle : work.mainTitle
-  const partTitle = chosenPublication ? chosenPublication.partTitle : work.partTitle
-  const partNumber = chosenPublication ? chosenPublication.partNumber : work.partNumber
-  const subtitle = chosenPublication ? chosenPublication.subtitle : work.subtitle
-  let completeTitle = title({mainTitle, subtitle, partNumber, partTitle})
-  let untranscribedTitle = chosenPublication ? chosenPublication.untranscribedTitle : undefined
-  if (!untranscribedTitle) {
-    const pubWithUntranscribedTitle = work.publications.find(publication => publication.untranscribedTitle && publication.untranscribedTitle === completeTitle)
-    if (pubWithUntranscribedTitle) {
-      completeTitle = pubWithUntranscribedTitle.mainTitle
-      untranscribedTitle = pubWithUntranscribedTitle.untranscribedTitle
-    }
+  let publicationTitle
+  let untranscribedPublicationtitle
+  if (chosenPublication) {
+    publicationTitle = title({mainTitle: chosenPublication.mainTitle, subtitle: chosenPublication.subtitle, partTitle: chosenPublication.partTitle, partNumber: chosenPublication.partNumber})
+    untranscribedPublicationtitle = chosenPublication.untranscribedTitle
   }
 
   return (
     <section className="work-information">
-      <Title title={completeTitle} untranscribedTitle={untranscribedTitle} />
+      <Title title={publicationTitle || originalTitle} untranscribedTitle={untranscribedPublicationtitle} />
       <Author by={work.by} />
-      <OriginalTitle title={completeTitle} untranscribedTitle={untranscribedTitle} />
+      <OriginalTitle title={originalTitle} untranscribedTitle={untranscribedOriginalTitle} />
       <OriginalLanguage languages={work.languages} />
       <CountryOfOrigin country={work.countryOfOrigin} />
       <Year year={work.publicationYear} />

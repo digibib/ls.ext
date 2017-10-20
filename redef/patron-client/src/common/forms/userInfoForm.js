@@ -18,5 +18,9 @@ module.exports = {
   email: {
     required: false,
     asyncValidation: true
+  },
+  telephone: {
+    required: false,
+    asyncValidation: true
   }
 }

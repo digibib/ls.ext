@@ -1,4 +1,94 @@
 /*global window,history*/
+/**
+ * This file operates on a Ractive (https://ractive.js.org/) data structure representing inputs to create and edit RDF
+ * resources through the REST API provided by the ls.ext/redef/services module which stores the data in a triple store.
+ * Resources are a set of RDF triples, and are in principle general, but Publications and Works are treated specially.
+ * Other types may be Persons, Places, Events, (general) Subjects etc.
+ *
+ * The general idea is that input data structures are two-way bound to html input elements, such as text fields select
+ * lists etc, implemented as Ractive partials. When a value is changed by the user, the previous value, which is kept in
+ * the input data structure, is compared with the new one, and an HTTP PATCH with the content-type application/ldpatch+json
+ * is dispatched to the services backend. Thus the RDF triple for the old value is deleted, and a triple for the new value is
+ * added to the triple store. In effect a property is updated. New values only result in PATH with only an add part.
+ *
+ * Each input is configured with which resource type/domain is belongs to, e.g. 'Work', and which predicate, e.g. 'mainTitle'.
+ * The actual resource uri is stored in a map in the ractive structure, 'targetUri'. That way, by combing a changed
+ * input's old value, new value, predicate, domain and uri obtained by resolving targetUri[domain] (e.g. targetUri['Work']),
+ * a PATCH may be created.
+ *
+ * Input structures look like this:
+ *
+ * input
+ *   +- id            an id for household and referring purposes, e.g. 'mainTitleInput'. Must be unique.
+ *   +- domain        which resource type the input belongs to
+ *   +- rdfProperty   shorthand form of RDF predicate the input maps to e.g. 'mainTitle'
+ *   +- type          e.g. 'input-string', 'searchable-with-result-in-side-panel', 'select-predefined-value'
+ *   +- multiple      whether to allow more than one value
+ *   +- labelKey      a key represented in i18n files
+ *   +- values        array with value structures
+ *        +- 0
+ *        |  +- current
+ *        |  |     +- value   One of the actual values. If type is select dropdown, all values are store as an array here
+ *        |  |     +- displayValue If value is an uri referring to another resource, this is a more user-freindly display value, e.g. name
+ *        |  +- old
+ *        |        +- value   The previous value
+ *        |
+ *        +- 1
+ *           +- current
+ *           |     +- value
+ *           |     +- displayValue
+ *           |
+ *           +- old
+ *                 +- value
+ *
+ * Inputs may also be of a compound type, and have subInputs. This is used to handle blank nodes, by wrapping
+ * other fields.
+ *
+ * Inputs are grouped, facilitating displaying them in tabs. For presentation purposes, some inputs are decorated by
+ * properties like 'firstInGroup', 'lastInGroup', 'cssClassPrefix', 'orderBy', 'showOnlyWhen', 'placeHolder' etc.
+ *
+ * inputGroups
+ *    +- 0
+ *    |   +- domain      Which domain/resource type the tab is concerned with
+ *    |   +- tabLabel    Key to label of tab
+ *    |   +- inputs      Inputs of this tab
+ *    |   |     +- 0
+ *    |   |        +- id
+ *    |   |        +- ...
+ *    |   |
+ *    |   |     +- 1
+ *    |   |        +- id
+ *    |   |        +- ...
+ *    |   |
+ *    |   +- nextStep
+ *    |   |     +- buttonLabel  Key to label of button to go to next tab
+ *    |   |     +- ...
+ *    |   |
+ *    |   +- tools
+ *    |        +- 0
+ *    |           +- template    Name of a ractive partial that implements a special purpose tool, e.g. to split work
+ *    |
+ *    +- 1
+ *       +- domain
+ *       +- ...
+ *
+ *  The input structure is initalised by compining the application configuration, obtained from the backend, with the ontology from
+ *  the same source, since the ontology does not define much regarding presentation. The main driver for this approach
+ *  is the grouping of inputs into tabs definfing the workflow. In addition, the input order is thus configurable, along
+ *  with properties like cardinality, property label overrides etc.
+ *
+ *  All inputs are represented in a flat array as well, called 'inputs' in the Ractive structure.
+ *
+ *  Input structures may also have additional configuration, as a property called 'widgetOptions'. widgetOptions may e.g. refer
+ *  to definitions of popup forms, which are lists of inputs used to create or edit related resources on the fly. Say an
+ *  input has type='searchable-with-results-in-side-panel'. Its behaviour is to hold an uri pointing to resource, e.g. a Person,
+ *  but display that person's name as displayValue. To set the uri value, a search is performed, and the user may select an existing
+ *  resource found in from the search this setting the value to the person's uri and displayValue to his/her name, or the
+ *  user can create a new instance. For this purpose, the create popup form is shown.
+ *
+ *  To enable comparing tho resources of the same type side-by-side, values in the 'other' resource may be stored in 'compareValues'
+ *  field of input, rather than 'values' field.
+ */
 (function (root, factory) {
   'use strict'
 
@@ -23,6 +113,14 @@
   }
 }(this, function (Ractive, axios, Graph, Ontology, StringUtil, _, $, ldGraph, URI, ISBN, esquery, nestedPropertyHelper) {
     'use strict'
+
+    /**
+     * This function clears all inputs for the supplied domain type.
+     *
+     * @param domainType Clear only inputs with this domain
+     * @param excludeInputs  Leave these inputs alone
+     * @returns {Promise.<TResult>|*}
+     */
     const unloadResourceForDomain = function (domainType, excludeInputs) {
       excludeInputs = excludeInputs || []
       const subjectTypesOfInputValue = {}
@@ -136,6 +234,12 @@
       }
     }
 
+    /**
+     * This function saves to the browser's sessiom store data that are fetched from external source but has not yet been saved in triple store.
+     * This is in case the user reloads the page, giving possibility to continue a fairer chance.
+     * @param event
+     * @returns {boolean}
+     */
     function saveSuggestionData (event) {
       let suggestionData = []
       let acceptedData = []
@@ -150,7 +254,7 @@
           _.each(realInputs, function (input, subInputIndex) {
             if (!unIdentifiedAuthorities && input.type === 'searchable-with-result-in-side-panel') {
               _.each(input.values, (value) => {
-                if (value.current.displayValue.length > 0 && (!value.current.value || value.current.value.length === 0)) {
+                if ((value.current.displayValue || '').length > 0 && (!value.current.value || value.current.value.length === 0)) {
                   unIdentifiedAuthorities = true
                 }
               })
@@ -196,7 +300,9 @@
         window.sessionStorage.setItem(suggestedValueSearchInput.searchForValueSuggestions.parameterName, suggestedValueSearchInput.values[ 0 ].current.value)
       }
       if (unIdentifiedAuthorities) {
-        return false
+        if (!URI.parseQuery(URI.parse(document.location.href).query).noOnloadWarning) {
+          return false
+        }
       }
     }
 
@@ -210,6 +316,10 @@
       return inputHasOpenForm
     }
 
+    /**
+     * Hides all open support panels.
+     * @param options
+     */
     function clearSupportPanels (options) {
       let changes = false
       const keepActions = (options || {}).keep || []
@@ -246,6 +356,12 @@
       return ractive.get('applicationData.translations')[ ractive.get('applicationData.language') ][ msgKey ]
     })
 
+    /**
+     * Shows the delete resource dialog, and calls the success function when donw..
+     * @param uri
+     * @param deleteConfig
+     * @param success called when deletion is completed
+     */
     const deleteResource = function (uri, deleteConfig, success) {
       if (!deleteConfig.dialogKeypath) {
         deleteConfig.dialogKeypath = 'deleteResourceDialog'
@@ -327,6 +443,10 @@
       })
     }
 
+    /**
+     * Shows dialog that ask the user to show a particular input that is usually hidden.
+     * @param enableSpecialInputSpec
+     */
     const enableSpecialInput = function (enableSpecialInputSpec) {
       ractive.set('confirmEnableSpecialInputDialog.confirmLabel', enableSpecialInputSpec.confirmLabel)
       let keypath = ractive.get(`inputLinks.${enableSpecialInputSpec.inputId}`)
@@ -353,6 +473,14 @@
       })
     }
 
+    /**
+     * Shows dialog to initiate merging of resources/extended edit.
+     *
+     * @param mergeResourcesSpec
+     * @param targetUri
+     * @param sourceUri
+     * @param proceed
+     */
     const mergeResources = function (mergeResourcesSpec, targetUri, sourceUri, proceed) {
       axios.get(proxyToServices(`${sourceUri}/references`)).then(function (response) {
         ractive.set('mergeResourcesWarning', {
@@ -390,6 +518,12 @@
       })
     }
 
+    /**
+     * Shows dialog to clone/split parent resource
+     * @param cloneParentSpec
+     * @param parentUri
+     * @param proceed
+     */
     const cloneParents = function (cloneParentSpec, parentUri, proceed) {
       $('#clone-parent-dialog').dialog({
         resizable: false,
@@ -448,6 +582,12 @@
       })
     }
 
+    /**
+     * Shows dialog that warns about an existing resource, e.g. with same ISBN
+     * @param spec
+     * @param existingResources
+     * @param proceed
+     */
     const alertAboutExistingResource = function (spec, existingResources, proceed) {
       ractive.set('existingResourcesDialog.existingResources', existingResources)
       ractive.set('existingResourcesDialog.legend', existingResources.length > 1 ? spec.legendPlural : spec.legendSingular)
@@ -484,6 +624,11 @@
       })
     }
 
+    /**
+     * Shows dialog that warns that there are addiotnal suggestions which may be used.
+     * @param spec
+     * @param proceed
+     */
     const alertAboutAdditionalSuggestions = function (spec, proceed) {
       ractive.set('additionalSuggestionsDialog', spec)
       $('#additional-suggestions-dialog').dialog({
@@ -517,6 +662,12 @@
       })
     }
 
+    /**
+     * Shows dialog that initiates copying of a resource.
+     * @param copyPublicationSpec
+     * @param proceed
+     * @param success
+     */
     const copyPublication = function (copyPublicationSpec, proceed, success) {
       const idPrefix = _.uniqueId()
       $('#copy-resource-dialog').dialog({
@@ -605,6 +756,17 @@
       }
     }
 
+    /**
+     * Sets values into an input representing select from predefined values
+     * @param values
+     * @param input
+     * @param index
+     * @param options
+     *     compareValues=true sets values in 'compareValues' rather than 'values' field.
+     *     demoteAcceptedSuggestions=true moves existing values that stem from external source to suggested values
+     *     initialLoad=true means that this is loading from a resource. old and current are set equal so subsequent changes are detectable
+     * @returns {Array}
+     */
     function setMultiValues (values, input, index, options) {
       options = options || {}
       if (values) {
@@ -637,7 +799,7 @@
         let valuesKey = options.compareValues ? 'compareValues' : 'values'
         if (!input[ valuesKey ][ index ]) {
           input[ valuesKey ][ index ] = {}
-        } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value.length > 0) {
+        } else if (options.noOverwrite && input[ valuesKey ][ index ].current && input[ valuesKey ][ index ].current.value && input[ valuesKey ][ index ].current.value.length > 0) {
           return
         }
         if (options.demoteAcceptedSuggestions) {
@@ -654,10 +816,11 @@
             })
             input.suggestionsAreDemoted = true
             delete input[ valuesKey ][ index ].current.accepted[ value ]
+            ractive.update(`${input}.${valuesKey}.current.accepted`)
           })
         }
         if (options.initialLoad) {
-          input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old
+          input[ valuesKey ][ index ].old = input[ valuesKey ][ index ].old || {}
           input[ valuesKey ][ index ].old.value = valuesAsArray
         }
         input[ valuesKey ][ index ].current = input[ valuesKey ][ index ].current || {}
@@ -685,6 +848,16 @@
       }
     }
 
+    /**
+     * Sets a literal or uri value
+     * @param value
+     * @param input
+     * @param index
+     * @param options
+     *     compareValues=true sets value in 'compareValues' rather than 'values' field.
+     *     demoteAcceptedSuggestions=true moves existing value that stem from external source to suggested values
+     *     initialLoad=true means that this is loading from a resource. old and current are set equal so subsequent changes are detectable
+     */
     function setSingleValue (value, input, index, options) {
       options = options || {}
       if (options.compareValues) {
@@ -715,7 +888,8 @@
           lang: value.lang,
           accepted: options.source ? { source: options.source } : undefined
         },
-        uniqueId: _.uniqueId()
+        uniqueId: _.uniqueId(),
+        expanded: (input[ valuesKey ][ index ] || {}).expanded || value.value === ''
       }
       if (input[ valuesKey ][ index ].current.accepted) {
         setSuggestionsAreAcceptedForParentInput(input, index)
@@ -726,6 +900,7 @@
     function setIdValue (id, input, index, valuesField, options) {
       options = options || {}
       input[ valuesField ] = input[ valuesField ] || []
+
       if (!input[ valuesField ][ index ]) {
         input[ valuesField ][ index ] = {}
       } else if (options.noOverwrite) {
@@ -755,6 +930,14 @@
       }
     }
 
+    /**
+     * Sets the display value of an input with values that are uris pointing to other resources
+     * @param input
+     * @param index
+     * @param root a previously parsed linked data graph containing the resource to fetch display data from
+     * @param options
+     * @returns {*}
+     */
     function setDisplayValue (input, index, root, options) {
       options = options || {}
       let valuesField = options.valuesField || 'values'
@@ -852,6 +1035,12 @@
       }
     }
 
+    /**
+     * Determines whether an input should be shown or not based on one or more values from other inputs and the document's url's query parameters
+     * @param input input which shuld be checked
+     * @param allInputs check against alle these inputs
+     * @returns {boolean}
+     */
     function checkShouldInclude (input, allInputs) {
       let shouldInclude = true
       let handleInput = function (includeWhenValues, property) {
@@ -878,6 +1067,12 @@
       return shouldInclude
     }
 
+    /**
+     * Checks whether an input is considered esoteric (rarely used), and if it should be shown or not.
+     * @param input
+     * @param allInputs
+     * @returns {boolean}
+     */
     function checkEsoteric (input, allInputs) {
       let isEsoteric = (input.esotericWhen || undefined) === 'always'
       let handleInput = function (includeWhenValues, property) {
@@ -1046,6 +1241,12 @@
         .value()
     }
 
+    /**
+     * This function traverses all inputs in all input groups and applies the supplied function to each. The function receives
+     * parameters for the input, griup index input index within group and for sub inputs the index within the parent input's inputs.
+     *
+     * If options.handleInputGroups is defined, it handles the compound inputs themselves as well.
+     */
     function forAllGroupInputs (handleInput, options) {
       options = options || {}
       _.find(options.inputGroups || _.compact(ractive.get('inputGroups')), function (group, groupIndex) {
@@ -1064,6 +1265,9 @@
       })
     }
 
+    /**
+     * Returns all inputs from groups, 'maintenence' inputs and inputs in popup forms
+     */
     function allInputs () {
       let inputs = _.select(ractive.get('inputs'), function (input) {
         return (input.fragment === 'publicationOf' || input.fragment === 'recordId')
@@ -1094,6 +1298,10 @@
       return inputs
     }
 
+    /**
+     * Special function that finds input for Publication's publicationOf and applies function to it.
+     * @param handler
+     */
     function withPublicationOfWorkInput (handler) {
       const publicationOfInput = _.find(allInputs(), function (input) {
         return (input.fragment === 'publicationOf' && input.domain === 'deichman:Publication' && input.type === 'searchable-with-result-in-side-panel')
@@ -1103,6 +1311,10 @@
       }
     }
 
+    /**
+     * Finds input by inputId
+     * @param inputId
+     */
     function inputFromInputId (inputId) {
       let keypath = ractive.get(`inputLinks.${inputId}`)
       if (keypath) {
@@ -1114,6 +1326,11 @@
       return ractive.get('applicationData.config.typeMap')
     })
 
+    /**
+     * Determines resource type based on uri
+     * @param resourceUri
+     * @returns {*}
+     */
     function typeFromUri (resourceUri) {
       const typeMap = memoizedTypeMap()
       const allTypes = _.keys(typeMap).join('|')
@@ -1280,6 +1497,15 @@
       }
     }
 
+    /**
+     * Updates values in all inputs or a subset with data from graph data. Traverse through all inputs that has supplied type
+     * as domain transfers values from graph into the input values.
+     * @param graphData parsed graph data
+     * @param resourceUri
+     * @param options
+     * @param root
+     * @param type
+     */
     function updateInputsForResource (graphData, resourceUri, options, root, type) {
       options = options || {}
       const valuesField = options.compareValues ? 'compareValues' : 'values'
@@ -1318,7 +1544,10 @@
                   return function (_root) {
                     _root = _root || root
                     input.offset = input.offset || {}
-                    let offset = 0
+                    let offset = (input.type !== 'select-predefined-value' && input.multiple) ? (_.filter(input.values || [], (val) => ![ undefined, '', null ].includes(val.current.value))).length : 0
+                    if (input.isSubInput) {
+                      offset = 0
+                    }
                     if (input.offset[ offsetCrossTypes[ type ] ]) {
                       offset = input.offset[ offsetCrossTypes[ type ] ]
                     }
@@ -1353,7 +1582,13 @@
                           if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                             _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                               index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField, options)
+                              const id = input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id
+                              // for regular non-sub inputs, check if value is already present
+                              if (!input.isSubInput && _.chain(input[ valuesField ]).pluck('current').pluck('value').filter((value) => value === id).any().value()) {
+                                return
+                              }
+
+                              setIdValue(id, input, index, valuesField, options)
                               if (options.source && node.id !== '') {
                                 setPreviewValues(input, node, index)
                               }
@@ -1432,27 +1667,32 @@
                               })
                           }
                         } else {
-                          _.each(these(root.getAll(fragmentPartOf(predicate))).orIf(input.isSubInput || options.compareValues).atLeast([ { value: '' } ]), (value, index) => {
-                            if (!options.onlyValueSuggestions) {
-                              let valueIndex = input.isSubInput ? rootIndex : index
-                              setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
-                              input[ valuesField ][ valueIndex ].subjectType = type
-                              input[ valuesField ][ valueIndex ].oldSubjectType = type
-                              if (input.isSubInput && !options.source) {
-                                input[ valuesField ][ valueIndex ].nonEditable = true
-                                ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
-                                input.parentInput.allowAddNewButton = true
-                              } else if (input.multiple) {
-                                input.allowAddNewButton = true
+                          _.each(
+                            these(_.union(root.getAll(fragmentPartOf(predicate)), _.map(root.outAll(fragmentPartOf(predicate)), (node) => ({ value: node.id }))))
+                              .orIf(input.isSubInput || options.compareValues || input.literal)
+                              .atLeast([ { value: '' } ]), (value, index) => {
+                              if (!options.onlyValueSuggestions) {
+                                let valueIndex = input.isSubInput ? rootIndex : index
+                                setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
+                                if (input[ valuesField ][ valueIndex ]) {
+                                  input[ valuesField ][ valueIndex ].subjectType = type
+                                  input[ valuesField ][ valueIndex ].oldSubjectType = type
+                                  if (input.isSubInput && !options.source) {
+                                    input[ valuesField ][ valueIndex ].nonEditable = true
+                                    ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
+                                    input.parentInput.allowAddNewButton = true
+                                  } else if (input.multiple) {
+                                    input.allowAddNewButton = true
+                                  }
+                                }
+                              } else if (value.value && value.value.length > 0) {
+                                input.suggestedValues = input.suggestedValues || []
+                                input.suggestedValues.push({
+                                  value: value.value,
+                                  source: options.source
+                                })
                               }
-                            } else {
-                              input.suggestedValues = input.suggestedValues || []
-                              input.suggestedValues.push({
-                                value: value.value,
-                                source: options.source
-                              })
-                            }
-                          })
+                            })
                         }
                         rootIndex++
                       }
@@ -1526,6 +1766,12 @@
         })
     }
 
+    /**
+     * Saves values from inputs as a new resource
+     * @param inputsToSave
+     * @param resourceType
+     * @returns {Promise.<TResult>|*}
+     */
     function saveInputs (inputsToSave, resourceType) {
       let wait = ractive.get('waitHandler').thisMayTakeSomTime()
       // force all inputs to appear as changed
@@ -1623,6 +1869,18 @@
         })
     }
 
+    /**
+     *
+     * In the following section, configuration data is combined with ontology to set up initial input group structure
+     *
+     */
+
+    /**
+     * Returns a new structure for empty values.
+     * @param predefined
+     * @param searchable
+     * @returns {[null]}
+     */
     function emptyValues (predefined, searchable) {
       return [ {
         old: { value: predefined ? [] : undefined, lang: '' },
@@ -1712,6 +1970,11 @@
       (group.inputs[ lastFoundOrActualLast(_.findLastIndex(group.inputs, function (input) { return input.visible === true }), group.inputs.length) ] || {}).lastInGroup = true
     }
 
+    /**
+     * determines input type based on RDF range property value
+     * @param range
+     * @returns {{inputType: *, rdfType: *}}
+     */
     const typesFromRange = function (range) {
       let inputType
       let rdfType = range
@@ -1786,6 +2049,11 @@
       })
     }
 
+    /**
+     * Sets up the input group structure
+     * @param applicationData
+     * @returns {Promise.<TResult>|*}
+     */
     function createInputGroups (applicationData) {
       const props = Ontology.allProps(applicationData.ontology)
       const inputs = []
@@ -1946,7 +2214,7 @@
               if (formInput.label) {
                 formInput.labelkey = formInput.label
               }
-              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
+              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', 'keypath'))
               formInput.values = emptyValues(false)
               formInput.rdfType = resourceForm.rdfType
               if (targetResourceIsMainEntry) {
@@ -2076,6 +2344,8 @@
             if (input.showOnlyWhenInputHasValue) {
               ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
+            ontologyInput.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(ontologyInput.type)
+            ontologyInput.oink = ontologyInput.type
           }
           copyResourceForms(input)
         })
@@ -2189,6 +2459,10 @@
       })
     }
 
+    /**
+     * Utility that returns gradnparent of supplid keypath i.e. two dots up
+     * @param keypath
+     */
     function grandParentOf (keypath) {
       return _.initial(_.initial(keypath.split('.'))).join('.')
     }
@@ -2201,6 +2475,12 @@
       _.each(mainInput.subInputs ? _.pluck(mainInput.subInputs, 'input') : [ mainInput ], visitor)
     }
 
+    /**
+     * Positions support panels to align with inputs they are supposed to support.
+     * @param applicationData
+     * @param tabId
+     * @returns {*}
+     */
     function positionSupportPanels (applicationData, tabId) {
       tabId = undefined
       const dummyPanel = $('#right-dummy-panel')
@@ -2523,6 +2803,10 @@
       })
     }
 
+    /**
+     * Shows overlay with TURTLE data
+     * @param uri
+     */
     function showTurtle (uri) {
       const openTabTargets = {
         publication: 1,
@@ -2551,6 +2835,10 @@
       })
     }
 
+    /**
+     * Close the compare section (right column) of the compare resources tool
+     * @param type
+     */
     function closeCompare (type) {
       ractive.set('compare', null)
       ractive.set('duplicateSearchTerm', undefined)
@@ -2600,6 +2888,13 @@
       }
     }
 
+    /**
+     * Fetches a resource (some triples) to be used as template for new resource
+     * @param templateResourcePartsFrom list of inputIds to use as query parameters when asking for tenmplate
+     * @param newResourceType
+     * @param inputs Which inputs to update with new temnplate data.
+     * @returns {Promise.<T>}
+     */
     function fetchResourceTemplate (templateResourcePartsFrom, newResourceType, inputs) {
       if (templateResourcePartsFrom) {
         let templateUri = URI(`http://data.deichman.no/${newResourceType.type.toLowerCase()}/template`)
@@ -2614,12 +2909,20 @@
         })
 
         if (!abortFetchTemplate) {
-          return fetchExistingResource(templateUri.toString(), { noOverwrite: true, source: 'template', inputs })
+          return fetchExistingResource(templateUri.toString(), {
+            noOverwrite: true,
+            source: 'template',
+            keepDocumentUrl: true,
+            inputs
+          })
         }
       }
       return Promise.resolve()
     }
 
+    /**
+     * Main exported object
+     */
     const Main = {
       searchResultItemHandlers: {
         defaultItemHandler: function (item) {
@@ -2784,6 +3087,14 @@
           return applicationData
         }
 
+        /**
+         * Saves inputs in a compound input as new blank noe
+         * @param event
+         * @param applicationData
+         * @param index
+         * @param op
+         * @returns {Promise.<TResult>|*}
+         */
         function saveObject (event, applicationData, index, op) {
           let waitHandler = ractive.get('waitHandler')
           waitHandler.newWaitable(event.original.target)
@@ -2975,7 +3286,10 @@
               ractive.set('save_status', 'alle endringer er lagret')
               if (input.subInputs) {
                 _.each(input.subInputs, function (subInput) {
-                  subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                  if (subInput.input.values[ index ].current) {
+                    subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
+                    subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                  }
                 })
               } else {
                 input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
@@ -2996,7 +3310,14 @@
           let sourceSpan = ''
           if (acceptedSourcekeypath) {
             var source = (ractive.get(`${acceptedSourcekeypath}.current.accepted`) || {})[ selection.id ]
-            sourceSpan = source ? `<span class='suggestion-source suggestion-source-${source}'/>` : ''
+            const uniqueId = _.uniqueId()
+            sourceSpan = source ? `<span id="${uniqueId}" class='suggestion-source suggestion-source-${source}'/>` : ''
+            const removeSuggestionSourceObserver = ractive.observe(`${acceptedSourcekeypath}.current.accepted`, function (newValue, oldValue, keypath) {
+              if (_.keys(newValue).length === 0) {
+                $(`#${uniqueId}`).remove()
+                removeSuggestionSourceObserver.cancel()
+              }
+            }, { init: false })
           }
           return $(`<span>${selection.text}${sourceSpan}</span>`)
         }
@@ -3022,6 +3343,10 @@
           })
         }
 
+        /**
+         * temprarily turn off all observers to speed up execution
+         * @param doStuff
+         */
         function whileUnobserved (doStuff) {
           _.invoke(ractive.get('observers'), 'cancel')
           doStuff()
@@ -3297,7 +3622,13 @@
           }
           const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
-            $(suggestedValues).hide()
+            let keypath = Ractive.getNodeInfo(node).keypath
+            if (_.flatten([ ractive.get(`${keypath}.current.value`) ])[ 0 ] !== '') {
+              $(suggestedValues).hide()
+              ractive.set(`${keypath}.expanded`, false)
+            } else {
+              ractive.set(`${keypath}.expanded`, true)
+            }
             let toggle = function () {
               $(suggestedValues).slideToggle()
             }
@@ -4019,6 +4350,9 @@
               // patchResource creates a patch request based on previous and current value of
               // input field, and sends this to the backend.
               patchResource: function (event, predicate, rdfType, editAuthorityMode) {
+                if (event.original.target.validity && !event.original.target.validity.valid) {
+                  return
+                }
                 const inputValue = event.context
                 const eventKeypath = event.keypath
                 const input = event.input || ractive.get(grandParentOf(eventKeypath))
@@ -4128,7 +4462,6 @@
                   updateBrowserLocationWithTab(2)
                 }
                 Main.init(initOptions)
-//                updateBrowserLocationWithTemplate(editWith.template)
               },
               focusEditItem: function (event, itemIndex) {
                 $(`#ed-item-${itemIndex}`).focus()
@@ -4307,19 +4640,21 @@
                 if (newResourceType && (!ractive.get(`targetUri.${newResourceType.type}`))) {
                   fetchResourceTemplate(newResourceType.templateResourcePartsFrom, newResourceType)
                     .then(function () {
-                      _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
-                        const sourceInput = inputFromInputId(copyFromInputId)
-                        if (sourceInput) {
-                          const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
-                          if (targetInput) {
-                            copyValues(targetInput, sourceInput)
+                      if (!ractive.get('primarySuggestionAccepted')) {
+                        _.each(_.keys(newResourceType.copyInputValues), function (copyFromInputId) {
+                          const sourceInput = inputFromInputId(copyFromInputId)
+                          if (sourceInput) {
+                            const targetInput = inputFromInputId(newResourceType.copyInputValues[ copyFromInputId ])
+                            if (targetInput) {
+                              copyValues(targetInput, sourceInput)
+                            } else {
+                              throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
+                            }
                           } else {
-                            throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in target source input in copyInputValues spec`)
+                            throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
                           }
-                        } else {
-                          throw Error(`Unknown input id ${newResourceType.copyInputValues[ copyFromInputId ]} in input source input in copyInputValues spec`)
-                        }
-                      })
+                        })
+                      }
                       saveNewResourceFromInputs(newResourceType.type)
                       ractive.update()
                     })
@@ -4390,6 +4725,14 @@
                   ractive.update(event.keypath)
                 }
               },
+              checkValidity: function (event) {
+                const form = $(event.node)
+                if (_.any(form.find('input:invalid'))) {
+                  form.find('button.disable-when-invalid').attr('disabled', 'disabled')
+                } else {
+                  form.find('button.disable-when-invalid').removeAttr('disabled')
+                }
+              },
               createNewResource: function (event, origin) {
                 let maintenance = origin.indexOf('maintenanceInputs') !== -1
                 const inputs = event.context.inputs
@@ -4422,6 +4765,7 @@
                 let patchMotherResource = function (resourceUri) {
                   if (!useAfterCreation && !targetInput.isSubInput && !targetInput.searchMainResource) {
                     Main.patchResourceFromValue(ractive.get(`targetUri.${targetInput.rdfType}`), targetInput.predicate, ractive.get(origin), targetInput.datatypes[ 0 ], errors)
+                    ractive.set(`${origin}.old.value`, resourceUri)
                   }
                   return resourceUri
                 }
@@ -4645,7 +4989,7 @@
                     return { id: value }
                   })
                   values.push({ id: value.value, source })
-                  setMultiValues(values, input, 0, { source: source, intitalLoad: true })
+                  setMultiValues(values, input, 0, { intitalLoad: true })
                 }
                 const selectField = $(`span[data-support-panel-base-id="support_panel_base_${input.values[ 0 ].uniqueId}"] span.select2.select2-container`)
                 ractive.fire('patchResource', {
@@ -4823,7 +5167,7 @@
                 showTurtle(`${proxyToServices(resourceUri)}?format=TURTLE`)
               },
               showReport: function (event, resourceUri) {
-                let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true`
+                let targetUrl = `/cataloguing?template=report&Publication=${resourceUri}&hideHome=true&disablePagination=true`
                 let query = URI.parseQuery(URI.parse(document.location.href).query)
                 if (query.hasMediaType) {
                   targetUrl += `&hasMediaType=${query.hasMediaType}`
@@ -5051,15 +5395,17 @@
             }
           }
 
-          function checkRequiredSubInput (newValue, keypath) {
+          function checkRequiredSubInput (newValue, oldvalue, keypath) {
             newValue = _.flatten([ newValue ]).join('')
             const valueIndex = _.last(grandParentOf(keypath).split('.'))
             const inputKeypath = grandParentOf(grandParentOf(keypath))
             const inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
             const input = ractive.get(inputKeypath)
-            if (input.required) {
+            const newStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(newValue.replace(/\n/g, '')))
+            const oldStringValid = (typeof oldvalue === 'string' && /^\S+.*\S$|^\S?$/.test(oldvalue.replace(/\n/g, '')))
+            if (input.required || !newStringValid || (newStringValid && !oldStringValid)) {
               const voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
-              const veto = !(typeof newValue === 'string' && newValue.length > 0) ||
+              const veto = !newStringValid ||
                 (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
               castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
             }
@@ -5071,9 +5417,7 @@
               ractive.set(`${parentOf(keypath)}.oldSubjectType`, oldValue)
             }, { init: false }),
 
-            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, function (newValue, oldValue, keypath) {
-              checkRequiredSubInput(newValue, keypath)
-            }, { init: true }),
+            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, checkRequiredSubInput, { init: true }),
 
             ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.nonEditable`, function (newValue, oldValue, keypath) {
               let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
@@ -5302,7 +5646,7 @@
         }
 
         function loadPublication (query, tab) {
-          fetchExistingResource(query.Publication)
+          fetchExistingResource(query.Publication, query)
             .then(loadWorkOfPublication)
             .then(function () {
               ractive.set('rdfType', 'Publication')
@@ -5472,19 +5816,21 @@
                 setInputVisibility(inputLink, false)
               }
             }
+
             _.each(input.dependentResourceTypes, function (type) {
-              ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
+              ractive.push('observers', ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
                 if (typeof newValue === 'string' && newValue !== '') {
                   fetchExistingResource(newValue, { inputs: [ input ] })
                 }
-              })
-              ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
-                if (typeof newValue === 'string' && newValue !== '') {
-                  if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
-                    fetchExistingResource(newValue)
+              }, { init: false }))
+              ractive.push('observers', ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
+                  if (typeof newValue === 'string' && newValue !== '') {
+                    if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
+                      fetchExistingResource(newValue)
+                    }
                   }
-                }
-              }, { init: false })
+                }, { init: false })
+              )
             })
           }
           forAllGroupInputs(handleVisibility, { handleInputGroups: true })

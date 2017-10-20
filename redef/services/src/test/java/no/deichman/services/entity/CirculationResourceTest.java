@@ -92,7 +92,7 @@ public class CirculationResourceTest {
                 + "      \"recordId\": \"54312\",\n"
                 + "      \"workURI\": \"http://data.deichman.no/work/%5$s\",\n"
                 + "      \"publicationURI\": \"http://data.deichman.no/publication/%1$s\",\n"
-                + "      \"publicationImage\": \"http://example.org/image.jpg\",\n"
+                + "      \"publicationImage\": null,\n"
                 + "      \"contributor\": {\n"
                 + "        \"role\": \"http://data.deichman.no/role#author\",\n"
                 + "        \"agentUri\": \"http://data.deichman.no/person/%4$s\",\n"
@@ -122,7 +122,7 @@ public class CirculationResourceTest {
                 + "      \"recordId\": \"99232\",\n"
                 + "      \"workURI\": \"http://data.deichman.no/work/%5$s\",\n"
                 + "      \"publicationURI\": \"http://data.deichman.no/publication/%2$s\",\n"
-                + "      \"publicationImage\": \"http://example.org/image.jpg\",\n"
+                + "      \"publicationImage\": null,\n"
                 + "      \"contributor\": {\n"
                 + "        \"role\": \"http://data.deichman.no/role#author\",\n"
                 + "        \"agentUri\": \"http://data.deichman.no/person/%4$s\",\n"
@@ -144,7 +144,7 @@ public class CirculationResourceTest {
                 + "      \"recordId\": \"220\",\n"
                 + "      \"workURI\": \"http://data.deichman.no/work/%5$s\",\n"
                 + "      \"publicationURI\": \"http://data.deichman.no/publication/%3$s\",\n"
-                + "      \"publicationImage\": \"http://example.org/image.jpg\",\n"
+                + "      \"publicationImage\": null,\n"
                 + "      \"contributor\": {\n"
                 + "        \"role\": \"http://data.deichman.no/role#author\",\n"
                 + "        \"agentUri\": \"http://data.deichman.no/person/%4$s\",\n"
@@ -223,7 +223,6 @@ public class CirculationResourceTest {
                 ResourceFactory.createProperty(BaseURI.ontology() + "publicationYear"),
                 ResourceFactory.createTypedLiteral("2005", XSDDatatype.XSDgYear)));
         publicationModel.add(createStatement(subject, createProperty(BaseURI.ontology() + "hasMediaType"), createResource(BaseURI.root() + "mediaType#Book")));
-        publicationModel.add(createStatement(subject, createProperty(BaseURI.ontology() + "hasImage"), createResource("http://example.org/image.jpg")));
         return publicationModel;
     }
 }

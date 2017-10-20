@@ -6,7 +6,7 @@ const OriginalTitle = ({ title, untranscribedTitle }) => {
   if (title) {
     return (
       <MetaItem label={messages.labelOriginalTitle} data-automation-id="work_originalTitle">
-        { untranscribedTitle ? `${untranscribedTitle} ${title}` : title }
+        { untranscribedTitle ? `${untranscribedTitle} | ${title}` : title }
       </MetaItem>
     )
   } else {

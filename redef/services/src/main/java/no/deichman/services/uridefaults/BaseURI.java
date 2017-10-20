@@ -81,4 +81,8 @@ public final class BaseURI {
     public static String workSeries() {
         return BASE_URI_ROOT + "workSeries/";
     }
+
+    public static String cataloguingSource(String source) {
+        return BASE_URI_ROOT + "cataloguingSource#" + source;
+    }
 }

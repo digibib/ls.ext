@@ -48,13 +48,24 @@ public class MARCMapper {
     private static final Predicate<String> EMPTY_VALUES = s -> s != null;
     private static final int THREE = 3;
     private static final Function<String, String> MUL_FILTER = s -> s.replace("mul", "");
+    private String cataloguingSourceUri;
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
 
-    public MARCMapper() {
+    private MARCMapper() {
     }
 
-    public MARCMapper(boolean simpleIdGenerator) {
+    MARCMapper(String cataloguingSourceUri, boolean simpleIdGenerator) {
+        this.cataloguingSourceUri = cataloguingSourceUri;
+        this.simpleIdGenerator = simpleIdGenerator;
+    }
+
+    MARCMapper(Target cataloguingSource) {
+        this(cataloguingSource.getCataloguingSourceUri(), false);
+    }
+
+    MARCMapper(Target cataloguingSource, boolean simpleIdGenerator) {
+        this(cataloguingSource);
         this.simpleIdGenerator = simpleIdGenerator;
     }
 
@@ -81,6 +92,7 @@ public class MARCMapper {
         work.setId(workId);
 
         Publication publication = new Publication();
+        publication.setCataloguingSource(new ExternalDataObject(cataloguingSourceUri));
         publication.setPublicationOf(work);
         publication.setId(newBlankNodeId());
 
@@ -90,6 +102,9 @@ public class MARCMapper {
 
         for (ControlField controlField : r.getControlFields()) {
             switch (controlField.getTag()) {
+                case "001":
+                    getControlFieldValue(controlField).ifPresent(publication::setCataloguingSourceIdentifier);
+                    break;
                 case "008":
                     setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
                     setUriObject(controlField, THIRTY_THREE, "fictionNonfiction", work::setFictionNonfiction, FictionNonfiction::translate);
@@ -104,10 +119,6 @@ public class MARCMapper {
         for (DataField dataField : r.getDataFields()) {
             String tag = dataField.getTag();
             switch (tag) {
-                case "015":
-                    setUriObject(dataField, 'b', "cataloguingSource", CataloguingSource::translate, publication::setCataloguingSource);
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setCataloguingSourceIdentifier);
-                    break;
                 case "019":
                     setUriObject(dataField, 'a', "audience", Audience::translate, work::setAudience);
                     setUriObject(dataField, 'b', "format", Format::translate, publication::setFormat);
@@ -677,6 +688,10 @@ public class MARCMapper {
 
     private Optional<String> getSubfieldValue(DataField dataField, Character character) {
         return getSubfieldValue(dataField, character, null);
+    }
+
+    private Optional<String> getControlFieldValue(ControlField controlField) {
+        return Optional.of(controlField.getData());
     }
 
     private Optional<String> getControlFieldValue(ControlField controlField, int position) {

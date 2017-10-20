@@ -653,6 +653,45 @@ describe('searchBuilder', () => {
                                             },
                                             boost: 0.1
                                           }
+                                        },
+                                        {
+                                          constant_score: {
+                                            boost: 1,
+                                            filter: {
+                                              match_phrase: {
+                                                untranscribedTitle: {
+                                                  query: 'some more strings',
+                                                  slop: 0
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          constant_score: {
+                                            boost: 1,
+                                            filter: {
+                                              match_phrase: {
+                                                untranscribedTitle: {
+                                                  query: 'some more',
+                                                  slop: 0
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          constant_score: {
+                                            boost: 1,
+                                            filter: {
+                                              match_phrase: {
+                                                untranscribedTitle: {
+                                                  query: 'more strings',
+                                                  slop: 0
+                                                }
+                                              }
+                                            }
+                                          }
                                         }
                                       ]
                                     }
@@ -1106,6 +1145,45 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match_phrase: {
                                       summary: {
+                                        query: 'more strings',
+                                        slop: 0
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  boost: 1,
+                                  filter: {
+                                    match_phrase: {
+                                      untranscribedTitle: {
+                                        query: 'some more strings',
+                                        slop: 0
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  boost: 1,
+                                  filter: {
+                                    match_phrase: {
+                                      untranscribedTitle: {
+                                        query: 'some more',
+                                        slop: 0
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                constant_score: {
+                                  boost: 1,
+                                  filter: {
+                                    match_phrase: {
+                                      untranscribedTitle: {
                                         query: 'more strings',
                                         slop: 0
                                       }

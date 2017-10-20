@@ -52,7 +52,7 @@ public interface RDFRepository {
 
     Model retrieveWorkAndLinkedResourcesByURI(XURI xuri);
 
-    Model retrieveResourceByURI(XURI xuri, Boolean withMigrationFilter);
+    Model retrieveResourceByURI(XURI xuri, boolean withMigrationFilter);
 
     Model retrievePersonAndLinkedResourcesByURI(String uri);
 

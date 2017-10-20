@@ -1,7 +1,7 @@
 {{#if primarySuggestionAccepted && (!input.isSubInput || !multiple)}}
 {{#if../../suggestedValues}}
 <div class="external-sources" as-slideDown slideIn-in>
-    <span tabindex="{{tabSelected ? '0' : '-1'}}" on-keyup="toggle" on-click='toggle' class-unexpanded="{{!expanded}}" class-expanded="{{expanded}}">{{>showHideFromExternalSources}}</span>
+    <span tabindex="{{tabSelected ? '0' : '-1'}}" on-keyup="toggle" on-click='toggle' class-unexpanded="{{!this.expanded}}" class-expanded="{{this.expanded}}">{{>showHideFromExternalSources {expanded:this.expanded}}}</span>
     <div class="suggested-values pure-u-1-1">
         {{#each ../../suggestedValues}}
         {{>'suggestor-for-' + input.type}}

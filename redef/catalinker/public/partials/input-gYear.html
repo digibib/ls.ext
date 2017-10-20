@@ -1,4 +1,6 @@
 <input {{#disabled}} disabled="true" {{/}}
+pattern="^\S+.*\S$|^\S$"
+title="{{>acceptedStringFormat}}"
 class="pure-u-1-2"
 class-invalid-input="{{error}}"
 class-valid="{{!error}}"
