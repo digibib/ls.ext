@@ -67,5 +67,10 @@ describe('containers', () => {
       const { node } = setup({ modalType: 'RESERVATION', modalProps: { publication: { formats: [], recordId: 'test_recordId', items: [ { itemnumber: 123 } ] } } })
       expect(node.querySelectorAll("[data-automation-id='reservation_modal']").length).toBe(1)
     })
+
+    it('should display RemoteReservationModal', () => {
+      const { node } = setup({ modalType: 'REMOTE_RESERVATION', modalProps: { publication: { formats: [], recordId: 'test_recordId', items: [ { itemnumber: 123 } ] } } })
+      expect(node.querySelectorAll("[data-automation-id='remote_reservation_modal']").length).toBe(1)
+    })
   })
 })

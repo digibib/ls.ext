@@ -1,11 +1,10 @@
 import React, { PropTypes } from 'react'
-import { reduxForm, reset } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, FormattedMessage } from 'react-intl'
 
 import FormInputField from '../../components/FormInputField'
-import * as ProfileActions from '../../actions/ProfileActions'
 import * as ReservationActions from '../../actions/ReservationActions'
 import * as ModalActions from '../../actions/ModalActions'
 
@@ -45,15 +44,17 @@ class RemoteReservationForm extends React.Component {
   getWaitingListInformation () {
     const holds = this.props.modalProps.publication.numHolds
     if (holds > 0) {
-      return <div style={{ color: 'red'}}><FormattedMessage {...this.props.messages.waitingListPrefix} />{holds}<FormattedMessage {...this.props.messages.waitingListSuffix} /></div>
+      return (
+        <div style={{ color: 'red' }}>
+          <FormattedMessage {...this.props.messages.waitingListPrefix} />{holds}<FormattedMessage {...this.props.messages.waitingListSuffix} />
+        </div>
+      )
     }
   }
 
   render () {
     const {
-      submitting,
       handleSubmit,
-      remoteReservationSuccess,
       messages
     } = this.props
     return (
@@ -98,11 +99,13 @@ class RemoteReservationForm extends React.Component {
 
 RemoteReservationForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  remoteReservationSuccess: PropTypes.bool,
+  reservationActions: PropTypes.object,
+  modalActions: PropTypes.object,
+  modalProps: PropTypes.object.isRequired,
   fields: PropTypes.object.isRequired,
   messages: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  submitting: PropTypes.bool.isRequired,
+  isRequestingReservation: PropTypes.bool.isRequired,
   intl: intlShape.isRequired
 }
 
@@ -123,7 +126,7 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     modalActions: bindActionCreators(ModalActions, dispatch),
-    reservationActions: bindActionCreators(ReservationActions, dispatch),
+    reservationActions: bindActionCreators(ReservationActions, dispatch)
   }
 }
 

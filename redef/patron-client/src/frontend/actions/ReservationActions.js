@@ -110,14 +110,13 @@ export function chooseReservationDialogue (publication) {
   return (dispatch, getState) => {
     dispatch({ type: types.REQUEST_RESERVATION_DIALOGUE })
     const profile = getState().profile
-    if (profile.category === "IL") { // remote libraries with categorycode IL are remote libraries
+    if (profile.category === 'IL') { // remote libraries with categorycode IL are remote libraries
       dispatch(showModal(ModalComponents.REMOTE_RESERVATION, { publication: publication }))
     } else {
       dispatch(showModal(ModalComponents.RESERVATION, { publication: publication }))
     }
   }
 }
-
 
 export function requestReservePublication (recordId, branchCode) {
   return {
@@ -273,16 +272,17 @@ export function requestRemoteReservePublication (recordId, userId, reservationCo
   }
 }
 
-export function remoteReservePublicationSuccess (recordId, userId) {
+export function remoteReservePublicationSuccess (recordId, userId, reservationComment) {
   // TODO: what to do if success? go to loans page?
   return dispatch => {
-    dispatch(showModal(ModalComponents.REMOTE_RESERVATION, { isSuccess: true, recordId: recordId, userId: userId }))
+    dispatch(showModal(ModalComponents.REMOTE_RESERVATION, { isSuccess: true, recordId: recordId, userId: userId, reservationComment: reservationComment }))
     dispatch(ProfileActions.fetchProfileLoans())
     dispatch({
       type: types.REMOTE_RESERVE_PUBLICATION_SUCCESS,
       payload: {
         recordId: recordId,
-        userId: userId
+        userId: userId,
+        reservationComment: reservationComment
       }
     })
   }

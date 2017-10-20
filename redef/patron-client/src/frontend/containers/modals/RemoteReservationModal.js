@@ -8,9 +8,6 @@ import * as ModalActions from '../../actions/ModalActions'
 import * as ReservationActions from '../../actions/ReservationActions'
 
 class RemoteReservationModal extends React.Component {
-  constructor (props) {
-    super(props)
-  }
 
   renderSuccess () {
     return (
@@ -95,7 +92,7 @@ export const messages = defineMessages({
   genericReservationError: {
     id: 'RemoteReservationModal.genericReservationError',
     description: 'A generic reservation error message',
-    defaultMessage: 'Something went wrong when reserving #sadpanda'
+    defaultMessage: 'Something went wrong when reserving.\nPlease contact library for more information.'
   },
   materialNotAvailableForRemoteReserve: {
     id: 'RemoteReservationModal.materialNotAvailableForRemoteReserve',
