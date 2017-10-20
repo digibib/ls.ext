@@ -26,7 +26,7 @@ public class MARCMapperTest extends MappingTester {
     @Test
     public void it_can_map_marc() {
         String marc = new ResourceReader().readFile("BS_external_data.xml");
-        List<Object> mapping = new MARCMapper(Target.BIBBI).getMapping(marc);
+        List<Object> mapping = new BSMarcMapper(Target.BIBBI).getMapping(marc);
         assertNotNull(mapping);
         checkMapping("BS_external_data.xml", "BS_external_data.json");
     }
@@ -48,7 +48,7 @@ public class MARCMapperTest extends MappingTester {
 
     private void checkMapping(String marcXmlFile, String jsonFile) {
         String marc = new ResourceReader().readFile(marcXmlFile);
-        List<Object> mapping = new MARCMapper(Target.BIBBI, true).getMapping(marc);
+        List<Object> mapping = new BSMarcMapper(Target.BIBBI, true).getMapping(marc);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         assertEquals(simplifyBNodes(new ResourceReader().readFile(jsonFile)), simplifyBNodes(gson.toJson(mapping)));
         assertThat(simplifyBNodes(new ResourceReader().readFile(jsonFile)),

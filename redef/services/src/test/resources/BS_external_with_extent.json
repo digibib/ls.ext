@@ -51,7 +51,7 @@
         "deichman:hasPrimaryCataloguingSource": {
           "@id": "http://data.deichman.no/cataloguingSource#BS"
         },
-        "deichman:hasIdentifierInPrimaryCataloguingSource": "000001",
+        "deichman:hasIdentifierInPrimaryCataloguingSource": "0250080",
         "@type": [
           "deichman:Publication"
         ],
