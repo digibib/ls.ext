@@ -12,6 +12,10 @@ class Footer extends React.Component {
     this.props.loadLanguage(this.props.locale === 'no' ? 'en' : 'no')
   }
 
+  ignore (event) {
+  event.preventDefault
+  }
+
   render () {
     return (
       <footer className="main-footer">
