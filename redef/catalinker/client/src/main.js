@@ -5459,7 +5459,8 @@
             const input = ractive.get(inputKeypath)
             const newStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(newValue.replace(/\n/g, '')))
             const oldStringValid = (typeof oldvalue === 'string' && /^\S+.*\S$|^\S?$/.test(oldvalue.replace(/\n/g, '')))
-            if (input.required || !newStringValid || (newStringValid && !oldStringValid)) {
+            const existingVetoes = ractive.get(`${inputGroupKeypath}.inputGroupRequiredVetoes.${valueIndex}`) || []
+            if (existingVetoes.length > 0 || input.required || !newStringValid || (newStringValid && !oldStringValid)) {
               const voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
               const veto = !newStringValid ||
                 (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
