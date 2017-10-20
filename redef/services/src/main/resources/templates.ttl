@@ -66,9 +66,7 @@ work:filmWorkTemplate a :Work ;
 
 work:musicWorkTemplate a :Work ;
     duo:templateMatch [
-        :hasMediaType mediaType:MusicRecording, mediaType:SheetMusic
-    ] ;
-    duo:templateMatch [
+        :hasMediaType mediaType:MusicRecording, mediaType:SheetMusic ;
         :hasWorkType workType:Music
     ] ;
     :hasWorkType workType:Music ;

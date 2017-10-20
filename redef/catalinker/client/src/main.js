@@ -888,7 +888,8 @@
           lang: value.lang,
           accepted: options.source ? { source: options.source } : undefined
         },
-        uniqueId: _.uniqueId()
+        uniqueId: _.uniqueId(),
+        expanded: (input[ valuesKey ][ index ] || {}).expanded || value.value === ''
       }
       if (input[ valuesKey ][ index ].current.accepted) {
         setSuggestionsAreAcceptedForParentInput(input, index)
@@ -899,6 +900,7 @@
     function setIdValue (id, input, index, valuesField, options) {
       options = options || {}
       input[ valuesField ] = input[ valuesField ] || []
+
       if (!input[ valuesField ][ index ]) {
         input[ valuesField ][ index ] = {}
       } else if (options.noOverwrite) {
@@ -1580,7 +1582,13 @@
                           if (!(input.suggestValueFrom && options.onlyValueSuggestions)) {
                             _.each(these(root.outAll(fragmentPartOf(predicate))).orIf(input.isSubInput).atLeast([ { id: '' } ]), function (node, multiValueIndex) {
                               index = (input.isSubInput ? rootIndex : multiValueIndex) + (offset)
-                              setIdValue(input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id, input, index, valuesField, options)
+                              const id = input.type === 'searchable-authority-dropdown' ? [ node.id ] : node.id
+                              // for regular non-sub inputs, check if value is already present
+                              if (!input.isSubInput && _.chain(input[ valuesField ]).pluck('current').pluck('value').filter((value) => value === id).any().value()) {
+                                return
+                              }
+
+                              setIdValue(id, input, index, valuesField, options)
                               if (options.source && node.id !== '') {
                                 setPreviewValues(input, node, index)
                               }
@@ -1661,21 +1669,23 @@
                         } else {
                           _.each(
                             these(_.union(root.getAll(fragmentPartOf(predicate)), _.map(root.outAll(fragmentPartOf(predicate)), (node) => ({ value: node.id }))))
-                              .orIf(input.isSubInput || options.compareValues)
+                              .orIf(input.isSubInput || options.compareValues || input.literal)
                               .atLeast([ { value: '' } ]), (value, index) => {
                               if (!options.onlyValueSuggestions) {
                                 let valueIndex = input.isSubInput ? rootIndex : index
                                 setSingleValue(value, input, (valueIndex) + (offset), _.extend(options, { setNonEditable: input.isSubInput && !options.source }))
-                                input[ valuesField ][ valueIndex ].subjectType = type
-                                input[ valuesField ][ valueIndex ].oldSubjectType = type
-                                if (input.isSubInput && !options.source) {
-                                  input[ valuesField ][ valueIndex ].nonEditable = true
-                                  ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
-                                  input.parentInput.allowAddNewButton = true
-                                } else if (input.multiple) {
-                                  input.allowAddNewButton = true
+                                if (input[ valuesField ][ valueIndex ]) {
+                                  input[ valuesField ][ valueIndex ].subjectType = type
+                                  input[ valuesField ][ valueIndex ].oldSubjectType = type
+                                  if (input.isSubInput && !options.source) {
+                                    input[ valuesField ][ valueIndex ].nonEditable = true
+                                    ractive.set(`${input.parentInput.keypath}.subInputs.0.input.${valuesField}.${valueIndex}.nonEditable`, true)
+                                    input.parentInput.allowAddNewButton = true
+                                  } else if (input.multiple) {
+                                    input.allowAddNewButton = true
+                                  }
                                 }
-                              } else {
+                              } else if (value.value && value.value.length > 0) {
                                 input.suggestedValues = input.suggestedValues || []
                                 input.suggestedValues.push({
                                   value: value.value,
@@ -2207,7 +2217,7 @@
               if (formInput.label) {
                 formInput.labelkey = formInput.label
               }
-              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : ''))
+              _.extend(formInput, _.omit(ontologyInput, formInput.type ? 'type' : '', 'keypath'))
               formInput.values = emptyValues(false)
               formInput.rdfType = resourceForm.rdfType
               if (targetResourceIsMainEntry) {
@@ -2337,6 +2347,8 @@
             if (input.showOnlyWhenInputHasValue) {
               ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
+            ontologyInput.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(ontologyInput.type)
+            ontologyInput.oink = ontologyInput.type
           }
           copyResourceForms(input)
         })
@@ -3289,56 +3301,62 @@
           })
 
           ractive.set('save_status', 'arbeider...')
-          const promises = []
-          _.each(patches, function (patch) {
-            promises.push(axios.patch(proxyToServices(patch.subject), JSON.stringify(patch.patch, undefined, 2), {
-              headers: {
-                Accept: 'application/ld+json',
-                'Content-Type': 'application/ldpatch+json'
+          return axios.patch(proxyToServices(mainSubject), JSON.stringify(patch, undefined, 2), {
+            headers: {
+              Accept: 'application/ld+json',
+              'Content-Type': 'application/ldpatch+json'
+            }
+          }).then(function (response) {
+            let parsed = ldGraph.parse(response.data)
+            _.each(applicationData.sortOrders, function (sortOrder) {
+              let root = sortNodes(parsed.byId(mainSubject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
+              ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
+              ractive.update('lastRoots')
+            })
+            let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
+            if (op === 'del' || addedMultivalues > 1) {
+              removeInputsForObject(input, index)()
+              ractive.update()
+              if (addedMultivalues > 1) {
+                updateInputsForResource(response.data, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
               }
-            }).then(function (response) {
-              if (patch.subject === mainSubject) {
-                let parsed = ldGraph.parse(response.data)
-                _.each(applicationData.sortOrders, function (sortOrder) {
-                  let root = sortNodes(parsed.byId(patch.subject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
-                  ractive.get('lastRoots')[ patch.subject ] = { [sortOrder.predicate]: root }
-                  ractive.update('lastRoots')
-                })
-                let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
-                if (op === 'del' || addedMultivalues > 1) {
-                  removeInputsForObject(input, index)()
-                  ractive.update()
-                  if (addedMultivalues > 1) {
-                    updateInputsForResource(response.data, patch.subject, { inputs: _.pluck(input.subInputs, 'input') })
+            }
+            return response
+          })
+            .then(function (response) {
+              // do an extra patch to invalidate cache of old subject
+              if (mainSubject !== deleteSubject) {
+                axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
+                  headers: {
+                    Accept: 'application/ld+json',
+                    'Content-Type': 'application/ldpatch+json'
                   }
-                }
+                })
               }
               return response
             })
-              .then(function (response) {
-                // successfully patched resource
-                ractive.set('save_status', 'alle endringer er lagret')
-                if (input.subInputs) {
-                  _.each(input.subInputs, function (subInput) {
-                    if (subInput.input.values[ index ]) {
-                      subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
-                      subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
-                    }
-                  })
-                } else {
-                  input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
-                }
-                ractive.update()
-                return response
-              }))
-            // .catch(function (response) {
-            //    // failed to patch resource
-            //    console.log('HTTP PATCH failed with: ')
-            //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
-            //    ractive.set('save_status', '')
-            // })
-          })
-          return Promise.all(promises)
+            .then(function (response) {
+              // successfully patched resource
+              ractive.set('save_status', 'alle endringer er lagret')
+              if (input.subInputs) {
+                _.each(input.subInputs, function (subInput) {
+                  if (subInput.input.values[ index ].current) {
+                    subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
+                    subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                  }
+                })
+              } else {
+                input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
+              }
+              ractive.update()
+              return response
+            })
+          // .catch(function (response) {
+          //    // failed to patch resource
+          //    console.log('HTTP PATCH failed with: ')
+          //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
+          //    ractive.set('save_status', '')
+          // })
         }
 
         let templateSelection = function (selection) {
@@ -3658,7 +3676,13 @@
           }
           const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
-            $(suggestedValues).hide()
+            let keypath = Ractive.getNodeInfo(node).keypath
+            if (_.flatten([ ractive.get(`${keypath}.current.value`) ])[ 0 ] !== '') {
+              $(suggestedValues).hide()
+              ractive.set(`${keypath}.expanded`, false)
+            } else {
+              ractive.set(`${keypath}.expanded`, true)
+            }
             let toggle = function () {
               $(suggestedValues).slideToggle()
             }
@@ -5845,19 +5869,21 @@
                 setInputVisibility(inputLink, false)
               }
             }
+
             _.each(input.dependentResourceTypes, function (type) {
-              ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
+              ractive.push('observers', ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
                 if (typeof newValue === 'string' && newValue !== '') {
                   fetchExistingResource(newValue, { inputs: [ input ], keepDocumentUrl: true })
                 }
-              })
-              ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
-                if (typeof newValue === 'string' && newValue !== '') {
-                  if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
-                    fetchExistingResource(newValue)
+              }, { init: false }))
+              ractive.push('observers', ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
+                  if (typeof newValue === 'string' && newValue !== '') {
+                    if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
+                      fetchExistingResource(newValue)
+                    }
                   }
-                }
-              }, { init: false })
+                }, { init: false })
+              )
             })
           }
           forAllGroupInputs(handleVisibility, { handleInputGroups: true })

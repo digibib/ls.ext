@@ -250,7 +250,7 @@ module.exports = (app) => {
                 }
               }
             ],
-            templateResourcePartsFrom: []
+            templateResourcePartsFrom: [ 'workTypeInput', 'mediaTypeInput']
           },
           {
             id: 'create-work-form',

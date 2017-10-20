@@ -12,6 +12,33 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.54
+
+- Koha
+  - DEICH-933 opdater koha til 17.05.04
+  - DEICH-928 Implementere støtte for å bruke mobilnummer som id på automater.
+- Catalinker
+  - DEICH-921 Konflikt mellom eksisterende opplysninger på verk og nye opplysninger fra ekstern kilde
+  - DEICH-912 Endre verk på utgivelse knytter ikke nytt verk til utgivelsen
+  - DEICH-915 Feil sortering og oppslag
+  - DEICH-931 Standardverdi for musikk kommer på alle verkstyper
+  - DEICH-624 Hindre innledende og avsluttende whitespace (1d)
+  - DEICH-236 Alle faner skal starte fra toppen (1d)
+  - DEICH-569 Ny ekstern kilde: Det flerspråklige bibliotek (10d)
+  - DEICH-760 Oversiktsside viser ikke mer enn 10 deler
+  - DEICH-938 Klarer ikke slette verk som har blitt klonet ved verksplitting
+  - DEICH-913 Felt for utranskribert tittel på verk og utgivelse
+- Patron-client
+  - DEICH-911 Både transkribert og utranskribert tittel på verkstittel
+  - DEICH-936 Fixes på alt. text.
+  - DEICH---- Fiks endring og lagring av telefonnummer
+- Annet
+  - DEICH-914 Utgivelser uten eksemplarer blir bare delvis slettet
+
+## 2017.53
+
+  Canceled
+
 ## 2017.52
 
 KOHA: f29d0bb2995dd00c18c10b8c47947b1e566c1509
