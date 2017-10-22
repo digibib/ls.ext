@@ -889,7 +889,7 @@
           accepted: options.source ? { source: options.source } : undefined
         },
         uniqueId: _.uniqueId(),
-        expanded: (input[ valuesKey ][ index ] || {}).expanded || value.value === ''
+        expanded: value.value === ''
       }
       if (input[ valuesKey ][ index ].current.accepted) {
         setSuggestionsAreAcceptedForParentInput(input, index)
@@ -955,12 +955,14 @@
             const displayProperties = getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
             const headLineDisplayProperties = getDisplayProperties(input.headlineNameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
             const handleDisplayProperties = () => {
-              resolve({values: _.pluck(displayProperties || [], 'val')
-                .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-                .join(' ')
-                .replace(/[,\.:]\s*$/g, '')
-                .replace(/- /, '-')
-                .replace(/: /g, ' : '), headlineDisplayValue: _.pluck(headLineDisplayProperties || [], 'val')})
+              resolve({
+                values: _.pluck(displayProperties || [], 'val')
+                  .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
+                  .join(' ')
+                  .replace(/[,\.:]\s*$/g, '')
+                  .replace(/- /, '-')
+                  .replace(/: /g, ' : '), headlineDisplayValue: _.pluck(headLineDisplayProperties || [], 'val')
+              })
             }
             if (isPromise(displayProperties)) {
               return displayProperties.then(handleDisplayProperties)
@@ -1132,7 +1134,7 @@
         oldUri.query = URI.buildQuery(_.pick(queryParameters, _.identity))
         history.replaceState('', '', URI.build(oldUri))
       }
-      ractive.set('rdfType', triumph)
+      ractive.set('rdfType', triumph.replace(prefix, ''))
     }
 
     function updateBrowserLocationWithTab (tabNumber) {
@@ -3683,11 +3685,8 @@
           const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
             let keypath = Ractive.getNodeInfo(node).keypath
-            if (_.flatten([ ractive.get(`${keypath}.current.value`) ])[ 0 ] !== '') {
+            if (!ractive.get(`${keypath}.expanded`)) {
               $(suggestedValues).hide()
-              ractive.set(`${keypath}.expanded`, false)
-            } else {
-              ractive.set(`${keypath}.expanded`, true)
             }
             let toggle = function () {
               $(suggestedValues).slideToggle()
@@ -5679,7 +5678,7 @@
                     if (disabledInput) {
                       disabledInput.attr('disabled', false)
                       setTimeout(function () {
-                        if (disabledInput) {
+                        if (disabledInput && !$(document.activeElement).is('input')) {
                           disabledInput.nextAll('span.select2.select2-container').first().find('input').focus()
                         }
                       })
@@ -5862,7 +5861,6 @@
               }
             })
             partial += '\n{{/if}}\n'
-            console.log(partial)
             let titleRactive = new Ractive({
               el: 'headline_' + index,
               template: partial,
