@@ -1,4 +1,4 @@
-/*global window,history*/
+/*global window,history,event*/
 /**
  * This file operates on a Ractive (https://ractive.js.org/) data structure representing inputs to create and edit RDF
  * resources through the REST API provided by the ls.ext/redef/services module which stores the data in a triple store.
@@ -956,7 +956,7 @@
             const headLineDisplayProperties = getDisplayProperties(input.headlineNameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
             const handleDisplayProperties = () => {
               resolve({
-                values:_.pluck(displayProperties || [], 'val')
+                values: _.pluck(displayProperties || [], 'val')
                   .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
                   .join(' ')
                   .replace(/[,\.:]\s*$/g, '')
@@ -3216,13 +3216,20 @@
                     inverseRelationOpSpec.alternativeValueFor[ inputChain.first().value().predicate ] = mappings[ valueBeforeMapping ]
                   }
                 })
+                // make a delete existing inverse relation operation spec as well, to avoid duplicates if the inverse relation already exists
                 opsWithInverse.push(inverseRelationOpSpec)
+                if (opSpec.operation === 'add') {
+                  const inverseDeleteExistingInverseRelationOpSpec = deepClone(inverseRelationOpSpec)
+                  inverseDeleteExistingInverseRelationOpSpec.operation = 'del'
+                  inverseDeleteExistingInverseRelationOpSpec.isDeleteForExisting = true
+                  opsWithInverse.push(inverseDeleteExistingInverseRelationOpSpec)
+                }
               }
             })
             return opsWithInverse
           }
 
-          if (input.maintainInverseRelation) {
+          if (input.maintainInverseRelation && !(event && event.altKey)) {
             preprocessFunction = inverseRelation
           }
           const opSpec = {
@@ -3248,22 +3255,22 @@
           var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
           var mainSubject = ractive.get(`targetUri.${actualSubjectType}`)
           var deleteSubject = ractive.get(`targetUri.${deleteSubjectType}`)
-          const patches = []
+          const patchRequests = []
           const opSpecs = preprocessFunction(opSpec[ op ])
           _.each(opSpecs, function (spec, opIndex) {
             const subject = spec.alternativeSubject || (spec.operation === 'del' ? deleteSubject : mainSubject)
-            let patch = []
+            let patchCommand = []
             let existingAddPatchesForSubject
-            if (spec.operation === 'add') {
-              existingAddPatchesForSubject = _.find(patches, (patch) => patch.operation === 'add' && patch.subject === subject)
+            if (spec.operation === 'add' || spec.isDeleteForExisting) {
+              existingAddPatchesForSubject = _.find(patchRequests, (patch) => patch.operation === 'add' && patch.subject === subject)
               if (existingAddPatchesForSubject) {
-                patch = existingAddPatchesForSubject.patch
+                patchCommand = existingAddPatchesForSubject.patch
               }
             }
             if (!existingAddPatchesForSubject) {
-              patches.push({ subject, patch, operation: spec.operation })
+              patchRequests.push({ subject, patch: patchCommand, operation: spec.operation })
             }
-            patch.push({
+            patchCommand.push({
               op: spec.operation,
               s: subject,
               p: input.predicate,
@@ -3273,7 +3280,7 @@
               }
             })
             if (input.range) {
-              patch.push({
+              patchCommand.push({
                 op: spec.operation,
                 s: `_:b${opIndex}`,
                 p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
@@ -3289,7 +3296,7 @@
                   ? spec.alternativeValueFor[ subInput.input.predicate ]
                   : subInput.input.values[ index ] ? (subInput.input.values[ index ][ spec.useValue ] || {}).value : undefined
                 if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
-                  patch.push({
+                  patchCommand.push({
                     op: spec.operation,
                     s: `_:b${opIndex}`,
                     p: subInput.input.predicate,
@@ -3302,7 +3309,7 @@
               }
             })
             if (input.isMainEntry) {
-              patch.push({
+              patchCommand.push({
                 op: spec.operation,
                 s: `_:b${opIndex}`,
                 p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
@@ -3316,7 +3323,7 @@
 
           ractive.set('save_status', 'arbeider...')
           const promises = []
-          _.each(patches, function (patch) {
+          _.each(patchRequests, function (patch) {
             promises.push(axios.patch(proxyToServices(patch.subject), JSON.stringify(patch.patch, undefined, 2), {
               headers: {
                 Accept: 'application/ld+json',
