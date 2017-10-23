@@ -869,7 +869,7 @@
       }
       if (options.demoteAcceptedSuggestions) {
         const acceptedSource = _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').pluck('source').compact().first().value()
-        if (acceptedSource) {
+        if (acceptedSource && input[ valuesKey ][ index ].current.value !== '') {
           input.suggestedValues = input.suggestedValues || []
           input.suggestedValues.push({
             source: acceptedSource,
@@ -889,7 +889,7 @@
           accepted: options.source ? { source: options.source } : undefined
         },
         uniqueId: _.uniqueId(),
-        expanded: value.value === ''
+        expanded: value.value === '' && input.suggestionsAreDemoted
       }
       if (input[ valuesKey ][ index ].current.accepted) {
         setSuggestionsAreAcceptedForParentInput(input, index)
