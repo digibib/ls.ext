@@ -174,6 +174,7 @@ When(/^jeg går til Min Side$/) do
 end
 
 When(/^skal jeg se innloggingsvinduet$/) do
+  sleep 1
   @site.PatronClientCommon.login_modal_visible?.should eq true
 end
 

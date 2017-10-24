@@ -145,3 +145,7 @@ end
 After do |scenario|
   Cucumber.wants_to_quit = ENV['FAIL_FAST'] && scenario.failed?
 end
+
+After do
+  @browser.cookies.clear if @browser
+end

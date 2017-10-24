@@ -20,7 +20,7 @@ class Checkin < Circulation
     wait_for {
       @browser.button(class: 'approve').present?
     }
-	  @browser.button(class: 'approve').click
+	  @browser.buttons(class: 'approve')[1].click
 	end
 
 end
