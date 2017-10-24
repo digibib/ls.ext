@@ -7,6 +7,55 @@ const frame = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'misc', 'fra
 
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
+
+  app.get('/api/v1/translations/:lang', jsonParser, (request, response) => {
+    fetch(`http://services:8005/translations/${request.params.lang}`, { headers: { accept: 'application/json' } })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          return Promise.reject(`error fetching translations for ${request.params.lang}: ${res.statusText}`)
+        }
+      })
+      .then(res => response.status(200).send(res))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
+  app.get('/api/v1/resources/person/:personId', jsonParser, (request, response) => {
+    fetch(`http://services:8005/person/${request.params.personId}`)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          return Promise.reject(`error fetching person ${request.params.personId}: ${res.statusText}`)
+        }
+      })
+      .then(person => response.status(200).send(person))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
+  app.get('/api/v1/resources/person/:personId/works', jsonParser, (request, response) => {
+    fetch(`http://services:8005/person/${request.params.personId}/works`)
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          return Promise.reject(`error fetching person ${request.params.personId}: ${res.statusText}`)
+        }
+      })
+      .then(person => response.status(200).send(person))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
   app.get('/api/v1/resources/work/:workId', jsonParser, (request, response) => {
     fetch(`http://services:8005/work/${request.params.workId}`, { headers: { accept: 'application/n-triples;charset=utf-8' } })
       .then(res => {

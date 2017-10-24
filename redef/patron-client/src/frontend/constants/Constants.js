@@ -261,7 +261,6 @@ module.exports = {
     'utøver': 'performer',
     'år': '=utgivelsesår'
   },
-  backendUri: '/services',
   maxVisibleFilterItems: 3,
   maxSearchResultsPerPage: 20,
   filterableFields: {

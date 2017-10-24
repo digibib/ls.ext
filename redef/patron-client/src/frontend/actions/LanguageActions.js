@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
-import Constants from '../constants/Constants'
 
 export function requestTranslation (locale) {
   return {
@@ -33,7 +32,7 @@ export function receiveTranslation (locale, messages) {
 export function loadLanguage (locale) {
   return (dispatch, getState) => {
     locale = locale || getState().application.locale
-    const url = `${Constants.backendUri}/translations/${locale}`
+    const url = `/api/v1/translations/${locale}`
     dispatch(requestTranslation(locale))
     return fetch(url, {
       method: 'GET',

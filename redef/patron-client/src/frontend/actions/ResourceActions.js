@@ -2,7 +2,6 @@ import fetch from 'isomorphic-fetch'
 import {push, replace} from 'react-router-redux'
 import * as types from '../constants/ActionTypes'
 import {parsePersonResponse} from '../utils/graphParse'
-import Constants from '../constants/Constants'
 import {action, errorAction} from './GenericActions'
 
 export const requestResource = id => action(types.REQUEST_RESOURCE, { id })
@@ -16,8 +15,9 @@ export function fetchPersonResource (personId) {
     if (getState().resources.resources[ personId ]) {
       return
     }
-    const url = `${Constants.backendUri}/person/${personId}`
+    const url = `/api/v1/resources/person/${personId}`
     dispatch(requestResource(personId))
+    // TODO merge theese two calls backend instead
     return Promise.all([
       fetch(url).then(response => {
         if (response.status === 200) {
