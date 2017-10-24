@@ -81,6 +81,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             createProperty(BaseURI.ontology("hasIdentifierInPrimaryCataloguingSource")),
             createProperty(BaseURI.ontology("hasImage")),
             createProperty(BaseURI.ontology("hasHomeBranch")),
+            createProperty(BaseURI.ontology("hasAvailableBranch")),
             createProperty(BaseURI.ontology("hasNumItems"))
     );
 
