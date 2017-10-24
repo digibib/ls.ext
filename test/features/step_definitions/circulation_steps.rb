@@ -624,7 +624,7 @@ When(/^jeg låner ut boka$/) do
     @context[:first_available_exemplar_barcode] :
     @context[:koha].biblio["items"][0]["barcode"]
   branchcode = @context[:defaults][:branches][0].code
-  @context[:circ] = TestSetup::Circulation.new "sip_proxy", "6001"
+  @context[:circ] = TestSetup::Circulation.new "sip_proxy", "9999"
   @context[:circ].checkout(branchcode, cardnumber, "1234", barcode)
 
   @cleanup.push("email box #{usermail}" =>
