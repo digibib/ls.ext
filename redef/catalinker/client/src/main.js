@@ -2141,7 +2141,7 @@
           predicate: ontologyUri + compoundInput.subInputs.rdfProperty,
           ranges: compoundInput.subInputs.ranges,
           range: compoundInput.subInputs.range,
-          inputGroupRequiredVetoes: [],
+          inputGroupRequiredVetoes: [ '' ],
           accordionHeader: compoundInput.subInputs.accordionHeader,
           pagination: compoundInput.subInputs.pagination,
           objectSortOrder: compoundInput.subInputs.objectSortOrder,
@@ -2198,7 +2198,7 @@
           }
           // prefill vetoes according to inputs' requiredness
           if (subInput.required) {
-            currentInput.inputGroupRequiredVetoes.push(`${subInputIndex}`)
+            currentInput.inputGroupRequiredVetoes[ 0 ] += `${subInputIndex}`
           }
 
           copyResourceForms(newSubInput.input, compoundInput.isMainEntry)
@@ -5463,15 +5463,35 @@
             const inputKeypath = grandParentOf(grandParentOf(keypath))
             const inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
             const input = ractive.get(inputKeypath)
-            const newStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(newValue.replace(/\n/g, '')))
-            const oldStringValid = (typeof oldvalue === 'string' && /^\S+.*\S$|^\S?$/.test(oldvalue.replace(/\n/g, '')))
-            const existingVetoes = ractive.get(`${inputGroupKeypath}.inputGroupRequiredVetoes.${valueIndex}`) || []
-            if (existingVetoes.length > 0 || input.required || !newStringValid || (newStringValid && !oldStringValid)) {
+            const newStringInvalid = (typeof newValue === 'string' && !(/^\S+.*\S$|^\S?$/.test(newValue.replace(/\n/g, ''))))
+            input.parentInput.inputGroupRequiredVetoes[ valueIndex ] = input.parentInput.inputGroupRequiredVetoes[ valueIndex ] || ''
+            if (input.required || newStringInvalid || input.parentInput.inputGroupRequiredVetoes[ valueIndex ].includes(`${_.last(parentOf(inputKeypath).split('.'))}`)) {
               const voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
-              const veto = !newStringValid ||
+              const veto = newStringInvalid || input.required && (typeof newValue === 'string' && newValue.length === 0 || newValue === undefined) ||
                 (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
               castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
             }
+          }
+
+          function checkRequiredSubInputDisplayValue (newValue, oldvalue, keypath) {
+            const valueIndex = _.last(grandParentOf(keypath).split('.'))
+            const inputKeypath = grandParentOf(grandParentOf(keypath))
+            const inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
+            const input = ractive.get(inputKeypath)
+            if (input.type === 'searchable-with-result-in-side-panel') {
+              const veto = newValue !== '' && newValue !== undefined && !input.values[ valueIndex ].deletable || input.required && (newValue === '' || newValue === undefined)
+              const voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
+              castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, veto)
+            }
+          }
+
+          function checkRequiredSubInputDeletable (newValue, oldvalue, keypath) {
+            const valueIndex = _.last(parentOf(keypath).split('.'))
+            const inputKeypath = grandParentOf(parentOf(keypath))
+            const inputGroupKeypath = parentOf(grandParentOf(inputKeypath))
+            const input = ractive.get(inputKeypath)
+            const voter = _.last(grandParentOf(grandParentOf(keypath)).split('.'))
+            castVetoForRequiredSubInput(inputGroupKeypath, valueIndex, voter, input.required && !newValue)
           }
 
           ractive.set('observers', [
@@ -5481,6 +5501,10 @@
             }, { init: false }),
 
             ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.value`, checkRequiredSubInput, { init: true }),
+
+            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.current.displayValue`, checkRequiredSubInputDisplayValue, { init: true }),
+
+            ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.deletable`, checkRequiredSubInputDeletable, { init: true }),
 
             ractive.observe(`${inputsKeypath}.*.subInputs.*.input.values.*.nonEditable`, function (newValue, oldValue, keypath) {
               let compoundInputKeypath = grandParentOf(grandParentOf(grandParentOf(keypath)))
