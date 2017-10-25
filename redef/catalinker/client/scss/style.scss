@@ -1027,6 +1027,9 @@ html {
               cursor: pointer;
               min-width: 20px;
             }
+            .ui-accordion div.pure-u-1-24 a.edit{
+              background-position-x: 14px;
+            }
             .default-non-editable {
               padding: 8px;
               div.edit {
