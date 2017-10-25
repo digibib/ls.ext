@@ -4403,7 +4403,9 @@
                 positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
                 copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
                 ractive.update().then(function () {
-                  heightAligned(document.main.$(event.node).closest('.height-aligned'))
+                  const node = document.main.$(event.node)
+                  heightAligned(node.closest('.height-aligned'))
+                  node.closest('.panel-part').find('[contenteditable=true],input').first().focus()
                 })
               },
               // patchResource creates a patch request based on previous and current value of
