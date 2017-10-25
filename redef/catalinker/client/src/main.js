@@ -5595,6 +5595,13 @@
           return applicationData
         }
 
+        /**
+         * For a given group of inputs, this function finds inputs that may receive additional value suggestions from others, thus acting as default value for the inputs.
+         * If the last value slot of an input that is configured for this (having whenEmptyExternalSuggestionCopyValueFrom defined) is empty,
+         * value is copied from the source input.
+         *
+         * @param groupIndex
+         */
         function copyAdditionalSuggestionsForGroup (groupIndex) {
           forAllGroupInputs(function (input, groupIndex1) {
             if (groupIndex1 === Number(groupIndex) && input.widgetOptions && input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom) {
@@ -5603,12 +5610,12 @@
                 const value = _.last(input.values)
                 if (value && (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
                     (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object')) {
-                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.current`, {
-                    value: sourceInput.values[ 0 ].current.value,
-                    displayValue: sourceInput.values[ 0 ].current.displayValue
-                  })
-                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.searchable`, sourceInput.values[ 0 ].searchable)
-                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.deletable`, sourceInput.values[ 0 ].deletable)
+                  ractive.set(`${input.keypath}.values.${input.values.length - 1}.current.value`, sourceInput.values[ 0 ].current.value)
+                  if (input.type === 'searchable-with-result-in-side-panel') {
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.current.displayValue`, sourceInput.values[ 0 ].current.displayValue)
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.deletable`, sourceInput.values[ 0 ].deletable)
+                    ractive.set(`${input.keypath}.values.${input.values.length - 1}.searchable`, sourceInput.values[ 0 ].searchable)
+                  }
                   ractive.set(`${input.keypath}.values.${input.values.length - 1}.subjectType`, input.values[ 0 ].subjectType)
                 }
               }
@@ -5753,7 +5760,9 @@
             .then(function () {
               ractive.set('rdfType', 'Publication')
               ractive.set('targetUri.Publication', query.Publication)
-              ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
+              setTimeout(function () {
+                ractive.fire('activateTab', { keypath: 'inputGroups.' + (tab || '3') })
+              })
             })
         }
 
