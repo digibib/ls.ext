@@ -792,7 +792,7 @@ describe('searchBuilder', () => {
                                 constant_score: {
                                   filter: {
                                     match: {
-                                      compType: {
+                                      compositionType: {
                                         query: 'some more strings',
                                         minimum_should_match: '70%'
                                       }
