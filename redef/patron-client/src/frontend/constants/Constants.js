@@ -194,7 +194,7 @@ module.exports = {
     'dewey': '=klasse',
     'komp': 'composer',
     'komponist': 'composer',
-    'komposisjonstype': { scope: 'Work', translation: 'compType' },
+    'komposisjonstype': { scope: 'Work', translation: 'compositionType' },
     'compType': '=komposisjonstype',
     'kor': 'coreographer',
     'koreograf': 'coreographer',
