@@ -52,7 +52,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +87,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -1241,7 +1241,6 @@ public class AppTest {
 
 
     @Test
-    @Ignore
     public void resources_are_reindexed_when_themself_or_connected_resources_are_changed() throws Exception {
         kohaAPIMock.addLoginExpectation(); // TODO understand why needed here
 
@@ -1697,7 +1696,7 @@ public class AppTest {
     }
 
     private List<String> fetchAllDocuments() {
-        HttpGet request = new HttpGet("http://localhost:" + EmbeddedElasticsearchServer.getClient().getHttpPort() + "/search/_search?size=100");
+        HttpGet request = new HttpGet("http://localhost:" + EmbeddedElasticsearchServer.getClient().getHttpPort() + "/search/_search?size=1000");
 
         try {
             CloseableHttpResponse response = createDefault().execute(request);
@@ -1706,6 +1705,7 @@ public class AppTest {
 
             ObjectMapper objectMapper = new ObjectMapper();
             com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(body);
+            assertThat ("There are more documents in the index than fetchAllDocuments could fetch", jsonNode.get("hits").get("total").intValue(), lessThanOrEqualTo(1000));
             return StreamSupport.stream(jsonNode.get("hits").get("hits").spliterator(), false)
                     .map(hitNode -> hitNode.get("_source"))
                     .map(com.fasterxml.jackson.databind.JsonNode::toString)
