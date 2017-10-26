@@ -92,7 +92,7 @@
 <http://data.deichman.no/subject/e1200005> rdf:type ns2:Subject ;
     ns2:prefLabel "Trondheim".
 
-<http://data.deichman.no/place/g0301> rdf:type ns2:Subject ;
+<http://data.deichman.no/place/g0301> rdf:type ns2:Place ;
     ns2:prefLabel "Oslo".
 
 <http://data.deichman.no/work/w42> rdf:type ns2:Work ;
