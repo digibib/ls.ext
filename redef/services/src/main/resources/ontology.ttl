@@ -727,3 +727,15 @@ duo:Biography a rdfs:Class ;
   rdfs:label "Identifikator i hovedkatalogiseringskilde"@no ;
   rdfs:domain :Publication ;
   rdfs:range xsd:string .
+
+:isMainClassificationNumber a rdfs:Property ;
+  rdfs:label "Main number"@en ;
+  rdfs:label "Hovednummer"@no ;
+  rdfs:domain :ClassificationEntry ;
+  rdfs:range xsd:boolean .
+
+:hasTag a rdfs:Property ;
+  rdfs:label "Tag"@en ;
+  rdfs:label "Stikkord"@no ;
+  rdfs:domain :Publication ;
+  rdfs:range xsd:string .
