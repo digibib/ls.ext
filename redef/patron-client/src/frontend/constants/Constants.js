@@ -195,7 +195,7 @@ module.exports = {
     'komp': 'composer',
     'komponist': 'composer',
     'komposisjonstype': { scope: 'Work', translation: 'compositionType' },
-    'compositionType':{ scope: 'Work', translation: 'komposisjonstype' },
+    'compositionType': { scope: 'Work', translation: 'komposisjonstype' },
     'compType': '=komposisjonstype',
     'kor': 'coreographer',
     'koreograf': 'coreographer',
