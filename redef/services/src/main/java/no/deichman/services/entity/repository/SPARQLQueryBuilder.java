@@ -947,25 +947,22 @@ public final class SPARQLQueryBuilder {
                 queryString += ""
                         + "      { ?resource :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
                         + "UNION { ?publication :publicationOf ?resource . ?publication :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
-                        + "UNION { ?resource :publicationOf ?work . ?work :contributor [ a :Contribution ; :agent <__URI__> ] }\n"
                         + "UNION { ?resource :subject <__URI__> }\n"
                         + "UNION { ?resource :publishedBy <__URI__> }\n";
                 break;
             case EVENT:
             case SUBJECT:
                 queryString += ""
-                        + "      { ?resource :subject <__URI__> }\n"
-                        + "UNION { ?resource :publicationOf ?work . ?work :subject <__URI__> }\n";
+                        + "      { ?resource :subject <__URI__> }\n";
                 break;
             case GENRE:
                 queryString += ""
-                        + "      { ?resource :publicationOf ?work . ?work :genre <__URI__> }\n";
+                        + "      { ?resource :genre <__URI__> }\n";
                 break;
             case PLACE:
                 queryString += ""
                         + "      { ?resource :hasPublicationPlace <__URI__> . }\n"
                         + "UNION { ?resource :subject <__URI__> . }\n"
-                        + "UNION { ?resource :publicationOf ?work . ?work :subject <__URI__> }"
                         + "UNION { ?resource :place <__URI__> . }\n";
                 break;
             case WORK_SERIES:
@@ -973,25 +970,23 @@ public final class SPARQLQueryBuilder {
                         + "      { ?resource :isPartOfWorkSeries [ a :WorkSeriesPart ; :workSeries <__URI__> ] }\n";
                 break;
             case SERIAL:
-                queryString += "      ?resource :inSerial [ a :SerialIssue ; :serial <__URI__> ]\n";
+                queryString += " { ?resource :inSerial [ a :SerialIssue ; :serial <__URI__> ] }\n";
                 break;
             case PUBLICATION:
-                queryString += "      ?work :publicationOf <__URI__> .\n";
+                queryString += " { ?work :publicationOf <__URI__> } \n";
                 break;
             case WORK:
                 queryString += ""
                         + "      { ?resource :publicationOf <__URI__> }\n"
                         + "UNION { ?resource :subject <__URI__> }\n"
-                        + "UNION { ?resource :publicationOf ?work . ?work :subject <__URI__> }\n"
                         + "UNION { <__URI__> :contributor [ a :Contribution; :agent ?resource ] }\n";
                 break;
             case MUSICAL_INSTRUMENT:
                 queryString += ""
-                        + "     ?resource :publicationOf ?work .\n"
-                        + "     ?work :hasInstrumentation [ a :Instrumentation ; :hasInstrument <__URI__> ] .\n";
+                        + "      { ?resource :hasInstrumentation [ a :Instrumentation ; :hasInstrument <__URI__> ] }\n";
                 break;
             case MUSICAL_COMPOSITION_TYPE:
-                queryString += "    ?resource :publicationOf ?work . ?work :compositionType <__URI__> .\n";
+                queryString += " { ?resource :hasCompositionType <__URI__> }\n";
                 break;
             default:
                 break;

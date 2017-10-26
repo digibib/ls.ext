@@ -1,5 +1,6 @@
 package no.deichman.services.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -33,7 +34,10 @@ import no.deichman.services.testutil.RandomisedData;
 import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import no.deichman.services.utils.ResourceReader;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -48,7 +52,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,9 +65,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.collect.ImmutableMap.of;
 import static java.net.HttpURLConnection.HTTP_OK;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.stream.Collectors.toList;
 import static javax.json.Json.createObjectBuilder;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CREATED;
@@ -73,6 +79,7 @@ import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static junit.framework.TestCase.fail;
 import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static no.deichman.services.restutils.MimeType.LD_JSON;
+import static org.apache.http.impl.client.HttpClients.createDefault;
 import static org.apache.jena.rdf.model.ResourceFactory.createLangLiteral;
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -1233,7 +1240,6 @@ public class AppTest {
 
 
     @Test
-    @Ignore
     public void resources_are_reindexed_when_themself_or_connected_resources_are_changed() throws Exception {
         kohaAPIMock.addLoginExpectation(); // TODO understand why needed here
 
@@ -1242,6 +1248,9 @@ public class AppTest {
         repo.createResource(modelFrom(data, Lang.TTL));
 
         String workUri = "http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20";
+        String workUri2 = "http://data.deichman.no/work/w42";
+        String workUri3 = "http://data.deichman.no/work/w620";
+        String workUri4 = "http://data.deichman.no/work/w492";
         String pubUri1 = "http://data.deichman.no/publication/p594502562255";
         String pubUri2 = "http://data.deichman.no/publication/p735933031021";
         String persUri1 = "http://data.deichman.no/person/h10834700";
@@ -1250,25 +1259,43 @@ public class AppTest {
         String workSeriesUri = "http://data.deichman.no/workSeries/v279125243466";
         String corporationUri1 = "http://data.deichman.no/corporation/c123456";
         String corporationUri2 = "http://data.deichman.no/corporation/c443233";
+        String genreUri = "http://data.deichman.no/genre/g42";
+        String instrumentUri = "http://data.deichman.no/instrument/i1234";
+        String compositionTypeUri = "http://data.deichman.no/compositionType/c1234";
+        String placeUri = "http://data.deichman.no/place/g0301";
 
         // 1 ) Verify that resources exist in triplestore:
 
         assertTrue(repo.askIfResourceExists(new XURI(workUri)));
+        assertTrue(repo.askIfResourceExists(new XURI(workUri2)));
+        assertTrue(repo.askIfResourceExists(new XURI(workUri3)));
+        assertTrue(repo.askIfResourceExists(new XURI(workUri4)));
         assertTrue(repo.askIfResourceExists(new XURI(pubUri1)));
         assertTrue(repo.askIfResourceExists(new XURI(pubUri2)));
         assertTrue(repo.askIfResourceExists(new XURI(persUri1)));
         assertTrue(repo.askIfResourceExists(new XURI(persUri2)));
         assertTrue(repo.askIfResourceExists(new XURI(subjUri)));
         assertTrue(repo.askIfResourceExists(new XURI(workSeriesUri)));
+        assertTrue(repo.askIfResourceExists(new XURI(genreUri)));
+        assertTrue(repo.askIfResourceExists(new XURI(compositionTypeUri)));
+        assertTrue(repo.askIfResourceExists(new XURI(instrumentUri)));
+        assertTrue(repo.askIfResourceExists(new XURI(placeUri)));
 
         // 2) Verify that none of the resources are indexed:
 
         assertFalse(resourceIsIndexed(workUri));
+        assertFalse(resourceIsIndexed(workUri2));
+        assertFalse(resourceIsIndexed(workUri3));
+        assertFalse(resourceIsIndexed(workUri4));
         assertFalse(resourceIsIndexed(pubUri1));
         assertFalse(resourceIsIndexed(pubUri2));
         assertFalse(resourceIsIndexed(persUri1));
         assertFalse(resourceIsIndexed(persUri2));
         assertFalse(resourceIsIndexed(subjUri));
+        assertFalse(resourceIsIndexed(genreUri));
+        assertFalse(resourceIsIndexed(instrumentUri));
+        assertFalse(resourceIsIndexed(compositionTypeUri));
+        assertFalse(resourceIsIndexed(placeUri));
 
         // 3) Patch work, and verify that work, its mainentry agent and its publications gets indexed within 2 seconds:
 
@@ -1283,54 +1310,52 @@ public class AppTest {
         assertTrue(resourceIsIndexedWithinNumSeconds(persUri1, 2));
 
         // 4) Patch person, and verify that persn, work and publications gets reindexed within few seconds
-        buildPatchRequest(
-                resolveLocally(persUri1),
-                buildLDPatch(
-                        buildPatchStatement("del", persUri1, BaseURI.ontology("name"), "Ragde, Anne B."),
-                        buildPatchStatement("add", persUri1, BaseURI.ontology("name"), "Zappa, Frank"))).asString();
+        patchResource(persUri1, "name", "Ragde, Anne B.", "Zappa, Frank");
 
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(persUri1, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Zappa, Frank", 2));
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri2, "Zappa, Frank", 2));
 
+        // Patch place, and verify that work is reindexed
+        patchResource(placeUri, "prefLabel", "Oslo", "Tigerstaden");
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Tigerstaden", 40));
 
-        // 5) Patch subject, and verify that publications get reindexed
-        buildPatchRequest(
-                resolveLocally(subjUri),
-                buildLDPatch(
-                        buildPatchStatement("del", subjUri, BaseURI.ontology("prefLabel"), "Trondheim"),
-                        buildPatchStatement("add", subjUri, BaseURI.ontology("prefLabel"), "Drontheim"))).asString();
-
-        //assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 2)); // TODO Ask kristoffer: framing/Query only includes uri in work
+        // Patch subject, and verify that work is reindexed
+        patchResource(subjUri, "prefLabel", "Trondheim", "Drontheim");
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Drontheim", 20));
 
-        // 6) Patch work series, and verify that works get reindexed
-        buildPatchRequest(
-                resolveLocally(workSeriesUri),
-                buildLDPatch(
-                        buildPatchStatement("del", workSeriesUri, BaseURI.ontology("mainTitle"), "Harry Potter"),
-                        buildPatchStatement("add", workSeriesUri, BaseURI.ontology("mainTitle"), "Cosmicomics"))).asString();
-
+        // Patch work series, and verify that works get reindexed
+        patchResource(workSeriesUri, "mainTitle", "Harry Potter", "Cosmicomics");
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Cosmicomics", 40));
 
         // patch corporation, and verify that publication gets reindexed
-        buildPatchRequest(
-                resolveLocally(corporationUri1),
-                buildLDPatch(
-                        buildPatchStatement("del", corporationUri1, BaseURI.ontology("name"), "Bantam Publishing"),
-                        buildPatchStatement("add", corporationUri1, BaseURI.ontology("name"), "Gakk Fontoy"))).asString();
-
+        patchResource(corporationUri1, "name", "Bantam Publishing", "Gakk Fontoy");
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(pubUri1, "Gakk Fontoy", 40));
 
         // patch corporation, and verify that work gets reindexed
-        buildPatchRequest(
-                resolveLocally(corporationUri2),
-                buildLDPatch(
-                        buildPatchStatement("del", corporationUri2, BaseURI.ontology("name"), "Goldendahl"),
-                        buildPatchStatement("add", corporationUri2, BaseURI.ontology("name"), "Simpar Delantos"))).asString();
-
+        patchResource(corporationUri2, "name", "Goldendahl", "Simpar Delantos");
         assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri, "Simpar Delantos", 40));
+
+        // patch genre, and verify that work gets reindexed
+        patchResource(genreUri, "prefLabel", "Eventyr", "Skrekk");
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri2, "Skrekk", 40));
+
+        // Patch compositio type, and verify that work is reindexed
+        patchResource(compositionTypeUri, "prefLabel", "Opera", "Operette");
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri3, "Operette", 40));
+
+        // Patch instrument, and verify that work is reindexed
+        patchResource(instrumentUri, "prefLabel", "Fløyte", "Bongotromme");
+        assertTrue(resourceIsIndexedWithValueWithinNumSeconds(workUri4, "Bongotromme", 40));
+    }
+
+    private void patchResource(String uri, String predicate, String from, String to) throws UnirestException {
+        buildPatchRequest(
+                resolveLocally(uri),
+                buildLDPatch(
+                        buildPatchStatement("del", uri, BaseURI.ontology(predicate), from),
+                        buildPatchStatement("add", uri, BaseURI.ontology(predicate), to))).asString();
     }
 
     @Test
@@ -1461,7 +1486,7 @@ public class AppTest {
 
     private Boolean resourceIsIndexed(String uri) throws Exception {
         Boolean found = false;
-        List<String> docs = embeddedElasticsearchServer.getClient().fetchAllDocuments("search");
+        List<String> docs = fetchAllDocuments();
         for (String doc : docs) {
             if (doc.contains(uri)) {
                 found = true;
@@ -1472,7 +1497,7 @@ public class AppTest {
     }
 
     private Boolean resourceIsIndexedWithValue(String uri, String value) throws Exception {
-        List<String> docs = embeddedElasticsearchServer.getClient().fetchAllDocuments("search");
+        List<String> docs = fetchAllDocuments();
         Boolean found = false;
         for (String doc : docs) {
             if (doc.contains(uri) && doc.contains(value)) {
@@ -1668,4 +1693,24 @@ public class AppTest {
 
         return loan;
     }
+
+    private List<String> fetchAllDocuments() {
+        HttpGet request = new HttpGet("http://localhost:" + EmbeddedElasticsearchServer.getClient().getHttpPort() + "/search/_search?size=100");
+
+        try {
+            CloseableHttpResponse response = createDefault().execute(request);
+            String body = null;
+            body = IOUtils.toString(response.getEntity().getContent(), UTF_8);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(body);
+            return StreamSupport.stream(jsonNode.get("hits").get("hits").spliterator(), false)
+                    .map(hitNode -> hitNode.get("_source"))
+                    .map(com.fasterxml.jackson.databind.JsonNode::toString)
+                    .collect(toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
