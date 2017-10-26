@@ -52,6 +52,7 @@ module.exports = {
     'inst': true,
     'isbn': true,
     'ismn': true,
+    'kd': true,
     'kl': true,
     'klasse': true,
     'komp': true,
