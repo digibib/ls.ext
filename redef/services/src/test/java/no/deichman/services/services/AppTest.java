@@ -1705,7 +1705,7 @@ public class AppTest {
 
             ObjectMapper objectMapper = new ObjectMapper();
             com.fasterxml.jackson.databind.JsonNode jsonNode = objectMapper.readTree(body);
-            assertThat ("There are more documents in the index than fetchAllDocuments could fetch", jsonNode.get("hits").get("total").intValue(), lessThanOrEqualTo(1000));
+            assertThat("There are more documents in the index than fetchAllDocuments could fetch", jsonNode.get("hits").get("total").intValue(), lessThanOrEqualTo(1000));
             return StreamSupport.stream(jsonNode.get("hits").get("hits").spliterator(), false)
                     .map(hitNode -> hitNode.get("_source"))
                     .map(com.fasterxml.jackson.databind.JsonNode::toString)
