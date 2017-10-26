@@ -70,7 +70,8 @@ public class WorkModelToIndexMapperTest {
             + "        \"hasWorkType\": {\n"
             + "              \"uri\": \"http://data.deichman.no/workType#Literature\"\n"
             + "         },"
-            + "        \"untranscribedTitle\": \"김치\"\n"
+            + "        \"untranscribedTitle\": \"김치\",\n"
+            + "        \"tag\": \"sausage\"\n"
             + "}";
 
     @Test
@@ -115,7 +116,8 @@ public class WorkModelToIndexMapperTest {
                 + "    ns2:hasContentAdaptation <http://data.deichman.no/contentAdaptation#easyLanguage> ;\n"
                 + "    ns2:isPartOfWorkSeries [ a ns2:WorkSeriesPart ; ns2:workSeries <http://data.deichman.no/workSeries/s1> ] ;\n"
                 + "    ns2:created            \"2016-11-17T07:03:10.239Z\"^^<http://www.w3.org/2001/XMLSchema#dateTime> ;\n"
-                + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> .\n"
+                + "    ns2:hasWorkType <http://data.deichman.no/workType#Literature> ;\n"
+                + "    ns2:hasTag \"sausage\" .\n"
                 + "\n"
                 + "<http://data.deichman.no/publication/p5945025622551> rdf:type ns2:Publication ;\n"
                 + "    ns2:bibliofilPublicationID \"15498951\" ;\n"

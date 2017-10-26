@@ -314,6 +314,9 @@
       },
       "created": {
         "type": "date"
+      },
+      "tag": {
+        "type": "text"
       }
     }
   }

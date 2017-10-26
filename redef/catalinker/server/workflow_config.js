@@ -1580,6 +1580,12 @@ module.exports = (app) => {
                   },
                   enableInPlaceEditing: true
                 }
+              },
+              {
+                rdfProperty: 'hasTag',
+                id: 'tagInput',
+                multiple: 'true',
+                addAnotherLabel: 'addAnotherTag'
               }
             ],
             nextStep: {

@@ -4405,7 +4405,7 @@
                 ractive.update().then(function () {
                   const node = document.main.$(event.node)
                   heightAligned(node.closest('.height-aligned'))
-                  node.closest('.panel-part').find('[contenteditable=true],input').first().focus()
+                  node.closest('.panel-part').find('[contenteditable=true],input[value=""]').first().focus()
                 })
               },
               // patchResource creates a patch request based on previous and current value of

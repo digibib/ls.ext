@@ -737,5 +737,5 @@ duo:Biography a rdfs:Class ;
 :hasTag a rdfs:Property ;
   rdfs:label "Tag"@en ;
   rdfs:label "Stikkord"@no ;
-  rdfs:domain :Publication ;
+  rdfs:domain :Work ;
   rdfs:range xsd:string .

@@ -52,6 +52,7 @@ module.exports = {
     { field: 'subject', boost: 0.5, phrase: true },
     { field: 'subject.raw', boost: 0.5, phrase: true },
     { field: 'summary', phrase: true },
-    { field: 'untranscribedTitle', phrase: true }
+    { field: 'untranscribedTitle', phrase: true },
+    { field: 'tag' }
   ]
 }

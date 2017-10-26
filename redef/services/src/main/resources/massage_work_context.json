@@ -97,6 +97,7 @@
     "litform": "deichman:literaryForm",
     "fictionNonfiction": "deichman:fictionNonfiction",
     "created": "deichman:created",
-    "untranscribedTitle": "deichman:untranscribedTitle"
+    "untranscribedTitle": "deichman:untranscribedTitle",
+    "tag": "deichman:hasTag"
   }
 }

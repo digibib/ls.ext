@@ -34,7 +34,8 @@ CONSTRUCT {
                deich:totalNumItems ?totalNumItems ;
                deich:literaryForm ?litform ;
                deich:created ?created ;
-               deich:untranscribedTitle ?untranscribedTitle .
+               deich:untranscribedTitle ?untranscribedTitle ;
+               deich:hasTag ?hasTag .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
                deich:mainEntry ?mainEntry ;
@@ -130,6 +131,7 @@ WHERE {
           ?workSeries ?seriesPred ?seriesTitle .
           VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
   }
+  UNION { <__WORKURI__> deich:hasTag ?hasTag }
   UNION {
     select ?totalNumItems
     where {
