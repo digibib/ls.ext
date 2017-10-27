@@ -136,7 +136,7 @@ on-escape="cancelEdit">
             {{#if !(type === 'hidden-url-query-value')}}
                 <div>
                     <span data-uri-escaped-label="{{encodeURI(./label)}}">{{#if .labelKey}}{{>.labelKey}}{{else}}{{label}}{{/if}}:</span>
-                    {{#if multiple && type === "input-string"}}
+                    {{#if .multiple && type === "input-string"}}
                         <span class="add-more-legend">{{>addMoreValuesInExtendedEditing}}</span>
                     {{/if}}
                     {{#each values}}
