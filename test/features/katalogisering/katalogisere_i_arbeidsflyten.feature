@@ -67,6 +67,7 @@ Egenskap: Katalogisere i arbeidsflyt
     Så velger jeg et emne fra treffliste fra emneregisteret
     Så sjekker jeg at emnet er listet opp på verket
     Og jeg venter litt
+    Og jeg skriver verdien "Fantomet" for "Stikkord"
     Og jeg venter litt
     Og bekrefter for å gå videre til "Beskriv deler"
     Så sjekker jeg at den verdien jeg la inn for "Aktør" inneholder personnavnet
