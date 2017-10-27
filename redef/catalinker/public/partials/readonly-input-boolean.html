@@ -1,4 +1,14 @@
 <span data-automation-id="{{../../dataAutomationId}}">
-    {{#if ./current.value === true}}Ja{{/if}}
-    {{#if ./current.value === false}}Nei{{/if}}
+    {{#if parentInput}}
+        {{#if ./current.value === true}}
+            {{#if ../../labelKey}}
+                {{>../../labelKey}}
+            {{else}}
+                {{../../label}}
+            {{/if}}
+        {{/if}}
+    {{else}}
+        {{#if ./current.value === true}}{{>yes}}{{/if}}
+        {{#if ./current.value === false}}{{>no}}{{/if}}
+    {{/if}}
 </span>

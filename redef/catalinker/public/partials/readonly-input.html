@@ -19,9 +19,11 @@
                                         <span class="pure-u-1-1 value-list">
                                             {{#each ../../../../../subInputs}}
                                                         {{#with input.values[inputValueIndex]}}
+                                                            {{#if current.value}}
                                                             <span class="list-value">
                                                                 {{>"readonly-" + ../../../input.type}}
                                                             </span>
+                                                            {{/if}}
                                                         {{/with}}
                                             {{/each}}
                                     {{#if subjectTypes.length > 1}}

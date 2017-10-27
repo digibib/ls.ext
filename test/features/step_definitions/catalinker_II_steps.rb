@@ -203,11 +203,11 @@ When(/^jeg skriver i feltet "([^"]*)" teksten$/) do |parameter_label, value|
 end
 
 def predicate_from_automation_id(select_id)
-  select_id.sub(/^(Work|Publication|Person|WorkRelation)_/, '').sub(/_[0-9]+$/, '')
+  select_id.sub(/^(Work|Publication|Person|WorkRelation|ClassificationEntry)_/, '').sub(/_[0-9]+$/, '')
 end
 
 def domain_of_automation_id(select_id)
-  select_id.match(/^(Work|Publication|Person|WorkRelation)_.*/).captures[0]
+  select_id.match(/^(Work|Publication|Person|WorkRelation|ClassificationEntry)_.*/).captures[0]
 end
 
 def do_select_value(selectable_parameter_label, value)
@@ -916,4 +916,9 @@ When(/^sletter jeg den første forekomsten under (.*)$/) do |parameter_label|
     first_delete = @browser.as(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(parameter_label)}']//a[@class='delete']").first
     first_delete.scroll.to
     first_delete.click
+end
+
+
+When(/^sjekker jeg at antall (.*)er er (.*)$/) do |label, entries|
+  @browser.divs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(label)}']//div[#{contains_class 'default-non-editable'}]").length.should eq entries.to_i
 end

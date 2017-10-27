@@ -411,6 +411,8 @@
     searching: 'Søker…',
     copiedFrom: 'Fra {{>copiedFromType + "LabelDet"}}',
     copiedFromLegend: 'Verdien i dette feltet er kopiert fra {{copiedFromLabel}} på {{>copiedFromType + "LabelDet"}}',
-    acceptedStringFormat: 'Verdier kan ikke starte eller slutte med mellomrom'
+    acceptedStringFormat: 'Verdier kan ikke starte eller slutte med mellomrom',
+    yes: 'Ja',
+    no: 'Nei'
   }
 }))

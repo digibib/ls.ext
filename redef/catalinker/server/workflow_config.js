@@ -1557,6 +1557,9 @@ module.exports = (app) => {
                       label: 'classificationSourceLabel',
                       rdfProperty: 'hasClassificationSource',
                       required: true
+                    },
+                    {
+                      rdfProperty: 'isMainClassificationNumber'
                     }
                   ]
                 }

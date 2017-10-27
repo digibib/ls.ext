@@ -409,6 +409,8 @@
     searching: 'Searching…',
     copiedFrom: 'From {{>copiedFromType + "LabelDet"}}',
     copiedFromLegend: 'The value in this fields has been copied from {{copiedFromLabel}} of {{>copiedFromType + "LabelDet"}}',
-    acceptedStringFormat: 'Values must not start or end with white space'
+    acceptedStringFormat: 'Values must not start or end with white space',
+    yes: 'Yes',
+    no: 'No'
   }
 }));
