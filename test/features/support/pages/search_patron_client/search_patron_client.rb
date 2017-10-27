@@ -9,7 +9,7 @@ class SearchPatronClient < PageRoot
   end
 
   def search_with_text(search_term)
-    @browser.text_field(data_automation_id: 'search_input_field').set '"' + search_term + '"'
+    @browser.text_field(data_automation_id: 'search_input_field').set search_term
     @browser.element(data_automation_id: 'search_button').click
     wait_for { not @browser.element(data_automation_id: 'is_searching').exist? }
   end
