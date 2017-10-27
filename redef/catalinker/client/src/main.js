@@ -1539,7 +1539,7 @@
               (unPrefix(ownerInput.domain) === options.wrappedIn || !options.wrappedIn) &&
               (options.wrapperObject && options.wrapperObject.isA(options.wrappedIn) || !options.wrapperObject)) {
               let inputParentOfCreateNewResourceFormKeypath = ractive.get(`inputLinks.${input.belongsToCreateResourceFormOfInput}`)
-              let ownerValueIndex = ownerInput.values.map(value => value.current.value).indexOf(root.id)
+              let ownerValueIndex = ownerInput[ valuesField ].map(value => value.current.value).indexOf(root.id)
               ractive.set(`${inputParentOfCreateNewResourceFormKeypath}.suggestedValuesForNewResource.${ownerValueIndex}`, root)
               skipRest = true
             } else {
@@ -1550,7 +1550,7 @@
                   return function (_root) {
                     _root = _root || root
                     input.offset = input.offset || {}
-                    let offset = (input.type !== 'select-predefined-value' && input.multiple) ? (_.filter(input.values || [], (val) => ![ undefined, '', null ].includes(val.current.value))).length : 0
+                    let offset = (input.type !== 'select-predefined-value' && input.multiple) ? (_.filter(input[ valuesField ] || [], (val) => ![ undefined, '', null ].includes(val.current.value))).length : 0
                     if (input.isSubInput) {
                       offset = 0
                     }
@@ -4392,7 +4392,8 @@
                     values.oldSubjectType = values.subjectType
                   }
                   try {
-                    promises.push(ractive.push(`${input.keypath}.values`, values))
+                    mainInput.values.push(values)
+                    promises.push(ractive.update())
                   } catch (e) {
                     // nop
                   }

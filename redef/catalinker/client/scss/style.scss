@@ -394,301 +394,302 @@ html {
               margin-top: 6px;
             }
 
-          .save-placeholder {
-            padding: 0 !important;
-            position: relative;
-            .spinner {
-              zoom: 0.5;
-            }
-          }
-          .input-wrapper button.saving + .save-placeholder {
-            top: -2px;
-            right: -247px;
-          }
-          .input-wrapper .subject-type-association button.saving + .save-placeholder {
-            top: 16px;
-            right: -39px;
-          }
-          span.select2.select2-container + .save-placeholder {
-            right: 40px;
-            top: -21px;
-          }.label {
-            &.esoteric {
-              margin-top: -23px;
-            }
-            padding: 12px 12px 4px 12px;
-            display: block;
-            background: $input-background;
-            font-weight: bold;
-            &:after {
-              content: ":";
-            }
-            &:empty:after {
-              font-size: 0px;
-            }
-            &.for-one-liner {
-              display: inline;
-              min-width: 104px;
-            }
-          }
-          .one-liner {
-            margin-top: 13px;
-          }
-          .input-wrapper .label {
-            padding: 12px 12px 4px 0px;
-          }
-          .panel-part {
-            &.esoteric .field {
-              min-height: 0 !important;
-            }
-            a.show-esoterics {
-              margin-top: 5px;
-              max-height: 20px;
-              display: inline-block;
-            }
-            &.for-one-liner {
-              display: flex;
-              &:not(.last-one) {
-                margin-bottom: -24px;
+            .save-placeholder {
+              padding: 0 !important;
+              position: relative;
+              .spinner {
+                zoom: 0.5;
               }
             }
-            &.first {
-              border-top: 1px solid lightgrey;
+            .input-wrapper button.saving + .save-placeholder {
+              top: -2px;
+              right: -247px;
             }
-            &.boolean-separator {
-              height: 2px;
+            .input-wrapper .subject-type-association button.saving + .save-placeholder {
+              top: 16px;
+              right: -39px;
             }
-            &:last-child:not(.last-one):after, &.boolean-separator:not(last-one):after {
+            span.select2.select2-container + .save-placeholder {
+              right: 40px;
+              top: -21px;
+            }
+            .label {
+              &.esoteric {
+                margin-top: -23px;
+              }
+              padding: 12px 12px 4px 12px;
               display: block;
-              height: 2px;
-              background: lightgrey;
-              content: "";
-              margin: 0 12px 2px 12px;
-              order: 1000;
-            }
-            &.last-one:not(first) {
-              border-bottom: 1px solid lightgrey;
-              padding-bottom: 15px;
-            }
-            &.ui-accordion {
-              .ui-accordion-icons {
-                padding-left: 13px;
+              background: $input-background;
+              font-weight: bold;
+              &:after {
+                content: ":";
               }
-              .ui-accordion-header {
-                border-radius: 0px;
-                background: none;
-                margin: 4px 13px;
-                .ui-accordion-header-icon {
-                  right: .5em;
-                  left: auto;
-                }
-                &:focus {
-                  @include focus();
-                }
+              &:empty:after {
+                font-size: 0px;
               }
-              .ui-accordion-content {
-                border: none;
-                padding: 13px;
-                display: none;
-                & + span > .add-new-btn-row {
-                  margin-top: 13px;
-                }
-              }
-              display: flex;
-              flex-direction: column;
-              &.label {
-                flex-direction: row;
+              &.for-one-liner {
+                display: inline;
+                min-width: 104px;
               }
             }
-            .support-panel {
-              margin-left: 2px;
-              margin-right: 2px;
-              padding: 0 15px;
-              position: absolute;
-              width: 340px;
-              &.fixed {
-                .support-panel-content:before {
-                  display: none !important;
+            .one-liner {
+              margin-top: 13px;
+            }
+            .input-wrapper .label {
+              padding: 12px 12px 4px 0px;
+            }
+            .panel-part {
+              &.esoteric .field {
+                min-height: 0 !important;
+              }
+              a.show-esoterics {
+                margin-top: 5px;
+                max-height: 20px;
+                display: inline-block;
+              }
+              &.for-one-liner {
+                display: flex;
+                &:not(.last-one) {
+                  margin-bottom: -24px;
                 }
-                z-index: 50 !important;
               }
-              .prop-search-result {
-                height: 300px;
+              &.first {
+                border-top: 1px solid lightgrey;
               }
-              .support-panel-content {
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-                background: white;
-                &:before {
-                  content: "";
-                  position: absolute;
-                  left: 0px;
-                  right: 100%;
-                  width: 0;
-                  height: 0;
-                  border-top: 32px solid transparent;
-                  border-right: 16px solid white;
-                  border-bottom: 32px solid transparent;
+              &.boolean-separator {
+                height: 2px;
+              }
+              &:last-child:not(.last-one):after, &.boolean-separator:not(last-one):after {
+                display: block;
+                height: 2px;
+                background: lightgrey;
+                content: "";
+                margin: 0 12px 2px 12px;
+                order: 1000;
+              }
+              &.last-one:not(first) {
+                border-bottom: 1px solid lightgrey;
+                padding-bottom: 15px;
+              }
+              &.ui-accordion {
+                .ui-accordion-icons {
+                  padding-left: 13px;
+                }
+                .ui-accordion-header {
+                  border-radius: 0px;
+                  background: none;
+                  margin: 4px 13px;
+                  .ui-accordion-header-icon {
+                    right: .5em;
+                    left: auto;
+                  }
+                  &:focus {
+                    @include focus();
+                  }
+                }
+                .ui-accordion-content {
+                  border: none;
+                  padding: 13px;
+                  display: none;
+                  & + span > .add-new-btn-row {
+                    margin-top: 13px;
+                  }
+                }
+                display: flex;
+                flex-direction: column;
+                &.label {
+                  flex-direction: row;
+                }
+              }
+              .support-panel {
+                margin-left: 2px;
+                margin-right: 2px;
+                padding: 0 15px;
+                position: absolute;
+                width: 340px;
+                &.fixed {
+                  .support-panel-content:before {
+                    display: none !important;
+                  }
+                  z-index: 50 !important;
+                }
+                .prop-search-result {
+                  height: 300px;
+                }
+                .support-panel-content {
+                  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+                  background: white;
+                  &:before {
+                    content: "";
+                    position: absolute;
+                    left: 0px;
+                    right: 100%;
+                    width: 0;
+                    height: 0;
+                    border-top: 32px solid transparent;
+                    border-right: 16px solid white;
+                    border-bottom: 32px solid transparent;
+                    min-height: 66px;
+                  }
                   min-height: 66px;
+                  .search-result-box {
+                    max-height: 450px;
+                    overflow-y: auto;
+                    border: 6px solid white;
+                    margin-top: 8px;
+                  }
+                  .add-new-btn-row {
+                    padding: 19px 0 8px 8px;
+                  }
                 }
-                min-height: 66px;
-                .search-result-box {
-                  max-height: 450px;
-                  overflow-y: auto;
-                  border: 6px solid white;
-                  margin-top: 8px;
-                }
-                .add-new-btn-row {
-                  padding: 19px 0 8px 8px;
+                .field {
+                  padding-left: 0;
+                  padding-right: 0;
                 }
               }
               .field {
-                padding-left: 0;
-                padding-right: 0;
-              }
-            }
-            .field {
-              min-height: 37px;
-              .index-type-select {
-                margin-bottom: 6px;
-              }
-              input[type="checkbox"] + .save-placeholder {
-                top: 11px;
-                padding-left: 52%;
-              }
-              input:not([type=checkbox]) + .save-placeholder {
-                top: 17px;
-                right: 18px;
-              }
-              input[type=search] + .save-placeholder {
-                top: -17px;
-                right: 18px;
-              }
-              a.support-panel-expander.saving {
-                display: none;
-              }
-              :not(.sub-field) .index-type-select + a.support-panel-expander + .save-placeholder {
-                top: 47px;
-                right: 18px;
-              }
-              :not(.sub-field) a.support-panel-expander + .save-placeholder {
-                top: 18px;
-                right: 18px;
-              }
-              .sub-field a.support-panel-expander + .save-placeholder {
-                top: 15px;
-                right: 16px;
-              }
-              .sub-field a.open-bulk-edit {
-                float: right;
-                margin-top: 3px;
-              }
-              .sub-field textarea {
-                max-width: 431px;
-                white-space: nowrap;
-              }
-              padding: 0 12px 10px 12px;
-              background: $input-background;
-              margin-right: -5px;
+                min-height: 37px;
+                .index-type-select {
+                  margin-bottom: 6px;
+                }
+                input[type="checkbox"] + .save-placeholder {
+                  top: 11px;
+                  padding-left: 52%;
+                }
+                input:not([type=checkbox]) + .save-placeholder {
+                  top: 17px;
+                  right: 18px;
+                }
+                input[type=search] + .save-placeholder {
+                  top: -17px;
+                  right: 18px;
+                }
+                a.support-panel-expander.saving {
+                  display: none;
+                }
+                :not(.sub-field) .index-type-select + a.support-panel-expander + .save-placeholder {
+                  top: 47px;
+                  right: 18px;
+                }
+                :not(.sub-field) a.support-panel-expander + .save-placeholder {
+                  top: 18px;
+                  right: 18px;
+                }
+                .sub-field a.support-panel-expander + .save-placeholder {
+                  top: 15px;
+                  right: 16px;
+                }
+                .sub-field a.open-bulk-edit {
+                  float: right;
+                  margin-top: 3px;
+                }
+                .sub-field textarea {
+                  max-width: 431px;
+                  white-space: nowrap;
+                }
+                padding: 0 12px 10px 12px;
+                background: $input-background;
+                margin-right: -5px;
 
-              input[type=checkbox] {
-                width: auto;
-                margin-top: -7px;
+                input[type=checkbox] {
+                  width: auto;
+                  margin-top: -7px;
+                }
+                .explanation {
+                  margin-left: 0.5em;
+                  font-style: italic;
+                  font-size: 0.9em;
+                }
               }
-              .explanation {
-                margin-left: 0.5em;
-                font-style: italic;
-                font-size: 0.9em;
-              }
-            }
-            border-left: 1px solid lightgrey;
-            border-right: 1px solid lightgrey;
-            background: white;
-            div.external-source-results {
-              span {
-                width: 100%;
-              }
-              margin-top: 7px;
-              ul {
-                margin-top: 3px;
-                max-height: 300px;
-                overflow-y: auto;
-                overflow-x: hidden;
-                list-style: none;
-                padding: 0px;
-                li {
+              border-left: 1px solid lightgrey;
+              border-right: 1px solid lightgrey;
+              background: white;
+              div.external-source-results {
+                span {
                   width: 100%;
-                  background-color: $lightergray;
-                  display: inline-block;
-                  padding: 5px;
-                  .pure-button {
-                    float: right;
-                    margin-top: 14px;
-                    padding-left: 25px;
-                    padding-right: 25px;
-                    & + .save-placeholder {
-                      left: 380px;
+                }
+                margin-top: 7px;
+                ul {
+                  margin-top: 3px;
+                  max-height: 300px;
+                  overflow-y: auto;
+                  overflow-x: hidden;
+                  list-style: none;
+                  padding: 0px;
+                  li {
+                    width: 100%;
+                    background-color: $lightergray;
+                    display: inline-block;
+                    padding: 5px;
+                    .pure-button {
+                      float: right;
+                      margin-top: 14px;
+                      padding-left: 25px;
+                      padding-right: 25px;
+                      & + .save-placeholder {
+                        left: 380px;
+                      }
+                    }
+                    span {
+                      float: left;
                     }
                   }
-                  span {
-                    float: left;
-                  }
                 }
               }
-            }
-            div.external-sources {
+              div.external-sources {
 
-              padding: 13px;
-              & > span {
-                background-repeat: no-repeat;
-                background-position: right center;
-                border-bottom: 1px solid black;
-                cursor: pointer;
-                display: block;
-                &.unexpanded {
-                  background-image: url("/images/arrow_down_outline.svg");
-                }
-                &.expanded {
-                  background-image: url("/images/arrow_up_outline.svg");
+                padding: 13px;
+                & > span {
+                  background-repeat: no-repeat;
+                  background-position: right center;
+                  border-bottom: 1px solid black;
+                  cursor: pointer;
+                  display: block;
+                  &.unexpanded {
+                    background-image: url("/images/arrow_down_outline.svg");
+                  }
+                  &.expanded {
+                    background-image: url("/images/arrow_up_outline.svg");
+                  }
                 }
               }
-            }
-            div.suggested-values {
-              margin-top: 10px;
-              .suggested-value {
-                clear: both;
-                margin-bottom: 25px;
-                &.suggestion-source-bibbi {
-                  @include source-logo-bibbi;
-                  background-position: calc(100% - 130px);
-                  background-position-y: bottom;
-                  &.searchable {
-                    background-position: 87%;
+              div.suggested-values {
+                margin-top: 10px;
+                .suggested-value {
+                  clear: both;
+                  margin-bottom: 25px;
+                  &.suggestion-source-bibbi {
+                    @include source-logo-bibbi;
+                    background-position: calc(100% - 130px);
+                    background-position-y: bottom;
+                    &.searchable {
+                      background-position: 87%;
+                    }
                   }
-                }
-                &.suggestion-source-loc {
-                  @include source-logo-loc;
-                  background-position: calc(100% - 130px);
-                  background-position-y: bottom;
-                  &.searchable {
-                    background-position: 86% 0;
+                  &.suggestion-source-loc {
+                    @include source-logo-loc;
+                    background-position: calc(100% - 130px);
+                    background-position-y: bottom;
+                    &.searchable {
+                      background-position: 86% 0;
+                    }
                   }
-                }
-                &.suggestion-source-dfb {
-                  @include source-logo-dfb;
-                  background-position: calc(100% - 130px);
-                  background-position-y: bottom;
-                  &.searchable {
-                    background-position: 86% 0;
+                  &.suggestion-source-dfb {
+                    @include source-logo-dfb;
+                    background-position: calc(100% - 130px);
+                    background-position-y: bottom;
+                    &.searchable {
+                      background-position: 86% 0;
+                    }
                   }
-                }
-                button {
-                  float: right;
-                }
-                .support-panel-expander {
-                  margin-top: -25px;
+                  button {
+                    float: right;
+                  }
+                  .support-panel-expander {
+                    margin-top: -25px;
+                  }
                 }
               }
-            }
 
             }
             .search-input {
@@ -698,8 +699,8 @@ html {
               background-color: white;
               border: 1px solid lightgrey;
               .search-term {
-                &:empty:not(:focus):before{
-                  content:attr(data-text);
+                &:empty:not(:focus):before {
+                  content: attr(data-text);
                   opacity: 0.5;
                 }
                 min-height: 37px;
@@ -908,6 +909,12 @@ html {
             }
 
             .search-result {
+              .add-more-legend {
+                float: right;
+                font-size: 80%;
+                font-style: italic;
+                margin-top: 4px;
+              }
               @include turnableArrow();
               .field {
                 margin-bottom: 10px;
@@ -1027,7 +1034,7 @@ html {
               cursor: pointer;
               min-width: 20px;
             }
-            .ui-accordion div.pure-u-1-24 a.edit{
+            .ui-accordion div.pure-u-1-24 a.edit {
               background-position-x: 14px;
             }
             .default-non-editable {

@@ -114,7 +114,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               {
                 rdfProperty: 'ordinal',
@@ -144,7 +146,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               createdTimestamp(),
               modifiedTimestamp()
@@ -170,7 +174,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               createdTimestamp(),
               modifiedTimestamp()
@@ -210,7 +216,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               createdTimestamp(),
               modifiedTimestamp()
@@ -328,7 +336,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               createdTimestamp(),
               modifiedTimestamp()
@@ -367,7 +377,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               createdTimestamp(),
               modifiedTimestamp()
@@ -434,7 +446,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               createdTimestamp(),
               modifiedTimestamp()
@@ -458,7 +472,9 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'alternativeName',
-                type: 'input-string'
+                type: 'input-string',
+                multiple: true,
+                addAnotherLabel: 'addAnotherAlternativeName'
               },
               createdTimestamp(),
               modifiedTimestamp()
