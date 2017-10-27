@@ -60,6 +60,8 @@
     addAnotherVariantTitle: 'Add another variant title',
     addAnotherTag: 'Add another tag',
     addAnotherAlternativeName: 'Add another alternative name',
+    addAnotherDescription: 'Add another description',
+    addAnotherSummary: 'Add another summary',
     suggestionFromOtherSources: 'Suggestions from external sources',
     missingRequiredValuesOfBlankMode: 'Cannot add until {{subjectTypeLabelDet(subjectType)}} has been created or loaded. Mandatory fields must populated.',
     cannotSelectRelationBeforeResourceTypeIsLoaded: 'Cannot select relation until relevant resource type is loaded', //Denne knytningen kan ikke velges før tilhørende ressurstype er lastet

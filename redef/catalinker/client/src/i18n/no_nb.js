@@ -60,6 +60,8 @@
     addAnotherVariantTitle: 'Legg til en alternativ tittel til',
     addAnotherTag: 'Legg til et stikkord til',
     addAnotherAlternativeName: 'Legg til et alternativt navn til',
+    addAnotherDescription: 'Legg til en beskrivelse til',
+    addAnotherSummary: 'Legg til et sammendrag til',
     suggestionFromOtherSources: 'Forslag fra andre eksterne kilder',
     missingRequiredValuesOfBlankMode: 'Kan ikke legge til før {{subjectTypeLabelDet(subjectType)}} er opprettet eller lastet. Påkrevde felter må være utfylt eller ha valgt autoritet/fast verdi.',
     cannotSelectRelationBeforeResourceTypeIsLoaded: 'Denne knytningen kan ikke velges før tilhørende ressurstype er lastet',

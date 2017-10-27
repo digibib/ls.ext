@@ -1070,7 +1070,9 @@ module.exports = (app) => {
               { rdfProperty: 'locationSignature' },
               {
                 rdfProperty: 'hasDescription',
-                type: 'input-string-large'
+                type: 'input-string-large',
+                multiple: true,
+                addAnotherLabel: 'addAnotherDescription',
               },
               {
                 rdfProperty: 'publicationOf',
@@ -1342,7 +1344,9 @@ module.exports = (app) => {
               {
                 rdfProperty: 'hasSummary',
                 esotericWhen: { hasWorkType: [ 'Music' ] },
-                type: 'input-string-large'
+                type: 'input-string-large',
+                multiple: true,
+                addAnotherLabel: 'addAnotherSummary',
               },
               createdTimestamp(),
               modifiedTimestamp()

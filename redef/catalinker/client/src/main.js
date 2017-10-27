@@ -3658,6 +3658,9 @@
               if (!event.isDefaultPrevented()) {
                 const rightDummyPanel = $('#right-dummy-panel')
                 const supportPanelLeftEdge = rightDummyPanel.offset().left
+                if (rightDummyPanel.length === 0) {
+                  return
+                }
                 const supportPanelWidth = rightDummyPanel.width()
                 const outsideX = event.originalEvent.pageX < supportPanelLeftEdge || event.originalEvent.pageX > (supportPanelLeftEdge + supportPanelWidth)
                 const targetIsInsideSupportPanel = !outsideX && $(event.originalEvent.target).closest('span.support-panel').length
