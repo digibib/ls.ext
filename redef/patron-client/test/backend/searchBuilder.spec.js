@@ -1190,6 +1190,19 @@ describe('searchBuilder', () => {
                                     }
                                   }
                                 }
+                              },
+                              {
+                                constant_score: {
+                                  boost: 1,
+                                  filter: {
+                                    match: {
+                                      tag: {
+                                        minimum_should_match: "70%",
+                                        query: "some more strings"
+                                      }
+                                    }
+                                  }
+                                }
                               }
                             ]
                           }
