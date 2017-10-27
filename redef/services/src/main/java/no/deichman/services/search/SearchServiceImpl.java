@@ -283,49 +283,25 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void toggleActiveIndex(String idx) {
-        initialiseElasticsearch();
         removeAliases();
         addAlias(idx, "search");
     }
 
     private void addAlias(String from, String to) {
-        if (isIndexOrAlias(from)) {
-            try (CloseableHttpClient httpclient = createDefault()) {
-                URI uri = getIndexUriBuilder().setPath("/" + from + "/_alias/" + to).build();
-                try (CloseableHttpResponse res = httpclient.execute(new HttpPut(uri))) {
-                    int statusCode = res.getStatusLine().getStatusCode();
-                    LOG.info("Create index alias returned status " + statusCode);
-                    if (statusCode != HTTP_OK) {
-                        LOG.error("Creating index alias failed, cause: " + IOUtils.toString(res.getEntity().getContent(), StandardCharsets.UTF_8));
-                        throw new ServerErrorException("Failed to create index alias", HTTP_INTERNAL_ERROR);
-                    }
-                }
-
-            } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
-                throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
-            }
-        }
-    }
-
-    private boolean aliasesExist() {
-        return aliasExists("*");
-    }
-
-    private void initialiseElasticsearch() {
-        String aliasName = "search";
-        try (CloseableHttpClient closeableHttpClient = createDefault()) {
-            if (!aliasExists(aliasName) && isIndexOrAlias(aliasName)) {
-                URI searchUri = getIndexUriBuilder().setPath("/" + aliasName).build();
-                try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(new HttpDelete(searchUri))) {
-                    int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
-                    if (statusCode == 200) {
-                        LOG.info("Deleting index \"" + aliasName + "\" so alias with same name can be created");
-                    }
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = getIndexUriBuilder().setPath("/" + from + "/_alias/" + to).build();
+            try (CloseableHttpResponse res = httpclient.execute(new HttpPut(uri))) {
+                int statusCode = res.getStatusLine().getStatusCode();
+                LOG.info("Create index alias returned status " + statusCode);
+                if (statusCode != HTTP_OK) {
+                    LOG.error("Creating index alias failed, cause: " + IOUtils.toString(res.getEntity().getContent(), StandardCharsets.UTF_8));
+                    throw new ServerErrorException("Failed to create index alias", HTTP_INTERNAL_ERROR);
                 }
             }
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -350,40 +326,19 @@ public class SearchServiceImpl implements SearchService {
         return searchAliasExists;
     }
 
-    private boolean isIndexOrAlias(String aliasOrIndexName) {
-        boolean indexOrAliasExists = false;
-        try (CloseableHttpClient closeableHttpClient = createDefault()) {
-            URI uri2 = getIndexUriBuilder().setPath("/" + aliasOrIndexName + "").build();
-            try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(new HttpGet(uri2))) {
-                int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
-                if (statusCode == 200) {
-                    LOG.info("Inspecting Elasticsearch while initialising shows \"" + aliasOrIndexName + "\" alias or index already exists");
-                    indexOrAliasExists = true;
-                } else {
-                    LOG.info("Inspecting Elasticsearch while initialising shows \"" + aliasOrIndexName + "\" alias or index does not exist");
-                }
-            }
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
-        }
-        return indexOrAliasExists;
-    }
-
     private void removeAliases() {
-        if (aliasesExist()) {
-            try (CloseableHttpClient httpclient = createDefault()) {
-                URI uri = getIndexUriBuilder().setPath("/_all/_aliases/search").build();
-                try (CloseableHttpResponse res = httpclient.execute(new HttpDelete(uri))) {
-                    int statusCode = res.getStatusLine().getStatusCode();
-                    LOG.info("Delete index aliases returned status " + statusCode);
-                    if (statusCode != HTTP_OK && statusCode != HTTP_NOT_FOUND) {
-                        throw new ServerErrorException("Failed to delete index aliases", HTTP_INTERNAL_ERROR);
-                    }
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = getIndexUriBuilder().setPath("/_all/_aliases/search").build();
+            try (CloseableHttpResponse res = httpclient.execute(new HttpDelete(uri))) {
+                int statusCode = res.getStatusLine().getStatusCode();
+                LOG.info("Delete index aliases returned status " + statusCode);
+                if (statusCode != HTTP_OK && statusCode != HTTP_NOT_FOUND) {
+                    throw new ServerErrorException("Failed to delete index aliases", HTTP_INTERNAL_ERROR);
                 }
-            } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
-                throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
             }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -392,7 +347,7 @@ public class SearchServiceImpl implements SearchService {
         try (CloseableHttpClient httpclient = createDefault()) {
             URI uri = getIndexUriBuilder().setPath("/a/_alias/search").build();
             try (CloseableHttpResponse res = httpclient.execute(new HttpGet(uri))) {
-                if (res.getEntity().toString().contains("search")) {
+                if (EntityUtils.toString(res.getEntity()).contains("search")) {
                     return "a";
                 }
             }
