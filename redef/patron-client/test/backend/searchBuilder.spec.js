@@ -1197,8 +1197,8 @@ describe('searchBuilder', () => {
                                   filter: {
                                     match: {
                                       tag: {
-                                        minimum_should_match: "70%",
-                                        query: "some more strings"
+                                        minimum_should_match: '70%',
+                                        query: 'some more strings'
                                       }
                                     }
                                   }
