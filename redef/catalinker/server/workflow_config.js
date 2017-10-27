@@ -1230,7 +1230,7 @@ module.exports = (app) => {
                     onlyWhenAll: [
                       {
                         inputId: 'relationTypeInput',
-                        valueAsStringMatches: '^.*continuedIn$|^.*continuationOf$'
+                        valueAsStringMatches: '^.*continuedIn$|^.*continuationOf$|^.*relatedWork'
                       },
                       {
                         inputId: 'relatedToWorkInput',
