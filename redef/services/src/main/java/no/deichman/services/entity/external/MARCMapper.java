@@ -101,313 +101,314 @@ public class MARCMapper {
         graphList.add(publication);
 
         for (ControlField controlField : r.getControlFields()) {
-            switch (controlField.getTag()) {
-                case "001":
-                    getControlFieldValue(controlField).ifPresent(publication::setCataloguingSourceIdentifier);
-                    break;
-                case "008":
-                    setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
-                    setUriObject(controlField, THIRTY_THREE, "fictionNonfiction", work::setFictionNonfiction, FictionNonfiction::translate);
-                    setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
-                    setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, publication::addLanguage, MUL_FILTER, this::languagePrefix);
-                    break;
-                default:
+            if (handleControlFieldHook(controlField, work, publication)) {
+                switch (controlField.getTag()) {
+                    case "008":
+                        setUriObject(controlField, TWENTY_TWO, "audience", work::setAudience, Audience::translate008pos22);
+                        setUriObject(controlField, THIRTY_THREE, "fictionNonfiction", work::setFictionNonfiction, FictionNonfiction::translate);
+                        setUriObject(controlField, THIRTY_FOUR, "biography", work::setBiography, Biography::translate);
+                        setUriObject(controlField, THIRTY_FIVE, THIRTY_SEVEN, publication::addLanguage, MUL_FILTER, this::languagePrefix);
+                        break;
+                    default:
+                }
             }
         }
 
         boolean foundWorkLanguage = false;
         for (DataField dataField : r.getDataFields()) {
-            String tag = dataField.getTag();
-            switch (tag) {
-                case "019":
-                    setUriObject(dataField, 'a', "audience", Audience::translate, work::setAudience);
-                    setUriObject(dataField, 'b', "format", Format::translate, publication::setFormat);
-                    setUriObject(dataField, 'b', "mediaType", MediaType::translateUnitedMediaType, publication::setUnitedMediaType);
-                    setUriObject(dataField, 'b', "mediaType", MediaType::translatePagedMediaType, publication::setPagedMediaType);
-                    setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", LiteraryForm::translate, work::addLiteraryForm);
-                    setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaptation", ContentAdaption::translate, work::addContentAdaption);
-                    setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaptation", FormatAdaption::translate, publication::addFormatAdaption);
-                    getSubfieldValue(dataField, 's').ifPresent(publication::setAgeLimit);
-                    break;
-                case "020":
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
-                    setUriObject(dataField, 'b', "binding", Binding::translate, publication::setBinding);
-                    break;
-                case "025":
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setEan);
-                    break;
-                case "024":
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setIsmn);
-                    break;
-                case "041":
-                    setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
-                    setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
-                    setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
-                    if (dataField.getSubfields('h').isEmpty()) {
-                        setUriObjectFixedValueWidth(dataField, 'a', THREE, work::addLanguage, this::languagePrefix);
-                        r.getControlFields()
-                                .stream()
-                                .filter(f -> f.getTag().equals("008"))
-                                .findFirst()
-                                .ifPresent(s -> setUriObject(s, THIRTY_FIVE, THIRTY_SEVEN, work::addLanguage, MUL_FILTER, this::languagePrefix));
-                    }
-                    foundWorkLanguage = true;
-                    break;
-                case "082":
-                    getSubfieldValue(dataField, 'a').ifPresent(extractClassificationAndSource(work, graphList, dataField));
-                    break;
-                case "090":
-                    getSubfieldValue(dataField, 'b').ifPresent(publication::locationFormat);
-                    getSubfieldValue(dataField, 'c').ifPresent(publication::locationClassNumber);
-                    getSubfieldValue(dataField, 'd').ifPresent(publication::locationSignature);
-                    break;
-                case "100":
-                    getSubfieldValue(dataField, 'a').ifPresent(personName -> {
-                        Person person1 = setPersonDataFromDataField(dataField, new Person(newBlankNodeId(), personName));
-                        persons.add(person1);
-                        MainEntry mainEntryForPerson = new MainEntry(person1, newBlankNodeId());
-                        setRole(dataField, mainEntryForPerson);
-                        work.addContributon(mainEntryForPerson);
-                        contributions.add(mainEntryForPerson);
-                    });
-                    break;
-                case "110":
-                    getSubfieldValue(dataField, 'a').ifPresent(corporationName -> {
-                        Corporation corporation1 = setCorporationDataFromDataField(dataField, new Corporation(newBlankNodeId(), corporationName));
-                        getSubfieldValue(dataField, 'c').ifPresent(place -> {
-                            addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
-                        });
-                        corporations.add(corporation1);
-                        MainEntry mainEntryForCorporation = new MainEntry(corporation1, newBlankNodeId());
-                        setRole(dataField, mainEntryForCorporation);
-                        publication.addContributon(mainEntryForCorporation);
-                        contributions.add(mainEntryForCorporation);
-                    });
-                    break;
-                case "130":
-                    setBibliographicDataFromDataField(dataField, work);
-                    work.setMissingMainEntry(true);
-                    break;
-                case "240":
-                    setBibliographicDataFromDataField(dataField, work);
-                    break;
-                case "245":
-                    setBibliographicDataFromDataField(dataField, publication);
-                    if (r.getVariableFields("240").isEmpty()) {
-                        setBibliographicDataFromDataField(dataField, work);
-                    }
-                    break;
-                case "250":
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setEdition);
-                    break;
-                case "260":
-                    getSubfieldValue(dataField, 'a').ifPresent(place -> {
-                        addExternalObject(graphList, place, PLACE_TYPE, publication::setHasPlaceOfPublication);
-                    });
-                    getSubfieldValue(dataField, 'b').ifPresent(publisher -> {
-                        addNamed(graphList, publisher, CORPORATION_TYPE, publication::setPublishedBy);
-                    });
-                    getSubfieldValue(dataField, 'c').ifPresent(publication::setPublicationYear);
-                    break;
-                case "300":
-                    getSubfieldValue(dataField, 'a').ifPresent(publication::setExtent);
-                    getSubfieldValue(dataField, 'b').ifPresent(b -> {
-                        stream(b.split(","))
-                                .map(this::unPunctuate)
-                                .map(IllustrativeMatter::translate)
-                                .filter(EMPTY_VALUES)
-                                .map(fragment -> path("illustrativeMatter", fragment))
-                                .map(this::dataPrefix)
-                                .map(this::asExternalObject)
-                                .forEach(publication::setIllustrativeMatter);
-                    });
-                    break;
-                case "440":
-                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
-                        Serial serial = new Serial(a, newBlankNodeId());
-                        getSubfieldValue(dataField, 'x').ifPresent(serial::setIssn);
-                        graphList.add(serial);
-                        getSubfieldValue(dataField, 'b').ifPresent(publishedBy -> {
-                            addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
-                        });
-                        Map<String, Object> serialIssue = new HashMap<>();
-                        serialIssue.put("@type", newArrayList(SERIAL_ISSUE_TYPE));
-                        String serialIssueId = newBlankNodeId();
-                        serialIssue.put("@id", serialIssueId);
-                        serialIssue.put("deichman:serial", of("@id", serial.getId()));
-                        getSubfieldValue(dataField, 'v').ifPresent(v -> {
-                            serialIssue.put("deichman:issue", v);
-                        });
-                        graphList.add(serialIssue);
-                        publication.setSerial(of("@id", serialIssueId));
-                    });
-                    break;
-                case "520":
-                    if (dataField.getIndicator1() == ' ') {
-                        getSubfieldValue(dataField, 'a').ifPresent(work::setHasSummary);
-                    }
-                    break;
-                case "600":
-                    getSubfieldValue(dataField, 'a').ifPresent(personName -> {
-                        Person person1 = (Person) extractNewNamed(persons, corporations, dataField, personName);
-                        if (getSubfieldValue(dataField, 't').isPresent()) {
-                            getSubfieldValue(dataField, 't').ifPresent(title -> {
-                                Work workAsSubject = new Work(newBlankNodeId(), title);
-                                Contribution contribution = new Contribution(person1, newBlankNodeId());
-                                setDefaultRole(contribution);
-                                workAsSubject.addContributon(contribution);
-                                contributions.add(contribution);
-                                graphList.add(workAsSubject);
-                                work.addSubject(workAsSubject);
-                            });
-                        } else {
-                            work.addSubject(person1);
+            if (handleDatafieldHook(dataField, work, publication)) {
+                String tag = dataField.getTag();
+                switch (tag) {
+                    case "019":
+                        setUriObject(dataField, 'a', "audience", Audience::translate, work::setAudience);
+                        setUriObject(dataField, 'b', "format", Format::translate, publication::setFormat);
+                        setUriObject(dataField, 'b', "mediaType", MediaType::translateUnitedMediaType, publication::setUnitedMediaType);
+                        setUriObject(dataField, 'b', "mediaType", MediaType::translatePagedMediaType, publication::setPagedMediaType);
+                        setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", LiteraryForm::translate, work::addLiteraryForm);
+                        setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaptation", ContentAdaption::translate, work::addContentAdaption);
+                        setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaptation", FormatAdaption::translate, publication::addFormatAdaption);
+                        getSubfieldValue(dataField, 's').ifPresent(publication::setAgeLimit);
+                        break;
+                    case "020":
+                        getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
+                        setUriObject(dataField, 'b', "binding", Binding::translate, publication::setBinding);
+                        break;
+                    case "025":
+                        getSubfieldValue(dataField, 'a').ifPresent(publication::setEan);
+                        break;
+                    case "024":
+                        getSubfieldValue(dataField, 'a').ifPresent(publication::setIsmn);
+                        break;
+                    case "041":
+                        setUriObjectFixedValueWidth(dataField, 'a', THREE, publication::addLanguage, this::languagePrefix);
+                        setUriObjectFixedValueWidth(dataField, 'b', THREE, publication::addSubTitles, this::languagePrefix);
+                        setUriObjectFixedValueWidth(dataField, 'h', THREE, work::addLanguage, this::languagePrefix);
+                        if (dataField.getSubfields('h').isEmpty()) {
+                            setUriObjectFixedValueWidth(dataField, 'a', THREE, work::addLanguage, this::languagePrefix);
+                            r.getControlFields()
+                                    .stream()
+                                    .filter(f -> f.getTag().equals("008"))
+                                    .findFirst()
+                                    .ifPresent(s -> setUriObject(s, THIRTY_FIVE, THIRTY_SEVEN, work::addLanguage, MUL_FILTER, this::languagePrefix));
                         }
-                        getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
+                        foundWorkLanguage = true;
+                        break;
+                    case "082":
+                        getSubfieldValue(dataField, 'a').ifPresent(extractClassificationAndSource(work, graphList, dataField));
+                        break;
+                    case "090":
+                        getSubfieldValue(dataField, 'b').ifPresent(publication::locationFormat);
+                        getSubfieldValue(dataField, 'c').ifPresent(publication::locationClassNumber);
+                        getSubfieldValue(dataField, 'd').ifPresent(publication::locationSignature);
+                        break;
+                    case "100":
+                        getSubfieldValue(dataField, 'a').ifPresent(personName -> {
+                            Person person1 = setPersonDataFromDataField(dataField, new Person(newBlankNodeId(), personName));
+                            persons.add(person1);
+                            MainEntry mainEntryForPerson = new MainEntry(person1, newBlankNodeId());
+                            setRole(dataField, mainEntryForPerson);
+                            work.addContributon(mainEntryForPerson);
+                            contributions.add(mainEntryForPerson);
+                        });
+                        break;
+                    case "110":
+                        getSubfieldValue(dataField, 'a').ifPresent(corporationName -> {
+                            Corporation corporation1 = setCorporationDataFromDataField(dataField, new Corporation(newBlankNodeId(), corporationName));
+                            getSubfieldValue(dataField, 'c').ifPresent(place -> {
+                                addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
+                            });
+                            corporations.add(corporation1);
+                            MainEntry mainEntryForCorporation = new MainEntry(corporation1, newBlankNodeId());
+                            setRole(dataField, mainEntryForCorporation);
+                            publication.addContributon(mainEntryForCorporation);
+                            contributions.add(mainEntryForCorporation);
+                        });
+                        break;
+                    case "130":
+                        setBibliographicDataFromDataField(dataField, work);
+                        work.setMissingMainEntry(true);
+                        break;
+                    case "240":
+                        setBibliographicDataFromDataField(dataField, work);
+                        break;
+                    case "245":
+                        setBibliographicDataFromDataField(dataField, publication);
+                        if (r.getVariableFields("240").isEmpty()) {
+                            setBibliographicDataFromDataField(dataField, work);
+                        }
+                        break;
+                    case "250":
+                        getSubfieldValue(dataField, 'a').ifPresent(publication::setEdition);
+                        break;
+                    case "260":
+                        getSubfieldValue(dataField, 'a').ifPresent(place -> {
+                            addExternalObject(graphList, place, PLACE_TYPE, publication::setHasPlaceOfPublication);
+                        });
+                        getSubfieldValue(dataField, 'b').ifPresent(publisher -> {
+                            addNamed(graphList, publisher, CORPORATION_TYPE, publication::setPublishedBy);
+                        });
+                        getSubfieldValue(dataField, 'c').ifPresent(publication::setPublicationYear);
+                        break;
+                    case "300":
+                        getSubfieldValue(dataField, 'a').ifPresent(publication::setExtent);
+                        getSubfieldValue(dataField, 'b').ifPresent(b -> {
+                            stream(b.split(","))
+                                    .map(this::unPunctuate)
+                                    .map(IllustrativeMatter::translate)
+                                    .filter(EMPTY_VALUES)
+                                    .map(fragment -> path("illustrativeMatter", fragment))
+                                    .map(this::dataPrefix)
+                                    .map(this::asExternalObject)
+                                    .forEach(publication::setIllustrativeMatter);
+                        });
+                        break;
+                    case "440":
+                        getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                            Serial serial = new Serial(a, newBlankNodeId());
+                            getSubfieldValue(dataField, 'x').ifPresent(serial::setIssn);
+                            graphList.add(serial);
+                            getSubfieldValue(dataField, 'b').ifPresent(publishedBy -> {
+                                addNamed(graphList, publishedBy, CORPORATION_TYPE, serial::setPublisher);
+                            });
+                            Map<String, Object> serialIssue = new HashMap<>();
+                            serialIssue.put("@type", newArrayList(SERIAL_ISSUE_TYPE));
+                            String serialIssueId = newBlankNodeId();
+                            serialIssue.put("@id", serialIssueId);
+                            serialIssue.put("deichman:serial", of("@id", serial.getId()));
+                            getSubfieldValue(dataField, 'v').ifPresent(v -> {
+                                serialIssue.put("deichman:issue", v);
+                            });
+                            graphList.add(serialIssue);
+                            publication.setSerial(of("@id", serialIssueId));
+                        });
+                        break;
+                    case "520":
+                        if (dataField.getIndicator1() == ' ') {
+                            getSubfieldValue(dataField, 'a').ifPresent(work::setHasSummary);
+                        }
+                        break;
+                    case "600":
+                        getSubfieldValue(dataField, 'a').ifPresent(personName -> {
+                            Person person1 = (Person) extractNewNamed(persons, corporations, dataField, personName);
+                            if (getSubfieldValue(dataField, 't').isPresent()) {
+                                getSubfieldValue(dataField, 't').ifPresent(title -> {
+                                    Work workAsSubject = new Work(newBlankNodeId(), title);
+                                    Contribution contribution = new Contribution(person1, newBlankNodeId());
+                                    setDefaultRole(contribution);
+                                    workAsSubject.addContributon(contribution);
+                                    contributions.add(contribution);
+                                    graphList.add(workAsSubject);
+                                    work.addSubject(workAsSubject);
+                                });
+                            } else {
+                                work.addSubject(person1);
+                            }
+                            getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
+                            extractGeographicSubject(work, graphList, dataField);
+                        });
+                        break;
+                    case "610":
+                        getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                            String corporationId = newBlankNodeId();
+                            Corporation corporation1 = new Corporation(corporationId, a);
+                            setCorporationDataFromDataField(dataField, corporation1);
+                            graphList.add(corporation1);
+                            getSubfieldValue(dataField, 'c').ifPresent(place -> {
+                                addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
+                            });
+                            work.addSubject(corporation1);
+                            getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
+                        });
                         extractGeographicSubject(work, graphList, dataField);
-                    });
-                    break;
-                case "610":
-                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
-                        String corporationId = newBlankNodeId();
-                        Corporation corporation1 = new Corporation(corporationId, a);
-                        setCorporationDataFromDataField(dataField, corporation1);
-                        graphList.add(corporation1);
-                        getSubfieldValue(dataField, 'c').ifPresent(place -> {
-                            addExternalObject(graphList, place, PLACE_TYPE, corporation1::setPlace);
+                        break;
+                    case "611":
+                        getSubfieldValue(dataField, 'a').ifPresent(prefLabel -> {
+                            String eventId = newBlankNodeId();
+                            Event event = new Event(eventId, prefLabel);
+                            getSubfieldValue(dataField, 'c').ifPresent(place -> {
+                                addExternalObject(graphList, place, PLACE_TYPE, event::setPlace);
+                            });
+                            getSubfieldValue(dataField, 'd').ifPresent(event::setDate);
+                            getSubfieldValue(dataField, 'n').ifPresent(event::setNumber);
+                            getSubfieldValue(dataField, 'q').ifPresent(event::setSpecification);
+                            graphList.add(event);
+                            work.addSubject(event);
+                            getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
                         });
-                        work.addSubject(corporation1);
+                        extractGeographicSubject(work, graphList, dataField);
+                        break;
+                    case "630":
+                        String workAsSubjectId = newBlankNodeId();
+                        Work work1 = new Work(workAsSubjectId);
+                        setBibliographicDataFromDataField(dataField, work1);
+                        work.addSubject(work1);
+                        graphList.add(work1);
+                        extractGeographicSubject(work, graphList, dataField);
                         getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
-                    });
-                    extractGeographicSubject(work, graphList, dataField);
-                    break;
-                case "611":
-                    getSubfieldValue(dataField, 'a').ifPresent(prefLabel -> {
-                        String eventId = newBlankNodeId();
-                        Event event = new Event(eventId, prefLabel);
-                        getSubfieldValue(dataField, 'c').ifPresent(place -> {
-                            addExternalObject(graphList, place, PLACE_TYPE, event::setPlace);
-                        });
-                        getSubfieldValue(dataField, 'd').ifPresent(event::setDate);
-                        getSubfieldValue(dataField, 'n').ifPresent(event::setNumber);
-                        getSubfieldValue(dataField, 'q').ifPresent(event::setSpecification);
-                        graphList.add(event);
-                        work.addSubject(event);
+                        break;
+                    case "650":
+                    case "690":
+                        mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE);
                         getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
-                    });
-                    extractGeographicSubject(work, graphList, dataField);
-                    break;
-                case "630":
-                    String workAsSubjectId = newBlankNodeId();
-                    Work work1 = new Work(workAsSubjectId);
-                    setBibliographicDataFromDataField(dataField, work1);
-                    work.addSubject(work1);
-                    graphList.add(work1);
-                    extractGeographicSubject(work, graphList, dataField);
-                    getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
-                    break;
-                case "650":
-                case "690":
-                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, SUBJECT_TYPE);
-                    getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
-                    break;
-                case "651":
-                    mapPrimaryAndSubDivisionSubject(work, graphList, dataField, PLACE_TYPE);
-                    getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
-                    break;
-                case "653":
-                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
-                        addExternalObject(graphList, a, SUBJECT_TYPE, work::addSubject);
-                    });
-                    break;
-                case "655":
-                    getSubfieldValue(dataField, 'a').ifPresent(a -> {
-                        addExternalObject(graphList, a, GENRE_TYPE, work::addGenre);
-                    });
-                    getSubfieldValue(dataField, 'z').ifPresent(z -> {
-                        addLabeledValue(graphList, "no", z, NATIONALITY_TYPE, work::addNationality);
-                    });
-                    break;
-                case "700":
-                case "710":
-                    if (thisIsContribution(dataField)) { // contribution
-                        getSubfieldValue(dataField, 'a').ifPresent(contributorName -> {
-                            Named named = extractNewNamed(persons, corporations, dataField, contributorName);
-                            Contribution contribution = new Contribution(named, newBlankNodeId());
-                            setRole(dataField, contribution);
-                            publication.addContributon(contribution);
-                            contributions.add(contribution);
+                        break;
+                    case "651":
+                        mapPrimaryAndSubDivisionSubject(work, graphList, dataField, PLACE_TYPE);
+                        getSubfieldValue(dataField, '1').ifPresent(extractClassification(work, graphList, dataField));
+                        break;
+                    case "653":
+                        getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                            addExternalObject(graphList, a, SUBJECT_TYPE, work::addSubject);
                         });
-                    } else {
-                        if (hasPublicationPartRelationship(dataField)) {
+                        break;
+                    case "655":
+                        getSubfieldValue(dataField, 'a').ifPresent(a -> {
+                            addExternalObject(graphList, a, GENRE_TYPE, work::addGenre);
+                        });
+                        getSubfieldValue(dataField, 'z').ifPresent(z -> {
+                            addLabeledValue(graphList, "no", z, NATIONALITY_TYPE, work::addNationality);
+                        });
+                        break;
+                    case "700":
+                    case "710":
+                        if (thisIsContribution(dataField)) { // contribution
                             getSubfieldValue(dataField, 'a').ifPresent(contributorName -> {
                                 Named named = extractNewNamed(persons, corporations, dataField, contributorName);
-                                PublicationPart publicationPart = new PublicationPart(named, newBlankNodeId());
-                                getSubfieldValue(dataField, 't').ifPresent(publicationPart::setMainTitle);
-                                setRole(dataField, publicationPart);
-                                publicationPart.setAgent(named);
-                                publication.addPublicationPart(publicationPart);
-                                publicationParts.add(publicationPart);
+                                Contribution contribution = new Contribution(named, newBlankNodeId());
+                                setRole(dataField, contribution);
+                                publication.addContributon(contribution);
+                                contributions.add(contribution);
                             });
-                        } else if (hasrelatedWorkRelationship(dataField)) {
-                            getSubfieldValue(dataField, 'a').ifPresent(name -> {
-                                Named named = extractNewNamed(persons, corporations, dataField, name);
-                                getSubfieldValue(dataField, 't').ifPresent(title -> {
-                                    Work work2 = new Work(newBlankNodeId(), title);
-                                    graphList.add(work2);
-                                    WorkRelation workRelation = new WorkRelation(newBlankNodeId(), work2.getId(), dataPrefix(path("relationType", "relatedWork")));
-                                    graphList.add(workRelation);
-                                    work.isRelatedTo(workRelation);
-                                    Contribution contribution = new Contribution(named, newBlankNodeId());
-                                    publication.addContributon(contribution);
-                                    contributions.add(contribution);
+                        } else {
+                            if (hasPublicationPartRelationship(dataField)) {
+                                getSubfieldValue(dataField, 'a').ifPresent(contributorName -> {
+                                    Named named = extractNewNamed(persons, corporations, dataField, contributorName);
+                                    PublicationPart publicationPart = new PublicationPart(named, newBlankNodeId());
+                                    getSubfieldValue(dataField, 't').ifPresent(publicationPart::setMainTitle);
+                                    setRole(dataField, publicationPart);
+                                    publicationPart.setAgent(named);
+                                    publication.addPublicationPart(publicationPart);
+                                    publicationParts.add(publicationPart);
                                 });
-                            });
+                            } else if (hasrelatedWorkRelationship(dataField)) {
+                                getSubfieldValue(dataField, 'a').ifPresent(name -> {
+                                    Named named = extractNewNamed(persons, corporations, dataField, name);
+                                    getSubfieldValue(dataField, 't').ifPresent(title -> {
+                                        Work work2 = new Work(newBlankNodeId(), title);
+                                        graphList.add(work2);
+                                        WorkRelation workRelation = new WorkRelation(newBlankNodeId(), work2.getId(), dataPrefix(path("relationType", "relatedWork")));
+                                        graphList.add(workRelation);
+                                        work.isRelatedTo(workRelation);
+                                        Contribution contribution = new Contribution(named, newBlankNodeId());
+                                        publication.addContributon(contribution);
+                                        contributions.add(contribution);
+                                    });
+                                });
+                            }
                         }
-                    }
-                    break;
-                case "730":
-                    if (hasPublicationPartRelationship(dataField)) {
-                        PublicationPart publicationPart = new PublicationPart(newBlankNodeId());
-                        getSubfieldValue(dataField, 'a').ifPresent(publicationPart::setMainTitle);
-                        publication.addPublicationPart(publicationPart);
-                        publicationParts.add(publicationPart);
-                    } else {
-                        if (getSubfieldValue(dataField, 'a').isPresent()) {
-                            Work relatedToWork = new Work(newBlankNodeId());
-                            setBibliographicDataFromDataField(dataField, relatedToWork);
-                            graphList.add(relatedToWork);
-                            WorkRelation workRelation = new WorkRelation(newBlankNodeId(), relatedToWork.getId(),
-                                    dataPrefix(path("relationType", "relatedWork")));
-                            graphList.add(workRelation);
-                            work.isRelatedTo(workRelation);
+                        break;
+                    case "730":
+                        if (hasPublicationPartRelationship(dataField)) {
+                            PublicationPart publicationPart = new PublicationPart(newBlankNodeId());
+                            getSubfieldValue(dataField, 'a').ifPresent(publicationPart::setMainTitle);
+                            publication.addPublicationPart(publicationPart);
+                            publicationParts.add(publicationPart);
+                        } else {
+                            if (getSubfieldValue(dataField, 'a').isPresent()) {
+                                Work relatedToWork = new Work(newBlankNodeId());
+                                setBibliographicDataFromDataField(dataField, relatedToWork);
+                                graphList.add(relatedToWork);
+                                WorkRelation workRelation = new WorkRelation(newBlankNodeId(), relatedToWork.getId(),
+                                        dataPrefix(path("relationType", "relatedWork")));
+                                graphList.add(workRelation);
+                                work.isRelatedTo(workRelation);
+                            }
                         }
-                    }
-                    break;
-                case "740":
-                    if (hasPublicationPartRelationship(dataField)) {
-                        PublicationPart publicationPart = new PublicationPart(newBlankNodeId());
-                        getSubfieldValue(dataField, 'a').ifPresent(publicationPart::setMainTitle);
-                        publication.addPublicationPart(publicationPart);
-                        publicationParts.add(publicationPart);
-                    } else {
-                        getSubfieldValue(dataField, 'a').ifPresent(work::addAltTitle);
-                    }
-                    break;
-                case "780":
-                case "785":
-                    getSubfieldValue(dataField, 't').ifPresent(title -> {
-                        Work followingWork = new Work(newBlankNodeId(), title);
-                        graphList.add(followingWork);
-                        WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(),
-                                dataPrefix(path("relationType", tag.equals("780") ? "continuationOf" : "continuedIn")));
-                        graphList.add(relationToFollowing);
-                        work.isRelatedTo(relationToFollowing);
-                    });
-                    break;
-                default:
-                    //we're not interested in the content so we do nothing -- checkstyle requires default.
-                    break;
+                        break;
+                    case "740":
+                        if (hasPublicationPartRelationship(dataField)) {
+                            PublicationPart publicationPart = new PublicationPart(newBlankNodeId());
+                            getSubfieldValue(dataField, 'a').ifPresent(publicationPart::setMainTitle);
+                            publication.addPublicationPart(publicationPart);
+                            publicationParts.add(publicationPart);
+                        } else {
+                            getSubfieldValue(dataField, 'a').ifPresent(work::addAltTitle);
+                        }
+                        break;
+                    case "780":
+                    case "785":
+                        getSubfieldValue(dataField, 't').ifPresent(title -> {
+                            Work followingWork = new Work(newBlankNodeId(), title);
+                            graphList.add(followingWork);
+                            WorkRelation relationToFollowing = new WorkRelation(newBlankNodeId(), followingWork.getId(),
+                                    dataPrefix(path("relationType", tag.equals("780") ? "continuationOf" : "continuedIn")));
+                            graphList.add(relationToFollowing);
+                            work.isRelatedTo(relationToFollowing);
+                        });
+                        break;
+                    default:
+                        //we're not interested in the content so we do nothing -- checkstyle requires default.
+                        break;
+                }
             }
         }
 
@@ -432,6 +433,28 @@ public class MARCMapper {
         graphList.addAll(publicationPartWorks);
 
         return topLevelMap;
+    }
+
+    /**
+     * Hook to handle data field. Override for special treatment.
+     * @param dataField
+     * @param work
+     * @param publication
+     * @return false to prevent further handling.
+     */
+    protected boolean handleDatafieldHook(DataField dataField, Work work, Publication publication) {
+        return true;
+    }
+
+    /**
+     * Hook to handle control field. Override for special treatment.
+     * @param controlField
+     * @param work
+     * @param publication
+     * @return false to prevent further handling.
+     */
+    protected boolean handleControlFieldHook(ControlField controlField, Work work, Publication publication) {
+        return true;
     }
 
     private Consumer<String> extractClassification(Work work, List<Object> graphList, DataField dataField) {
@@ -581,7 +604,15 @@ public class MARCMapper {
                 .ifPresent(contribution::setRole);
     }
 
-    private void setUriObject(DataField dataField, char subField, String path, Function<String, String> mapper, Consumer<ExternalDataObject> setterFunction) {
+    /**
+     * Sets uri object though supplied setter method.
+     * @param dataField
+     * @param subField
+     * @param path
+     * @param mapper
+     * @param setterFunction
+     */
+    protected void setUriObject(DataField dataField, char subField, String path, Function<String, String> mapper, Consumer<ExternalDataObject> setterFunction) {
         getSubfieldValues(dataField, subField)
                 .map(String::toLowerCase)
                 .map(this::unPunctuate)
@@ -686,11 +717,22 @@ public class MARCMapper {
     }
 
 
-    private Optional<String> getSubfieldValue(DataField dataField, Character character) {
+    /**
+     * Gets the subfiel value.
+     * @param dataField
+     * @param character
+     * @return
+     */
+    protected Optional<String> getSubfieldValue(DataField dataField, Character character) {
         return getSubfieldValue(dataField, character, null);
     }
 
-    private Optional<String> getControlFieldValue(ControlField controlField) {
+    /**
+     * Gets control field value.
+     * @param controlField
+     * @return
+     */
+    protected Optional<String> getControlFieldValue(ControlField controlField) {
         return Optional.of(controlField.getData());
     }
 

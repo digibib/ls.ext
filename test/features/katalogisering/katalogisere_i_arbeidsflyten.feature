@@ -747,3 +747,33 @@ Egenskap: Katalogisere i arbeidsflyt
     Så trykker jeg på "Ok"-knappen i dialogen
     Og jeg venter litt
     Så viser brukergrensenittet at jeg har åpnet en kopi
+
+  Scenario: Opprette inverse verksrelasjoner
+    Gitt at jeg vil relatere to verk til hverandre
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tittelen på verk nr 1 i feltet "Verk" og trykker enter
+    Og jeg venter litt
+    Så velger jeg et verk fra treffliste fra verksindeksen
+    Og jeg venter litt
+    Og jeg venter litt
+    Så klikker jeg på fanen "Beskriv verk"
+    Og at jeg skriver inn tittelen på verk nr 2 i feltet "Relasjon til annet verk eller verksserie" og trykker enter
+    Så velger jeg første verk i trefflisten fra verksregisteret
+    Og jeg velger verdien "Fortsettelse av" for "Type relasjon"
+    Og jeg trykker på "Legg til"-knappen
+    Og jeg venter litt
+    Så sjekker jeg at antall relasjoner er 1
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tittelen på verk nr 2 i feltet "Verk" og trykker enter
+    Og jeg venter litt
+    Så velger jeg et verk fra treffliste fra verksindeksen
+    Og jeg venter litt
+    Så sjekker jeg at teksten "Fortsettes i" finnes på siden
+    Så sjekker jeg at antall relasjoner er 1
+    Så sletter jeg den første forekomsten under Relasjon til annet verk eller verksserie
+    Så åpner jeg startsiden for katalogisering med fanen for vedlikehold av autoriteter
+    Og at jeg skriver inn tittelen på verk nr 1 i feltet "Verk" og trykker enter
+    Og jeg venter litt
+    Så velger jeg et verk fra treffliste fra verksindeksen
+    Og jeg venter litt
+    Så sjekker jeg at antall relasjoner er 0

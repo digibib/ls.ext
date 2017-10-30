@@ -10,6 +10,7 @@ module.exports = (app) => {
     }
     let borrowerNumber
     let homeBranch
+    let category
     loginHandler(request.body.username)
       .then(res => {
         if (res.status === 200) {
@@ -25,6 +26,7 @@ module.exports = (app) => {
         } else {
           borrowerNumber = json[ 0 ].borrowernumber
           homeBranch = json[ 0 ].branchcode
+          category = json[ 0 ].categorycode
           return fetch('http://xkoha:8081/api/v1/auth/session', {
             method: 'POST',
             headers: {
@@ -41,6 +43,7 @@ module.exports = (app) => {
           request.session.homeBranch = homeBranch
           request.session.kohaSession = res.headers._headers[ 'set-cookie' ][ 0 ]
           request.session.passwordHash = bcrypt.hashSync(request.body.password)
+          request.session.category = category
           return res.json()
         } else {
           return Promise.reject({ message: 'Could not create session', status: 403 })
@@ -52,7 +55,8 @@ module.exports = (app) => {
           isLoggedIn: true,
           borrowerNumber: request.session.borrowerNumber,
           borrowerName: borrowerName,
-          homeBranch: request.session.homeBranch
+          homeBranch: request.session.homeBranch,
+          category: request.session.category
         })
       })
       .catch(error => {
@@ -70,7 +74,8 @@ module.exports = (app) => {
       isLoggedIn: request.session.borrowerNumber !== undefined,
       borrowerNumber: request.session.borrowerNumber,
       borrowerName: request.session.borrowerName,
-      homeBranch: request.session.homeBranch
+      homeBranch: request.session.homeBranch,
+      category: request.session.category
     })
   })
 

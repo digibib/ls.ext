@@ -71,4 +71,38 @@ module.exports = (app) => {
       response.sendStatus(500)
     })
   })
+
+  // TODO: add reservationComment to Koha ill backend
+  app.post('/api/v1/illrequests', jsonParser, (request, response) => {
+    console.log(request.session)
+    console.log(request.body)
+    fetch('http://xkoha:8081/api/v1/illrequests', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+      body: `remote_library=${encodeURIComponent(request.session.borrowerNumber)}` +
+        `&biblionumber=${encodeURIComponent(request.body.recordId)}` +
+        `&userid=${encodeURIComponent(request.body.userId)}` +
+        `&comment=${encodeURIComponent(request.body.reservationComment)}`
+    })
+    .then(res => {
+      if (res.status === 201) {
+        response.sendStatus(201)
+      } else if (res.status >= 400 && res.status <= 409) {
+        return res.json()
+      } else {
+        throw Error(`Unhandled error when placing ill request, status ${res.status}`)
+      }
+    })
+    .then(err => {
+      response.status(400)
+      response.send(err) // pass along Koha's error reason message to client side
+    })
+    .catch(error => {
+      console.log(error)
+      response.sendStatus(500)
+    })
+  })
 }

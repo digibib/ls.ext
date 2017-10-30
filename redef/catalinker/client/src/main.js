@@ -1,4 +1,4 @@
-/*global window,history*/
+/*global window,history,event*/
 /**
  * This file operates on a Ractive (https://ractive.js.org/) data structure representing inputs to create and edit RDF
  * resources through the REST API provided by the ls.ext/redef/services module which stores the data in a triple store.
@@ -869,7 +869,7 @@
       }
       if (options.demoteAcceptedSuggestions) {
         const acceptedSource = _.chain([ input ]).pluck(valuesKey).pluck(index).pluck('current').pluck('accepted').pluck('source').compact().first().value()
-        if (acceptedSource) {
+        if (acceptedSource && input[ valuesKey ][ index ].current.value !== '') {
           input.suggestedValues = input.suggestedValues || []
           input.suggestedValues.push({
             source: acceptedSource,
@@ -889,7 +889,7 @@
           accepted: options.source ? { source: options.source } : undefined
         },
         uniqueId: _.uniqueId(),
-        expanded: (input[ valuesKey ][ index ] || {}).expanded || value.value === ''
+        expanded: value.value === '' && input.suggestionsAreDemoted
       }
       if (input[ valuesKey ][ index ].current.accepted) {
         setSuggestionsAreAcceptedForParentInput(input, index)
@@ -953,13 +953,16 @@
         function getValues (onlyFirstField) {
           return new Promise((resolve, reject) => {
             const displayProperties = getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
+            const headLineDisplayProperties = getDisplayProperties(input.headlineNameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
             const handleDisplayProperties = () => {
-              resolve(_.pluck(displayProperties || [], 'val')
-                .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
-                .join(' ')
-                .replace(/[,\.:]\s*$/g, '')
-                .replace(/- /, '-')
-                .replace(/: /g, ' : '))
+              resolve({
+                values: _.pluck(displayProperties || [], 'val')
+                  .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
+                  .join(' ')
+                  .replace(/[,\.:]\s*$/g, '')
+                  .replace(/- /, '-')
+                  .replace(/: /g, ' : '), headlineDisplayValue: _.pluck(headLineDisplayProperties || [], 'val')
+              })
             }
             if (isPromise(displayProperties)) {
               return displayProperties.then(handleDisplayProperties)
@@ -969,7 +972,8 @@
           })
         }
 
-        getValues(options.onlyFirstField).then((values) => {
+        getValues(options.onlyFirstField).then((valuesWrapper) => {
+          let values = valuesWrapper.values
           const typeMap = ractive.get('applicationData.config.typeMap')
           let selectedIndexType
           _.each(input.indexTypes, function (indexType) {
@@ -991,10 +995,10 @@
               }
               input[ valuesField ][ index ].current.displayValue = values
             } else {
-              getValues().then(function (value) {
+              getValues().then(function (valuesWrapper) {
                 ractive.set(`${input.keypath}.suggestedValues.${index}`, {
                     value: values,
-                    displayValue: value,
+                    displayValue: valuesWrapper.displayValue,
                     source: options.source,
                     selectedIndexType: selectedIndexType
                   }
@@ -1005,6 +1009,7 @@
             input[ valuesField ][ index ] = input[ valuesField ][ index ] || {}
             input[ valuesField ][ index ].current = input[ valuesField ][ index ].current || {}
             input[ valuesField ][ index ].current.displayValue = values
+            input[ valuesField ][ index ].current.headlineDisplayValue = valuesWrapper.headlineDisplayValue
             if (options.source) {
               input[ valuesField ][ index ].current.accepted = {
                 source: options.source,
@@ -1031,7 +1036,7 @@
           const graphData = ensureJSON(response.data)
           const root = ldGraph.parse(graphData).byId(uri)
           fromRoot(root)
-        })
+        }).then(updateHeadline)
       }
     }
 
@@ -1129,6 +1134,7 @@
         oldUri.query = URI.buildQuery(_.pick(queryParameters, _.identity))
         history.replaceState('', '', URI.build(oldUri))
       }
+      ractive.set('rdfType', triumph.replace(prefix, ''))
     }
 
     function updateBrowserLocationWithTab (tabNumber) {
@@ -1760,6 +1766,7 @@
             }
           }
         )
+        .then(updateHeadline)
         .catch(function (err) {
           console.log(`HTTP GET ${resourceUri} existing resource failed with:`)
           console.log(err)
@@ -1805,11 +1812,13 @@
           if (patchBatch.length > 0) {
             executePatch(resourceUri, patchBatch, undefined, errors)
           }
-          ractive.update().then(function () {
-            if (wait) {
-              wait.done()
-            }
-          })
+          ractive.update()
+            .then(updateHeadline)
+            .then(function () {
+              if (wait) {
+                wait.done()
+              }
+            })
           return resourceUri
         })
       // .catch(function (err) {
@@ -1915,6 +1924,9 @@
       input.visible = (prop.type !== 'entity' && !prop.initiallyHidden)
       if (prop.nameProperties) {
         input.nameProperties = prop.nameProperties
+      }
+      if (prop.headlineNameProperties) {
+        input.headlineNameProperties = prop.headlineNameProperties
       }
       if (prop.previewProperties) {
         input.previewProperties = prop.previewProperties
@@ -2144,6 +2156,9 @@
             objectSortOrder: compoundInput.subInputs.objectSortOrder
           })
         }
+        if (compoundInput.subInputs.maintainInverseRelation) {
+          currentInput.maintainInverseRelation = compoundInput.subInputs.maintainInverseRelation
+        }
         _.each(compoundInput.subInputs.inputs, function (subInput, subInputIndex) {
           if (!subInput.rdfProperty) {
             throw new Error(`Missing rdfProperty of subInput "${subInput.label}"`)
@@ -2165,9 +2180,9 @@
               selectedIndexType: indexTypes.length === 1 ? indexTypes[ 0 ] : undefined,
               indexDocumentFields: subInput.indexDocumentFields,
               nameProperties: subInput.nameProperties,
+              headlineNameProperties: subInput.headlineNameProperties,
               dataAutomationId: inputFromOntology.dataAutomationId,
               widgetOptions: subInput.widgetOptions,
-              headlinePart: subInput.headlinePart,
               suggestValueFrom: subInput.suggestValueFrom,
               id: subInput.id,
               required: subInput.required,
@@ -2317,9 +2332,6 @@
             if (input.widgetOptions) {
               ontologyInput.widgetOptions = input.widgetOptions
             }
-            if (input.headlinePart) {
-              ontologyInput.headlinePart = input.headlinePart
-            }
             if (input.suggestValueFrom) {
               ontologyInput.suggestValueFrom = input.suggestValueFrom
             }
@@ -2344,8 +2356,7 @@
             if (input.showOnlyWhenInputHasValue) {
               ontologyInput.showOnlyWhenInputHasValue = input.showOnlyWhenInputHasValue
             }
-            ontologyInput.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].includes(ontologyInput.type)
-            ontologyInput.oink = ontologyInput.type
+            ontologyInput.literal = [ 'input-string-large', 'input-string', 'input-duration', 'input-nonNegativeInteger' ].indexOf(ontologyInput.type) !== -1
           }
           copyResourceForms(input)
         })
@@ -2725,6 +2736,10 @@
       })
     }
 
+    function updateHeadline () {
+      _.each(ractive.get('applicationData.headlineRactives'), (titleRactive) => titleRactive.update())
+    }
+
     function executePatch (subject, patches, keypath, errors) {
       let waiter = ractive.get('waitHandler').thisMayTakeSomTime()
       ractive.set('save_status', translate('statusWorking'))
@@ -2771,6 +2786,7 @@
             }
           })
         })
+        .then(updateHeadline)
         .catch(function (response) {
           // failed to patch resource
           console.log('HTTP PATCH failed with: ')
@@ -3118,25 +3134,24 @@
 
           const autoNumberInput = inputFromInputId(bulkEntryInputChain.first().value().widgetOptions.enableBulkEntry.autoNumberInputRef)
           let nextAutoNumber = autoNumberInput ? autoNumberInput.nextNumber : undefined
-          var options = bulkEntryData && bulkEntryData.length > 0 ? {
-            bulkMultiply: function (ops) {
-              return _.chain(bulkEntryData).map(function (value) {
-                  var opsClone = deepClone(ops)
-                  _.each(opsClone, function (opSpec) {
-                    opSpec.alternativeValueFor = {
-                      [bulkEntryPredicate]: value
-                    }
-                    if (!Number(nextAutoNumber).isNaN) {
-                      opSpec.alternativeValueFor[ autoNumberInput.predicate ] = nextAutoNumber++
-                    }
-                  })
-                  return opsClone
-                }
-              ).flatten().value()
-            }
-          } : {}
 
-          return patchObject(input, applicationData, index, op, options).then(function () {
+          const bulkMultiply = function (ops) {
+            return _.chain(bulkEntryData).map(function (value) {
+                var opsClone = deepClone(ops)
+                _.each(opsClone, function (opSpec) {
+                  opSpec.alternativeValueFor = {
+                    [bulkEntryPredicate]: value
+                  }
+                  if (!Number(nextAutoNumber).isNaN) {
+                    opSpec.alternativeValueFor[ autoNumberInput.predicate ] = nextAutoNumber++
+                  }
+                })
+                return opsClone
+              }
+            ).flatten().value()
+          }
+
+          return patchObject(input, applicationData, index, op, bulkEntryData && bulkEntryData.length > 0 ? bulkMultiply : undefined).then(function () {
             visitInputs(input, function (input) {
               if (input.isSubInput) {
                 _.each(input.values, function (value, valueIndex) {
@@ -3158,17 +3173,65 @@
                 }
               })
             }
+            promises.push(new Promise(updateHeadline))
             promises.push(new Promise(waiter.done))
             sequentialPromiseResolver(promises)
           })
         }
 
-        function patchObject (input, applicationData, index, op, options) {
-          options = _.defaults(options || {}, {
-            bulkMultiply: function (ops) {
-              return ops
-            }
-          })
+        function patchObject (input, applicationData, index, op, preprocessFunction) {
+          preprocessFunction = preprocessFunction || function (ops) {
+            return ops
+          }
+
+          function subInputChainById (inputId) {
+            return _.chain(input.subInputs).pluck('input').filter((input) => input.id === inputId)
+          }
+
+          // this function generates operations specs that generates patch for inverse relation
+          const inverseRelation = function (ops) {
+            let opsWithInverse = []
+            _.each(ops, function (opSpec) {
+              function valueFromInputChain (chain) {
+                return chain.pluck('values').pluck(index).pluck(opSpec.useValue).pluck('value').first().value()
+              }
+
+              const checkOnlyWhenCondition = (condition) => {
+                return RegExp(condition.valueAsStringMatches).test(_.flatten([ valueFromInputChain(subInputChainById(condition.inputId)) ]))
+              }
+              opsWithInverse.push(opSpec)
+              if (opSpec.operation === 'del' || _(input.maintainInverseRelation.onlyWhenAll).every(checkOnlyWhenCondition)) {
+                const inverseRelationOpSpec = deepClone(opSpec)
+                inverseRelationOpSpec.alternativeValueFor = {}
+                const inverseSubjectInputChain = subInputChainById(input.maintainInverseRelation.inverseSubjectInput)
+                const inverseSubject = valueFromInputChain(inverseSubjectInputChain)
+
+                inverseRelationOpSpec.alternativeSubject = inverseSubject
+                inverseRelationOpSpec.alternativeValueFor[ inverseSubjectInputChain.first().value().predicate ] = mainSubject
+
+                _.chain(input.maintainInverseRelation.valueMapping).map((mappings, inputId) => {
+                  const inputChain = subInputChainById(inputId)
+                  const valueBeforeMapping = valueFromInputChain(inputChain)
+                  if (mappings[ valueBeforeMapping ]) {
+                    inverseRelationOpSpec.alternativeValueFor[ inputChain.first().value().predicate ] = mappings[ valueBeforeMapping ]
+                  }
+                })
+                // make a delete existing inverse relation operation spec as well, to avoid duplicates if the inverse relation already exists
+                opsWithInverse.push(inverseRelationOpSpec)
+                if (opSpec.operation === 'add') {
+                  const inverseDeleteExistingInverseRelationOpSpec = deepClone(inverseRelationOpSpec)
+                  inverseDeleteExistingInverseRelationOpSpec.operation = 'del'
+                  inverseDeleteExistingInverseRelationOpSpec.isDeleteForExisting = true
+                  opsWithInverse.push(inverseDeleteExistingInverseRelationOpSpec)
+                }
+              }
+            })
+            return opsWithInverse
+          }
+
+          if (input.maintainInverseRelation && !(event && event.altKey)) {
+            preprocessFunction = inverseRelation
+          }
           const opSpec = {
             add: [ {
               operation: 'add',
@@ -3188,16 +3251,28 @@
                 useValue: 'current'
               } ]
           }
-          var patch = []
           var actualSubjectType = _.first(input.subInputs).input.values[ index ].subjectType || input.subjectType || input.rdfType
           var deleteSubjectType = _.first(input.subInputs).input.values[ index ].oldSubjectType || actualSubjectType
           var mainSubject = ractive.get(`targetUri.${actualSubjectType}`)
           var deleteSubject = ractive.get(`targetUri.${deleteSubjectType}`)
-          const opSpecs = options.bulkMultiply(opSpec[ op ])
+          const patchRequests = []
+          const opSpecs = preprocessFunction(opSpec[ op ])
           _.each(opSpecs, function (spec, opIndex) {
-            patch.push({
+            const subject = spec.alternativeSubject || (spec.operation === 'del' ? deleteSubject : mainSubject)
+            let patchCommand = []
+            let existingAddPatchesForSubject
+            if (spec.operation === 'add' || spec.isDeleteForExisting) {
+              existingAddPatchesForSubject = _.find(patchRequests, (patch) => patch.operation === 'add' && patch.subject === subject)
+              if (existingAddPatchesForSubject) {
+                patchCommand = existingAddPatchesForSubject.patch
+              }
+            }
+            if (!existingAddPatchesForSubject) {
+              patchRequests.push({ subject, patch: patchCommand, operation: spec.operation })
+            }
+            patchCommand.push({
               op: spec.operation,
-              s: spec.operation === 'del' ? deleteSubject : mainSubject,
+              s: subject,
               p: input.predicate,
               o: {
                 value: `_:b${opIndex}`,
@@ -3205,7 +3280,7 @@
               }
             })
             if (input.range) {
-              patch.push({
+              patchCommand.push({
                 op: spec.operation,
                 s: `_:b${opIndex}`,
                 p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
@@ -3221,7 +3296,7 @@
                   ? spec.alternativeValueFor[ subInput.input.predicate ]
                   : subInput.input.values[ index ] ? (subInput.input.values[ index ][ spec.useValue ] || {}).value : undefined
                 if (typeof value !== 'undefined' && value !== null && (typeof value !== 'string' || value !== '') && (!_.isArray(value) || (value.length > 0 && value[ 0 ] !== ''))) {
-                  patch.push({
+                  patchCommand.push({
                     op: spec.operation,
                     s: `_:b${opIndex}`,
                     p: subInput.input.predicate,
@@ -3234,7 +3309,7 @@
               }
             })
             if (input.isMainEntry) {
-              patch.push({
+              patchCommand.push({
                 op: spec.operation,
                 s: `_:b${opIndex}`,
                 p: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
@@ -3247,62 +3322,56 @@
           })
 
           ractive.set('save_status', 'arbeider...')
-          return axios.patch(proxyToServices(mainSubject), JSON.stringify(patch, undefined, 2), {
-            headers: {
-              Accept: 'application/ld+json',
-              'Content-Type': 'application/ldpatch+json'
-            }
-          }).then(function (response) {
-            let parsed = ldGraph.parse(response.data)
-            _.each(applicationData.sortOrders, function (sortOrder) {
-              let root = sortNodes(parsed.byId(mainSubject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
-              ractive.get('lastRoots')[ mainSubject ] = { [sortOrder.predicate]: root }
-              ractive.update('lastRoots')
-            })
-            let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
-            if (op === 'del' || addedMultivalues > 1) {
-              removeInputsForObject(input, index)()
-              ractive.update()
-              if (addedMultivalues > 1) {
-                updateInputsForResource(response.data, mainSubject, { inputs: _.pluck(input.subInputs, 'input') })
+          const promises = []
+          _.each(patchRequests, function (patch) {
+            promises.push(axios.patch(proxyToServices(patch.subject), JSON.stringify(patch.patch, undefined, 2), {
+              headers: {
+                Accept: 'application/ld+json',
+                'Content-Type': 'application/ldpatch+json'
               }
-            }
-            return response
+            }).then(function (response) {
+              if (patch.subject === mainSubject) {
+                let parsed = ldGraph.parse(response.data)
+                _.each(applicationData.sortOrders, function (sortOrder) {
+                  let root = sortNodes(parsed.byId(patch.subject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
+                  ractive.get('lastRoots')[ patch.subject ] = { [sortOrder.predicate]: root }
+                  ractive.update('lastRoots')
+                })
+                let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
+                if (op === 'del' || addedMultivalues > 1) {
+                  removeInputsForObject(input, index)()
+                  ractive.update()
+                  if (addedMultivalues > 1) {
+                    updateInputsForResource(response.data, patch.subject, { inputs: _.pluck(input.subInputs, 'input') })
+                  }
+                }
+              }
+              return response
+            })
+              .then(function (response) {
+                // successfully patched resource
+                ractive.set('save_status', 'alle endringer er lagret')
+                if (input.subInputs) {
+                  _.each(input.subInputs, function (subInput) {
+                    if (subInput.input.values[ index ]) {
+                      subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
+                      subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                    }
+                  })
+                } else {
+                  input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
+                }
+                ractive.update()
+                return response
+              }))
+            // .catch(function (response) {
+            //    // failed to patch resource
+            //    console.log('HTTP PATCH failed with: ')
+            //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
+            //    ractive.set('save_status', '')
+            // })
           })
-            .then(function (response) {
-              // do an extra patch to invalidate cache of old subject
-              if (mainSubject !== deleteSubject) {
-                axios.patch(proxyToServices(deleteSubject), JSON.stringify([], undefined, 2), {
-                  headers: {
-                    Accept: 'application/ld+json',
-                    'Content-Type': 'application/ldpatch+json'
-                  }
-                })
-              }
-              return response
-            })
-            .then(function (response) {
-              // successfully patched resource
-              ractive.set('save_status', 'alle endringer er lagret')
-              if (input.subInputs) {
-                _.each(input.subInputs, function (subInput) {
-                  if (subInput.input.values[ index ].current) {
-                    subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
-                    subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
-                  }
-                })
-              } else {
-                input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
-              }
-              ractive.update()
-              return response
-            })
-          // .catch(function (response) {
-          //    // failed to patch resource
-          //    console.log('HTTP PATCH failed with: ')
-          //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
-          //    ractive.set('save_status', '')
-          // })
+          return Promise.all(promises)
         }
 
         let templateSelection = function (selection) {
@@ -3623,11 +3692,8 @@
           const slideDown = function (node) {
             let suggestedValues = $(node).find('.suggested-values')[ 0 ]
             let keypath = Ractive.getNodeInfo(node).keypath
-            if (_.flatten([ ractive.get(`${keypath}.current.value`) ])[ 0 ] !== '') {
+            if (!ractive.get(`${keypath}.expanded`)) {
               $(suggestedValues).hide()
-              ractive.set(`${keypath}.expanded`, false)
-            } else {
-              ractive.set(`${keypath}.expanded`, true)
             }
             let toggle = function () {
               $(suggestedValues).slideToggle()
@@ -4036,13 +4102,6 @@
               authorityLabels: {},
               compare: false,
               compareValues: {},
-              headlinePart: function (headlinePart) {
-                return {
-                  value: headlinePart.predefinedValue
-                    ? Main.predefinedLabelValue(headlinePart.fragment, this.get(headlinePart.keypath))
-                    : this.get(headlinePart.keypath)
-                }
-              },
               checkDisabledNextStep (disabledUnlessSpec) {
                 var enabled = true
                 if (disabledUnlessSpec.presentTargetUri) {
@@ -4414,6 +4473,7 @@
                   .then(function () {
                     heightAligned(heightAlignedTarget)
                   })
+                  .then(updateHeadline)
                   .then(waiter.done)
               },
               editObject: function (event, parentInput, valueIndex) {
@@ -4462,6 +4522,9 @@
                   updateBrowserLocationWithTab(2)
                 }
                 Main.init(initOptions)
+                  .then(function () {
+                    setTimeout(updateHeadline)
+                  })
               },
               focusEditItem: function (event, itemIndex) {
                 $(`#ed-item-${itemIndex}`).focus()
@@ -4579,7 +4642,6 @@
                     setTimeout(positionSupportPanels, 1000)
                   })
                 } else {
-                  ractive.set(`${origin}.old.value`, ractive.get(`${origin}.current.value`))
                   ractive.set(`${origin}.current.value`, uri)
                   ractive.set(`${origin}.current.displayValue`, displayValue)
                   ractive.set(`${origin}.deletable`, true)
@@ -5403,7 +5465,8 @@
             const input = ractive.get(inputKeypath)
             const newStringValid = (typeof newValue === 'string' && /^\S+.*\S$|^\S?$/.test(newValue.replace(/\n/g, '')))
             const oldStringValid = (typeof oldvalue === 'string' && /^\S+.*\S$|^\S?$/.test(oldvalue.replace(/\n/g, '')))
-            if (input.required || !newStringValid || (newStringValid && !oldStringValid)) {
+            const existingVetoes = ractive.get(`${inputGroupKeypath}.inputGroupRequiredVetoes.${valueIndex}`) || []
+            if (existingVetoes.length > 0 || input.required || !newStringValid || (newStringValid && !oldStringValid)) {
               const voter = _.last(parentOf(grandParentOf(grandParentOf(keypath))).split('.'))
               const veto = !newStringValid ||
                 (input.type === 'searchable-with-result-in-side-panel' && typeof newValue === 'string' && isBlankNodeUri(newValue))
@@ -5498,6 +5561,10 @@
                 openInputForms = _.without(openInputForms, keypath)
               }
               ractive.set('openInputForms', openInputForms)
+            }, { init: false }),
+
+            ractive.observe('rdfType', function (newValue) {
+              ractive.set('applicationData.showHeadlineForType', newValue).then(updateHeadline)
             }, { init: false }) ])
           return applicationData
         }
@@ -5540,9 +5607,13 @@
           withPublicationOfWorkInput(function (publicationOfInput) {
             const workUri = _.flatten([ publicationOfInput.values[ 0 ].current.value ])[ 0 ]
             if (workUri) {
-              return fetchExistingResource(workUri, options).then(function () {
-                ractive.set('targetUri.Work', workUri)
-              })
+              return fetchExistingResource(workUri, options)
+                .then(function () {
+                  ractive.set('targetUri.Work', workUri)
+                })
+                .then(function () {
+                  setTimeout(updateHeadline())
+                })
             }
           })
         }
@@ -5601,7 +5672,7 @@
                     const savePlaceholder = target.nextAll('.save-placeholder')
                     if (savePlaceholder.length > 0) {
                       savePlaceholder.append(spinner.el)
-                      disabledInput = savePlaceholder.prevAll('input,select')
+                      disabledInput = savePlaceholder.prevAll('select')
                       disabledInput.attr('disabled', 'disabled')
                     } else {
                       $('#growler').show()
@@ -5613,6 +5684,11 @@
                   if (showingWaiting) {
                     if (disabledInput) {
                       disabledInput.attr('disabled', false)
+                      setTimeout(function () {
+                        if (disabledInput && !$(document.activeElement).is('input')) {
+                          disabledInput.nextAll('span.select2.select2-container').first().find('input').focus()
+                        }
+                      })
                     }
                     spinner.stop()
                     target.removeClass('saving')
@@ -5751,27 +5827,59 @@
           return applicationData
         }
 
-        const initHeadlineParts = function (applicationData) {
-          const headlineParts = []
-          forAllGroupInputs(function (input, groupIndex, inputIndex, subInputIndex) {
-            if (input.headlinePart) {
-              const subInputPart = subInputIndex !== undefined ? `.subInputs.${subInputIndex}.input` : ''
-              let keypath
-              const headlinePart = {}
-              if (input.type === 'select-predefined-value') {
-                headlinePart.predefinedValue = true
-                keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.value[0]`
-              } else {
-                const valuePart = input.type === 'searchable-with-result-in-side-panel' ? 'displayValue' : 'value'
-                keypath = `inputGroups.${groupIndex}.inputs.${inputIndex}${subInputPart}.values.0.current.${valuePart}`
+        const initHeadLine = function (applicationData) {
+          _.chain(applicationData.config.headlines).pairs().each(function (headlineSpec, index) {
+            const forDomainType = headlineSpec[ 0 ]
+            let partial = `{{#if showHeadlineForType == '${forDomainType}'}}\n`
+            _.each(headlineSpec[ 1 ], (part) => {
+              const inputId = part.input
+              const input = inputFromInputId(inputId)
+              if (!input) {
+                throw Error(`Unknown input id in headline definition for ${forDomainType}: ${inputId}`)
               }
-              headlinePart.keypath = keypath
-              headlinePart.fragment = input.fragment
-              ractive.set(`${input.keypath}.headlinePart`, headlinePart)
-              headlineParts.push(headlinePart)
-            }
+              const inputKeypath = input.keypath
+              if (part.joinBy) {
+                const rightInputId = part.joinBy.input
+                const rightInput = inputFromInputId(rightInputId)
+                if (!rightInput) {
+                  throw Error(`Unknown input id in headline definition for ${forDomainType}: ${rightInputId}`)
+                }
+                const leftKeypath = inputKeypath + '.values.0.current.value'
+                const rightKeypath = rightInput.keypath + '.values.0.current.value'
+                if (part.prefix) {
+                  partial += `{{#if ${leftKeypath} || ${rightKeypath}}}<span>{{'${part.prefix}'}}</span>{{/if}}\n`
+                }
+                partial += `{{>join{left: ${leftKeypath}, right: ${rightKeypath}, separator: '${part.joinBy.separator}'}}}\n`
+                if (part.postfix) {
+                  partial += `{{#if ${leftKeypath} || ${rightKeypath}}}<span >{{'${part.postfix}'}}</span>{{/if}}\n`
+                }
+              } else {
+                const valueKeypath = `${inputKeypath}.values.0.current.${input.type === 'searchable-with-result-in-side-panel' ? (input.headlineNameProperties ? 'headlineDisplayValue' : 'displayValue') : 'value'}`
+                const subInputCondition = (input.type === 'searchable-with-result-in-side-panel') ? ` && ${inputKeypath}.values.0.nonEditable` : ''
+                partial += `{{#if ${valueKeypath}${subInputCondition}}}`
+                if (part.prefix) {
+                  partial += `<span>{{'${part.prefix}'}}</span>`
+                }
+                partial += `<span>{{${valueKeypath}}}</span>`
+                if (part.postfix) {
+                  partial += `<span>{{'${part.postfix}'}}</span>`
+                }
+                partial += '{{/if}}\n'
+              }
+            })
+            partial += '\n{{/if}}\n'
+            let titleRactive = new Ractive({
+              el: 'headline_' + index,
+              template: partial,
+              data: applicationData,
+              partials: {
+                join: '<span>{{left}}</span>{{#if left && right}}<span>{{separator}}</span>{{/if}}<span style="margin-right:-2px;">{{right}}</span>'
+              }
+            })
+            applicationData.headlineRactives = applicationData.headlineRactives || []
+            applicationData.headlineRactives.push(titleRactive)
           })
-          ractive.set('applicationData.headlineParts', headlineParts)
+          ractive.update()
           return applicationData
         }
 
@@ -5820,7 +5928,7 @@
             _.each(input.dependentResourceTypes, function (type) {
               ractive.push('observers', ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
                 if (typeof newValue === 'string' && newValue !== '') {
-                  fetchExistingResource(newValue, { inputs: [ input ] })
+                  fetchExistingResource(newValue, { inputs: [ input ], keepDocumentUrl: true })
                 }
               }, { init: false }))
               ractive.push('observers', ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
@@ -5989,9 +6097,9 @@
           .then(enableObservers)
           .then(loadResourceOfQuery)
           .then(positionSupportPanels)
-          .then(initHeadlineParts)
           .then(initInputLinks)
           .then(initInputInterDependencies)
+          .then(initHeadLine)
           .then(initTitle)
           .then(initValuesFromQuery)
           .then(workaroundContentEditableBugs)
@@ -6023,6 +6131,7 @@
             return applicationData
           })
           .then(hideGrowler)
+          .then(updateHeadline)
         // .catch(function (err) {
         //   console.log('Error initiating Main: ' + err)
         // })

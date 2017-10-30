@@ -15,6 +15,7 @@ describe('reducers', () => {
         changeReservationSuspensionError: false,
         isRequestingCancelReservation: false,
         isRequestingChangeReservationSuspension: false,
+        isRequestingRemoteReservation: false,
         cancelReservationError: false,
         isRequestingChangePickupLocation: false,
         pickupLocation: null
@@ -70,12 +71,61 @@ describe('reducers', () => {
           payload: {
             branchCode: 'testBranch'
           },
-          error: true
+          error: false
         })
       ).toEqual({
         isRequestingChangePickupLocation: false,
         changePickupLocationError: false,
         pickupLocation: 'testBranch'
+      })
+    })
+
+    it(`should handle ${types.REQUEST_REMOTE_RESERVE_PUBLICATION}`, () => {
+      expect(
+        reservation({}, {
+          type: types.REQUEST_REMOTE_RESERVE_PUBLICATION,
+          payload: {
+            recordId: 123,
+            userId: 'N123456789',
+            reservationComment: 'Some comment'
+          },
+          error: false
+        })
+      ).toEqual({
+        isRequestingRemoteReservation: true,
+        reservationError: false
+      })
+    })
+
+    it(`should handle ${types.REMOTE_RESERVE_PUBLICATION_FAILURE}`, () => {
+      expect(
+        reservation({}, {
+          type: types.REMOTE_RESERVE_PUBLICATION_FAILURE,
+          payload: {
+            error: 'message'
+          },
+          error: true
+        })
+      ).toEqual({
+        isRequestingRemoteReservation: false,
+        reservationError: 'message'
+      })
+    })
+
+    it(`should handle ${types.REMOTE_RESERVE_PUBLICATION_SUCCESS}`, () => {
+      expect(
+        reservation({}, {
+          type: types.REMOTE_RESERVE_PUBLICATION_SUCCESS,
+          payload: {
+            recordId: 123,
+            userId: 'N123456789',
+            reservationComment: 'Some comment'
+          },
+          error: false
+        })
+      ).toEqual({
+        isRequestingRemoteReservation: false,
+        reservationError: false
       })
     })
   })

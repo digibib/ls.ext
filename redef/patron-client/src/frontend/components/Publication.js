@@ -3,6 +3,7 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import ClickableElement from '../components/ClickableElement'
 import Constants from '../constants/Constants'
 import title from '../utils/title'
+import {connect} from 'react-redux'
 
 class Publication extends React.Component {
   renderBookCover (publication) {
@@ -71,7 +72,10 @@ class Publication extends React.Component {
               <span data-automation-id="publication_formats">{formats.join(', ')}</span>
             </div>
             <div className="meta-item">
-              <span data-automation-id="publication_record_id">{publication.recordId}</span>
+              {this.props.isAdmin
+                ? <a href={`https://intra.deichman.no/cgi-bin/koha/catalogue/detail.pl?biblionumber=${publication.recordId}`}>{publication.recordId}</a>
+                : <span data-automation-id="publication_record_id">{publication.recordId}</span>
+              }
             </div>
           </div>
           {(publication.items.length > 0 &&
@@ -118,9 +122,15 @@ Publication.propTypes = {
   expandSubResource: PropTypes.func.isRequired,
   startReservation: PropTypes.func.isRequired,
   open: PropTypes.bool,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  isAdmin: PropTypes.bool
 }
 
+function mapStateToProps (state) {
+  return {
+    isAdmin: state.profile.category === 'ANS'
+  }
+}
 export const messages = defineMessages({
   available: {
     id: 'Publication.available',
@@ -164,4 +174,6 @@ export const messages = defineMessages({
   }
 })
 
-export default injectIntl(Publication)
+export default connect(
+  mapStateToProps
+)(injectIntl(Publication))

@@ -153,3 +153,7 @@ format:Diapositive a duo:Format ;
 format:MusicalInstrument a duo:Format ;
   rdfs:label "Musikkinstrument"@no ;
   rdfs:label "Musical instrument"@en .
+
+format:BookAndAudiobook a duo:Format ;
+  rdfs:label "Bok og lydbok"@no ;
+  rdfs:label "Book and audiobook"@en .

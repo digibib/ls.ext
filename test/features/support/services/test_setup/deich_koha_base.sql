@@ -39,6 +39,7 @@ UPDATE `systempreferences` SET `value` = '$(document).ready(function(){\r\n  if 
 UPDATE `systempreferences` SET `value` = '1' WHERE `variable` = 'NorwegianPatronDBEnable';
 UPDATE `systempreferences` SET `value` = 'http://nlsink:9999' WHERE `variable` = 'NorwegianPatronDBEndpoint';
 UPDATE `systempreferences` SET `value` = '1' WHERE `variable` = 'ILLModule';
+UPDATE `systempreferences` SET `value` = 'ILL1234' WHERE `variable` = 'ILLISIL';
 
 /*!40000 ALTER TABLE `systempreferences` ENABLE KEYS */;
 
@@ -74,7 +75,11 @@ CREATE TABLE `borrower_attribute_types` (
 
 LOCK TABLES `borrower_attribute_types` WRITE;
 /*!40000 ALTER TABLE `borrower_attribute_types` DISABLE KEYS */;
-INSERT INTO `borrower_attribute_types` VALUES ('dooraccess','Meråpent tilgang',0,0,0,0,0,'DOORACCESS',0,NULL,'dooraccess'),('fnr','Fødselsnummer',0,1,0,1,0,'',0,NULL,'fnr'),('old_lnr','Biblifil lånenummer',0,1,0,1,0,'',0,NULL,'');
+INSERT INTO `borrower_attribute_types` VALUES
+('dooraccess','Meråpent tilgang',0,0,0,0,0,'DOORACCESS',0,NULL,'dooraccess'),
+('fnr','Fødselsnummer',0,1,0,1,0,'',0,NULL,'fnr'),
+('old_lnr','Biblifil lånenummer',0,1,0,1,0,'',0,NULL,''),
+('nncip_uri','NNCIP endpoint',0,0,0,0,0,'',0,NULL,'');
 /*!40000 ALTER TABLE `borrower_attribute_types` ENABLE KEYS */;
 UNLOCK TABLES;
 

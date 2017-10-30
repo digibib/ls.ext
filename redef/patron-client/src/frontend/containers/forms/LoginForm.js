@@ -83,8 +83,8 @@ LoginForm.propTypes = {
   intl: intlShape.isRequired,
   isRequestingLogin: PropTypes.bool.isRequired,
   messages: PropTypes.object.isRequired,
-  successAction: PropTypes.object,
   registrationActions: PropTypes.object.isRequired,
+  successAction: PropTypes.object,
   loginActions: PropTypes.object.isRequired,
   fields: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired

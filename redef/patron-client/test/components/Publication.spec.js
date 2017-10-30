@@ -4,7 +4,11 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import Publication from '../../src/frontend/components/Publication'
+import { Provider } from 'react-redux'
 import { IntlProvider } from 'react-intl'
+import { createStore } from 'redux'
+import rootReducer from '../../src/frontend/reducers'
+import * as LoginActions from '../../src/frontend/actions/LoginActions'
 
 function setup (propOverrides) {
   const props = {
@@ -27,10 +31,16 @@ function setup (propOverrides) {
     'test_format': 'test_format_english',
     'test_language': 'test_language_english'
   }
+
+  const store = createStore(rootReducer)
+  store.dispatch(LoginActions.loginSuccess('test_username', 'test_borrowernumber', 'test_borrowerName', 'test_category'))
+
   const output = TestUtils.renderIntoDocument(
-    <IntlProvider locale="en" messages={messages}>
-      <Publication {...props} />
-    </IntlProvider>
+    <Provider store={store}>
+      <IntlProvider locale="en" messages={messages}>
+        <Publication {...props} />
+      </IntlProvider>
+    </Provider>
   )
 
   return {
