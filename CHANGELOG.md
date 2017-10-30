@@ -12,7 +12,36 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.55
+
+KOHA: daa5665abcea512e33aedb26d86b46075e11b4a6
+GITREF: TODO
+
+patron-client:
+  DEICH-865: show link to koha when patron category='ANS'
+  DEICH-935: reserves for category='IL' should initiate ILL request
+  DEICH-943: ignore apostrophe in search
+catalinker:
+  DEICH-945: refocus after saving dropdown values
+  DEICH-558: display recordId for publication in page title
+  DEICH-946: fix literals on imported record on work
+  DEICH-944/946: fix display of role in batch edit
+services:
+  Fix template for music
+  DEICH-942: get cataloguing source and id from MARC field 001, not 015
+Koha:
+  DEICH-935: Introduce ILL module (fjernlån)
+  DEICH-947: Fix checkout of already checked out material
+  Fixes in REST API /api/v1/location (for rfidscanner and plucklist)
+  Add stovner and roa to door access branches
+  Fixes to items.ccode cronjob
+Other:
+  Plucklist: show barcodes
+
 ## 2017.54
+
+KOHA: 32e8651d4b437ca43a480bfea39ff05eadfb8f4c
+GITREF: 4a98a161675df53dbdc030f0086da4c2d75be109
 
 - Koha
   - DEICH-933 opdater koha til 17.05.04
@@ -42,7 +71,7 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 ## 2017.52
 
 KOHA: f29d0bb2995dd00c18c10b8c47947b1e566c1509
-GITREF: TODO
+GITREF: cce8d098022823ac79675557face0d922da55ca5
 
 - Koha
   - DEICH-905 Bug i sett på vent funksjonalitet
@@ -56,7 +85,7 @@ GITREF: TODO
 ## 2017.51
 
 KOHA: Uendret
-GITREF: TODO
+GITREF: f29d0bb2995dd00c18c10b8c47947b1e566c1509
 
 - Koha
   - DEICH-882 Anonymisering i Koha er endret etter siste oppdatering i Koha ( ny versjon)
