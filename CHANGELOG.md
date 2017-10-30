@@ -12,6 +12,28 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.56
+
+- Koha
+  - DEICH-927 Forbedring av verktøy for stenging
+  - DEICH-929 Reminder på hentemelding
+  - DEICH-935 Fjernlån - implementering og testing
+- Catalinker
+  - DEICH-429 Nytt felt, "Stikkord" (1,5 d)
+  - DEICH-626 Felt for alternativ label må være repeterbar (1d)
+  - DEICH-695 Angi at klassifikasjon har hovednummer for verk
+  - DEICH-941 Relatert verk-relasjoner skal være symmetriske
+  - DEICH-939 Kopierte utgivelser uten eksemplarer skal ikke synes i treffliste uten eksemplarer
+  - DEICH-454 Krav om at aktør må være bekreftet på del (1d)
+  - DEICH-849 Fokus etter bruk av "Legg til ny"-knapp
+  - DEICH-588 Deler vises med aktør og rolle, selv om dette ikke er registrert
+  - DEICH-948 Angi felt for id per katalogiseringskilde
+- Patron-client
+  - DEICH-949 Block external access to GET-enabled resources in Services not required by Patron client
+- Services
+  - DEICH-950 Sletting av autoritet må trigge reindeksering av verk
+
+
 ## 2017.55
 
 KOHA: daa5665abcea512e33aedb26d86b46075e11b4a6
