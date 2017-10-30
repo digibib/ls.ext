@@ -13,7 +13,7 @@ class Footer extends React.Component {
   }
 
   ignore (event) {
-    event.prevent.default()
+    event.preventDefault()
   }
 
   render () {
