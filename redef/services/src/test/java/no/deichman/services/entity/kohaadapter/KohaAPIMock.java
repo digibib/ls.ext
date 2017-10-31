@@ -91,15 +91,9 @@ public final class KohaAPIMock {
                 + "    \"items\": \"\"\n"
                 + "}\n";
 
-        String expectedPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<marcxml:collection xmlns:marcxml=\"http://www.loc.gov/MARC21/slim\">"
-                + "<marcxml:record><marcxml:leader>00000    a2200000       </marcxml:leader>"
-                + "</marcxml:record></marcxml:collection>\n";
-
         clientDriver.addExpectation(
                 onRequestTo("/api/v1/biblios")
                         .withMethod(POST)
-                        .withBody(expectedPayload, MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(responseJSON, "application/json; charset=utf8")
                         .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + returnedBiblioId)
@@ -115,7 +109,6 @@ public final class KohaAPIMock {
         clientDriver.addExpectation(
                 onRequestTo("/api/v1/biblios")
                         .withMethod(POST)
-                        .withBody(expectedPayload, MediaType.TEXT_XML)
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(responseJSON, "application/json; charset=utf8")
                         .withHeader("Location", "http://localhost:" + clientdriverPort + "/api/v1/biblios/" + biblioId)

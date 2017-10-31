@@ -460,6 +460,7 @@ public final class SPARQLQueryBuilder {
                 + "       deichman:isbn ?isbn ;\n"
                 + "       deichman:publicationYear ?publicationYear ;\n"
                 + "       deichman:publicationPlace ?placeLabel ;\n"
+                + "       deichman:publicationOf ?work ;\n"
                 + "       deichman:ageLimit ?ageLimit ;\n"
                 + "       deichman:mainEntryPerson ?mainEntryPersonName ;\n"
                 + "       deichman:mainEntryCorporation ?mainEntryCorporationName ;\n"

@@ -646,6 +646,10 @@ public final class EntityServiceImpl implements EntityService {
                     field015.addSubfield(MarcConstants.SUBFIELD_B, stmt.getLiteral().getString());
                 } else if (pred.equals(cataloguingSourceIdentifier)) {
                     field015.addSubfield(MarcConstants.SUBFIELD_A, stmt.getLiteral().getString());
+                } else if (pred.equals(publicationOfProperty)) {
+                    String workUri = stmt.getObject().asResource().getURI();
+                    System.out.println(workUri);
+                    marcRecord.addMarcField(MarcConstants.FIELD_856, MarcConstants.SUBFIELD_U, workUri);
                 }
             }
         }

@@ -672,9 +672,6 @@ public class EntityServiceImplTest {
         String originalPublicationTitle = "Sult";
         String newPublicationTitle = "Torst";
 
-        MarcRecord marcRecord = getMarcRecord(originalPublicationTitle, originalCreator);
-        when(mockKohaAdapter.createNewBiblioWithMarcRecord(marcRecord)).thenReturn(A_BIBLIO_ID);
-
         String workTriples = ""
                 + "<http://host/work/w1> <" + ontologyURI + "mainTitle> \"" + originalWorkTitle + "\" .\n"
                 + "<http://host/work/w1> <" + ontologyURI + "publicationYear> \"2011\"^^<http://www.w3.org/2001/XMLSchema#gYear> ."
@@ -697,6 +694,9 @@ public class EntityServiceImplTest {
         Model inputWork = modelFrom(workTriples.replace("__CREATORURI__", personUri.getUri()), Lang.NTRIPLES);
         XURI workUri = new XURI(service.create(WORK, inputWork));
 
+        MarcRecord marcRecord = getMarcRecord(originalPublicationTitle, originalCreator, workUri.getUri().toString());
+        when(mockKohaAdapter.createNewBiblioWithMarcRecord(marcRecord)).thenReturn(A_BIBLIO_ID);
+
         Model inputPublication = modelFrom(publicationTriples.replace("__WORKURI__", workUri.getUri()), Lang.NTRIPLES);
         XURI publicationUri = new XURI(service.create(PUBLICATION, inputPublication));
         verify(mockKohaAdapter).createNewBiblioWithMarcRecord(marcRecord);
@@ -705,13 +705,13 @@ public class EntityServiceImplTest {
         Model publicationModel = service.retrieveById(publicationUri);
 
         String recordId = publicationModel.getProperty(null, ResourceFactory.createProperty(ontologyURI + "recordId")).getString();
-        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator));
+        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator, workUri.getUri()));
 
         service.patch(workUri, getPatch(workUri.getUri(), "mainTitle", originalWorkTitle, newWorkTitle));
-        verify(mockKohaAdapter, times(2)).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator)); // Need times(2) because publication has not changed.
+        verify(mockKohaAdapter, times(2)).updateRecord(recordId, getMarcRecord(newPublicationTitle, originalCreator, workUri.getUri())); // Need times(2) because publication has not changed.
 
         service.patch(personUri, getPatch(personUri.getUri(), "name", originalCreator, newCreator));
-        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator));
+        verify(mockKohaAdapter).updateRecord(recordId, getMarcRecord(newPublicationTitle, newCreator, workUri.getUri()));
     }
 
     @Test
@@ -872,6 +872,10 @@ public class EntityServiceImplTest {
         field = MarcRecord.newDataField("521");
         field.addSubfield('a', "Aldersgrense 75");
         want.addMarcField(field);
+        // work uri:
+        field = MarcRecord.newDataField("856");
+        field.addSubfield('u', "http://data.deichman.no/work/w4e5db3a95caa282e5968f68866774e20");
+        want.addMarcField(field);
         MarcRecord got = service.generateMarcRecordForPublication(pub, model);
         assertTrue(got.equals(want));
     }
@@ -954,6 +958,20 @@ public class EntityServiceImplTest {
         }
         if (name != null) {
             marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, name);
+        }
+        return marcRecord;
+    }
+
+    private MarcRecord getMarcRecord(String mainTitle, String name, String workURI) {
+        MarcRecord marcRecord = new MarcRecord();
+        if (mainTitle != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_245, MarcConstants.SUBFIELD_A, mainTitle);
+        }
+        if (name != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_100, MarcConstants.SUBFIELD_A, name);
+        }
+        if (workURI != null) {
+            marcRecord.addMarcField(MarcConstants.FIELD_856, MarcConstants.SUBFIELD_U, workURI);
         }
         return marcRecord;
     }
