@@ -21,3 +21,6 @@ classificationSource:ddc23 a duo:ClassificationSource ;
 classificationSource:cdclass a duo:ClassificationSource ;
   rdfs:label "CD classification"@en ;
   rdfs:label "CD-klassifikasjon"@no .
+classificationSource:dfb a duo:ClassificationSource ;
+  rdfs:label "DFB"@en ;
+  rdfs:label "DFB"@no .
