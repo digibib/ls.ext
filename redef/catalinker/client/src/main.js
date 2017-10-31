@@ -4392,8 +4392,7 @@
                     values.oldSubjectType = values.subjectType
                   }
                   try {
-                    mainInput.values.push(values)
-                    promises.push(ractive.update())
+                    promises.push(ractive.push(`${input.keypath}.values`, values))
                   } catch (e) {
                     // nop
                   }
