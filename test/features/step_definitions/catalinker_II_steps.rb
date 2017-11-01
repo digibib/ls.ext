@@ -919,6 +919,6 @@ When(/^sletter jeg den første forekomsten under (.*)$/) do |parameter_label|
 end
 
 
-When(/^sjekker jeg at antall (.*)er er (.*)$/) do |label, entries|
+When(/^sjekker jeg at antall ([A-Z].*)er er (.*)$/) do |label, entries|
   @browser.divs(:xpath => "//*[preceding-sibling::*/@data-uri-escaped-label='#{URI::escape(label)}']//div[#{contains_class 'default-non-editable'}]").length.should eq entries.to_i
 end
