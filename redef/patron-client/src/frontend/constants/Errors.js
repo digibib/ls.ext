@@ -9,7 +9,8 @@ export default {
     GENERIC_RESERVATION_ERROR: 'genericReservationError',
     GENERIC_CANCEL_RESERVATION_ERROR: 'genericCancelReservationError',
     GENERIC_CHANGE_PICKUP_LOCATION_ERROR: 'genericChangePickupLocationError',
-    GENERIC_CHANGE_RESERVATION_SUSPENSION_ERROR: 'genericChangeReservationSuspensionError'
+    GENERIC_CHANGE_RESERVATION_SUSPENSION_ERROR: 'genericChangeReservationSuspensionError',
+    MATERIAL_NOT_AVAILABLE_FOR_REMOTE_RESERVE: 'materialNotAvailableForRemoteReserve'
   },
   loan: {
     GENERIC_EXTEND_LOAN_ERROR: 'genericExtendLoanError',

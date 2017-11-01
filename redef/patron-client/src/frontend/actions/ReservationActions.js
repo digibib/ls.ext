@@ -323,9 +323,11 @@ export function remoteReservePublication (recordId, userId, reservationComment) 
         return dispatch(remoteReservePublicationSuccess(recordId, userId))
       } else if (response.status === 400) {
         return response.json().then(err => {
-          // TODO: handler various errors from a 400 response?
-          console.log(err)
-          throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
+          if (err === 'Material not approved for remote reserval') {
+            throw Error(Errors.reservation.MATERIAL_NOT_AVAILABLE_FOR_REMOTE_RESERVE)
+          } else {
+            throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
+          }
         })
       } else {
         throw Error(Errors.reservation.GENERIC_RESERVATION_ERROR)
