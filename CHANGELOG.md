@@ -12,6 +12,18 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.57
+
+KOHA: 7e389e34613cd36895b748f6198f793ed5a7cb36
+GITREF: TODO
+
+- Koha
+  - DEICH-863 Fix av Unblock juvenile debarments
+  - DEICH-889 Feil i kemmnerrapporter
+  - DEICH-954 Begrensninger må legges på fjernlån i patron client
+  - DEICH-940 Fix på kemnerrapport
+  - DEICH-641 Gjøre verksid tilgjengelig i Koha
+
 ## 2017.56
 
 - Koha
