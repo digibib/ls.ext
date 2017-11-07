@@ -21,3 +21,6 @@ adaptation:capitalLetters a duo:FormatAdaptation ;
   duo:code "tj" ;
   rdfs:label "Blokkbokstaver"@no ;
   rdfs:label "Capital letters only"@en .
+adaptation:signSupportedSpeech a duo:FormatAdaptation ;
+  rdfs:label "Tegn-til-tale"@no ;
+  rdfs:label "Sign supported speech"@en .
