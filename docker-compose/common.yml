@@ -123,7 +123,6 @@ services:
       - backend
     depends_on:
       - services
-      - z3950proxy
     ports:
       - "8010:8010"
     environment:
@@ -255,26 +254,6 @@ services:
       #- "-strip-barcode=true"
       #- "-extend-barcode=true"
       #- "-no-alert-if-same-branch=true"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
-
-  z3950proxy:
-    container_name: z3950proxy
-    image: "digibib/z3950proxy:331137ac40ba155760c311e5197fa9fa73cf4c27"
-    networks:
-      - backend
-    ports:
-      - 3000:3000
-    environment:
-      APPSECRET: "${Z3950SECRET:-replaceme}"
-      BS_SERVER: "${BS_SERVER:-replaceme}"
-      BS_PORT: "${BS_PORT:-replaceme}"
-      BS_DB: "${BS_DB:-replaceme}"
-      BS_USER: "${BS_USER:-replaceme}"
-      BS_PASS: "${BS_PASS:-replaceme}"
     logging:
       driver: "json-file"
       options:
