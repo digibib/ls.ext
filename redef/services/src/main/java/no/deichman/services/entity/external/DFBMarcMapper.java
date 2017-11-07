@@ -22,9 +22,8 @@ public class DFBMarcMapper extends MARCMapper {
     protected final boolean handleControlFieldHook(ControlField controlField, Work work, Publication publication) {
         if (controlField.getTag().equals("001")) {
             getControlFieldValue(controlField).ifPresent(publication::setCataloguingSourceIdentifier);
-            return true;
-        } else {
             return false;
         }
+        return true;
     }
 }
