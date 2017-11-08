@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react'
-import ReactDOM from 'react-dom'
 import {injectIntl, intlShape} from 'react-intl'
 
 class SearchFilterItem extends React.Component {
@@ -13,11 +12,6 @@ class SearchFilterItem extends React.Component {
     event.preventDefault()
     const { filter: { id } } = this.props
     this.props.toggleFilter(id)
-    this.props.toggleAllFilters(event)
-
-    if (window.innerWidth < 668) {
-      ReactDOM.findDOMNode(this.props.scrollTargetNode).scrollIntoView()
-    }
   }
 
   handleKey (event) {

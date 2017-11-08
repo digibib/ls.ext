@@ -920,7 +920,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 // filters
 // --------------------------------------------------------
-
 .active-filters {
   /* border-top: 1px solid $mediumGreyColor; */
   margin-top: $rhythm1;
@@ -975,6 +974,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include span(12);
   @include clearfix;
   margin-bottom: $rhythm4;
+  // hack to fix extra mystery padding after filters in mobile version
+  @media (min-width: 1px) and (max-width: 667px) {
+          margin-bottom: 0px;
+      }
 }
 
 .filters .limit-filters {
@@ -986,6 +989,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   color: $redColor;
   margin-bottom: $rhythm3;
   /* border-top: 1px solid $mediumGreyColor; */
+  // hack to fix extra mystery padding after filters in mobile version
+  @media (min-width: 1px) and (max-width: 667px) {
+        margin-bottom: 0px;
+    }
 }
 
 @include breakpoint($small) {
@@ -1210,6 +1217,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   margin-top: 1em;
   margin-bottom: 1em;
   cursor: default;
+  //hack to make borders work properly in mobile version
+  @media (min-width: 1px) and (max-width: 667px) {
+        border-bottom: 2px solid $blackColor;
+    }
 }
 
 .filter-group.dateRangeFilters .form-item {
@@ -1285,7 +1296,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .search-results .search-results-list {
-  border-top: 2px solid $blackColor;
   padding-top: $rhythm2;
 }
 
@@ -1325,6 +1335,12 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   align-items: flex-end; */
   position: relative;
   margin-top: 1.85em;
+}
+
+@media (min-width: 1px) and (max-width: 667px) {
+  .search-results-header-flex {
+    border-bottom: 2px solid $blackColor;
+  }
 }
 
 .search-results-header {
