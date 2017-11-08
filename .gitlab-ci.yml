@@ -1,2 +1,4 @@
-tests:
-  script: "cd /home/jenkins/ls.ext && make cuke_test"
+cuke:
+  script:
+    - cd /home/jenkins/ls.ext
+    - make cuke_test
