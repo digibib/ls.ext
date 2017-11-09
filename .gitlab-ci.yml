@@ -1,6 +1,6 @@
 cuke:
   script:
-    - make cuke_test
+    - make test
   only:
     - develop
   stage: test
