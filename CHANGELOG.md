@@ -15,7 +15,7 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 ## 2017.57
 
 KOHA: 7e389e34613cd36895b748f6198f793ed5a7cb36
-GITREF: TODO
+GITREF: e68370a35cbed1630241992a5937a0669a8a8840
 
 - Koha
   - DEICH-863 Fix av Unblock juvenile debarments
