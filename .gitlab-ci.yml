@@ -4,3 +4,5 @@ cuke:
     - make cuke_test
   only:
     - develop
+  stage:
+    - test
