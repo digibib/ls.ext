@@ -1,6 +1,6 @@
 cuke:
   script:
-    - make test
+    - make rebuild_services rebuild_patron_client rebuild_catalinker test
   only:
     - develop
   stage: test
