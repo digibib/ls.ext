@@ -1,6 +1,5 @@
 cuke:
   script:
-    - cd /home/jenkins/ls.ext
     - make cuke_test
   only:
     - develop
