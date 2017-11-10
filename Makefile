@@ -18,7 +18,7 @@ help:                                                 	## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 docker_compose_up:
-	$(DOCKER_COMPOSE_FULL) up -d
+	$(DOCKER_COMPOSE_FULL) up -d --remove-orphans
 
 shell_provision_ship:
 	./provision.sh $(LSDEVMODE) $(LSEXTPATH) $(HOST)
