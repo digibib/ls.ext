@@ -16,14 +16,6 @@ services:
       - "${MOUNTPATH:-..}/redef/catalinker/public:/usr/src/app/public"
       - "${MOUNTPATH:-..}/redef/catalinker/server:/usr/src/app/server"
 
-  build_services:
-    container_name: build_services
-    build:
-      context: "${LSEXTPATH:-..}/redef/services"
-      dockerfile: Dockerfile.build
-    volumes:
-      - "${LSEXTPATH:-..}/redef/services/build:/services/build"
-
   services:
     build:
       context: "${LSEXTPATH:-..}/redef/services"

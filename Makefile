@@ -74,7 +74,6 @@ rebuild=$(DOCKER_COMPOSE_INIT) && $(DOCKER_COMPOSE) stop $(1) || true &&\
 
 rebuild_services:  			## Force rebuilds services
 	@echo "======= FORCE RECREATING SERVICES ======\n"
-ifeq ($(LSDEVMODE),ci)
 	$(DOCKER_COMPOSE_INIT) &&\
 	$(DOCKER_COMPOSE) stop build_services || true &&\
 	$(DOCKER_COMPOSE) rm -f build_services || true &&\
@@ -86,14 +85,7 @@ ifeq ($(LSDEVMODE),ci)
 		   -v $(LSEXTPATH):/to \
 			alpine ash -c 'cp /from/build/libs/services-1.0-SNAPSHOT-standalone.jar /to/'
 	mkdir -p redef/services/build/libs
-	cp services-1.0-SNAPSHOT-standalone.jar redef/services/build/libs/
-else
-	$(DOCKER_COMPOSE_INIT) &&\
-	$(DOCKER_COMPOSE) stop build_services || true &&\
-	$(DOCKER_COMPOSE) rm -f build_services || true &&\
-	$(DOCKER_COMPOSE) build build_services &&\
-	$(DOCKER_COMPOSE) run build_services
-endif
+	mv services-1.0-SNAPSHOT-standalone.jar redef/services/build/libs/
 	$(call rebuild,services)
 
 rebuild_catalinker:					## Force rebuilds catalinker

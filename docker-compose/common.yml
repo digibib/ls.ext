@@ -1,6 +1,9 @@
 ---
 version: '3'
 
+volumes:
+  services_build: {}
+
 networks:
   backend:
     driver: bridge
@@ -136,6 +139,15 @@ services:
       options:
         max-size: "1m"
         max-file: "2"
+
+
+  build_services:
+    container_name: build_services
+    build:
+      context: "${LSEXTPATH:-..}/redef/services"
+      dockerfile: Dockerfile.build
+    volumes:
+      - "services_build:/services"
 
   services:
     container_name: services
