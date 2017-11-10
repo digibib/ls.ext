@@ -85,7 +85,7 @@ rebuild_services:  			## Force rebuilds services
 		   -v $(LSEXTPATH)/redef/services/build:/to \
 			alpine ash -c 'cp /from/build/libs/services-1.0-SNAPSHOT-standalone.jar /to/'
 	$(call rebuild,services)
-	docker run --rm -v $(LSEXTPATH):/to alpine ash -c 'rm /to/services-1.0-SNAPSHOT-standalone.jar'
+	docker run --rm -v $(LSEXTPATH)/redef/services/build:/to alpine ash -c 'rm /to/services-1.0-SNAPSHOT-standalone.jar'
 
 rebuild_catalinker:					## Force rebuilds catalinker
 	@echo "======= FORCE RECREATING CATALINKER ======\n"
