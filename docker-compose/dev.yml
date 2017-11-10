@@ -1,6 +1,9 @@
 ---
 version: '3'
 
+volumes:
+  cuke_reports: {}
+
 services:
 
   koha_mysql:
@@ -73,6 +76,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - "${LSEXTPATH:-..}/test:/tests"
+      - "cuke_reports:/tests/report"
     environment:
       HOST: "${HOST}"
       KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
