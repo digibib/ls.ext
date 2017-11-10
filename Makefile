@@ -72,7 +72,7 @@ rebuild=$(DOCKER_COMPOSE_INIT) && $(DOCKER_COMPOSE) stop $(1) || true &&\
 	  $(DOCKER_COMPOSE) build $(CACHE_ARG) $(1) &&\
 	  $(DOCKER_COMPOSE) up --force-recreate --no-deps -d $(1)
 
-rebuild_services: docker_cleanup			## Force rebuilds services
+rebuild_services:  			## Force rebuilds services
 	@echo "======= FORCE RECREATING SERVICES ======\n"
 ifeq ($(LSDEVMODE),ci)
 	$(DOCKER_COMPOSE_INIT) &&\
