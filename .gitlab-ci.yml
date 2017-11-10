@@ -1,6 +1,6 @@
 cuke:
   script:
-    - make rebuild_services rebuild_patron_client rebuild_catalinker docker_compose_up test
+    - make docker_compose_up rebuild_services rebuild_patron_client rebuild_catalinker test
   only:
     - develop
   stage: test
