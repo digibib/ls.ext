@@ -1,6 +1,6 @@
 FROM java:8
 
-ADD build/libs/services-1.0-SNAPSHOT-standalone.jar /services-1.0-SNAPSHOT-standalone.jar
+ADD build/services-1.0-SNAPSHOT-standalone.jar /services-1.0-SNAPSHOT-standalone.jar
 
 ADD entrypoint.sh /entrypoint.sh
 
