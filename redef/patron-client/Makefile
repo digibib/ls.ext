@@ -10,17 +10,17 @@ HOST_VOLUME_BINDINGS=-v $(PCPATH)/src:/usr/src/app/src \
 .PHONY: test lit logs push
 
 lint:
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm run -s lint
+	docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm run -s lint
 
 test: lint
-	sudo docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm test
+	docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm test
 
 logs:
-	sudo docker logs -f $(CONTAINER)
+	docker logs -f $(CONTAINER)
 
 push:
 ifndef TAG
 	@echo "You must specify TAG when pushing"
 	exit 1
 endif
-	sudo docker push $(IMAGE):$(TAG)
+	docker push $(IMAGE):$(TAG)
