@@ -12,6 +12,21 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.58
+
+KOHA: 4840796532dd9a95cf195db054a4363c8905876d
+GITREF: 097d04e058765cf4f9c88f73f096cb4ec4eba929
+
+- Koha
+  - DEICH-929 Holds reminder, default after 4 days
+  - DEICH-965 ILL stage one, basic implementation
+  - DEICH-955 ILL automatic ship item when checked in
+  - DEICH-974 Limit some material types from ILL
+  - DEICH-843 Short cuts in AddItem page
+- Other:
+  - DEICH-970 Add missing info from migrated DFB records
+  - Removed deprecated z3950 proxy
+
 ## 2017.57
 
 KOHA: 7e389e34613cd36895b748f6198f793ed5a7cb36
