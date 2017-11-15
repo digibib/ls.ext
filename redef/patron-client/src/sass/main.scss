@@ -920,6 +920,15 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 // filters
 // --------------------------------------------------------
+.sticky {
+  z-index: 1;
+  opacity: 1;
+  background-color: $white
+  // background-color: $redColor;
+  // a {
+  //       color: $white
+  // }
+}
 .active-filters {
   /* border-top: 1px solid $mediumGreyColor; */
   margin-top: $rhythm1;

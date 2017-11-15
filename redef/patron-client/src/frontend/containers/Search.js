@@ -209,7 +209,9 @@ class Search extends React.Component {
           : null}
         {this.props.totalHits > 0
           ? <div className="search-wrapper">
+            <div className="sticky-wrapper">
             {this.manageMobileHeaders()}
+            </div>
               <SearchResults key="search_results"
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
