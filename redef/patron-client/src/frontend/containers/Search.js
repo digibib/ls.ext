@@ -13,6 +13,7 @@ import * as SearchFilterActions from '../actions/SearchFilterActions'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as RegistrationActions from '../actions/RegistrationActions'
 import SearchResults from '../components/SearchResults'
+import SearchResultsHeader from '../components/SearchResultsHeader'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
 import SearchFilterBox from '../components/SearchFilterBox'
@@ -90,6 +91,64 @@ class Search extends React.Component {
     }
   }
 
+  manageMobileHeaders () {
+    if (this.props.windowWidth < 668) {
+      return (
+        <div>
+
+                    <SearchResultsHeader key="search_results_header"
+                      locationQuery={this.props.location.query}
+                      searchActions={this.props.searchActions}
+                      searchError={this.props.searchError}
+                      totalHits={this.props.totalHits}
+                    />
+                    <SearchFilters key="search_filters"
+                                   filters={this.props.filters}
+                                   locationQuery={this.props.location.query}
+                                   toggleFilter={this.props.searchFilterActions.toggleFilter}
+                                   toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
+                                   toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
+                                   toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                                   togglePeriod={this.props.searchFilterActions.togglePeriod}
+                                   toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                                   toggleHideNoItems={this.props.searchFilterActions.toggleHideNoItems}
+                                   scrollTargetNode={this}
+                                   isSearching={this.props.isSearching}
+                                   windowWidth={this.props.windowWidth}
+                    />
+
+        </div>
+
+      )
+    } else {
+      return (
+          <div>
+            <SearchFilters key="search_filters"
+                           filters={this.props.filters}
+                           locationQuery={this.props.location.query}
+                           toggleFilter={this.props.searchFilterActions.toggleFilter}
+                           toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
+                           toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
+                           toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                           togglePeriod={this.props.searchFilterActions.togglePeriod}
+                           toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                           toggleHideNoItems={this.props.searchFilterActions.toggleHideNoItems}
+                           scrollTargetNode={this}
+                           isSearching={this.props.isSearching}
+                           windowWidth={this.props.windowWidth}
+            />
+
+              <SearchResultsHeader key="search_results_header"
+                locationQuery={this.props.location.query}
+                searchActions={this.props.searchActions}
+                searchError={this.props.searchError}
+                totalHits={this.props.totalHits}
+              />
+          </div>
+      )
+    }
+  }
+
   render () {
     return (
       <NonIETransitionGroup
@@ -150,20 +209,9 @@ class Search extends React.Component {
           : null}
         {this.props.totalHits > 0
           ? <div className="search-wrapper">
-              <SearchFilters key="search_filters"
-                             filters={this.props.filters}
-                             locationQuery={this.props.location.query}
-                             toggleFilter={this.props.searchFilterActions.toggleFilter}
-                             toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
-                             toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
-                             toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
-                             togglePeriod={this.props.searchFilterActions.togglePeriod}
-                             toggleAvailability={this.props.searchFilterActions.toggleAvailability}
-                             toggleHideNoItems={this.props.searchFilterActions.toggleHideNoItems}
-                             scrollTargetNode={this}
-                             isSearching={this.props.isSearching}
-                             windowWidth={this.props.windowWidth}
-              />
+            <div className="sticky-wrapper">
+            {this.manageMobileHeaders()}
+            </div>
               <SearchResults key="search_results"
                            locationQuery={this.props.location.query}
                            searchActions={this.props.searchActions}
@@ -175,6 +223,17 @@ class Search extends React.Component {
                            page={Number(this.props.location.query.page || '1')}
                            items={this.props.items}
                            homeBranch={this.props.userProfile.homeBranch}
+                           filters={this.props.filters}
+                           toggleFilter={this.props.searchFilterActions.toggleFilter}
+                           toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
+                           toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
+                           toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                           togglePeriod={this.props.searchFilterActions.togglePeriod}
+                           toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                           toggleHideNoItems={this.props.searchFilterActions.toggleHideNoItems}
+                           scrollTargetNode={this}
+                           isSearching={this.props.isSearching}
+                           windowWidth={this.props.windowWidth}
               />
             </div>
           : null}

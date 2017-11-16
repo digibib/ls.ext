@@ -8,6 +8,7 @@ import Constants from '../constants/Constants'
 import DataRangeFilter from '../components/DateRangeFilter'
 import AvailableFilter from '../components/AvailableFilter'
 import NoItemsFilter from '../components/NoItemsFilter'
+import Sticky from 'react-sticky-el'
 
 class SearchFilters extends React.Component {
   constructor (props) {
@@ -75,15 +76,21 @@ class SearchFilters extends React.Component {
           transitionLeaveTimeout={500}
           component="aside"
           className="filters">
-          <div className="limit-filters">
+
+          {this.props.locationQuery.hideFilters === Constants.enabledParameter
+            ? <div className="limit-filters">
             <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
-              {this.props.locationQuery.hideFilters === Constants.enabledParameter
-                ? (<span>Vis filter</span>)
-                : (<span>Skjul filter</span>)}
+              <span>Vis filter</span>
             </Link>
           </div>
-
-          <header className="limit-filters-header">
+          : <Sticky id="stuck" boundaryElement=".filters">
+              <div className="limit-filters">
+              <Link className={buttonClass} to="#" onClick={this.handleFiltersOpenClick}>
+                <span>Skjul filter</span>
+              </Link>
+            </div>
+          </Sticky>}
+            <header className="limit-filters-header">
             <FormattedMessage {...messages.limit} />
           </header>
 
@@ -97,6 +104,7 @@ class SearchFilters extends React.Component {
                 scrollTargetNode={this.props.scrollTargetNode}
               />
             }
+
             {this.props.locationQuery.hideFilters === Constants.enabledParameter
               ? null
               : <SearchFilter
