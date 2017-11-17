@@ -7,7 +7,7 @@ cuke:
 
 build:
   script:
-    - LSDEVMODE=ci make rebuild_services rebuild_patron_client rebuild_catalinker login push
+    - LSDEVMODE=ci LSEXTPATH=$(pwd) make rebuild_services rebuild_patron_client rebuild_catalinker login push
   only:
     - tags
   stage: build
