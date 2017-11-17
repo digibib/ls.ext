@@ -4,6 +4,8 @@ cuke:
   only:
     - develop
   stage: test
+  tags:
+    - test
 
 build:
   script:
