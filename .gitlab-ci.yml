@@ -11,3 +11,5 @@ build:
   only:
     - tags
   stage: build
+  tags:
+    - build
