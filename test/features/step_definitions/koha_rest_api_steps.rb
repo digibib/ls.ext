@@ -122,7 +122,7 @@ When(/^jeg slår opp eksemplaret via API$/) do
 end
 
 Then(/^vil systemet vise detaljert eksemplarinformasjon$/) do
-  @context[:extended_item_biblio]["biblionumber"].should eq(@context[:koha].biblio["biblio"]["biblionumber"])
+  @context[:extended_item_biblio]["biblionumber"].to_i.should eq(@context[:koha].biblio["biblio"]["biblionumber"].to.i)
   @context[:extended_item_biblio]["title"].should eq(@context[:koha].biblio["biblio"]["title"])
 end
 
@@ -193,7 +193,7 @@ Then(/^kan jeg følge lenken og finne den bibliografiske posten$/) do
   res = http.get(uri, headers)
   expect(res.code).to eq("200"), "got unexpected #{res.code} when fetching biblio.\nResponse body: #{res.body}"
   json = JSON.parse(res.body)
-  json["biblionumber"].should eq(@context[:biblio_api_response][:biblionumber])
+  json["biblionumber"].to_i.should eq(@context[:biblio_api_response][:biblionumber].to_i)
 end
 
 When(/^at jeg autentiserer brukeren mot Kohas REST API$/) do
