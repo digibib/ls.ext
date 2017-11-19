@@ -122,7 +122,7 @@ When(/^jeg slår opp eksemplaret via API$/) do
 end
 
 Then(/^vil systemet vise detaljert eksemplarinformasjon$/) do
-  @context[:extended_item_biblio]["biblionumber"].to_i.should eq(@context[:koha].biblio["biblio"]["biblionumber"].to.i)
+  @context[:extended_item_biblio]["biblionumber"].to_i.should eq(@context[:koha].biblio["biblio"]["biblionumber"].to_i)
   @context[:extended_item_biblio]["title"].should eq(@context[:koha].biblio["biblio"]["title"])
 end
 
@@ -204,7 +204,7 @@ end
 
 Then(/^gir APIet tilbakemelding med riktige brukerrettigheter$/) do
   session = @context[:session_api_response]
-  session["borrowernumber"].should eq(@active[:patron].borrowernumber)
+  session["borrowernumber"].to_i.should eq(@active[:patron].borrowernumber.to_i)
   session["permissions"].sort.should eq(["borrowers", "editcatalogue", "staffaccess"].sort)
 end
 
