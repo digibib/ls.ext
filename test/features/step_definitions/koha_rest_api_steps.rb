@@ -132,11 +132,11 @@ end
 
 When(/^nye meldingspreferanser sendes til Kohas API$/) do
   new_prefs = {
-    item_due: { transports: ["sms","email"], wants_digest: true},
-    advance_notice: { transports: ["email"], wants_digest: false, days_in_advance: 5},
-    hold_filled: { transports: ["sms"], wants_digest: false },
-    item_check_in: { transports: ["email"], wants_digest: true}, # Yes, it is check_in, not checkin
-    item_checkout: { transports: ["email"], wants_digest: true}
+    item_due: { transports: ["sms","email"], wants_digest: 1},
+    advance_notice: { transports: ["email"], wants_digest: 0, days_in_advance: 5},
+    hold_filled: { transports: ["sms"], wants_digest: 0 },
+    item_check_in: { transports: ["email"], wants_digest: 1}, # Yes, it is check_in, not checkin
+    item_checkout: { transports: ["email"], wants_digest: 1}
   }
   res = KohaRESTAPI::MessagePreferences.new(@browser,@context,@active).update(@context[:patron]['borrowernumber'], new_prefs)
   @context[:new_messagepreferences] = JSON.parse(res)
