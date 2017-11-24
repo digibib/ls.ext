@@ -1363,7 +1363,7 @@ public class AppTest {
     public void test_sru_resource_is_retrieved_and_mapped() throws UnirestException {
         sruServiceMock.getSingleMarcRecordExpectation();
 
-        String url = appURI + "/datasource/dfb?isbn=912312312312";
+        String url = appURI + "/datasource/dfb?isbn=912312312312&media_type=Book";
 
         HttpResponse<String> result = Unirest.get(url).asString();
 

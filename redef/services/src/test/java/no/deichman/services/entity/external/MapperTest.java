@@ -38,17 +38,17 @@ public class MapperTest extends MappingTester {
 
         Mapper mapper = new Mapper();
 
-        assertEquals(simplifyBNodes(json), simplifyBNodes(gson.toJson(mapper.map(sourceName, new SearchResultInfo(record)))));
+        assertEquals(simplifyBNodes(json), simplifyBNodes(gson.toJson(mapper.map("Book", sourceName, new SearchResultInfo(record)))));
         assertThat(simplifyBNodes(json),
-                SameJSONAs.sameJSONAs(simplifyBNodes(gson.toJson(mapper.map(sourceName, new SearchResultInfo(record)))))
+                SameJSONAs.sameJSONAs(simplifyBNodes(gson.toJson(mapper.map("Book", sourceName, new SearchResultInfo(record)))))
                         .allowingAnyArrayOrdering()
                         .allowingExtraUnexpectedFields());
-        assertEquals(sourceName, mapper.map(sourceName, new SearchResultInfo(record)).getSource());
+        assertEquals(sourceName, mapper.map("Book", sourceName, new SearchResultInfo(record)).getSource());
     }
 
     @Test(expected = Exception.class)
     public void mapper_throws_exception_on_unknown_format() throws Exception {
         Mapper mapper = new Mapper();
-        mapper.map("google", null);
+        mapper.map("Book","google", null);
     }
 }

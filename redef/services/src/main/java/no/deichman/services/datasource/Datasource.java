@@ -10,6 +10,7 @@ import no.deichman.services.entity.external.SearchResultInfo;
 import no.deichman.services.restutils.MimeType;
 
 import javax.inject.Singleton;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -59,11 +60,12 @@ public class Datasource {
             @QueryParam("ean") String ean,
             @QueryParam("local_id") String localId,
             @QueryParam("title") String title,
+            @QueryParam("media_type") String mediaType,
             @QueryParam("author") String author) throws Exception {
-        Mapper mapper = new Mapper();
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
+        if (mediaType == null) {
+            throw new BadRequestException("missing mandatory query parameter: media_type");
+        }
         String idType = "isbn";
         String term = "";
         if (isbn != null) {
@@ -83,12 +85,16 @@ public class Datasource {
             term = author;
         }
 
-        SearchResultInfo searchResultInfo = EXTERNAL_CATALOGUES.get(datasource).getByField(datasource, term, idType);
+        Mapper mapper = new Mapper();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        SearchResultInfo searchResultInfo = EXTERNAL_CATALOGUES.get(datasource).getByField(datasource, term, idType, mediaType);
 
         String result = "";
 
         if (searchResultInfo != null && !searchResultInfo.isEmpty()) {
-            result = gson.toJson(mapper.map(datasource, searchResultInfo));
+            result = gson.toJson(mapper.map(mediaType, datasource, searchResultInfo));
         }
 
         return Response.ok().entity(result).build();

@@ -4926,7 +4926,7 @@
                     itemsFromOtherSources: {}
                   }
                   _.each(sources, function (source) {
-                    promises.push(axios.get(`/valueSuggestions/${source}?${parameterName}=${encodeURIComponent(searchValue.replace(',', ''))}`, {
+                    promises.push(axios.get(`/valueSuggestions/${source}?media_type=${URI.parseQuery(URI.parse(document.location.href).query).hasMediaType}&${parameterName}=${encodeURIComponent(searchValue.replace(',', ''))}`, {
                         headers: {
                           Accept: 'application/ld+json'
                         }

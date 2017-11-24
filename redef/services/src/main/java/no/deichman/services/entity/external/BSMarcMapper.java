@@ -6,16 +6,16 @@ import org.marc4j.marc.DataField;
  *  Extends MARCMapper by extracting local id from 015$a and $b.
  */
 public class BSMarcMapper extends MARCMapper {
-    BSMarcMapper(String cataloguingSourceUri, boolean simpleIdGenerator) {
-        super(cataloguingSourceUri, simpleIdGenerator);
+    BSMarcMapper(String mediaType, String cataloguingSourceUri, boolean simpleIdGenerator) {
+        super(mediaType, cataloguingSourceUri, simpleIdGenerator);
     }
 
-    BSMarcMapper(Target cataloguingSource) {
-        super(cataloguingSource);
+    BSMarcMapper(String mediaType, Target cataloguingSource) {
+        super(mediaType, cataloguingSource);
     }
 
-    BSMarcMapper(Target cataloguingSource, boolean simpleIdGenerator) {
-        super(cataloguingSource, simpleIdGenerator);
+    BSMarcMapper(String mediaType, Target cataloguingSource, boolean simpleIdGenerator) {
+        super(mediaType, cataloguingSource, simpleIdGenerator);
     }
 
     @Override

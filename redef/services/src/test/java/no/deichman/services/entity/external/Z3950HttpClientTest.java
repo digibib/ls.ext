@@ -51,7 +51,7 @@ public class Z3950HttpClientTest {
     public void test_it_gets_a_single_MARC_record_by_isbn() throws IOException {
         z3950ServiceMock.getSingleMarcRecordExpectation();
         Z3950HttpClient z3950HttpClient = new Z3950HttpClient("http://localhost", z3950ServiceMock.getPort());
-        SearchResultInfo response = z3950HttpClient.getByField("bibbi", "123123123", "isbn");
+        SearchResultInfo response = z3950HttpClient.getByField("bibbi", "123123123", "isbn", "Book");
         assertTrue(response.getMarcXmlContent().contains("Eksempel Eksempelsen"));
     }
 
@@ -59,7 +59,7 @@ public class Z3950HttpClientTest {
     public void test_it_gets_a_single_MARC_record_by_ean() throws IOException {
         z3950ServiceMock.getSingleMarcRecordExpectation();
         Z3950HttpClient z3950HttpClient = new Z3950HttpClient("http://localhost", z3950ServiceMock.getPort());
-        SearchResultInfo response = z3950HttpClient.getByField("bibbi", "123123123", "ean");
+        SearchResultInfo response = z3950HttpClient.getByField("bibbi", "123123123", "ean", "Book");
         assertTrue(response.getMarcXmlContent().contains("Eksempel Eksempelsen"));
     }
 }

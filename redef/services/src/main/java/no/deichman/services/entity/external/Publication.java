@@ -24,7 +24,18 @@ public class Publication extends BibliographicObjectExternal {
         Paged, United
     }
 
-    Publication() {
+    Publication(String mediaType) {
+        switch (mediaType) {
+            case "Other":
+            case "SheetMusic":
+            case "E-book":
+            case "Book":
+                this.extentType = Paged;
+                break;
+            default:
+                this.extentType = United;
+        }
+        this.mediaType = new ExternalDataObject("http://data.deichman.no/mediaType#" + mediaType);
     }
 
     @SerializedName("deichman:isbn")
@@ -166,16 +177,6 @@ public class Publication extends BibliographicObjectExternal {
 
     public final void setFormat(ExternalDataObject format) {
         this.format = format;
-    }
-
-    public final void setUnitedMediaType(ExternalDataObject mediaType) {
-        this.extentType = United;
-        this.mediaType = mediaType;
-    }
-
-    public final void setPagedMediaType(ExternalDataObject mediaType) {
-        this.extentType = Paged;
-        this.mediaType = mediaType;
     }
 
     public final ExternalDataObject getFormat() {

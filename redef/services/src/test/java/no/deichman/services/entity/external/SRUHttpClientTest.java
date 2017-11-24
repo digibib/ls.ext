@@ -15,8 +15,8 @@ public class SRUHttpClientTest {
     @Test
     public void test_it_gets_a_single_MARC_record_by_isbn() throws IOException {
         sruServiceMock.getSingleMarcRecordExpectation();
-        SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/sru?version=1.1", sruServiceMock.getPort()));
-        SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "isbn");
+        SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/sru?version=1.1", sruServiceMock.getPort(), "Book"));
+        SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "isbn", "Book");
         final String marcXmlContent = response.getMarcXmlContent();
         assertTrue(marcXmlContent.contains("collection"));
         assertTrue(marcXmlContent.contains("Dostojevskij, Fjodor Mikhajlovitsj"));
@@ -25,8 +25,8 @@ public class SRUHttpClientTest {
     @Test
     public void test_it_gets_a_single_MARC_record_by_ean() throws IOException {
         sruServiceMock.getSingleMarcRecordExpectation();
-        SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/sru?version=1.1", sruServiceMock.getPort()));
-        SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "ean");
+        SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/sru?version=1.1", sruServiceMock.getPort(), "Book"));
+        SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "ean", "Book");
         final String marcXmlContent = response.getMarcXmlContent();
         assertTrue(marcXmlContent.contains("collection"));
         assertTrue(marcXmlContent.contains("Dostojevskij, Fjodor Mikhajlovitsj"));
@@ -35,8 +35,8 @@ public class SRUHttpClientTest {
     @Test
     public void test_it_gets_a_single_MARC_record_by_isbn_for_micromarc() throws IOException {
         sruServiceMock.getMicroMarcSingleMarcRecordExpectation();
-        SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/mmwebapi/bibbi/6475/SRU?version=2.0", sruServiceMock.getPort()));
-        SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "isbn");
+        SRUHttpClient sruHttpClient = new SRUHttpClient(String.format("http://localhost:%d/mmwebapi/bibbi/6475/SRU?version=2.0", sruServiceMock.getPort(), "Book"));
+        SearchResultInfo response = sruHttpClient.getByField("bibbi", "123123123", "isbn", "Book");
         final String marcXmlContent = response.getMarcXmlContent();
         assertTrue(marcXmlContent.contains("collection"));
         assertTrue(marcXmlContent.contains("Verdens fineste julefortellinger"));

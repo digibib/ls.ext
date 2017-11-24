@@ -6,16 +6,16 @@ import org.marc4j.marc.ControlField;
  *  Extends MARCMapper by extracting local id from 001.
  */
 public class DFBMarcMapper extends MARCMapper {
-    DFBMarcMapper(String cataloguingSourceUri, boolean simpleIdGenerator) {
-        super(cataloguingSourceUri, simpleIdGenerator);
+    DFBMarcMapper(String mediaType, String cataloguingSourceUri, boolean simpleIdGenerator) {
+        super(mediaType, cataloguingSourceUri, simpleIdGenerator);
     }
 
-    DFBMarcMapper(Target cataloguingSource) {
-        super(cataloguingSource);
+    DFBMarcMapper(String mediaType, Target cataloguingSource) {
+        super(mediaType, cataloguingSource);
     }
 
-    DFBMarcMapper(Target cataloguingSource, boolean simpleIdGenerator) {
-        super(cataloguingSource, simpleIdGenerator);
+    DFBMarcMapper(String mediaType, Target cataloguingSource, boolean simpleIdGenerator) {
+        super(mediaType, cataloguingSource, simpleIdGenerator);
     }
 
     @Override

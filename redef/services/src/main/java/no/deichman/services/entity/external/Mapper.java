@@ -5,17 +5,17 @@ package no.deichman.services.entity.external;
  */
 public final class Mapper {
 
-    public Result map(String sourceName, SearchResultInfo resultInfo) throws Exception {
+    public Result map(String mediaType, String sourceName, SearchResultInfo resultInfo) throws Exception {
         Target target = Target.valueOf(sourceName.toUpperCase());
         Result result = new Result(resultInfo);
         MARCMapper marcMapper;
         switch (target) {
             case DFB:
-                marcMapper = new DFBMarcMapper(target.getCataloguingSourceUri(), true);
+                marcMapper = new DFBMarcMapper(mediaType, target.getCataloguingSourceUri(), true);
                 break;
             case BIBBI:
                 default:
-                marcMapper = new BSMarcMapper(target.getCataloguingSourceUri(), true);
+                marcMapper = new BSMarcMapper(mediaType, target.getCataloguingSourceUri(), true);
                 break;
         }
         result.setSource(target.getDatabaseName());

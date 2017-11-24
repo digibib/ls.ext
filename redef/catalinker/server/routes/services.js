@@ -41,12 +41,12 @@ module.exports = (app) => {
 
   app.get('/valueSuggestions/:source', cache('1 second'), requestProxy(services, {
     forwardPath: (req, res) => {
-      var param = _(req.query).keys().find((key)=>{return _.contains(['isbn','ean', 'title', 'author', 'local_id'],key)})
+      var param = _(req.query).keys().find((key)=>{return _.contains(['isbn','ean', 'title', 'author', 'local_id'], key)})
       var paramValue = req.query[param]
       if (param === 'isbn') {
         paramValue = paramValue.replace(/-/g,'')
       }
-      const reqUrl = services + '/datasource/' + req.params.source + '?' + param + '=' + encodeURIComponent(paramValue)
+      const reqUrl = services + '/datasource/' + req.params.source + '?media_type=' + req.query['media_type'] + '&' + param + '=' + encodeURIComponent(paramValue)
       return url.parse(reqUrl).path
     }
   }))

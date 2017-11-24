@@ -51,21 +51,24 @@ public class MARCMapper {
     private String cataloguingSourceUri;
     private boolean simpleIdGenerator = false;
     private int simpleIdGeneratorCounter = 0;
+    private String mediaType;
 
-    private MARCMapper() {
+    private MARCMapper(String mediaType) {
+        this.mediaType = mediaType;
     }
 
-    MARCMapper(String cataloguingSourceUri, boolean simpleIdGenerator) {
+    MARCMapper(String mediaType, String cataloguingSourceUri, boolean simpleIdGenerator) {
+        this.mediaType = mediaType;
         this.cataloguingSourceUri = cataloguingSourceUri;
         this.simpleIdGenerator = simpleIdGenerator;
     }
 
-    MARCMapper(Target cataloguingSource) {
-        this(cataloguingSource.getCataloguingSourceUri(), false);
+    MARCMapper(String mediaType, Target cataloguingSource) {
+        this(mediaType,cataloguingSource.getCataloguingSourceUri(), false);
     }
 
-    MARCMapper(Target cataloguingSource, boolean simpleIdGenerator) {
-        this(cataloguingSource);
+    MARCMapper(String mediaType, Target cataloguingSource, boolean simpleIdGenerator) {
+        this(mediaType, cataloguingSource);
         this.simpleIdGenerator = simpleIdGenerator;
     }
 
@@ -91,7 +94,7 @@ public class MARCMapper {
         String workId = newBlankNodeId();
         work.setId(workId);
 
-        Publication publication = new Publication();
+        Publication publication = new Publication(mediaType);
         publication.setCataloguingSource(new ExternalDataObject(cataloguingSourceUri));
         publication.setPublicationOf(work);
         publication.setId(newBlankNodeId());
@@ -122,8 +125,6 @@ public class MARCMapper {
                     case "019":
                         setUriObject(dataField, 'a', "audience", Audience::translate, work::setAudience);
                         setUriObject(dataField, 'b', "format", Format::translate, publication::setFormat);
-                        setUriObject(dataField, 'b', "mediaType", MediaType::translateUnitedMediaType, publication::setUnitedMediaType);
-                        setUriObject(dataField, 'b', "mediaType", MediaType::translatePagedMediaType, publication::setPagedMediaType);
                         setUriObjectFixedValueWidth(dataField, 'd', 1, "literaryForm", LiteraryForm::translate, work::addLiteraryForm);
                         setUriObjectFixedValueWidth(dataField, 'e', 2, "contentAdaptation", ContentAdaption::translate, work::addContentAdaption);
                         setUriObjectFixedValueWidth(dataField, 'e', 2, "formatAdaptation", FormatAdaption::translate, publication::addFormatAdaption);

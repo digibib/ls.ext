@@ -67,7 +67,7 @@ public class SRUHttpClient implements ExternalCatalogue{
     }
 
     @Override
-    public final SearchResultInfo getByField(String targetString, String term, String parameter) throws IOException {
+    public final SearchResultInfo getByField(String targetString, String term, String parameter, String mediaType) throws IOException {
         Target target = Target.valueOf(targetString.toUpperCase());
         final StringWriter writer;
         writer = new StringWriter();

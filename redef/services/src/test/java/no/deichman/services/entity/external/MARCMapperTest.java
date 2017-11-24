@@ -26,29 +26,29 @@ public class MARCMapperTest extends MappingTester {
     @Test
     public void it_can_map_marc() {
         String marc = new ResourceReader().readFile("BS_external_data.xml");
-        List<Object> mapping = new BSMarcMapper(Target.BIBBI).getMapping(marc);
+        List<Object> mapping = new BSMarcMapper("Book", Target.BIBBI).getMapping(marc);
         assertNotNull(mapping);
-        checkMapping("BS_external_data.xml", "BS_external_data.json");
+        checkMapping("Book","BS_external_data.xml", "BS_external_data.json");
     }
 
     @Test
     public void it_maps_marc_with_work() {
-        checkMapping("BS_external_data_with_work.xml", "BS_external_with_work_raw_mapping.json");
+        checkMapping("Book","BS_external_data_with_work.xml", "BS_external_with_work_raw_mapping.json");
     }
 
     @Test
     public void it_maps_marc_with_extent() {
-        checkMapping("BS_external_data_with_extent.xml", "BS_external_with_extent.json");
+        checkMapping("Film","BS_external_data_with_extent.xml", "BS_external_with_extent.json");
     }
 
     @Test
     public void it_maps_bible() {
-        checkMapping("BS_external_data_bible.xml", "BS_external_data_bible.json");
+        checkMapping("Book","BS_external_data_bible.xml", "BS_external_data_bible.json");
     }
 
-    private void checkMapping(String marcXmlFile, String jsonFile) {
+    private void checkMapping(String mediaType, String marcXmlFile, String jsonFile) {
         String marc = new ResourceReader().readFile(marcXmlFile);
-        List<Object> mapping = new BSMarcMapper(Target.BIBBI, true).getMapping(marc);
+        List<Object> mapping = new BSMarcMapper(mediaType, Target.BIBBI, true).getMapping(marc);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         assertEquals(simplifyBNodes(new ResourceReader().readFile(jsonFile)), simplifyBNodes(gson.toJson(mapping)));
         assertThat(simplifyBNodes(new ResourceReader().readFile(jsonFile)),
