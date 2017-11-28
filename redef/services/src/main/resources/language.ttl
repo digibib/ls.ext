@@ -218,6 +218,10 @@ language:kan	a	lvont:Language ;
 	rdfs:label	"Kannada"@no ;
 	rdfs:label	"Kannada"@en .
 
+language:kaz	a	lvont:Language ;
+	rdfs:label	"Kasakhisk"@no ;
+	rdfs:label	"Kazakh"@en .
+
 language:cat	a	lvont:Language ;
 	rdfs:label	"Katalansk"@no ;
 	rdfs:label	"Catalan"@en .
