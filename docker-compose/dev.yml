@@ -24,7 +24,6 @@ services:
       context: "${LSEXTPATH:-..}/redef/services"
       dockerfile: Dockerfile.dev
     depends_on:
-      - build_services
       - fuseki
       - koha
     ports:

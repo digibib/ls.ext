@@ -11,7 +11,6 @@ volumes:
   koha_mysql_data: {}
   elasticsearch_data: {}
   fuseki_data: {}
-  services_build: {}
 
 services:
   koha:
@@ -137,15 +136,6 @@ services:
       options:
         max-size: "1m"
         max-file: "2"
-
-
-  build_services:
-    container_name: build_services
-    build:
-      context: "${LSEXTPATH:-..}/redef/services"
-      dockerfile: Dockerfile.build
-    volumes:
-      - "services_build:/services"
 
   services:
     container_name: services

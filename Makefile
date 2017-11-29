@@ -74,18 +74,7 @@ rebuild=$(DOCKER_COMPOSE_INIT) && $(DOCKER_COMPOSE) stop $(1) || true &&\
 
 rebuild_services:  			## Force rebuilds services
 	@echo "======= FORCE RECREATING SERVICES ======\n"
-	$(DOCKER_COMPOSE_INIT) &&\
-	$(DOCKER_COMPOSE) stop build_services || true &&\
-	$(DOCKER_COMPOSE) rm -f build_services || true &&\
-	docker volume rm dockercompose_services_build || true &&\
-	$(DOCKER_COMPOSE) build build_services &&\
-	$(DOCKER_COMPOSE) run build_services
-	docker run --rm \
-		   -v dockercompose_services_build:/from \
-		   -v $(LSEXTPATH)/redef/services/build:/to \
-			alpine ash -c 'cp /from/build/libs/services-1.0-SNAPSHOT-standalone.jar /to/'
 	$(call rebuild,services)
-	docker run --rm -v $(LSEXTPATH)/redef/services/build:/to alpine ash -c 'rm /to/services-1.0-SNAPSHOT-standalone.jar'
 
 rebuild_catalinker:					## Force rebuilds catalinker
 	@echo "======= FORCE RECREATING CATALINKER ======\n"
