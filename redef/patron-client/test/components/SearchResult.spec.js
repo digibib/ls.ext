@@ -15,6 +15,7 @@ function setup (resultPropOverrides) {
     locationQuery: { showStatus: 'test_relativeUri' },
     result: {
       mediaTypes: [],
+      mediaType: [],
       displayTitle: 'test_mainTitle',
       publication: {
         mainTitle: 'test_mainTitle',
@@ -91,6 +92,16 @@ describe('components', () => {
      expect(node.querySelector("[data-automation-id='work_contributors']").innerHTML).toContain(props.result.publication.contributors[ 0 ].agent.relativeUri)
      })
      */
+
+    // it('should render year from publication or work', () => {
+    //   const { node, props } = setup({
+    //     formats: [],
+    //     contributors: [],
+    //     work
+    //
+    //   })
+    //   expect(node.querySelector("[data-automation-id='publication_year']").innerHTML).toContain(props.result.publicationYear || props.result.workPublicationYear)
+    // })
 
     it('should render multiple contributors', () => {
       const { node, props } = setup({

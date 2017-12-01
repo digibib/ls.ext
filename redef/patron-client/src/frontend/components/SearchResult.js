@@ -33,6 +33,63 @@ class SearchResult extends React.Component {
     window.scrollTo(0, 0)
   }
 
+  renderYear (fictionNonfiction, publicationYear, workPublicationYear, mediaType) {
+    const parsedMediatype = mediaType[0]
+    switch (parsedMediatype) {
+      case 'Bok':
+        if (fictionNonfiction === 'http://data.deichman.no/fictionNonfiction#fiction') {
+          if (Array.isArray(workPublicationYear) && workPublicationYear.length === 0) {
+            this.parsedYear = Math.min(...publicationYear)
+            this.typeOfYear = 'published'
+          } else {
+            this.parsedYear = workPublicationYear
+            this.typeOfYear = 'published'
+          }
+        } else {
+          if (Array.isArray(publicationYear) && publicationYear.length === 0) {
+            return // Do not display year if the value is empty in the database, returns ar: -infinity
+          } else {
+            this.parsedYear = Math.max(...publicationYear) // Non-fiction
+            this.typeOfYear = 'ourLatestEdition'
+          }
+        }
+        break
+      case 'Film':
+        this.parsedYear = workPublicationYear
+        this.typeOfYear = 'productionYear'
+        break
+      case 'Noter':
+        this.parsedYear = workPublicationYear
+        this.typeOfYear = 'composed'
+        break
+      case 'Musikkopptak':
+        if (Array.isArray(workPublicationYear) && workPublicationYear.length === 0) {
+          this.parsedYear = Math.min(...publicationYear)
+          this.typeOfYear = 'originallyReleased'
+        } else {
+          this.parsedYear = workPublicationYear
+          this.typeOfYear = 'originallyReleased'
+        }
+        break
+      default:
+        this.parsedYear = workPublicationYear
+        this.typeOfYear = 'published'
+        break
+    }
+    if (Array.isArray(this.parsedYear) && this.parsedYear.length === 0) {
+      return // Do not display year if the value is empty in the database
+    } else {
+      return (
+            <p data-automation-id="work_or_publication_year" >
+              <span>
+                {/* <strong><FormattedMessage {...messages.published} /></strong> {(this.parsedYear)} */}
+                <strong><FormattedMessage {...messages[this.typeOfYear]} /></strong> {(this.parsedYear)}
+              </span>
+            </p>
+      )
+    }
+  }
+
   renderContributors (contributors) {
     if (contributors.length > 0) {
       return (
@@ -442,7 +499,8 @@ class SearchResult extends React.Component {
             {this.renderDisplayTitle(result)}
             {this.renderContributors(result.contributors)}
             {this.renderOriginalTitle(result.originalTitle)}
-            {/* this.renderSeries(result.publication) */}
+            {this.renderYear(result.fictionNonfiction, result.publicationYear, result.workPublicationYear, result.mediaType)}
+
             {result.abstract
               ? <p className="abstract" >{result.abstract}</p>
               : null
@@ -512,6 +570,31 @@ SearchResult.propTypes = {
 }
 
 export const messages = defineMessages({
+  published: {
+    id: 'SearchResult.published',
+    description: 'Label for Published',
+    defaultMessage: 'Published'
+  },
+  ourLatestEdition: {
+    id: 'SearchResult.ourLatestEdition',
+    description: 'Label for Our Latest Edition',
+    defaultMessage: 'Our Latest Edition'
+  },
+  originallyReleased: {
+    id: 'SearchResult.originallyReleased',
+    description: 'Label for Originally released',
+    defaultMessage: 'Originally Released'
+  },
+  composed: {
+    id: 'SearchResult.composed',
+    description: 'Label for Composed',
+    defaultMessage: 'Composed'
+  },
+  productionYear: {
+    id: 'SearchResult.productionYear',
+    description: 'Label for Production year',
+    defaultMessage: 'Production year'
+  },
   showBranchAvailability: {
     id: 'SearchResult.showBranchAvailability',
     description: 'Label for icon button showing availability info in branch',
