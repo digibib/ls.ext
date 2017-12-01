@@ -27,7 +27,7 @@ RUN gradle --no-daemon -x test build oneJar
 
 FROM java:8
 
-COPY --from=builder /services-1.0-SNAPSHOT-standalone.jar /services-1.0-SNAPSHOT-standalone.jar
+COPY --from=builder /services/build/libs/services-1.0-SNAPSHOT-standalone.jar /services-1.0-SNAPSHOT-standalone.jar
 
 ADD entrypoint.sh /entrypoint.sh
 
