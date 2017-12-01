@@ -12,6 +12,30 @@ Then setup environment with docker compose, sourcing the GITREF and KOHA_IMAGE_T
 
 # Releases
 
+## 2017.59
+
+KOHA: 4a1063d80f7a373c57bade03656a3cbf1d48f493
+GITREF:
+
+- Koha
+  - DEICH-929 Reminder på hentemelding
+  - DEICH-965 Åpne testbibliotekene for fjernlån
+  - DEICH-962 Når fjernlån er returnert burde innlevering i Koha trigge done-status
+  - DEICH-986 Feilmelding ved fjernlånsbestilling
+  - DEICH-991 Begrensning knyttet til 2. purring forsvinner ikke når purringen er betalt.
+  - DEICH-990 Legge til filial som innlånsavdeling
+  - DEICH-988 Fjernlånsbibliotek skal plasseres nederst i køen ved fjernlånsbestilling på materiale med venteliste.
+  - DEICH-987 Ved innlån skal henteavdeling aldri være fjernlan.
+  - DEICH-993 Lenke til bestillingsbibliotek/låner i ILL fungerer ikke
+  - DEICH-978 Hentenummer vises ikke alltid
+- Catalinker
+  - DEICH-994 Knappen "Neste steg: Beskrivelse" mangler i noen tilfeller
+- Patron-client
+  - DEICH-311 Lenke: Tilbake til søkeresultat
+  - DEICH-759 Slette reseravsjoner feiler i Edge
+  - DEICH-885 sok.deichman.no skaleres ikke til mobil i Samsungs android-nettleser
+  - DEICH-886 Feil i filter på mobil
+
 ## 2017.58
 
 KOHA: 4840796532dd9a95cf195db054a4363c8905876d
