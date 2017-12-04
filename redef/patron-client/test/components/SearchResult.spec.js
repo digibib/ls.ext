@@ -93,16 +93,6 @@ describe('components', () => {
      })
      */
 
-    // it('should render year from publication or work', () => {
-    //   const { node, props } = setup({
-    //     formats: [],
-    //     contributors: [],
-    //     work
-    //
-    //   })
-    //   expect(node.querySelector("[data-automation-id='publication_year']").innerHTML).toContain(props.result.publicationYear || props.result.workPublicationYear)
-    // })
-
     it('should render multiple contributors', () => {
       const { node, props } = setup({
         formats: [],
