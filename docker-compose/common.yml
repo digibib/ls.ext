@@ -249,9 +249,9 @@ services:
       - "-to=xkoha:${SIP_PORT:-6001}"
       - "-log-messages=true"
       - "-log-pre-transform=true"
-      - "-patron-session=true"
-      #- "-ensure-branch=true"
-      #- "-strip-barcode=true"
+      #- "-patron-session=true"
+      - "-ensure-branch=true"
+      - "-strip-barcode=true"
       #- "-extend-barcode=true"
       #- "-no-alert-if-same-branch=true"
     logging:
