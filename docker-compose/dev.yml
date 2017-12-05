@@ -81,6 +81,10 @@ services:
       TCP_PORT: 6006
       SIP_USER: rfidhub
       SIP_PASS: "${SIP_AUTOPASS:-autopass}"
+    command:
+      - "/koha-rfidhub2"
+      - "-rfid-timeout=10m"
+      - "-ws-proxy=false"
     logging:
       driver: "json-file"
       options:
