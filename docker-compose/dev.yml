@@ -66,6 +66,27 @@ services:
     ports:
       - "8101:9999"
 
+  rfidhub:
+    container_name: rfidhub
+    image: "digibib/rfidhub2:ef93aae6585c66ee2a2300c18a2ad0d1d500f240"
+    networks:
+      - backend
+    depends_on:
+      - sip_proxy
+    ports:
+      - "6006:6006"
+      - "8899:8899"
+    environment:
+      SIP_SERVER: sip_proxy:9999
+      TCP_PORT: 6006
+      SIP_USER: rfidhub
+      SIP_PASS: "${SIP_AUTOPASS:-autopass}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "2"
+
   cuke_tests:
     container_name: cuke_tests
     build:
