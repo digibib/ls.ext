@@ -17,6 +17,7 @@ function setup (propOverrides) {
   const props = {
     location: { pathname: '', query: {} },
     mediaQueryValues: { width: 992 },
+    patronCategory: 'V',
     ...propOverrides
   }
 

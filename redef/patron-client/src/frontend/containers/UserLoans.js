@@ -134,18 +134,28 @@ class UserLoans extends React.Component {
                 </h2>
               </div>
               <div className="flex-col pickup-location">
-                <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
-                {this.renderLibrarySelect(item)}
+                {this.props.patronCategory !== 'IL'
+                  ? (<div>
+                      <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
+                      {this.renderLibrarySelect(item)}
+                    </div>)
+                  : null
+                }
               </div>
               <div className="flex-col placeholder-column" />
               <div className="flex-col place-in-queue">
-                <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
-                <p data-automation-id="UserLoans_reservation_queue_place">
-                  {item.suspendUntil
-                    ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                    : this.renderWaitingPeriodInit(item)
-                  }
-                </p>
+                {this.props.patronCategory !== 'IL'
+                  ? (<div>
+                      <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
+                      <p data-automation-id="UserLoans_reservation_queue_place">
+                        {item.suspendUntil
+                          ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
+                          : this.renderWaitingPeriodInit(item)
+                        }
+                      </p>
+                    </div>)
+                  : null
+                }
               </div>
               <div className="flex-col resume-suspend-button">
                 {this.renderResumeSuspendReservationButton(item)}
@@ -394,6 +404,7 @@ class UserLoans extends React.Component {
 }
 
 UserLoans.propTypes = {
+  patronCategory: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
   profileActions: PropTypes.object.isRequired,
   loansAndReservations: PropTypes.object.isRequired,
@@ -589,6 +600,7 @@ export const messages = defineMessages({
 
 function mapStateToProps (state) {
   return {
+    patronCategory: state.profile.category,
     loansAndReservationError: state.profile.loansAndReservationError,
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations,
     loansAndReservations: state.profile.loansAndReservations,
