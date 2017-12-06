@@ -21,3 +21,7 @@ workType:Game a duo:WorkType ;
 workType:Other a duo:WorkType ;
   rdfs:label "Andre"@no ;
   rdfs:label "Other"@en .
+
+workType:Superwork a duo:WorkType ;
+  rdfs:label "Overordnet verk"@no ;
+  rdfs:label "Superwork"@en .
