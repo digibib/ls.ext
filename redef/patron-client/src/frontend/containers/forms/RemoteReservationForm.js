@@ -74,9 +74,11 @@ class RemoteReservationForm extends React.Component {
             <div className="remote-reservation-fields">
               <FormInputField name="userId" message={messages.userId} formName={formName}
                               getValidator={this.getValidator} />
+              {/* Hide comment field, until Norwegian NCIP profile as settled how to deal with it.
               <p><FormattedMessage {...messages.reserveLimitationNote} /></p>
               <FormInputField name="reservationComment" message={messages.reservationComment} formName={formName}
                               getValidator={this.getValidator} />
+              */}
             </div>
             <p>
               <strong><FormattedMessage {...messages.remoteReserveManagementInfoHeader} /></strong><br />
