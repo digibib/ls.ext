@@ -42,7 +42,7 @@ export function processSearchResponse (response, locationQuery) {
       result.relativeUri = relativeUri(result.workUri)
       result.subject = element._source.subject
       result.genre = element._source.genre
-      result.workPublicationYear = element._source.publicationYear || []
+      result.workPublicationYear = element._source.publicationYear
       result.fictionNonfiction = element._source.fictionNonfiction
       result.formats = []
       result.contributors = element._source.contributors || []
@@ -54,8 +54,7 @@ export function processSearchResponse (response, locationQuery) {
 
       if (element.inner_hits.publications.hits.hits.length > 0) {
         result.formats = [].concat.apply([], element.inner_hits.publications.hits.hits.map(pub => { return pub._source.formats || [] }))
-        result.publicationYear = [].concat.apply([], element.inner_hits.publications.hits.hits.map(pub => { return pub._source.publicationYear || [] }))
-        result.mediaType = [].concat.apply([], element.inner_hits.publications.hits.hits.map(pub => { return pub._source.mt || [] }))
+        result.publicationYears = [].concat.apply([], element.inner_hits.publications.hits.hits.map(pub => { return pub._source.publicationYear || [] }))
       }
 
       let selected // will be our selected publication for display, based on language criteria

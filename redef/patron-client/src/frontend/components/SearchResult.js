@@ -33,61 +33,50 @@ class SearchResult extends React.Component {
     window.scrollTo(0, 0)
   }
 
-  renderYear (fictionNonfiction, publicationYear, workPublicationYear, mediaType) {
-    const parsedMediatype = mediaType[0]
+  renderYear (fictionNonfiction, publicationYears, workPublicationYear, mediaTypes) {
+    // A result can have multiple metiatypes (for example book and audiobook), but
+    // for now we just consider one, arbritary mediatype:
+    const parsedMediatype = mediaTypes[0] ? mediaTypes[0].uri.substring(34) : 'Book' // strip http://data.deichman.no/mediaType#
+
+    let selectedYear = workPublicationYear // defaults to work publication year
+    let typeOfYear = 'published'
     switch (parsedMediatype) {
-      case 'Bok':
+      case 'Book':
         if (fictionNonfiction === 'http://data.deichman.no/fictionNonfiction#fiction') {
-          if (Array.isArray(workPublicationYear) && workPublicationYear.length === 0) {
-            this.parsedYear = Math.min(...publicationYear)
-            this.typeOfYear = 'published'
-          } else {
-            this.parsedYear = workPublicationYear
-            this.typeOfYear = 'published'
+          if (!workPublicationYear && publicationYears.length > 0) {
+            selectedYear = Math.min(...publicationYears)
           }
         } else {
-          if (Array.isArray(publicationYear) && publicationYear.length === 0) {
-            return // Do not display year if the value is empty in the database, returns ar: -infinity
-          } else {
-            this.parsedYear = Math.max(...publicationYear) // Non-fiction
-            this.typeOfYear = 'ourLatestEdition'
+          typeOfYear = 'ourLatestEdition'
+          if (publicationYears.length > 0) {
+            selectedYear = Math.max(...publicationYears)
           }
         }
         break
       case 'Film':
-        this.parsedYear = workPublicationYear
-        this.typeOfYear = 'productionYear'
+        typeOfYear = 'productionYear'
         break
-      case 'Noter':
-        this.parsedYear = workPublicationYear
-        this.typeOfYear = 'composed'
+      case 'SheetMusic':
+        typeOfYear = 'composed'
         break
-      case 'Musikkopptak':
-        if (Array.isArray(workPublicationYear) && workPublicationYear.length === 0) {
-          this.parsedYear = Math.min(...publicationYear)
-          this.typeOfYear = 'originallyReleased'
-        } else {
-          this.parsedYear = workPublicationYear
-          this.typeOfYear = 'originallyReleased'
+      case 'MusicRecording':
+        typeOfYear = 'originallyReleased'
+        if (!workPublicationYear && publicationYears.length > 0) {
+          selectedYear = Math.min(...publicationYears)
         }
-        break
-      default:
-        this.parsedYear = workPublicationYear
-        this.typeOfYear = 'published'
-        break
     }
-    if (Array.isArray(this.parsedYear) && this.parsedYear.length === 0) {
-      return // Do not display year if the value is empty in the database
-    } else {
-      return (
-            <p data-automation-id="work_or_publication_year" >
-              <span>
-                {/* <strong><FormattedMessage {...messages.published} /></strong> {(this.parsedYear)} */}
-                <strong><FormattedMessage {...messages[this.typeOfYear]} /></strong> {(this.parsedYear)}
-              </span>
-            </p>
-      )
+
+    if (!selectedYear) {
+      return
     }
+
+    return (
+        <p data-automation-id="work_or_publication_year" >
+          <span>
+            <strong><FormattedMessage {...messages[typeOfYear]} /></strong> {selectedYear}
+          </span>
+        </p>
+    )
   }
 
   renderContributors (contributors) {
@@ -499,7 +488,7 @@ class SearchResult extends React.Component {
             {this.renderDisplayTitle(result)}
             {this.renderContributors(result.contributors)}
             {this.renderOriginalTitle(result.originalTitle)}
-            {this.renderYear(result.fictionNonfiction, result.publicationYear, result.workPublicationYear, result.mediaType)}
+            {this.renderYear(result.fictionNonfiction, result.publicationYears || [], result.workPublicationYear, result.mediaTypes || [])}
 
             {result.abstract
               ? <p className="abstract" >{result.abstract}</p>
