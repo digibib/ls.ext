@@ -144,18 +144,15 @@ class UserLoans extends React.Component {
               </div>
               <div className="flex-col placeholder-column" />
               <div className="flex-col place-in-queue">
-                {this.props.patronCategory !== 'IL'
-                  ? (<div>
-                      <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
-                      <p data-automation-id="UserLoans_reservation_queue_place">
-                        {item.suspendUntil
-                          ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                          : this.renderWaitingPeriodInit(item)
-                        }
-                      </p>
-                    </div>)
-                  : null
-                }
+                <div>
+                  <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
+                  <p data-automation-id="UserLoans_reservation_queue_place">
+                    {item.suspendUntil
+                      ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
+                      : this.renderWaitingPeriodInit(item)
+                    }
+                  </p>
+                </div>
               </div>
               <div className="flex-col resume-suspend-button">
                 {this.renderResumeSuspendReservationButton(item)}
