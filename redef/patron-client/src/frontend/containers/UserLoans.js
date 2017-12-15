@@ -149,7 +149,7 @@ class UserLoans extends React.Component {
                   <p data-automation-id="UserLoans_reservation_queue_place">
                     {item.suspendUntil
                       ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                      : this.renderWaitingPeriodInit(item)
+                      : this.renderWaitingPeriodInit(item, this.props.patronCategory === 'IL')
                     }
                   </p>
                 </div>
@@ -172,8 +172,13 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderWaitingPeriodInit (item) {
+  renderWaitingPeriodInit (item, onlyShowQueueSpot) {
     if (item.queuePlace > 0) {
+      if (onlyShowQueueSpot) {
+        return <span>
+          {item.queuePlace}
+        </span>
+      }
       return <span>
         {item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}
         <Tooltip title={this.props.intl.formatMessage(messages.waitingTime)} position="top">
