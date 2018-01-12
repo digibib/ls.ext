@@ -130,6 +130,10 @@ nationality:burund a duo:Nationality ;
 	rdfs:label	"Burundi"@no ;
 	rdfs:label	"Burundi"@en .
 
+nationality:cat a duo:Nationality ;
+	rdfs:label	"Katalansk"@no ;
+	rdfs:label	"Catalan"@en .
+
 nationality:chil a duo:Nationality ;
 	rdfs:label	"Chile"@no ;
 	rdfs:label	"Chile"@en .
@@ -714,7 +718,7 @@ nationality:tchad a duo:Nationality ;
 	rdfs:label	"Tchad"@no ;
 	rdfs:label	"Chad"@en .
 
-nationality:thai a duo:Nationality ;
+nationality:th a duo:Nationality ;
 	rdfs:label	"Thailand"@no ;
 	rdfs:label	"Thailand"@en .
 
