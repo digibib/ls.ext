@@ -24,3 +24,6 @@ classificationSource:cdclass a duo:ClassificationSource ;
 classificationSource:dfb a duo:ClassificationSource ;
   rdfs:label "DFB"@en ;
   rdfs:label "DFB"@no .
+classificationSource:oldMusicDewey a duo:ClassificationSource ;
+  rdfs:label "Old music"@en ;
+  rdfs:label "Gammel musikk"@no .
