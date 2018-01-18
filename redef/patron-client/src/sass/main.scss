@@ -1285,6 +1285,52 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 }
 
+// login page
+// --------------------------------------------------------
+.login-page {
+  @include clearfix;
+  background: $greyColor;
+}
+
+@include breakpoint($small) {
+  .login-page form  {
+    @include span(8);
+    @include push(2);
+  }
+}
+@include breakpoint($medium) {
+  .login-page form  {
+    @include span(6);
+    @include push(3);
+  }
+}
+@include breakpoint($large) {
+  .login-page form  {
+    @include span(4);
+    @include push(4);
+  }
+}
+
+.login-page label, .login-page input, .login-page p, .login-page h4, .login-page hr, .login-page h1 {
+  @include span(8);
+}
+
+.login-page h4 {
+  font-weight: bold;
+  font-size: $rhythm3;
+  margin-top: $rhythm2;
+  margin-bottom: $rhythm0_2;
+}
+
+.login-page .cancel-link {
+  margin-left: $rhythm5;
+}
+
+.login-page input {
+  font-size: $rhythm3;
+  margin-bottom: $rhythm2;
+}
+
 // search results
 // --------------------------------------------------------
 

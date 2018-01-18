@@ -41,7 +41,7 @@ class SearchHeader extends React.Component {
   handleLoginClick (event) {
     event.preventDefault()
     this.props.mobileNavigationActions.hideMobileNavigation()
-    this.props.showLoginDialog(push({ pathname: '/profile/loans' }))
+    push({pathname: '/login'})
   }
 
   handleRegistrationClick (event) {
@@ -60,7 +60,7 @@ class SearchHeader extends React.Component {
     if (!this.props.isLoggedIn) {
       return [
         <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick} >
-          <Link to="/" >
+          <Link to="/login" >
             <FormattedMessage {...messages.logIn} /> <span >&raquo;</span >
           </Link >
         </li >

@@ -3,6 +3,7 @@ import { Route, IndexRoute } from 'react-router'
 
 import App from '../containers/App'
 import Search from '../containers/Search'
+import Login from '../containers/Login'
 import Work from '../containers/Work'
 import Person from '../containers/Person'
 import MyPage from '../containers/MyPage'
@@ -22,6 +23,7 @@ export default function (store) {
   const routes = (
     <Route path="/" component={App}>
       <IndexRoute component={Search} />
+      <Route path="login" component={Login} />
       <Route path="search" component={Search} />
       <Route path="work/:workId" component={Work} />
       <Route path="work/:workId/publication/:publicationId" component={Work} />
