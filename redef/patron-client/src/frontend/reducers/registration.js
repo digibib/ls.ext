@@ -4,7 +4,8 @@ import {
   REQUEST_CHECK_FOR_EXISTING_USER,
   CHECK_FOR_EXISTING_USER_SUCCESS,
   CHECK_FOR_EXISTING_USER_FAILURE,
-  HIDE_MODAL
+  REGISTRATION_SUCCESS,
+  REGISTRATION_FAILURE
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -47,8 +48,18 @@ export default function registration (state = initialState, action) {
         isCheckingForExistingUser: false,
         registrationError: action.payload.error
       }
-    case HIDE_MODAL:
-      return initialState
+    case REGISTRATION_SUCCESS:
+      return {
+        ...state,
+        isSuccess: action.payload.isSuccess,
+        username: action.payload.username,
+        categoryCode: action.payload.categoryCode
+      }
+    case REGISTRATION_FAILURE:
+      return {
+        ...state,
+        isError: true
+      }
     default:
       return state
   }

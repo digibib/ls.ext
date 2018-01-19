@@ -351,7 +351,7 @@ Given(/^at det finnes en person som ikke er låner$/) do
 end
 
 When(/^jeg trykker på logg inn$/) do
-  @browser.element(data_automation_id: 'login_element').click
+  @browser.goto patron_client_login_page
 end
 
 When(/^jeg trykker på registreringslenken$/) do

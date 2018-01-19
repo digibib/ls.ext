@@ -761,6 +761,10 @@ i {
   font-style: italic;
 }
 
+address {
+  font-style: normal;
+}
+
 // used for higlighting search terms
 em {
   background: $yellow;
@@ -1285,50 +1289,178 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 }
 
-// login page
-// --------------------------------------------------------
-.login-page {
+// form pages common
+// -------------------------------------------------------
+
+.default-form {
   @include clearfix;
   background: $greyColor;
+  padding: 1em
 }
 
 @include breakpoint($small) {
-  .login-page form  {
+  .default-form form  {
     @include span(8);
     @include push(2);
   }
 }
+
 @include breakpoint($medium) {
-  .login-page form  {
+  .default-form form  {
     @include span(6);
     @include push(3);
   }
 }
 @include breakpoint($large) {
-  .login-page form  {
-    @include span(4);
+  .default-form form  {
+    @include span(3);
     @include push(4);
   }
 }
 
-.login-page label, .login-page input, .login-page p, .login-page h4, .login-page hr, .login-page h1 {
-  @include span(8);
+.default-form label, .default-form input, .default-form p, .default-form h4, .default-form hr, .default-form h1, .default-form legend {
+  @include span(12);
 }
 
-.login-page h4 {
+.default-form label {
+  margin-top: $rhythm2;
+}
+
+.default-form h4, .default-form legend {
   font-weight: bold;
   font-size: $rhythm3;
   margin-top: $rhythm2;
   margin-bottom: $rhythm0_2;
 }
 
-.login-page .cancel-link {
+.default-form legend {
+ text-align: center;
+}
+
+.default-form .cancel-link {
   margin-left: $rhythm5;
 }
 
-.login-page input {
+.default-form input {
   font-size: $rhythm3;
-  margin-bottom: $rhythm2;
+}
+
+.default-form .error-msg {
+  @include container;
+  @include span(12);
+  margin-bottom: $rhythm4;
+}
+
+.default-form .error-msg p {
+  width: 100%;
+  margin: 0;
+}
+
+.default-form .feedback {
+  @include span(10);
+  color: $redColor;
+  font-size: $rhythm2_5;
+}
+
+.default-form select {
+  padding: 0.5625em;
+}
+
+.default-form a:hover {
+  cursor: pointer
+}
+
+// login page
+// --------------------------------------------------------
+
+.login-page {
+}
+
+// register page
+// --------------------------------------------------------
+
+.register-page .form-item > input, .register-page .form-item > .select-container {
+  @include span(12);
+  font-size: $rhythm3;
+}
+
+.register-page .select-container {
+  padding: 0.5625em;
+  margin-bottom: $rhythm3;
+}
+
+.register-page .date-of-birth .form-item {
+  @include span(4);
+}
+
+.register-page .date-of-birth .form-item:nth-child(3) {
+  margin-right: 0;
+}
+
+.register-page input#mobile, .register-page input#ssn {
+  max-width: 8em;
+}
+
+.register-page input#pin, .register-page input#repeatPin {
+  max-width: 4em;
+}
+
+.register-page input#day, .register-page input#month, .register-page input#year, .register-page input#zipcode {
+  max-width: 5em;
+}
+
+@include breakpoint($small) {
+
+  .register-page address {
+
+  }
+
+  .register-page address .form-item:first-child {
+    @include span(12 first);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .register-page address .form-item:nth-child(2) {
+    @include span(3);
+  }
+
+  .register-page address .form-item:nth-child(3) {
+    @include span(9 last);
+    margin-right: 0;
+  }
+
+  .register-page address .form-item label, .register-page address .form-item input, .register-page address .form-item .feedback {
+    margin-left: 0%;
+    @include span(12 first);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .register-page .terms_and_conditions .checkbox-wrapper {
+    width: 6.77966%;
+    float: left;
+    margin-right: 1.69492%;
+  }
+
+  .register-page .terms_and_conditions .checkbox-desc {
+    width: 91.52542%;
+    float: right;
+    margin-right: 0;
+    padding-top: 0.25em;
+  }
+
+  .register-page input#mobile, .register-page input#ssn {
+    max-width: 9em;
+  }
+
+  .register-page input#pin, .register-page input#repeatPin {
+    max-width: 4em;
+  }
+
+  .register-page input#day, .register-page input#month, .register-page input#year, .register-page input#zipcode {
+    max-width: inherit;
+  }
 }
 
 // search results
@@ -3339,316 +3471,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
     @include span(4);
     @include push(4);
   }
-}
-
-// modal - register
-// --------------------------------------------------------
-
-
-.register-modal {
-  @include clearfix;
-  max-width: 100%;
-  position: relative;
-  padding: $rhythm4;
-  background: $greyColor;
-  border-radius: 0.5em;
-  border: 1px solid $mediumGreyColor;
-  /**
-   * Max width for input fields
-   */
-}
-
-.register-modal .error-msg {
-  @include container;
-  @include span(12);
-  margin-bottom: $rhythm4;
-}
-
-.register-modal .error-msg p {
-  width: 100%;
-  margin: 0;
-}
-
-.register-modal .close-modal-button {
-  position: absolute;
-  background: $white;
-  border: 1px solid $blackColor;
-  border-radius: 1em;
-  width: 2em;
-  height: 2em;
-  top: -1em;
-  right: -1em;
-  font-size: 1em;
-  padding: 0;
-  margin: 0;
-}
-
-.register-modal .close-modal-button:hover {
-  background: $darkGreyColor;
-  color: $white;
-  cursor: pointer;
-}
-
-.register-modal h1 {
-  @include container;
-  @include span(12);
-  text-align: center;
-  font-family: 'open-sans', Arial, sans-serif;
-  font-weight: 600;
-  margin: 0;
-  font-size: $rhythm4;
-  font-size: normal;
-}
-
-.register-modal .form-item, .register-modal p {
-  margin-top: $rhythm1;
-  margin-bottom: $rhythm1;
-}
-
-.register-modal a:hover {
-  cursor: pointer;
-}
-
-.register-modal .cancel-link {
-  margin-left: $rhythm5;
-}
-
-.register-modal fieldset {
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-
-.register-modal fieldset:disabled label {
-  opacity: 0.35;
-}
-
-.register-modal fieldset:disabled input {
-  opacity: 0.35;
-}
-
-.register-modal .form-item {
-  @include clearfix;
-  @include container;
-  @include span(12);
-}
-
-.register-modal .form-item > label {
-  @include span(10);
-  @include push(1);
-}
-
-.register-modal .form-item > input, .register-modal .form-item > .select-container {
-  @include span(10);
-  @include push(1);
-  font-size: $rhythm3;
-}
-
-.register-modal p {
-  @include span(10);
-  @include push(1);
-}
-
-.register-modal legend {
-  @include span(10);
-  @include push(1);
-  margin-top: $rhythm2;
-  text-align: center;
-  font-size: $rhythm4;
-}
-
-.register-modal .feedback {
-  @include span(10);
-  @include push(1);
-  color: $redColor;
-  font-size: $rhythm2_5;
-}
-
-.register-modal .select-container {
-  padding: 0.5625em;
-  margin-bottom: $rhythm3;
-}
-
-.register-modal .terms_and_conditions {
-  @include clearfix;
-  @include span(10);
-  max-width: 100%;
-  @include push(1);
-}
-
-.register-modal .terms_and_conditions .checkbox-wrapper {
-  width: 15.25424%;
-  float: left;
-  margin-right: 1.69492%;
-}
-
-.register-modal .terms_and_conditions .checkbox-desc {
-  width: 83.05085%;
-  float: right;
-  margin-right: 0;
-}
-
-.register-modal .terms_and_conditions input[type="checkbox"] + label i {
-  font-size: $rhythm4;
-}
-
-.register-modal input#mobile, .register-modal input#ssn {
-  max-width: 8em;
-}
-
-.register-modal input#pin, .register-modal input#repeatPin {
-  max-width: 4em;
-}
-
-.register-modal input#day, .register-modal input#month, .register-modal input#year, .register-modal input#zipcode {
-  max-width: 5em;
-}
-
-@include breakpoint($small) {
-  .register-modal {
-   /**
-  * Max width for input fields
-  */
-  }
-
-  .register-modal address {
-    @include span(9);
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    @include push(1);
-  }
-
-
-  .register-modal address .form-item:first-child {
-    @include span(12 first);
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .register-modal address .form-item:nth-child(2) {
-    @include span(3);
-  }
-
-  .register-modal address .form-item:nth-child(3) {
-    @include span(9 last);
-    margin-right: 0;
-  }
-
-  .register-modal address .form-item label, .register-modal address .form-item input, .register-modal address .form-item .feedback {
-    margin-left: 0%;
-    @include span(12 first);
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .register-modal .date-of-birth {
-    @include span(9);
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    @include push(1);
-    @include clearfix;
-  }
-
-
-  .register-modal .date-of-birth .form-item {
-    @include span(4);
-  }
-
-  .register-modal .date-of-birth .form-item:nth-child(3) {
-    width: 32.20339%;
-    float: right;
-    margin-right: 0;
-  }
-
-  .register-modal .terms_and_conditions .checkbox-wrapper {
-    width: 6.77966%;
-    float: left;
-    margin-right: 1.69492%;
-  }
-
-  .register-modal .terms_and_conditions .checkbox-desc {
-    width: 91.52542%;
-    float: right;
-    margin-right: 0;
-    padding-top: 0.25em;
-  }
-
-  .register-modal input#mobile, .register-modal input#ssn {
-    max-width: 9em;
-  }
-
-  .register-modal input#pin, .register-modal input#repeatPin {
-    max-width: 4em;
-  }
-
-  .register-modal input#day, .register-modal input#month, .register-modal input#year, .register-modal input#zipcode {
-    max-width: inherit;
-  }
-}
-
-@include breakpoint($medium) {
-  .registration-modal-wrapper .modal-content {
-    @include span(8);
-    @include push(2);
-  }
-}
-
-@include breakpoint($large) {
-  .registration-modal-wrapper .modal-content {
-    @include span(6);
-    @include push(3);
-  }
-}
-
-.register-check-modal {
-  width: 95%;
-  height: auto;
-  padding: $rhythm6;
-  background: $white;
-  margin: 5% auto;
-  border-radius: 5px;
-}
-
-@include breakpoint($small) {
-  .register-check-modal {
-    width: 40%;
-  }
-}
-
-.register-check-modal h1 {
-  text-align: center;
-  font-family: 'open-sans', Arial, sans-serif;
-  font-weight: 600;
-}
-
-.register-check-modal h2 {
-  font-family: 'open-sans', Arial, sans-serif;
-  font-weight: 700;
-  margin-bottom: $rhythm1;
-}
-
-.register-check-modal h3 {
-  font-size: 16px;
-  text-align: center;
-}
-
-.register-check-modal input[type=text] {
-  width: 100%;
-}
-
-.register-check-modal button {
-  width: 100%;
-}
-
-.register-check-modal .date-of-birth .item {
-  display: inline-block;
-}
-
-.register-check-modal .date-of-birth .item input {
-  margin-right: $rhythm4;
-  width: 80px;
 }
 
 

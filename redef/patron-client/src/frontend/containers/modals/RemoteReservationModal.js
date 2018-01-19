@@ -46,7 +46,7 @@ class RemoteReservationModal extends React.Component {
       return this.renderSuccess()
     } else {
       return (
-        <section className="register-modal">
+        <section className="default-modal">
           <RemoteReservationForm messages={messages} />
         </section>
       )

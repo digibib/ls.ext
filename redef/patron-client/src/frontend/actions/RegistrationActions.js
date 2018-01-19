@@ -1,11 +1,5 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
-import { showModal } from './ModalActions'
-import ModalComponents from '../constants/ModalComponents'
-
-export function startRegistration () {
-  return showModal(ModalComponents.REGISTRATION, {})
-}
 
 export function requestPostRegistration () {
   return {
@@ -21,9 +15,6 @@ export function requestCheckForExistingUser () {
 
 export function postRegistrationFailure (error, message) {
   return dispatch => {
-    dispatch(showModal(ModalComponents.REGISTRATION, {
-      isError: true
-    }))
     dispatch({
       type: types.REGISTRATION_FAILURE,
       payload: { error: error, message: message },
@@ -34,12 +25,14 @@ export function postRegistrationFailure (error, message) {
 
 export function postRegistrationSuccess (username, password, categoryCode) {
   return dispatch => {
-    dispatch(showModal(ModalComponents.REGISTRATION, {
-      isSuccess: true,
-      username: username,
-      categoryCode: categoryCode
-    }))
-    dispatch({ type: types.REGISTRATION_SUCCESS })
+    dispatch({
+      type: types.REGISTRATION_SUCCESS,
+      payload: {
+        isSuccess: true,
+        username: username,
+        categoryCode: categoryCode
+      }
+    })
   }
 }
 
@@ -93,8 +86,6 @@ export function checkForExistingUser () {
 
 export function checkForExistingUserSuccess () {
   return dispatch => {
-    dispatch(showModal(ModalComponents.REGISTRATION, { checkForExistingUser: true }))
-    console.log('dispatched showmodal')
     dispatch({ type: types.CHECK_FOR_EXISTING_USER_SUCCESS })
   }
 }

@@ -3,9 +3,9 @@ import { reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { browserHistory } from 'react-router'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
-import * as ModalActions from '../../actions/ModalActions'
 import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartOne'
 import validator from '../../../common/validation/validator'
@@ -18,20 +18,13 @@ const formName = 'registrationPartOne'
 class RegistrationFormPartOne extends React.Component {
   constructor (props) {
     super(props)
-    this.handleCancel = this.handleCancel.bind(this)
     this.handleKey = this.handleKey.bind(this)
     this.handleKeyToggle = this.handleKeyToggle.bind(this)
   }
 
-  handleCancel (event) {
-    event.preventDefault()
-    this.props.modalActions.hideModal()
-  }
-
   handleKey (event) {
     if (event.keyCode === 32) { // Space for checkbox
-      event.preventDefault()
-      this.handleCancel(event)
+      browserHistory.goBack
     }
   }
 
@@ -77,8 +70,7 @@ class RegistrationFormPartOne extends React.Component {
                 data-automation-id="check_existing_user_button">
           <FormattedMessage {...messages.checkForExistingUser} />
         </button>
-
-        <a role="button" tabIndex="0" className="cancel-link" onKeyDown={this.handleKey} onClick={this.handleCancel} title="cancel"><FormattedMessage {...messages.cancel} /></a>
+        <a role="button" tabIndex="0" className="cancel-link" onKeyDown={this.handleKey} onClick={browserHistory.goBack} title="cancel"><FormattedMessage {...messages.cancel} /></a>
       </p>
     )
   }
@@ -124,13 +116,13 @@ class RegistrationFormPartOne extends React.Component {
         </div>
         <div disabled={this.props.checkForExistingUserSuccess}>
           <legend><FormattedMessage {...messages.ssnHeader} /></legend>
+          <FormInputField name="ssn" message={messages.ssn} formName={formName} getValidator={this.getValidator} />
           <p>
             <a role="button" tabIndex="0" aria-expanded={this.props.showSSNInfo} onKeyDown={this.handleKeyToggle} onClick={this.props.registrationActions.showSSNInfo} title="ssnLink">
               <FormattedMessage {...messages.ssnLink} />
             </a>
           </p>
           {this.props.showSSNInfo ? this.renderSSNInfo() : ''}
-          <FormInputField name="ssn" message={messages.ssn} formName={formName} getValidator={this.getValidator} />
           {this.props.isCheckingForExistingUser ? this.renderCheckingForExistingUser() : ''}
           {/* TODO: also handle all fields empty */}
           {this.props.checkForExistingUserSuccess ? null : this.renderContinueAndCancelButtons(submitting)}
@@ -251,7 +243,6 @@ export const messages = defineMessages({
 
 RegistrationFormPartOne.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  modalActions: PropTypes.object.isRequired,
   registrationActions: PropTypes.object.isRequired,
   fields: PropTypes.object,
   handleSubmit: PropTypes.func.isRequired,
@@ -288,8 +279,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    registrationActions: bindActionCreators(RegistrationActions, dispatch),
-    modalActions: bindActionCreators(ModalActions, dispatch)
+    registrationActions: bindActionCreators(RegistrationActions, dispatch)
   }
 }
 

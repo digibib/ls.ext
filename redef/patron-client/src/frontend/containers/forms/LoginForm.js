@@ -19,7 +19,6 @@ class LoginForm extends React.Component {
   constructor (props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
-    this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
   }
 
   handleLogin (event) {
@@ -29,11 +28,6 @@ class LoginForm extends React.Component {
       this.props.fields.values.password,
       this.props.successAction ? [ ModalActions.hideModal(), this.props.successAction ] : [ ModalActions.hideModal() ]
     )
-  }
-
-  handleRegistrationClick (event) {
-    event.preventDefault()
-    this.props.registrationActions.startRegistration()
   }
 
   closeModal () {
@@ -69,8 +63,8 @@ class LoginForm extends React.Component {
           </p>
           <p>
             Er du ikke registrert? <br />
-            <a href="#" data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer
-              deg</a>
+            <Link to="/register" data-automation-id="registration_link" title="register">Registrer
+              deg</Link>
           </p>
         </form>
       </div>

@@ -11,7 +11,6 @@ class SearchHeader extends React.Component {
     this.handleSearch = this.handleSearch.bind(this)
     this.handleLoginClick = this.handleLoginClick.bind(this)
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
-    this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
   }
 
   componentDidUpdate (prevprops, prevState) {
@@ -42,11 +41,6 @@ class SearchHeader extends React.Component {
     event.preventDefault()
     this.props.mobileNavigationActions.hideMobileNavigation()
     push({pathname: '/login'})
-  }
-
-  handleRegistrationClick (event) {
-    event.preventDefault()
-    this.props.startRegistration()
   }
 
   toggleMobileNav () {
@@ -94,8 +88,8 @@ class SearchHeader extends React.Component {
     if (!this.props.isLoggedIn) {
       return (
         <li data-automation-id="registration_element" >
-          <a href="#" onClick={this.handleRegistrationClick}
-             title="register" ><FormattedMessage {...messages.register} /><span >&raquo;</span ></a >
+          <Link to="/register"
+             title="register" ><FormattedMessage {...messages.register} /><span >&raquo;</span ></Link>
         </li >
       )
     }
@@ -258,7 +252,6 @@ SearchHeader.propTypes = {
   logout: PropTypes.func.isRequired,
   mediaQueryValues: PropTypes.object,
   intl: intlShape.isRequired,
-  startRegistration: PropTypes.func.isRequired,
   showMobileNavigation: PropTypes.bool.isRequired,
   mobileNavigationActions: PropTypes.object.isRequired,
   searchActions: PropTypes.object.isRequired,

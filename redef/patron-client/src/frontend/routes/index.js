@@ -10,6 +10,7 @@ import MyPage from '../containers/MyPage'
 import UserLoans from '../containers/UserLoans'
 import UserInfo from '../containers/UserInfo'
 import UserSettings from '../containers/UserSettings'
+import Register from '../containers/Register'
 import { requireLoginBeforeAction } from '../actions/LoginActions'
 import { SHOW_PRIVILEGED_ROUTE } from '../constants/ActionTypes'
 
@@ -28,7 +29,7 @@ export default function (store) {
       <Route path="work/:workId" component={Work} />
       <Route path="work/:workId/publication/:publicationId" component={Work} />
       <Route path="person/:personId" component={Person} />
-      <Route path="register" component={Search} />
+      <Route path="register" component={Register} />
       <Route path="profile" component={MyPage} onEnter={requireLogin}>
         <IndexRoute component={UserLoans} />
         <Route path="loans" component={UserLoans} />

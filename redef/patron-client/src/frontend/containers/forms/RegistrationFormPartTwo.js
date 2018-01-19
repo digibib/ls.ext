@@ -3,9 +3,9 @@ import { reduxForm } from 'redux-form'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { browserHistory } from 'react-router'
 
 import * as RegistrationActions from '../../actions/RegistrationActions'
-import * as ModalActions from '../../actions/ModalActions'
 import ValidationMessage from '../../components/ValidationMessage'
 import fields from '../../../common/forms/registrationPartTwo'
 import validator from '../../../common/validation/validator'
@@ -23,7 +23,6 @@ class RegistrationFormPartTwo extends React.Component {
     this.handleExpandedSSNInfo = this.handleExpandedSSNInfo.bind(this)
     this.handleAcceptTerms = this.handleAcceptTerms.bind(this)
     this.handleRegistration = this.handleRegistration.bind(this)
-    this.handleCancel = this.handleCancel.bind(this)
     this.handleKey = this.handleKey.bind(this)
   }
 
@@ -43,15 +42,9 @@ class RegistrationFormPartTwo extends React.Component {
     this.props.registrationActions.postRegistration()
   }
 
-  handleCancel (event) {
-    event.preventDefault()
-    this.props.modalActions.hideModal()
-  }
-
   handleKey (event) {
     if (event.keyCode === 32) { // Space for button
-      event.preventDefault()
-      this.handleCancel(event)
+      browserHistory.goBack
     }
   }
 
@@ -112,7 +105,7 @@ class RegistrationFormPartTwo extends React.Component {
                     data-automation-id="register_button">
               <FormattedMessage {...messages.register} />
             </button>
-            <a role="button" tabIndex="0" className="cancel-link" onKeyDown={this.handleKey} onClick={this.handleCancel}
+            <a role="button" tabIndex="0" className="cancel-link" onKeyDown={this.handleKey} onClick={browserHistory.goBack}
                title="cancel"><FormattedMessage {...messages.cancel} /></a>
           </p>
         </div>
@@ -231,7 +224,6 @@ export const messages = defineMessages({
 
 RegistrationFormPartTwo.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  modalActions: PropTypes.object.isRequired,
   registrationActions: PropTypes.object.isRequired,
   fields: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -268,8 +260,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    registrationActions: bindActionCreators(RegistrationActions, dispatch),
-    modalActions: bindActionCreators(ModalActions, dispatch)
+    registrationActions: bindActionCreators(RegistrationActions, dispatch)
   }
 }
 

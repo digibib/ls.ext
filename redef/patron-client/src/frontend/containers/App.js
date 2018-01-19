@@ -47,7 +47,6 @@ class App extends React.Component {
                       logout={this.props.loginActions.logout}
                       showLoginDialog={this.props.loginActions.showLoginDialog}
                       requireLoginBeforeAction={this.props.loginActions.requireLoginBeforeAction}
-                      startRegistration={this.props.registrationActions.startRegistration}
                       showMobileNavigation={this.props.showMobileNavigation}
                       mobileNavigationActions={this.props.mobileNavigationActions}
                       borrowerName={this.props.borrowerName}

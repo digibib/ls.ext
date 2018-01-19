@@ -122,6 +122,10 @@ module Paths
     "http://patron_client:#{port(:patron_client)}/?includeWithoutItems"
   end
 
+  def patron_client_login_page
+    "http://patron_client:#{port(:patron_client)}/login"
+  end
+
   def services(path=nil)
     paths = {
       :work => "/work",

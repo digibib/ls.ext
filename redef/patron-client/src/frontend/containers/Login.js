@@ -15,7 +15,6 @@ class Login extends React.Component {
   constructor (props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
-    this.handleRegistrationClick = this.handleRegistrationClick.bind(this)
   }
 
   handleLogin (event) {
@@ -25,11 +24,6 @@ class Login extends React.Component {
       this.props.fields.values.password,
       [push({ pathname: '/profile/loans' })]
     )
-  }
-
-  handleRegistrationClick (event) {
-    event.preventDefault()
-    this.props.registrationActions.startRegistration()
   }
 
   renderError () {
@@ -48,7 +42,7 @@ class Login extends React.Component {
 
   render () {
     return (
-      <section className="login-page">
+      <section className="login-page default-form">
         <form onSubmit={this.handleLogin}>
           {this.renderError()}
           <h1><FormattedMessage {...messages.logIn} /></h1>
@@ -65,7 +59,7 @@ class Login extends React.Component {
             </Link>
           </p>
           <h4>Er du ikke registrert?</h4>
-          <p><a href="#" data-automation-id="registration_link" onClick={this.handleRegistrationClick} title="register">Registrer deg</a></p>
+          <p><Link to="/register" data-automation-id="registration_link" title="register">Registrer deg</Link></p>
           <hr />
           <h4><FormattedMessage {...messages.forgotPin} /></h4>
           <p><FormattedMessage {...messages.forgotPinDesc} /></p>
