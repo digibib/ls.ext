@@ -11,6 +11,7 @@ class SearchHeader extends React.Component {
     this.handleSearch = this.handleSearch.bind(this)
     this.handleLoginClick = this.handleLoginClick.bind(this)
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
+    this.handleSearchClick = this.handleSearchClick.bind(this)
   }
 
   componentDidUpdate (prevprops, prevState) {
@@ -43,6 +44,11 @@ class SearchHeader extends React.Component {
     push({pathname: '/login'})
   }
 
+  handleSearchClick (event) {
+    event.preventDefault()
+    this.props.searchActions.toggleSearchBar(window.location.pathname)
+  }
+
   toggleMobileNav () {
     this.props.mobileNavigationActions.toggleMobileNavigation()
   }
@@ -50,10 +56,22 @@ class SearchHeader extends React.Component {
   /**
    * Links used in the menu and the mobile menu
    */
+
+  yourLibraryLink () {
+    return (
+      <a href="https://www.deichman.no/filialer">
+        <FormattedMessage {...messages.yourLibrary} /> <span >&raquo;</span >
+      </a>
+    )
+  }
+
   loginLink () {
     if (!this.props.isLoggedIn) {
       return [
         <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick} >
+          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+            <img className="icon" src="/images/profile24.svg" />
+          </MediaQuery>
           <Link to="/login" >
             <FormattedMessage {...messages.logIn} /> <span >&raquo;</span >
           </Link >
@@ -78,6 +96,9 @@ class SearchHeader extends React.Component {
     if (this.props.isLoggedIn) {
       return [
         <li key={3} >
+          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+            <img className="icon" src="/images/profile24.svg" />
+          </MediaQuery>
           <Link to="/profile/loans" ><FormattedMessage {...messages.myProfile} /> <span >&raquo;</span ></Link >
         </li >
       ]
@@ -87,7 +108,7 @@ class SearchHeader extends React.Component {
   registrationLink () {
     if (!this.props.isLoggedIn) {
       return (
-        <li data-automation-id="registration_element" >
+        <li key={4} data-automation-id="registration_element" >
           <Link to="/register"
              title="register" ><FormattedMessage {...messages.register} /><span >&raquo;</span ></Link>
         </li >
@@ -100,6 +121,20 @@ class SearchHeader extends React.Component {
       <li >
         <a href="https://www.deichman.no/sp%C3%B8rsm%C3%A5l_og_svar_nytt_biblioteksystem" >
           <FormattedMessage {...messages.faq} />
+          <span >&raquo;</span >
+        </a >
+      </li >
+    )
+  }
+
+  searchLink () {
+    return (
+      <li key={5} >
+        <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+          <img className="icon" src="/images/search24white.svg" />
+        </MediaQuery>
+        <a src="#" onClick={this.handleSearchClick}>
+          <FormattedMessage {...messages.search} />
           <span >&raquo;</span >
         </a >
       </li >
@@ -120,21 +155,21 @@ class SearchHeader extends React.Component {
    * Renders the menu, and/or the mobile menu
    */
   renderNavigationLinks () {
-    const { borrowerName } = this.props
     return (
       <ul >
-        {this.faqLink()}
+        { /* this.faqLink() */ }
         {this.profileLink()}
         {this.registrationLink()}
-        {borrowerName
+        { /* borrowerName
           ? (
             <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }} >
               <li >{this.loggedInMessage()}</li >
             </MediaQuery >
           )
-          : null}
+          : null */}
         {this.loginLink()}
         {this.logoutLink()}
+        {this.searchLink()}
       </ul >
     )
   }
@@ -142,17 +177,20 @@ class SearchHeader extends React.Component {
   renderMobileNavigationLinks () {
     return (
       <ul >
-        {this.faqLink()}
+        { /* this.faqLink() */}
+        <li key={0} >
+          {this.yourLibraryLink()}
+        </li>
         {this.profileLink()}
         {this.registrationLink()}
         {this.loginLink()}
         {this.logoutLink()}
+        {this.searchLink()}
       </ul >
     )
   }
 
   render () {
-    const { borrowerName } = this.props
     const mobileNavClass = this.props.showMobileNavigation ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
       <div >
@@ -163,11 +201,17 @@ class SearchHeader extends React.Component {
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="header"
-          className="wrapper" >
+          className="search-header" >
+
+          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+            <div className="your-library-link" >
+              <p>{this.yourLibraryLink()}</p>
+            </div >
+          </MediaQuery >
 
           <div className="logo" >
             <a href="https://www.deichman.no/" >
-              <img src="/images/logo.png" alt={this.props.intl.formatMessage(messages.logoAlt)} />
+              <img src="/images/logo_negative.svg" alt={this.props.intl.formatMessage(messages.logoAlt)} />
             </a >
           </div >
 
@@ -184,13 +228,13 @@ class SearchHeader extends React.Component {
             </nav >
           </MediaQuery >
 
-          {borrowerName
+          { /* borrowerName
             ? (<MediaQuery query="(max-width: 991px)" values={{ ...this.props.mediaQueryValues }} >
               <div className="logged-in-message" >
                 {this.loggedInMessage()}
               </div >
             </MediaQuery >)
-            : null}
+            : null */ }
 
         </NonIETransitionGroup >
 
@@ -207,11 +251,11 @@ class SearchHeader extends React.Component {
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="section"
-          className="search-box-wrapper"
-          role="search" >
-          <div className="search-box" >
+          className={this.props.enabled ? 'search-box-wrapper' : 'hidden'}
+          role="search">
+          <div className="search-box wrapper" >
             <form onSubmit={this.handleSearch} >
-              <label htmlFor="search" >{this.props.intl.formatMessage(messages.searchLabel)}:</label >
+              <label htmlFor="search" >{this.props.intl.formatMessage(messages.searchLabel)}</label >
               <div className="search-field-wrapper" >
                 <div className="search-field" >
                   <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
@@ -225,12 +269,7 @@ class SearchHeader extends React.Component {
                 <div className="search-button" >
                   <button onClick={this.handleSearch} type="button" className="search-submit"
                           data-automation-id="search_button" >
-                    {!this.props.isSearching
-                      ? <FormattedMessage {...messages.search} />
-                      : <span data-automation-id="is_searching" className="loading-spinner" >
-                          <i className="icon-spin4 animate-spin" style={{ color: '#fff' }} />
-                        </span >
-                    }
+                  <img src="/images/search16.svg" />
                   </button >
                 </div >
               </div >
@@ -257,14 +296,15 @@ SearchHeader.propTypes = {
   searchActions: PropTypes.object.isRequired,
   isSearching: PropTypes.bool.isRequired,
   borrowerName: PropTypes.string,
-  path: PropTypes.string.isRequired
+  path: PropTypes.string.isRequired,
+  enabled: PropTypes.bool.isRequired
 }
 
 export const messages = defineMessages({
   logoAlt: {
     id: 'SearchHeader.logoAlt',
     description: 'Alt text for the logo',
-    defaultMessage: 'Black logo with text'
+    defaultMessage: 'Deichman logo'
   },
   myProfile: {
     id: 'SearchHeader.myProfile',
@@ -325,6 +365,11 @@ export const messages = defineMessages({
     id: 'Navigation.loggedInAs',
     description: 'Shown then logged',
     defaultMessage: 'Logged in as:'
+  },
+  yourLibrary: {
+    id: 'Navigation.yourLibrary',
+    description: 'Link label to your library',
+    defaultMessage: 'Your library'
   }
 })
 

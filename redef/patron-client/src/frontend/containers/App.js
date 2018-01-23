@@ -52,6 +52,7 @@ class App extends React.Component {
                       borrowerName={this.props.borrowerName}
                       searchActions={this.props.searchActions}
                       isSearching={this.props.isSearching}
+                      enabled={this.props.displaySearchBar}
         />
         {this.props.children}
         <Footer loadLanguage={this.props.languageActions.loadLanguage} locale={this.props.locale} />
@@ -76,7 +77,8 @@ App.propTypes = {
   windowActions: PropTypes.object.isRequired,
   borrowerName: PropTypes.string,
   searchActions: PropTypes.object.isRequired,
-  isSearching: PropTypes.bool.isRequired
+  isSearching: PropTypes.bool.isRequired,
+  displaySearchBar: PropTypes.bool.isRequired
 }
 
 function mapStateToProps (state) {
@@ -86,7 +88,8 @@ function mapStateToProps (state) {
     isLoggedIn: state.application.isLoggedIn,
     showMobileNavigation: state.mobileNavigation.visible,
     borrowerName: state.profile.borrowerName,
-    isSearching: state.search.isSearching
+    isSearching: state.search.isSearching,
+    displaySearchBar: state.search.displaySearchBar
   }
 }
 

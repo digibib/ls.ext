@@ -90,12 +90,16 @@ class SearchFilters extends React.Component {
               </Link>
             </div>
           </Sticky>}
-            <header className="limit-filters-header">
-            <FormattedMessage {...messages.limit} />
-          </header>
 
           <section className="filter-wrapper"
                    data-automation-id="search_filters">
+            {this.props.locationQuery.hideFilters === Constants.enabledParameter
+              ? null
+              : <header className="limit-filters-header">
+                  <FormattedMessage {...messages.limit} />
+                </header>
+            }
+
             {this.props.locationQuery.hideFilters === Constants.enabledParameter
               ? null
               : <AvailableFilter

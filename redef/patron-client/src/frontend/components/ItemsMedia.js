@@ -26,7 +26,7 @@ class ItemsMedia extends React.Component {
       <div data-automation-id="work_items">
         <div className="flex-wrapper media-header">
           <div className="flex-item">
-            <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType ] ]} />
+            <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaType ] ]} />&nbsp;
             {mediaType ? intl.formatMessage({ id: mediaType }) : ''}
           </div>
           <div className="flex-item item-icon-button">
@@ -36,10 +36,10 @@ class ItemsMedia extends React.Component {
               {this.shouldShowBranchStatusMedia(`${branchCode}_${this.splitMediaType(mediaType)}`)
                 ? [(<span key={`show-less-content-media${branchCode}`} className="is-vishidden">
                         <FormattedMessage {...messages.showBranchAvailabilityMedia} />
-                      </span>), (<i key={`show-less-content-media-icon${branchCode}`} className="icon-minus" aria-hidden="true" />)]
+                      </span>), (<img src="images/minus.svg" key={`show-less-content-media-icon${branchCode}`} className="icon" aria-hidden="true" />)]
                 : [(<span key={`show-more-content-media${branchCode}`} className="is-vishidden">
                       <FormattedMessage {...messages.hideBranchAvailabilityMedia} />
-                      </span>), (<i key={`show-more-content-media-icon${branchCode}`} className="icon-plus" aria-hidden="true" />)]
+                      </span>), (<img src="images/plus.svg" key={`show-more-content-media-icon${branchCode}`} className="icon" aria-hidden="true" />)]
               }
             </button>
           </div>

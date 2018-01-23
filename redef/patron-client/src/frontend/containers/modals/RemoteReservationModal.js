@@ -16,7 +16,7 @@ class RemoteReservationModal extends React.Component {
         <p>
           <FormattedMessage {...messages.messageSuccess} />
         </p>
-        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
+        <button className="blue-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -32,7 +32,7 @@ class RemoteReservationModal extends React.Component {
             ? <FormattedMessage {...messages[ this.props.message ]} />
             : <FormattedMessage {...messages.genericReservationError} />}
         </p>
-        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
+        <button className="blue-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>

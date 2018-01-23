@@ -1,11 +1,16 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
-
 import FormPartTwo from './forms/RegistrationFormPartTwo'
 import NameAndSsnForm from './forms/RegistrationFormPartOne'
+import * as SearchActions from '../actions/SearchActions'
+import { bindActionCreators } from 'redux'
 
 class Register extends React.Component {
+  componentWillMount () {
+    this.props.searchActions.disableSearchBar()
+  }
+
   renderSuccess () {
     return (
       <div data-automation-id="registration_success_modal" className="default-form">
@@ -70,7 +75,8 @@ Register.propTypes = {
   isCheckingForExistingUser: PropTypes.bool,
   checkForExistingUserSuccess: PropTypes.bool,
   categoryCode: PropTypes.string,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  searchActions: PropTypes.bool.isRequired
 }
 
 const intlRegister = injectIntl(Register)
@@ -89,7 +95,8 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    dispatch: dispatch
+    dispatch: dispatch,
+    searchActions: bindActionCreators(SearchActions, dispatch)
   }
 }
 

@@ -101,7 +101,7 @@ class RegistrationFormPartTwo extends React.Component {
                                             type="checkbox"
           />
           <p>
-            <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
+            <button className="blue-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
                     data-automation-id="register_button">
               <FormattedMessage {...messages.register} />
             </button>

@@ -66,7 +66,7 @@ class RegistrationFormPartOne extends React.Component {
   renderContinueAndCancelButtons (submitting) {
     return (
       <p>
-        <button className="black-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
+        <button className="blue-btn" type="submit" disabled={submitting || this.hasInvalidFormFields()}
                 data-automation-id="check_existing_user_button">
           <FormattedMessage {...messages.checkForExistingUser} />
         </button>

@@ -1,4 +1,4 @@
-import { SEARCH_FAILURE, RECEIVE_SEARCH, REQUEST_SEARCH } from '../constants/ActionTypes'
+import { SEARCH_FAILURE, RECEIVE_SEARCH, REQUEST_SEARCH, TOGGLE_SEARCH_BAR, ENABLE_SEARCH_BAR, DISABLE_SEARCH_BAR } from '../constants/ActionTypes'
 
 const initialState = {
   searchResults: [],
@@ -8,8 +8,10 @@ const initialState = {
   totalHits: 0,
   totalHitsPublications: 0,
   searchError: false,
-  inputQuery: ''
+  inputQuery: '',
+  displaySearchBar: true
 }
+
 export default function search (state = initialState, action) {
   switch (action.type) {
     case RECEIVE_SEARCH:
@@ -33,6 +35,21 @@ export default function search (state = initialState, action) {
         ...state,
         isSearching: true,
         inputQuery: action.payload.inputQuery
+      }
+    case TOGGLE_SEARCH_BAR:
+      return {
+        ...state,
+        displaySearchBar: !state.displaySearchBar
+      }
+    case ENABLE_SEARCH_BAR:
+      return {
+        ...state,
+        displaySearchBar: true
+      }
+    case DISABLE_SEARCH_BAR:
+      return {
+        ...state,
+        displaySearchBar: false
       }
     default:
       return state

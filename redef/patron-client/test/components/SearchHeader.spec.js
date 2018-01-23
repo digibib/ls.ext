@@ -9,6 +9,7 @@ import { IntlProvider } from 'react-intl'
 
 function setup (propOverrides) {
   const props = {
+    enabled: true,
     locale: 'no',
     dispatch: expect.createSpy(),
     locationQuery: {},
@@ -78,19 +79,9 @@ describe('components', () => {
       })
     })
 
-    it('should show logged in username on desktop', () => {
-      const { node } = setup({ mediaQueryValues: { width: 992 }, borrowerName: 'test_borrowerName' })
-      expect(node.querySelector("[data-automation-id='borrowerName']").textContent).toEqual('test_borrowerName')
-    })
-
     it('should not show logged in user field when not logged in on desktop', () => {
       const { node } = setup({ mediaQueryValues: { width: 992 } })
       expect(node.querySelector("[data-automation-id='borrowerName']")).toEqual(undefined)
-    })
-
-    it('should show logged in username on mobile', () => {
-      const { node } = setup({ mediaQueryValues: { width: 600 }, borrowerName: 'test_borrowerName' })
-      expect(node.querySelector("[data-automation-id='borrowerName']").textContent).toEqual('test_borrowerName')
     })
 
     it('should not show logged in user field when not logged in on mobile', () => {

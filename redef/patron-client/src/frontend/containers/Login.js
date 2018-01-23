@@ -8,6 +8,7 @@ import { push } from 'react-router-redux'
 
 import FormInputField from '../components/FormInputField'
 import * as LoginActions from '../actions/LoginActions'
+import * as SearchActions from '../actions/SearchActions'
 import * as RegistrationActions from '../actions/RegistrationActions'
 const formName = 'loginForm'
 
@@ -15,6 +16,10 @@ class Login extends React.Component {
   constructor (props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
+  }
+
+  componentWillMount () {
+    this.props.searchActions.disableSearchBar()
   }
 
   handleLogin (event) {
@@ -49,7 +54,7 @@ class Login extends React.Component {
           <FormInputField name="username" message={messages.username} type="text" formName={formName} />
           <FormInputField name="password" message={messages.password} type="password" formName={formName} />
           <p>
-            <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}
+            <button className="blue-btn" type="submit" disabled={this.props.isRequestingLogin}
                     onClick={this.handleLogin}
                     data-automation-id="login_button">
               <FormattedMessage {...messages.logIn} />
@@ -72,6 +77,7 @@ class Login extends React.Component {
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
   loginActions: PropTypes.object.isRequired,
+  searchActions: PropTypes.object.isRequired,
   loginError: PropTypes.string,
   fields: PropTypes.object.isRequired,
   borrowerNumber: PropTypes.string,
@@ -136,7 +142,8 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     loginActions: bindActionCreators(LoginActions, dispatch),
-    registrationActions: bindActionCreators(RegistrationActions, dispatch)
+    registrationActions: bindActionCreators(RegistrationActions, dispatch),
+    searchActions: bindActionCreators(SearchActions, dispatch)
   }
 }
 

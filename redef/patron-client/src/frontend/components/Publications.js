@@ -323,11 +323,11 @@ class Publications extends React.Component {
                     onClickAction={this.props.toggleParameterValue}
                     onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
                     <h2 role="button" tabIndex="0" aria-expanded={!collapsePublications.includes(mediaTypeFragment)}>
-                      <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} aria-hidden="true" />
-                      {this.props.intl.formatMessage({ id: mediaTypeUri })}
+                      <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} aria-hidden="true" />&nbsp;
+                      {this.props.intl.formatMessage({ id: mediaTypeUri })} &nbsp;
                       {collapsePublications.includes(mediaTypeFragment)
-                        ? <i className="icon-down-open last" aria-hidden="true" />
-                        : <i className="icon-up-open last" aria-hidden="true" />}
+                        ? <img className="icon" src="/images/plus.svg" aria-hidden="true" />
+                        : <img className="icon" src="/images/minus.svg" aria-hidden="true" />}
                     </h2>
                   </ClickableElement>
                 </header>

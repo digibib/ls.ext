@@ -26,6 +26,7 @@ class Search extends React.Component {
 
   componentWillMount () {
     this.props.searchActions.search()
+    this.props.searchActions.enableSearchBar()
   }
 
   componentDidUpdate (prevProps) {
@@ -59,21 +60,23 @@ class Search extends React.Component {
   }
 
   renderPagination () {
+    const pageCount = Math.ceil(Math.min(this.props.totalHits, 10000) / Constants.maxSearchResultsPerPage)
+    const ofLabel = `av ${pageCount}`
     if ((this.props.totalHits > Constants.maxSearchResultsPerPage) && this.props.location.query.query) {
       return (
         <section className="pagination-area"
                  data-automation-id="search-results-pagination">
           <nav aria-label={this.props.intl.formatMessage(messages.paginationLabel)}>
             <ReactPaginate
-              previousLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationPrevious)}>&lt;</span>}
-              nextLabel={<span aria-label={this.props.intl.formatMessage(messages.paginationNext)}>&gt;</span>}
-              breakLabel={<span aria-hidden="true">...</span>}
+              previousLabel={this.props.intl.formatMessage(messages.paginationPrevious)}
+              nextLabel={this.props.intl.formatMessage(messages.paginationNext)}
+              breakLabel={<span aria-hidden="true">&nbsp;{ofLabel}</span>}
               forcePage={this.props.location.query.page - 1 || 0}
-              marginPagesDisplayed={1}
-              pageRangeDisplayed={5}
-              pageCount={Math.ceil(Math.min(this.props.totalHits, 10000) / Constants.maxSearchResultsPerPage)}
+              marginPagesDisplayed={0}
+              pageRangeDisplayed={0}
+              pageCount={pageCount}
               onPageChange={this.handlePageClick}
-              containerClassName={'pagination'}
+              containerClassName={'pagination wrapper'}
               subContainerClassName={'pages pagination'}
               activeClassName={'active'}
               items={this.props.items}
@@ -151,86 +154,87 @@ class Search extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="main"
-        role="main"
-        className="wrapper">
-        {this.props.locationQuery.query
-          ? (<div className="search-results-header">
-            <a href="#main-search-content" className="is-vishidden focusable">{this.props.intl.formatMessage(messages.jumpToMainContent)}</a>
-          <div className="search-results-summary">
-            {!this.props.isSearching && this.props.totalHitsPublications === 0
-             ? <div className="search-no-hits">
-                <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
-                <SearchFilterBox
+        role="main">
+          <div>
+          {this.props.locationQuery.query
+            ? (<div className="search-results-header">
+              <a href="#main-search-content" className="is-vishidden focusable">{this.props.intl.formatMessage(messages.jumpToMainContent)}</a>
+            <div className="search-results-summary">
+              {!this.props.isSearching && this.props.totalHitsPublications === 0
+               ? <div className="search-no-hits">
+                  <p>{this.props.intl.formatMessage(messages.noHitsHeading)}</p>
+                  <SearchFilterBox
+                    path={this.props.location.pathname}
+                    query={this.props.locationQuery}
+                    toggleFilter={this.props.searchFilterActions.toggleFilter}
+                    removePeriod={this.props.searchFilterActions.removePeriod}
+                    toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                    removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
+                  <p>{this.props.intl.formatMessage(messages.noHitsTry)}</p>
+                  <ul>
+                    <li>{this.props.intl.formatMessage(messages.noHitsTryA)}</li>
+                    <li>{this.props.intl.formatMessage(messages.noHitsTryB)}</li>
+                    <li>{this.props.intl.formatMessage(messages.noHitsTryC)}</li>
+                    <li>{this.props.intl.formatMessage(messages.noHitsTryD)}</li>
+                  </ul>
+                </div>
+                : null }
+            </div>
+              {this.props.totalHits > 0
+                ? <SearchFilterBox
                   path={this.props.location.pathname}
                   query={this.props.locationQuery}
                   toggleFilter={this.props.searchFilterActions.toggleFilter}
                   removePeriod={this.props.searchFilterActions.removePeriod}
                   toggleAvailability={this.props.searchFilterActions.toggleAvailability}
                   removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
-                <p>{this.props.intl.formatMessage(messages.noHitsTry)}</p>
-                <ul>
-                  <li>{this.props.intl.formatMessage(messages.noHitsTryA)}</li>
-                  <li>{this.props.intl.formatMessage(messages.noHitsTryB)}</li>
-                  <li>{this.props.intl.formatMessage(messages.noHitsTryC)}</li>
-                  <li>{this.props.intl.formatMessage(messages.noHitsTryD)}</li>
-                </ul>
-              </div>
-              : null }
-          </div>
+                : null}
             {this.props.totalHits > 0
-              ? <SearchFilterBox
-                path={this.props.location.pathname}
-                query={this.props.locationQuery}
-                toggleFilter={this.props.searchFilterActions.toggleFilter}
-                removePeriod={this.props.searchFilterActions.removePeriod}
-                toggleAvailability={this.props.searchFilterActions.toggleAvailability}
-                removeAllFilters={this.props.searchFilterActions.removeAllFilters} />
-              : null}
-          {this.props.totalHits > 0
-            ? (<div className="search-sorting patron-placeholder">
-            <p>Sorter treff på</p>
+              ? (<div className="search-sorting patron-placeholder">
+              <p>Sorter treff på</p>
 
-            <div className="search-sorting-select-box">
-              <select>
-                <option defaultValue>Årstall</option>
-                <option>Nyeste</option>
-                <option>Eldre</option>
-              </select>
-            </div>
-          </div>) : null}
-        </div>)
-          : null}
-        {this.props.totalHits > 0
-          ? <div className="search-wrapper">
-            <div className="sticky-wrapper">
-            {this.manageMobileHeaders()}
-            </div>
-              <SearchResults key="search_results"
-                           locationQuery={this.props.location.query}
-                           searchActions={this.props.searchActions}
-                           searchResults={this.props.searchResults}
-                           totalHits={this.props.totalHits}
-                           searchError={this.props.searchError}
-                           fetchWorkResource={this.props.resourceActions.fetchWorkResource}
-                           resources={this.props.resources}
-                           page={Number(this.props.location.query.page || '1')}
-                           items={this.props.items}
-                           homeBranch={this.props.userProfile.homeBranch}
-                           filters={this.props.filters}
-                           toggleFilter={this.props.searchFilterActions.toggleFilter}
-                           toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
-                           toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
-                           toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
-                           togglePeriod={this.props.searchFilterActions.togglePeriod}
-                           toggleAvailability={this.props.searchFilterActions.toggleAvailability}
-                           toggleHideNoItems={this.props.searchFilterActions.toggleHideNoItems}
-                           scrollTargetNode={this}
-                           isSearching={this.props.isSearching}
-                           windowWidth={this.props.windowWidth}
-              />
-            </div>
-          : null}
-        {this.renderPagination()}
+              <div className="search-sorting-select-box">
+                <select>
+                  <option defaultValue>Årstall</option>
+                  <option>Nyeste</option>
+                  <option>Eldre</option>
+                </select>
+              </div>
+            </div>) : null}
+          </div>)
+            : null}
+          {this.props.totalHits > 0
+            ? <div className="wrapper search-wrapper">
+              <div className="sticky-wrapper">
+              {this.manageMobileHeaders()}
+              </div>
+                <SearchResults key="search_results"
+                             locationQuery={this.props.location.query}
+                             searchActions={this.props.searchActions}
+                             searchResults={this.props.searchResults}
+                             totalHits={this.props.totalHits}
+                             searchError={this.props.searchError}
+                             fetchWorkResource={this.props.resourceActions.fetchWorkResource}
+                             resources={this.props.resources}
+                             page={Number(this.props.location.query.page || '1')}
+                             items={this.props.items}
+                             homeBranch={this.props.userProfile.homeBranch}
+                             filters={this.props.filters}
+                             toggleFilter={this.props.searchFilterActions.toggleFilter}
+                             toggleFilterVisibility={this.props.searchFilterActions.toggleFilterVisibility}
+                             toggleAllFiltersVisibility={this.props.searchFilterActions.toggleAllFiltersVisibility}
+                             toggleCollapseFilter={this.props.searchFilterActions.toggleCollapseFilter}
+                             togglePeriod={this.props.searchFilterActions.togglePeriod}
+                             toggleAvailability={this.props.searchFilterActions.toggleAvailability}
+                             toggleHideNoItems={this.props.searchFilterActions.toggleHideNoItems}
+                             scrollTargetNode={this}
+                             isSearching={this.props.isSearching}
+                             windowWidth={this.props.windowWidth}
+                />
+              </div>
+            : null}
+          {this.renderPagination()}
+          </div>
       </NonIETransitionGroup>
     )
   }

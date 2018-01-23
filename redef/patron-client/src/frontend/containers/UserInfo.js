@@ -115,9 +115,9 @@ class UserInfo extends React.Component {
     return (
       <footer className={classNames.join(' ')}>
         {editable
-          ? <button className="black-btn" type="button" onClick={this.handleSubmit} data-automation-id="save_profile_changes_button">
+          ? <button className="blue-btn" type="button" onClick={this.handleSubmit} data-automation-id="save_profile_changes_button">
           <FormattedMessage {...messages.saveChanges} /></button>
-          : <button className="black-btn" type="button" onClick={this.handleChangeClick} data-automation-id="change_profile_info_button">
+          : <button className="blue-btn" type="button" onClick={this.handleChangeClick} data-automation-id="change_profile_info_button">
           <FormattedMessage {...messages.editPersonalInfo} /></button>}
         {/* <div className="last-updated">
           <FormattedMessage {...messages.lastUpdated} />:&nbsp;

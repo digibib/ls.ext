@@ -89,7 +89,7 @@ class UserLoans extends React.Component {
                 <div className="flex-col cancel-button">
                   <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.id}>
-                    <button className="black-btn" data-automation-id="cancel_reservation_button">
+                    <button className="blue-btn" data-automation-id="cancel_reservation_button">
                       <FormattedMessage {...messages.cancelReservation} />
                     </button>
                   </ClickableElement>
@@ -160,7 +160,7 @@ class UserLoans extends React.Component {
               <div className="flex-col reserve-cancel-button">
                 <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.id}>
-                  <button className="black-btn" data-automation-id="cancel_reservation_button">
+                  <button className="small-blue-btn" data-automation-id="cancel_reservation_button">
                     <FormattedMessage {...messages.cancelReservation} />
                   </button>
                 </ClickableElement>
@@ -263,12 +263,12 @@ class UserLoans extends React.Component {
           : (
           <ClickableElement onClickAction={this.props.reservationActions.suspendReservation}
                             onClickArguments={[ item.id, !item.suspended ]}>
-            <button className={`${item.suspended ? 'black-btn red-btn' : 'black-btn'} ${item.queuePlace === '0' ? 'is-hidden' : ''}`}
+            <button className={`${item.suspended ? 'small-blue-btn' : 'small-blue-btn'} ${item.queuePlace === '0' ? 'is-hidden' : ''}`}
                     disabled={this.props.isRequestingChangeReservationSuspension !== false}
                     data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
               {item.suspended
-                ? <span><span className="btn-icon"><i className="icon-play" aria-hidden="true" /></span><FormattedMessage {...messages.resumeReservation} /></span>
-                : <span><span className="btn-icon"><i className="icon-pause" aria-hidden="true" /></span><FormattedMessage {...messages.suspendReservation} /></span>}
+                ? <span><span className="btn-icon"><img className="icon" src="/images/play.svg" aria-hidden="true" /></span><FormattedMessage {...messages.resumeReservation} /></span>
+                : <span><span className="btn-icon"><img className="icon" src="/images/pause.svg" aria-hidden="true" /></span><FormattedMessage {...messages.suspendReservation} /></span>}
             </button>
           </ClickableElement>
         )}
@@ -318,7 +318,7 @@ class UserLoans extends React.Component {
               <div className="flex-col renew-button">
                 <ClickableElement onClickAction={this.props.loanActions.startExtendLoan}
                                   onClickArguments={item.id}>
-                  <button className="black-btn" disabled={item.renewalStatus}>
+                  <button className="small-blue-btn" disabled={item.renewalStatus}>
                     <FormattedMessage {...messages.extendLoan} />
                   </button>
                 </ClickableElement>
@@ -380,7 +380,7 @@ class UserLoans extends React.Component {
       return (
         <ClickableElement onClickAction={this.props.loanActions.startExtendAllLoans}
                           onClickArguments={[this.props.loansAndReservations.loans]}>
-          <button className="renew-all-button black-btn"
+          <button className="renew-all-button small-blue-btn"
                   disabled={this.props.hasRequestedRenewAll}
                   data-automation-id="UserLoans_extend_all_loans_button">
               <FormattedMessage {...messages.renewAllLoans} />

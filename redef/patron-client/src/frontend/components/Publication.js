@@ -22,7 +22,7 @@ class Publication extends React.Component {
         <div className="book-cover missing">
           <ClickableElement onClickAction={this.props.expandSubResource}
                             onClickArguments={[ this.props.publication.id, true ]}>
-            <i className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[ 0 ] ] ]} />
+            <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[ 0 ] ] ]} />
           </ClickableElement>
         </div>
       )
@@ -83,7 +83,7 @@ class Publication extends React.Component {
             !publication.mediaTypes.includes('http://data.deichman.no/mediaType#Periodical') ? (
             <div className="reserve-button">
               <ClickableElement onClickAction={startReservation} onClickArguments={publication}>
-                <button className="red-btn" type="button"
+                <button className="small-blue-btn" type="button"
                         data-automation-id={`recordId_${publication.recordId}`}>
                   <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
                 </button>
@@ -99,7 +99,7 @@ class Publication extends React.Component {
             <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>
               <button data-automation-id="publication_close_show_more_info" aria-expanded="true">
                 <FormattedMessage {...messages.hideInfo} />
-                <i className="icon-up-open" aria-hidden="true" />
+                <img className="icon" src="/images/minus.svg" aria-hidden="true" />
               </button>
             </ClickableElement>
           ) : (
@@ -107,7 +107,7 @@ class Publication extends React.Component {
                               onClickArguments={[ this.props.publication.id, true ]}>
               <button type="button" data-automation-id="publication_open_show_more_info" aria-expanded="false">
                 <FormattedMessage {...messages.showInfo} />
-                <i className="icon-down-open" aria-hidden="true" />
+                <img className="icon"src="/images/plus.svg" aria-hidden="true" />
               </button>
             </ClickableElement>
           )}

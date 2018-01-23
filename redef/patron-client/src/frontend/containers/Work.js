@@ -11,12 +11,14 @@ import Publications from '../components/Publications'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ParameterActions from '../actions/ParameterActions'
+import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
 import AdditionalInformationContent from '../components/work/AdditionalInformationContent'
 
 class Work extends React.Component {
   componentWillMount () {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
+    this.props.searchActions.disableSearchBar()
   }
 
   // Force reload when router changes workId in URI
@@ -132,49 +134,51 @@ class Work extends React.Component {
     const { back } = this.props.location.query
 
     return (
-      <main role="main" className="wrapper">
-        <NonIETransitionGroup
-          transitionName="fade-in"
-          transitionAppear
-          transitionAppearTimeout={500}
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={500}
-          component="article"
-          className="work-entry">
-          {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
-            ? (
-            <header className="back-to-results">
-              <Link to={this.props.location.query.back}>
-                <i className="icon-angle-double-left" aria-hidden="true" /><FormattedMessage {...messages.backToSearchResults} />
-              </Link>
-            </header>
-          ) : ''}
+      <div className="white">
+        <main role="main" className="wrapper">
+          <NonIETransitionGroup
+            transitionName="fade-in"
+            transitionAppear
+            transitionAppearTimeout={500}
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={500}
+            component="article"
+            className="work-entry wrapper">
+            {back && back.startsWith('/search') // We don't want to allow arbitrary URLs in the back parameter
+              ? (
+              <header className="back-to-results">
+                <Link to={this.props.location.query.back}>
+                  <i className="icon-angle-double-left" aria-hidden="true" /><FormattedMessage {...messages.backToSearchResults} />
+                </Link>
+              </header>
+            ) : ''}
 
-          <WorkInformation work={work} publicationId={this.props.params.publicationId}
-                           showAdditionalInformation={this.props.showAdditionalInformation.includes(work.id)}
-                           toggleShowAdditionalInformation={this.props.resourceActions.toggleShowAdditionalInformation} />
+            <WorkInformation work={work} publicationId={this.props.params.publicationId}
+                             showAdditionalInformation={this.props.showAdditionalInformation.includes(work.id)}
+                             toggleShowAdditionalInformation={this.props.resourceActions.toggleShowAdditionalInformation} />
 
-          <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
-            <AdditionalInformationContent work={work} />
-          </MediaQuery>
-          {/* this.renderAvailableMediaTypes(work.publications) */}
+            <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
+              <AdditionalInformationContent work={work} />
+            </MediaQuery>
+            {/* this.renderAvailableMediaTypes(work.publications) */}
 
-          <Publications
-            path={this.props.location.pathname}
-            locationQuery={this.props.location.query}
-            expandSubResource={this.props.resourceActions.expandSubResource}
-            publications={publicationsWithItems}
-            startReservation={this.props.reservationActions.startReservation}
-            toggleParameterValue={this.props.parameterActions.toggleParameterValue}
-            workLanguage={work.language}
-            libraries={this.props.libraries}
-            audiences={Array.isArray(this.props.resources[ this.props.params.workId ].audience) ? this.props.resources[ this.props.params.workId ].audience : [ this.props.resources[ this.props.params.workId ].audience ]}
-            searchFilterActions={this.props.searchFilterActions}
-            query={this.props.query} />
+            <Publications
+              path={this.props.location.pathname}
+              locationQuery={this.props.location.query}
+              expandSubResource={this.props.resourceActions.expandSubResource}
+              publications={publicationsWithItems}
+              startReservation={this.props.reservationActions.startReservation}
+              toggleParameterValue={this.props.parameterActions.toggleParameterValue}
+              workLanguage={work.language}
+              libraries={this.props.libraries}
+              audiences={Array.isArray(this.props.resources[ this.props.params.workId ].audience) ? this.props.resources[ this.props.params.workId ].audience : [ this.props.resources[ this.props.params.workId ].audience ]}
+              searchFilterActions={this.props.searchFilterActions}
+              query={this.props.query} />
 
-        </NonIETransitionGroup>
+          </NonIETransitionGroup>
 
-      </main>
+        </main>
+      </div>
     )
   }
 }
@@ -190,6 +194,7 @@ Work.propTypes = {
   parameterActions: PropTypes.object.isRequired,
   query: PropTypes.object.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
+  searchActions: PropTypes.object.isRequired,
   libraries: PropTypes.object.isRequired,
   items: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
@@ -251,7 +256,8 @@ function mapDispatchToProps (dispatch) {
     resourceActions: bindActionCreators(ResourceActions, dispatch),
     reservationActions: bindActionCreators(ReservationActions, dispatch),
     parameterActions: bindActionCreators(ParameterActions, dispatch),
-    searchFilterActions: bindActionCreators(SearchFilterActions, dispatch)
+    searchFilterActions: bindActionCreators(SearchFilterActions, dispatch),
+    searchActions: bindActionCreators(SearchActions, dispatch)
   }
 }
 

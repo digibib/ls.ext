@@ -100,15 +100,15 @@ class SearchFilter extends React.Component {
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
-        className={this.props.first ? 'filter-group-first' : 'filter-group'}
+        className="filter-group"
         data-automation-id={`filter_${this.props.aggregation}`}>
         <header className="filterTitle" onClick={this.handleCollapse}>
           <h1>{this.renderTitle()}</h1>
           <button className="single-filter-close" type="button"
                   aria-label={buttonAriaLabel} aria-expanded={!this.isCollapsed()}>
             {this.isCollapsed()
-              ? <i className="icon-plus" aria-hidden />
-              : <i className="icon-minus" aria-hidden />}
+              ? <img className="icon" src="images/plus.svg" />
+              : <img className="icon" src="images/minus.svg" /> }
           </button>
         </header>
         {this.isCollapsed() ? null

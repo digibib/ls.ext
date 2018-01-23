@@ -14,7 +14,8 @@ function setup (propOverrides) {
   const props = {
     searchActions: {
       search: expect.createSpy(),
-      toggleListView: () => {}
+      toggleListView: () => {},
+      enableSearchBar: () => {}
     },
     searchResults: [],
     isSearching: false,
@@ -90,7 +91,7 @@ describe('containers', () => {
         totalHits: Constants.maxSearchResultsPerPage * 3
       })
       expect(node.querySelector("[data-automation-id='search-results-pagination']")
-        .getElementsByClassName('pagination')[ 0 ].children.length).toBe(5) // including next and prev
+        .getElementsByClassName('pagination')[ 0 ].children.length).toBe(4) // including next and prev
     })
   })
 })

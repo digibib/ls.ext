@@ -317,13 +317,13 @@ module.exports = {
     '': 'undefined'
   },
   mediaTypeIconsMap: {
-    'book': 'icon-book',
-    'audiobook': 'icon-audiobook',
-    'music': 'icon-music',
-    'music-note': 'icon-music',
-    'movie': 'icon-movie',
-    'play': 'icon-cd',
-    'undefined': 'icon-help'
+    'book': '/images/book24.svg',
+    'audiobook': '/images/headset24.svg',
+    'music': '/images/music24.svg',
+    'music-note': '/images/music24.svg',
+    'movie': '/images/movie24.svg',
+    'play': '/images/game24.svg',
+    'undefined': '/images/help24.svg'
   },
   preferredLanguages: [
     'http://lexvo.org/id/iso639-3/nob',

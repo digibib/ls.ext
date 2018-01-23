@@ -93,7 +93,7 @@ class PostponeReservationForm extends React.Component {
           </div>
         </div>
         <button
-          className="black-btn"
+          className="blue-btn"
           data-automation-id="postpone_reserve_button"
           type="button"
           disabled={submitting}

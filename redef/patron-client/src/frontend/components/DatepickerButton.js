@@ -6,7 +6,7 @@ class DatepickerButton extends React.Component {
       <button
         className="date-picker-button"
         onClick={this.props.onClick}>
-        <i className="icon-calendar" aria-hidden="true" />
+        <img className="icon" src="/images/calendar.svg" aria-hidden="true" />
       </button>
     )
   }

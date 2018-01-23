@@ -16,7 +16,8 @@ describe('reducers', () => {
         totalHits: 0,
         totalHitsPublications: 0,
         searchError: false,
-        inputQuery: ''
+        inputQuery: '',
+        displaySearchBar: true
       })
     })
 

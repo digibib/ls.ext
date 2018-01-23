@@ -69,7 +69,7 @@ class DateRangeFilter extends React.Component {
                         maxLength="4"
         />
         <button
-          className="black-btn"
+          className="blue-btn"
           data-automation-id="submit_year_range_button"
           type="submit"
           disabled={submitting}

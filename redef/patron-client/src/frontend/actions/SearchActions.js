@@ -4,6 +4,29 @@ import * as types from '../constants/ActionTypes'
 import { processSearchResponse } from '../utils/searchResponseParser'
 import { toggleParameterValue, ensureDefinedFiltersOpen, ensureOneBranchOpen, toggleListParameter } from './ParameterActions'
 
+export function toggleSearchBar (pathname) {
+  if (pathname === '/' || pathname === '/search') {
+    return {
+      type: types.ENABLE_SEARCH_BAR
+    }
+  }
+  return {
+    type: types.TOGGLE_SEARCH_BAR
+  }
+}
+
+export function enableSearchBar () {
+  return {
+    type: types.ENABLE_SEARCH_BAR
+  }
+}
+
+export function disableSearchBar () {
+  return {
+    type: types.DISABLE_SEARCH_BAR
+  }
+}
+
 export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
     type: types.REQUEST_SEARCH,

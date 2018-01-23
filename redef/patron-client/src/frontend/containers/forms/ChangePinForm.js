@@ -87,7 +87,7 @@ class ChangePinForm extends React.Component {
           </div>
         </section>
         <footer>
-          <button className="black-btn" type="submit" disabled={submitting} data-automation-id="changePinForm_button">
+          <button className="blue-btn" type="submit" disabled={submitting} data-automation-id="changePinForm_button">
             <FormattedMessage {...messages.changePin} /><br />
           </button>
           {changePasswordSuccess ? <div data-automation-id="changePinForm_success" style={{ color: 'green' }}>

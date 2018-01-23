@@ -12,13 +12,12 @@ class SearchResultsSettings extends React.Component {
   render () {
     return (
         <div className="search-results-settings">
-          <span className="search-results-settings-label">Vis liste som:</span>
           <ClickableElement onClickAction={this.props.searchActions.toggleListView} onClickArguments={'showFullList'}>
             <button type="button">
               <span className="is-vishidden">{this.props.intl.formatMessage(messages.showFullList)}</span>
               {this.shouldShowFullList()
-                ? <i className="icon-th" aria-hidden="true" style={{ fontSize: '2em' }} />
-                : <i className="icon-th" aria-hidden="true" style={{ fontSize: '2em', opacity: '0.5' }} />
+                ? <img src="images/view1.svg" className="icon" aria-hidden="true" style={{ marginRight: '1em', fontSize: '2em' }} />
+                : <img src="images/view1.svg" className="icon" aria-hidden="true" style={{ marginRight: '1em', fontSize: '2em', opacity: '0.5' }} />
               }
             </button>
           </ClickableElement>
@@ -26,8 +25,8 @@ class SearchResultsSettings extends React.Component {
             <button type="button">
               <span className="is-vishidden">{this.props.intl.formatMessage(messages.showList)}</span>
               {this.shouldShowFullList()
-                ? <i className="icon-th-list" aria-hidden="true" style={{ fontSize: '2em', opacity: '0.5' }} />
-                : <i className="icon-th-list" aria-hidden="true" style={{ fontSize: '2em' }} />
+                ? <img src="images/view2.svg" className="icon" aria-hidden="true" style={{ marginRight: '1em', fontSize: '2em', opacity: '0.5' }} />
+                : <img src="images/view2.svg" className="icon" aria-hidden="true" style={{ marginRight: '1em', fontSize: '2em' }} />
               }
             </button>
           </ClickableElement>

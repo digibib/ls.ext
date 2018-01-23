@@ -29,7 +29,7 @@ class CancelReservationModal extends React.Component {
         <h2>
           <FormattedMessage {...messages.messageSuccess} />
         </h2>
-        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
+        <button className="blue-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -45,7 +45,7 @@ class CancelReservationModal extends React.Component {
             ? <FormattedMessage {...messages[ this.props.message ]} />
             : <FormattedMessage {...messages.genericCancelReservationError} />}
         </p>
-        <button className="black-btn" onClick={this.props.modalActions.hideModal}>
+        <button className="blue-btn" onClick={this.props.modalActions.hideModal}>
           <FormattedMessage {...messages.button} />
         </button>
       </div>
@@ -61,7 +61,7 @@ class CancelReservationModal extends React.Component {
     return (
       <div data-automation-id="cancel_reservation_modal" className="default-modal">
         <h2>{this.props.message}</h2>
-        <button className="black-btn" disabled={this.props.isRequestingCancelReservation}
+        <button className="blue-btn" disabled={this.props.isRequestingCancelReservation}
                 onClick={this.handleCancelReservation}
                 data-automation-id="confirm_button">
           <FormattedMessage {...messages.cancelReservation} />

@@ -85,7 +85,7 @@ class RemoteReservationForm extends React.Component {
               <FormattedMessage {...messages.remoteReserveManagementInfo} />
             </p>
           </div>
-            <button className="black-btn" data-automation-id="remoteReservationButton"
+            <button className="blue-btn" data-automation-id="remoteReservationButton"
                   disabled={this.props.isRequestingReservation}
                   onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />

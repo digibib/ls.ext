@@ -84,8 +84,7 @@ class SearchResult extends React.Component {
       return (
         <p data-automation-id="work_contributors" >{contributors.map(contribution => (
           <span key={contribution.agent.relativeUri} >
-            <strong>Av</strong>
-            <Link to={fieldQueryLink('aktør', contribution.agent.name)} > {contribution.agent.name} </Link>
+            <strong>Av</strong> <Link to={fieldQueryLink('aktør', contribution.agent.name)} >{contribution.agent.name} </Link>
           </span>
         ))}
         </p>
@@ -127,12 +126,12 @@ class SearchResult extends React.Component {
     if (result.subject) {
       return (
         <p key="pubs" className="subjects" data-automation-id="work_subjects" >
-          <strong><FormattedMessage {...messages.subjects} /></strong>
+          <strong><FormattedMessage {...messages.subjects} /></strong>&nbsp;
           {result.subject.map((subject, i) => (
             <span key={subject} >
                 <Link
                   to={fieldQueryLink('emne', subject)}
-                  onClick={this.scrollToTop} > {subject} </Link> {(i < result.subject.length - 1) ? '|' : null}
+                  onClick={this.scrollToTop} >{subject}</Link>{(i < result.subject.length - 1) ? ', ' : null}
                 </span>
           ))}
         </p>
@@ -144,11 +143,11 @@ class SearchResult extends React.Component {
     if (result.genre) {
       return (
         <p key="gens" className="genres" data-automation-id="work_genres" >
-          <strong><FormattedMessage {...messages.genres} /></strong>
+          <strong><FormattedMessage {...messages.genres} /></strong>&nbsp;
           {result.genre.map((genre, i) => (
             <span key={genre} >
                 <Link to={fieldQueryLink('sjanger', genre)}
-                      onClick={this.scrollToTop} > {genre} </Link> {(i < result.genre.length - 1) ? '|' : null}
+                      onClick={this.scrollToTop} >{genre}</Link>{(i < result.genre.length - 1) ? ', ' : null}
                 </span>
           ))}
         </p>
@@ -341,11 +340,11 @@ class SearchResult extends React.Component {
                       {this.shouldShowBranchStatus(el.branchcode, groupedByBranchAndMedia.length)
                         ? [ (<span key={`show-less-content${el.branchcode}`} className="is-vishidden" >
                           <FormattedMessage {...messages.showBranchAvailability} />
-                        </span>), (<i key={`show-less-content-icon${el.branchcode}`} className="icon-up-open"
+                        </span>), (<img className="icon" src="images/minus.svg" key={`show-less-content-icon${el.branchcode}`}
                                       aria-hidden="true" />) ]
                         : [ (<span key={`show-more-content${el.branchcode}`} className="is-vishidden" >
                         <FormattedMessage {...messages.hideBranchAvailability} />
-                        </span>), (<i key={`show-more-content-icon${el.branchcode}`} className="icon-down-open"
+                        </span>), (<img className="icon" src="images/plus.svg" key={`show-more-content-icon${el.branchcode}`}
                                       aria-hidden="true" />) ]
                       }
                     </button>
@@ -462,14 +461,14 @@ class SearchResult extends React.Component {
         transitionLeaveTimeout={500}
         component="div"
         className="single-entry"
-        data-formats={formats.join(', ')}
-        style={{borderWidth: '1px'}}><div className="entry-header">
+        data-formats={formats.join(', ')}>
+        <div className="entry-header">
           {this.shouldShowFullList()
-            ? <aside className="book-cover" aria-hidden="true" >
+            ? <aside className={result.image ? 'book-cover' : 'book-cover missing'} aria-hidden="true" >
               <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1" >
                 {result.image ? <img src={result.image} alt={coverAltText} />
-                  : <i aria-label={missingCoverAltText}
-                       className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
+                  : <img aria-label={missingCoverAltText}
+                       src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
               </Link>
             </aside>
             : null
@@ -498,45 +497,50 @@ class SearchResult extends React.Component {
               ? [ this.renderSubjects(result), this.renderGenres(result) ]
               : null
             }
-          </article>
-        </div>
-        {this.shouldShowStatus()
-          ? [ (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}
-                    onKeyDown={this.handleEnter} >
-            <p><a role="button" tabIndex="0" aria-expanded="true" ><FormattedMessage {...messages.hideStatus} /></a></p>
-            <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
-          </div>),
-            (<div key="entry-more-content" className="entry-content-more" >
-              {this.renderItems(groupedByBranchAndMedia[ 0 ])}
-            </div>),
-            (<span key="entry-more-content-unfiltered-wrapper" >{groupedByBranchAndMedia[ 1 ].length
-              ? (<div key="entry-more-content-unfiltered" onClick={this.handleShowUnfilteredStatusClick}
+
+          {this.shouldShowStatus()
+            ? (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}
                       onKeyDown={this.handleEnter} >
-                {this.shouldShowUnfilteredStatus()
-                  ? [ (<div key="show-more-unfiltered-content" className="show-more-content" >
-                    <p><a role="button" tabIndex="0"
-                          aria-expanded="true" ><FormattedMessage {...messages.hideRestOfBranches} /></a></p>
-                    <img src="/images/btn-red-arrow-close.svg" alt="Red arrow pointing up" aria-hidden="true" />
-                  </div>),
-                    (<div key="show-more-unfiltered-content-items"
-                          className="entry-content-more" >{this.renderItems(groupedByBranchAndMedia[ 1 ])}</div>) ]
-                  : (<div className="show-more-content" onClick={this.handleShowUnfilteredStatusClick}
-                          onKeyDown={this.handleEnter} >
-                    <p><a role="button" tabIndex="0"
-                          aria-expanded="false" ><FormattedMessage {...messages.restOfBranches} /></a></p>
-                    <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
-                  </div>)
-                }
+                <p><a role="button" tabIndex="0" aria-expanded="true" ><FormattedMessage {...messages.showStatus} /></a></p>
+                <img src="/images/minus.svg" alt="minus sign" aria-hidden="true" />
               </div>)
-              : null
-            }</span>)
-          ]
-          : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter} >
-            <p><a role="button" tabIndex="0" aria-expanded="false" ><FormattedMessage {...messages.showStatus} /></a>
-            </p>
-            <img src="/images/btn-red-arrow-open.svg" alt="Red arrow pointing down" aria-hidden="true" />
-          </div>)
-        }
+            : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter} >
+              <p><a role="button" tabIndex="0" aria-expanded="false" ><FormattedMessage {...messages.showStatus} /></a>
+              </p>
+              <img src="/images/plus.svg" alt="plus sign" aria-hidden="true" />
+            </div>)
+          }
+          </article>
+
+        </div>
+          {this.shouldShowStatus()
+            ? [ (<div key="entry-more-content" className="entry-content-more" >
+                {this.renderItems(groupedByBranchAndMedia[ 0 ])}
+              </div>),
+              (<span key="entry-more-content-unfiltered-wrapper" >{groupedByBranchAndMedia[ 1 ].length
+                ? (<div key="entry-more-content-unfiltered" onClick={this.handleShowUnfilteredStatusClick}
+                        onKeyDown={this.handleEnter} >
+                  {this.shouldShowUnfilteredStatus()
+                    ? [ (<div key="show-more-unfiltered-content" className="show-more-content" >
+                      <p><a role="button" tabIndex="0"
+                            aria-expanded="true" ><FormattedMessage {...messages.hideRestOfBranches} /></a></p>
+                      <img src="/images/minus.svg" alt="minus sign" aria-hidden="true" />
+                    </div>),
+                      (<div key="show-more-unfiltered-content-items"
+                            className="entry-content-more" >{this.renderItems(groupedByBranchAndMedia[ 1 ])}</div>) ]
+                    : (<div className="show-more-content" onClick={this.handleShowUnfilteredStatusClick}
+                            onKeyDown={this.handleEnter} >
+                      <p><a role="button" tabIndex="0"
+                            aria-expanded="false" ><FormattedMessage {...messages.restOfBranches} /></a></p>
+                      <img src="/images/minus.svg" alt="minus sign" aria-hidden="true" />
+                    </div>)
+                  }
+                </div>)
+                : null
+              }</span>)
+            ]
+            : null
+          }
 
       </NonIETransitionGroup>
     )
@@ -622,7 +626,7 @@ export const messages = defineMessages({
   showStatus: {
     id: 'SearchResult.showStatus',
     description: 'Shown when the status is hidden',
-    defaultMessage: 'Where can you find this'
+    defaultMessage: 'Find it here'
   },
   hideRestOfBranches: {
     id: 'SearchResult.hideRestOfBranches',
@@ -633,11 +637,6 @@ export const messages = defineMessages({
     id: 'SearchResult.restOfBranches',
     description: 'Shown the rest of branches which do not meet filter criteria',
     defaultMessage: 'Show other branches'
-  },
-  hideStatus: {
-    id: 'SearchResult.hideStatus',
-    description: 'Shown when the status is shown',
-    defaultMessage: 'Hide availability'
   },
   firstPublished: {
     id: 'SearchResult.firstPublished',

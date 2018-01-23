@@ -15,8 +15,8 @@ class SearchResultsText extends React.Component {
           transitionAppearTimeout={500}
           transitionLeaveTimeout={0}
           transitionEnterTimeout={500}
-          component="div"
-          className="search-results-number">
+          component="span"
+          className="search-results-number marked-yellow">
           <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }}>
             <FormattedHTMLMessage {...messages.totalHits}
                                   values={{

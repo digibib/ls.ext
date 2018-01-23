@@ -251,7 +251,7 @@ class UserSettings extends React.Component {
           : '' }
 
         <footer>
-          <button className="black-btn"
+          <button className="blue-btn"
                   type="button"
                   disabled={this.props.contactDetailsVerificationError}
                   data-automation-id="UserSettings_saveButton"

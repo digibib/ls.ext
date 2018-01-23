@@ -52,7 +52,7 @@ class LoginForm extends React.Component {
             <FormattedMessage {...this.props.messages.forgotPinDesc} />
           </p>
           <p>
-            <button className="black-btn" type="submit" disabled={this.props.isRequestingLogin}
+            <button className="blue-btn" type="submit" disabled={this.props.isRequestingLogin}
                     onClick={this.handleLogin}
                     data-automation-id="login_button">
               <FormattedMessage {...this.props.messages.logIn} />

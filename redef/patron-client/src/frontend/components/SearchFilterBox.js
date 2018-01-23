@@ -42,7 +42,7 @@ const SearchFilterBox = ({ path, toggleFilter, removePeriod, query, toggleAvaila
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}
         component="div"
-        className="active-filters">
+        className="wrapper active-filters">
         <div className="label">{filterText}</div>
         <ul>
           { filters.filter((filter) => filter.active).map((filter) => <SearchFilterBoxItem
@@ -71,7 +71,7 @@ export const messages = defineMessages({
   titleSearch: {
     id: 'SearchFilterBox.title.search',
     description: 'title text for the SearchFilterItemBox on the search page',
-    defaultMessage: 'Delimited to:'
+    defaultMessage: 'Delimited to'
   },
   titleWork: {
     id: 'SearchFilterBox.title.work',
