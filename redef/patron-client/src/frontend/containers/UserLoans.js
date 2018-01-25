@@ -6,8 +6,6 @@ import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-int
 import {routerActions} from 'react-router-redux'
 import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
-import isEmpty from '../utils/emptyObject'
-import Tooltip from 'react-tooltip-component'
 
 import * as LoanActions from '../actions/LoanActions'
 import * as ReservationActions from '../actions/ReservationActions'
@@ -29,8 +27,26 @@ class UserLoans extends React.Component {
     }
   }
 
+  renderMainContributors (item) {
+    if (item.contributors) {
+      const mainEntry = item.contributors.find(c => { return c.mainEntry === true })
+      if (mainEntry) {
+        return (
+          <div>
+            <Link data-automation-id="work_contributor_link"
+              to={fieldQueryLink('aktør', mainEntry.agent.name)}>
+              {mainEntry.agent.name}
+            </Link>
+          </div>
+        )
+      }
+    } else if (item.author) {
+      return <h2 data-automation-id="UserLoans_author_name">{item.author}</h2>
+    }
+  }
+
   renderPickups () {
-    if (this.props.loansAndReservations.pickups.length > 0) {
+    if ([ ...this.props.loansAndReservations.pickups ].length > 0) {
       return (
         <section className="pickup">
           <h1><FormattedMessage {...messages.canBePickedUp} /></h1>
@@ -40,7 +56,7 @@ class UserLoans extends React.Component {
                        data-automation-id="UserLoans_pickup"
                        data-recordid={item.recordId}>
               <div className="flex-col media-type">
-                {item.mediaType !== null
+                {item.mediaType
                   ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
                     <span key="item-text" data-automation-id="UserLoans_pickup_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
                   : null
@@ -50,17 +66,8 @@ class UserLoans extends React.Component {
                   <Link to={item.relativePublicationPath} data-automation-id="UserLoans_pickup_title">
                     {item.title}
                   </Link>
-                  <h2>
-                  {!isEmpty(item.contributor)
-                    ? (<Link
-                      data-automation-id="UserLoans_pickup_author"
-                      to={fieldQueryLink('aktør', item.contributor.contributorName)}>
-                      {item.contributor.contributorName}
-                      </Link>)
-                    : null
-                  }
-                  </h2>
-                  <h2 data-automation-id="UserLoans_pickup_author" className="contributors">{item.author}</h2>
+                  {this.renderMainContributors(item)}
+                  <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
                 </div>
                 <div className="flex-col loan-expire">
                   <h2><FormattedMessage {...messages.expiry} />:</h2>
@@ -93,8 +100,9 @@ class UserLoans extends React.Component {
       )
     }
   }
+  /* TODO: rename reservation -> hold */
   renderReservations () {
-    if ([ ...this.props.loansAndReservations.reservations ].length > 0) {
+    if ([ ...this.props.loansAndReservations.holds ].length > 0) {
       return (
         <NonIETransitionGroup
           transitionName="fade-in"
@@ -105,14 +113,14 @@ class UserLoans extends React.Component {
           component="section"
           className="reserve">
           <h1><FormattedMessage {...messages.reservations} /></h1>
-          {[ ...this.props.loansAndReservations.reservations ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
+          {[ ...this.props.loansAndReservations.holds ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
             <article key={item.id}
                      className="single-entry"
                      data-automation-id="UserLoans_reservation"
                      data-recordid={item.recordId}>
 
               <div className="flex-col media-type">
-                {item.mediaType !== null
+                {item.mediaType
                 ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
                   <span key="item-text" data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
                   : null
@@ -122,16 +130,8 @@ class UserLoans extends React.Component {
                 <Link to={item.relativePublicationPath} data-automation-id="UserLoans_reservation_title">
                   {item.title}
                 </Link>
-                <h2>
-                  {!isEmpty(item.contributor)
-                    ? (<Link
-                      data-automation-id="UserLoans_reservation_author"
-                      to={fieldQueryLink('aktør', item.contributor.contributorName)}>
-                      {item.contributor.contributorName}
-                    </Link>)
-                    : null
-                  }
-                </h2>
+                {this.renderMainContributors(item)}
+                <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col pickup-location">
                 {this.props.patronCategory !== 'IL'
@@ -149,7 +149,7 @@ class UserLoans extends React.Component {
                   <p data-automation-id="UserLoans_reservation_queue_place">
                     {item.suspendUntil
                       ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                      : this.renderWaitingPeriodInit(item, this.props.patronCategory === 'IL')
+                      : <span>{item.queuePlace}</span>
                     }
                   </p>
                 </div>
@@ -172,23 +172,69 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderWaitingPeriodInit (item, onlyShowQueueSpot) {
-    if (item.queuePlace > 0) {
-      if (onlyShowQueueSpot) {
-        return <span>
-          {item.queuePlace}
-        </span>
-      }
-      return <span>
-        {item.queuePlace} &nbsp; {this.renderWaitingPeriod(item.estimatedWait)}
-        <Tooltip title={this.props.intl.formatMessage(messages.waitingTime)} position="top">
-          <button className="btn btn-default">
-            <span className="icon-help" style={{ color: '#fff', background: '#000', borderRadius: '50%', fontSize: 12, marginLeft: '5px' }} />
-          </button>
-        </Tooltip>
-      </span>
-    } else {
-      return <FormattedMessage {...messages.enRoute} />
+  renderReservationsFromRemoteLibraries () {
+    if ([ ...this.props.loansAndReservations.remoteholds ].length > 0) {
+      return (
+        <NonIETransitionGroup
+          transitionName="fade-in"
+          transitionAppear
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+          component="section"
+          className="reserve">
+          <h1><FormattedMessage {...messages.remoteReservations} /></h1>
+          {[ ...this.props.loansAndReservations.remoteholds ].sort((a, b) => a.queuePlace > b.queuePlace).map(item => (
+            <article key={item.id}
+                     className="single-entry"
+                     data-automation-id="UserLoans_remoteHold"
+                     data-recordid={item.recordId}>
+
+              <div className="flex-col media-type">
+                {item.mediaType
+                ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                  <span key="item-text" data-automation-id="UserLoans_remoteHold_type">{this.props.intl.formatMessage({ id: item.mediaType })}</span>])
+                  : null
+                }
+              </div>
+              <div className="flex-col entry-details">
+                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_remoteHold_title">
+                  {item.title}
+                </Link>
+                {this.renderMainContributors(item)}
+                <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
+              </div>
+              <div className="flex-col pickup-location">
+                {this.props.patronCategory !== 'IL'
+                  ? (<div>
+                      <h2><FormattedMessage {...messages.pickupLocation} />:</h2>
+                      {this.renderLibrarySelect(item)}
+                    </div>)
+                  : null
+                }
+              </div>
+              <div className="flex-col placeholder-column" />
+              <div className="flex-col place-in-queue">
+                <div>
+                  <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
+                  <p data-automation-id="UserLoans_remoteHold_queue_place">
+                    <span>{item.queuePlace}</span>
+                  </p>
+                </div>
+              </div>
+              <div className="flex-col placeholder-column" />
+              <div className="flex-col reserve-cancel-button">
+                <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
+                                    onClickArguments={item.id}>
+                  <button className="black-btn" data-automation-id="cancel_reservation_button">
+                    <FormattedMessage {...messages.cancelReservation} />
+                  </button>
+                </ClickableElement>
+              </div>
+            </article>
+          ))}
+        </NonIETransitionGroup>
+      )
     }
   }
 
@@ -230,16 +276,6 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderWaitingPeriod (expected) {
-    if (expected.error != null) {
-      return <FormattedMessage {...messages.unknown} />
-    } else {
-      const estimate = (expected.estimate < 11) ? `${expected.estimate}–${expected.estimate + 2}` : '11'
-      return <span>({this.renderExpectedEstimationPrefix(estimate)} {estimate} <FormattedMessage {...messages.weeks} />)</span>
-    }
-  }
-  // <FormattedMessage {...messages.name} values={{ name: this.props.borrowerName }} />
-  // &nbsp;-&nbsp;{this.renderCurrentDateTime()}
   renderLoans () {
     if ([ ...this.props.loansAndReservations.loans ].length > 0) {
       return (
@@ -256,9 +292,9 @@ class UserLoans extends React.Component {
                      data-automation-id="UserLoans_loan"
                      data-recordid={item.recordId}>
               <div className="flex-col media-type">
-                {item.mediaType !== null
+                {item.mediaType
                   ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
-                    <span key="item-text" data-automation-id="UserLoans_reservation_type">{this.props.intl.formatMessage({ id: item.mediaType })}
+                    <span key="item-text" data-automation-id="UserLoans_loan_type">{this.props.intl.formatMessage({ id: item.mediaType })}
                     </span>])
                   : null
                 }
@@ -267,16 +303,7 @@ class UserLoans extends React.Component {
                 <Link to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
                   {item.title}
                 </Link>
-                <h2>
-                  {!isEmpty(item.contributor)
-                    ? (<Link
-                      data-automation-id="UserLoans_loan_author"
-                      to={fieldQueryLink('aktør', item.contributor.contributorName)}>
-                      {item.contributor.contributorName}
-                    </Link>)
-                    : null
-                  }
-                </h2>
+                {this.renderMainContributors(item)}
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col due-date">
@@ -296,6 +323,51 @@ class UserLoans extends React.Component {
                   </button>
                 </ClickableElement>
               </div>
+            </article>
+          ))}
+        </section>
+      )
+    }
+  }
+
+  renderLoansFromRemoteLibraries () {
+    if ([ ...this.props.loansAndReservations.remoteloans ].length > 0) {
+      return (
+        <section className="loan">
+          <div className="loan-header">
+            <h1>
+              <FormattedMessage {...messages.yourRemoteLoans} />
+            </h1>
+            <FormattedMessage {...messages.howToManageYourRemoteLoans} />
+          </div>
+          {[ ...this.props.loansAndReservations.remoteloans ].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).map(item => (
+            <article key={item.id}
+                     className="single-entry"
+                     data-automation-id="UserLoans_remoteLoan"
+                     data-recordid={item.recordId}>
+              <div className="flex-col media-type">
+                {item.mediaType
+                  ? ([<i key="item-icon" className={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ item.mediaType ] ]} aria-hidden="true" />,
+                    <span key="item-text" data-automation-id="UserLoans_remoteLoan_type">{this.props.intl.formatMessage({ id: item.mediaType })}
+                    </span>])
+                  : null
+                }
+              </div>
+              <div className="flex-col entry-details">
+                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_remoteLoan_title">
+                  {item.title}
+                </Link>
+                {this.renderMainContributors(item)}
+                <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
+              </div>
+              <div className="flex-col due-date">
+                {item.renewalStatus === 'genericExtendLoanSuccess'
+                  ? <span className="success">{this.renderDueDate(item)}</span>
+                  : <span>{this.renderDueDate(item)}</span>}
+              </div>
+              <div className="flex-col placeholder-column" />
+              <div className="flex-col placeholder-column" />
+              <div className="flex-col placeholder-column" />
             </article>
           ))}
         </section>
@@ -328,31 +400,17 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderCurrentDateTime () {
-    const dateTime = new Intl.DateTimeFormat('nb', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(Date.now())
-    return (
-      <span className="date">{dateTime}</span>
-    )
-  }
-
   renderDueDate (item) {
     if (item.dueDate) {
       return (
       item.renewalStatus !== 'overdue'
         ? <div>
           <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p data-automation-id="UserLoans_loan_dueDate">{formatDate(item.dueDate)}</p>
+          <p data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
         </div>
         : <div>
           <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p className="fail" data-automation-id="UserLoans_loan_dueDate">{formatDate(item.dueDate)}</p>
+          <p className="fail" data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
         </div>
       )
     }
@@ -361,15 +419,9 @@ class UserLoans extends React.Component {
   renderPublishedDate (publicationYear) {
     if (publicationYear) {
       return (
-        <span className="published" data-automation-id="UserLoans_loan_publicationYear">{publicationYear}</span>
+        <span className="published" data-automation-id="UserLoans_publicationYear">{publicationYear}</span>
       )
     }
-  }
-
-  renderExpectedEstimationPrefix (estimate) {
-    return estimate.includes('–')
-      ? <FormattedMessage {...messages.approx} />
-      : <FormattedMessage {...messages.moreThan} />
   }
 
   renderTabs () {
@@ -399,7 +451,9 @@ class UserLoans extends React.Component {
       <div>
         {this.renderPickups()}
         {this.renderReservations()}
+        {this.renderReservationsFromRemoteLibraries()}
         {this.renderLoans()}
+        {this.renderLoansFromRemoteLibraries()}
       </div>
     )
   }
@@ -428,11 +482,6 @@ UserLoans.propTypes = {
 }
 
 export const messages = defineMessages({
-  waitingTime: {
-    id: 'UserLoans.waitingTime',
-    description: 'The waiting time explanation text',
-    defaultMessage: 'Expected waiting time is a rough estimate, accuracy may vary.'
-  },
   title: {
     id: 'UserLoans.title',
     description: 'The label of the item title',
@@ -452,11 +501,6 @@ export const messages = defineMessages({
     id: 'UserLoans.orderedDate',
     description: 'The label of the ordered date of the reservation',
     defaultMessage: 'Ordered date'
-  },
-  waitingPeriod: {
-    id: 'UserLoans.waitingPeriod',
-    description: 'The label of the waiting period of the reservation',
-    defaultMessage: 'Waiting period'
   },
   pickupLocation: {
     id: 'UserLoans.pickupLocation',
@@ -498,6 +542,16 @@ export const messages = defineMessages({
     description: 'The header over the current loans',
     defaultMessage: 'Your loans'
   },
+  yourRemoteLoans: {
+    id: 'UserLoans.yourRemoteLoans',
+    description: 'The header over the current remote loans',
+    defaultMessage: 'Your remote loans'
+  },
+  howToManageYourRemoteLoans: {
+    id: 'UserLoans.howToManageYourRemoteLoans',
+    description: 'Message explaining how to manage remote loans',
+    defaultMessage: 'Please get in contact with library staff to ask for extension'
+  },
   name: {
     id: 'UserLoans.name',
     description: 'The header over the current loans',
@@ -507,6 +561,11 @@ export const messages = defineMessages({
     id: 'UserLoans.reservations',
     description: 'The header of the reservations section',
     defaultMessage: 'Reservations'
+  },
+  remoteReservations: {
+    id: 'UserLoans.remoteReservations',
+    description: 'The header of the remote reservations section',
+    defaultMessage: 'Remote Reservations'
   },
   renewAllLoans: {
     id: 'UserLoans.renewAllLoans',
@@ -522,31 +581,6 @@ export const messages = defineMessages({
     id: 'UserLoans.placeInQueue',
     description: 'The header over a reservations\' place in holds queue',
     defaultMessage: 'Place in queue'
-  },
-  approx: {
-    id: 'UserLoans.approximately',
-    description: 'The abbreviation used to mean approximately',
-    defaultMessage: '~'
-  },
-  weeks: {
-    id: 'UserLoans.weeks',
-    description: 'The word used to mean weeks',
-    defaultMessage: 'weeks'
-  },
-  moreThan: {
-    id: 'UserLoans.moreThan',
-    description: 'The words used to mean more than',
-    defaultMessage: 'more than'
-  },
-  unknown: {
-    id: 'UserLoans.unknown',
-    description: 'Text displayed when unable to estimate waiting period',
-    defaultMessage: '(Unknown waiting period)'
-  },
-  enRoute: {
-    id: 'UserLoans.enRoute',
-    description: 'Text displayed when item is en route',
-    defaultMessage: 'En route'
   },
   suspendReservation: {
     id: 'UserLoans.suspendReservation',
