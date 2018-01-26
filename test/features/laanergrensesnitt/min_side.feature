@@ -36,7 +36,7 @@ Egenskap: Min Side
     Og trykker på endre PIN-kode
     Så skal jeg se at PIN-koden har blitt endret
     Når jeg logger ut
-    Når jeg trykker logg inn
+    Når jeg går til Min Side
     Så skal jeg se innloggingsvinduet
     Og jeg logger inn med nytt passord
     Så skal jeg se at jeg er logget inn

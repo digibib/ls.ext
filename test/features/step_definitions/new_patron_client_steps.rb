@@ -571,11 +571,9 @@ When(/^skal reservasjonen være på ny avdeling$/) do
   branchcode = 'ffur'
   wait_for { @site.PatronClientLoansAndReservationsPage.reservations.first && @site.PatronClientLoansAndReservationsPage.reservations.first.select.value.eql?(branchcode) }
 end
+
 When(/^skal jeg se at jeg er logget inn$/) do
-  surname = @active[:patron] ?
-    @active[:patron].surname :
-    @context[:koha].patrons[0]["surname"]
-  wait_for { @browser.element(data_automation_id: 'borrowerName').text.should eq surname }
+  wait_for { @browser.element(data_automation_id: 'my-page-link').text.should include "Min side" }
 end
 
 When(/^jeg skriver inn riktig brukernavn men feil passord$/) do
