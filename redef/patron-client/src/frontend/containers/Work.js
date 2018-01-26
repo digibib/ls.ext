@@ -19,6 +19,7 @@ class Work extends React.Component {
   componentWillMount () {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
     this.props.searchActions.disableSearchBar()
+    window.scrollTo(0, 0)
   }
 
   // Force reload when router changes workId in URI
