@@ -133,11 +133,11 @@ export default function profile (state = initialState, action) {
         ...state,
         loansAndReservations: {
           ...state.loansAndReservations,
-          reservations: state.loansAndReservations.reservations.map(reservation => {
-            if (reservation.id === action.payload.reserveId) {
-              reservation.branchCode = action.payload.branchCode
+          reservations: state.loansAndReservations.holds.map(hold => {
+            if (hold.id === action.payload.reserveId) {
+              hold.branchCode = action.payload.branchCode
             }
-            return reservation
+            return hold
           })
         }
       }
@@ -146,12 +146,12 @@ export default function profile (state = initialState, action) {
         ...state,
         loansAndReservations: {
           ...state.loansAndReservations,
-          reservations: state.loansAndReservations.reservations.map(reservation => {
-            if (reservation.id === action.payload.reserveId) {
-              reservation.suspended = action.payload.suspended
-              reservation.suspendUntil = action.payload.suspendUntil
+          reservations: state.loansAndReservations.holds.map(hold => {
+            if (hold.id === action.payload.reserveId) {
+              hold.suspended = action.payload.suspended ? "1" : "0"
+              hold.suspendUntil = action.payload.suspendUntil
             }
-            return reservation
+            return hold
           })
         }
       }

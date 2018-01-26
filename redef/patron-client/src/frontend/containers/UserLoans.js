@@ -256,17 +256,18 @@ class UserLoans extends React.Component {
   }
 
   renderResumeSuspendReservationButton (item) {
+    const suspended = item.suspended === "1"
     return (
       <div>
         {this.props.isRequestingChangeReservationSuspension === item.id
           ? <Loading />
           : (
           <ClickableElement onClickAction={this.props.reservationActions.suspendReservation}
-                            onClickArguments={[ item.id, !item.suspended ]}>
-            <button className={`${item.suspended ? 'small-blue-btn' : 'small-blue-btn'} ${item.queuePlace === '0' ? 'is-hidden' : ''}`}
+                            onClickArguments={[ item.id, !suspended ]}>
+            <button className={`${suspended ? 'small-blue-btn' : 'small-blue-btn'} ${item.queuePlace === '0' ? 'is-hidden' : ''}`}
                     disabled={this.props.isRequestingChangeReservationSuspension !== false}
-                    data-automation-id={item.suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
-              {item.suspended
+                    data-automation-id={suspended ? 'resume_reservation_button' : 'suspend_reservation_button'}>
+              {suspended
                 ? <span><span className="btn-icon"><img className="icon" src="/images/play.svg" aria-hidden="true" /></span><FormattedMessage {...messages.resumeReservation} /></span>
                 : <span><span className="btn-icon"><img className="icon" src="/images/pause.svg" aria-hidden="true" /></span><FormattedMessage {...messages.suspendReservation} /></span>}
             </button>
