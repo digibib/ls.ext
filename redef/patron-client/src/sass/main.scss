@@ -445,7 +445,9 @@ button {
   padding: 0.7em 0.7em 0.5em 0.6em;
   font-size: $rhythm3;
   font-weight: normal;
-  min-width: 6em
+  @include breakpoint($small) {
+    min-width: 6em
+  }
 }
 
 .blue-btn:hover, .blue-btn:active, .blue-btn:focus {
@@ -995,6 +997,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-size: $rhythm3;
   font-weight: normal;
   line-height: $rhythm4;
+  font-weight: bold;
 }
 
 .filterTitle .single-filter-close {
@@ -1476,9 +1479,9 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 .single-entry .book-cover.missing {
   background-color: #D6D6D6;
+  max-height: 200px;
   @include breakpoint($small) {
     border: 10px solid #fff;
-    //max-height: 200px;
   }
 }
 
@@ -3288,12 +3291,17 @@ header {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  @include breakpoint($small) {
+    min-height: 100px;
+    align-items: baseline;
+
+  }
 }
 
 .search-header a {
   color: $white;
   font-weight: bold;
-  font-size: $rhythm3;
+  font-size: 18px;
   text-decoration: none;
 }
 
@@ -3884,10 +3892,6 @@ footer .social-icons {
   border-radius: 4px 4px;
 }
 
-.search-box form .search-button {
-
-}
-
 .search-button button {
   margin: 0;
   padding: 0;
@@ -3908,7 +3912,7 @@ footer .social-icons {
 }
 
 .search-button {
-  margin: 1em;
+  margin: 0.5em;
   width: 32px;
   height: 32px;
   float: right;
@@ -3962,6 +3966,10 @@ footer .social-icons {
 }
 
 @include breakpoint($small) {
+
+  .search-button {
+    margin: 1em;
+  }
 
   .search-field {
     @include span(10.8);

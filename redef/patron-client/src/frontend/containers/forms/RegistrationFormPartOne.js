@@ -99,7 +99,7 @@ class RegistrationFormPartOne extends React.Component {
         {isIe() ? <fieldset style={{ visibility: 'hidden' }}><input /></fieldset> : null}
         {/* IE11-hack end */}
         <div disabled={this.props.checkForExistingUserSuccess}>
-          <legend><FormattedMessage {...messages.nameLabel} /></legend>
+          { /* <legend><FormattedMessage {...messages.nameLabel} /></legend> */ }
           <FormInputField name="firstName" message={messages.firstName} formName={formName}
                           getValidator={this.getValidator} />
           <FormInputField name="lastName" message={messages.lastName} formName={formName}
