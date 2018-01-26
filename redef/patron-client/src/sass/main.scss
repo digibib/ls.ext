@@ -698,6 +698,11 @@ input {
   border-radius: 5px;
 }
 
+input:focus {
+  outline: none;
+  border-color: $blue
+}
+
 input:focus::-webkit-input-placeholder {
   color: transparent;
 }
