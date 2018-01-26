@@ -99,7 +99,7 @@ class SearchHeader extends React.Component {
           <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
             <img className="icon" src="/images/profile24.svg" />
           </MediaQuery>
-          <Link to="/profile/loans" ><FormattedMessage {...messages.myProfile} /> <span >&raquo;</span ></Link >
+          <Link data-automation-id="my-page-link" to="/profile/loans" ><FormattedMessage {...messages.myProfile} /> <span >&raquo;</span ></Link >
         </li >
       ]
     }
