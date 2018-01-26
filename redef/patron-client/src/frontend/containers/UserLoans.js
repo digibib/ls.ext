@@ -256,7 +256,7 @@ class UserLoans extends React.Component {
   }
 
   renderResumeSuspendReservationButton (item) {
-    const suspended = item.suspended === "1"
+    const suspended = item.suspended === '1'
     return (
       <div>
         {this.props.isRequestingChangeReservationSuspension === item.id
