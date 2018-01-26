@@ -226,7 +226,7 @@ class UserLoans extends React.Component {
               <div className="flex-col reserve-cancel-button">
                 <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
                                     onClickArguments={item.id}>
-                  <button className="black-btn" data-automation-id="cancel_reservation_button">
+                  <button className="small-blue-btn" data-automation-id="cancel_reservation_button">
                     <FormattedMessage {...messages.cancelReservation} />
                   </button>
                 </ClickableElement>
