@@ -37,7 +37,9 @@ const initialState = {
   loansAndReservations: {
     pickups: [],
     loans: [],
-    reservations: []
+    holds: [],
+    remoteholds: [],
+    remoteloans: []
   },
   isRequestingPersonalInformation: false,
   personalInformationError: null,
