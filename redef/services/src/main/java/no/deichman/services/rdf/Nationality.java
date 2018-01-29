@@ -45,6 +45,7 @@ public final class Nationality {
     public static final Resource BURKIN = createResource(NAMESPACE + "burkin");
     public static final Resource BURM = createResource(NAMESPACE + "burm");
     public static final Resource BURUND = createResource(NAMESPACE + "burund");
+    public static final Resource CAT = createResource(NAMESPACE + "cat");
     public static final Resource CHIL = createResource(NAMESPACE + "chil");
     public static final Resource COLOMB = createResource(NAMESPACE + "colomb");
     public static final Resource COSTARIC = createResource(NAMESPACE + "costaric");
@@ -191,7 +192,7 @@ public final class Nationality {
     public static final Resource TAIW = createResource(NAMESPACE + "taiw");
     public static final Resource TANZ = createResource(NAMESPACE + "tanz");
     public static final Resource TCHAD = createResource(NAMESPACE + "tchad");
-    public static final Resource THAI = createResource(NAMESPACE + "thai");
+    public static final Resource TH = createResource(NAMESPACE + "th");
     public static final Resource TIB = createResource(NAMESPACE + "tib");
     public static final Resource TOGO = createResource(NAMESPACE + "togo");
     public static final Resource TRINID = createResource(NAMESPACE + "trinid");
