@@ -126,7 +126,6 @@ public class AppTest {
     public static void setUp() throws Exception {
         JenaSystem.init(); // Needed to counter sporadic nullpointerexceptions because of context is not initialized.
         appPort = PortSelector.randomFree();
-        int jamonAppPort = PortSelector.randomFree();
         kohaAPIMock = new KohaAPIMock();
         String kohaAPIEndpoint = LOCALHOST + ":" + kohaAPIMock.getPort();
         sruServiceMock = new SRUServiceMock();
@@ -142,7 +141,7 @@ public class AppTest {
         System.setProperty("ELASTICSEARCH_URL", "http://localhost:" + embeddedElasticsearchServer.getPort());
 
         appURI = LOCALHOST + ":" + appPort + "/";
-        app = new App(appPort, kohaAPIEndpoint, USE_IN_MEMORY_REPO, jamonAppPort, z3950Endpoint);
+        app = new App(appPort, kohaAPIEndpoint, USE_IN_MEMORY_REPO, z3950Endpoint);
         app.startAsync();
     }
 

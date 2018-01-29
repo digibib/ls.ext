@@ -1,6 +1,5 @@
 package no.deichman.services.entity;
 
-import com.jamonapi.proxy.MonProxyFactory;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.KohaAdapterImpl;
 import no.deichman.services.entity.repository.InMemoryRepository;
@@ -52,7 +51,7 @@ public abstract class ResourceBase {
     protected final EntityService getEntityService() {
         if (entityService == null) {
             RDFRepository repository = getRdfRepository();
-            entityService = (EntityService) MonProxyFactory.monitor(new EntityServiceImpl(repository, getKohaAdapter()));
+            entityService = new EntityServiceImpl(repository, getKohaAdapter());
         }
         return entityService;
     }
@@ -72,7 +71,7 @@ public abstract class ResourceBase {
             }
             repository = staticInMemoryRepository;
         } else {
-            repository = (RDFRepository) MonProxyFactory.monitor(new RemoteRepository());
+            repository = new RemoteRepository();
         }
         return repository;
     }
@@ -80,7 +79,6 @@ public abstract class ResourceBase {
     protected final KohaAdapter getKohaAdapter() {
         if (kohaAdapter == null) {
             kohaAdapter = new KohaAdapterImpl(getConfig() != null ? getConfig().getInitParameter(SERVLET_INIT_PARAM_KOHA_PORT) : null);
-            kohaAdapter = (KohaAdapter) MonProxyFactory.monitor(kohaAdapter);
         }
         return kohaAdapter;
     }
@@ -106,7 +104,7 @@ public abstract class ResourceBase {
 
     public final SearchService getSearchService() {
         if (searchService == null) {
-            searchService = (SearchService) MonProxyFactory.monitor(new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService()));
+            searchService = new SearchServiceImpl(elasticSearchBaseUrl(), getEntityService());
         }
         return searchService;
     }

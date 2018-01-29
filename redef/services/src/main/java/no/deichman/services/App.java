@@ -1,7 +1,5 @@
 package no.deichman.services;
 
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
 import no.deichman.services.datasource.Datasource;
 import no.deichman.services.entity.CirculationResource;
 import no.deichman.services.entity.EntityResource;
@@ -14,28 +12,17 @@ import no.deichman.services.ontology.TranslationResource;
 import no.deichman.services.restutils.CORSResponseFilter;
 import no.deichman.services.search.SearchResource;
 import no.deichman.services.version.VersionResource;
-import org.apache.commons.io.FileUtils;
 import org.apache.jena.system.JenaSystem;
 import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Slf4jRequestLog;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerWrapper;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.webapp.Configuration;
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.glassfish.jersey.server.ServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
@@ -43,27 +30,24 @@ import static java.util.Arrays.asList;
  * Responsibility: Start application (using embedded web server).
  */
 public final class App {
-    private static final int JAMON_WEBAPP_PORT = 8006;
     private static final Logger LOG = LoggerFactory.getLogger(App.class);
     private static final int SERVICES_PORT_NO = 8005;
     private final int port;
     private Server jettyServer;
     private String kohaPort;
     private boolean inMemoryRDFRepository;
-    private int jamonAppPort;
     private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://elasticsearch:9200");
     private String z3950Endpoint;
 
-    public App(int port, String kohaPort, boolean inMemoryRDFRepository, int jamonAppPort, String z3950Endpoint) {
+    public App(int port, String kohaPort, boolean inMemoryRDFRepository, String z3950Endpoint) {
         this.port = port;
         this.kohaPort = kohaPort;
         this.inMemoryRDFRepository = inMemoryRDFRepository;
-        this.jamonAppPort = jamonAppPort;
         this.z3950Endpoint = z3950Endpoint;
     }
 
     public static void main(String[] args) {
-        App app = new App(SERVICES_PORT_NO, null, false, JAMON_WEBAPP_PORT, null);
+        App app = new App(SERVICES_PORT_NO, null, false, null);
         try {
             JenaSystem.init(); // Needed to counter sporadic nullpointerexceptions because of context is not initialized.
             app.startSync();
@@ -84,24 +68,12 @@ public final class App {
 
     public void startAsync() throws Exception {
         setUpMainWebApp();
-        setUpJamonWebApp();
     }
 
     private void setUpMainWebApp() throws Exception {
 
         jettyServer = new Server(port);
         HandlerCollection handlers = new HandlerCollection();
-
-
-        handlers.addHandler(new HandlerWrapper() {
-            @Override
-            public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-                Monitor monitor = MonitorFactory.start(
-                        "no.deichman.services  " + request.getMethod() + "   " + request.getRequestURI().replaceAll("(w|p|h|marc/)[0-9]+([/a-zA-Z])*$", "$1*******"));
-                super.handle(target, baseRequest, request, response);
-                monitor.stop();
-            }
-        });
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
@@ -162,29 +134,6 @@ public final class App {
         jettyServer.setHandler(collection);
         jettyServer.start();
         LOG.info("App started on port: " + port);
-    }
-
-    private void setUpJamonWebApp() throws Exception {
-        Server jamonJettyServer = new Server(jamonAppPort);
-        WebAppContext webapp = new WebAppContext();
-        webapp.setContextPath("/");
-        File tempFile = new File(System.getProperty("java.io.tmpdir"), "jamon.war");
-        FileUtils.copyInputStreamToFile(getClass().getResourceAsStream("/jamon.war"), tempFile);
-        webapp.setWar(tempFile.getAbsolutePath());
-
-        Configuration.ClassList classlist = Configuration.ClassList
-                .setServerDefault(jamonJettyServer);
-        classlist.addBefore(
-                "org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
-                "org.eclipse.jetty.annotations.AnnotationConfiguration");
-
-        webapp.setAttribute(
-                "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
-                ".*/[^/]*servlet-api-[^/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\.jar$|.*/[^/]*taglibs.*\\.jar$");
-
-
-        jamonJettyServer.setHandler(webapp);
-        jamonJettyServer.start();
     }
 
     private void join() throws InterruptedException {

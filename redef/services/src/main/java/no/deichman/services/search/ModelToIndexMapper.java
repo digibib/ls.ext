@@ -6,8 +6,6 @@ import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
 import no.deichman.services.entity.EntityType;
 import no.deichman.services.rdf.RDFModelUtil;
 import no.deichman.services.uridefaults.BaseURI;
@@ -44,7 +42,6 @@ public class ModelToIndexMapper {
     }
 
     public final String createIndexDocument(Model model, XURI xuri) {
-        Monitor mon = MonitorFactory.start("createIndexDocument");
         Model massagedModel = massageModel(model, xuri);
         if (massagedModel.isEmpty()) {
             throw new RuntimeException("Massaged model of " + xuri.getUri() + " is empty");
@@ -55,7 +52,6 @@ public class ModelToIndexMapper {
         } catch (IOException | JsonLdError e) {
             throw new RuntimeException("Exception raised when applying context to json-ld", e);
         }
-        mon.stop();
         return json;
     }
 

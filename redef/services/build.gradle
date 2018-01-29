@@ -81,11 +81,9 @@ dependencies {
     compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: version_slf4j
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.8.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
-    compile group: 'com.jamonapi', name: 'jamon', version: '2.81'
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: version_jetty
     compile group: 'org.eclipse.jetty', name: 'jetty-annotations', version: version_jetty
     compile group: 'org.eclipse.jetty', name: 'apache-jsp', version: version_jetty
-    compile group: 'com.jamonapi', name: 'fdsapi', version: '1.2'
     compile group: 'joda-time', name: 'joda-time', version: '2.9.7'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'

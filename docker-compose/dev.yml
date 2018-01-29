@@ -28,7 +28,6 @@ services:
       - koha
     ports:
       - "8005:8005"
-      - "8006:8006"
       - "5070:5070"
     environment:
       KOHA_MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
