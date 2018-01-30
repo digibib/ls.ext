@@ -3311,7 +3311,7 @@ header {
 }
 
 header .logo {
-  flex:1;
+  flex: 1;
   text-align: center
 }
 
@@ -3551,7 +3551,7 @@ header .logged-in-message {
 }
 
 .primary-menu ul {
-  padding-left: 0;
+  padding:0;
   margin: 0;
 }
 
@@ -3812,7 +3812,7 @@ footer .social-icons {
   @include clearfix;
   @include container;
   @include span(12);
-  padding-bottom: 2em;
+  padding: 0.5em;
 }
 
 .work-entry.loading {
@@ -3969,10 +3969,6 @@ footer .social-icons {
 
   .search-button {
     margin: 1em;
-  }
-
-  .search-field {
-    @include span(10.8);
   }
 
   .search-box {
