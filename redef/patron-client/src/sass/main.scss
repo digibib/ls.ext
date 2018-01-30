@@ -3291,10 +3291,9 @@ header {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  @include breakpoint($small) {
+  @include breakpoint($large) {
     min-height: 100px;
     align-items: baseline;
-
   }
 }
 
@@ -3324,11 +3323,11 @@ header .logo-new {
   margin-left: 0.2em;
   vertical-align: top;
   height: 17px;
-  width: 24px;
+  width: 1em;
 }
 
 header .primary-menu {
-  padding: 1em;
+  padding: 0;
   padding-right: 2em;
   flex: 1
 }
@@ -3348,7 +3347,6 @@ header .primary-menu .icon {
 }
 
 header .mobile-menu-toggle {
-  @include span(7 last);
   padding: $rhythm2;
 }
 
@@ -3368,23 +3366,6 @@ header .logged-in-message {
   }
 }
 
-@include breakpoint($medium) {
-
-  header .primary-menu {
-    @include span(9 last);
-    margin-right: 0;
-  }
-
-  header .mobile-menu-toggle {
-    @include span(9 last);
-    margin-right: 0;
-  }
-
-  header .logged-in-message {
-    @include span(12 first);
-    margin-right: 1.69492%;
-  }
-}
 
 
 // global - footer

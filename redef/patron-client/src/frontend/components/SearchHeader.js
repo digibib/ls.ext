@@ -69,7 +69,7 @@ class SearchHeader extends React.Component {
     if (!this.props.isLoggedIn) {
       return [
         <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick} >
-          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
             <img className="icon" src="/images/profile24.svg" />
           </MediaQuery>
           <Link to="/login" >
@@ -96,7 +96,7 @@ class SearchHeader extends React.Component {
     if (this.props.isLoggedIn) {
       return [
         <li key={3} >
-          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
             <img className="icon" src="/images/profile24.svg" />
           </MediaQuery>
           <Link data-automation-id="my-page-link" to="/profile/loans" ><FormattedMessage {...messages.myProfile} /> <span >&raquo;</span ></Link >
@@ -119,7 +119,7 @@ class SearchHeader extends React.Component {
   searchLink () {
     return (
       <li key={5} >
-        <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+        <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
           <img className="icon" src="/images/search24white.svg" />
         </MediaQuery>
         <a src="#" onClick={this.handleSearchClick}>
@@ -190,14 +190,14 @@ class SearchHeader extends React.Component {
           component="header"
           className="search-header" >
 
-          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
             <div className="your-library-link" >
               <p>{this.yourLibraryLink()}</p>
             </div >
           </MediaQuery >
 
           <div className="logo" >
-            <a href="https://www.deichman.no/" >
+            <a href="https://www.deichman.no/">
               <img className="logo-deichman" src="/images/logo_negative.svg" alt={this.props.intl.formatMessage(messages.logoAlt)} />
             </a >
             <a href="https://www.deichman.no/nye-nettsider">
@@ -205,14 +205,14 @@ class SearchHeader extends React.Component {
             </a>
           </div >
 
-          <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(max-width: 1199px)" values={{ ...this.props.mediaQueryValues }} >
             <div className="mobile-menu-toggle" >
               <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars"
                    onClick={this.toggleMobileNav} />
             </div >
           </MediaQuery >
 
-          <MediaQuery query="(min-width: 668px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
             <nav className="primary-menu" >
               {this.renderNavigationLinks()}
             </nav >
@@ -228,7 +228,7 @@ class SearchHeader extends React.Component {
 
         </NonIETransitionGroup >
 
-        <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }} >
+        <MediaQuery query="(max-width: 1199px)" values={{ ...this.props.mediaQueryValues }} >
           <nav className={mobileNavClass} >
             {this.renderMobileNavigationLinks()}
           </nav >
