@@ -45,7 +45,7 @@ export default {
   'Footer.contactUs': 'Kontakt oss',
   'Footer.currentLanguage': 'Norsk',
   'Footer.faq': 'Ofte stilte spørsmål',
-  'Footer.feedback': 'Gi tilbakemeldinger på søk eller Min side',
+  'Footer.feedback': 'Gi tilbakemelding på søk/min side',
   'Footer.info': 'Arne Garborgs plass 4<br />0179 Oslo<br />Telefon: +47 23 43 29 00<br />&nbsp;<br /><strong>Redaktør:</strong><br />Knut Skansen, biblioteksjef <br />',
   'Footer.languageChoice': 'In English',
   'Footer.openingHours': 'Åpningstider',

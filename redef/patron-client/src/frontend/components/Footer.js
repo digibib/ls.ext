@@ -131,7 +131,7 @@ export const messages = defineMessages({
   feedback: {
     id: 'Footer.feedback',
     description: 'Feeback description',
-    defaultMessage: 'Give feedback on search or My page'
+    defaultMessage: 'Give feedback on search/my page'
   },
   faq: {
     id: 'Footer.faq',
