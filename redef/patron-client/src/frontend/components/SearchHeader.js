@@ -59,7 +59,7 @@ class SearchHeader extends React.Component {
 
   yourLibraryLink () {
     return (
-      <a href="https://www.deichman.no/filialer">
+      <a href="https://www.deichman.no/bibliotekene">
         <FormattedMessage {...messages.yourLibrary} /> <span >&raquo;</span >
       </a>
     )
@@ -116,17 +116,6 @@ class SearchHeader extends React.Component {
     }
   }
 
-  faqLink () {
-    return (
-      <li >
-        <a href="https://www.deichman.no/sp%C3%B8rsm%C3%A5l_og_svar_nytt_biblioteksystem" >
-          <FormattedMessage {...messages.faq} />
-          <span >&raquo;</span >
-        </a >
-      </li >
-    )
-  }
-
   searchLink () {
     return (
       <li key={5} >
@@ -157,7 +146,6 @@ class SearchHeader extends React.Component {
   renderNavigationLinks () {
     return (
       <ul >
-        { /* this.faqLink() */ }
         {this.profileLink()}
         {this.registrationLink()}
         { /* borrowerName
@@ -177,7 +165,6 @@ class SearchHeader extends React.Component {
   renderMobileNavigationLinks () {
     return (
       <ul >
-        { /* this.faqLink() */}
         <li key={0} >
           {this.yourLibraryLink()}
         </li>
@@ -211,8 +198,11 @@ class SearchHeader extends React.Component {
 
           <div className="logo" >
             <a href="https://www.deichman.no/" >
-              <img src="/images/logo_negative.svg" alt={this.props.intl.formatMessage(messages.logoAlt)} />
+              <img className="logo-deichman" src="/images/logo_negative.svg" alt={this.props.intl.formatMessage(messages.logoAlt)} />
             </a >
+            <a href="https://www.deichman.no/nye-nettsider">
+              <img className="logo-new" src="/images/ny.png" alt="ny" />
+            </a>
           </div >
 
           <MediaQuery query="(max-width: 667px)" values={{ ...this.props.mediaQueryValues }} >
@@ -355,11 +345,6 @@ export const messages = defineMessages({
     id: 'Navigation.register',
     description: 'Register link in main menu',
     defaultMessage: 'Register'
-  },
-  faq: {
-    id: 'Navigation.faq',
-    description: 'Faq link in main menu',
-    defaultMessage: 'FAQ'
   },
   loggedInAs: {
     id: 'Navigation.loggedInAs',

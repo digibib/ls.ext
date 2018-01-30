@@ -33,12 +33,12 @@ class Footer extends React.Component {
             <nav className="secondary-navigation" type="navigation">
               <ul>
                 <li>
-                  <a href="https://www.deichman.no/kontakt-oss">
+                  <a href="https://www.deichman.no/side/kontakt-oss">
                     <FormattedMessage {...messages.contactUs} />
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.deichman.no/filialer">
+                  <a href="https://www.deichman.no/bibliotekene">
                     <FormattedMessage {...messages.openingHours} />
                   </a>
                 </li>
@@ -50,15 +50,25 @@ class Footer extends React.Component {
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.deichman.no/om-oss">
+                  <a href="https://www.deichman.no/side/om-oss">
                     <FormattedMessage {...messages.aboutUs} />
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.deichman.no/side/ofte-stilte-sporsmal-om-nytt-biblioteksystem">
+                    <FormattedMessage {...messages.faq} />
+                  </a>
+                </li>
+                <li>
+                  <a href="https://goo.gl/forms/QvwgiEhD2rdsWZLv1">
+                    <FormattedMessage {...messages.feedback} />
                   </a>
                 </li>
               </ul>
             </nav>
 
             <div className="cookie-policy">
-              <p><a href="https://notfound.com">Personvern og informasjonskapsler</a></p>
+              <p><a href="http://www.deichman.no/node/20992">Personvern og informasjonskapsler</a></p>
             </div>
 
             <div className="social-icons">
@@ -70,9 +80,12 @@ class Footer extends React.Component {
           </div>
         </footer>
         <div className="footer-oslo">
-          <img src="/images/oslo.png" />
-          <span> OSLO KOMMUNE</span>
+          <a href="https://oslo.kommune.no">
+            <img src="/images/oslo.png" />
+            <span> OSLO KOMMUNE</span>
+          </a>
         </div>
+
       </div>
     )
   }
@@ -119,6 +132,11 @@ export const messages = defineMessages({
     id: 'Footer.feedback',
     description: 'Feeback description',
     defaultMessage: 'Give feedback on search or My page'
+  },
+  faq: {
+    id: 'Footer.faq',
+    description: 'Faq link in footer menu',
+    defaultMessage: 'FAQ'
   }
 })
 
