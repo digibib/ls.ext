@@ -37,7 +37,7 @@ const SearchFilterBoxItemDateRange = ({ dateRange, removePeriod }) => {
         <span className="is-vishidden">{filterText}</span>
           {dateEl}
         </span>
-        <span className="remove"><i className="icon-cancel-1" /></span>
+        <img className="icon" src="/images/x.svg" />
       </li>
     </ClickableElement>
   )

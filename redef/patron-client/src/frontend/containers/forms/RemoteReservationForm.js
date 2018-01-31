@@ -62,7 +62,7 @@ class RemoteReservationForm extends React.Component {
       <div data-automation-id="remote_reservation_modal">
         <button className="close-modal-button" onClick={this.props.modalActions.hideModal}>
           <span className="is-vishidden">Close</span>
-          <i className="icon-cancel-1" aria-hidden="true" />
+          <img className="icon" src="/images/x.svg" />
         </button>
 
         <form onSubmit={handleSubmit(this.handleRemoteReserve)}>
