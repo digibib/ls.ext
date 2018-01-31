@@ -1335,7 +1335,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .search-results .search-results-number {
   font-size: $rhythm5;
   font-weight: bold;
-  flex: 3
+  flex: 2;
+  @include breakpoint($small) {
+    flex: 3
+  }
 }
 
 
