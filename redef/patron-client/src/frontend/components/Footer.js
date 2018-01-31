@@ -42,6 +42,11 @@ class Footer extends React.Component {
                     <FormattedMessage {...messages.openingHours} />
                   </a>
                 </li>
+                <li>
+                  <a href="https://www.deichman.no/slik-laner-du">
+                    <FormattedMessage {...messages.howToLoan} />
+                  </a>
+                </li>
                 <li data-automation-id="change_language_element"
                     data-current-language={this.props.intl.formatMessage(messages.currentLanguage)}
                     onClick={this.handleChangeLanguage}>
@@ -68,7 +73,7 @@ class Footer extends React.Component {
             </nav>
 
             <div className="cookie-policy">
-              <p><a href="http://www.deichman.no/node/20992">Personvern og informasjonskapsler</a></p>
+              <p><a href="http://www.deichman.no/personvern">Personvern og informasjonskapsler</a></p>
             </div>
 
             <div className="social-icons">
@@ -126,7 +131,7 @@ export const messages = defineMessages({
   info: {
     id: 'Footer.info',
     description: 'The text containing the address, telephone number and other information',
-    defaultMessage: 'Arne Garborgs plass 4<br />0179 Oslo<br />Telephone: +47 23 43 29 00 <br />&nbsp;<br /><strong>Editor:</strong><br />Knut Skansen, director<br />'
+    defaultMessage: 'Arne Garborgs plass 4<br />0179 Oslo<br />Telephone: +47 23 43 29 00 <br />&nbsp;<br /><strong>Chief editor:</strong><br />Knut Skansen, director<br />'
   },
   feedback: {
     id: 'Footer.feedback',
@@ -137,6 +142,11 @@ export const messages = defineMessages({
     id: 'Footer.faq',
     description: 'Faq link in footer menu',
     defaultMessage: 'FAQ'
+  },
+  howToLoan: {
+    id: 'Footer.howToLoan',
+    description: 'Link describing how to loan',
+    defaultMessage: 'How to loan'
   }
 })
 
