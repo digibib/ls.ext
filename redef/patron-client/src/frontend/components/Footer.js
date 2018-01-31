@@ -33,7 +33,7 @@ class Footer extends React.Component {
             <nav className="secondary-navigation" type="navigation">
               <ul>
                 <li>
-                  <a href="https://www.deichman.no/side/kontakt-oss">
+                  <a href="https://www.deichman.no/kontakt-oss">
                     <FormattedMessage {...messages.contactUs} />
                   </a>
                 </li>
@@ -55,12 +55,12 @@ class Footer extends React.Component {
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.deichman.no/side/om-oss">
+                  <a href="https://www.deichman.no/om-oss">
                     <FormattedMessage {...messages.aboutUs} />
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.deichman.no/side/ofte-stilte-sporsmal-om-nytt-biblioteksystem">
+                  <a href="https://www.deichman.no/ofte-stilte-sporsmal-om-nytt-biblioteksystem">
                     <FormattedMessage {...messages.faq} />
                   </a>
                 </li>
