@@ -321,9 +321,9 @@ module.exports = {
     'audiobook': '/images/headset24.svg',
     'music': '/images/music24.svg',
     'music-note': '/images/music24.svg',
-    'movie': '/images/movie24.svg',
-    'play': '/images/game24.svg',
-    'undefined': '/images/help24.svg'
+    'movie': '/images/film.svg',
+    'play': '/images/spill.svg',
+    'undefined': '/images/annet.svg'
   },
   preferredLanguages: [
     'http://lexvo.org/id/iso639-3/nob',
