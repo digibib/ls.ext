@@ -1335,13 +1335,14 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .search-results .search-results-number {
   font-size: $rhythm5;
   font-weight: bold;
+  flex: 3
 }
 
 
 .search-results-settings {
-  position: absolute;
-  bottom: 0.1em;
-  right: 0;
+  flex: 1;
+  padding-top: 0.7em;
+  text-align: right
 }
 
 .search-results-settings button {
@@ -1349,10 +1350,9 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .search-results-header-flex {
-  /* display: flex;
-  justify-content: space-between;
-  align-items: flex-end; */
-  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
   margin-top: 1.85em;
 }
 
@@ -1374,12 +1374,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include clearfix;
   font-size: $rhythm3;
   /* margin: rhythm(2) 0; */
-}
-
-.search-results-header .search-results-summary .search-results-number {
-  width: 23.72881%;
-  float: left;
-  margin-right: 1.69492%;
 }
 
 .search-results-header .search-results-summary .search-sorting-placeholder {
@@ -1443,10 +1437,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
     /* margin-top: rhythm(5);
     padding-top: rhythm(4); */
     margin-right: 0;
-  }
-
-  .search-results-header .search-results-summary .search-results-number {
-    @include span(8);
   }
 
   .search-results-header .search-results-summary .search-sorting-placeholder {
