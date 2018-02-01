@@ -47,7 +47,7 @@ function setup (propOverrides) {
           }
         ],
         publicationYear: 'publicationYear_1',
-        expirationDate: '01/10/2016',
+        expirationDate: '2016-01-10',
         pickupNumber: 'pickupNumber_1',
         branchCode: 'branchCode_1'
       },
@@ -63,7 +63,7 @@ function setup (propOverrides) {
           }
         ],
         publicationYear: 'publicationYear_1',
-        expirationDate: '02/10/2016',
+        expirationDate: '2016-10-02',
         pickupNumber: 'pickupNumber_2',
         branchCode: 'branchCode_2'
       }
@@ -232,7 +232,7 @@ describe('containers', () => {
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_type']").textContent).toEqual(messages[loansAndReservations.pickups[ index ].mediaType])
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_title']").textContent).toEqual(loansAndReservations.pickups[ index ].title)
         expect(pickup.querySelector("[data-automation-id='work_contributor_link']").textContent).toEqual(loansAndReservations.pickups[ index ].contributors[0].agent.name)
-        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(formatDate(new Date(Date.parse(loansAndReservations.pickups[ index ].expirationDate) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ]))
+        expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_expiry']").textContent).toEqual(formatDate(loansAndReservations.pickups[ index ].expirationDate))
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_pickupNumber']").textContent).toEqual(loansAndReservations.pickups[ index ].pickupNumber)
         expect(pickup.querySelector("[data-automation-id='UserLoans_pickup_branch']").textContent).toEqual(messages[ loansAndReservations.pickups[ index ].branchCode ])
       })
