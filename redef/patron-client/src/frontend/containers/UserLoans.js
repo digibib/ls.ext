@@ -18,15 +18,6 @@ import Loading from '../components/Loading'
 import Constants from '../constants/Constants'
 
 class UserLoans extends React.Component {
-  // NB: this is a hack, permanent solution comes later
-  addWeek (date) {
-    if (date) {
-      return new Date(Date.parse(`${date}`) + (1000 * 60 * 60 * 24 * 7)).toISOString(1).split('T')[ 0 ]
-    } else {
-      return 'ukjent'
-    }
-  }
-
   renderMainContributors (item) {
     if (item.contributors) {
       const mainEntry = item.contributors.find(c => { return c.mainEntry === true })
@@ -72,7 +63,7 @@ class UserLoans extends React.Component {
                 <div className="flex-col loan-expire">
                   <h2><FormattedMessage {...messages.expiry} />:</h2>
                   {item.expirationDate
-                    ? (<p data-automation-id="UserLoans_pickup_expiry">{formatDate(this.addWeek(item.expirationDate))}</p>)
+                    ? (<p data-automation-id="UserLoans_pickup_expiry">{formatDate(item.expirationDate)}</p>)
                     : (<p data-automation-id="UserLoans_pickup_expiry">?</p>)
                     }
                 </div>
