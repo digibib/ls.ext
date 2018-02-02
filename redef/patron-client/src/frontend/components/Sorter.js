@@ -24,8 +24,8 @@ class Sorter extends React.Component {
     return (
       <button className="sorter" onClick={handleReverseSortOrder}
               title={intl.formatMessage(messages[ swapSortOrder(sortOrder) ])} >
-        <span className={`sort-button icon-up-open ${((!sortOrder || sortOrder === 'asc') ? 'visible' : '')}`} />
-        <span className={`sort-button icon-down-open ${((!sortOrder || sortOrder === 'desc') ? 'visible' : '')}`} />
+        <span className={`sort-button icon-up-open ${((!sortOrder || sortOrder === 'asc') ? 'visible' : '')}`}>▲</span>
+        <span className={`sort-button icon-down-open ${((!sortOrder || sortOrder === 'desc') ? 'visible' : '')}`}>▼</span>
       </button>
     )
   }
