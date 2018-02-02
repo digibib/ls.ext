@@ -78,9 +78,9 @@ class Footer extends React.Component {
 
             <div className="social-icons">
               <a href="https://www.flickr.com/photos/deichmanske/"><img src="/images/flickr.svg" /></a>
-              <a href="https://instagram.com/deichmanske/"><img src="/images/instagram.svg" /></a>
-              <a href="https://twitter.com/deichmanske"><img src="/images/twitter.svg" /></a>
-              <a href="https://www.facebook.com/deichmanske"><img src="/images/facebook.svg" /></a>
+              <a href="https://www.instagram.com/deichman.hovedbiblioteket/"><img src="/images/instagram.svg" /></a>
+              <a href="https://twitter.com/deichman_oslo"><img src="/images/twitter.svg" /></a>
+              <a href="https://www.facebook.com/deichman.hovedbiblioteket/"><img src="/images/facebook.svg" /></a>
             </div>
           </div>
         </footer>
