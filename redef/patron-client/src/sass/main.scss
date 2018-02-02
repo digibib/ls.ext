@@ -1321,6 +1321,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include container;
   @include span(12);
   @include clearfix;
+  padding: 0.5em;
+  @include breakpoint($small) {
+    padding: 0;
+  }
 }
 
 .search-results .search-results-list {
@@ -1468,13 +1472,19 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .single-entry .book-cover {
   @include span(3);
   text-align: center;
+  margin-top: 0.5em;
+  @include breakpoint($small) {
+    margin-top: 0;
+  }
 }
 
 .single-entry .book-cover.missing {
   background-color: #D6D6D6;
-  max-height: 200px;
+  max-height: 90px;
   @include breakpoint($small) {
-    border: 10px solid #fff;
+    border-left: 10px solid #fff;
+    border-right: 10px solid #fff;
+    max-height: 180px;
   }
 }
 
@@ -1485,14 +1495,17 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 .single-entry .book-cover img {
   display: inline-block;
-  margin-top: 10px;
 }
 
 
 .single-entry .book-cover.missing img {
-  margin-top: 3em;
-  width: 3em;
+  margin-top: 1.25em;
+  width: 2em;
   opacity: 0.5;
+  @include breakpoint($small) {
+    margin-top: 3em;
+    width: 3em;
+  }
 }
 
 .entry-header {
@@ -1506,7 +1519,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-size: $rhythm2;
   margin-right: auto;
   float: none;
-  margin-top: 1em;
+  margin-top: 0;
 }
 
 .entry-content .entry-content-icon {
@@ -1528,13 +1541,15 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include clearfix;
   font-size: $rhythm5;
   margin-top: 0;
+  margin-bottom: 0.25em;
+
 }
 
 .entry-content h1 .title-text {
   width: 91.52542%;
   float: left;
   margin-right: 1.69492%;
-  margin-bottom: 0.25em;
+  margin-bottom: 0;
   color: #333;
 }
 
@@ -1595,7 +1610,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .entry-content .subjects, .entry-content .genres {
-  margin-top: $rhythm2;
+  margin-top: 0;
 }
 
 .entry-content .subjects strong, .entry-content .genres strong {
@@ -1757,18 +1772,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
     margin-left: 1em;
   }
 
-  .entry-content h1 {
-    margin-bottom: $rhythm0_5;
-    font-weight: bold;
-  }
 
-  .entry-content > p {
-    margin-bottom: $rhythm1;
-  }
-
-  .entry-content .subjects, .entry-content .genres {
-    margin-top: 0em;
-  }
 
   .items-by-branch .main-row-1 {
     width: 25%;
@@ -2174,10 +2178,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   text-align: center;
 }
 
-.single-publication .book-cover.missing i {
-  color: $mediumGreyColor;
-  font-size: 3em;
-}
 
 .single-publication .meta-info {
   @include clearfix;
@@ -3434,6 +3434,10 @@ header .logged-in-message {
   background-color: $white;
   @include container;
   margin-bottom: $rhythm6;
+  margin-left: 1.2em;
+  @include breakpoint($small) {
+    margin-left: 0;
+  }
 }
 
 .pagination-area ul {
@@ -3890,7 +3894,6 @@ footer .social-icons {
   padding: $rhythm1 $rhythm2;
   background-repeat: no-repeat;
   font-size: $rhythm4;
-  font-weight: bold;
   color: $blackColor;
   border: none;
   width: 100%;
