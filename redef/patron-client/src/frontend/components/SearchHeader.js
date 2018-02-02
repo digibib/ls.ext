@@ -11,7 +11,6 @@ class SearchHeader extends React.Component {
     this.handleSearch = this.handleSearch.bind(this)
     this.handleLoginClick = this.handleLoginClick.bind(this)
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
-    this.handleSearchClick = this.handleSearchClick.bind(this)
   }
 
   componentDidUpdate (prevprops, prevState) {
@@ -42,11 +41,6 @@ class SearchHeader extends React.Component {
     event.preventDefault()
     this.props.mobileNavigationActions.hideMobileNavigation()
     push({pathname: '/login'})
-  }
-
-  handleSearchClick (event) {
-    event.preventDefault()
-    this.props.searchActions.toggleSearchBar(window.location.pathname)
   }
 
   toggleMobileNav () {
@@ -116,20 +110,6 @@ class SearchHeader extends React.Component {
     }
   }
 
-  searchLink () {
-    return (
-      <li key={5} >
-        <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
-          <img className="icon" src="/images/search24white.svg" />
-        </MediaQuery>
-        <a src="#" onClick={this.handleSearchClick}>
-          <FormattedMessage {...messages.search} />
-          <span >&raquo;</span >
-        </a >
-      </li >
-    )
-  }
-
   loggedInMessage () {
     const { borrowerName } = this.props
     return (
@@ -157,7 +137,6 @@ class SearchHeader extends React.Component {
           : null */}
         {this.loginLink()}
         {this.logoutLink()}
-        {this.searchLink()}
       </ul >
     )
   }
@@ -172,7 +151,6 @@ class SearchHeader extends React.Component {
         {this.registrationLink()}
         {this.loginLink()}
         {this.logoutLink()}
-        {this.searchLink()}
       </ul >
     )
   }
@@ -241,7 +219,7 @@ class SearchHeader extends React.Component {
           transitionEnterTimeout={500}
           transitionLeaveTimeout={500}
           component="section"
-          className={this.props.enabled ? 'search-box-wrapper' : 'hidden'}
+          className="search-box-wrapper"
           role="search">
           <div className="search-box wrapper" >
             <form onSubmit={this.handleSearch} >
@@ -286,8 +264,7 @@ SearchHeader.propTypes = {
   searchActions: PropTypes.object.isRequired,
   isSearching: PropTypes.bool.isRequired,
   borrowerName: PropTypes.string,
-  path: PropTypes.string.isRequired,
-  enabled: PropTypes.bool.isRequired
+  path: PropTypes.string.isRequired
 }
 
 export const messages = defineMessages({

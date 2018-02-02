@@ -6,7 +6,6 @@ import { routerActions } from 'react-router-redux'
 
 import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
-import * as SearchActions from '../actions/SearchActions'
 import Tabs from '../components/Tabs'
 
 class MyPage extends React.Component {
@@ -14,7 +13,6 @@ class MyPage extends React.Component {
     if (this.props.isLoggedIn) {
       this.props.profileActions.fetchAllProfileData()
     }
-    this.props.searchActions.disableSearchBar()
   }
 
   componentDidUpdate (prevProps) {
@@ -55,7 +53,6 @@ class MyPage extends React.Component {
 MyPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   loginActions: PropTypes.object.isRequired,
-  searchActions: PropTypes.object.isRequired,
   borrowerNumber: PropTypes.string,
   isLoggedIn: PropTypes.bool.isRequired,
   profileActions: PropTypes.object.isRequired,
@@ -105,8 +102,7 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     profileActions: bindActionCreators(ProfileActions, dispatch),
     loginActions: bindActionCreators(LoginActions, dispatch),
-    routerActions: bindActionCreators(routerActions, dispatch),
-    searchActions: bindActionCreators(SearchActions, dispatch)
+    routerActions: bindActionCreators(routerActions, dispatch)
   }
 }
 

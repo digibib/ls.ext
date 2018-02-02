@@ -11,14 +11,12 @@ import Publications from '../components/Publications'
 import * as ResourceActions from '../actions/ResourceActions'
 import * as ReservationActions from '../actions/ReservationActions'
 import * as ParameterActions from '../actions/ParameterActions'
-import * as SearchActions from '../actions/SearchActions'
 import * as SearchFilterActions from '../actions/SearchFilterActions'
 import AdditionalInformationContent from '../components/work/AdditionalInformationContent'
 
 class Work extends React.Component {
   componentWillMount () {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
-    this.props.searchActions.disableSearchBar()
     window.scrollTo(0, 0)
   }
 
@@ -195,7 +193,6 @@ Work.propTypes = {
   parameterActions: PropTypes.object.isRequired,
   query: PropTypes.object.isRequired,
   searchFilterActions: PropTypes.object.isRequired,
-  searchActions: PropTypes.object.isRequired,
   libraries: PropTypes.object.isRequired,
   items: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
@@ -257,8 +254,7 @@ function mapDispatchToProps (dispatch) {
     resourceActions: bindActionCreators(ResourceActions, dispatch),
     reservationActions: bindActionCreators(ReservationActions, dispatch),
     parameterActions: bindActionCreators(ParameterActions, dispatch),
-    searchFilterActions: bindActionCreators(SearchFilterActions, dispatch),
-    searchActions: bindActionCreators(SearchActions, dispatch)
+    searchFilterActions: bindActionCreators(SearchFilterActions, dispatch)
   }
 }
 

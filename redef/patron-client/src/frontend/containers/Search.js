@@ -26,7 +26,6 @@ class Search extends React.Component {
 
   componentWillMount () {
     this.props.searchActions.search()
-    this.props.searchActions.enableSearchBar()
   }
 
   componentDidUpdate (prevProps) {

@@ -8,7 +8,6 @@ import { push } from 'react-router-redux'
 
 import FormInputField from '../components/FormInputField'
 import * as LoginActions from '../actions/LoginActions'
-import * as SearchActions from '../actions/SearchActions'
 import * as RegistrationActions from '../actions/RegistrationActions'
 const formName = 'loginForm'
 
@@ -16,10 +15,6 @@ class Login extends React.Component {
   constructor (props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
-  }
-
-  componentWillMount () {
-    this.props.searchActions.disableSearchBar()
   }
 
   handleLogin (event) {
@@ -77,7 +72,6 @@ class Login extends React.Component {
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
   loginActions: PropTypes.object.isRequired,
-  searchActions: PropTypes.object.isRequired,
   loginError: PropTypes.string,
   fields: PropTypes.object.isRequired,
   borrowerNumber: PropTypes.string,
@@ -142,8 +136,7 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     loginActions: bindActionCreators(LoginActions, dispatch),
-    registrationActions: bindActionCreators(RegistrationActions, dispatch),
-    searchActions: bindActionCreators(SearchActions, dispatch)
+    registrationActions: bindActionCreators(RegistrationActions, dispatch)
   }
 }
 

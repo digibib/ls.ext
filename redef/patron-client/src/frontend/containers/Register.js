@@ -7,9 +7,6 @@ import * as SearchActions from '../actions/SearchActions'
 import { bindActionCreators } from 'redux'
 
 class Register extends React.Component {
-  componentWillMount () {
-    this.props.searchActions.disableSearchBar()
-  }
 
   renderSuccess () {
     return (
