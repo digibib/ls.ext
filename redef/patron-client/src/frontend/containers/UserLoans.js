@@ -6,6 +6,7 @@ import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-int
 import {routerActions} from 'react-router-redux'
 import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
+import Tooltip from 'react-tooltip-component'
 
 import * as LoanActions from '../actions/LoanActions'
 import * as ReservationActions from '../actions/ReservationActions'
@@ -33,6 +34,26 @@ class UserLoans extends React.Component {
       }
     } else if (item.author) {
       return <h2 data-automation-id="UserLoans_author_name">{item.author}</h2>
+    }
+  }
+
+  renderWaitingPeriodInit (item, onlyShowQueueSpot) {
+    if (item.queuePlace > 0) {
+      if (onlyShowQueueSpot) {
+        return <span data-automation-id="UserLoans_reservation_queue_place">
+          {item.queuePlace}
+        </span>
+      }
+      return <span>
+        <span data-automation-id="UserLoans_reservation_queue_place">{item.queuePlace}</span> &nbsp; {this.renderWaitingPeriod(item.estimate)}
+        <Tooltip title={this.props.intl.formatMessage(messages.waitingTime)} position="top">
+          <button className="btn btn-default">
+            <img className="icon" style={{ fontSize: 16, marginTop: '-5px' }} src="/images/question.svg" />
+          </button>
+        </Tooltip>
+      </span>
+    } else {
+      return <FormattedMessage {...messages.enRoute} />
     }
   }
 
@@ -137,10 +158,10 @@ class UserLoans extends React.Component {
               <div className="flex-col place-in-queue">
                 <div>
                   <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
-                  <p data-automation-id="UserLoans_reservation_queue_place">
+                  <p>
                     {item.suspendUntil
                       ? <span data-automation-id="Userloans_reservation_suspend_message" className="feedback"><FormattedMessage {...messages.putOnHold} /> {formatDate(item.suspendUntil)}</span>
-                      : <span>{item.queuePlace}</span>
+                      : this.renderWaitingPeriodInit(item, this.props.patronCategory === 'IL')
                     }
                   </p>
                 </div>
@@ -266,6 +287,16 @@ class UserLoans extends React.Component {
         )}
       </div>
     )
+  }
+
+  renderWaitingPeriod (expected) {
+    if (expected.error != null) {
+      return <FormattedMessage {...messages.unknown} />
+    } else {
+      const numWeeks = Math.floor(expected.estimate / 7)
+      const estimate = (numWeeks < 11) ? `${numWeeks}–${numWeeks + 2}` : '11'
+      return <span>({this.renderExpectedEstimationPrefix(estimate)} {estimate} <FormattedMessage {...messages.weeks} />)</span>
+    }
   }
 
   renderLoans () {
@@ -416,6 +447,12 @@ class UserLoans extends React.Component {
     }
   }
 
+  renderExpectedEstimationPrefix (estimate) {
+    return estimate.includes('–')
+      ? <FormattedMessage {...messages.approx} />
+      : <FormattedMessage {...messages.moreThan} />
+  }
+
   renderTabs () {
     const tabList = [
       { label: 'Oversikt', path: '/profile/loans/overview' },
@@ -474,6 +511,16 @@ UserLoans.propTypes = {
 }
 
 export const messages = defineMessages({
+  waitingTime: {
+    id: 'UserLoans.waitingTime',
+    description: 'The waiting time explanation text',
+    defaultMessage: 'Expected waiting time is a rough estimate, accuracy may vary.'
+  },
+  waitingPeriod: {
+    id: 'UserLoans.waitingPeriod',
+    description: 'The label of the waiting period of the reservation',
+    defaultMessage: 'Waiting period'
+  },
   title: {
     id: 'UserLoans.title',
     description: 'The label of the item title',
@@ -563,6 +610,31 @@ export const messages = defineMessages({
     id: 'UserLoans.renewAllLoans',
     description: 'The label for the renew all loans button',
     defaultMessage: 'Renew all loans'
+  },
+  approx: {
+    id: 'UserLoans.approximately',
+    description: 'The abbreviation used to mean approximately',
+    defaultMessage: '~'
+  },
+  weeks: {
+    id: 'UserLoans.weeks',
+    description: 'The word used to mean weeks',
+    defaultMessage: 'weeks'
+  },
+  moreThan: {
+    id: 'UserLoans.moreThan',
+    description: 'The words used to mean more than',
+    defaultMessage: 'more than'
+  },
+  unknown: {
+    id: 'UserLoans.unknown',
+    description: 'Text displayed when unable to estimate waiting period',
+    defaultMessage: '(Unknown waiting period)'
+  },
+  enRoute: {
+    id: 'UserLoans.enRoute',
+    description: 'Text displayed when item is en route',
+    defaultMessage: 'En route'
   },
   loansAndReservationError: {
     id: 'UserLoans.loansAndReservationError',

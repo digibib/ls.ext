@@ -84,7 +84,7 @@ function setup (propOverrides) {
         expected: '1–2',
         expectedTestData: '(~ 1–2 weeks)',
         branchCode: 'branchCode_1',
-        estimatedWait: {
+        estimate: {
           error: null,
           estimate: 2,
           pending: false
@@ -105,7 +105,7 @@ function setup (propOverrides) {
         expected: '12',
         expectedTestData: '(more than 12 weeks)',
         branchCode: 'branchCode_2',
-        estimatedWait: {
+        estimate: {
           error: null,
           estimate: 2,
           pending: false
@@ -121,7 +121,7 @@ function setup (propOverrides) {
         expected: 'unknown',
         expectedTestData: '(Unknown waiting period)',
         branchCode: 'branchCode_3',
-        estimatedWait: {
+        estimate: {
           error: null,
           estimate: 2,
           pending: false
