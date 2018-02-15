@@ -78,6 +78,7 @@ export default {
   'Login.forgotPinDesc': 'Har du glemt PIN-koden din må du inntil videre møte opp på ett av våre bibliotek for å endre denne. Vi jobber med en bedre løsning på dette.',
   'Login.genericLoginError': 'Noe gikk galt under påloggingen, vennligst prøv igjen senere',
   'Login.invalidCredentials': 'Feil brukernavn og/eller passord',
+  'Login.tooManyFailedAttempts': 'Feil brukernavn og/eller passord',
   'Login.logIn': 'Logg inn',
   'Login.password': 'PIN-kode:',
   'Login.username': 'Lånernummer eller epost:',

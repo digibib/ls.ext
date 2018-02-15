@@ -1143,6 +1143,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 // form pages common
 // -------------------------------------------------------
 
+.capthca-container {
+  margin-top: 1em;
+  clear: both;
+}
+
 .default-form {
   @include clearfix;
   background: $greyColor;
@@ -1170,7 +1175,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .default-form label, .default-form input, .default-form p, .default-form h4, .default-form hr, .default-form h1, .default-form legend {
-  @include span(12);
+  @include container;
 }
 
 .default-form label {
@@ -1196,10 +1201,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-size: $rhythm3;
 }
 
-.default-form .error-msg {
+.error-msg {
   @include container;
   @include span(12);
   margin-bottom: $rhythm4;
+  color: $redColor;
 }
 
 .default-form .error-msg p {
@@ -3147,16 +3153,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   border: 1px solid $mediumGreyColor;
 }
 
-.login-modal .error-msg {
-  @include container;
-  @include span(12);
-  margin-bottom: $rhythm4;
-}
-
-.login-modal .error-msg p {
-  width: 100%;
-  margin: 0;
-}
 
 .login-modal .close-modal-button {
   position: absolute;

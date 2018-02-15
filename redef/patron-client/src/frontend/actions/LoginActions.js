@@ -9,6 +9,15 @@ import { fetchProfileInfo } from './ProfileActions'
 
 export const requestLogin = (username) => action(types.REQUEST_LOGIN, { username })
 
+export function captchaSuccess (response) {
+  return {
+    type: types.CAPTCHA_SUCCESS,
+    payload: {
+      response: response
+    }
+  }
+}
+
 export const loginSuccess = (username, borrowerNumber, borrowerName, category) => action(types.LOGIN_SUCCESS, {
   username,
   borrowerNumber,
@@ -16,12 +25,13 @@ export const loginSuccess = (username, borrowerNumber, borrowerName, category) =
   category
 })
 
-export function loginFailure (username, error) {
+export function loginFailure (username, error, demandCaptcha) {
   return {
     type: types.LOGIN_FAILURE,
     payload: {
       username: username,
-      message: error.message
+      message: error.message,
+      demandCaptcha: demandCaptcha
     },
     error: true
   }
@@ -38,7 +48,7 @@ export function showLoginDialog (successAction) {
   }
 }
 
-export function login (username, password, successActions = []) {
+export function login (username, password, captchaResponse, successActions = []) {
   const url = '/api/v1/login'
   return dispatch => {
     dispatch(requestLogin(username))
@@ -48,13 +58,15 @@ export function login (username, password, successActions = []) {
         'Content-Type': 'application/json'
       },
       credentials: 'same-origin',
-      body: JSON.stringify({ username: username, password: password })
+      body: JSON.stringify({ username: username, password: password, captcha: captchaResponse })
     })
       .then(response => {
         if (response.status === 200) {
           return response.json()
         } else if (response.status === 403) {
           throw Error(Errors.login.INVALID_CREDENTIALS)
+        } else if (response.status === 429) {
+          throw Error(Errors.login.TO_MANY_FAILED_ATTEMPTS)
         } else {
           throw Error(Errors.login.GENERIC_LOGIN_ERROR)
         }
@@ -66,7 +78,9 @@ export function login (username, password, successActions = []) {
       .then(() => {
         successActions.forEach(successAction => dispatch(successAction))
       })
-      .catch(error => dispatch(loginFailure(username, error)))
+      .catch(error => {
+        dispatch(loginFailure(username, error, error.message === Errors.login.TO_MANY_FAILED_ATTEMPTS))
+      })
   }
 }
 

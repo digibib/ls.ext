@@ -1,6 +1,7 @@
 export default {
   login: {
     INVALID_CREDENTIALS: 'invalidCredentials',
+    TO_MANY_FAILED_ATTEMPTS: 'tooManyFailedAttempts',
     GENERIC_LOGIN_ERROR: 'genericLoginError'
   },
   reservation: {

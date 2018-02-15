@@ -171,6 +171,7 @@ services:
       BUILD_TAG: "${BUILD_TAG:-0}"
       KOHA_API_USER: "${KOHA_API_USER:-api}"
       KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
+      RECAPTCHA_SECRET: "${RECAPTCHA_SECRET}"
     logging:
       driver: "json-file"
       options:
