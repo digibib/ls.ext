@@ -52,6 +52,11 @@ export const messages = defineMessages({
     description: 'The message shown when the user inputs invalid username and password combination',
     defaultMessage: 'Invalid username and/or password'
   },
+  tooManyFailedAttempts: {
+    id: 'Login.tooManyFailedAttempts',
+    description: 'The message shown when the user inputs invalid username and password combination',
+    defaultMessage: 'Invalid username and/or password'
+  },
   genericLoginError: {
     id: 'Login.genericLoginError',
     description: 'A generic message for login failures, which can be caused by server errors, network problems etc.',
