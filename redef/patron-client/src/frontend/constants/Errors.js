@@ -26,6 +26,7 @@ export default {
     GENERIC_CHANGE_PIN_ERROR: 'genericChangePinError'
   },
   history: {
-    GENERIC_FETCH_HISTORY_ERROR: 'genericFetchHistoryError'
+    GENERIC_FETCH_HISTORY_ERROR: 'genericFetchHistoryError',
+    GENERIC_DELETE_HISTORY_ERROR: 'genericDeleteHistoryError'
   }
 }

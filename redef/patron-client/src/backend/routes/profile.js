@@ -35,16 +35,30 @@ module.exports = (app) => {
 
   app.post('/api/v1/profile/history', jsonParser, (request, response) => {
     const params = {
-      offset: request.body.offset,
-      limit: request.body.limit
+      offset: request.body.offset || 0,
+      limit: request.body.limit || 20
     }
     fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/history?${querystring.stringify(params)}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
         } else {
-          response.status(res.status).send(res.statusText)
-          throw Error()
+          throw Error(res.statusText)
+        }
+      }).then(json => response.status(200).send(json))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
+  app.delete('/api/v1/profile/history', jsonParser, (request, response) => {
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/history`, { method: 'DELETE' })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw Error(res.statusText)
         }
       }).then(json => response.status(200).send(json))
       .catch(error => {

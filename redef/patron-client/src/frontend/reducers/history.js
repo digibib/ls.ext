@@ -5,7 +5,10 @@ import {
   UPDATE_HISTORY,
   RESET_HISTORY,
   SET_CURRENT_LOADED_HISTORY_ITEMS,
-  SET_NO_HISTORY_TO_FETCH
+  SET_NO_HISTORY_TO_FETCH,
+  DELETE_ALL_HISTORY,
+  DELETE_ALL_HISTORY_SUCCESS,
+  DELETE_ALL_HISTORY_FAILURE
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -13,8 +16,11 @@ const initialState = {
   fetchHistoryFailure: false,
   historyData: [],
   allLoadedHistory: [],
+  historyToDelete: [],
   moreToFetch: true,
-  loadedHistoryItems: 0
+  loadedHistoryItems: 0,
+  isRequestingDeleteAllHistory: false,
+  isRequestingDeleteHistory: false
 }
 
 export default function loan (state = initialState, action) {
@@ -33,6 +39,12 @@ export default function loan (state = initialState, action) {
       return { ...state, fetchHistoryFailure: false, allLoadedHistory: action.payload.historyAll }
     case FETCH_HISTORY_FAILURE:
       return { ...state, isRequestingHistory: false, fetchHistoryFailure: true }
+    case DELETE_ALL_HISTORY:
+      return { ...state, isRequestingDeleteAllHistory: true }
+    case DELETE_ALL_HISTORY_SUCCESS:
+      return { ...state, isRequestingDeleteAllHistory: false, historyData: [], allLoadedHistory: [], moreToFetch: false, loadedHistoryItems: 0 }
+    case DELETE_ALL_HISTORY_FAILURE:
+      return { ...state, isRequestingDeleteAllHistory: false }
     default:
       return state
   }

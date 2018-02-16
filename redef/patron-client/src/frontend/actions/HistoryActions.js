@@ -19,9 +19,42 @@ export function fetchHistoryFailure (error) {
   }
 }
 
+export function deleteAllHistoryFailure (error) {
+  return dispatch => {
+    dispatch({
+      type: types.DELETE_ALL_HISTORY_FAILURE,
+      payload: { message: error },
+      error: true
+    })
+  }
+}
+
+export function deleteAllHistory () {
+  return (dispatch, getState) => {
+    const url = `/api/v1/profile/history`
+    dispatch(requestDeleteAllHistory())
+    return fetch(url, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status === 200) {
+        dispatch(action(types.DELETE_ALL_HISTORY_SUCCESS))
+      } else {
+        dispatch(deleteAllHistoryFailure(Errors.loan.GENERIC_DELETE_HISTORY_ERROR))
+      }
+    }).catch(error => dispatch(deleteAllHistoryFailure(error)))
+  }
+}
+
 export const resetHistory = () => action(types.RESET_HISTORY)
 
 export const requestHistory = () => action(types.REQUEST_FETCH_HISTORY)
+
+export const requestDeleteAllHistory = () => action(types.REQUEST_DELETE_ALL_HISTORY)
 
 export const receiveHistory = data => action(types.RECEIVE_FETCH_HISTORY, { history: data })
 
@@ -59,12 +92,10 @@ export function fetchHistory (args) {
 export function updateHistory () {
   return (dispatch, getState) => {
     const { historyData, allLoadedHistory, loadedHistoryItems } = getState().history
-    const mergedHistory = merge(allLoadedHistory, historyData, 'issue_id')
+    const mergedHistory = merge(allLoadedHistory, historyData, 'id')
     dispatch(requestUpdateHistory(mergedHistory))
     dispatch(setCurrentLoadedNumber(mergedHistory.length))
-    if (historyData.length === 0 ) {
-      dispatch(setNoHistoryToFetch())
-    } else if (mergedHistory.length === loadedHistoryItems) {
+    if (historyData.length === 0 || mergedHistory.length === loadedHistoryItems) {
       dispatch(setNoHistoryToFetch())
     }
   }

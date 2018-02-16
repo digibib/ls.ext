@@ -26,7 +26,7 @@ class UserHistory extends React.Component {
   }
 
   loadItems () {
-    if (this.props.isRequestingHistory) {
+    if (this.props.isRequestingHistory || this.props.fetchHistoryFailure) {
       // We don't want to send multiple requests at a time
       return
     }
@@ -65,14 +65,14 @@ class UserHistory extends React.Component {
               <span className="checkbox-wrapper" style={{ display: 'inline-block' }}>
                 <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                 <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
-              </span>
+              </span>&nbsp;
               <FormattedMessage {...messages.keepMyHistory} />
-            </label>
+          </label>
         </div>
         {this.props.personalInformation.privacy === 0 ||
         this.props.personalInformation.privacy === 1 ||
         this.props.personalInformation.privacy === ''
-          ? < HistoryItems historyItems={this.props.allLoadedHistory} loadItems={this.loadItems} hasMoreItems={this.props.hasMoreItems} />
+          ? < HistoryItems historyItems={this.props.allLoadedHistory} historyActions={this.props.historyActions} loadItems={this.loadItems} hasMoreItems={this.props.hasMoreItems} />
           : null
         }
       </div>
@@ -86,7 +86,8 @@ UserHistory.propTypes = {
   profileActions: PropTypes.object.isRequired,
   loadedHistoryItems: PropTypes.number.isRequired,
   allLoadedHistory: PropTypes.array.isRequired,
-  hasMoreItems: PropTypes.bool.isRequired
+  hasMoreItems: PropTypes.bool.isRequired,
+  historyToDelete: PropTypes.array.isRequired
 }
 
 export const messages = defineMessages({
@@ -105,11 +106,13 @@ export const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     isRequestingHistory: state.history.isRequestingHistory,
+    fetchHistoryFailure: state.history.fetchHistoryFailure,
     historyItems: state.history.historyData,
     allLoadedHistory: state.history.allLoadedHistory,
     loadedHistoryItems: state.history.loadedHistoryItems,
     hasMoreItems: state.history.moreToFetch,
-    personalInformation: state.profile.personalInformation
+    personalInformation: state.profile.personalInformation,
+    historyToDelete: state.history.historyToDelete
   }
 }
 

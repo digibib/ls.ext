@@ -2495,6 +2495,30 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 /* Prototype */
 
+.single-entry {
+  position: relative;
+}
+
+.delete-history-buttons {
+  text-align: right;
+}
+
+.delete-history-entry {
+  order: -1;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  text-align: right;
+  @include breakpoint($small) {
+    order: inherit;
+    position: inherit;
+    top: inherit;
+    width: auto;
+    text-align: left;
+  }
+}
+
+
 .pickup, .reserve, .loan {
   width: 100%;
   margin-top: 2.5em;
@@ -2502,7 +2526,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   /* Line item */
 }
 
-.pickup > h1, .reserve > h1, .loan > h1 {
+.pickup > h1, .reserve > h1, .loan > h1, .history > h1 {
   width: 100%;
   font-size: $rhythm4;
   font-weight: normal;
@@ -2527,7 +2551,9 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 .pickup .single-entry, .reserve .single-entry, .loan .single-entry {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: stretch;
   flex-wrap: wrap;
   float: none;
   border-bottom: 1px solid $blackColor;
@@ -2589,7 +2615,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   width: 23.72881%;
 }
 
-.pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type {
+.pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type, .history .single-entry .media-type {
   font-size: 0.8em;
   text-transform: uppercase;
   width: 100%;
@@ -2605,7 +2631,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   width: 49.15254%;
 }
 
-.pickup .loan-expire h2, .pickup .loan-pickup-number h2, .pickup .loan-pickup-location h2 {
+.pickup .loan-expire h2, .pickup .loan-pickup-number h2, .pickup .loan-pickup-location h2, .history .return-date h2 {
   text-transform: uppercase;
 }
 
@@ -2679,11 +2705,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
     margin-bottom: 0.7em;
   }
 
-  .pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type {
+  .pickup .single-entry .media-type, .reserve .single-entry .media-type, .loan .single-entry .media-type, .history .single-entry .media-type {
     width: 11.01695%;
   }
 
-  .pickup .single-entry .entry-details, .reserve .single-entry .entry-details, .loan .single-entry .entry-details{
+  .pickup .single-entry .entry-details, .reserve .single-entry .entry-details, .loan .single-entry .entry-details, .history .single-entry .entry-details{
     width: 23.72881%;
   }
 
@@ -2747,7 +2773,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 
 
-  .loan .single-entry .due-date {
+  .loan .single-entry .due-date, .history .single-entry .return-date {
     width: 15.25424%;
   }
 
