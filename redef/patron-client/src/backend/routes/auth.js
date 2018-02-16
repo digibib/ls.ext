@@ -48,7 +48,7 @@ module.exports = (app) => {
         request.session.passwordHash = bcrypt.hashSync(request.body.password)
         request.session.category = category
         return res.json()
-      } else if (res.status === 429) {
+      } else if (res.status === 429 && process.env.RECAPTCHA_SECRET) {
         return Promise.reject({ message: 'To many failed attempts', status: 429 })
       } else {
         return Promise.reject({ message: 'Could not create session', status: 403 })
@@ -93,7 +93,7 @@ module.exports = (app) => {
   }
 
   function captchaHandler (captcha) {
-    if (!captcha) {
+    if (!captcha || !process.env.RECAPTCHA_SECRET) {
       return Promise.resolve({})
     }
     return fetch('https://www.google.com/recaptcha/api/siteverify', {
