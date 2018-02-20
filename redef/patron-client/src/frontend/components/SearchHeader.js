@@ -178,9 +178,6 @@ class SearchHeader extends React.Component {
             <a href="https://www.deichman.no/">
               <img className="logo-deichman" src="/images/logo_negative.svg" alt={this.props.intl.formatMessage(messages.logoAlt)} />
             </a >
-            <a href="https://www.deichman.no/nye-nettsider">
-              <img className="logo-new" src="/images/ny.png" alt="ny" />
-            </a>
           </div >
 
           <MediaQuery query="(max-width: 1199px)" values={{ ...this.props.mediaQueryValues }} >
