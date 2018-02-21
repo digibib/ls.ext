@@ -350,5 +350,79 @@ module.exports = {
     'http://lexvo.org/id/iso639-3/ita',
     'http://lexvo.org/id/iso639-3/rus'
   ],
-  enabledParameter: null /* used to clarify url parameters without value, e.g. ?hideFilters */
+  enabledParameter: null, /* used to clarify url parameters without value, e.g. ?hideFilters */
+  predefinedQueries: [
+    {
+      query: '/search?query=%2A',
+      title: 'Søk i hele samlingen',
+      desc: 'I tillegg til bøker har vi filmer, musikk, spill, noter og mye mer.',
+      image: '/images/q1.jpg'
+    },
+    {
+      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&query=form%3Aroman+NOT+sjanger%3Akriminal+OR+sjanger%3Aspenning&showFilter=audience&showFilter=branch&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      title: 'Nye romaner (voksne)',
+      desc: 'Les våre nyeste romaner.',
+      image: '/images/q2.jpg'
+    },
+    {
+      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=sjanger%3Akriminal+OR+sjanger%3Aspenning&showFilter=audience&showFilter=branch&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      title: 'Ny Krim og spenning (voksne)',
+      desc: 'Det er gratis å låne på biblioteket. Se de nyeste krimbøkene her.',
+      image: '/images/q3.jpg'
+    },
+    {
+      query: '/search?filter=audience_adult&filter=fictionNonfiction_nonfiction&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      title: 'Nye fagbøker (voksne)',
+      desc: 'Finn ut om vi har pensumbøkene du trenger.',
+      image: '/images/q4.jpg'
+    },
+    {
+      query: '/search?filter=audience_adult&filter=mediatype_Film&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      title: 'Ny Film (voksne)',
+      desc: 'Vi har filmer om det meste for de fleste. Finn våre nyeste filmer her.',
+      image: '/images/q5.jpg'
+    },
+    {
+      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&page=1&query=sjanger%3A%22science+fiction%22+OR+sjanger%3Afantasy&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=language&showMore=mediatype&yearFrom=2012',
+      title: 'Science fiction og fantasy (voksne)',
+      desc: 'Slipp fantasien løs blant hundrevis av titler.',
+      image: '/images/q6.jpg'
+    },
+    {
+      query: '/search?filter=audience_ages13To15&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Aroman&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
+      title: 'Nye romaner for ungdom',
+      desc: 'Sjekk ut våre nyeste ungdomsromaner.',
+      image: '/images/q7.jpg'
+    },
+    {
+      query: 'search?filter=audience_ages11To12&filter=audience_ages13To15&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Aroman+AND+sjanger%3Afantasy+OR+sjanger%3A%22science+fiction%22&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2012',
+      title: 'SFantasy og science fiction for ungdom',
+      desc: 'Slipp fantasien løs blant hundrevis av titler.',
+      image: '/images/q8.jpg'
+    },
+    {
+      query: '/search?filter=audience_ages0To2&filter=audience_ages3To5&filter=audience_ages6To8&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Abildebok&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
+      title: 'Nye bildebøker',
+      desc: 'Lån våre flotte bildebøker for barn.',
+      image: '/images/q9.jpg'
+    },
+    {
+      query: '/search?filter=audience_ages3To5&filter=audience_ages6To8&filter=language_nob&filter=mediatype_Book&query=sjanger%3Alettlest&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=mediatype&yearFrom=2012',
+      title: 'Lesestart',
+      desc: 'Vi har flere hundre lettlestbøker.',
+      image: '/images/q10.jpg'
+    },
+    {
+      query: '/search?filter=audience_ages11To12&filter=audience_ages6To8&filter=fictionNonfiction_fiction&filter=fictionNonfiction_nonfiction&filter=language_nob&filter=mediatype_Book&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
+      title: 'Nye barnebøker',
+      desc: 'Velkommen til Oslos største barne– og ungdomsbibliotek!',
+      image: '/images/q11.jpg'
+    },
+    {
+      query: '/search?filter=audience_ages11To12&filter=audience_ages9To10&filter=language_nob&filter=mediatype_Book&query=sjanger%3Ahumor&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2012',
+      title: 'Morsomme bøker for mellomtrinnet',
+      desc: 'Øk leselysten med disse morsomme bøkene!',
+      image: '/images/q12.jpg'
+    }
+  ]
 }

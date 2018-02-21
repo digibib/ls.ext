@@ -1320,6 +1320,17 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 }
 
+// search links
+
+.search-links    { @include container; }
+.search-links h2 { font-weight: bold; text-align: center; margin: 0.5em 0 0 0 }
+.search-links ul { font-size: $rhythm3; list-style-type: none; padding: 0; display: flex; align-items: stretch; flex-wrap: wrap }
+.search-links a  { flex: 1 0 30%;  padding: 2em; background-color:rgba(0,0,255,0.05); margin: 1em;
+                   text-decoration: none; color: $blackColor; }
+.search-links li { height: 100%; display: flex; flex-direction: column; }
+.search-links .arrow { width: 2em; height: 1em; margin-top: auto; margin-left: auto; margin-right: auto }
+
+
 // search results
 // --------------------------------------------------------
 
