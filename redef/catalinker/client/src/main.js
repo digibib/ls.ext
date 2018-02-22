@@ -3322,56 +3322,48 @@
           })
 
           ractive.set('save_status', 'arbeider...')
-          const promises = []
-          _.each(patchRequests, function (patch) {
-            promises.push(axios.patch(proxyToServices(patch.subject), JSON.stringify(patch.patch, undefined, 2), {
-              headers: {
-                Accept: 'application/ld+json',
-                'Content-Type': 'application/ldpatch+json'
-              }
-            }).then(function (response) {
-              if (patch.subject === mainSubject) {
-                let parsed = ldGraph.parse(response.data)
-                _.each(applicationData.sortOrders, function (sortOrder) {
-                  let root = sortNodes(parsed.byId(patch.subject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
-                  ractive.get('lastRoots')[ patch.subject ] = { [sortOrder.predicate]: root }
-                  ractive.update('lastRoots')
-                })
-                let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
-                if (op === 'del' || addedMultivalues > 1) {
-                  removeInputsForObject(input, index)()
-                  ractive.update()
-                  if (addedMultivalues > 1) {
-                    updateInputsForResource(response.data, patch.subject, { inputs: _.pluck(input.subInputs, 'input') })
-                  }
+          const subject = patchRequests[0] ? patchRequests[0].subject : null
+          const patches = [].concat.apply([], patchRequests.map(f => f.patch))
+          return axios.patch(proxyToServices(subject), JSON.stringify(patches, undefined, 2), {
+            headers: {
+              Accept: 'application/ld+json',
+              'Content-Type': 'application/ldpatch+json'
+            }
+          }).then(function (response) {
+            if (subject === mainSubject) {
+              let parsed = ldGraph.parse(response.data)
+              _.each(applicationData.sortOrders, function (sortOrder) {
+                let root = sortNodes(parsed.byId(subject).outAll(sortOrder.predicate), sortOrder.objectSortOrder)
+                ractive.get('lastRoots')[ subject ] = { [sortOrder.predicate]: root }
+                ractive.update('lastRoots')
+              })
+              let addedMultivalues = _.select(opSpecs, function (spec) { return spec.operation === 'add' }).length
+              if (op === 'del' || addedMultivalues > 1) {
+                removeInputsForObject(input, index)()
+                ractive.update()
+                if (addedMultivalues > 1) {
+                  updateInputsForResource(response.data, subject, { inputs: _.pluck(input.subInputs, 'input') })
                 }
               }
+            }
+            return response
+          })
+            .then(function (response) {
+              // successfully patched resource
+              ractive.set('save_status', 'alle endringer er lagret')
+              if (input.subInputs) {
+                _.each(input.subInputs, function (subInput) {
+                  if (subInput.input.values[ index ]) {
+                    subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
+                    subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
+                  }
+                })
+              } else {
+                input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
+              }
+              ractive.update()
               return response
             })
-              .then(function (response) {
-                // successfully patched resource
-                ractive.set('save_status', 'alle endringer er lagret')
-                if (input.subInputs) {
-                  _.each(input.subInputs, function (subInput) {
-                    if (subInput.input.values[ index ]) {
-                      subInput.input.values[ index ].old = subInput.input.values[ index ].old || {}
-                      subInput.input.values[ index ].old.value = deepClone(subInput.input.values[ index ].current.value)
-                    }
-                  })
-                } else {
-                  input.values[ index ].old.value = deepClone(input.values[ index ].current.value)
-                }
-                ractive.update()
-                return response
-              }))
-            // .catch(function (response) {
-            //    // failed to patch resource
-            //    console.log('HTTP PATCH failed with: ')
-            //    errors.push('Noe gikk galt! Fikk ikke lagret endringene')
-            //    ractive.set('save_status', '')
-            // })
-          })
-          return Promise.all(promises)
         }
 
         let templateSelection = function (selection) {
