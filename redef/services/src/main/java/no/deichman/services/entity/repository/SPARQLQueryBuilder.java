@@ -251,6 +251,34 @@ public final class SPARQLQueryBuilder {
         return q.toString();
     }
 
+    // Builds queries for a simple test mechanism that checks the cardinality of the operations to
+    // gauge their succesfulness
+    public String buildTestQuery(List<Patch> patches, Resource subject, String operation) {
+        StringBuilder q = new StringBuilder();
+
+        String del = getStringOfStatments(patches, "DEL", SKIP_BLANK_NODES);
+        String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
+        String add = getStringOfStatments(patches, "ADD", KEEP_BLANK_NODES);
+
+        if (del.length() > 0) {
+            // q.append("DELETE DATA {" + NEWLINE + del + "};" + NEWLINE);
+        }
+        if (operation.toUpperCase().equals("DEL") && delSelect.length() > 0) {
+            q.append("SELECT (count(*) AS ?count)" + NEWLINE + "WHERE {" + NEWLINE + delSelect + "}" + NEWLINE);
+        }
+        if (operation.toUpperCase().equals("ADD") && add.length() > 0) {
+            q.append("SELECT (count(*) AS ?count)" + NEWLINE + "WHERE {" + NEWLINE + add + "}" + NEWLINE);
+        }
+
+        return q.toString();
+    }
+
+
+
+
+
+
+
     private String getStringOfStatementsWithVariables(List<Patch> patches, String operation) {
 
         String retVal = "";

@@ -9,9 +9,10 @@ import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.datatypes.xsd.XSDDateTime;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.Model;
@@ -316,8 +317,42 @@ public abstract class RDFRepositoryBase implements RDFRepository {
         ArrayList<Patch> copy = newArrayList(patches);
         copy.add(addPatch(modifiedStatement(subject), null));
         UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(copy, subject));
+
+
+        ArrayList<Patch> testcopy = newArrayList(patches);
+        ArrayList<Patch> testcopy2 = newArrayList(patches);
+        String testDel = sqb.buildTestQuery(testcopy, subject, "DEL");
+        String testAdd = sqb.buildTestQuery(testcopy2, subject, "ADD");
+
+        runCardinalityTest(testDel, updateRequest, "DEL");
         executeUpdate(updateRequest);
+        runCardinalityTest(testAdd, updateRequest, "ADD");
     }
+
+    // Simple test mechanism to check if delete operations target more than one node or add operations
+    // were successful
+    private void runCardinalityTest(String queryString, UpdateRequest update, String operation) {
+        if (queryString.length() > 0) {
+            Query query = QueryFactory.create(queryString);
+
+            Integer numberofHits = 0;
+            try (QueryExecution qexec = getQueryExecution(query)) {
+                disableCompression(qexec);
+                ResultSet resultSet = qexec.execSelect();
+                while (resultSet.hasNext()) {
+                    numberofHits += resultSet.next().getLiteral("?count").getInt();
+                }
+            }
+
+            if (numberofHits != 1) {
+                System.out.println("Feil ved " + operation + ": Søket traff " + numberofHits + " noder.");
+                System.out.println("Logg: ");
+                System.out.println(update.toString());
+            }
+        }
+
+    }
+
 
     @Override
     public final Optional<String> getResourceURIByBibliofilId(String id, String type) {
