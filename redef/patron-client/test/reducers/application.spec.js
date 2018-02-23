@@ -15,6 +15,9 @@ describe('reducers', () => {
           no: { ...i18n.no }
         },
         isLoggedIn: false,
+        demandCaptcha: false,
+        captchaResponse: null,
+        isValidatingCaptcha: false,
         borrowerNumber: null,
         isRequestingLogin: false,
         loginError: null,

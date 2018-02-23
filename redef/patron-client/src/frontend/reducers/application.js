@@ -14,7 +14,9 @@ import {
   REQUEST_LIBRARIES,
   RECEIVE_LIBRARIES,
   LIBRARIES_FAILURE,
-  RESIZE_WINDOW_WIDTH
+  RESIZE_WINDOW_WIDTH,
+  CAPTCHA_SUCCESS,
+  HIDE_MODAL
 } from '../constants/ActionTypes'
 import * as i18n from '../i18n'
 
@@ -29,6 +31,9 @@ const initialState = {
   loginError: null,
   isRequestingLogout: false,
   logoutError: null,
+  isValidatingCaptcha: false,
+  demandCaptcha: false,
+  captchaResponse: null,
   isRequestingLoginStatus: false,
   loginStatusError: null,
   libraries: {},
@@ -63,7 +68,10 @@ export default function application (state = initialState, action) {
       return {
         ...state,
         isRequestingLogin: false,
-        loginError: action.payload.message
+        loginError: action.payload.message,
+        demandCaptcha: action.payload.demandCaptcha,
+        captchaResponse: null,
+        isValidatingCaptcha: action.payload.demandCaptcha
       }
     case LOGIN_SUCCESS:
       return {
@@ -71,8 +79,17 @@ export default function application (state = initialState, action) {
         isRequestingLogin: false,
         isLoggedIn: true,
         loginError: null,
+        demandCaptcha: false,
+        captchaResponse: null,
+        isValidatingCaptcha: false,
         borrowerNumber: action.payload.borrowerNumber,
         category: action.payload.category
+      }
+    case CAPTCHA_SUCCESS:
+      return {
+        ...state,
+        isValidatingCaptcha: false,
+        captchaResponse: action.payload.response
       }
     case REQUEST_LOGOUT:
       return { ...state, isRequestingLogout: true }
@@ -101,6 +118,13 @@ export default function application (state = initialState, action) {
       return { ...state, isRequestingLibraries: false, libraryError: action.payload.message }
     case RESIZE_WINDOW_WIDTH:
       return { ...state, windowWidth: action.payload.windowWidth }
+    case HIDE_MODAL:
+      return {
+        ...state,
+        demandCaptcha: false,
+        captchaResponse: null,
+        isValidatingCaptcha: false
+      }
     default:
       return state
   }

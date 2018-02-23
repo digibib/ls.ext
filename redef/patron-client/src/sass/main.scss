@@ -1143,6 +1143,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 // form pages common
 // -------------------------------------------------------
 
+.capthca-container {
+  margin-top: 1em;
+  clear: both;
+}
+
 .default-form {
   @include clearfix;
   background: $greyColor;
@@ -1170,7 +1175,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .default-form label, .default-form input, .default-form p, .default-form h4, .default-form hr, .default-form h1, .default-form legend {
-  @include span(12);
+  @include container;
 }
 
 .default-form label {
@@ -1196,10 +1201,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-size: $rhythm3;
 }
 
-.default-form .error-msg {
+.error-msg {
   @include container;
   @include span(12);
   margin-bottom: $rhythm4;
+  color: $redColor;
 }
 
 .default-form .error-msg p {
@@ -1314,6 +1320,18 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 }
 
+// search links
+
+.search-links    { @include container; }
+.search-links h2 { font-weight: bold; text-align: center; margin: 0.5em 0 0 0 }
+.search-links p  { text-align: center; }
+.search-links ul { font-size: $rhythm3; list-style-type: none; padding: 0; display: flex; align-items: stretch; flex-wrap: wrap }
+.search-links a  { flex: 1 0 30%;  padding: 2em; background-color:rgba(0,0,255,0.05); margin: 1em;
+                   text-decoration: none; color: $blackColor; }
+.search-links li { height: 100%; display: flex; flex-direction: column; }
+.search-links .arrow { width: 2em; height: 1em; margin-top: auto; margin-left: auto; margin-right: auto }
+
+
 // search results
 // --------------------------------------------------------
 
@@ -1334,6 +1352,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 @include breakpoint($small) {
   .search-results .search-results-list {
   }
+}
+
+.search-results-list .single-entry {
+  border-bottom: 1px solid #777;
+  margin-bottom: 1em;
 }
 
 .search-results .search-results-number {
@@ -1590,11 +1613,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-weight: normal;
 }
 
-.entry-content > a:hover h1 .title-text, .entry-content > a:active h1 .title-text, .entry-content > a:focus h1 .title-text {
+.entry-content > a h1 .title-text, .entry-content > a:active h1 .title-text, .entry-content > a:focus h1 .title-text {
   text-decoration: underline;
 }
 
-.entry-content > a:hover h1 .caret i, .entry-content > a:active h1 .caret i, .entry-content > a:focus h1 .caret i {
+.entry-content > a h1 .caret i, .entry-content > a:active h1 .caret i, .entry-content > a:focus h1 .caret i {
   margin-left: 0;
 }
 
@@ -3147,16 +3170,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   border: 1px solid $mediumGreyColor;
 }
 
-.login-modal .error-msg {
-  @include container;
-  @include span(12);
-  margin-bottom: $rhythm4;
-}
-
-.login-modal .error-msg p {
-  width: 100%;
-  margin: 0;
-}
 
 .login-modal .close-modal-button {
   position: absolute;

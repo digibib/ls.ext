@@ -5,11 +5,14 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
 import { Link, browserHistory } from 'react-router'
 import { push } from 'react-router-redux'
+import Recaptcha from 'react-recaptcha'
 
 import FormInputField from '../components/FormInputField'
 import * as LoginActions from '../actions/LoginActions'
 import * as RegistrationActions from '../actions/RegistrationActions'
 const formName = 'loginForm'
+
+let recaptchaInstance
 
 class Login extends React.Component {
   constructor (props) {
@@ -17,11 +20,20 @@ class Login extends React.Component {
     this.handleLogin = this.handleLogin.bind(this)
   }
 
+  componentWillUpdate (nextProps) {
+    if (this.props.isRequestingLogin && !nextProps.isRequestingLogin) {
+      if (recaptchaInstance) {
+        recaptchaInstance.reset()
+      }
+    }
+  }
+
   handleLogin (event) {
     event.preventDefault()
     this.props.loginActions.login(
       this.props.fields.values.username,
       this.props.fields.values.password,
+      this.props.captchaResponse,
       [push({ pathname: '/profile/loans' })]
     )
   }
@@ -40,16 +52,32 @@ class Login extends React.Component {
     }
   }
 
+  renderCaptcha () {
+    if (this.props.demandCaptcha) {
+      return (
+          <div className="capthca-container">
+            <Recaptcha
+              ref={e => recaptchaInstance = e}
+              sitekey="6LdrFEYUAAAAAP1dCDklZZPldqgxgJozCaVF-aq9"
+              hl="no"
+              verifyCallback={this.props.loginActions.captchaSuccess}
+             />
+          </div>
+      )
+    }
+  }
+
   render () {
     return (
       <section className="login-page default-form">
         <form onSubmit={this.handleLogin}>
-          {this.renderError()}
           <h1><FormattedMessage {...messages.logIn} /></h1>
           <FormInputField name="username" message={messages.username} type="text" formName={formName} />
           <FormInputField name="password" message={messages.password} type="password" formName={formName} />
+          {this.renderError()}
+          {this.renderCaptcha()}
           <p>
-            <button className="blue-btn" type="submit" disabled={this.props.isRequestingLogin}
+            <button className="blue-btn" type="submit" disabled={this.props.isRequestingLogin || this.props.isValidatingCaptcha}
                     onClick={this.handleLogin}
                     data-automation-id="login_button">
               <FormattedMessage {...messages.logIn} />
@@ -73,12 +101,15 @@ Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
   loginActions: PropTypes.object.isRequired,
   loginError: PropTypes.string,
+  demandCaptcha: PropTypes.bool.isRequired,
   fields: PropTypes.object.isRequired,
   borrowerNumber: PropTypes.string,
   location: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   registrationActions: PropTypes.object.isRequired,
-  isRequestingLogin: PropTypes.bool.isRequired
+  isRequestingLogin: PropTypes.bool.isRequired,
+  isValidatingCaptcha: PropTypes.bool.isRequired,
+  captchaResponse: PropTypes.string
 }
 
 export const messages = defineMessages({
@@ -107,6 +138,11 @@ export const messages = defineMessages({
     description: 'The message shown when the user inputs invalid username and password combination',
     defaultMessage: 'Invalid username and/or password'
   },
+  tooManyFailedAttempts: {
+    id: 'Login.tooManyFailedAttempts',
+    description: 'The message shown when the user inputs invalid username and password combination',
+    defaultMessage: 'Invalid username and/or password'
+  },
   genericLoginError: {
     id: 'Login.genericLoginError',
     description: 'A generic message for login failures, which can be caused by server errors, network problems etc.',
@@ -128,7 +164,10 @@ function mapStateToProps (state) {
   return {
     fields: state.form.loginForm ? state.form.loginForm : {},
     loginError: state.application.loginError,
-    isRequestingLogin: state.application.isRequestingLogin
+    demandCaptcha: state.application.demandCaptcha,
+    isRequestingLogin: state.application.isRequestingLogin,
+    isValidatingCaptcha: state.application.isValidatingCaptcha,
+    captchaResponse: state.application.captchaResponse
   }
 }
 

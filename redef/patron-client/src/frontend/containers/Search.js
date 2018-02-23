@@ -16,6 +16,7 @@ import SearchResultsHeader from '../components/SearchResultsHeader'
 import SearchFilters from '../components/SearchFilters'
 import Constants from '../constants/Constants'
 import SearchFilterBox from '../components/SearchFilterBox'
+import SearchLinks from '../components/SearchLinks'
 
 class Search extends React.Component {
   constructor (props) {
@@ -201,7 +202,8 @@ class Search extends React.Component {
               </div>
             </div>) : null}
           </div>)
-            : null}
+            : <SearchLinks />
+          }
           {this.props.totalHits > 0
             ? <div className="wrapper search-wrapper">
               <div className="sticky-wrapper">
@@ -231,7 +233,7 @@ class Search extends React.Component {
                              windowWidth={this.props.windowWidth}
                 />
               </div>
-            : null}
+            : null }
           {this.renderPagination()}
           </div>
       </NonIETransitionGroup>

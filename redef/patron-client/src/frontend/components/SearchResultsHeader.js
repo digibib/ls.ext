@@ -15,6 +15,9 @@ class SearchResultsHeader extends React.Component {
         </p>
       )
     }
+    if (!this.props.locationQuery.query) {
+      return null
+    }
     return (
       <NonIETransitionGroup
         transitionName="fade-in"

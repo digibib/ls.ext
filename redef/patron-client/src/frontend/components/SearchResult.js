@@ -502,12 +502,12 @@ class SearchResult extends React.Component {
             ? (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}
                       onKeyDown={this.handleEnter} >
                 <p><a role="button" tabIndex="0" aria-expanded="true" ><FormattedMessage {...messages.showStatus} /></a></p>
-                <img src="/images/minus.svg" alt="minus sign" aria-hidden="true" />
+                <img src="/images/arrow_up.svg" alt="arrow up" aria-hidden="true" />
               </div>)
             : (<div className="show-more-content" onClick={this.handleShowStatusClick} onKeyDown={this.handleEnter} >
               <p><a role="button" tabIndex="0" aria-expanded="false" ><FormattedMessage {...messages.showStatus} /></a>
               </p>
-              <img src="/images/plus.svg" alt="plus sign" aria-hidden="true" />
+              <img src="/images/arrow_down.svg" alt="arrow down" aria-hidden="true" />
             </div>)
           }
           </article>

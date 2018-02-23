@@ -123,6 +123,7 @@
     "react-datepicker": "^0.40.0",
     "react-sticky-el": "^1.0.13",
     "react-tooltip-component": "^0.3.0",
+    "react-recaptcha": "2.3.7",
     "sanitize-html": "1.13.0",
     "url-loader": "0.5.7",
     "xml2js": "0.4.17"

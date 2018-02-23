@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import { injectIntl, intlShape, defineMessages } from 'react-intl'
 
 import * as ModalActions from '../../actions/ModalActions'
 import LoginForm from '../forms/LoginForm'
@@ -12,20 +12,6 @@ class LoginModal extends React.Component {
     this.handleCancel = this.handleCancel.bind(this)
   }
 
-  renderError () {
-    if (this.props.loginError) {
-      return (
-        <div className="error-msg">
-          <p data-automation-id="login_error_message">
-            {messages[ this.props.loginError ]
-              ? <FormattedMessage {...messages[ this.props.loginError ]} />
-              : <FormattedMessage {...messages.genericLoginError} />}
-          </p>
-        </div>
-      )
-    }
-  }
-
   handleCancel (event) {
     event.preventDefault()
     this.props.modalActions.hideModal()
@@ -34,7 +20,6 @@ class LoginModal extends React.Component {
   render () {
     return (
       <section className="login-modal">
-        {this.renderError()}
         <LoginForm successAction={this.props.successAction} messages={messages} />
       </section>
     )
@@ -67,6 +52,11 @@ export const messages = defineMessages({
     description: 'The message shown when the user inputs invalid username and password combination',
     defaultMessage: 'Invalid username and/or password'
   },
+  tooManyFailedAttempts: {
+    id: 'Login.tooManyFailedAttempts',
+    description: 'The message shown when the user inputs invalid username and password combination',
+    defaultMessage: 'Invalid username and/or password'
+  },
   genericLoginError: {
     id: 'Login.genericLoginError',
     description: 'A generic message for login failures, which can be caused by server errors, network problems etc.',
@@ -88,14 +78,7 @@ LoginModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   modalActions: PropTypes.object.isRequired,
   successAction: PropTypes.object,
-  loginError: PropTypes.string,
   intl: intlShape.isRequired
-}
-
-function mapStateToProps (state) {
-  return {
-    loginError: state.application.loginError
-  }
 }
 
 function mapDispatchToProps (dispatch) {
@@ -109,7 +92,6 @@ const intlLogin = injectIntl(LoginModal)
 export { intlLogin as Login }
 
 export default connect(
-  mapStateToProps,
   mapDispatchToProps
 )(intlLogin)
 
