@@ -274,7 +274,7 @@ export default {
   'SearchResult.published': 'Utgitt',
   'SearchResult.restOfBranches': 'Vis andre avdelinger',
   'SearchResult.showBranchAvailability': 'Vis avdelingsstatus',
-  'SearchResult.showStatus': 'Finn den her',
+  'SearchResult.showStatus': 'Se hvor den finnes',
   'SearchResult.subjects': 'Emner:',
   'SearchResults.searchError': 'Noe gikk galt med søket',
   'SearchResultSettings.showFullList': 'Vis full versjon av søkeresultatet',

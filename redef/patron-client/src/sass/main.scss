@@ -1354,6 +1354,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 }
 
+.search-results-list .single-entry {
+  border-bottom: 1px solid #777;
+  margin-bottom: 1em;
+}
+
 .search-results .search-results-number {
   font-size: $rhythm5;
   font-weight: bold;
@@ -1608,11 +1613,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-weight: normal;
 }
 
-.entry-content > a:hover h1 .title-text, .entry-content > a:active h1 .title-text, .entry-content > a:focus h1 .title-text {
+.entry-content > a h1 .title-text, .entry-content > a:active h1 .title-text, .entry-content > a:focus h1 .title-text {
   text-decoration: underline;
 }
 
-.entry-content > a:hover h1 .caret i, .entry-content > a:active h1 .caret i, .entry-content > a:focus h1 .caret i {
+.entry-content > a h1 .caret i, .entry-content > a:active h1 .caret i, .entry-content > a:focus h1 .caret i {
   margin-left: 0;
 }
 
