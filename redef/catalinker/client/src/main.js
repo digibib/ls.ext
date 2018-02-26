@@ -5566,7 +5566,7 @@
                     })
                   })
                 } else {
-                  copyAdditionalSuggestionsForGroup(groupIndex)
+                  //copyAdditionalSuggestionsForGroup(groupIndex)
                 }
               }
             }, { init: false, defer: true }),
