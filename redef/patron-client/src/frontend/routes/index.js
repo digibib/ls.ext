@@ -21,8 +21,18 @@ export default function (store) {
     }
   }
 
+  function scrollToTopUnlessGoingBack (prevState, nextState) {
+    if (nextState.location.action !== 'POP') {
+      window.scrollTo(0, 0)
+    }
+  }
+
   const routes = (
-    <Route path="/" component={App}>
+    <Route
+      path="/"
+      component={App}
+      onChange={scrollToTopUnlessGoingBack}
+      >
       <IndexRoute component={Search} />
       <Route path="login" component={Login} />
       <Route path="search" component={Search} />

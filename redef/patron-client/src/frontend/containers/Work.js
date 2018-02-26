@@ -17,7 +17,6 @@ import AdditionalInformationContent from '../components/work/AdditionalInformati
 class Work extends React.Component {
   componentWillMount () {
     this.props.resourceActions.fetchWorkResource(this.props.params.workId)
-    window.scrollTo(0, 0)
   }
 
   // Force reload when router changes workId in URI

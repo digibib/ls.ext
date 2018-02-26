@@ -29,10 +29,6 @@ class SearchResult extends React.Component {
     }
   }
 
-  scrollToTop () {
-    window.scrollTo(0, 0)
-  }
-
   renderYear (fictionNonfiction, publicationYears, workPublicationYear, mediaTypes) {
     // A result can have multiple metiatypes (for example book and audiobook), but
     // for now we just consider one, arbritary mediatype:
@@ -129,9 +125,7 @@ class SearchResult extends React.Component {
           <strong><FormattedMessage {...messages.subjects} /></strong>&nbsp;
           {result.subject.map((subject, i) => (
             <span key={subject} >
-                <Link
-                  to={fieldQueryLink('emne', subject)}
-                  onClick={this.scrollToTop} >{subject}</Link>{(i < result.subject.length - 1) ? ', ' : null}
+                <Link to={fieldQueryLink('emne', subject)}>{subject}</Link>{(i < result.subject.length - 1) ? ', ' : null}
                 </span>
           ))}
         </p>
@@ -146,8 +140,7 @@ class SearchResult extends React.Component {
           <strong><FormattedMessage {...messages.genres} /></strong>&nbsp;
           {result.genre.map((genre, i) => (
             <span key={genre} >
-                <Link to={fieldQueryLink('sjanger', genre)}
-                      onClick={this.scrollToTop} >{genre}</Link>{(i < result.genre.length - 1) ? ', ' : null}
+                <Link to={fieldQueryLink('sjanger', genre)}>{genre}</Link>{(i < result.genre.length - 1) ? ', ' : null}
                 </span>
           ))}
         </p>
@@ -160,7 +153,7 @@ class SearchResult extends React.Component {
       <div data-automation-id="publication_series" >
         <strong><FormattedMessage {...messages.partOfSeries} /></strong>
         <span>
-          <Link to="#" onClick={this.scrollToTop} >Serie placeholder</Link>
+          <Link to="#">Serie placeholder</Link>
         </span>
       </div>
     )
