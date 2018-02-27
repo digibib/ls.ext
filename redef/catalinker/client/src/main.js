@@ -5566,7 +5566,7 @@
                     })
                   })
                 } else {
-                  copyAdditionalSuggestionsForGroup(groupIndex)
+                  //copyAdditionalSuggestionsForGroup(groupIndex)
                 }
               }
             }, { init: false, defer: true }),
@@ -5635,6 +5635,7 @@
               return fetchExistingResource(workUri, options)
                 .then(function () {
                   ractive.set('targetUri.Work', workUri)
+                  ractive.set('targetUri.suspendObservers', false)
                 })
                 .then(function () {
                   setTimeout(updateHeadline())
@@ -5844,9 +5845,14 @@
               window.sessionStorage.clear()
             }
           }
+
+          // the suspendObservers flag tries to curb the otherwise excessive loading and reloading of
+          // the work resource
           if (query.Publication && !ractive.get(`targetUri.${query.Publication}`)) {
+            ractive.set('targetUri.suspendObservers', true)
             loadPublication(query, tab)
           } else if (query.Work && !ractive.get(`targetUri.${query.Work}`)) {
+            ractive.set('targetUri.suspendObservers', true)
             loadOtherResource(query, tab)
           } else {
             loadOtherResource(query, tab)
@@ -5954,12 +5960,12 @@
 
             _.each(input.dependentResourceTypes, function (type) {
               ractive.push('observers', ractive.observe(`targetUri.${type}`, function (newValue, oldValue, keypath) {
-                if (typeof newValue === 'string' && newValue !== '') {
+                if (!ractive.get('targetUri.suspendObservers') && typeof newValue === 'string' && newValue !== '') {
                   fetchExistingResource(newValue, { inputs: [ input ], keepDocumentUrl: true })
                 }
               }, { init: false }))
               ractive.push('observers', ractive.observe(`${applicationData.inputLinks[ input.id ]}.values.0.current.value`, function (newValue, oldValue, keypath) {
-                  if (typeof newValue === 'string' && newValue !== '') {
+                  if (!ractive.get('targetUri.suspendObservers') && typeof newValue === 'string' && newValue !== '') {
                     if (ractive.get(`targetUri.${type}`) !== newValue && !isBlankNodeUri(newValue)) {
                       fetchExistingResource(newValue)
                     }
