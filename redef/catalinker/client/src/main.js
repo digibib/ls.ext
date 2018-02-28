@@ -954,7 +954,7 @@
           return new Promise((resolve, reject) => {
             const displayProperties = getDisplayProperties(input.nameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
             const headLineDisplayProperties = getDisplayProperties(input.headlineNameProperties || [ 'name', 'prefLabel' ], valuePropertyFromNode(root), indexTypeFromNode(root))
-            const handleDisplayProperties = () => {
+            const handleDisplayProperties = (displayProperties) => {
               resolve({
                 values: _.pluck(displayProperties || [], 'val')
                   .slice(onlyFirstField ? 0 : undefined, onlyFirstField ? 1 : undefined)
