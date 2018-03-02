@@ -9,7 +9,7 @@ export HOST=$3
 echo -e "\n Provisioning for $LSENV env, LSENV=$LSENV, LSEXTPATH=$LSEXTPATH, HOST=$HOST\n"
 if [[ `uname -s` == 'Linux' ]]; then
   echo -e "\n1) Installing Docker\n"
-  VERSION="17.09.0~ce-0~ubuntu"
+  VERSION="17.12.0~ce-0~ubuntu"
   INSTALLED=`dpkg -l | grep docker-engine | awk '{print $3}'`
   if [ $VERSION = "$INSTALLED" ] ; then
     echo "docker version $VERSION already installed";
