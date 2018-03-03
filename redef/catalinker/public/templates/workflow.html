@@ -40,7 +40,7 @@
                             {{#if !toolMode}}
                             {{#each inputs:inputIndex}}
                             {{#visible}}
-                            {{>input . as input }}
+                            {{>input {input:.} }}
                             {{#if (type === 'input-boolean') && !(this.visible === false) && !resourceIsLoaded(showOnlyWhenEmpty) && (checkShouldInclude(.))}}
                                 <span class="prop-input boolean-separator pure-u-1-2 {{(firstAndLastVisibleInputs[groupIndex].last === inputIndex) ? 'last-one':''}}">
                                     <span class="panel-part boolean-separator pure-u-1-1"> </span>

@@ -4390,6 +4390,16 @@
                   }
                 })
                 sequentialPromiseResolver(promises)
+
+                // there's something iffy going on with the keypath context for the input.html partial.
+                // given up on trying to understand it and the original author's intentions.
+                // the following works (hopefully, pending testing) with ractivejs v0.8.14, but event needs
+                // to be handled differently if there is a rollback to the previously running version
+                ractive.get(`${event.keypath}`) ?
+                  ractive.set(`${event.keypath}.allowAddNewButton`, false)
+                  : ractive.set(`${mainInput.keypath}.allowAddNewButton`, false)
+
+
                 ractive.set(`${event.keypath}.allowAddNewButton`, false)
                 ractive.set(`${mainInput.keypath}.unFinished`, false)
                 positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
