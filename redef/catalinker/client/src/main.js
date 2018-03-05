@@ -4372,6 +4372,8 @@
               // addValue adds another input field for the predicate.
               addValue: function (event) {
                 if (eventShouldBeIgnored(event)) return
+                const $currentInputPanel = $(event.node).closest('.panel-part')
+
                 var mainInput = (event.context || {}).input || ractive.get(event.keypath)
                 let promises = []
                 ractive.set(`${mainInput.keypath}.unFinished`, true)
@@ -4404,9 +4406,20 @@
                 positionSupportPanels(undefined, tabIdFromKeypath(event.keypath))
                 copyAdditionalSuggestionsForGroup(Number(event.keypath.split('.')[ 1 ]))
                 ractive.update().then(function () {
-                  const node = document.main.$(event.node)
-                  heightAligned(node.closest('.height-aligned'))
-                  node.closest('.panel-part').find('[contenteditable=true],input[value=""]').first().focus()
+                  heightAligned($currentInputPanel.find('.height-aligned'))
+
+                  // brittle fix for setting focus after input forms have been created
+                  const wrappedInputs = $currentInputPanel.find('.input-wrapper > .inputs').find('.value.sub-field')
+
+                  if (wrappedInputs.length) {
+                    wrappedInputs.find('input.valid').length ?
+                    wrappedInputs.find('input.valid').first().focus()
+                    : wrappedInputs.find('[contenteditable="true"], [value=""]').first().focus()
+                  } else if ($currentInputPanel.find('[contenteditable="true"]').length) {
+                    $currentInputPanel.find('[contenteditable="true"]').first().focus()
+                  } else {
+                    $currentInputPanel.find('input').last().focus()
+                  }
                 })
               },
               // patchResource creates a patch request based on previous and current value of
