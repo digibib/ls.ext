@@ -63,10 +63,10 @@ class SearchHeader extends React.Component {
     if (!this.props.isLoggedIn) {
       return [
         <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick} >
-          <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
-            <img className="icon" src="/images/profile24.svg" />
-          </MediaQuery>
           <Link to="/login" >
+            <MediaQuery query="(min-width: 1200px)" values={{ ...this.props.mediaQueryValues }} >
+              <img className="icon" src="/images/profile24.svg" />
+            </MediaQuery>
             <FormattedMessage {...messages.logIn} /> <span >&raquo;</span >
           </Link >
         </li >
