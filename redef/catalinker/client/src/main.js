@@ -4412,8 +4412,8 @@
                   const wrappedInputs = $currentInputPanel.find('.input-wrapper > .inputs').find('.value.sub-field')
 
                   if (wrappedInputs.length) {
-                    wrappedInputs.find('input.valid').length ?
-                    wrappedInputs.find('input.valid').first().focus()
+                    wrappedInputs.find('input.valid').length
+                    ? wrappedInputs.find('input.valid').first().focus()
                     : wrappedInputs.find('[contenteditable="true"], [value=""]').first().focus()
                   } else if ($currentInputPanel.find('[contenteditable="true"]').length) {
                     $currentInputPanel.find('[contenteditable="true"]').first().focus()
