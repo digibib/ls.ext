@@ -155,6 +155,26 @@ class SearchHeader extends React.Component {
     )
   }
 
+  renderSearchField () {
+    return (
+      <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+        {(matches) => {
+          let placeholder = ''
+          if (matches) {
+            placeholder = this.props.intl.formatMessage(messages.searchInputPlaceholder)
+          }
+          return  <input placeholder={placeholder}
+                    id="search"
+                    type="text"
+                    defaultValue={this.props.locationQuery.query || ''}
+                    ref={e => this.searchFieldInput = e}
+                    data-automation-id="search_input_field"
+                  />
+        }}
+      </MediaQuery >
+    )
+  }
+
   render () {
     const mobileNavClass = this.props.showMobileNavigation ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
@@ -223,13 +243,7 @@ class SearchHeader extends React.Component {
               <label htmlFor="search" >{this.props.intl.formatMessage(messages.searchLabel)}</label >
               <div className="search-field-wrapper" >
                 <div className="search-field" >
-                  <input placeholder={this.props.intl.formatMessage(messages.searchInputPlaceholder)}
-                         id="search"
-                         type="text"
-                         defaultValue={this.props.locationQuery.query || ''}
-                         ref={e => this.searchFieldInput = e}
-                         data-automation-id="search_input_field"
-                  />
+                  {this.renderSearchField()}
                 </div >
                 <div className="search-button" >
                   <button onClick={this.handleSearch} type="button" className="search-submit"
