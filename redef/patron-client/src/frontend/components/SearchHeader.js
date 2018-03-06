@@ -163,7 +163,7 @@ class SearchHeader extends React.Component {
           if (matches) {
             placeholder = this.props.intl.formatMessage(messages.searchInputPlaceholder)
           }
-          return  <input placeholder={placeholder}
+          return <input placeholder={placeholder}
                     id="search"
                     type="text"
                     defaultValue={this.props.locationQuery.query || ''}
