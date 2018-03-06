@@ -797,19 +797,21 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .wrapper {
   max-width: 100%;
   @include clearfix;
+  padding: 0 1em;
 }
 
 @include breakpoint($small) {
   .wrapper {
-    max-width: 800px;
+    max-width: 1050px;
     margin-left: auto;
     margin-right: auto;
     @include clearfix;
   }
 }
 
-@include breakpoint($medium) {
+@include breakpoint($large) {
   .wrapper {
+    padding: 0;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
@@ -963,7 +965,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 @include breakpoint($small) {
   .filters {
-    @include span(4);
+    @include span(4.5);
     margin-top: $rhythm5;
   }
 }
@@ -1325,8 +1327,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .search-links    { @include container; }
 .search-links h2 { font-weight: bold; text-align: center; margin: 0.5em 0 0 0 }
 .search-links p  { text-align: center; }
-.search-links ul { font-size: $rhythm3; list-style-type: none; padding: 0; display: flex; align-items: stretch; flex-wrap: wrap }
-.search-links a  { flex: 1 0 30%;  padding: 2em; background-color:rgba(0,0,255,0.05); margin: 1em;
+.search-links ul { font-size: $rhythm3; list-style-type: none; padding: 0; display: flex; align-items: stretch; flex-wrap: wrap; justify-content: space-between }
+.search-links a  { flex: 1 0 30%;  padding: 2em; background-color:rgba(0,0,255,0.05); margin: 0.5em;
                    text-decoration: none; color: $blackColor; }
 .search-links li { height: 100%; display: flex; flex-direction: column; }
 .search-links .arrow { width: 2em; height: 1em; margin-top: auto; margin-left: auto; margin-right: auto }
@@ -1347,11 +1349,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 .search-results .search-results-list {
   padding-top: $rhythm2;
-}
-
-@include breakpoint($small) {
-  .search-results .search-results-list {
-  }
 }
 
 .search-results-list .single-entry {
@@ -1461,7 +1458,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 @include breakpoint($small) {
   .search-results {
-    width: span(8);
+    width: span(7.5);
     float: left;
     margin-right: 1.69492%;
     /* margin-top: rhythm(5);
