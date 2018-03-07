@@ -373,7 +373,7 @@ module.exports = {
     {
       query: '/search?filter=audience_ages3To5&filter=audience_ages6To8&filter=language_nob&filter=mediatype_Book&query=sjanger%3Alettlest&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=mediatype&yearFrom=2012',
       title: 'Lesestart',
-      desc: 'Her finner du bøker for deg som holder på å lære deg og lese',
+      desc: 'For deg som lærer å lese.',
       image: '/images/q10.jpg'
     },
     {
@@ -397,13 +397,13 @@ module.exports = {
     {
       query: 'search?filter=audience_ages11To12&filter=audience_ages13To15&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Aroman+AND+sjanger%3Afantasy+OR+sjanger%3A%22science+fiction%22&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2012',
       title: 'Fantasy og science fiction for ungdom',
-      desc: 'Det fins mer enn Kattekrigeren, sjekk ut her!',
+      desc: 'Det finnes mer enn Kattekrigerne, sjekk ut her.',
       image: '/images/q8.jpg'
     },
     {
       query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&page=1&query=sjanger%3A%22science+fiction%22+OR+sjanger%3Afantasy&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=language&showMore=mediatype&yearFrom=2012',
       title: 'Fantasy og science  fiction for voksne',
-      desc: 'Lev deg inn i andre verdner. Prøv sjangrene fantasy og science fiction. ',
+      desc: 'Lev deg inn i andre verdener. Prøv sjangerne fantasy og science fiction.',
       image: '/images/q6.jpg'
     },
     {
@@ -421,7 +421,7 @@ module.exports = {
     {
       query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=sjanger%3Akriminal+OR+sjanger%3Aspenning&showFilter=audience&showFilter=branch&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
       title: 'Krim og spenning for voksne',
-      desc: 'De nyeste krimbøker finner du her.',
+      desc: 'De nyeste krimbøkene vi har finner du her.',
       image: '/images/q3.jpg'
     }
   ]
