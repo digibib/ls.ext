@@ -22,8 +22,8 @@ export default function (store) {
   }
 
   function scrollToTopUnlessGoingBack (prevState, nextState) {
-    if (nextState.location.query.showStatus) {
-      // Don't scroll to top when opening status in search result
+    if (nextState.location.query.showStatus || (prevState.location.query.showStatus && !nextState.location.query.showStatus)) {
+      // Don't scroll to top when opening/closing status in search result
       // TODO this information should probably be local state, not be encoded in URL
       return
     }
