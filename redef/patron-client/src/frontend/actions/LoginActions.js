@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import { showModal } from './ModalActions'
+import { hideMobileNavigation } from './MobileNavigationActions'
 import ModalComponents from '../constants/ModalComponents'
 import Errors from '../constants/Errors'
 import { action } from './GenericActions'
@@ -104,6 +105,7 @@ export function logout () {
         } else {
           dispatch(updateLoginStatus())
         }
+        dispatch(hideMobileNavigation())
       }).catch(message => dispatch(logoutFailure(message)))
   }
 }
