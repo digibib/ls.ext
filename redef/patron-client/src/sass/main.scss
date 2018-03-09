@@ -3317,6 +3317,11 @@ header .logo {
   text-align: center
 }
 
+header .logo-mobile {
+  flex: 1;
+  text-align: left
+}
+
 header .logo-deichman {
   margin-left: 1em;
   height: 32px;
@@ -3554,14 +3559,9 @@ header .logged-in-message {
   padding: $rhythm2;
 }
 
-.primary-menu li span:last-child, .your-library-link p span:last-child  {
-  display: none;
-}
-
 .primary-menu li span:first-child {
   display: inline;
 }
-
 
 .btn-mobile-toggle {
   height: $rhythm4;
@@ -3575,7 +3575,9 @@ header .logged-in-message {
   transition: max-height 0.5s;
   max-height: 250px;
   overflow: hidden;
-  background-color: $white;
+  background-color: $blackColor;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .primary-mobile-menu.collapsed {
@@ -3594,21 +3596,18 @@ header .logged-in-message {
 }
 
 .primary-mobile-menu ul li a {
-  border-bottom: 1px solid $darkGreyColor;
   padding: $rhythm3 $rhythm6;
   text-decoration: none;
-  color: $blackColor;
+  color: $white;
   display: block;
 }
 
 .primary-mobile-menu ul li a:hover {
-  background-color: $darkGreyColor;
   color: $white;
+  text-decoration: underline;
 }
 
-.primary-mobile-menu ul span:last-child {
-  float: right;
-}
+
 
 
 .secondary-navigation {

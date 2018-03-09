@@ -252,6 +252,8 @@ export default {
   'SearchHeader.contactUs': 'Kontakt oss',
   'SearchHeader.logoAlt': 'Deichmanske bibliotek logo',
   'SearchHeader.more': 'Mer',
+  'SearchHeader.openMenu': 'Meny',
+  'SearchHeader.closeMenu': 'Lukk',
   'SearchHeader.myLoans': 'Mine lån',
   'SearchHeader.myProfile': 'Min side',
   'SearchHeader.search': 'Søk',

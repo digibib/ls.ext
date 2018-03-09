@@ -54,7 +54,7 @@ class SearchHeader extends React.Component {
   yourLibraryLink () {
     return (
       <a href="https://www.deichman.no/bibliotekene">
-        <FormattedMessage {...messages.yourLibrary} /> <span >&raquo;</span >
+        <FormattedMessage {...messages.yourLibrary} />
       </a>
     )
   }
@@ -67,7 +67,7 @@ class SearchHeader extends React.Component {
             <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
               <img className="icon" src="/images/profile24.svg" />
             </MediaQuery>
-            <FormattedMessage {...messages.logIn} /> <span >&raquo;</span >
+            <FormattedMessage {...messages.logIn} />
           </Link >
         </li >
       ]
@@ -79,7 +79,7 @@ class SearchHeader extends React.Component {
       return [
         <li key={1} data-automation-id="logout_element" onClick={this.props.logout} >
           <Link to="/" >
-            <FormattedMessage {...messages.logout} /> <span >&raquo;</span >
+            <FormattedMessage {...messages.logout} />
           </Link >
         </li >
       ]
@@ -93,7 +93,7 @@ class SearchHeader extends React.Component {
           <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
             <img className="icon" src="/images/profile24.svg" />
           </MediaQuery>
-          <Link data-automation-id="my-page-link" to="/profile/loans" ><FormattedMessage {...messages.myProfile} /> <span >&raquo;</span ></Link >
+          <Link data-automation-id="my-page-link" to="/profile/loans" ><FormattedMessage {...messages.myProfile} /></Link >
         </li >
       ]
     }
@@ -104,7 +104,7 @@ class SearchHeader extends React.Component {
       return (
         <li key={4} data-automation-id="registration_element" >
           <Link to="/register"
-             title="register" ><FormattedMessage {...messages.register} /><span >&raquo;</span ></Link>
+             title="register" ><FormattedMessage {...messages.register} /></Link>
         </li >
       )
     }
@@ -175,6 +175,14 @@ class SearchHeader extends React.Component {
     )
   }
 
+  renderLogo () {
+    return (
+      <a href="https://www.deichman.no/">
+        <img className="logo-deichman" src="/images/logo_negative.svg" alt={this.props.intl.formatMessage(messages.logoAlt)} />
+      </a >
+    )
+  }
+
   render () {
     const mobileNavClass = this.props.showMobileNavigation ? 'primary-mobile-menu' : 'primary-mobile-menu collapsed'
     return (
@@ -194,16 +202,25 @@ class SearchHeader extends React.Component {
             </div >
           </MediaQuery >
 
-          <div className="logo" >
-            <a href="https://www.deichman.no/">
-              <img className="logo-deichman" src="/images/logo_negative.svg" alt={this.props.intl.formatMessage(messages.logoAlt)} />
-            </a >
-          </div >
+          <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+            <div className="logo" >
+              {this.renderLogo()}
+            </div >
+          </MediaQuery >
+
+          <MediaQuery query="(max-width: 1049px)" values={{ ...this.props.mediaQueryValues }} >
+            <div className="logo-mobile" >
+              {this.renderLogo()}
+            </div >
+          </MediaQuery >
 
           <MediaQuery query="(max-width: 1049px)" values={{ ...this.props.mediaQueryValues }} >
             <div className="mobile-menu-toggle" >
-              <img className="btn-mobile-toggle" src="/images/btn-mobile.svg" alt="3 black bars"
-                   onClick={this.toggleMobileNav} />
+              {this.props.showMobileNavigation ? (
+                <a href="#" onClick={this.toggleMobileNav}><FormattedMessage {...messages.closeMenu} /></a>
+              ) : (
+                <a href="#" onClick={this.toggleMobileNav}><FormattedMessage {...messages.openMenu} /></a>
+              )}
             </div >
           </MediaQuery >
 
@@ -279,6 +296,16 @@ SearchHeader.propTypes = {
 }
 
 export const messages = defineMessages({
+  openMenu: {
+    id: 'SearchHeader.openMenu',
+    description: 'Menu',
+    defaultMessage: 'Menu'
+  },
+  closeMenu: {
+    id: 'SearchHeader.closeMenu',
+    description: 'Close',
+    defaultMessage: 'Close'
+  },
   logoAlt: {
     id: 'SearchHeader.logoAlt',
     description: 'Alt text for the logo',
