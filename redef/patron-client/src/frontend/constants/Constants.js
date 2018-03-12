@@ -359,67 +359,67 @@ module.exports = {
       image: '/images/q1.jpg'
     },
     {
-      query: '/search?filter=audience_adult&filter=fictionNonfiction_nonfiction&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      query: '/search?filter=audience_adult&filter=fictionNonfiction_nonfiction&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=language&yearFrom=2017',
       title: 'Lær noe nytt',
       desc: 'Se våre nyeste fagbøker. Bruk taggene for å finne tema som interesserer deg.',
       image: '/images/q4.jpg'
     },
     {
-      query: '/search?filter=audience_adult&filter=mediatype_Film&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      query: '/search?filter=audience_adult&filter=mediatype_Film&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=language&yearFrom=2017',
       title: 'Se film på gamlemåten',
       desc: 'Her er de nyeste godbitene. Bruk filteret målgruppe for å finne det som passer deg.',
       image: '/images/q5.jpg'
     },
     {
-      query: '/search?filter=audience_ages3To5&filter=audience_ages6To8&filter=language_nob&filter=mediatype_Book&query=sjanger%3Alettlest&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=mediatype&yearFrom=2012',
+      query: '/search?filter=audience_ages3To5&filter=audience_ages6To8&filter=language_nob&filter=mediatype_Book&query=sjanger%3Alettlest&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=audience&showMore=mediatype&yearFrom=2012',
       title: 'Lesestart',
       desc: 'For deg som lærer å lese.',
       image: '/images/q10.jpg'
     },
     {
-      query: '/search?filter=audience_ages13To15&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Aroman&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
+      query: '/search?filter=audience_ages13To15&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Aroman&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
       title: 'Våre nyeste  ungdomsromaner',
       desc: 'Her finner vårt utvalg av romaner for ungdom utgitt etter 2017.',
       image: '/images/q7.jpg'
     },
     {
-      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&query=form%3Aroman+NOT+sjanger%3Akriminal+OR+sjanger%3Aspenning&showFilter=audience&showFilter=branch&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&query=form%3Aroman+NOT+sjanger%3Akriminal+OR+sjanger%3Aspenning&showFilter=audience&showFilter=branch&showFilter=language&showFilter=mediatype&showMore=language&yearFrom=2017',
       title: 'Våre nyeste  romaner for voksne',
       desc: 'Her finner du de ferskeste romanene vi har for voksne.',
       image: '/images/q2.jpg'
     },
     {
-      query: '/search?filter=audience_ages11To12&filter=audience_ages6To8&filter=fictionNonfiction_fiction&filter=fictionNonfiction_nonfiction&filter=language_nob&filter=mediatype_Book&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
+      query: '/search?filter=audience_ages11To12&filter=audience_ages6To8&filter=fictionNonfiction_fiction&filter=fictionNonfiction_nonfiction&filter=language_nob&filter=mediatype_Book&query=%2A&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
       title: 'Våre nyeste  barnebøker',
       desc: 'Bla deg gjennom fantasi og fakta for barn mellom 5 og 12.',
       image: '/images/q11.jpg'
     },
     {
-      query: 'search?filter=audience_ages11To12&filter=audience_ages13To15&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Aroman+AND+sjanger%3Afantasy+OR+sjanger%3A%22science+fiction%22&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2012',
+      query: 'search?filter=audience_ages11To12&filter=audience_ages13To15&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Aroman+AND+sjanger%3Afantasy+OR+sjanger%3A%22science+fiction%22&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2012',
       title: 'Fantasy og science fiction for ungdom',
       desc: 'Det finnes mer enn Kattekrigerne, sjekk ut her.',
       image: '/images/q8.jpg'
     },
     {
-      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&page=1&query=sjanger%3A%22science+fiction%22+OR+sjanger%3Afantasy&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=language&showMore=mediatype&yearFrom=2012',
+      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&page=1&query=sjanger%3A%22science+fiction%22+OR+sjanger%3Afantasy&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=language&showMore=mediatype&yearFrom=2012',
       title: 'Fantasy og science  fiction for voksne',
       desc: 'Lev deg inn i andre verdener. Prøv sjangerne fantasy og science fiction.',
       image: '/images/q6.jpg'
     },
     {
-      query: '/search?filter=audience_ages11To12&filter=audience_ages9To10&filter=language_nob&filter=mediatype_Book&query=sjanger%3Ahumor&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2012',
+      query: '/search?filter=audience_ages11To12&filter=audience_ages9To10&filter=language_nob&filter=mediatype_Book&query=sjanger%3Ahumor&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2012',
       title: 'Morsomme bøker for deg mellom  9 og 12',
       desc: 'Trenger du å le litt - prøv en bok i sjangeren humor.',
       image: '/images/q12.jpg'
     },
     {
-      query: '/search?filter=audience_ages0To2&filter=audience_ages3To5&filter=audience_ages6To8&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Abildebok&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showFullList&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
+      query: '/search?filter=audience_ages0To2&filter=audience_ages3To5&filter=audience_ages6To8&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=form%3Abildebok&showFilter=audience&showFilter=branch&showFilter=fictionNonfiction&showFilter=language&showFilter=mediatype&showMore=audience&showMore=language&showMore=mediatype&yearFrom=2017',
       title: 'Våre nyeste bildebøker for barn',
       desc: 'Oppdag fortellingenes univers sammen med barnet ditt.',
       image: '/images/q9.jpg'
     },
     {
-      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=sjanger%3Akriminal+OR+sjanger%3Aspenning&showFilter=audience&showFilter=branch&showFilter=language&showFilter=mediatype&showFullList&showMore=language&yearFrom=2017',
+      query: '/search?filter=audience_adult&filter=language_eng&filter=language_nno&filter=language_nob&filter=mediatype_Book&query=sjanger%3Akriminal+OR+sjanger%3Aspenning&showFilter=audience&showFilter=branch&showFilter=language&showFilter=mediatype&showMore=language&yearFrom=2017',
       title: 'Krim og spenning for voksne',
       desc: 'De nyeste krimbøkene vi har finner du her.',
       image: '/images/q3.jpg'

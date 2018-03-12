@@ -14,7 +14,6 @@ function setup (propOverrides) {
   const props = {
     searchActions: {
       search: expect.createSpy(),
-      toggleListView: () => {},
       enableSearchBar: () => {}
     },
     searchResults: [],

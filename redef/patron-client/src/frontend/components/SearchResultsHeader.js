@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import {defineMessages, FormattedMessage} from 'react-intl' //, injectIntl, intlShape
-import SearchResultsSettings from '../components/SearchResultsSettings'
 import SearchResultsText from '../components/SearchResultsText'
 // import {connect} from 'react-redux'
 // import {bindActionCreators} from 'redux'
@@ -33,12 +32,7 @@ class SearchResultsHeader extends React.Component {
             totalHits={this.props.totalHits}
             locationQuery={this.props.locationQuery}
           />
-          <SearchResultsSettings
-            searchActions={this.props.searchActions}
-            locationQuery={this.props.locationQuery}
-          />
         </div>
-
       </NonIETransitionGroup>
     )
   }

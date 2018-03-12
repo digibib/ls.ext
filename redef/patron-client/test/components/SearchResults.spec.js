@@ -16,8 +16,7 @@ function setup (propOverrides) {
     totalHits: 0,
     searchResults: [],
     searchActions: {
-      search: () => {},
-      toggleListView: () => {}
+      search: () => {}
     },
     fetchWorkResource: () => {},
     resources: {},

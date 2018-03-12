@@ -97,10 +97,7 @@ class SearchResult extends React.Component {
             : null
           }
           <span className="title-text" >{result.title}</span>
-          {this.shouldShowFullList()
-            ? <span className="caret" ><i className="icon-angle-wide" aria-hidden="true" /></span>
-            : null
-          }
+          <span className="caret" ><i className="icon-angle-wide" aria-hidden="true" /></span>
         </h1>
       </Link>
     )
@@ -415,11 +412,6 @@ class SearchResult extends React.Component {
     }
   }
 
-  shouldShowFullList () {
-    const { locationQuery: { showFullList } } = this.props
-    return (showFullList === null)
-  }
-
   shouldShowStatus () {
     const { locationQuery: { showStatus }, result: { id } } = this.props
     return (showStatus && showStatus === id || (Array.isArray(showStatus) && showStatus.includes(id)))
@@ -444,7 +436,7 @@ class SearchResult extends React.Component {
 
     // Contains two arrays: one array for filtered branches and one array for branches excluded from filter criteria
     const groupedByBranchAndMedia = this.getResultItems()
-    // console.log('shouldShowFullList', this.shouldShowFullList())
+
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -456,16 +448,13 @@ class SearchResult extends React.Component {
         className="single-entry"
         data-formats={formats.join(', ')}>
         <div className="entry-header">
-          {this.shouldShowFullList()
-            ? <aside className={result.image ? 'book-cover' : 'book-cover missing'} aria-hidden="true" >
-              <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1" >
+          <aside className={result.image ? 'book-cover' : 'book-cover missing'} aria-hidden="true" >
+            <Link to={this.getResultUrl(result)} className="book-cover-item" tabIndex="-1" >
                 {result.image ? <img src={result.image} alt={coverAltText} />
                   : <img aria-label={missingCoverAltText}
-                       src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
-              </Link>
-            </aside>
-            : null
-          }
+                  src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeURI ] ]} />}
+            </Link>
+          </aside>
 
           <article className="entry-content" >
 
@@ -486,10 +475,8 @@ class SearchResult extends React.Component {
               ? <p className="abstract" >{result.abstract}</p>
               : null
             }
-            {this.shouldShowFullList()
-              ? [ this.renderSubjects(result), this.renderGenres(result) ]
-              : null
-            }
+
+            [ this.renderSubjects(result), this.renderGenres(result) ]
 
           {this.shouldShowStatus()
             ? (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}

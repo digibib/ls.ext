@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 
 import * as types from '../constants/ActionTypes'
 import { processSearchResponse } from '../utils/searchResponseParser'
-import { toggleParameterValue, ensureDefinedFiltersOpen, ensureOneBranchOpen, toggleListParameter } from './ParameterActions'
+import { toggleParameterValue, ensureDefinedFiltersOpen, ensureOneBranchOpen } from './ParameterActions'
 
 export function requestSearch (inputQuery, elasticSearchQuery) {
   return {
@@ -78,11 +78,4 @@ export function showBranchStatus (branchCode) {
 
 export function showBranchStatusMedia (branchCodeMedia) {
   return toggleParameterValue('showBranchStatusMedia', branchCodeMedia)
-}
-
-export function toggleListView (listParam) {
-  return (dispatch, getState) => {
-    const locationQuery = { ...getState().routing.locationBeforeTransitions.query }
-    dispatch(toggleListParameter(listParam, locationQuery))
-  }
 }

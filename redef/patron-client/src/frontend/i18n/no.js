@@ -279,8 +279,6 @@ export default {
   'SearchResult.showStatus': 'Se hvor den finnes',
   'SearchResult.subjects': 'Emner:',
   'SearchResults.searchError': 'Noe gikk galt med søket',
-  'SearchResultSettings.showFullList': 'Vis full versjon av søkeresultatet',
-  'SearchResultSettings.showList': 'Vis kort versjon av søkeresultatet',
   'SearchResultsText.searchForWork': 'Søk etter verk',
   'SearchResultsText.searching': 'Søker...',
   'SearchResultsText.totalHits': '<span data-automation-id="hits-total">{totalHits}</span> treff',
