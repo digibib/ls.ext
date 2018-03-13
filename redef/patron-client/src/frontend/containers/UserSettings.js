@@ -7,6 +7,7 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
 import ChangePin from './forms/ChangePinForm'
 import ContactDetails from './forms/ContactDetailsForm'
+import KeepMyHistory from '../components/KeepMyHistory'
 
 class UserSettings extends React.Component {
   constructor (props) {
@@ -119,6 +120,11 @@ class UserSettings extends React.Component {
         transitionLeaveTimeout={500}
         component="section"
         className="user-settings">
+
+        <header>
+          <h1><FormattedMessage {...messages.history} /></h1>
+          <KeepMyHistory profileActions={this.props.profileActions} personalInformation={this.props.personalInformation} />
+        </header>
 
         <header>
           <h1><FormattedMessage {...messages.alerts} /></h1>
@@ -289,6 +295,11 @@ UserSettings.propTypes = {
 }
 
 export const messages = defineMessages({
+  history: {
+    id: 'History.history',
+    description: 'The label of history title',
+    defaultMessage: 'My history'
+  },
   saveSuccess: {
     id: 'UserSettings.saveSuccess',
     description: 'Success notification when settings are saved',

@@ -3,7 +3,6 @@ import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-i
 import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
 import {formatDate} from '../utils/dateFormatter'
-import isEmpty from '../utils/emptyObject'
 import Constants from '../constants/Constants'
 
 const HistoryItem = ({ historyItem, intl }) => {
