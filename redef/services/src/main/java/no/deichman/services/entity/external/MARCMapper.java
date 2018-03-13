@@ -131,7 +131,7 @@ public class MARCMapper {
                         getSubfieldValue(dataField, 's').ifPresent(publication::setAgeLimit);
                         break;
                     case "020":
-                        getSubfieldValue(dataField, 'a').ifPresent(publication::setIsbn);
+                        getSubfieldValue(dataField, 'a').ifPresent(publication::addIsbn);
                         setUriObject(dataField, 'b', "binding", Binding::translate, publication::setBinding);
                         break;
                     case "025":

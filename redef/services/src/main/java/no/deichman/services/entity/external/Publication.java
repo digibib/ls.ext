@@ -39,7 +39,7 @@ public class Publication extends BibliographicObjectExternal {
     }
 
     @SerializedName("deichman:isbn")
-    private String isbn;
+    private List<String> isbn;
 
     @SerializedName("deichman:hasEan")
     private String ean;
@@ -109,12 +109,15 @@ public class Publication extends BibliographicObjectExternal {
 
     private transient Extent extentType;
 
-    public final String getIsbn() {
+    public final List<String> getIsbn() {
         return isbn;
     }
 
-    final void setIsbn(String isbn) {
-        this.isbn = isbn;
+    final void addIsbn(String isbn) {
+        if (this.isbn == null) {
+            this.isbn = new ArrayList<>();
+        }
+        this.isbn.add(isbn);
     }
 
     final void setIsmn(String ismn) {
