@@ -5588,7 +5588,7 @@
                     })
                   })
                 } else {
-                  // copyAdditionalSuggestionsForGroup(groupIndex)
+                  copyAdditionalSuggestionsForGroup(groupIndex)
                 }
               }
             }, { init: false, defer: true }),
@@ -5620,7 +5620,13 @@
           forAllGroupInputs(function (input, groupIndex1) {
             if (groupIndex1 === Number(groupIndex) && input.widgetOptions && input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom) {
               const sourceInput = inputFromInputId(input.widgetOptions.whenEmptyExternalSuggestionCopyValueFrom.inputRef)
-              if (sourceInput) {
+
+              // Adding the default values to the list view of publication parts was confusing to the users.
+              // Figuring out where exactly in the code the part gets rendered as an input form proved difficult,
+              // hence this inelegant hack.
+              const targetIsInputForm = !input.parentInput.allowAddNewButton
+
+              if (sourceInput && targetIsInputForm) {
                 const value = _.last(input.values)
                 if (value && (!value.current || value.current.value === undefined || value.current.value === null || value.current.value === '' || _.isEqual(value.current.value, [ '' ]) ||
                     (input.type === 'searchable-with-result-in-side-panel' && typeof value.current.displayValue !== 'string' || value.current.displayValue === '') && typeof sourceInput.values[ 0 ] === 'object')) {
