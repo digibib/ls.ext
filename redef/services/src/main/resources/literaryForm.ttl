@@ -67,3 +67,6 @@ literaryForm:shortFilm a duo:LiteraryForm ;
 literaryForm:exerciseBook a duo:LiteraryForm ;
   rdfs:label "Oppgavebok"@no ;
   rdfs:label "Exercise book"@en .
+literaryForm:statistics a duo:LiteraryForm ;
+  rdfs:label "Statistikk"@no ;
+  rdfs:label "Statistics"@en .
