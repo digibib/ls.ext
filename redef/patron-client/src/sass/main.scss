@@ -3487,6 +3487,7 @@ header .logged-in-message {
 
 .pagination-area ul.pagination li a, .pagination-area ul.pagination li span {
   text-decoration: none;
+    white-space: pre;
 }
 
 .pagination-area ul.pagination li.active a {
@@ -3497,6 +3498,7 @@ header .logged-in-message {
 }
 
 .pagination-area ul.pagination li.next {
+
 }
 
 .pagination-area ul.pagination li.previous a:before {
@@ -3520,7 +3522,7 @@ header .logged-in-message {
   height: 1em;
   position: relative;
   left: 0.4em;
-  top: 0.2em
+  top: 0.2em;
 }
 
 .pagination-area ul.pagination li:not(.active) a:hover {
