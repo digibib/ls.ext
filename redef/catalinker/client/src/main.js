@@ -5311,7 +5311,7 @@
                   showGrowler()
                   _.each(event.context.relations, function (relation, index) {
                     if (relation.enable) {
-                      promises.push(axios.post(`${proxyToServices(parentUri)}/clone`)
+                      promises.push(axios.post(`${proxyToServices(parentUri)}/split`)
                         .then(function (response) {
                           return patchValue(relation.uri, event.context.inverseRdfProperty, 'http://www.w3.org/2001/XMLSchema#anyURI', parentUri, response.headers.location).then(function () {
                             return response

@@ -509,6 +509,17 @@ public final class EntityResource extends ResourceBase {
     @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/clone")
     public Response cloneResource(@PathParam("type") String type,
                                   @PathParam("id") String id) {
+        return splitOrCopyResource(type, id, "http://migration.deichman.no/clonedFrom");
+    }
+
+    @POST
+    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/split")
+    public Response splitResource(@PathParam("type") String type,
+                                  @PathParam("id") String id) {
+        return splitOrCopyResource(type, id, "http://migration.deichman.no/splitFrom");
+    }
+
+    private Response splitOrCopyResource(String type, String id, String uriref) {
         try {
             XURI xuri = new XURI(BaseURI.root(), type, id);
             final Model model = getEntityService().retrieveById(xuri);
@@ -517,11 +528,12 @@ public final class EntityResource extends ResourceBase {
             }
             model.add(ResourceFactory.createStatement(
                     ResourceFactory.createResource(xuri.getUri()),
-                    ResourceFactory.createProperty("http://migration.deichman.no/clonedFrom"),
+                    ResourceFactory.createProperty(uriref),
                     ResourceFactory.createResource(xuri.getUri())));
             return created(URI.create(getEntityService().create(EntityType.get(type), model))).build();
         } catch (Exception e) {
             throw new BadRequestException(e);
         }
     }
+
 }
