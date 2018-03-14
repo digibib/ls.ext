@@ -276,6 +276,7 @@ export function manageHistory (privacy) {
       .then(response => {
         if (response.status === 200) {
           // dispatch(changeHistoryPrivacy(privacy))
+          dispatch(postProfileSettingsSuccess())
           dispatch(fetchProfileInfo())
         } else {
           throw Error('Unexpected status code')
@@ -300,6 +301,7 @@ export function manageHistoryConsent (consent) {
       .then(response => {
         if (response.status === 200) {
           // dispatch(changeHistoryPrivacy(privacy))
+          dispatch(postProfileSettingsSuccess())
           dispatch(fetchProfileInfo())
         } else {
           throw Error('Unexpected status code')
