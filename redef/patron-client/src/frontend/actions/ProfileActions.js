@@ -284,3 +284,27 @@ export function manageHistory (privacy) {
       .catch(error => dispatch(manageHistoryFailure(error)))
   }
 }
+
+export function manageHistoryConsent (consent) {
+  const url = '/api/v1/profile/settings/historyconsent'
+  return dispatch => {
+    dispatch(requestManageHistory())
+    return fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ consent: consent })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          // dispatch(changeHistoryPrivacy(privacy))
+          dispatch(fetchProfileInfo())
+        } else {
+          throw Error('Unexpected status code')
+        }
+      })
+      .catch(error => dispatch(manageHistoryFailure(error)))
+  }
+}

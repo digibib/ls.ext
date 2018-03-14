@@ -32,9 +32,9 @@ class MyPage extends React.Component {
     }
     const tabList = [
       { label: this.props.intl.formatMessage(messages.loansAndReservations), path: '/profile/loans' },
-      { label: this.props.intl.formatMessage(messages.history), path: '/profile/history' },
       { label: this.props.intl.formatMessage(messages.personalInformation), path: '/profile/info' },
-      { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' }
+      { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' },
+      { label: this.props.intl.formatMessage(messages.history), path: '/profile/history' }
     ]
     return (
       <main role="main" data-automation-id="profile_page" className="mypage-wrapper">

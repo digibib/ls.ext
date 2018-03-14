@@ -33,6 +33,29 @@ module.exports = (app) => {
       })
   })
 
+  app.post('/api/v1/profile/settings/historyconsent', jsonParser, (request, response) => {
+    const params = {
+      code: 'hist_cons',
+      attribute: Date.now()
+    }
+    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/attributes`, {
+      method: 'POST',
+      body: JSON.stringify(params)
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json
+        } else {
+          response.status(res.status).send(res.statusText)
+          // throw Error()
+        }
+      }).then(json => response.status(200).send(json))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
   app.post('/api/v1/profile/history', jsonParser, (request, response) => {
     const params = {
       offset: request.body.offset || 0,

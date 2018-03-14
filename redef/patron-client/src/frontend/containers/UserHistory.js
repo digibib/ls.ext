@@ -6,6 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl'
 import * as HistoryActions from '../actions/HistoryActions'
 import * as ProfileActions from '../actions/ProfileActions'
 import HistoryItems from '../components/HistoryItems'
+import OptInHistory from '../components/OptInHistory'
 
 const limit = 20
 
@@ -34,7 +35,9 @@ class UserHistory extends React.Component {
   render () {
     return (
       <div key={Math.random()}> {/*  Ensures component rerendering */}
-
+        {!this.props.personalInformation.isOptedIn &&
+          <OptInHistory personalInformation={this.props.personalInformation} profileActions={this.props.profileActions} />
+        }
         {this.props.personalInformation.privacy === 0 ||
         this.props.personalInformation.privacy === 1 ||
         this.props.personalInformation.privacy === ''
