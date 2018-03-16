@@ -34,9 +34,12 @@ module.exports = (app) => {
   })
 
   app.post('/api/v1/profile/settings/historyconsent', jsonParser, (request, response) => {
+    let attribute = request.body.consent ? 'yes' : 'no'
+    attribute += '_'
+    attribute += Date.now()
     const params = {
       code: 'hist_cons',
-      attribute: Date.now()
+      attribute: attribute
     }
     fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/attributes`, {
       method: 'POST',

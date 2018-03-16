@@ -382,6 +382,7 @@ export default {
   'UserSettings.history': 'Min historikk',
   'UserSettings.keepMyHistory': 'Jeg ønsker å bevare historikken',
   'UserSettings.saveConsent': 'Ja takk',
+  'UserSettings.consentLater': 'Ikke nå',
   'UserSettings.saveMyHistoryHeader': 'Nå kan du ta vare på lånehistorikken din!',
   'UserSettings.saveMyHistoryInformation': 'Du har altid oversikt over det du har lånt ...',
   'ValidationMessage.emailOrMobileRequired': 'Enten epost eller mobilnummer må fylles ut',

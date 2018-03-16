@@ -7,13 +7,16 @@ import { routerActions } from 'react-router-redux'
 
 import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
+import * as ModalActions from '../actions/ModalActions'
 import Tabs from '../components/Tabs'
+// import ModalComponents from '../constants/ModalComponents'
 
 class MyPage extends React.Component {
   componentWillMount () {
     if (this.props.isLoggedIn) {
       this.props.profileActions.fetchAllProfileData()
     }
+    // this.props.modalActions.showModal(ModalComponents.NEW_USER_OPT_IN_HISTORY, { isSuccess: true })
   }
 
   componentDidUpdate (prevProps) {
@@ -55,6 +58,7 @@ class MyPage extends React.Component {
 MyPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   loginActions: PropTypes.object.isRequired,
+  modalActions: PropTypes.object.isRequired,
   borrowerNumber: PropTypes.string,
   isLoggedIn: PropTypes.bool.isRequired,
   profileActions: PropTypes.object.isRequired,
@@ -109,7 +113,8 @@ function mapDispatchToProps (dispatch) {
     dispatch: dispatch,
     profileActions: bindActionCreators(ProfileActions, dispatch),
     loginActions: bindActionCreators(LoginActions, dispatch),
-    routerActions: bindActionCreators(routerActions, dispatch)
+    routerActions: bindActionCreators(routerActions, dispatch),
+    modalActions: bindActionCreators(ModalActions, dispatch)
   }
 }
 
