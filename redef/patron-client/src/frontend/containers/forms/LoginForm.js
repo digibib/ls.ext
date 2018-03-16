@@ -99,7 +99,7 @@ class LoginForm extends React.Component {
                     data-automation-id="login_button">
               <FormattedMessage {...this.props.messages.logIn} />
             </button>
-            <Link to="#" className="cancel-link" onClick={this.props.modalActions.hideModal}>
+            <Link className="cancel-link" onClick={this.props.modalActions.hideModal}>
               Avbryt
             </Link>
           </p>
