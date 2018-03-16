@@ -24,7 +24,7 @@ export default function (store) {
   function scrollToTopUnlessGoingBack (prevState, nextState) {
     if (nextState.location.query.showStatus ||
        (prevState.location.query.showStatus && !nextState.location.query.showStatus) ||
-       (prevState.location.pathname.startsWith("/work") && nextState.location.pathname.startsWith("/work"))) {
+       (prevState.location.pathname.startsWith('/work') && nextState.location.pathname.startsWith('/work'))) {
       // Don't scroll to top when opening/closing status in search result, or on work page
       // TODO this information should probably be local state, not be encoded in URL
       return
