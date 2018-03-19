@@ -132,6 +132,7 @@ class Work extends React.Component {
     const { back } = this.props.location.query
 
     return (
+      <div>
       <div className="white">
         <main role="main" className="wrapper">
           <NonIETransitionGroup
@@ -160,22 +161,21 @@ class Work extends React.Component {
             </MediaQuery>
             {/* this.renderAvailableMediaTypes(work.publications) */}
 
-            <Publications
-              path={this.props.location.pathname}
-              locationQuery={this.props.location.query}
-              expandSubResource={this.props.resourceActions.expandSubResource}
-              publications={publicationsWithItems}
-              startReservation={this.props.reservationActions.startReservation}
-              toggleParameterValue={this.props.parameterActions.toggleParameterValue}
-              workLanguage={work.language}
-              libraries={this.props.libraries}
-              audiences={Array.isArray(this.props.resources[ this.props.params.workId ].audience) ? this.props.resources[ this.props.params.workId ].audience : [ this.props.resources[ this.props.params.workId ].audience ]}
-              searchFilterActions={this.props.searchFilterActions}
-              query={this.props.query} />
-
           </NonIETransitionGroup>
-
         </main>
+        </div>
+        <Publications
+          path={this.props.location.pathname}
+          locationQuery={this.props.location.query}
+          expandSubResource={this.props.resourceActions.expandSubResource}
+          publications={publicationsWithItems}
+          startReservation={this.props.reservationActions.startReservation}
+          toggleParameterValue={this.props.parameterActions.toggleParameterValue}
+          workLanguage={work.language}
+          libraries={this.props.libraries}
+          audiences={Array.isArray(this.props.resources[ this.props.params.workId ].audience) ? this.props.resources[ this.props.params.workId ].audience : [ this.props.resources[ this.props.params.workId ].audience ]}
+          searchFilterActions={this.props.searchFilterActions}
+          query={this.props.query} />
       </div>
     )
   }

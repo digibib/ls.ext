@@ -7,12 +7,14 @@ const WorkAgeLimit = ({ publications, intl }) => {
   if (ageLimits.length === 1) {
     return (
       <MetaItem label={messages.ageLimit} data-automation-id="work_ageLimit">
+        <br />
         {ageLimits[0] === '0' ? <FormattedMessage {...messages.noAgeLimit} /> : ageLimits[0]}
       </MetaItem>
     )
   } else if (ageLimits.length > 1) {
     return (
       <MetaItem label={messages.ageLimit} data-automation-id="work_ageLimit">
+          <br />
           <FormattedMessage {...messages.seePublication} />
       </MetaItem>
     )

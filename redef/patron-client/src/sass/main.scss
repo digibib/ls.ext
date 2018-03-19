@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+
 // Imports
 // --------------------------------------------------------
 
@@ -25,7 +26,8 @@
 $redColor: #D63814 !default;
 $redGreyColor: #916359 !default;
 $blackColor: #1A1A1A !default;
-$greyColor: #F5F5F5 !default;
+$greyColor: #E5E5E5 !default;
+$lightGreyColor: #F5F5F5;
 $mediumGreyColor: #CACACA !default;
 $darkGreyColor: #767676 !default;
 $white: #FFF !default;
@@ -177,7 +179,7 @@ body {
   font-weight: normal;
   font-style: normal;
   color: $blackColor;
-  background-color: #E5E5E5;
+  background-color: $greyColor;
   margin: 0;
 }
 
@@ -244,10 +246,6 @@ table {
   border-collapse: collapse;
 }
 
-table thead {
-  border-bottom: 1px solid $blackColor;
-}
-
 table th, table tr {
   padding: $rhythm1;
 }
@@ -291,12 +289,12 @@ table th button.sorter:focus {
   outline: none;
 }
 
-table tr:nth-child(odd) {
-  background: $white;
+table tbody tr:nth-child(odd) {
+  background: $lightGreyColor;
 }
 
-table tr:nth-child(even) {
-  background: $greyColor;
+table tbody tr:nth-child(even) {
+  background: #ebebeb;
 }
 
 // digibib icons
@@ -306,6 +304,16 @@ img.icon {
   width: 1em;
   height: 1em;
   vertical-align: middle;
+}
+
+img.icon-tall {
+  transform: rotate(90deg);
+  width: 2em;
+  height: 1em;
+  vertical-align: middle;
+}
+
+.mediatype .icon-tall {
 }
 
 .icon-check-empty:before { content: url("/images/checkbox-unchecked.png"); }
@@ -1880,8 +1888,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .work-information .work-excerpt {
-  margin-top: $rhythm1;
-  margin-bottom: $rhythm1;
+  margin-top: $rhythm3;
+  margin-bottom: $rhythm3;
 }
 
 .work-information .additional-info {
@@ -1903,7 +1911,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
   .work-information h1 {
     font-size: $rhythm5;
-    font-weight: normal;
   }
 
   .work-information h2 {
@@ -1934,7 +1941,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 
   .additional-info .work-subjects, .additional-info .work-genres {
-    border-top: 1px solid $blackColor;
     margin-bottom: $rhythm2;
   }
 
@@ -1968,9 +1974,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .work-relations li .content:after {
-  content: '|';
+  content: ',';
   display: inline-block;
-  padding-left: 0.25em;
   padding-right: 0.25em;
 }
 
@@ -2006,9 +2011,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .work-subjects li:after, .work-genres li:after {
-  content: '|';
+  content: ',';
   display: inline-block;
-  padding-left: 0.25em;
   padding-right: 0.25em;
 }
 
@@ -2022,14 +2026,14 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 // --------------------------------------------------------
 
 .other-publications .mediatype-group {
-  border-top: 4px solid $blackColor;
   margin-top: $rhythm4;
 }
 .other-publications .mediatype-group:first-of-type {
   margin-top: 0;
 }
-.other-publications > header h2 {
-  font-size: $rhythm2_5;
+.other-publications h2 {
+  font-size: $rhythm4;
+  font-weight: bold;
 }
 .other-publications .toggle-all-publications {
   margin-top: $rhythm4;
@@ -2071,13 +2075,24 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .other-publications .mediatype-selector {
   @include container;
   @include span(12);
-  margin-bottom: $rhythm2;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $rhythm5;
 }
-.other-publications .mediatype-selector > div {
-  display: inline-block;
+
+.other-publications .mediatype-selector .mediatype {
+  flex-grow: 1;
   cursor: pointer;
+  text-align: left;
+  background-color: $lightGreyColor;
+  border-radius: 3px;
+  padding: 0.5em 1em;
 }
+
+.other-publications .mediatype-selector .mediatype:first-child {
+  margin-right: 1em;
+}
+
 .other-publications .mediatype-group {
   @include container;
   @include span(12);
@@ -2087,8 +2102,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .other-publications .mediatype-group h2 {
   font-family: Lato, Arial, sans-serif;
   font-weight: 600;
-  font-size: $rhythm2_5;
-  margin-bottom: 0;
+  font-size: $rhythm3;
+  margin: 0.2em 0;
 }
 .other-publications .mediatype-group > header {
   @include container;
@@ -2158,13 +2173,13 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 @include breakpoint($medium) {
   .other-publications .mediatype-group .single-publication {
-    @include span(4);
+    @include span(6);
   }
   .other-publications .mediatype-group .single-publication:nth-child(even) {
-    @include span(4);
+    @include span(6);
   }
-  .other-publications .mediatype-group .single-publication:nth-child(3) {
-    width: 32.20339%;
+  .other-publications .mediatype-group .single-publication:nth-child(2) {
+    width: 49%;
     float: right;
     margin-right: 0;
   }
@@ -2174,12 +2189,14 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 // --------------------------------------------------------
 
 .single-publication {
-  border: 1px solid $mediumGreyColor;
   margin-bottom: $rhythm2;
+  background-color: #fff;
+  border-radius: 4px;
   padding: $rhythm2;
 }
 
 .single-publication.open {
+  background-color: #ebebeb;
   border-bottom: none;
 }
 
@@ -2191,7 +2208,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .single-publication .book-cover img {
-  max-height: 7em;
+  max-height: 12em;
 }
 
 .single-publication .book-cover.missing {
@@ -2218,19 +2235,21 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include container;
   @include span(12);
   @include clearfix;
+  font-size: $rhythm3;
+  line-height: 1.2em;
 }
 
 .single-publication .availability {
   @include container;
   @include span(12);
-  text-transform: uppercase;
-  font-size: $rhythm2;
+  font-size: $rhythm2_5;
+  color: $darkGreyColor;
 }
 
 .single-publication h2 {
   @include container;
   @include span(12);
-  font-size: $rhythm2_5;
+  font-size: $rhythm3;
   margin: $rhythm1 0;
   font-weight: bold;
   cursor: pointer;
@@ -2278,9 +2297,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 .publication-info {
   padding: $rhythm1 $rhythm1 $rhythm2 $rhythm1;
-  border-bottom: 1px solid $darkGreyColor;
   margin-bottom: $rhythm4;
-  background: $greyColor;
+  background: #ebebeb;
   font-size: $rhythm2;
   margin-top: -1px;
 }
@@ -2362,10 +2380,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-size: $rhythm4;
 }
 
-.publication-info .entry-items table {
-  border: 1px solid $mediumGreyColor;
-}
-
 .publication-info .entry-items th {
   font-weight: bold;
 }
@@ -2378,7 +2392,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   margin-left: 1em;
   background-color: #ddd;
   border-radius: 0.2em;
-  padding: 0 0.5em;
+  padding: 0.2em 0.5em;
 }
 
 @include breakpoint($small) {
@@ -2390,12 +2404,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   }
 
   .single-publication.open {
-    border-bottom: 3px solid $blue;
+    margin-bottom: 0.5em;
   }
 
 
   .publication-info {
-    border: 1px solid $mediumGreyColor;
     padding: $rhythm4;
     margin-bottom: 0;
     font-size: $rhythm2_5;
@@ -3695,7 +3708,7 @@ footer .social-icons {
   @include clearfix;
   @include container;
   @include span(12);
-  font-size: $rhythm2_5;
+  font-size: $rhythm3;
   padding: 0;
   margin: 0;
 }
@@ -3714,7 +3727,6 @@ footer .social-icons {
 }
 
 .tab-bar li.tab-bar-tab-active a {
-  border-bottom: 2px solid $blackColor;
   color: $blackColor;
   text-decoration: none;
   font-weight: bold;
@@ -3722,19 +3734,11 @@ footer .social-icons {
 }
 
 .tab-bar a {
-  border-bottom: 1px solid $greyColor;
-  margin-bottom: 1px;
   display: inline-block;
   padding: 0.5em;
   text-align: center;
 }
 
-.tab-bar a:hover, .tab-bar a:active, .tab-bar a:focus {
-  border-bottom: 2px solid $blackColor;
-  text-decoration: none;
-  font-weight: bold;
-  margin-bottom: 0;
-}
 
 .tab-bar a::after {
   display: block;
@@ -3837,12 +3841,15 @@ footer .social-icons {
   @include clearfix;
   @include container;
   @include span(12);
+  font-size: $rhythm3;
+  line-height: 1.5;
 }
 
 .work-entry .meta-item {
   @include clearfix;
   @include container;
   @include span(12);
+  line-height: 2em;
 }
 
 .work-entry .contributors,
@@ -3863,12 +3870,20 @@ footer .social-icons {
   }
 
   .work-entry .additional-info {
+    background-color: $lightGreyColor;
+    padding: 1em;
+    border-radius: 3px;
     width: 32.20339%;
     float: right;
     margin-right: 0;
   }
 }
 
+.work-entry .additional-info {
+  @include breakpoint($medium) {
+    font-size: $rhythm3;
+  }
+}
 // search-box
 // --------------------------------------------------------
 
@@ -4013,6 +4028,10 @@ main {
 
 .white {
   background-color: $white;
+}
+
+.grey {
+  background-color: $lightGreyColor;
 }
 
 .mypage-wrapper {

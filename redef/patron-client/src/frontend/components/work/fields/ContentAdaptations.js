@@ -6,6 +6,7 @@ const ContentAdaptations = ({ contentAdaptations, intl }) => {
   if (contentAdaptations.length > 0) {
     return (
       <MetaItem label={messages.labelContentAdaptations} data-automation-id="work_contentAdaptations">
+        <br />
         {contentAdaptations.map(contentAdaptation => intl.formatMessage({ id: contentAdaptation })).join(', ')}
       </MetaItem>
     )

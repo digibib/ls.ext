@@ -115,9 +115,9 @@ describe('components', () => {
       expect(node.querySelectorAll("[data-automation-id^='publication_']").length).toBe(props.publications.length)
     })
 
-    it('should render row for every three publications on desktop screens', () => {
+    it('should render row for every two publications on desktop screens', () => {
       const { node } = setup({ mediaQueryValues: { width: 992 } })
-      expect(node.getElementsByClassName('row').length).toBe(2)
+      expect(node.getElementsByClassName('row').length).toBe(3)
     })
 
     it('should render row for every two publications on tablets', () => {

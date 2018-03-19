@@ -6,6 +6,7 @@ const TargetAudience = ({ audiences, intl }) => {
   if (audiences.length > 0) {
     return (
       <MetaItem label={messages.labelTargetAudience} data-automation-id="work_audiences">
+        <br />
         {audiences.map(audience => intl.formatMessage({ id: audience })).join(', ')}
       </MetaItem>
     )

@@ -6,6 +6,7 @@ const Biographies = ({ biographies, intl }) => {
   if (biographies.length > 0) {
     return (
       <MetaItem label={messages.labelBiographies} data-automation-id="work_biographies">
+        <br />
         {biographies.map(biography => intl.formatMessage({ id: biography.id })).join(', ')}
       </MetaItem>
     )

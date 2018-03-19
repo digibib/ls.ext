@@ -93,24 +93,24 @@ class Publication extends React.Component {
           ) : null}
             </div>
           ) : null}
-        </div>
-        <div className="show-status">
-          {this.props.open ? (
-            <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>
-              <button data-automation-id="publication_close_show_more_info" aria-expanded="true">
-                <FormattedMessage {...messages.hideInfo} />
-                <img className="icon" src="/images/minus.svg" aria-hidden="true" />
-              </button>
-            </ClickableElement>
-          ) : (
-            <ClickableElement onClickAction={this.props.expandSubResource}
-                              onClickArguments={[ this.props.publication.id, true ]}>
-              <button type="button" data-automation-id="publication_open_show_more_info" aria-expanded="false">
-                <FormattedMessage {...messages.showInfo} />
-                <img className="icon"src="/images/plus.svg" aria-hidden="true" />
-              </button>
-            </ClickableElement>
-          )}
+          <div className="show-status">
+            {this.props.open ? (
+              <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>
+                <button data-automation-id="publication_close_show_more_info" aria-expanded="true">
+                  <FormattedMessage {...messages.hideInfo} />
+                  <img className="icon" src="/images/minus.svg" aria-hidden="true" />
+                </button>
+              </ClickableElement>
+            ) : (
+              <ClickableElement onClickAction={this.props.expandSubResource}
+                                onClickArguments={[ this.props.publication.id, true ]}>
+                <button type="button" data-automation-id="publication_open_show_more_info" aria-expanded="false">
+                  <FormattedMessage {...messages.showInfo} />
+                  <img className="icon"src="/images/plus.svg" aria-hidden="true" />
+                </button>
+              </ClickableElement>
+            )}
+          </div>
         </div>
       </article>
     )

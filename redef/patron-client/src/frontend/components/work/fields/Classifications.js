@@ -6,6 +6,7 @@ const Classifications = ({ classifications }) => {
   if (classifications.length > 0) {
     return (
       <MetaItem label={messages.labelClassifications} data-automation-id="work_classifications">
+        <br />
         {classifications.join(', ')}
       </MetaItem>
     )

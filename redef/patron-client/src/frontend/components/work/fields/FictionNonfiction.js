@@ -6,6 +6,7 @@ const FictionNonfiction = ({ fictionNonfiction, intl }) => {
   if (fictionNonfiction) {
     return (
       <MetaItem label={messages.labelFictionNonfiction} data-automation-id="work_fictionNonfiction">
+        <br />
         {intl.formatMessage({ id: fictionNonfiction })}
       </MetaItem>
     )

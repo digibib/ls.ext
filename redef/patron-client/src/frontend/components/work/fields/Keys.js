@@ -6,6 +6,7 @@ const Key = ({ keys, intl }) => {
   if (keys.length > 0) {
     return (
       <MetaItem label={messages.labelKey} data-automation-id="work_key">
+        <br />
         {keys.map(key => intl.formatMessage({ id: key })).join(', ')}
       </MetaItem>
     )

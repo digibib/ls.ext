@@ -39,35 +39,37 @@ const WorkRelations = ({ workRelations, intl }) => {
       <ul >
         {objArray.map(relationType => (
           <li key={relationType} data-automation-id="work_relations" >
-            <span className="meta-label" >{intl.formatMessage({ id: relationType })}</span >:&nbsp;
-            {workRelations[ relationType ].map(relation => {
-              let link = null
-              if (relation.type === 'WorkSeries') {
-                link = <span >
-                  <Link
+            <p>
+              <span className="meta-label" >{intl.formatMessage({ id: relationType })}</span >:&nbsp;
+              {workRelations[ relationType ].map(relation => {
+                let link = null
+                if (relation.type === 'WorkSeries') {
+                  link = <span >
+                    <Link
+                      data-automation-id="work_relation_link"
+                      to={fieldQueryLink('serie', relation.mainTitle)} >
+                      {relation.mainTitle}
+                    </Link >
+                    {' ('}
+                    <FormattedMessage {...messages.workSerie} />
+                    {')'}
+                    </span >
+                } else {
+                  link = <Link
                     data-automation-id="work_relation_link"
-                    to={fieldQueryLink('serie', relation.mainTitle)} >
-                    {relation.mainTitle}
+                    to={relation.relativeUri} >
+                    {relationLink(title(relation), mainContributorName(relation.contributors), relation.numberInRelation)}
                   </Link >
-                  {' ('}
-                  <FormattedMessage {...messages.workSerie} />
-                  {')'}
+                }
+                return (
+                  <span className="content" key={relation.relativeUri + relationType} >
+                  <br />
+                    {link}
                   </span >
-              } else {
-                link = <Link
-                  data-automation-id="work_relation_link"
-                  to={relation.relativeUri} >
-                  {relationLink(title(relation), mainContributorName(relation.contributors), relation.numberInRelation)}
-                </Link >
+                )
               }
-              return (
-                <span className="content" key={relation.relativeUri + relationType} >
-                <br />
-                  {link}
-                </span >
-              )
-            }
-            )}
+              )}
+            </p>
           </li >
         ))}
       </ul >

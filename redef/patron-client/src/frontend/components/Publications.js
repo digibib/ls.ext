@@ -182,7 +182,7 @@ class Publications extends React.Component {
     return (
       <div key={publications}>
         <MediaQuery query="(min-width: 992px)" values={{ ...this.props.mediaQueryValues }}>
-          {this.renderPublications(publications, 3)}
+          {this.renderPublications(publications, 2)}
         </MediaQuery>
         <MediaQuery query="(min-width: 668px) and (max-width: 991px)" values={{ ...this.props.mediaQueryValues }}>
           {this.renderPublications(publications, 2)}
@@ -273,7 +273,7 @@ class Publications extends React.Component {
             return (
               <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[ mediaTypeUri ]}
                                 key={mediaTypeUri}>
-                <div><MediaType key={mediaTypeUri} mediaType={mediaType} buttonRole={'button'} buttonTabIndex={'0'} /></div>
+                <div className="mediatype"><MediaType key={mediaTypeUri} mediaType={mediaType} buttonRole={'button'} buttonTabIndex={'0'} /><img className="icon-tall" src="/images/long_arrow_right.svg" /></div>
               </ClickableElement>
             )
           })
@@ -301,52 +301,60 @@ class Publications extends React.Component {
         transitionLeaveTimeout={500}
         component="section"
         className="other-publications">
-        <header>
-          <h2>Gå til</h2>
-          {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
-          <SearchFilterBox
-            path={this.props.path}
-            toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
-            removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
-            toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
-            removeAllFilters={this.props.searchFilterActions.removeAllFilters}
-            query={this.props.query} />
-        </header>
-        {
-          Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
-            const mediaTypeFragment = getFragment(mediaTypeUri)
-            return (
-              <section className="mediatype-group" ref={e => this.mediaTypeUri[ mediaTypeUri ] = e} key={mediaTypeUri}
-                       data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
-                <header className="other-publications-title">
-                  <ClickableElement
-                    onClickAction={this.props.toggleParameterValue}
-                    onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
-                    <h2 role="button" tabIndex="0" aria-expanded={!collapsePublications.includes(mediaTypeFragment)}>
-                      <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} aria-hidden="true" />&nbsp;
-                      {this.props.intl.formatMessage({ id: mediaTypeUri })} &nbsp;
-                      {collapsePublications.includes(mediaTypeFragment)
-                        ? <img className="icon" src="/images/plus.svg" aria-hidden="true" />
-                        : <img className="icon" src="/images/minus.svg" aria-hidden="true" />}
-                    </h2>
-                  </ClickableElement>
-                </header>
-                <NonIETransitionGroup
-                  transitionName="fade-in"
-                  transitionAppear
-                  transitionAppearTimeout={500}
-                  transitionEnterTimeout={500}
-                  transitionLeaveTimeout={500}
-                  component="div"
-                  className="other-publications-entry-content">
-                  {collapsePublications.includes(mediaTypeFragment)
-                    ? null
-                    : this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaTypeUri ].map(publicationHolder => publicationHolder.original))}
-                </NonIETransitionGroup>
-              </section>
-            )
-          })
-        }
+        <div className="white">
+          <div className="wrapper clearfix">
+            <header>
+              <h2><span className="marked-yellow">Gå til</span></h2>
+              {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
+              <SearchFilterBox
+                path={this.props.path}
+                toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+                removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
+                toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
+                removeAllFilters={this.props.searchFilterActions.removeAllFilters}
+                query={this.props.query} />
+            </header>
+          </div>
+        </div>
+        <div className="grey">
+          <div className="wrapper clearfix">
+            {
+              Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
+                const mediaTypeFragment = getFragment(mediaTypeUri)
+                return (
+                   <section className="mediatype-group" ref={e => this.mediaTypeUri[ mediaTypeUri ] = e} key={mediaTypeUri}
+                             data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
+                      <header className="other-publications-title">
+                        <ClickableElement
+                          onClickAction={this.props.toggleParameterValue}
+                          onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
+                          <h2 role="button" tabIndex="0" aria-expanded={!collapsePublications.includes(mediaTypeFragment)}>
+                            <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} aria-hidden="true" />&nbsp;
+                            {this.props.intl.formatMessage({ id: mediaTypeUri })} &nbsp;
+                            {collapsePublications.includes(mediaTypeFragment)
+                              ? <img className="icon" src="/images/plus.svg" aria-hidden="true" />
+                              : <img className="icon" src="/images/minus.svg" aria-hidden="true" />}
+                          </h2>
+                        </ClickableElement>
+                      </header>
+                      <NonIETransitionGroup
+                        transitionName="fade-in"
+                        transitionAppear
+                        transitionAppearTimeout={500}
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={500}
+                        component="div"
+                        className="other-publications-entry-content">
+                        {collapsePublications.includes(mediaTypeFragment)
+                          ? null
+                          : this.renderPublicationsMediaQueries(publicationHoldersByMediaType[ mediaTypeUri ].map(publicationHolder => publicationHolder.original))}
+                      </NonIETransitionGroup>
+                    </section>
+                )
+              })
+            }
+          </div>
+        </div>
       </NonIETransitionGroup>
     )
   }

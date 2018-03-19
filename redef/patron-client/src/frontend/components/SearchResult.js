@@ -476,7 +476,8 @@ class SearchResult extends React.Component {
               : null
             }
 
-            [ this.renderSubjects(result), this.renderGenres(result) ]
+            {this.renderSubjects(result)}
+            {this.renderGenres(result)}
 
           {this.shouldShowStatus()
             ? (<div key="show-more-content" className="show-more-content" onClick={this.handleShowStatusClick}

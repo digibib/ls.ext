@@ -6,6 +6,7 @@ const CompositionTypes = ({ compositionTypes }) => {
   if (compositionTypes.length > 0) {
     return (
       <MetaItem label={messages.labelCompositionTypes} data-automation-id="work_compositionTypes">
+        <br />
         {compositionTypes.join(', ')}
       </MetaItem>
     )

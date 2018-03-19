@@ -6,6 +6,7 @@ const DeweyNumber = ({ deweyNumber }) => {
   if (deweyNumber) {
     return (
       <MetaItem label={messages.labelDeweyNumber} data-automation-id="work_deweyNumber">
+        <br />
         {deweyNumber}
       </MetaItem>
     )

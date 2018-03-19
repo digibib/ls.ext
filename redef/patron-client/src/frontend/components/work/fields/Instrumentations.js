@@ -5,7 +5,8 @@ import MetaItem from '../../MetaItem'
 const Instrumentations = ({ instrumentations }) => {
   if (instrumentations.length > 0) {
     return (
-      <MetaItem label={messages.labelInstrumentations} data-automation-id="work_Instrumentation">
+      <MetaItem label={messages.labelInstrumentations} data-automation-id="work_Instrumentation">7
+        <br />
         {instrumentations.map(instrumentation => `${instrumentation.instrument} (${instrumentation.number})`).join(', ')}
       </MetaItem>
     )
