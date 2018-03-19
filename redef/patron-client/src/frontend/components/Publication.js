@@ -37,11 +37,7 @@ class Publication extends React.Component {
     const { publication, startReservation } = this.props
     const languages = [ ...new Set(publication.languages.map(language => this.props.intl.formatMessage({ id: language }))) ]
     const formats = [ ...new Set(publication.formats.map(format => this.props.intl.formatMessage({ id: format }))) ]
-    const publicationYearLanguageSeparator = () => {
-      if (publication.publicationYear && publication.languages.length > 0) {
-        return ', '
-      }
-    }
+
     return (
       <article onClick={this.handleClick}
                className={this.props.open ? 'single-publication open' : 'single-publication'}
