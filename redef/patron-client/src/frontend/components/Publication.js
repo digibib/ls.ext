@@ -64,18 +64,19 @@ class Publication extends React.Component {
               </div>
             </ClickableElement>
             <div className="meta-item">
-              <span data-automation-id="publication_year">{publication.publicationYear}</span>
-              <span>{publicationYearLanguageSeparator()}</span>
-              <span data-automation-id="publication_languages">{languages.join(', ')}</span>
-            </div>
-            <div className="meta-item">
-              <span data-automation-id="publication_formats">{formats.join(', ')}</span>
-            </div>
-            <div className="meta-item">
               {this.props.isAdmin
                 ? <a href={`https://intra.deichman.no/cgi-bin/koha/catalogue/detail.pl?biblionumber=${publication.recordId}`}>{publication.recordId}</a>
                 : <span data-automation-id="publication_record_id">{publication.recordId}</span>
               }
+            </div>
+            <div className="meta-item">
+              <strong><span data-automation-id="publication_languages">{languages.join(', ')}</span></strong>
+            </div>
+            <div className="meta-item">
+              <span data-automation-id="publication_year">{publication.publicationYear}</span>
+            </div>
+            <div className="meta-item">
+              <span data-automation-id="publication_formats">{formats.join(', ')}</span>
             </div>
           </div>
           {(publication.items.length > 0 &&

@@ -314,6 +314,8 @@ img.icon-tall {
 }
 
 .mediatype .icon-tall {
+  float: right;
+  margin-top: 1em;
 }
 
 .icon-check-empty:before { content: url("/images/checkbox-unchecked.png"); }
