@@ -333,7 +333,6 @@ describe('containers', () => {
       Array.prototype.forEach.call(remoteholds, (remotehold, index) => {
         expect(remotehold.querySelector("[data-automation-id='UserLoans_author_name']").textContent).toEqual(loansAndReservations.remoteholds[index].author)
         expect(remotehold.querySelector("[data-automation-id='UserLoans_remoteHold_title']").textContent).toEqual(loansAndReservations.remoteholds[index].title)
-        expect(remotehold.querySelector("[data-automation-id='UserLoans_remoteHold_queue_place']").textContent).toEqual(loansAndReservations.remoteholds[index].queuePlace)
       })
     })
   })
