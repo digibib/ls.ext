@@ -51,7 +51,7 @@ class Publication extends React.Component {
             !publication.mediaTypes.includes('http://data.deichman.no/mediaType#Periodical') ? (
             <div className="reserve-button">
               <ClickableElement onClickAction={startReservation} onClickArguments={publication}>
-                <button style={{width:"100%"}} className="blue-btn" type="button"
+                <button style={{width: '100%'}} className="blue-btn" type="button"
                         data-automation-id={`recordId_${publication.recordId}`}>
                   <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
                 </button>
