@@ -42,7 +42,26 @@ class Publication extends React.Component {
       <article onClick={this.handleClick}
                className={this.props.open ? 'single-publication open' : 'single-publication'}
                data-automation-id={`publication_${publication.uri}`}>
-        {this.renderBookCover(publication)}
+        <div className="cover-and-order">
+          <div className="book-cover-container">
+            {this.renderBookCover(publication)}
+          </div>
+          {(publication.items.length > 0 &&
+            publication.items.filter(item => item.reservable).length > 0) &&
+            !publication.mediaTypes.includes('http://data.deichman.no/mediaType#Periodical') ? (
+            <div className="reserve-button">
+              <ClickableElement onClickAction={startReservation} onClickArguments={publication}>
+                <button style={{width:"100%"}} className="blue-btn" type="button"
+                        data-automation-id={`recordId_${publication.recordId}`}>
+                  <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
+                </button>
+              </ClickableElement>
+          {(publication.numHolds > 0) ? (
+            <p className="numholds strong"><strong>({publication.numHolds} <FormattedMessage {...messages.inQueue} />)</strong></p>
+          ) : null}
+            </div>
+          ) : null}
+        </div>
         <div className="meta-info">
           <div className="publication-text-container">
             <div className="availability"
@@ -75,21 +94,6 @@ class Publication extends React.Component {
               <span data-automation-id="publication_formats">{formats.join(', ')}</span>
             </div>
           </div>
-          {(publication.items.length > 0 &&
-            publication.items.filter(item => item.reservable).length > 0) &&
-            !publication.mediaTypes.includes('http://data.deichman.no/mediaType#Periodical') ? (
-            <div className="reserve-button">
-              <ClickableElement onClickAction={startReservation} onClickArguments={publication}>
-                <button className="small-blue-btn" type="button"
-                        data-automation-id={`recordId_${publication.recordId}`}>
-                  <span data-automation-id="publication_order"><FormattedMessage {...messages.order} /></span>
-                </button>
-              </ClickableElement>
-          {(publication.numHolds > 0) ? (
-            <span className="numholds strong"><strong>({publication.numHolds} <FormattedMessage {...messages.inQueue} />)</strong></span>
-          ) : null}
-            </div>
-          ) : null}
           <div className="show-status">
             {this.props.open ? (
               <ClickableElement onClickAction={this.props.expandSubResource} onClickArguments={[ null, true ]}>

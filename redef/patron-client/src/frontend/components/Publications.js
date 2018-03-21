@@ -304,7 +304,7 @@ class Publications extends React.Component {
         <div className="white">
           <div className="wrapper clearfix">
             <header>
-              <h2><span className="marked-yellow">Gå til</span></h2>
+              <h2 style={{textAlign: 'center'}}><span className="marked-yellow">Gå til</span></h2>
               {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
               <SearchFilterBox
                 path={this.props.path}

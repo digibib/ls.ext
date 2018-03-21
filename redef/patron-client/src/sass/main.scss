@@ -450,9 +450,9 @@ button {
 .blue-btn {
   font-family: Lato, Arial, sans-serif;
   background: $blue;
-  border-radius: 24px;
+  border-radius: 4px;
   color: $white;
-  padding: 0.7em 1.625em 0.7em 1.625em;
+  padding: 0.7em 0.625em 0.7em 0.625em;
   font-size: $rhythm3;
   font-weight: normal;
   @include breakpoint($small) {
@@ -2195,14 +2195,22 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   border-bottom: none;
 }
 
-.single-publication .book-cover {
+.single-publication .cover-and-order {
   width: 23.72881%;
-  float: left;
   margin-right: 1.69492%;
+  float: left;
+}
+
+.single-publication .book-cover-container {
+  height: 12em;
+}
+
+.single-publication .book-cover {
   cursor: pointer;
 }
 
 .single-publication .book-cover img {
+  width: 100%;
   max-height: 12em;
 }
 
@@ -2232,6 +2240,13 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include clearfix;
   font-size: $rhythm3;
   line-height: 1.2em;
+  h2 {
+  /*
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    */
+  }
 }
 
 .single-publication .availability {
@@ -2394,7 +2409,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
   .single-publication {
     margin-top: $rhythm4;
-    min-height: 11em;
+    min-height: 18em;
     margin-bottom: 0;
   }
 
