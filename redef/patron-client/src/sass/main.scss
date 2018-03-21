@@ -450,9 +450,9 @@ button {
 .blue-btn {
   font-family: Lato, Arial, sans-serif;
   background: $blue;
-  border-radius: 5px;
+  border-radius: 24px;
   color: $white;
-  padding: 0.7em 0.7em 0.5em 0.6em;
+  padding: 0.7em 1.625em 0.7em 1.625em;
   font-size: $rhythm3;
   font-weight: normal;
   @include breakpoint($small) {
@@ -490,7 +490,7 @@ button {
   color: $blackColor;
   font-weight: 600;
   font-size: 1em;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .grey-btn a, .grey-btn a:hover, .grey-btn span a span {
@@ -499,12 +499,11 @@ button {
 }
 
 .small-blue-btn {
-  font-weight: 600;
   padding-bottom: 0.5em;
   background: $blue;
   padding: $rhythm2;
-  border-radius: 2px;
-  font-size: 1em;
+  border-radius: 4px;
+  font-size: 0.75em;
   color: $white;
 }
 
@@ -2055,12 +2054,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   text-transform: uppercase;
 }
 
-// work - single publication
-// --------------------------------------------------------
-.single-publication .small-blue-btn {
-  padding: $rhythm1;
-}
-
 // work - publications
 // --------------------------------------------------------
 .other-publications {
@@ -2523,10 +2516,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   margin: 0;
 }
 
-.pickup .single-entry button, .reserve .single-entry button, .loan .single-entry button {
-  font-size: $rhythm2;
-}
-
 .pickup .single-entry .flex-col, .reserve .single-entry .flex-col, .loan .single-entry .flex-col {
   margin-bottom: 0.4em;
 }
@@ -2615,7 +2604,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .loan .loan-header .renew-all-button {
-  font-size: $rhythm2;
   align-self: center;
   background-color: $green;
 }
@@ -2711,10 +2699,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
     width: 11.25424%;
   }
 
-  .reserve .single-entry .resume-suspend-button .small-blue-btn {
-    padding: 0.626em;
-  }
-
   .reserve .single-entry .reserve-cancel-button {
     width: 6.77966%;
   }
@@ -2744,9 +2728,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
     width: 83.05085%;
   }
 
-  .loan .loan-header .renew-all-button {
-    width: 15.25424%;
-  }
 }
 
 // mypage - user settings
@@ -2816,11 +2797,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include container;
   @include span(12);
   margin-top: $rhythm4;
-}
-
-.user-settings footer button {
-  @include container;
-  @include span(12);
 }
 
 .user-settings footer .disclaimer {
@@ -2914,10 +2890,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 @include breakpoint($small) {
 
-  .user-settings footer button {
-    @include span(4);
-  }
-
   .user-settings footer .disclaimer {
     @include span(12 first);
     margin-left: 0;
@@ -2940,6 +2912,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
   .user-settings footer button {
     @include span(3);
+    width: auto;
   }
 }
 
@@ -2994,8 +2967,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .user-info footer button {
-  @include container;
   @include span(12);
+  width: auto;
 }
 
 .user-info footer .last-updated {
