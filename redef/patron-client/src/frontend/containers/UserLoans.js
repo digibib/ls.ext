@@ -226,14 +226,7 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col placeholder-column" />
-              <div className="flex-col place-in-queue">
-                <div>
-                  <h2><FormattedMessage {...messages.placeInQueue} />:</h2>
-                  <p data-automation-id="UserLoans_remoteHold_queue_place">
-                    <span>{item.queuePlace}</span>
-                  </p>
-                </div>
-              </div>
+              <div className="flex-col place-in-queue" />
               <div className="flex-col placeholder-column" />
               <div className="flex-col reserve-cancel-button">
                 <ClickableElement onClickAction={this.props.reservationActions.startCancelReservation}
