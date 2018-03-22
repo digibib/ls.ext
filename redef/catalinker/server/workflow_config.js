@@ -1604,6 +1604,7 @@ module.exports = (app) => {
                 rdfProperty: 'hasTag',
                 id: 'tagInput',
                 multiple: 'true',
+                esotericWhen: { hasWorkType: [ 'Music' ] },
                 addAnotherLabel: 'addAnotherTag'
               }
             ],
