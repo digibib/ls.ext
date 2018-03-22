@@ -2215,7 +2215,14 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .single-publication .book-cover.missing {
+  background-color: #D6D6D6;
   text-align: center;
+  height: 100%;
+  img {
+    padding-top: 3em;
+    width: 3em;
+    opacity: 0.5;
+  }
 }
 
 

@@ -22,7 +22,7 @@ class Publication extends React.Component {
         <div className="book-cover missing">
           <ClickableElement onClickAction={this.props.expandSubResource}
                             onClickArguments={[ this.props.publication.id, true ]}>
-            <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[ 0 ] ] ]} />
+            <img src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ publication.mediaTypes[ 0 ] ] ]} />
           </ClickableElement>
         </div>
       )
