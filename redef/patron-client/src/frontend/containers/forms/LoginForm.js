@@ -80,7 +80,7 @@ class LoginForm extends React.Component {
 
         <button className="close-modal-button" onClick={this.props.modalActions.hideModal}>
           <span className="is-vishidden">Lukk logg-inn-vinduet</span>
-          <i className="icon-cancel-1" aria-hidden="true" />
+            <img className="icon" aria-hidden="true" src="/images/x.svg" />
         </button>
 
         <form onSubmit={this.handleLogin}>
