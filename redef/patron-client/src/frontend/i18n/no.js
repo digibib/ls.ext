@@ -257,7 +257,7 @@ export default {
   'SearchHeader.myLoans': 'Mine lån',
   'SearchHeader.myProfile': 'Min side',
   'SearchHeader.search': 'Søk',
-  'SearchHeader.searchInputPlaceholder': 'Søk etter bøker, musikk, film mm.',
+  'SearchHeader.searchInputPlaceholder': 'Søk etter bøker, musikk, film m.m.',
   'SearchHeader.searchLabel': 'Søk i samlingene',
   'SearchResult.allPublications': 'alle utgivelser ►',
   'SearchResult.availableAs': 'Finnes som:',
