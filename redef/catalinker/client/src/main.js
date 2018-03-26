@@ -4618,6 +4618,79 @@
                 }
               },
               selectSearchableItem: function (event, uri, origin, displayValue, options) {
+                // DEICH-1147
+                // When adding a new publication, first metadata for the book is copied in from Bibsys and
+                // set correctly in the input map. However, when tying the book to an existing work,
+                // the classification codes from Bibsys get overwritten by the information in the work.
+                //
+                // To salvage the data, the following hack is applied: The bibsys classification codes are copied
+                // to savedSuggestions[]. After the work metadata has been imported, we add the suggestions back in
+                // (after checking whether they are duplicates).
+                //
+                // Utility functions for the hack:
+                function extractClassificationObject(subinput, index) {
+                  const codeIndex = 0
+                  const sourceIndex = 1
+
+                  try {
+                    return { code: subinput[codeIndex].input.values[index].current.value,
+                      source: subinput[sourceIndex].input.values[index].current.value
+                    }
+                  } catch(error) {
+                    return null
+                  }
+                }
+
+
+                function getInputCount(subinput) {
+                  try {
+                    return subinput[0].input.values.length
+                  } catch(error) {
+                    return 0
+                  }
+                }
+
+                function cloneClassificationSuggestions() {
+                  const savedSuggestions = []
+                  const suggestions = ractive.get('applicationData.inputGroups.3.inputs.4.subInputs')
+
+                  _.each(suggestions, function (suggestion) {
+                    savedSuggestions.push(deepClone(suggestion.input.values))
+                  })
+
+                  return savedSuggestions
+                }
+
+                function restoreClassificationSuggestions(savedSuggestions) {
+                  const currentClassificationsInputs = ractive.get('applicationData.inputGroups.3.inputs.4.subInputs')
+
+                  const currentClassificationObjects = []
+                  const noOfCurrentInputs = getInputCount(currentClassificationsInputs)
+
+                  // to handle the awkward structure of the input map, we awkwardly construct a list of
+                  // value objects to enable checking for duplcates
+                  for (let i = 0; i < noOfCurrentInputs; i++) {
+                    const obj = extractClassificationObject(currentClassificationsInputs, i)
+                    if (obj) {currentClassificationObjects.push(obj)}
+                  }
+
+                  const noOfSuggestedInputs = savedSuggestions[0].length
+
+                  currentClassificationsInputs.forEach(function(arr, index) {
+                    let currValues = arr.input.values
+                    for (let i = 0; i < noOfSuggestedInputs; i++) {
+                       const suggestion = {code: savedSuggestions[0][i].current.value,
+                        source: savedSuggestions[1][i].current.value}
+
+                       if (!_.any(currentClassificationObjects, (item) => _.isEqual(item, suggestion))) {
+                         currValues.push(savedSuggestions[index][i])
+                       }
+                    }
+                   })
+                }
+
+                const savedSuggestions = cloneClassificationSuggestions()
+
                 ractive.set('currentSearchResultKeypath', grandParentOf(event.keypath))
                 options = options || {}
                 if (options.loadResourceForCompare) {
@@ -4653,6 +4726,10 @@
                 } else if (input.isMainEntry || options.subItem) {
                   fetchExistingResource(uri, { demoteAcceptedSuggestions: true })
                     .then(function () {
+                      if(input.isMainEntry && savedSuggestions.length) {
+                        restoreClassificationSuggestions(savedSuggestions)
+                      }
+
                       updateInputsForDependentResources(typeFromUri(uri), uri)
                     }).then(function () {
                     setTimeout(positionSupportPanels, 1000)
