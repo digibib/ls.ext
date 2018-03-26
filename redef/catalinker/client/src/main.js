@@ -4674,7 +4674,7 @@
                     if (obj) {currentClassificationObjects.push(obj)}
                   }
 
-                  const noOfSuggestedInputs = savedSuggestions[0].length
+                  const noOfSuggestedInputs = savedSuggestions.length ? savedSuggestions[0].length : 0
 
                   currentClassificationsInputs.forEach(function(arr, index) {
                     let currValues = arr.input.values
