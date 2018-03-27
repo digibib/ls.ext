@@ -31,7 +31,7 @@ run-test-instance: rm-test-instance
 	docker run -d -p 7010:8000 --name $(MODULE_TEST_CONTAINER) $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF)
 
 lint:
-	docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm run eslint client/src/main.js server/server.js
+	docker run --rm $(HOST_VOLUME_BINDINGS) $(IMAGE):$(GITREF) npm run eslint server/server.js
 
 
 test: lint run-test-instance
