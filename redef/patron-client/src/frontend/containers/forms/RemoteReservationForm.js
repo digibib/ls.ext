@@ -86,7 +86,7 @@ class RemoteReservationForm extends React.Component {
             </p>
           </div>
             <button className="blue-btn" data-automation-id="remoteReservationButton"
-                  disabled={this.props.isRequestingReservation}
+                  disabled={this.props.isRequestingRemoteReservation}
                   onClick={this.handleReserve}>
             <FormattedMessage {...messages.reserve} />
           </button>
@@ -107,13 +107,13 @@ RemoteReservationForm.propTypes = {
   fields: PropTypes.object.isRequired,
   messages: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  isRequestingReservation: PropTypes.bool.isRequired,
+  isRequestingRemoteReservation: PropTypes.bool.isRequired,
   intl: intlShape.isRequired
 }
 
 function mapStateToProps (state) {
   return {
-    isRequestingReservation: state.reservation.isRequestingReservation,
+    isRequestingRemoteReservation: state.reservation.isRequestingRemoteReservation,
     publicationId: state.reservation.publicationId,
     requestingLibrary: state.reservation.requestingLibrary,
     changePasswordSuccess: state.profile.changePasswordSuccess,
