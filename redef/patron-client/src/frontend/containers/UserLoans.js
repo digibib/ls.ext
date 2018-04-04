@@ -210,9 +210,7 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_remoteHold_title">
-                  {item.title}
-                </Link>
+                <span data-automation-id="UserLoans_remoteHold_title">{item.title}</span>
                 {this.renderMainContributors(item)}
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
@@ -370,9 +368,7 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_remoteLoan_title">
-                  {item.title}
-                </Link>
+                <span data-automation-id="UserLoans_remoteLoan_title">{item.title}</span>
                 {this.renderMainContributors(item)}
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
