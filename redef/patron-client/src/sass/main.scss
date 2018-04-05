@@ -1579,7 +1579,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   float: left;
   margin-right: 1.69492%;
   margin-bottom: 0;
-  color: #333;
+  color: $blue;
 }
 
 .entry-content h1 .caret {
@@ -1620,7 +1620,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .entry-content > a h1 .title-text, .entry-content > a:active h1 .title-text, .entry-content > a:focus h1 .title-text {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .entry-content > a h1 .caret i, .entry-content > a:active h1 .caret i, .entry-content > a:focus h1 .caret i {
@@ -1649,8 +1649,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .show-more-content {
   @include clearfix;
   @include container;
-  font-size: $rhythm3;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .show-more-content:hover {
@@ -1667,11 +1666,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .show-more-content img {
-  margin-left: 1em;
-  width: 1em;
-  height: 1em;
+  margin-left: 0.5em;
+  width: 0.5em;
+  height: 0.5em;
   position: relative;
-  top: -0.25em;
+  top: -0.1em;
 }
 
 .entry-content-more {
