@@ -262,12 +262,12 @@ export default {
   'SearchResult.availableAs': 'Finnes som:',
   'SearchResult.composed': 'Komponert',
   'SearchResult.coverImageOf': 'Omslagsbilde av: {title}',
-  'SearchResult.firstPublished': 'Utgitt første gang:',
+  'SearchResult.firstPublished': 'Først utgitt:',
   'SearchResult.genres': 'Sjanger:',
   'SearchResult.hideBranchAvailability': 'Skjul avdelingsstatus',
   'SearchResult.hideRestOfBranches': 'Skjul andre avdelinger',
   'SearchResult.missingCoverImageOf': 'Mangler omslagsbilde av: {title}',
-  'SearchResult.originallyReleased': 'Opprinnelig utgitt',
+  'SearchResult.originallyReleased': 'Først utgitt',
   'SearchResult.originalTitle': 'Originaltittel:',
   'SearchResult.ourLatestEdition': 'Vår nyeste utgave',
   'SearchResult.partOfSeries': 'Inngår i serie: ',
@@ -385,7 +385,7 @@ export default {
   'ValidationMessage.termsMustBeAccepted': 'Brukervilkårene må godkjennes',
   'ValidationMessage.toYearBeforeFromYear': 'År fra er større enn år til',
   'Work.backToSearchResults': 'Tilbake til søkeresultat',
-  'Work.labelOriginalReleaseDate': 'Utgitt første gang',
+  'Work.labelOriginalReleaseDate': 'Først utgitt',
   'Work.labelRelation': 'Navn på relasjon',
   'Work.labelSeries': 'Inngår i serien',
   'Work.noWork': 'Inget verk',
@@ -393,5 +393,5 @@ export default {
   'WorkAgeLimit.seePublication': 'Se utgivelse',
   'WorkSerie': 'Serie',
   'WorkSerie.labelWorkSerie': 'Inngår i serien',
-  'Year.labelOriginalReleaseDate': 'Utgitt første gang'
+  'Year.labelOriginalReleaseDate': 'Først utgitt'
 }

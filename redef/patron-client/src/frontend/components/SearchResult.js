@@ -39,6 +39,7 @@ class SearchResult extends React.Component {
     switch (parsedMediatype) {
       case 'Book':
         if (fictionNonfiction === 'http://data.deichman.no/fictionNonfiction#fiction') {
+          typeOfYear = 'firstPublished'
           if (!workPublicationYear && publicationYears.length > 0) {
             selectedYear = Math.min(...publicationYears)
           }
