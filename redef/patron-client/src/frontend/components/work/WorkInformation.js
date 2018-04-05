@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react'
 import MediaQuery from 'react-responsive'
 
-import Author from './fields/Author'
 import Year from './fields/Year'
 import AdditionalInformation from './AdditionalInformation'
 import Summary from './fields/Summary'
@@ -27,7 +26,6 @@ const WorkInformation = ({ work, publicationId, showAdditionalInformation, toggl
   return (
     <section className="work-information">
       <Title title={publicationTitle || originalTitle} untranscribedTitle={untranscribedPublicationtitle} />
-      <Author by={work.by} />
       <OriginalTitle title={originalTitle} untranscribedTitle={untranscribedOriginalTitle} />
       <OriginalLanguage languages={work.languages} />
       <CountryOfOrigin country={work.countryOfOrigin} />
