@@ -1827,6 +1827,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   @include span(12);
   font-size: $rhythm4;
   margin: 0;
+  margin-top: 1em;
 }
 
 .work-information h2 {
@@ -2039,7 +2040,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .other-publications .toggle-all-publications {
   margin-top: $rhythm4;
   text-align: center;
-  color: $redColor;
+  color: $blue;
 }
 .other-publications .toggle-all-publications span {
   text-transform: lowercase;
@@ -2297,6 +2298,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-size: $rhythm2_5;
   cursor: pointer;
   width: 100%;
+  padding: 0;
 }
 
 .single-publication .show-status span {
@@ -3847,6 +3849,10 @@ footer .social-icons {
   @include container;
   @include span(12);
   line-height: 2em;
+}
+
+.additional-info .meta-item {
+  line-height: 1.5em
 }
 
 .work-entry .contributors,
