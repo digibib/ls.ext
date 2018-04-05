@@ -33,7 +33,7 @@ class UserLoans extends React.Component {
         )
       }
     } else if (item.author) {
-      return <h2 data-automation-id="UserLoans_author_name">{item.author}</h2>
+      return <span data-automation-id="UserLoans_author_name">{item.author}</span>
     }
   }
 
@@ -75,10 +75,10 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                  <Link to={item.relativePublicationPath} data-automation-id="UserLoans_pickup_title">
+                  <Link className="publication-title" to={item.relativePublicationPath} data-automation-id="UserLoans_pickup_title">
                     {item.title}
                   </Link>
-                  {this.renderMainContributors(item)}
+                  <h2>{this.renderMainContributors(item)}</h2>
                   <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
                 </div>
                 <div className="flex-col loan-expire">
@@ -139,10 +139,10 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_reservation_title">
+                <Link className="publication-title" to={item.relativePublicationPath} data-automation-id="UserLoans_reservation_title">
                   {item.title}
                 </Link>
-                {this.renderMainContributors(item)}
+                <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col pickup-location">
@@ -210,8 +210,8 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <span data-automation-id="UserLoans_remoteHold_title">{item.title}</span>
-                {this.renderMainContributors(item)}
+                <span className="publication-title" data-automation-id="UserLoans_remoteHold_title">{item.title}</span>
+                <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col pickup-location">
@@ -314,10 +314,10 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <Link to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
+                <Link className="publication-title" to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
                   {item.title}
                 </Link>
-                {this.renderMainContributors(item)}
+                <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col due-date">
@@ -368,8 +368,8 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <span data-automation-id="UserLoans_remoteLoan_title">{item.title}</span>
-                {this.renderMainContributors(item)}
+                <span className="publication-title" data-automation-id="UserLoans_remoteLoan_title">{item.title}</span>
+                <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
               <div className="flex-col due-date">

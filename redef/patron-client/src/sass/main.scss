@@ -2505,6 +2505,11 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   margin-top: $rhythm2;
 }
 
+.entry-details .publication-title {
+  text-decoration: none;
+  font-weight: bold;
+}
+
 .pickup .single-entry, .reserve .single-entry, .loan .single-entry {
   display: flex;
   justify-content: space-between;
