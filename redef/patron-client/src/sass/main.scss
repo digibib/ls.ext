@@ -2029,9 +2029,16 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .other-publications .mediatype-group {
   margin-top: $rhythm4;
 }
+
+.other-publications .mediatype-group {
+  border-top: 1px solid #777;
+}
+
 .other-publications .mediatype-group:first-of-type {
+  border: 0;
   margin-top: 0;
 }
+
 .other-publications h2 {
   font-size: $rhythm4;
   font-weight: bold;
@@ -2499,6 +2506,15 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   border-bottom: 4px solid $blackColor;
   padding-bottom: $rhythm1;
   margin-top: $rhythm2;
+}
+
+.entry-details {
+  line-height: 1.2em
+}
+
+.entry-details h2 {
+  clear: both;
+  padding-top: 0.5em;
 }
 
 .entry-details .publication-title {

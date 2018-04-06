@@ -347,17 +347,10 @@ class Publications extends React.Component {
                    <section className="mediatype-group" ref={e => this.mediaTypeUri[ mediaTypeUri ] = e} key={mediaTypeUri}
                              data-automation-id="mediaType_group" data-mediatype={mediaTypeUri}>
                       <header className="other-publications-title">
-                        <ClickableElement
-                          onClickAction={this.props.toggleParameterValue}
-                          onClickArguments={[ 'collapsePublications', mediaTypeFragment ]}>
-                          <h2 role="button" tabIndex="0" aria-expanded={!collapsePublications.includes(mediaTypeFragment)}>
-                            <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} aria-hidden="true" />&nbsp;
-                            {this.props.intl.formatMessage({ id: mediaTypeUri })} &nbsp;
-                            {collapsePublications.includes(mediaTypeFragment)
-                              ? <img className="icon" src="/images/plus.svg" aria-hidden="true" />
-                              : <img className="icon" src="/images/minus.svg" aria-hidden="true" />}
-                          </h2>
-                        </ClickableElement>
+                        <h2>
+                          <img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ mediaTypeUri ] ]} aria-hidden="true" />&nbsp;
+                          {this.props.intl.formatMessage({ id: mediaTypeUri })} &nbsp;
+                       </h2>
                       </header>
                       <NonIETransitionGroup
                         transitionName="fade-in"
