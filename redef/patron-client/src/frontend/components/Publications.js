@@ -325,15 +325,18 @@ class Publications extends React.Component {
               {Object.keys(publicationHoldersByMediaType).length > 1
                 ? <div>{this.renderMediaTypeAnchors(publicationHoldersByMediaType)}</div>
                 : null}
-              <SearchFilterBox
-                path={this.props.path}
-                toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
-                removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
-                toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
-                removeAllFilters={this.props.searchFilterActions.removeAllFilters}
-                query={this.props.query} />
+
             </header>
           </div>
+        </div>
+        <div className="darker-grey">
+          <SearchFilterBox
+            path={this.props.path}
+            toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}
+            removePeriod={this.props.searchFilterActions.removePeriodInBackUrl}
+            toggleAvailability={this.props.searchFilterActions.removeAvailabilityInBackUrl}
+            removeAllFilters={this.props.searchFilterActions.removeAllFilters}
+            query={this.props.query} />
         </div>
         <div className="grey">
           <div className="wrapper clearfix">

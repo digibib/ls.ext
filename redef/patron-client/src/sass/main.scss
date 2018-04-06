@@ -4036,6 +4036,9 @@ main {
 .grey {
   background-color: $lightGreyColor;
 }
+.darker-grey {
+  background-color: #E5E5E5;
+}
 
 .mypage-wrapper {
   @include clearfix;
