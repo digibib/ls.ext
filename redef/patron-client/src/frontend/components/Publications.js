@@ -12,7 +12,6 @@ import {getCategorizedFilters, getDateRange} from '../utils/filterParser'
 import Constants from '../constants/Constants'
 import ShowFilteredPublicationsLabel from '../components/ShowFilteredPublicationsLabel'
 import SearchFilterBox from '../components/SearchFilterBox'
-import MediaType from '../components/MediaType'
 
 class Publications extends React.Component {
   constructor (props) {
@@ -229,6 +228,18 @@ class Publications extends React.Component {
         publicationHoldersByMediaType[ messages.noMediaType.id ].push(this.getPublicationHolder(publication))
       }
     })
+    const byBooksFirst = function (a, b) {
+      if (a === 'http://data.deichman.no/mediaType#Book') {
+        return -1
+      }
+      if (a < b) {
+        return -1
+      }
+      if (a > b) {
+        return 1
+      }
+      return 0
+    }
     Object.keys(publicationHoldersByMediaType).forEach(mediaTypeUri => {
       publicationHoldersByMediaType[ mediaTypeUri ].sort(
         firstBy((a, b) => {
@@ -256,7 +267,7 @@ class Publications extends React.Component {
     })
 
     const sortedPublicationHoldersByMediaType = {}
-    Object.keys(publicationHoldersByMediaType).sort((a, b) => a.localeCompare(b)).forEach(field => sortedPublicationHoldersByMediaType[ field ] = publicationHoldersByMediaType[ field ])
+    Object.keys(publicationHoldersByMediaType).sort(byBooksFirst).forEach(field => sortedPublicationHoldersByMediaType[ field ] = publicationHoldersByMediaType[ field ])
     return sortedPublicationHoldersByMediaType
   }
 
@@ -265,19 +276,26 @@ class Publications extends React.Component {
   }
 
   renderMediaTypeAnchors (publicationHoldersByMediaType) {
+    if (Object.keys(publicationHoldersByMediaType).size <= 1) {
+      return null
+    }
+    const mediatypes = Object.keys(publicationHoldersByMediaType)
+    mediatypes.shift()
     return (
       <div className="mediatype-selector">
-        {
-          Object.keys(publicationHoldersByMediaType).map(mediaTypeUri => {
-            const mediaType = { uri: mediaTypeUri }
-            return (
-              <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[ mediaTypeUri ]}
-                                key={mediaTypeUri}>
-                <div className="mediatype"><MediaType key={mediaTypeUri} mediaType={mediaType} buttonRole={'button'} buttonTabIndex={'0'} /><img className="icon-tall" src="/images/long_arrow_right.svg" /></div>
-              </ClickableElement>
-            )
-          })
-        }
+        <p>Gå til&nbsp;
+          {
+            mediatypes.map(mediaTypeUri => {
+              const mediaType = { uri: mediaTypeUri }
+              return (
+                <ClickableElement onClickAction={this.handleAnchorClick} onClickArguments={[ mediaTypeUri ]}
+                                  key={mediaTypeUri}>
+                  <span>{this.props.intl.formatMessage({ id: mediaType.uri })}</span>
+                </ClickableElement>
+              )
+            })
+          }
+        </p>
       </div>
     )
   }
@@ -304,8 +322,9 @@ class Publications extends React.Component {
         <div className="white">
           <div className="wrapper clearfix">
             <header>
-              <h2 style={{textAlign: 'center'}}><span className="marked-yellow">Gå til</span></h2>
-              {this.renderMediaTypeAnchors(publicationHoldersByMediaType)}
+              {Object.keys(publicationHoldersByMediaType).length > 1
+                ? <div>{this.renderMediaTypeAnchors(publicationHoldersByMediaType)}</div>
+                : null}
               <SearchFilterBox
                 path={this.props.path}
                 toggleFilter={this.props.searchFilterActions.removeFilterInBackUrl}

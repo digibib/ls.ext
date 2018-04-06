@@ -2075,17 +2075,13 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   margin-bottom: $rhythm5;
 }
 
-.other-publications .mediatype-selector .mediatype {
-  flex-grow: 1;
-  cursor: pointer;
-  text-align: left;
-  background-color: $lightGreyColor;
-  border-radius: 3px;
-  padding: 0.5em 1em;
+.other-publications .mediatype-selector span {
+  color: $blue;
+  text-decoration: underline;
 }
 
-.other-publications .mediatype-selector .mediatype:first-child {
-  margin-right: 1em;
+.other-publications .mediatype-selector span:hover {
+  cursor:pointer
 }
 
 .other-publications .mediatype-group {
