@@ -2085,6 +2085,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .other-publications .mediatype-selector span {
   color: $blue;
   text-decoration: underline;
+  margin-right: 0.5em
 }
 
 .other-publications .mediatype-selector span:hover {
