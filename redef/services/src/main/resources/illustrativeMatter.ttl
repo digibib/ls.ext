@@ -3,8 +3,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 illustrativeMatter:illustrert a duo:IllustrativeMatter ;
   duo:code "ill" ;
-  rdfs:label "Illustrert"@no ;
-  rdfs:label "Illustration"@en .
+  rdfs:label "Illustrasjoner"@no ;
+  rdfs:label "Illustrations"@en .
 illustrativeMatter:kolorerte_illustrasjoner a duo:IllustrativeMatter ;
   duo:code "kol. ill." ;
   rdfs:label "Fargeillustrasjoner"@no ;
@@ -12,24 +12,24 @@ illustrativeMatter:kolorerte_illustrasjoner a duo:IllustrativeMatter ;
 illustrativeMatter:kart a duo:IllustrativeMatter ;
   duo:code "kart" ;
   rdfs:label "Kart"@no ;
-  rdfs:label "Map"@en .
+  rdfs:label "Maps"@en .
 illustrativeMatter:noter a duo:IllustrativeMatter ;
   duo:code "mus" ;
   rdfs:label "Noter"@no ;
   rdfs:label "Musical score"@en .
 illustrativeMatter:portrett a duo:IllustrativeMatter ;
   duo:code "port." ;
-  rdfs:label "Portrett"@no ;
-  rdfs:label "Portrait"@en .
+  rdfs:label "Portretter"@no ;
+  rdfs:label "Portraits"@en .
 illustrativeMatter:figur a duo:IllustrativeMatter ;
   duo:code "fig." ;
-  rdfs:label "Figur"@no ;
-  rdfs:label "Figure"@en .
+  rdfs:label "Figurer"@no ;
+  rdfs:label "Figures"@en .
 illustrativeMatter:tabell a duo:IllustrativeMatter ;
   duo:code "tab." ;
-  rdfs:label "Tabell"@no ;
-  rdfs:label "Table"@en .
+  rdfs:label "Tabeller"@no ;
+  rdfs:label "Tables"@en .
 illustrativeMatter:plansje a duo:IllustrativeMatter ;
   duo:code "pl." ;
-  rdfs:label "Plansje"@no ;
-  rdfs:label "Plate"@en .
+  rdfs:label "Plansjer"@no ;
+  rdfs:label "Plates"@en .
