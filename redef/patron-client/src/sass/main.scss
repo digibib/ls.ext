@@ -2549,7 +2549,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-weight: bold;
 }
 
-.pickup .single-entry, .reserve .single-entry, .loan .single-entry {
+.pickup .single-entry, .reserve .single-entry, .loan .single-entry, .history .single-entry {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

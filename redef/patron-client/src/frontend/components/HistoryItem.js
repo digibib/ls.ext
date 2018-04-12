@@ -13,14 +13,13 @@ const HistoryItem = ({ historyItem, intl }) => {
              data-recordid={historyItem.id}>
       <div className="flex-col media-type">
         {historyItem.mediaType !== null
-          ? ([<img className="icon" src={Constants.mediaTypeIconsMap[ Constants.mediaTypeIcons[ historyItem.mediaType ] ]} />,
-            <span key="item-text" data-automation-id="UserLoans_reservation_type"> {intl.formatMessage({ id: historyItem.mediaType })}
-            </span>])
+          ? <span key="item-text" data-automation-id="UserLoans_reservation_type"> {intl.formatMessage({ id: historyItem.mediaType })}
+            </span>
           : null
         }
       </div>
       <div className="flex-col entry-details">
-        <Link to={historyItem.relativePublicationPath}>
+        <Link className="publication-title" to={historyItem.relativePublicationPath}>
           {historyItem.title}
         </Link>
         <h2>
@@ -33,12 +32,13 @@ const HistoryItem = ({ historyItem, intl }) => {
           : null
         }
         </h2>
-      </div>
-      <div className="flex-col return-date">
-        <h2><FormattedMessage {...messages.checkedIn} />:</h2>
-        <p>{formatDate(historyItem.returnDate)}</p>
+        <h2>{historyItem.publicationYear}</h2>
       </div>
       <div className="flex-col placeholder-column" />
+      <div className="flex-col return-date">
+        <h2><FormattedMessage {...messages.checkedIn} /></h2>
+        <h2><strong>{formatDate(historyItem.returnDate)}</strong></h2>
+      </div>
       <div className="flex-col delete-history-entry">
         <input type="checkbox"
                name="delete-history-entry"
