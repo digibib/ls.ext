@@ -39,7 +39,10 @@ class UserHistory extends React.Component {
     return (
       <div key={Math.random()}> {/*  Ensures component rerendering */}
         {!optedIn &&
-          <OptInHistory personalInformation={this.props.personalInformation} profileActions={this.props.profileActions} />
+          <OptInHistory
+            personalInformation={this.props.personalInformation}
+            personalAttributes={this.props.personalAttributes}
+            profileActions={this.props.profileActions} />
         }
         {optedIn
           ? < HistoryItems historyItems={this.props.allLoadedHistory} historyActions={this.props.historyActions} loadItems={this.loadItems} hasMoreItems={this.props.hasMoreItems} />
@@ -56,7 +59,7 @@ UserHistory.propTypes = {
   personalAttributes: PropTypes.object.isRequired,
   profileActions: PropTypes.object.isRequired,
   loadedHistoryItems: PropTypes.number.isRequired,
-    allLoadedHistory: PropTypes.array.isRequired,
+  allLoadedHistory: PropTypes.array.isRequired,
   hasMoreItems: PropTypes.bool.isRequired,
   historyToDelete: PropTypes.array.isRequired,
   isRequestingHistory: PropTypes.bool.isRequired,

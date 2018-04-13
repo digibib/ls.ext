@@ -25,7 +25,7 @@ class KeepMyHistory extends React.Component {
     if (this.props.personalInformation.privacy === 0 || this.props.personalInformation.privacy === 1 || this.props.personalInformation.privacy === '') {
       this.props.profileActions.userHistory()
     } else if (this.props.personalInformation.privacy === 2) {
-      this.props.profileActions.manageHistory(0)
+      this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons)
     }
   }
 
@@ -75,6 +75,7 @@ KeepMyHistory.propTypes = {
   dispatch: PropTypes.func.isRequired,
   profileActions: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
+  personalAttributes: PropTypes.object.isRequired,
   postProfileSettingsSuccess: PropTypes.bool
 }
 

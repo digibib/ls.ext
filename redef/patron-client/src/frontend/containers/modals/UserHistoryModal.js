@@ -5,6 +5,7 @@ import { defineMessages, FormattedMessage } from 'react-intl'
 
 import * as ModalActions from '../../actions/ModalActions'
 import * as ProfileActions from '../../actions/ProfileActions'
+import * as HistoryActions from '../../actions/HistoryActions'
 
 class UserHistoryModal extends React.Component {
   constructor (props) {
@@ -20,7 +21,8 @@ class UserHistoryModal extends React.Component {
 
   handleDeleteHistory (event) {
     event.preventDefault()
-    this.props.profileActions.manageHistory(2) // privacy=2 (never store history)
+    this.props.profileActions.manageHistory(2, this.props.personalAttributes.hist_cons) // privacy=2 (never store history)
+    this.props.historyActions.deleteAllHistory()
     this.props.modalActions.hideModal()
   }
 
@@ -47,8 +49,10 @@ class UserHistoryModal extends React.Component {
 UserHistoryModal.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   isRequestingReservation: PropTypes.bool.isRequired,
+  personalAttributes: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
-  profileActions: PropTypes.object.isRequired
+  profileActions: PropTypes.object.isRequired,
+  historyActions: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({
@@ -77,7 +81,8 @@ export const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
-    isRequestingReservation: state.reservation.isRequestingReservation
+    isRequestingReservation: state.reservation.isRequestingReservation,
+    personalAttributes: state.profile.personalAttributes
   }
 }
 
@@ -85,7 +90,8 @@ function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
     modalActions: bindActionCreators(ModalActions, dispatch),
-    profileActions: bindActionCreators(ProfileActions, dispatch)
+    profileActions: bindActionCreators(ProfileActions, dispatch),
+    historyActions: bindActionCreators(HistoryActions, dispatch)
   }
 }
 

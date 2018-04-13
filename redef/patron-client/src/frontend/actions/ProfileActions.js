@@ -255,13 +255,11 @@ export const requestManageHistory = () => action(types.REQUEST_MANAGE_HISTORY)
 
 export const manageHistoryFailure = (error) => errorAction(types.MANAGE_HISTORY_FAILURE, error)
 
-export const changeHistoryPrivacy = (privacy) => action(types.CHANGE_HISTORY_PRIVACY, {privacy: privacy})
-
 export function userHistory () {
   return requireLoginBeforeAction(showModal(ModalComponents.USER_HISTORY, { isSuccess: true }))
 }
 
-export function manageHistory (privacy) {
+export function manageHistory (privacy, consent) {
   const url = '/api/v1/profile/settings/history'
   return dispatch => {
     dispatch(requestManageHistory())
@@ -271,11 +269,10 @@ export function manageHistory (privacy) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ privacy: privacy })
+      body: JSON.stringify({ privacy: privacy, hist_cons: consent })
     })
       .then(response => {
         if (response.status === 200) {
-          // dispatch(changeHistoryPrivacy(privacy))
           dispatch(postProfileSettingsSuccess())
           dispatch(fetchProfileInfo())
         } else {
@@ -286,7 +283,7 @@ export function manageHistory (privacy) {
   }
 }
 
-export function manageHistoryConsent (consent) {
+export function manageHistoryConsent (consent, previous) {
   const url = '/api/v1/profile/settings/historyconsent'
   return dispatch => {
     dispatch(requestManageHistory())
@@ -296,11 +293,10 @@ export function manageHistoryConsent (consent) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ consent: consent })
+      body: JSON.stringify({ consent: consent, previous: previous })
     })
       .then(response => {
         if (response.status === 200) {
-          // dispatch(changeHistoryPrivacy(privacy))
           dispatch(postProfileSettingsSuccess())
           dispatch(fetchProfileInfo())
         } else {

@@ -11,7 +11,7 @@ class OptInHistory extends React.Component {
 
   handleSaveClick (event) {
     event.preventDefault()
-    this.props.profileActions.manageHistoryConsent(true)
+    this.props.profileActions.manageHistoryConsent(true, this.props.personalAttributes.hist_cons)
   }
 
   render () {
@@ -39,7 +39,8 @@ class OptInHistory extends React.Component {
 
 OptInHistory.propTypes = {
   profileActions: PropTypes.object.isRequired,
-  personalInformation: PropTypes.object.isRequired
+  personalInformation: PropTypes.object.isRequired,
+  personalAttributes: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({

@@ -123,7 +123,10 @@ class UserSettings extends React.Component {
 
         <header>
           <h1><FormattedMessage {...messages.history} /></h1>
-          <KeepMyHistory profileActions={this.props.profileActions} personalInformation={this.props.personalInformation} />
+          <KeepMyHistory
+            profileActions={this.props.profileActions}
+            personalInformation={this.props.personalInformation}
+            personalAttributes={this.props.personalAttributes} />
         </header>
 
         <header>
@@ -373,6 +376,7 @@ function mapStateToProps (state) {
     isRequestingSettings: state.profile.isRequestingSettings,
     settings: state.profile.settings,
     personalInformation: state.profile.personalInformation,
+    personalAttributes: state.profile.personalAttributes,
     contactDetailsNeedVerification: state.profile.contactDetailsNeedVerification,
     contactDetailsVerificationError: state.profile.contactDetailsVerificationError,
     postProfileSettingsSuccess: state.profile.postProfileSettingsSuccess

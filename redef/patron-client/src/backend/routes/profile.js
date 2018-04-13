@@ -11,52 +11,29 @@ const querystring = require('querystring')
 module.exports = (app) => {
   const fetch = require('../fetch')(app)
 
-  app.post('/api/v1/profile/settings/history', jsonParser, (request, response) => {
-    const params = {
-      privacy: request.body.privacy
+  app.post('/api/v1/profile/settings/history', jsonParser, async (request, response) => {
+    try {
+      await updatePatronPrivacy(request.session.borrowerNumber, request.body.privacy)
+      await updateHistoryConsent(request.session.borrowerNumber, request.body.privacy === 0, request.body.hist_cons)
+      response.status(200).send({success: true})
+    } catch (error) {
+      console.log(error)
+      response.sendStatus(500)
     }
-    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
-      method: 'PUT',
-      body: JSON.stringify(params)
-    })
-      .then(res => {
-        if (res.status === 200) {
-          return res.json
-        } else {
-          response.status(res.status).send(res.statusText)
-          // throw Error()
-        }
-      }).then(json => response.status(200).send(json))
-      .catch(error => {
-        console.log(error)
-        response.sendStatus(500)
-      })
   })
 
-  app.post('/api/v1/profile/settings/historyconsent', jsonParser, (request, response) => {
-    let attribute = request.body.consent ? 'yes' : 'no'
-    attribute += '_'
-    attribute += Date.now()
-    const params = {
-      code: 'hist_cons',
-      attribute: attribute
+  app.post('/api/v1/profile/settings/historyconsent', jsonParser, async (request, response) => {
+    const consent = request.body.consent
+    const privacy = consent ? 0 : 2
+    const borrowernumber = request.session.borrowerNumber
+    try {
+      await updateHistoryConsent(borrowernumber, consent, request.body.previous)
+      await updatePatronPrivacy(borrowernumber, privacy)
+      response.status(200).send({success: true})
+    } catch (error) {
+      console.log(error)
+      response.sendStatus(500)
     }
-    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/attributes`, {
-      method: 'POST',
-      body: JSON.stringify(params)
-    })
-      .then(res => {
-        if (res.status === 200) {
-          return res.json
-        } else {
-          response.status(res.status).send(res.statusText)
-          // throw Error()
-        }
-      }).then(json => response.status(200).send(json))
-      .catch(error => {
-        console.log(error)
-        response.sendStatus(500)
-      })
   })
 
   app.post('/api/v1/profile/history', jsonParser, (request, response) => {
@@ -231,24 +208,15 @@ module.exports = (app) => {
     }
   })
 
-  app.put('api/v1/profile/managehistory', jsonParser, (request, response) => {
-    return fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({ privacy: request.body.privacy })
-    }).then(res => {
-      if (res.status === 200) {
-        console.log(res.json())
-        return res.json()
-      } else {
-        response.status(res.status).send(res.body)
-      }
-    }).catch(error => {
+  app.post('api/v1/profile/managehistory', jsonParser, async (request, response) => {
+    try {
+      await updatePatronPrivacy(request.session.borrowerNumber, request.body.privacy)
+      await updateHistoryConsent(request.session.borrowerNumber, request.body.privacy === 0, request.body.hist_cons)
+      response.status(200).send({success: true})
+    } catch (error) {
       console.log(error)
       response.sendStatus(500)
-    })
+    }
   })
 
   app.get('/api/v1/profile/settings', (request, response) => {
@@ -266,6 +234,37 @@ module.exports = (app) => {
         response.sendStatus(500)
       })
   })
+
+  async function updatePatronPrivacy (borrowernumber, privacy) {
+    const res = await fetch(`http://xkoha:8081/api/v1/patrons/${borrowernumber}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify({ privacy: privacy })})
+    if (res.status != 200) {
+      throw Error("failed to update patron privacy setting")
+    }
+  }
+
+  async function updateHistoryConsent (borrowernumber, new_consent, previous_consent) {
+    let attribute = new_consent ? 'yes' : 'no'
+    attribute += '_'
+    attribute += Date.now()
+
+    const params = {
+      code: 'hist_cons',
+      attribute: attribute
+    }
+    let method = 'POST'
+    let url = `http://xkoha:8081/api/v1/patrons/${borrowernumber}/attributes`
+    if (previous_consent) {
+      method = 'PUT'
+      url = `http://xkoha:8081/api/v1/patrons/${borrowernumber}/attributes/hist_cons`
+    }
+    const consentRes = await fetch(url, {method: method, body: JSON.stringify(params)})
+    if (consentRes.status > 201) {
+      throw Error("failed to update patron history consent attribute")
+    }
+  }
 
   function parseAttributes (attributes) {
     let filteredAttributes = {}
