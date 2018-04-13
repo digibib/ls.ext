@@ -93,20 +93,20 @@ module.exports = (app) => {
       })
   })
 
-  app.get('/api/v1/profile/info', (request, response) => {
-    fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`)
-      .then(res => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          response.status(res.status).send(res.statusText)
-          throw Error()
-        }
-      }).then(json => response.status(200).send(parsePatron(json)))
-      .catch(error => {
-        console.log(error)
-        response.sendStatus(500)
-      })
+  app.get('/api/v1/profile/info', async (request, response) => {
+    try {
+      const profileResp = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`)
+      const attributesResp = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/attributes`)
+      if (profileResp.status !== 200 || attributesResp.status != 200) {
+        throw Error("failed to fetch patron profile")
+      }
+      const profile = await profileResp.json()
+      const attributes = await attributesResp.json()
+      response.status(200).send({info: parsePatron(profile), attributes: parseAttributes(attributes)})
+    } catch (err) {
+      console.log(err)
+      response.sendStatus(500)
+    }
   })
 
   app.post('/api/v1/profile/info', jsonParser, (request, response) => {
@@ -266,6 +266,17 @@ module.exports = (app) => {
         response.sendStatus(500)
       })
   })
+
+  function parseAttributes (attributes) {
+    let filteredAttributes = {}
+    attributes.forEach(a => {
+      if (a.code === 'fnr') {
+        return
+      }
+      filteredAttributes[a.code] = a.attribute
+    })
+    return filteredAttributes
+  }
 
   function parsePatron (patron) {
     return {

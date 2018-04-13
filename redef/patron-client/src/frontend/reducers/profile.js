@@ -47,6 +47,7 @@ const initialState = {
   isRequestingPersonalInformation: false,
   personalInformationError: null,
   personalInformation: {},
+  personalAttributes: {},
   isRequestingSettings: false,
   settingsError: null,
   settings: {},
@@ -74,6 +75,7 @@ export default function profile (state = initialState, action) {
       return {
         ...state,
         personalInformation: action.payload.info,
+        personalAttributes: action.payload.attributes,
         personalInformationError: null,
         isRequestingPersonalInformation: false
       }

@@ -61,7 +61,7 @@ export const requestProfileInfo = () => action(types.REQUEST_PROFILE_INFO)
 
 export const profileInfoFailure = (error) => errorAction(types.PROFILE_INFO_FAILURE, error)
 
-export const receiveProfileInfo = (info) => action(types.RECEIVE_PROFILE_INFO, { info })
+export const receiveProfileInfo = ({info, attributes}) => action(types.RECEIVE_PROFILE_INFO, { info, attributes })
 
 export function fetchProfileInfo () {
   return (dispatch) => {

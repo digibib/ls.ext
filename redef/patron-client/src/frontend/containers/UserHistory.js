@@ -33,14 +33,15 @@ class UserHistory extends React.Component {
   }
 
   render () {
+    const optedIn = this.props.personalAttributes &&
+      this.props.personalAttributes.hist_cons &&
+      this.props.personalAttributes.hist_cons.startsWith('yes')
     return (
       <div key={Math.random()}> {/*  Ensures component rerendering */}
-        {!this.props.personalInformation.isOptedIn &&
+        {!optedIn &&
           <OptInHistory personalInformation={this.props.personalInformation} profileActions={this.props.profileActions} />
         }
-        {this.props.personalInformation.privacy === 0 ||
-        this.props.personalInformation.privacy === 1 ||
-        this.props.personalInformation.privacy === ''
+        {optedIn
           ? < HistoryItems historyItems={this.props.allLoadedHistory} historyActions={this.props.historyActions} loadItems={this.loadItems} hasMoreItems={this.props.hasMoreItems} />
           : null
         }
@@ -52,9 +53,10 @@ class UserHistory extends React.Component {
 UserHistory.propTypes = {
   historyActions: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
+  personalAttributes: PropTypes.object.isRequired,
   profileActions: PropTypes.object.isRequired,
   loadedHistoryItems: PropTypes.number.isRequired,
-  allLoadedHistory: PropTypes.array.isRequired,
+    allLoadedHistory: PropTypes.array.isRequired,
   hasMoreItems: PropTypes.bool.isRequired,
   historyToDelete: PropTypes.array.isRequired,
   isRequestingHistory: PropTypes.bool.isRequired,
@@ -83,6 +85,7 @@ function mapStateToProps (state) {
     loadedHistoryItems: state.history.loadedHistoryItems,
     hasMoreItems: state.history.moreToFetch,
     personalInformation: state.profile.personalInformation,
+    personalAttributes: state.profile.personalAttributes,
     historyToDelete: state.history.historyToDelete
   }
 }

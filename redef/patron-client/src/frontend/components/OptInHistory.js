@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 
 class OptInHistory extends React.Component {
 
@@ -19,9 +19,12 @@ class OptInHistory extends React.Component {
         <section
         className="history"
         style={{ marginTop: '1em' }}>
-          <h1><FormattedMessage {...messages.saveMyHistoryHeader} /></h1 >
+          {this.props.personalInformation.privacy === '0'
+            ? <h1><FormattedMessage {...messages.saveMyHistoryRevivalHeader} /></h1>
+            : <h1><FormattedMessage {...messages.saveMyHistoryHeader} /></h1>
+          }
           <p >
-            <FormattedMessage {...messages.saveMyHistoryInformation} />
+            <FormattedHTMLMessage {...messages.saveMyHistoryInformation} />
           </p >
           <button className="blue-btn"
                   type="button"
@@ -43,12 +46,17 @@ export const messages = defineMessages({
   saveConsent: {
     id: 'UserSettings.saveConsent',
     description: 'The label for the save button',
-    defaultMessage: 'Yes please'
+    defaultMessage: 'Keep my checkout history'
   },
   saveMyHistoryHeader: {
     id: 'UserSettings.saveMyHistoryHeader',
     description: 'The heading for save my history consent',
     defaultMessage: 'You are now able to save yor history!'
+  },
+  saveMyHistoryRevivalHeader: {
+    id: 'UserSettings.saveMyHistoryRevivalHeader',
+    description: 'The heading for save my history consent',
+    defaultMessage: 'Checkout history is back!'
   },
   saveMyHistoryInformation: {
     id: 'UserSettings.saveMyHistoryInformation',
