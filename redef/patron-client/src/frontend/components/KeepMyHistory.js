@@ -8,24 +8,24 @@ class KeepMyHistory extends React.Component {
 
   constructor (props) {
     super(props)
-
-    this.handleKeyKeepMyHistory = this.handleKeyKeepMyHistory.bind(this)
+    this.handleKeepMyHistory = this.handleKeepMyHistory.bind(this)
     this.handleSaveClick = this.handleSaveClick.bind(this)
   }
 
-  handleKeyKeepMyHistory (event) {
+  handleKeepMyHistory (event) {
     if (event.keyCode === 32) { // Space for checkbox
       event.preventDefault()
-      this.handleKeepMyHistory.click()
+      this.keepMyHistoryCheckbox.click()
     }
   }
 
   handleSaveClick (event) {
-    event.preventDefault()
-    if (this.props.personalInformation.privacy === 0 || this.props.personalInformation.privacy === 1 || this.props.personalInformation.privacy === '') {
-      this.props.profileActions.userHistory()
-    } else if (this.props.personalInformation.privacy === 2) {
+    // TODO bother to save if there is no changes? Ask M.
+    const checked = this.keepMyHistoryCheckbox.checked
+    if (checked) {
       this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons)
+    } else {
+      this.props.profileActions.userHistory()
     }
   }
 
@@ -38,10 +38,9 @@ class KeepMyHistory extends React.Component {
                    type="checkbox"
                    name="keep-my-history"
                    id="keep-my-history"
-                   onClick={this.handleKeepMyHistory}
-                   defaultChecked={this.props.personalInformation.privacy === 0 ||
-                   this.props.personalInformation.privacy === 1 ||
-                   this.props.personalInformation.privacy === ''} />
+                   ref={e => this.keepMyHistoryCheckbox = e}
+                   onChange={this.handleKeepMyHistory}
+                   defaultChecked={this.props.personalInformation.privacy === 0} />
             <label htmlFor="keep-my-history" onKeyDown={this.handleKeyKeepMyHistory}>
                 <span className="checkbox-wrapper">
                   <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />

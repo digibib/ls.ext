@@ -240,13 +240,17 @@ module.exports = (app) => {
       method: 'PUT',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({ privacy: privacy })})
-    if (res.status != 200) {
+    if (res.status != 200 && res.status != 204) {
       throw Error("failed to update patron privacy setting")
     }
   }
 
   async function updateHistoryConsent (borrowernumber, new_consent, previous_consent) {
     let attribute = new_consent ? 'yes' : 'no'
+    if (previous_consent && previous.startsWith(new_consent) {
+      // Allready sat consent, don't need to do it again
+      return
+    }
     attribute += '_'
     attribute += Date.now()
 
@@ -261,7 +265,7 @@ module.exports = (app) => {
       url = `http://xkoha:8081/api/v1/patrons/${borrowernumber}/attributes/hist_cons`
     }
     const consentRes = await fetch(url, {method: method, body: JSON.stringify(params)})
-    if (consentRes.status > 201) {
+    if (consentRes.status > 204) { // 200 = OK updated, 201 OK created, 204 = OK no change to persist
       throw Error("failed to update patron history consent attribute")
     }
   }
@@ -279,7 +283,7 @@ module.exports = (app) => {
 
   function parsePatron (patron) {
     return {
-      privacy: patron.privacy || '',
+      privacy: patron.privacy,
       borrowerNumber: patron.borrowernumber || '',
       cardNumber: patron.cardnumber || '',
       homeBranch: patron.branchcode || '',

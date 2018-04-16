@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { defineMessages, FormattedMessage } from 'react-intl'
+import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
+import {Link} from 'react-router'
 
 import * as ModalActions from '../../actions/ModalActions'
 import * as ProfileActions from '../../actions/ProfileActions'
@@ -29,17 +30,16 @@ class UserHistoryModal extends React.Component {
   render () {
     return (
       <div data-automation-id="history_delete_modal" className="default-modal">
-        <h1 style={{ fontSize: '1em', marginBottom: '1em' }}><FormattedMessage {...messages.deleteHistoryTitle} /></h1>
         <p>
-          <FormattedMessage {...messages.deleteHistoryExplainer} />
+          <FormattedHTMLMessage {...messages.deleteHistoryExplainer} />
         </p>
         <div style={{ textAlign: 'center' }}>
-          <button className="grey-btn" onClick={this.handleCancel} data-automation-id="cancel_button">
-            <FormattedMessage {...messages.cancel} />
-          </button>
-          <button className="black-btn" onClick={this.handleDeleteHistory} data-automation-id="delete_button">
+          <button className="small-blue-btn" onClick={this.handleDeleteHistory} data-automation-id="delete_button">
             <FormattedMessage {...messages.delete} />
           </button>
+          <Link role="button" onClick={this.handleCancel} data-automation-id="cancel_button">
+            <FormattedMessage {...messages.cancel} />
+          </Link>
         </div>
       </div>
     )
@@ -74,7 +74,7 @@ export const messages = defineMessages({
   deleteHistoryExplainer: {
     id: 'History.deleteHistoryExplainer',
     description: 'Explainer text in popup when user tries to remove history storage',
-    defaultMessage: 'Your loan history will be anonymized/deleted within 24 hours.'
+    defaultMessage: 'Are you sure you want to delete your history?<br/>This cannot be undone.'
   }
 })
 
