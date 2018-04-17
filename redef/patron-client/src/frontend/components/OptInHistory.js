@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
+import OptInHistoryInfo from './OptInHistoryInfo'
 
 class OptInHistory extends React.Component {
 
@@ -19,13 +20,9 @@ class OptInHistory extends React.Component {
         <section
         className="history"
         style={{ marginTop: '1em' }}>
-          {this.props.personalInformation.privacy === '0'
-            ? <h1><FormattedMessage {...messages.saveMyHistoryRevivalHeader} /></h1>
-            : <h1><FormattedMessage {...messages.saveMyHistoryHeader} /></h1>
-          }
-          <p >
-            <FormattedHTMLMessage {...messages.saveMyHistoryInformation} />
-          </p >
+          <OptInHistoryInfo
+            hasHistory={this.props.personalInformation.privacy === 0}
+          />
           <button className="blue-btn"
                   type="button"
                   data-automation-id="OptInHistory_saveButton"

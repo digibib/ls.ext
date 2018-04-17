@@ -3170,7 +3170,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   text-align: center;
   font-family: Lato, Arial, sans-serif;
   font-weight: 600;
-  margin: 0;
+  margin: 1em 0;
   font-size: $rhythm4;
   font-size: normal;
 }
@@ -3186,6 +3186,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 .default-modal .cancel-link {
   margin-left: $rhythm5;
+}
+
+.default-modal button {
+  margin-right: 1em
 }
 
 @include breakpoint($small) {

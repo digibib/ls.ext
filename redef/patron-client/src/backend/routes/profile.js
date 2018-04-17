@@ -247,7 +247,7 @@ module.exports = (app) => {
 
   async function updateHistoryConsent (borrowernumber, new_consent, previous_consent) {
     let attribute = new_consent ? 'yes' : 'no'
-    if (previous_consent && previous.startsWith(new_consent) {
+    if (previous_consent && previous_consent.startsWith(new_consent)) {
       // Allready sat consent, don't need to do it again
       return
     }

@@ -3,42 +3,49 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
 import {Link} from 'react-router'
-
+import OptInHistoryInfo from '../../components/OptInHistoryInfo'
 import * as ModalActions from '../../actions/ModalActions'
 import * as ProfileActions from '../../actions/ProfileActions'
 import * as HistoryActions from '../../actions/HistoryActions'
 
-class UserHistoryModal extends React.Component {
+class HistoryInfoModal extends React.Component {
   constructor (props) {
     super(props)
     this.handleCancel = this.handleCancel.bind(this)
-    this.handleDeleteHistory = this.handleDeleteHistory.bind(this)
+    this.handleKeepHistory = this.handleKeepHistory.bind(this)
+  }
+
+  componentDidMount() {
+    document.addEventListener('keyup', (e) => {
+        console.log(e)
+        if (e.keyCode === 27) {
+          this.handleCancel(event)
+        }
+    })
   }
 
   handleCancel (event) {
     event.preventDefault()
+    this.props.profileActions.manageHistoryConsent(false)
     this.props.modalActions.hideModal()
   }
 
-  handleDeleteHistory (event) {
+  handleKeepHistory (event) {
     event.preventDefault()
-    this.props.profileActions.manageHistory(2, this.props.personalAttributes.hist_cons) // privacy=2 (never store history)
-    this.props.historyActions.deleteAllHistory()
+    this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons)
     this.props.modalActions.hideModal()
   }
 
   render () {
     return (
-      <div data-automation-id="history_delete_modal" className="default-modal">
-        <p>
-          <FormattedHTMLMessage {...messages.deleteHistoryExplainer} />
-        </p>
-        <div style={{ textAlign: 'center'}}>
-          <button className="small-blue-btn" onClick={this.handleDeleteHistory} data-automation-id="delete_button">
-            <FormattedMessage {...messages.delete} />
+      <div data-automation-id="history_info_modal" className="default-modal">
+        <OptInHistoryInfo hasHistory={this.props.personalInformation.privacy === 0} />
+        <div style={{ textAlign: 'center', padding: '1em' }}>
+          <button className="blue-btn" onClick={this.handleKeepHistory} data-automation-id="delete_button">
+            <FormattedMessage {...messages.keep} />
           </button>
           <Link role="button" onClick={this.handleCancel} data-automation-id="cancel_button">
-            <FormattedMessage {...messages.cancel} />
+            <FormattedMessage {...messages.notNow} />
           </Link>
         </div>
       </div>
@@ -46,9 +53,10 @@ class UserHistoryModal extends React.Component {
   }
 }
 
-UserHistoryModal.propTypes = {
+HistoryInfoModal.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   isRequestingReservation: PropTypes.bool.isRequired,
+  personalInformation: PropTypes.object.isRequired,
   personalAttributes: PropTypes.object.isRequired,
   modalActions: PropTypes.object.isRequired,
   profileActions: PropTypes.object.isRequired,
@@ -56,23 +64,38 @@ UserHistoryModal.propTypes = {
 }
 
 export const messages = defineMessages({
-  deleteHistoryTitle: {
-    id: 'History.deleteHistoryTitle',
-    description: 'Delete history modal title',
-    defaultMessage: 'Would you like to delete your history'
+  heading: {
+    id: 'History.heading',
+    description: 'History information modal title',
+    defaultMessage: 'TODO'
   },
-  delete: {
-    id: 'History.delete',
-    description: 'Button text for deleting history',
+  heading2: {
+    id: 'History.heading2',
+    description: 'History information modal title for users allreay opted in in old system',
+    defaultMessage: 'TODO'
+  },
+  text: {
+    id: 'History.text',
+    description: 'Text explaining history policy',
+    defaultMessage: 'Keep my history'
+  },
+  text2: {
+    id: 'History.text2',
+    description: 'Text explaining history policy for users allready opted in in old system',
     defaultMessage: 'Delete'
   },
-  cancel: {
-    id: 'History.cancel',
-    description: 'The cancel button text',
-    defaultMessage: 'Cancel'
+  keep: {
+    id: 'History.keep',
+    description: 'The keep history button text',
+    defaultMessage: 'Keep my history'
   },
-  deleteHistoryExplainer: {
-    id: 'History.deleteHistoryExplainer',
+  notNow: {
+    id: 'History.notNow',
+    description: 'The cancel button text',
+    defaultMessage: 'Not now'
+  },
+  notNowExtraPopup: {
+    id: 'History.notNowExtraPopup',
     description: 'Explainer text in popup when user tries to remove history storage',
     defaultMessage: 'Are you sure you want to delete your history?<br/>This cannot be undone.'
   }
@@ -82,7 +105,8 @@ function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
     isRequestingReservation: state.reservation.isRequestingReservation,
-    personalAttributes: state.profile.personalAttributes
+    personalAttributes: state.profile.personalAttributes,
+    personalInformation: state.profile.personalInformation
   }
 }
 
@@ -98,4 +122,4 @@ function mapDispatchToProps (dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UserHistoryModal)
+)(HistoryInfoModal)

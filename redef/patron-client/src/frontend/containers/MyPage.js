@@ -9,19 +9,23 @@ import * as ProfileActions from '../actions/ProfileActions'
 import * as LoginActions from '../actions/LoginActions'
 import * as ModalActions from '../actions/ModalActions'
 import Tabs from '../components/Tabs'
-// import ModalComponents from '../constants/ModalComponents'
+import ModalComponents from '../constants/ModalComponents'
 
 class MyPage extends React.Component {
   componentWillMount () {
     if (this.props.isLoggedIn) {
       this.props.profileActions.fetchAllProfileData()
     }
-    // this.props.modalActions.showModal(ModalComponents.NEW_USER_OPT_IN_HISTORY, { isSuccess: true })
   }
 
   componentDidUpdate (prevProps) {
     if (prevProps.isLoggedIn === false && this.props.isLoggedIn === true) {
       this.props.profileActions.fetchAllProfileData()
+    }
+    if (Object.keys(this.props.personalAttributes).length > 0 && !this.props.personalAttributes.hist_cons) {
+      // This modal should only be showed once for the user,
+      // if consent is set, either to yes or no, don't display anything.
+      this.props.modalActions.showModal(ModalComponents.HISTORY_INFO_MODAL, { isSuccess: true })
     }
   }
 
@@ -65,7 +69,8 @@ MyPage.propTypes = {
   location: PropTypes.object.isRequired,
   routerActions: PropTypes.object.isRequired,
   children: PropTypes.node.isRequired,
-  intl: intlShape.isRequired
+  intl: intlShape.isRequired,
+  personalAttributes: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({
@@ -104,6 +109,7 @@ export const messages = defineMessages({
 function mapStateToProps (state) {
   return {
     isLoggedIn: state.application.isLoggedIn,
+    personalAttributes: state.profile.personalAttributes,
     loginError: state.application.loginError
   }
 }

@@ -10,7 +10,7 @@ import * as ModalActions from '../actions/ModalActions'
 import CancelReservation from './modals/CancelReservationModal'
 import PostponeReservation from './modals/PostponeReservationModal'
 import UserHistoryModal from './modals/UserHistoryModal'
-import NewUserOptInHistoryModal from './modals/NewUserOptInHistoryModal'
+import HistoryInfoModal from './modals/HistoryInfoModal'
 
 const MODAL_COMPONENTS = {
   'USER_HISTORY': UserHistoryModal,
@@ -19,7 +19,7 @@ const MODAL_COMPONENTS = {
   'LOGIN': Login,
   'RESERVATION': Reservation,
   'REMOTE_RESERVATION': RemoteReservation,
-  'NEW_USER_OPT_IN_HISTORY': NewUserOptInHistoryModal
+  'HISTORY_INFO_MODAL': HistoryInfoModal
 }
 
 class ModalRoot extends React.Component {
