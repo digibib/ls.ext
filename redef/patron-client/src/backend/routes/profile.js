@@ -89,8 +89,8 @@ module.exports = (app) => {
     try {
       const profileResp = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`)
       const attributesResp = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/attributes`)
-      if (profileResp.status !== 200 || attributesResp.status != 200) {
-        throw Error("failed to fetch patron profile")
+      if (profileResp.status !== 200 || attributesResp.status !== 200) {
+        throw Error('failed to fetch patron profile')
       }
       const profile = await profileResp.json()
       const attributes = await attributesResp.json()
@@ -255,14 +255,14 @@ module.exports = (app) => {
       method: 'PUT',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({ privacy: privacy })})
-    if (res.status != 200 && res.status != 204) {
-      throw Error("failed to update patron privacy setting")
+    if (res.status !== 200 && res.status !== 204) {
+      throw Error('failed to update patron privacy setting')
     }
   }
 
-  async function updateHistoryConsent (borrowernumber, new_consent, previous_consent) {
-    let attribute = new_consent ? 'yes' : 'no'
-    if (previous_consent && previous_consent.startsWith(new_consent)) {
+  async function updateHistoryConsent (borrowernumber, newConsent, previousConsent) {
+    let attribute = newConsent ? 'yes' : 'no'
+    if (previousConsent && previousConsent.startsWith(newConsent)) {
       // Allready sat consent, don't need to do it again
       return
     }
@@ -275,18 +275,18 @@ module.exports = (app) => {
     }
     let method = 'POST'
     let url = `http://xkoha:8081/api/v1/patrons/${borrowernumber}/attributes`
-    if (previous_consent) {
+    if (previousConsent) {
       method = 'PUT'
       url = `http://xkoha:8081/api/v1/patrons/${borrowernumber}/attributes/hist_cons`
     }
     const consentRes = await fetch(url, {method: method, body: JSON.stringify(params)})
     if (consentRes.status > 204) { // 200 = OK updated, 201 OK created, 204 = OK no change to persist
-      throw Error("failed to update patron history consent attribute")
+      throw Error('failed to update patron history consent attribute')
     }
   }
 
   function parseAttributes (attributes) {
-    let filteredAttributes = {}
+    const filteredAttributes = {}
     attributes.forEach(a => {
       if (a.code === 'fnr') {
         return

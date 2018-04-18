@@ -291,6 +291,7 @@ UserSettings.propTypes = {
   isRequestingSettings: PropTypes.bool.isRequired,
   settings: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
+  personalAttributes: PropTypes.object.isRequired,
   settingsError: PropTypes.object,
   contactDetailsNeedVerification: PropTypes.bool,
   contactDetailsVerificationError: PropTypes.object,

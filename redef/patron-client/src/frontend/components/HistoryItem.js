@@ -5,7 +5,6 @@ import { defineMessages, FormattedMessage, injectIntl, intlShape } from 'react-i
 import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
 import {formatDate} from '../utils/dateFormatter'
-import Constants from '../constants/Constants'
 import * as HistoryActions from '../actions/HistoryActions'
 
 class HistoryItem extends React.Component {
@@ -15,7 +14,7 @@ class HistoryItem extends React.Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
-  handleChange = function (id) {
+  handleChange (id) {
     console.log(id)
     this.props.historyActions.markHistoryForDeletion(id)
   }
@@ -98,7 +97,7 @@ export const messages = defineMessages({
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    historyActions: bindActionCreators(HistoryActions, dispatch),
+    historyActions: bindActionCreators(HistoryActions, dispatch)
   }
 }
 

@@ -10,14 +10,14 @@ class OptInHistoryInfo extends React.Component {
             <h1><FormattedMessage {...messages.saveMyHistoryRevivalHeader} /></h1>
             <p><FormattedHTMLMessage {...messages.saveMyHistoryRevivalInformation} /></p>
           </div>
-        )
+      )
     }
     return (
         <div>
           <h1><FormattedMessage {...messages.saveMyHistoryHeader} /></h1>
           <p><FormattedHTMLMessage {...messages.saveMyHistoryInformation} /></p>
         </div>
-      )
+    )
   }
 }
 

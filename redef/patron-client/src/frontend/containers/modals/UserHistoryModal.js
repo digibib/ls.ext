@@ -35,7 +35,7 @@ class UserHistoryModal extends React.Component {
         <p>
           <FormattedHTMLMessage {...messages.deleteHistoryExplainer} />
         </p>
-        <div style={{ textAlign: 'center'}}>
+        <div style={{ textAlign: 'center' }}>
           <button className="small-blue-btn" onClick={this.handleDeleteHistory} data-automation-id="delete_button">
             <FormattedMessage {...messages.delete} />
           </button>

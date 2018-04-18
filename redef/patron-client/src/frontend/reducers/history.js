@@ -11,8 +11,7 @@ import {
   DELETE_ALL_HISTORY_FAILURE,
   DELETE_HISTORY_SUCCESS,
   DELETE_HISTORY_FAILURE,
-  MARK_HISTORY_FOR_DELETION,
-  UNMARK_HISTORY_FOR_DELETION
+  MARK_HISTORY_FOR_DELETION
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -52,14 +51,14 @@ export default function loan (state = initialState, action) {
     case MARK_HISTORY_FOR_DELETION:
       if (state.historyToDelete.includes(action.payload.id)) {
         // unmark for deletion
-        return { ...state, historyToDelete: state.historyToDelete.filter(i => i !== action.payload.id)}
+        return { ...state, historyToDelete: state.historyToDelete.filter(i => i !== action.payload.id) }
       }
       // mark for deletion
-      return { ...state, historyToDelete: [...state.historyToDelete, action.payload.id]}
+      return { ...state, historyToDelete: [...state.historyToDelete, action.payload.id] }
     case DELETE_HISTORY_SUCCESS:
       return { ...state, historyToDelete: [] }
     case DELETE_HISTORY_FAILURE:
-      // TODO
+      return state // TODO display errors how?
     default:
       return state
   }

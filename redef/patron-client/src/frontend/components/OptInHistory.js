@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
+import { defineMessages, FormattedMessage } from 'react-intl'
 import OptInHistoryInfo from './OptInHistoryInfo'
 
 class OptInHistory extends React.Component {

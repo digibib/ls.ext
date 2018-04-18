@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { defineMessages, FormattedMessage, FormattedHTMLMessage } from 'react-intl'
+import { defineMessages, FormattedMessage } from 'react-intl'
 import {Link} from 'react-router'
 import OptInHistoryInfo from '../../components/OptInHistoryInfo'
 import * as ModalActions from '../../actions/ModalActions'
@@ -15,12 +15,11 @@ class HistoryInfoModal extends React.Component {
     this.handleKeepHistory = this.handleKeepHistory.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     document.addEventListener('keyup', (e) => {
-        console.log(e)
-        if (e.keyCode === 27) {
-          this.handleCancel(event)
-        }
+      if (e.keyCode === 27) {
+        this.handleCancel(e)
+      }
     })
   }
 

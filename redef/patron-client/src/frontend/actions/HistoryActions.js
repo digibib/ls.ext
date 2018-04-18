@@ -74,7 +74,7 @@ export function deleteHistory () {
       responses.forEach(r => {
         if (r.status !== 200) {
           console.log(r.status)
-          throw new Error("failed")
+          throw new Error('failed')
         }
       })
       const { allLoadedHistory } = getState().history
@@ -82,7 +82,7 @@ export function deleteHistory () {
       dispatch(requestUpdateHistory(newHistory))
       dispatch(setCurrentLoadedNumber(newHistory.length))
       dispatch(action(types.DELETE_HISTORY_SUCCESS))
-    }).catch(error => dispatch(deleteHistoryFailure(Errors.history.GENERIC_DELETE_HISTORY_ERROR)))
+    }).catch(() => dispatch(deleteHistoryFailure(Errors.history.GENERIC_DELETE_HISTORY_ERROR)))
   }
 }
 
@@ -98,7 +98,7 @@ export const receiveHistory = data => action(types.RECEIVE_FETCH_HISTORY, { hist
 
 export const requestUpdateHistory = (data) => action(types.UPDATE_HISTORY, { historyAll: data })
 
-export const markHistoryForDeletion = (id) => action(types.MARK_HISTORY_FOR_DELETION, { id: id } )
+export const markHistoryForDeletion = (id) => action(types.MARK_HISTORY_FOR_DELETION, { id: id })
 
 export const setCurrentLoadedNumber = (number) => action(types.SET_CURRENT_LOADED_HISTORY_ITEMS, { items: number })
 
