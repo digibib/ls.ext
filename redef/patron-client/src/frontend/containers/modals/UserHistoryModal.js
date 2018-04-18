@@ -58,11 +58,6 @@ UserHistoryModal.propTypes = {
 }
 
 export const messages = defineMessages({
-  deleteHistoryTitle: {
-    id: 'History.deleteHistoryTitle',
-    description: 'Delete history modal title',
-    defaultMessage: 'Would you like to delete your history'
-  },
   delete: {
     id: 'History.delete',
     description: 'Button text for deleting history',

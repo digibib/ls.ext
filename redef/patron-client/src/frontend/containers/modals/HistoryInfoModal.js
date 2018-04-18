@@ -63,26 +63,6 @@ HistoryInfoModal.propTypes = {
 }
 
 export const messages = defineMessages({
-  heading: {
-    id: 'History.heading',
-    description: 'History information modal title',
-    defaultMessage: 'TODO'
-  },
-  heading2: {
-    id: 'History.heading2',
-    description: 'History information modal title for users allreay opted in in old system',
-    defaultMessage: 'TODO'
-  },
-  text: {
-    id: 'History.text',
-    description: 'Text explaining history policy',
-    defaultMessage: 'Keep my history'
-  },
-  text2: {
-    id: 'History.text2',
-    description: 'Text explaining history policy for users allready opted in in old system',
-    defaultMessage: 'Delete'
-  },
   keep: {
     id: 'History.keep',
     description: 'The keep history button text',
@@ -92,11 +72,6 @@ export const messages = defineMessages({
     id: 'History.notNow',
     description: 'The cancel button text',
     defaultMessage: 'Not now'
-  },
-  notNowExtraPopup: {
-    id: 'History.notNowExtraPopup',
-    description: 'Explainer text in popup when user tries to remove history storage',
-    defaultMessage: 'Are you sure you want to delete your history?<br/>This cannot be undone.'
   }
 })
 

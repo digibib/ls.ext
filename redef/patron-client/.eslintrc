@@ -7,7 +7,8 @@
     "react/jsx-no-bind": [
       2,
       {
-        "ignoreRefs": true
+        "ignoreRefs": true,
+        "allowArrowFunctions": true
       }
     ],
     "prefer-template": 2,

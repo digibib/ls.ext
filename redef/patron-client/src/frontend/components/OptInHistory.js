@@ -45,21 +45,6 @@ export const messages = defineMessages({
     id: 'UserSettings.saveConsent',
     description: 'The label for the save button',
     defaultMessage: 'Keep my checkout history'
-  },
-  saveMyHistoryHeader: {
-    id: 'UserSettings.saveMyHistoryHeader',
-    description: 'The heading for save my history consent',
-    defaultMessage: 'You are now able to save yor history!'
-  },
-  saveMyHistoryRevivalHeader: {
-    id: 'UserSettings.saveMyHistoryRevivalHeader',
-    description: 'The heading for save my history consent',
-    defaultMessage: 'Checkout history is back!'
-  },
-  saveMyHistoryInformation: {
-    id: 'UserSettings.saveMyHistoryInformation',
-    description: 'The heading for save my history consent',
-    defaultMessage: 'You will have a full history of what you have ...'
   }
 })
 
