@@ -8,7 +8,11 @@ import {
   SET_NO_HISTORY_TO_FETCH,
   DELETE_ALL_HISTORY,
   DELETE_ALL_HISTORY_SUCCESS,
-  DELETE_ALL_HISTORY_FAILURE
+  DELETE_ALL_HISTORY_FAILURE,
+  DELETE_HISTORY_SUCCESS,
+  DELETE_HISTORY_FAILURE,
+  MARK_HISTORY_FOR_DELETION,
+  UNMARK_HISTORY_FOR_DELETION
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -45,6 +49,17 @@ export default function loan (state = initialState, action) {
       return { ...state, isRequestingDeleteAllHistory: false, historyData: [], allLoadedHistory: [], moreToFetch: false, loadedHistoryItems: 0 }
     case DELETE_ALL_HISTORY_FAILURE:
       return { ...state, isRequestingDeleteAllHistory: false }
+    case MARK_HISTORY_FOR_DELETION:
+      if (state.historyToDelete.includes(action.payload.id)) {
+        // unmark for deletion
+        return { ...state, historyToDelete: state.historyToDelete.filter(i => i !== action.payload.id)}
+      }
+      // mark for deletion
+      return { ...state, historyToDelete: [...state.historyToDelete, action.payload.id]}
+    case DELETE_HISTORY_SUCCESS:
+      return { ...state, historyToDelete: [] }
+    case DELETE_HISTORY_FAILURE:
+      // TODO
     default:
       return state
   }

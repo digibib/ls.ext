@@ -29,6 +29,16 @@ export function deleteAllHistoryFailure (error) {
   }
 }
 
+export function deleteHistoryFailure (error) {
+  return dispatch => {
+    dispatch({
+      type: types.DELETE_HISTORY_FAILURE,
+      payload: { message: error },
+      error: true
+    })
+  }
+}
+
 export function deleteAllHistory () {
   return (dispatch, getState) => {
     const url = `/api/v1/profile/history`
@@ -44,9 +54,35 @@ export function deleteAllHistory () {
       if (response.status === 200) {
         dispatch(action(types.DELETE_ALL_HISTORY_SUCCESS))
       } else {
-        dispatch(deleteAllHistoryFailure(Errors.loan.GENERIC_DELETE_HISTORY_ERROR))
+        dispatch(deleteAllHistoryFailure(Errors.history.GENERIC_DELETE_HISTORY_ERROR))
       }
     }).catch(error => dispatch(deleteAllHistoryFailure(error)))
+  }
+}
+
+export function deleteHistory () {
+  return (dispatch, getState) => {
+    const ids = getState().history.historyToDelete
+    Promise.all(ids.map(id => {
+      const url = `/api/v1/profile/history/${id}`
+      return fetch(url, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' }
+      })
+    })).then(responses => {
+      responses.forEach(r => {
+        if (r.status !== 200) {
+          console.log(r.status)
+          throw new Error("failed")
+        }
+      })
+      const { allLoadedHistory } = getState().history
+      const newHistory = allLoadedHistory.filter(i => !ids.includes(i.id))
+      dispatch(requestUpdateHistory(newHistory))
+      dispatch(setCurrentLoadedNumber(newHistory.length))
+      dispatch(action(types.DELETE_HISTORY_SUCCESS))
+    }).catch(error => dispatch(deleteHistoryFailure(Errors.history.GENERIC_DELETE_HISTORY_ERROR)))
   }
 }
 
@@ -54,11 +90,15 @@ export const resetHistory = () => action(types.RESET_HISTORY)
 
 export const requestHistory = () => action(types.REQUEST_FETCH_HISTORY)
 
+export const requestDeleteHistory = () => action(types.REQUEST_DELETE_HISTORY)
+
 export const requestDeleteAllHistory = () => action(types.REQUEST_DELETE_ALL_HISTORY)
 
 export const receiveHistory = data => action(types.RECEIVE_FETCH_HISTORY, { history: data })
 
 export const requestUpdateHistory = (data) => action(types.UPDATE_HISTORY, { historyAll: data })
+
+export const markHistoryForDeletion = (id) => action(types.MARK_HISTORY_FOR_DELETION, { id: id } )
 
 export const setCurrentLoadedNumber = (number) => action(types.SET_CURRENT_LOADED_HISTORY_ITEMS, { items: number })
 

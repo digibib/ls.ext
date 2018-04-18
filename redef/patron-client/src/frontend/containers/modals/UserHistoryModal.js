@@ -22,7 +22,9 @@ class UserHistoryModal extends React.Component {
 
   handleDeleteHistory (event) {
     event.preventDefault()
-    this.props.profileActions.manageHistory(2, this.props.personalAttributes.hist_cons) // privacy=2 (never store history)
+    if (window.location.pathame === '/profile/settings') {
+      this.props.profileActions.manageHistory(2, this.props.personalAttributes.hist_cons) // privacy=2 (never store history)
+    }
     this.props.historyActions.deleteAllHistory()
     this.props.modalActions.hideModal()
   }

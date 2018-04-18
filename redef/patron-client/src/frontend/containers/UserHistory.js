@@ -45,7 +45,12 @@ class UserHistory extends React.Component {
             profileActions={this.props.profileActions} />
         }
         {optedIn
-          ? < HistoryItems historyItems={this.props.allLoadedHistory} historyActions={this.props.historyActions} loadItems={this.loadItems} hasMoreItems={this.props.hasMoreItems} />
+          ? < HistoryItems
+              historyItems={this.props.allLoadedHistory}
+              historyActions={this.props.historyActions}
+              profileActions={this.props.profileActions}
+              loadItems={this.loadItems}
+              hasMoreItems={this.props.hasMoreItems} />
           : null
         }
       </div>

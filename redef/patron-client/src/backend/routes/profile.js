@@ -70,6 +70,21 @@ module.exports = (app) => {
       })
   })
 
+  app.delete('/api/v1/profile/history/:id', jsonParser, (request, response) => {
+    fetch(`http://xkoha:8081/api/v1/checkouts/${request.params.id}`, { method: 'DELETE' })
+      .then(res => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          throw Error(res.statusText)
+        }
+      }).then(json => response.status(200).send(json))
+      .catch(error => {
+        console.log(error)
+        response.sendStatus(500)
+      })
+  })
+
   app.get('/api/v1/profile/info', async (request, response) => {
     try {
       const profileResp = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}`)

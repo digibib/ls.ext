@@ -13,7 +13,7 @@ class HistoryItems extends React.Component {
         style={{ marginTop: '1em' }}>
         {this.props.historyItems.length > 0
           ? <div className="delete-history-buttons">
-              <button className="small-blue-btn">Slett valgte</button> &nbsp; <button onClick={this.props.historyActions.deleteAllHistory}className="small-blue-btn">Slett alle</button>
+              <button onClick={this.props.historyActions.deleteHistory} className="small-blue-btn">Slett valgte</button> &nbsp; <button onClick={this.props.profileActions.userHistory} className="small-blue-btn">Slett alle</button>
             </div>
           : null }
         <h1><FormattedMessage {...messages.history} /></h1>
@@ -35,7 +35,8 @@ HistoryItems.propTypes = {
   historyItems: PropTypes.array.isRequired,
   loadItems: PropTypes.func.isRequired,
   hasMoreItems: PropTypes.bool.isRequired,
-  historyActions: PropTypes.object.isRequired
+  profileActions: PropTypes.object.isRequired,
+  historyActions: PropTypes.object.isRequred
 }
 
 export const messages = defineMessages({
