@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
+import * as HistoryActions from '../actions/HistoryActions'
 
 class KeepMyHistory extends React.Component {
 
@@ -10,6 +11,11 @@ class KeepMyHistory extends React.Component {
     super(props)
     this.handleKeepMyHistory = this.handleKeepMyHistory.bind(this)
     this.handleSaveClick = this.handleSaveClick.bind(this)
+  }
+
+  componentWillMount () {
+    this.props.historyActions.resetHistory()
+    this.props.historyActions.fetchHistory({ limit: 10, offset: 0 })
   }
 
   handleKeepMyHistory (event) {
@@ -25,7 +31,12 @@ class KeepMyHistory extends React.Component {
     if (checked) {
       this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons)
     } else {
-      this.props.profileActions.userHistory()
+      if (this.props.historySize > 0) {
+        this.props.profileActions.userHistory()
+      } else {
+        // user has no items in history, so we don't bother with popup
+        this.props.profileActions.manageHistory(2, this.props.personalAttributes.hist_cons)
+      }
     }
   }
 
@@ -73,9 +84,11 @@ class KeepMyHistory extends React.Component {
 KeepMyHistory.propTypes = {
   dispatch: PropTypes.func.isRequired,
   profileActions: PropTypes.object.isRequired,
+  historyActions: PropTypes.object.isRequired,
   personalInformation: PropTypes.object.isRequired,
   personalAttributes: PropTypes.object.isRequired,
-  postProfileSettingsSuccess: PropTypes.bool
+  postProfileSettingsSuccess: PropTypes.bool,
+  historySize: PropTypes.number.isRequired
 }
 
 export const messages = defineMessages({
@@ -103,14 +116,16 @@ export const messages = defineMessages({
 
 function mapStateToProps (state) {
   return {
-    postProfileSettingsSuccess: state.profile.postProfileSettingsSuccess
+    postProfileSettingsSuccess: state.profile.postProfileSettingsSuccess,
+    historySize: state.history.loadedHistoryItems
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
     dispatch: dispatch,
-    profileActions: bindActionCreators(ProfileActions, dispatch)
+    profileActions: bindActionCreators(ProfileActions, dispatch),
+    historyActions: bindActionCreators(HistoryActions, dispatch)
   }
 }
 
