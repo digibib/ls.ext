@@ -13,16 +13,22 @@ const formName = 'changePin'
 class ChangePinForm extends React.Component {
   constructor (props) {
     super(props)
+    this.handleChange = this.handleChange.bind(this)
     this.handleChangePin = this.handleChangePin.bind(this)
     this.getValidator = this.getValidator.bind(this)
+    this.state = {
+      dirty: false
+    }
+  }
+
+  handleChange (event) {
+    if (this.props.fields.anyTouched) {
+      this.setState({dirty: true})
+    }
   }
 
   handleChangePin () {
     this.props.profileActions.changePasswordFromForm(reset('changePin'))
-  }
-
-  hasInvalidFormFields () {
-    return Object.values(this.props.fields).every(field => field.error)
   }
 
   renderError () {
@@ -49,7 +55,7 @@ class ChangePinForm extends React.Component {
       changePasswordSuccess
     } = this.props
     return (
-      <form onSubmit={handleSubmit(this.handleChangePin)}>
+      <form onChange={this.handleChange} onSubmit={handleSubmit(this.handleChangePin)}>
 
         <header>
           <h1><FormattedMessage {...messages.changePin} /></h1>
@@ -88,7 +94,7 @@ class ChangePinForm extends React.Component {
           </div>
         </section>
         <footer>
-          <button className="blue-btn" type="submit" disabled={submitting} data-automation-id="changePinForm_button">
+          <button className="blue-btn" type="submit" disabled={!this.state.dirty || submitting} data-automation-id="changePinForm_button">
             <FormattedMessage {...messages.changePin} /><br />
           </button>
           {changePasswordSuccess ? <div data-automation-id="changePinForm_success" style={{ color: 'green' }}>

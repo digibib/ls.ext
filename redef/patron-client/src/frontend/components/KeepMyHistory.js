@@ -11,6 +11,10 @@ class KeepMyHistory extends React.Component {
     super(props)
     this.handleKeepMyHistory = this.handleKeepMyHistory.bind(this)
     this.handleSaveClick = this.handleSaveClick.bind(this)
+    this.state = {
+      dirtyHistorySettings: false,
+      checked: this.props.personalInformation.privacy === 0
+    }
   }
 
   componentWillMount () {
@@ -18,15 +22,18 @@ class KeepMyHistory extends React.Component {
     this.props.historyActions.fetchHistory({ limit: 10, offset: 0 })
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      dirtyHistorySettings: false,
+      checked: this.props.personalInformation.privacy === 0
+    })
+  }
+
   handleKeepMyHistory (event) {
-    if (event.keyCode === 32) { // Space for checkbox
-      event.preventDefault()
-      this.keepMyHistoryCheckbox.click()
-    }
+     this.setState({dirtyHistorySettings: true, checked: !this.state.checked})
   }
 
   handleSaveClick (event) {
-    // TODO bother to save if there is no changes? Ask M.
     const checked = this.keepMyHistoryCheckbox.checked
     if (checked) {
       this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons)
@@ -44,15 +51,15 @@ class KeepMyHistory extends React.Component {
     return (
       <div key={Math.random()}>
         <div className="reminders-group">
-          <div className="reminder-item" >
+          <div className="reminder-item">
             <input data-automation-id="UserSettings_keepMyHistory"
                    type="checkbox"
                    name="keep-my-history"
                    id="keep-my-history"
                    ref={e => this.keepMyHistoryCheckbox = e}
                    onChange={this.handleKeepMyHistory}
-                   defaultChecked={this.props.personalInformation.privacy === 0} />
-            <label htmlFor="keep-my-history" onKeyDown={this.handleKeyKeepMyHistory}>
+                   checked={this.state.checked} />
+            <label htmlFor="keep-my-history">
                 <span className="checkbox-wrapper">
                   <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
                   <i className="icon-ok-squared checkbox-checked" role="checkbox" aria-checked="true" tabIndex="0" />
@@ -64,6 +71,7 @@ class KeepMyHistory extends React.Component {
         </div>
         <footer>
           <button className="blue-btn"
+                  disabled={!this.state.dirtyHistorySettings}
                   type="button"
                   data-automation-id="UserSettings_saveConsentButton"
                   onClick={this.handleSaveClick}>
