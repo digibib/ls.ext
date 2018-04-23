@@ -381,6 +381,7 @@ export default {
   'UserSettings.history': 'Min historikk',
   'UserSettings.keepMyHistory': 'Jeg ønsker å bevare historikken',
   'UserSettings.saveConsent': 'Ta vare på historikken min',
+  'UserSettings.policyLink': 'Les om vårt personvern',
   'History.saveMyHistoryHeader': 'Ta vare på lånehistorikken din!',
   'History.saveMyHistoryRevivalHeader': 'Nå kommer lånehistorikken tilbake!',
   'History.notNow': 'Ikke nå',

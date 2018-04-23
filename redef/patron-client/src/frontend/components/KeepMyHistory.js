@@ -68,6 +68,9 @@ class KeepMyHistory extends React.Component {
             </label>
           </div>
 
+          <div className="reminder-item">
+            <a href="https://www.deichman.no/node/20992"><FormattedMessage {...messages.policyLink} /></a>
+          </div>
         </div>
         <footer>
           <button className="blue-btn"
@@ -119,6 +122,11 @@ export const messages = defineMessages({
     id: 'UserSettings.save',
     description: 'The label for the save button',
     defaultMessage: 'Save'
+  },
+  policyLink: {
+    id: 'UserSettings.policyLink',
+    description: 'Text for link to read about privacy policy',
+    defaultMessage: 'Read about our privacy policy'
   }
 })
 
