@@ -51,14 +51,14 @@ class SearchHeader extends React.Component {
    * Links used in the menu and the mobile menu
    */
 
-  getInspiredLink() {
+  getInspiredLink () {
     return [
-        <li key={8} >
-          <Link to="/" >
-            <FormattedMessage {...messages.getInspired} />
-          </Link >
-        </li >
-      ]
+      <li key={8} >
+        <Link to="/" >
+          <FormattedMessage {...messages.getInspired} />
+        </Link >
+      </li >
+    ]
   }
 
   yourLibraryLink () {
