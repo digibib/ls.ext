@@ -251,6 +251,7 @@ export default {
   'SearchFilters.limit': 'Avgrens søket ditt',
   'SearchHeader.contactUs': 'Kontakt oss',
   'SearchHeader.logoAlt': 'Deichmanske bibliotek logo',
+  'SearchHeader.getInspired': 'Bli inspirert',
   'SearchHeader.more': 'Mer',
   'SearchHeader.openMenu': 'Meny',
   'SearchHeader.closeMenu': 'Lukk',

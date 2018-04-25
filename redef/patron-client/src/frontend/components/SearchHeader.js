@@ -51,6 +51,16 @@ class SearchHeader extends React.Component {
    * Links used in the menu and the mobile menu
    */
 
+  getInspiredLink() {
+    return [
+        <li key={8} >
+          <Link to="/" >
+            <FormattedMessage {...messages.getInspired} />
+          </Link >
+        </li >
+      ]
+  }
+
   yourLibraryLink () {
     return (
       <a href="https://www.deichman.no/bibliotekene">
@@ -64,7 +74,7 @@ class SearchHeader extends React.Component {
       return [
         <li key={2} data-automation-id="login_element" onClick={this.handleLoginClick} >
           <Link to="/login" >
-            <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+            <MediaQuery query="(min-width: 1100px)" values={{ ...this.props.mediaQueryValues }} >
               <img className="icon" src="/images/profile24.svg" />
             </MediaQuery>
             <FormattedMessage {...messages.logIn} />
@@ -90,7 +100,7 @@ class SearchHeader extends React.Component {
     if (this.props.isLoggedIn) {
       return [
         <li key={3} >
-          <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1100px)" values={{ ...this.props.mediaQueryValues }} >
             <img className="icon" src="/images/profile24.svg" />
           </MediaQuery>
           <Link data-automation-id="my-page-link" to="/profile/loans" ><FormattedMessage {...messages.myProfile} /></Link >
@@ -126,6 +136,7 @@ class SearchHeader extends React.Component {
   renderNavigationLinks () {
     return (
       <ul >
+        {this.getInspiredLink()}
         {this.profileLink()}
         {this.registrationLink()}
         { /* borrowerName
@@ -147,6 +158,7 @@ class SearchHeader extends React.Component {
         <li key={0} >
           {this.yourLibraryLink()}
         </li>
+        {this.getInspiredLink()}
         {this.profileLink()}
         {this.registrationLink()}
         {this.loginLink()}
@@ -157,7 +169,7 @@ class SearchHeader extends React.Component {
 
   renderSearchField () {
     return (
-      <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+      <MediaQuery query="(min-width: 1100px)" values={{ ...this.props.mediaQueryValues }} >
         {(matches) => {
           let placeholder = ''
           if (matches) {
@@ -196,25 +208,25 @@ class SearchHeader extends React.Component {
           component="header"
           className="search-header" >
 
-          <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1100px)" values={{ ...this.props.mediaQueryValues }} >
             <div className="your-library-link" >
               <p>{this.yourLibraryLink()}</p>
             </div >
           </MediaQuery >
 
-          <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1100px)" values={{ ...this.props.mediaQueryValues }} >
             <div className="logo" >
               {this.renderLogo()}
             </div >
           </MediaQuery >
 
-          <MediaQuery query="(max-width: 1049px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(max-width: 1099px)" values={{ ...this.props.mediaQueryValues }} >
             <div className="logo-mobile" >
               {this.renderLogo()}
             </div >
           </MediaQuery >
 
-          <MediaQuery query="(max-width: 1049px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(max-width: 1099px)" values={{ ...this.props.mediaQueryValues }} >
             <div className="mobile-menu-toggle" >
               {this.props.showMobileNavigation ? (
                 <a href="#" onClick={this.toggleMobileNav}><FormattedMessage {...messages.closeMenu} /></a>
@@ -224,7 +236,7 @@ class SearchHeader extends React.Component {
             </div >
           </MediaQuery >
 
-          <MediaQuery query="(min-width: 1050px)" values={{ ...this.props.mediaQueryValues }} >
+          <MediaQuery query="(min-width: 1100px)" values={{ ...this.props.mediaQueryValues }} >
             <nav className="primary-menu" >
               {this.renderNavigationLinks()}
             </nav >
@@ -240,7 +252,7 @@ class SearchHeader extends React.Component {
 
         </NonIETransitionGroup >
 
-        <MediaQuery query="(max-width: 1049px)" values={{ ...this.props.mediaQueryValues }} >
+        <MediaQuery query="(max-width: 1099px)" values={{ ...this.props.mediaQueryValues }} >
           <nav className={mobileNavClass} >
             {this.renderMobileNavigationLinks()}
           </nav >
@@ -296,6 +308,11 @@ SearchHeader.propTypes = {
 }
 
 export const messages = defineMessages({
+  getInspired: {
+    id: 'SearchHeader.getInspired',
+    description: 'Link text to get to search front page',
+    defaultMessage: 'Get inspired'
+  },
   openMenu: {
     id: 'SearchHeader.openMenu',
     description: 'Menu',
