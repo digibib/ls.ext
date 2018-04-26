@@ -806,7 +806,9 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .wrapper {
   max-width: 100%;
   @include clearfix;
-  padding: 0 1em;
+  @include breakpoint($small) {
+    padding: 0 1em;
+  }
 }
 
 @include breakpoint($small) {
