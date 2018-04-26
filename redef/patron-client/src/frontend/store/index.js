@@ -7,7 +7,7 @@ import persistState from 'redux-localstorage'
 import adapter from 'redux-localstorage/lib/adapters/localStorage'
 import filter from 'redux-localstorage-filter'
 import rootReducer from '../reducers'
-import types from '../constants/ActionTypes'
+import * as types from '../constants/ActionTypes'
 
 const storage = compose(
   filter([ 'application.locale' ])
