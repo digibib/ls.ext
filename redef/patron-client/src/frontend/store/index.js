@@ -7,13 +7,28 @@ import persistState from 'redux-localstorage'
 import adapter from 'redux-localstorage/lib/adapters/localStorage'
 import filter from 'redux-localstorage-filter'
 import rootReducer from '../reducers'
+import types from '../constants/ActionTypes'
 
 const storage = compose(
   filter([ 'application.locale' ])
 )(adapter(window.localStorage))
 
+// Add events we want to broadcast to Google Tag Manager to this array:
+const broadcastableEvents = [types.REGISTRAION_SUCCESS, types.REGISTRAION_FAILURE]
+
+const analytics = () => next => action => {
+  if (broadcastableEvents.includes(action.type)) {
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push({
+      event: action.type,
+      payload: action.payload
+    })
+  }
+  return next(action)
+}
+
 const reduxRouterMiddleware = routerMiddleware(browserHistory)
-const middleware = [ thunkMiddleware, reduxRouterMiddleware ]
+const middleware = [ thunkMiddleware, analytics, reduxRouterMiddleware ]
 
 if (process.env.NODE_ENV !== 'production') {
   const loggerMiddleware = createLogger()
