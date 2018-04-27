@@ -15,7 +15,6 @@ class HistoryItem extends React.Component {
   }
 
   handleChange (id) {
-    console.log(id)
     this.props.historyActions.markHistoryForDeletion(id)
   }
 
@@ -27,10 +26,8 @@ class HistoryItem extends React.Component {
                data-automation-id="UserHistory"
                data-recordid={historyItem.id}>
         <div className="flex-col media-type">
-          {historyItem.mediaType !== null
-            ? <span key="item-text"> {intl.formatMessage({ id: historyItem.mediaType })}
-              </span>
-            : null
+          {historyItem.mediaType &&
+            <span key="item-text"> {intl.formatMessage({ id: historyItem.mediaType })}</span>
           }
         </div>
         <div className="flex-col entry-details">
@@ -38,13 +35,12 @@ class HistoryItem extends React.Component {
             {historyItem.title}
           </Link>
           <h2>
-          {historyItem.author
-            ? (<Link
+          {historyItem.author &&
+            <Link
               data-automation-id="UserLoans_history_author"
               to={fieldQueryLink('aktør', historyItem.author)}>
               {historyItem.author}
-              </Link>)
-            : null
+              </Link>
           }
           </h2>
           <h2>{historyItem.publicationYear}</h2>

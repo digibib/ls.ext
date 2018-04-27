@@ -68,11 +68,10 @@ class KeepMyHistory extends React.Component {
                   onClick={this.handleSaveClick}>
             <FormattedMessage {...messages.save} />
           </button>
-          {this.props.postProfileSettingsSuccess
-            ? (<span className="disclaimer">
+          {this.props.postProfileSettingsSuccess &&
+            <span className="disclaimer">
                   <FormattedMessage {...messages.saveSuccess} />
-                </span>)
-            : null
+            </span>
           }
         </footer>
       </div>
