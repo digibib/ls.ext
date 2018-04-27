@@ -223,17 +223,6 @@ module.exports = (app) => {
     }
   })
 
-  app.post('api/v1/profile/managehistory', jsonParser, async (request, response) => {
-    try {
-      await updatePatronPrivacy(request.session.borrowerNumber, request.body.privacy)
-      await updateHistoryConsent(request.session.borrowerNumber, request.body.privacy === 0, request.body.hist_cons)
-      response.status(200).send({success: true})
-    } catch (error) {
-      console.log(error)
-      response.sendStatus(500)
-    }
-  })
-
   app.get('/api/v1/profile/settings', (request, response) => {
     return fetch(`http://xkoha:8081/api/v1/messagepreferences/${request.session.borrowerNumber}`)
       .then(res => {
