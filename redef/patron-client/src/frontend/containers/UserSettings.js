@@ -20,9 +20,6 @@ class UserSettings extends React.Component {
     this.handleKeyReceiptOnLoansEmail = this.handleKeyReceiptOnLoansEmail.bind(this)
     this.handleKeyReceiptOnReturnsEmail = this.handleKeyReceiptOnReturnsEmail.bind(this)
     this.handleChange = this.handleChange.bind(this)
-    this.state = {
-      dirty: false
-    }
   }
 
   componentWillMount () {
@@ -30,7 +27,6 @@ class UserSettings extends React.Component {
   }
 
   handleChange (event) {
-    this.setState({dirty: true})
     if (event.target.checked) {
       this.props.profileActions.contactDetailsNeedVerification()
     }
@@ -267,7 +263,7 @@ class UserSettings extends React.Component {
         <footer>
           <button className="blue-btn"
                   type="button"
-                  disabled={this.props.contactDetailsVerificationError || !this.state.dirty}
+                  disabled={this.props.contactDetailsVerificationError}
                   data-automation-id="UserSettings_saveButton"
                   onClick={this.handleSaveClick}>
             <FormattedMessage {...messages.save} />

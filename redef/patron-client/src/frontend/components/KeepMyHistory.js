@@ -11,10 +11,6 @@ class KeepMyHistory extends React.Component {
     super(props)
     this.handleKeepMyHistory = this.handleKeepMyHistory.bind(this)
     this.handleSaveClick = this.handleSaveClick.bind(this)
-    this.state = {
-      dirtyHistorySettings: false,
-      checked: this.props.personalInformation.privacy === 0
-    }
   }
 
   componentWillMount () {
@@ -22,15 +18,8 @@ class KeepMyHistory extends React.Component {
     this.props.historyActions.fetchHistory({ limit: 10, offset: 0 })
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({
-      dirtyHistorySettings: false,
-      checked: this.props.personalInformation.privacy === 0
-    })
-  }
-
   handleKeepMyHistory (event) {
-     this.setState({dirtyHistorySettings: true, checked: !this.state.checked})
+     // TODO dirty state (grey button vs blue button)
   }
 
   handleSaveClick (event) {
@@ -58,7 +47,7 @@ class KeepMyHistory extends React.Component {
                    id="keep-my-history"
                    ref={e => this.keepMyHistoryCheckbox = e}
                    onChange={this.handleKeepMyHistory}
-                   checked={this.state.checked} />
+                   defaultChecked={this.props.personalInformation.privacy === 0} />
             <label htmlFor="keep-my-history">
                 <span className="checkbox-wrapper">
                   <i className="icon-check-empty checkbox-unchecked" role="checkbox" aria-checked="false" tabIndex="0" />
@@ -74,7 +63,6 @@ class KeepMyHistory extends React.Component {
         </div>
         <footer>
           <button className="blue-btn"
-                  disabled={!this.state.dirtyHistorySettings}
                   type="button"
                   data-automation-id="UserSettings_saveConsentButton"
                   onClick={this.handleSaveClick}>
