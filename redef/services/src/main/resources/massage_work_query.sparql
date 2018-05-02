@@ -52,12 +52,23 @@ WHERE {
            ?l rdfs:label ?litLabel .
            BIND(str(?litLabel) AS ?litform)
            FILTER(lang(?litLabel) = "no") }
+
+  UNION { <__WORKURI__> deich:subject ?person .
+            ?person deich:name ?subjectNameString .
+                OPTIONAL { ?person deich:ordinal ?subjectOrdinal }
+                OPTIONAL { ?person deich:specification ?subjectSpecification }
+
+                BIND(IF (BOUND(?subjectSpecification),
+                    CONCAT(?subjectNameString, " ", str(?subjectOrdinal), " (", str(?subjectSpecification), ")"),
+                    CONCAT(?subjectNameString, " ", str(?subjectOrdinal))
+                ) as ?subjectNameWithOrdinal)  .
+
+                BIND(IF (BOUND(?subjectNameWithOrdinal), ?subjectNameWithOrdinal, ?subjectNameString) as ?subjectName) .}
+
   UNION { <__WORKURI__> deich:subject ?subject .
-            ?subject deich:prefLabel ?subjectName  . }
+                ?subject deich:prefLabel ?subjectName  . }
   UNION { <__WORKURI__> deich:subject ?subject .
-             ?subject deich:mainTitle ?subjectName  . }
-  UNION { <__WORKURI__> deich:subject ?subject .
-            ?subject deich:name ?subjectName  . }
+                 ?subject deich:mainTitle ?subjectName  . }
   UNION { <__WORKURI__> deich:untranscribedTitle ?untranscribedTitle }
   UNION { <__WORKURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
   UNION { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
@@ -72,24 +83,37 @@ WHERE {
         }
   UNION { <__WORKURI__> deich:publicationYear ?publicationYearO . BIND(str(?publicationYearO) AS ?publicationYear) }
   UNION { <__WORKURI__> deich:contributor ?workContrib .
-          ?workContrib a deich:Contribution ;
-             deich:agent ?contribAgent ;
-             deich:role ?contribRoleURI .
-             ?contribAgent deich:name ?contribAgentName .
-          OPTIONAL {
-               ?workContrib a deich:MainEntry.
-               BIND(true AS ?mainEntry) .
-               ?contribAgent deich:name ?mainEntryName .
-               OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
-                 BIND(str(?nationLabelLang) AS ?nationLabel)
-                 FILTER(lang(?nationLabelLang) = "no")
-               }
-           }
-          ?contribAgent deich:name ?name .
-          BIND(str(?contribRoleURI) AS ?role)
-          OPTIONAL { ?contribAgent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
-          OPTIONAL { ?contribAgent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
+         ?workContrib a deich:Contribution ;
+            deich:agent ?contribAgent ;
+            deich:role ?contribRoleURI .
+
+            ?contribAgent deich:name ?contribAgentNameString .
+            OPTIONAL { ?contribAgent deich:ordinal ?agentOrdinal }
+            OPTIONAL { ?contribAgent deich:specification ?agentSpecification }
+
+            BIND(IF (BOUND(?agentSpecification),
+                CONCAT(?contribAgentNameString, " ", str(?agentOrdinal), " (", str(?agentSpecification), ")"),
+                CONCAT(?contribAgentNameString, " ", str(?agentOrdinal))
+            ) as ?agentNameWithOrdinal)  .
+
+            BIND(IF (BOUND(?agentNameWithOrdinal), ?agentNameWithOrdinal, ?contribAgentNameString) as ?contribAgentName)
+
+         OPTIONAL {
+              ?workContrib a deich:MainEntry.
+              BIND(true AS ?mainEntry) .
+              OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
+                BIND(str(?nationLabelLang) AS ?nationLabel)
+                FILTER(lang(?nationLabelLang) = "no")
+              }
+         }
+
+         BIND (?contribAgentName AS ?name) .
+         BIND (IF (BOUND(?mainEntry), ?contribAgentName, ?thisIsAlwaysUnbound) AS ?mainEntryName) .
+         BIND(str(?contribRoleURI) AS ?role)
+         OPTIONAL { ?contribAgent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
+         OPTIONAL { ?contribAgent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
   }
+
   UNION {
       <__WORKURI__> deich:genre ?genre .
       ?genre a deich:Genre ;

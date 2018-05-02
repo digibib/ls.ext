@@ -12,6 +12,7 @@ import fieldQueryLink from '../utils/link'
 import {connect} from 'react-redux'
 
 import ClickableElement from '../components/ClickableElement'
+import { createLabelForPersonWithOrdinal } from '../utils/personNameWithOrdinal'
 
 class SearchResult extends React.Component {
   constructor (props) {
@@ -124,7 +125,7 @@ class SearchResult extends React.Component {
           <strong><FormattedMessage {...messages.subjects} /></strong>&nbsp;
           {result.subject.map((subject, i) => (
             <span key={subject} >
-                <Link to={fieldQueryLink('emne', subject)}>{subject}</Link>{(i < result.subject.length - 1) ? ', ' : null}
+                <Link to={fieldQueryLink('emne', createLabelForPersonWithOrdinal(subject) || subject)}>{createLabelForPersonWithOrdinal(subject) || subject}</Link>{(i < result.subject.length - 1) ? ', ' : null}
                 </span>
           ))}
         </p>

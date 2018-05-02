@@ -14,7 +14,7 @@ const Contributors = ({ contributors, intl }) => {
             <span className="content" key={agent.relativeUri + role}>
                 <Link
                   data-automation-id="work_contributor_link"
-                  to={fieldQueryLink('aktør', agent.name)}>{agent.subdivision ? `${agent.name} (${agent.subdivision})` : agent.name}
+                  to={fieldQueryLink('aktør', agent.linkField)}>{agent.linkLabel}
                 </Link>
               </span>
           )}

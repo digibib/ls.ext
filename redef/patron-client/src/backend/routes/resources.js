@@ -228,7 +228,7 @@ function transformWork (input) {
       publications: transformPublications(input.publications),
       serials: transformSerials(input),
       subtitle: input.subtitle,
-      subjects: input.subjects,
+      subjects: transformSubjects(input.subjects),
       uri: input.id,
       countryOfOrigin: input.nationality ? input.nationality.id : undefined,
       keys: input.key || []
@@ -283,6 +283,20 @@ function transformPublications (publications) {
   })
 }
 
+function getMassagedName (authority) {
+  let name = authority.name || authority.prefLabel || authority.mainTitle
+
+  if (authority.type === 'Person' && authority.ordinal) {
+    name += ` ${authority.ordinal}`
+  }
+
+  if (authority.specification) {
+    name += ` (${authority.specification})`
+  }
+
+  return name
+}
+
 function transformPublicationParts (input) {
   try {
     return input.map(inputPublicationPart => {
@@ -318,16 +332,62 @@ function transformContributors (input) {
       contributor.uri = contributor.id
       contributor.id = getId(contributor.id)
       contributor.relativeUri = relativeUri(contributor.uri)
-      if (contributor.specification) {
-        contributor.name += ` (${contributor.specification})`
-      }
+
       contributors[ inputContributor.role ] = contributors[ inputContributor.role ] || []
       contributors[ inputContributor.role ].push(contributor)
+
+      contributor.linkField = getMassagedName(contributor)
+      contributor.linkLabel = contributor.subdivision ? `${contributor.name} (${contributor.subdivision})` : getMassagedName(contributor)
     })
     return contributors
   } catch (error) {
     console.log(error)
     return {}
+  }
+}
+
+function transformSubjects (subjects) {
+  try {
+    return subjects.map(subject => {
+      let label = getMassagedName(subject)
+
+      if (subject.type === 'Event') {
+        if (subject.ordinal) {
+          label += ` (${subject.ordinal})`
+        }
+        if (subject.place) {
+          label += `. ${subject.place.prefLabel}`
+        }
+        if (subject.date) {
+          label += `, ${subject.date}`
+        }
+      }
+
+      if (subject.type === 'Work' && subject.contributors) {
+        if (subject.subtitle) {
+          label += ` : ${subject.subtitle}`
+        }
+        if (subject.partNumber) {
+          label += `. ${subject.partNumber}`
+        }
+        if (subject.partTitle) {
+          label += `. ${subject.partTitle}`
+        }
+
+        const contribs = subject.contributors.filter(contrib => contrib.type.includes('MainEntry'))
+        if (contribs.length >= 1) {
+          label += ` / ${contribs[0].agent.name}`
+        }
+      }
+
+      subject.linkField = getMassagedName(subject)
+      subject.linkLabel = label
+
+      return subject
+    })
+  } catch (error) {
+    console.log(error)
+    return []
   }
 }
 
@@ -393,7 +453,7 @@ function transformBy (contributors) {
       .concat(contributors[ 'http://data.deichman.no/role#performer' ])
       .filter(by => by)
       .filter(by => by.mainEntry)
-      .map(by => by.name)
+      .map(by => getMassagedName(by))
   } catch (error) {
     console.log(error)
     return []
