@@ -3,12 +3,20 @@ import React from 'react'
 import { defineMessages } from 'react-intl'
 import MetaItem from '../../MetaItem'
 
+import { Link } from 'react-router'
+import fieldQueryLink from '../../../utils/link'
+
 const CompositionTypes = ({ compositionTypes }) => {
   if (compositionTypes.length > 0) {
     return (
       <MetaItem label={messages.labelCompositionTypes} data-automation-id="work_compositionTypes">
         <br />
-        {compositionTypes.join(', ')}
+        {compositionTypes.map((type, index) =>
+          <span key={type}>
+            <Link to={fieldQueryLink('komposisjonstype', type)}>{type}</Link>
+            { index + 1 === compositionTypes.length ? '' : ', '}
+          </span>
+        )}
       </MetaItem>
     )
   } else {

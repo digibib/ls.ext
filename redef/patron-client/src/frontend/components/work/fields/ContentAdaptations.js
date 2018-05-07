@@ -2,13 +2,22 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import MetaItem from '../../MetaItem'
+import { Link } from 'react-router'
+import fieldQueryLink from '../../../utils/link'
 
 const ContentAdaptations = ({ contentAdaptations, intl }) => {
   if (contentAdaptations.length > 0) {
     return (
       <MetaItem label={messages.labelContentAdaptations} data-automation-id="work_contentAdaptations">
         <br />
-        {contentAdaptations.map(contentAdaptation => intl.formatMessage({ id: contentAdaptation })).join(', ')}
+        {contentAdaptations.map((contentAdaptation, index) =>
+          <span key={contentAdaptation.id}>
+            <Link to={fieldQueryLink('tilpassetform', intl.formatMessage({id: contentAdaptation}))}>
+              { intl.formatMessage({ id: contentAdaptation }) }
+            </Link>
+           {index + 1 === contentAdaptations.length ? '' : ', '}
+          </span>
+        )}
       </MetaItem>
     )
   } else {
