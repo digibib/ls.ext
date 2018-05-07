@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import expect from 'expect'
 import {buildQuery, translateFieldTerms} from '../../src/backend/utils/searchBuilder'
-//import {queryFieldTranslations} from '../../src/frontend/constants/Constants'
+// import {queryFieldTranslations} from '../../src/frontend/constants/Constants'
 
 function advancedQuery (queryWantForWorkLevel, queryWantedForPubLevel, boolOperator, options) {
   options = options || {}
