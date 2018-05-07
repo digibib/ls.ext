@@ -1272,7 +1272,7 @@ describe('searchBuilder', () => {
       )
     })
 
-    it('should map all scoped translations to themselves', () => {
+    /*it('should map all scoped translations to themselves', () => {
       Object.keys(queryFieldTranslations).forEach((key) => {
         const translationSpec = queryFieldTranslations[ key ]
         if (translationSpec.scope) {
@@ -1285,6 +1285,7 @@ describe('searchBuilder', () => {
         }
       })
     })
+    */
   })
 
   describe('aggregations', () => {
