@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 class ClickableElement extends React.Component {
   constructor (props) {
@@ -11,7 +12,7 @@ class ClickableElement extends React.Component {
     const { onClickAction, onClickArguments } = this.props
     event.preventDefault()
     event.stopPropagation()
-    onClickAction(...Array.isArray(onClickArguments) ? onClickArguments : [ onClickArguments ])
+    onClickAction(...((Array.isArray(onClickArguments) ? onClickArguments : [ onClickArguments ])))
   }
 
   handleKey (event) {

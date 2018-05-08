@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { defineMessages, FormattedMessage } from 'react-intl'
 import AdditionalInformationContent from './AdditionalInformationContent'
 import ClickableElement from '../ClickableElement'

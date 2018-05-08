@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import NonIETransitionGroup from '../components/NonIETransitionGroup'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'

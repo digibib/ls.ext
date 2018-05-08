@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import {matchPattern} from 'react-router/lib/PatternUtils'
 import Tab from './Tab'
 

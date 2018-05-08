@@ -1,7 +1,9 @@
 /**
  * Created by Nikolai on 12/09/16.
  */
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+
+import React from 'react'
 import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { injectIntl, intlShape, FormattedMessage } from 'react-intl'

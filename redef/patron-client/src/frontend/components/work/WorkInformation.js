@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import MediaQuery from 'react-responsive'
 
 import Author from './fields/Author'

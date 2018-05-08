@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'
 import MetaItem from '../../MetaItem'
 

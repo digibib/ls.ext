@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import NonIETransitionGroup from './NonIETransitionGroup'
 import {Link} from 'react-router'
 import {push} from 'react-router-redux'

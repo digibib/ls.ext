@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { bindActionCreators } from 'redux'
 import { reduxForm } from 'redux-form'
 import { injectIntl, intlShape, defineMessages } from 'react-intl'

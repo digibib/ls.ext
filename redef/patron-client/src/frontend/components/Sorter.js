@@ -1,6 +1,7 @@
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import React, {PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import * as ResourceActions from '../actions/ResourceActions'
 import {defineMessages, injectIntl, intlShape} from 'react-intl'
 

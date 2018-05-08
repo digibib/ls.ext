@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import Constants from '../constants/Constants'
 import Item from './Item'

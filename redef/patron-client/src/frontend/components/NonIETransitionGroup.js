@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import { CSSTransitionGroup } from 'react-transition-group'
 
 import isIe from '../utils/isIe'
 
@@ -14,7 +14,7 @@ const NonIETransitionGroup = (props) => {
     })
     return React.createElement(component, props)
   } else {
-    return <ReactCSSTransitionGroup {...props} />
+    return <CSSTransitionGroup {...props} />
   }
 }
 
