@@ -14,7 +14,7 @@ const storage = compose(
 )(adapter(window.localStorage))
 
 // Add events we want to broadcast to Google Tag Manager to this array:
-const broadcastableEvents = [types.REGISTRAION_SUCCESS, types.REGISTRAION_FAILURE]
+const broadcastableEvents = [types.REGISTRATION_SUCCESS, types.REGISTRATION_FAILURE]
 
 const analytics = () => next => action => {
   if (broadcastableEvents.includes(action.type)) {
