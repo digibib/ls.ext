@@ -81,7 +81,7 @@
     "react-hot-loader": "3.0.0-beta.6",
     "react-intl": "2.1.5",
     "react-modal": "1.5.2",
-    "react-paginate": "git+https://github.com/digibib/react-paginate.git#550cc7f6717d76d4994303aae90b2efe83e8d612",
+    "react-paginate": "git+https://github.com/digibib/react-paginate.git#92682bf7386458abf6089c52ecf91b28b147d955",
     "react-redux": "4.4.5",
     "react-responsive": "1.2.1",
     "react-router": "2.8.1",
