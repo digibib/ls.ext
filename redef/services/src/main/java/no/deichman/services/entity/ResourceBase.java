@@ -37,7 +37,7 @@ public abstract class ResourceBase {
     }
 
     private String elasticSearchBaseUrl() {
-        return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://elasticsearch:9200");
+        return Optional.ofNullable(getConfig() != null ? getConfig().getInitParameter(ELASTIC_SEARCH_URL) : null).orElse("http://sibyl:1666");
     }
 
     private static InMemoryRepository staticInMemoryRepository;

@@ -35,7 +35,7 @@ module.exports = (app) => {
   app.get('/q', (request, response) => {
     const queryString = request.originalUrl.substr(request.originalUrl.indexOf('?') + 1)
 
-    fetch('http://elasticsearch:9200/search/work/_search', {
+    fetch('http://sibyl:1666/search/work/_search', {
       method: 'POST',
       body: JSON.stringify(searchBuilder.buildQuery(queryString), null, 2)
     }).then(res => {

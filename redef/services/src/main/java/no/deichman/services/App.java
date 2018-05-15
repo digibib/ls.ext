@@ -36,7 +36,7 @@ public final class App {
     private Server jettyServer;
     private String kohaPort;
     private boolean inMemoryRDFRepository;
-    private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://elasticsearch:9200");
+    private String elasticSearchUrl = System.getProperty("ELASTICSEARCH_URL", "http://sibyl:1666");
     private String z3950Endpoint;
 
     public App(int port, String kohaPort, boolean inMemoryRDFRepository, String z3950Endpoint) {
