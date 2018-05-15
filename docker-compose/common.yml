@@ -108,13 +108,23 @@ services:
       MYSQL_PASSWORD: "${KOHA_ADMINPASS:-secret}"
       MYSQL_ROOT_PASSWORD: "${KOHA_ADMINPASS:-secret}"
       MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
+      SIBYL_USER: "${SIBYL_USER:-admin}"
+      SIBYL_PASSWORD: "${SIBYL_PASSWORD:-admin}"
     volumes:
       - "koha_mysql_data:/var/lib/mysql"
+      #- ./setup_sibyl.sql:/docker-entrypoint-initdb.d/setup_sibyl.sql
     logging:
       driver: "json-file"
       options:
         max-size: "1m"
         max-file: "2"
+
+  sibyl:
+    depends_on:
+      - koha_mysql
+    image: alpine
+    command:
+      - "sh -c 'sleep 100"
 
   catalinker:
     container_name: catalinker
@@ -150,6 +160,7 @@ services:
       KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
       GITREF: "${GITREF:-0}"
       BUILD_TAG: "${BUILD_TAG:-0}"
+      ELASTICSEARCH_URL: "sibyl:1666"
     logging:
       driver: "json-file"
       options:
@@ -264,27 +275,27 @@ services:
         max-size: "1m"
         max-file: "2"
 
-  koha_indexer:
-    container_name: koha_indexer
-    image: "digibib/koha-indexer:8fe76d382ea8333a7392a7c6f22ae181da28fd99"
-    networks:
-      - backend
-    command:
-      - "/koha-indexer"
-      - "-db=/var/lib/state/koharecords.db"
-      - "-sparql=http://fuseki:3030/ds/update"
-      - "-freq=15m"
-      - "-update"
-      - "-initial-import"
-      - "-services=http://services:8005/search/publication/reindex"
-    environment:
-      KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
-      KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
-      KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
-    volumes:
-      - "koha_state:/var/lib/state"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
+  # koha_indexer:
+  #   container_name: koha_indexer
+  #   image: "digibib/koha-indexer:8fe76d382ea8333a7392a7c6f22ae181da28fd99"
+  #   networks:
+  #     - backend
+  #   command:
+  #     - "/koha-indexer"
+  #     - "-db=/var/lib/state/koharecords.db"
+  #     - "-sparql=http://fuseki:3030/ds/update"
+  #     - "-freq=15m"
+  #     - "-update"
+  #     - "-initial-import"
+  #     - "-services=http://services:8005/search/publication/reindex"
+  #   environment:
+  #     KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
+  #     KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
+  #     KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
+  #   volumes:
+  #     - "koha_state:/var/lib/state"
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "1m"
+  #       max-file: "2"
