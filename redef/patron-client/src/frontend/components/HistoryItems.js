@@ -17,15 +17,18 @@ class HistoryItems extends React.Component {
             </div>
           : null }
         <h1><FormattedMessage {...messages.history} /></h1>
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={this.props.loadItems}
-          hasMore={this.props.hasMoreItems}
-          threshold={10}
-          loader={<div className="loader"><FormattedMessage {...messages.loading} /></div>}
-        >
-          {items}
-        </InfiniteScroll>
+        {items.length > 0 || this.props.hasMoreItems
+          ? <InfiniteScroll
+              pageStart={0}
+              loadMore={this.props.loadItems}
+              hasMore={this.props.hasMoreItems}
+              threshold={10}
+              loader={<div className="loader"><FormattedMessage {...messages.loading} /></div>}
+            >
+              {items}
+            </InfiniteScroll>
+          : <p><FormattedMessage {...messages.noItems} /></p>
+        }
       </section>
     )
   }
@@ -49,6 +52,11 @@ export const messages = defineMessages({
     id: 'History.loading',
     description: 'Message to show when loading history items',
     defaultMessage: 'Loading ...'
+  },
+  noItems: {
+    id: 'History.noItems',
+    description: 'Message to show when user has no history items yet',
+    defaultMessage: "You don't have any history yet. Go borrow some books!"
   }
 })
 

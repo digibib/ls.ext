@@ -94,6 +94,7 @@ export default {
   'History.deleteHistoryExplainer': 'Du er i ferd med å slette all historikk. Dette betyr at du ikke lenger vil kunne se hva du tidigere har lånt.<br/>Denne handlingen kan ikke angres.',
   'History.checkedIn': 'Levert',
   'History.loading': 'Laster flere...',
+  'History.noItems': 'Du har ikke noe historikk ennå. Lån noen bøker!',
   'Navigation.loggedInAs': 'Logget inn som:',
   'Navigation.logIn': 'Logg inn',
   'Navigation.logout': 'Logg ut',
