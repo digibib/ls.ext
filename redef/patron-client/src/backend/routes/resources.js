@@ -213,7 +213,7 @@ function transformWork (input) {
       workSeries: workSeries,
       deweyNumber: input.hasClassification ? input.hasClassification.hasClassificationNumber : undefined,
       fictionNonfiction: input.fictionNonfiction,
-      genres: input.genres,
+      genres: transformGenres(input.genres),
       hasSummary: input.hasSummary,
       id: getId(input.id),
       instrumentations: transformInstrumentation(input.hasInstrumentation),
@@ -380,10 +380,28 @@ function transformSubjects (subjects) {
         }
       }
 
-      subject.linkField = getMassagedName(subject)
+      let linkField = getMassagedName(subject)
+      if (subject.type === 'Work' && subject.contributors && subject.partTitle) {
+        linkField += `. ${subject.partTitle}`
+      }
+
+      subject.linkField = linkField
       subject.linkLabel = label
 
       return subject
+    })
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}
+
+function transformGenres (genres) {
+  try {
+    return genres.map(genre => {
+      genre.linkField = getMassagedName(genre)
+      genre.linkLabel = getMassagedName(genre)
+      return genre
     })
   } catch (error) {
     console.log(error)
@@ -457,7 +475,11 @@ function transformBy (contributors) {
 
 function transformCompositionType (hasCompositionType = []) {
   try {
-    return hasCompositionType.map(compositionType => compositionType.prefLabel)
+    return hasCompositionType.map(compositionType => {
+      compositionType.linkField = getMassagedName(compositionType)
+      compositionType.linkLabel = getMassagedName(compositionType)
+      return compositionType
+    })
   } catch (error) {
     console.log(error)
     return []

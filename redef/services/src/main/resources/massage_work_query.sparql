@@ -66,9 +66,21 @@ WHERE {
                 BIND(IF (BOUND(?subjectNameWithOrdinal), ?subjectNameWithOrdinal, ?subjectNameString) as ?subjectName) .}
 
   UNION { <__WORKURI__> deich:subject ?subject .
-                ?subject deich:prefLabel ?subjectName  . }
+            ?subject deich:prefLabel ?subjectNameString  .
+            OPTIONAL {?subject deich:specification ?subjectSpecification . }
+
+            BIND(IF (BOUND(?subjectSpecification),
+                CONCAT(?subjectNameString, " (", str(?subjectSpecification), ")"),
+                ?subjectNameString) as ?subjectName) .
+        }
+
   UNION { <__WORKURI__> deich:subject ?subject .
-                 ?subject deich:mainTitle ?subjectName  . }
+            ?subject deich:mainTitle ?subjectNameString  .
+            OPTIONAL { ?subject a deich:Work .
+                ?subject deich:partTitle ?subjectPT }
+
+            BIND(IF (BOUND(?subjectPT), CONCAT(?subjectNameString, " ", ?subjectPT), ?subjectNameString) as ?subjectName)  .
+        }
   UNION { <__WORKURI__> deich:untranscribedTitle ?untranscribedTitle }
   UNION { <__WORKURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
   UNION { <__WORKURI__> deich:mainTitle ?mainTitleO . BIND(str(?mainTitleO) as ?mainTitle) }
@@ -122,7 +134,10 @@ WHERE {
       BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
   }
   UNION {  <__WORKURI__> deich:hasCompositionType ?compType .
-           ?compType deich:prefLabel ?compTypeLabel .
+           ?compType deich:prefLabel ?compTypeString .
+
+           OPTIONAL { ?compType deich:specification ?compTypeSpec }
+           BIND(IF(BOUND(?compTypeSpec), CONCAT(?compTypeString, " (", ?compTypeSpec, ")"), ?compTypeString) AS ?compTypeLabel)
   }
   UNION { <__WORKURI__>  deich:fictionNonfiction ?ficturi .
             BIND(str(?ficturi) AS ?fictionNonfiction)
@@ -135,7 +150,9 @@ WHERE {
   }
   UNION { <__WORKURI__> deich:hasInstrumentation ?instrumentation.
            ?instrumentation deich:hasInstrument ?instrument .
-           ?instrument deich:prefLabel ?inst
+           ?instrument deich:prefLabel ?instName
+           OPTIONAL { ?instrument deich:specification ?instrumentSpec }
+           BIND(IF(BOUND(?instrumentSpec), CONCAT(?instName, " (", ?instrumentSpec, ")"), ?instName) AS ?inst)
   }
   UNION { <__WORKURI__> deich:biography ?b .
            ?b rdfs:label ?bioLabel .

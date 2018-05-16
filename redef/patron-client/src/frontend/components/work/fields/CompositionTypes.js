@@ -12,8 +12,8 @@ const CompositionTypes = ({ compositionTypes }) => {
       <MetaItem label={messages.labelCompositionTypes} data-automation-id="work_compositionTypes">
         <br />
         {compositionTypes.map((type, index) =>
-          <span key={type}>
-            <Link to={fieldQueryLink('komposisjonstype', type)}>{type}</Link>
+          <span key={type.linkField}>
+            <Link to={fieldQueryLink('komposisjonstype', type.linkField)}>{type.linkLabel}</Link>
             { index + 1 === compositionTypes.length ? '' : ', '}
           </span>
         )}
