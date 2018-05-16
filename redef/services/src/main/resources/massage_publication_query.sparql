@@ -13,9 +13,6 @@ CONSTRUCT {
                deich:format ?format ;
                deich:desc ?desc ;
                deich:publicationYear ?pubPublicationYear ;
-               deich:homeBranches ?homeBranch ;
-               deich:availableBranches ?availBranch ;
-               deich:numItems ?numItems ;
                deich:contributor ?contrib ;
                deich:hasImage  ?img ;
                deich:mediaType ?pubMediaType ;
@@ -80,9 +77,6 @@ WHERE {
   UNION { <__PUBLICATIONURI__> deich:variantTitle ?pubVarTitle }
   UNION { <__PUBLICATIONURI__> deich:partNumber ?pubPartNumber }
   UNION { <__PUBLICATIONURI__> deich:untranscribedTitle ?untranscribedTitle }
-  UNION { <__PUBLICATIONURI__> deich:hasHomeBranch ?homeBranch }
-  UNION { <__PUBLICATIONURI__> deich:hasAvailableBranch ?availBranch }
-  UNION { <__PUBLICATIONURI__> deich:hasNumItems ?numItems }
   UNION { <__PUBLICATIONURI__> deich:isbn ?isbn }
   UNION { <__PUBLICATIONURI__> deich:ismn ?ismn }
   UNION { <__PUBLICATIONURI__> deich:hasEan ?ean }
