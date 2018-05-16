@@ -446,12 +446,7 @@ function transformSerialIssues (input) {
 
 function transformBy (contributors) {
   try {
-    return []
-      .concat(contributors[ 'http://data.deichman.no/role#author' ])
-      .concat(contributors[ 'http://data.deichman.no/role#director' ])
-      .concat(contributors[ 'http://data.deichman.no/role#composer' ])
-      .concat(contributors[ 'http://data.deichman.no/role#performer' ])
-      .filter(by => by)
+    return Array.prototype.concat.apply([], Object.values(contributors))
       .filter(by => by.mainEntry)
       .map(by => getMassagedName(by))
   } catch (error) {
