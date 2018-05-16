@@ -21,15 +21,6 @@
       "@id": "deichman:format",
       "@container": "@set"
     },
-    "homeBranches": {
-      "@id": "deichman:homeBranches",
-      "@container": "@set"
-    },
-    "availableBranches": {
-      "@id": "deichman:availableBranches",
-      "@container": "@set"
-    },
-    "numItems": "deichman:numItems",
     "Publication": "deichman:Publication",
     "partTitle": "deichman:partTitle",
     "language": "deichman:language",
