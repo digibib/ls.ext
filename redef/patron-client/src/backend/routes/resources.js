@@ -286,8 +286,20 @@ function transformPublications (publications) {
 function getMassagedName (authority) {
   let name = authority.name || authority.prefLabel || authority.mainTitle
 
-  if (authority.type === 'Person' && authority.ordinal) {
+  if ((authority.type === 'Person' || authority.type === 'Event') && authority.ordinal) {
     name += ` ${authority.ordinal}`
+  }
+
+  if (authority.type === 'Corporation' && authority.subdivision) {
+    name += ` ${authority.subdivision}`
+  }
+
+  if (authority.type === 'Event' && authority.place) {
+    name += ` ${authority['http://migration.deichman.no/place']}`
+  }
+
+  if (authority.type === 'Event' && authority.date) {
+    name += ` ${authority.date}`
   }
 
   if (authority.specification) {
@@ -351,18 +363,7 @@ function transformSubjects (subjects) {
     return subjects.map(subject => {
       let label = getMassagedName(subject)
 
-      if (subject.type === 'Event') {
-        if (subject.ordinal) {
-          label += ` (${subject.ordinal})`
-        }
-        if (subject.place) {
-          label += `. ${subject.place.prefLabel}`
-        }
-        if (subject.date) {
-          label += `, ${subject.date}`
-        }
-      }
-
+      // TODO what does the subject.contributors entail here?
       if (subject.type === 'Work' && subject.contributors) {
         if (subject.subtitle) {
           label += ` : ${subject.subtitle}`
@@ -381,6 +382,7 @@ function transformSubjects (subjects) {
       }
 
       let linkField = getMassagedName(subject)
+
       if (subject.type === 'Work' && subject.contributors && subject.partTitle) {
         linkField += `. ${subject.partTitle}`
       }

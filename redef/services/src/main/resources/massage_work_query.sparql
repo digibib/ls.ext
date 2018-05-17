@@ -3,6 +3,7 @@ PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
 PREFIX  duo: <http://data.deichman.no/utility#>
 PREFIX  mediaType: <http://data.deichman.no/mediaType#>
+PREFIX  migration: <http://migration.deichman.no/>
 
 CONSTRUCT {
  <__WORKURI__> a deich:Work ;
@@ -53,33 +54,65 @@ WHERE {
            BIND(str(?litLabel) AS ?litform)
            FILTER(lang(?litLabel) = "no") }
 
-  UNION { <__WORKURI__> deich:subject ?person .
-            ?person deich:name ?subjectNameString .
-                OPTIONAL { ?person deich:ordinal ?subjectOrdinal }
-                OPTIONAL { ?person deich:specification ?subjectSpecification }
+  # This union matches the following types: Person, Corporation
+  # Massage to the form: name[ ordinal][ subdivision][ (specification)
+  UNION { <__WORKURI__> deich:subject ?subject .
+            ?subject deich:name ?subjectNameStep1 .
+                OPTIONAL { ?subject deich:ordinal ?subjectOrdinal }
+                OPTIONAL { ?subject deich:subdivision ?subjectSubdivision }
+                OPTIONAL { ?subject deich:specification ?subjectSpecification }
+
+                BIND(IF (BOUND(?subjectOrdinal),
+                    CONCAT(?subjectNameStep1, " ", str(?subjectOrdinal)),
+                    ?subjectNameStep1) as ?subjectNameStep2) .
+
+                BIND(IF (BOUND(?subjectSubdivision),
+                    CONCAT(?subjectNameStep2, " ", str(?subjectSubdivion)),
+                    ?subjectNameStep2) as ?subjectNameStep3) .
 
                 BIND(IF (BOUND(?subjectSpecification),
-                    CONCAT(?subjectNameString, " ", str(?subjectOrdinal), " (", str(?subjectSpecification), ")"),
-                    CONCAT(?subjectNameString, " ", str(?subjectOrdinal))
-                ) as ?subjectNameWithOrdinal)  .
-
-                BIND(IF (BOUND(?subjectNameWithOrdinal), ?subjectNameWithOrdinal, ?subjectNameString) as ?subjectName) .}
-
-  UNION { <__WORKURI__> deich:subject ?subject .
-            ?subject deich:prefLabel ?subjectNameString  .
-            OPTIONAL {?subject deich:specification ?subjectSpecification . }
-
-            BIND(IF (BOUND(?subjectSpecification),
-                CONCAT(?subjectNameString, " (", str(?subjectSpecification), ")"),
-                ?subjectNameString) as ?subjectName) .
+                    CONCAT(?subjectNameStep3, " (", str(?subjectSpecification), ")"),
+                    ?subjectNameStep3
+                ) as ?subjectName)  .
         }
 
+  # This union matches the following types: (General), Event
+  # Massage to the form: name[ ordinal][ date][ place][ date][ (specification)
+  # emne:"Olympiske vinterleker 19 2002"
   UNION { <__WORKURI__> deich:subject ?subject .
-            ?subject deich:mainTitle ?subjectNameString  .
+            ?subject deich:prefLabel ?subjectNameStep1  .
+            OPTIONAL { ?subject deich:ordinal ?subjectOrdinal }
+            OPTIONAL { ?subject deich:specification ?subjectSpecification }
+            OPTIONAL { ?subject deich:date ?subjectDate }
+            OPTIONAL { ?subject migration:place ?subjectPlace }
+
+            BIND(IF (BOUND(?subjectOrdinal),
+                CONCAT(?subjectNameStep1, " ", str(?subjectOrdinal)),
+                ?subjectNameStep1) as ?subjectNameStep2) .
+
+            BIND(IF (BOUND(?subjectPlace),
+                CONCAT(?subjectNameStep2, " ", str(?subjectPlace)),
+                ?subjectNameStep2) as ?subjectNameStep3) .
+
+            BIND(IF (BOUND(?subjectDate),
+                CONCAT(?subjectNameStep3, " ", str(?subjectDate)),
+                ?subjectNameStep3) as ?subjectNameStep4) .
+
+            BIND(IF (BOUND(?subjectSpecification),
+                CONCAT(?subjectNameStep4, " (", str(?subjectSpecification), ")"),
+                ?subjectNameStep4
+                ) as ?subjectName)
+        }
+
+  # subject types with mainTitle: Work, Place
+  UNION { <__WORKURI__> deich:subject ?subject .
+            ?subject deich:mainTitle ?subjectNameString .
             OPTIONAL { ?subject a deich:Work .
                 ?subject deich:partTitle ?subjectPT }
 
-            BIND(IF (BOUND(?subjectPT), CONCAT(?subjectNameString, " ", ?subjectPT), ?subjectNameString) as ?subjectName)  .
+            BIND(IF (BOUND(?subjectPT),
+                CONCAT(?subjectNameString, " ", ?subjectPT),
+                ?subjectNameString) as ?subjectName)  .
         }
   UNION { <__WORKURI__> deich:untranscribedTitle ?untranscribedTitle }
   UNION { <__WORKURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }

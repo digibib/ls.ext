@@ -65,7 +65,7 @@ public class WorkModelToIndexMapperTest {
             + "            \"workSeriesMainTitle\","
             + "            \"workSeriesPartTitle\"\n"
             + "        ],\n"
-            + "        \"compositionType\": \"Opera\",\n"
+            + "        \"compositionType\": \"Opera (It isn't over until the fat lady sins)\",\n"
             + "        \"fictionNonfiction\": \"http://data.deichman.no/fictionNonfiction#fiction\",\n"
             + "        \"workTypeLabel\": \"Litteratur\",\n"
             + "        \"dewey\": \"123.456\",\n"
