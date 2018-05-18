@@ -60,6 +60,9 @@ const WorkRelations = ({ workRelations, intl }) => {
                     data-automation-id="work_relation_link"
                     to={relation.relativeUri} >
                     {relationLink(title(relation), mainContributorName(relation.contributors), relation.numberInRelation)}
+                    {relation.literaryForms
+                      .map(litForm => "(" + intl.formatMessage({ id: litForm.id }) + ")")
+                      .join(',')}
                   </Link >
                 }
                 return (
