@@ -35,6 +35,7 @@ $green: #0E8A17 !default;
 $yellow: #FFFF00 !default;
 $blue: #0000FF !default;
 $headGreen: #25FFA3;
+$red: #FE2E64;
 
 // Variables - rhythm (replacement for compass function)
 // --------------------------------------------------------
@@ -518,8 +519,6 @@ button {
 .small-blue-btn a, .small-blue-btn a:hover {
   text-decoration: none;
 }
-
-
 
 // atoms - checkbox
 // --------------------------------------------------------
@@ -2653,7 +2652,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   font-weight: bold;
 }
 
-
 .loan {
   margin-top: $rhythm4;
 }
@@ -2675,6 +2673,10 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 .loan .loan-header .renew-all-button {
   align-self: center;
   background-color: $green;
+}
+
+.loan .loan-header .renew-all-button:disabled {
+  opacity: 0.4;
 }
 
 .loan .loan-header .renew-all-button:disabled {
@@ -2795,6 +2797,17 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
   .loan .loan-header h1 {
     width: 83.05085%;
+  }
+
+  .fine {
+    border: dashed 1px red;
+    background-color: #FBEFF5;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+
+  .fine-info {
+    color: red;
   }
 
 }

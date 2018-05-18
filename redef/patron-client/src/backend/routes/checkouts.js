@@ -1,3 +1,5 @@
+const isofetch = require('isomorphic-fetch')
+const parseString = require('xml2js').parseString
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 
@@ -41,4 +43,71 @@ module.exports = (app) => {
     }
     return msg
   }
+
+  async function xml2jsPromiseParser (xml) {
+    return new Promise(function (resolve, reject) {
+      parseString(xml, function (err, result) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  }
+
+  /**
+  * Register transaction at Nets. The received transactionId can be used as a key to the transaction
+  */
+  app.post('/api/v1/checkouts/start-pay-fine', jsonParser, async (request, response) => {
+    const merchantId = process.env.NETS_MERCHANT_ID
+    const token = process.env.NETS_TOKEN
+    const netsUrl = process.env.NETS_URL
+    const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${request.body.fineId}&amount=100&CurrencyCode=NOK&redirectUrl=http://localhost:8000/profile/payment-response/`
+    const terminalUrl = `${netsUrl}/Terminal/default.aspx`
+    try {
+      const res = await isofetch(registerUrl)
+      const xmlResponse = await res.text()
+      const jsonResponse = await xml2jsPromiseParser(xmlResponse)
+      const transactionId = jsonResponse.RegisterResponse.TransactionId
+      // TODO Post transactionId to Koha here to persist it
+      response.send({
+        transactionId: transactionId,
+        merchantId: merchantId,
+        terminalUrl: terminalUrl
+      })
+    } catch (error) {
+      console.log(error)
+      response.sendStatus(500)
+    }
+  })
+
+  /**
+  * Process transaction at Nets. Operation = SALE to capture instantly
+  */
+  app.put('/api/v1/checkouts/process-fine', jsonParser, async (request, response) => {
+    const merchantId = process.env.NETS_MERCHANT_ID
+    const token = process.env.NETS_TOKEN
+    const netsUrl = process.env.NETS_URL
+    const processUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&transactionId=${request.body.transactionId}&operation=SALE`
+    try {
+      const res = await isofetch(processUrl)
+      const xmlResponse = await res.text()
+      const jsonResponse = await xml2jsPromiseParser(xmlResponse)
+      const authorizationId = jsonResponse.ProcessResponse.AuthorizationId
+      const batchNumber = jsonResponse.ProcessResponse.BatchNumber
+      const responseCode = jsonResponse.ProcessResponse.ResponseCode
+      const transactionId = jsonResponse.ProcessResponse.TransactionId
+      // TODO Send response data to Koha for persisting, ie authorizationId, batchNumber, responseCode
+      response.send({
+        transactionId: transactionId,
+        responseCode: responseCode,
+        authorizationId: authorizationId,
+        batchNumber: batchNumber
+      })
+    } catch (error) {
+      console.log(error)
+      response.sendStatus(500)
+    }
+  })
 }

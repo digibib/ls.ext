@@ -171,6 +171,13 @@ module.exports = (app) => {
           throw Error(res.statusText)
         }
       }).then(json => {
+        const loans = json.loans
+        loans.forEach(loan => {
+          if (loan.id % 2 === 0) {
+            loan.isFine = true
+            loan.fineId = '12345'
+          }
+        })
         response.send(json)
       })
       .catch(error => {

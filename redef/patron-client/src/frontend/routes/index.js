@@ -8,6 +8,7 @@ import Work from '../containers/Work'
 import Person from '../containers/Person'
 import MyPage from '../containers/MyPage'
 import UserLoans from '../containers/UserLoans'
+import PaymentResponse from '../containers/PaymentResponse'
 import UserInfo from '../containers/UserInfo'
 import UserSettings from '../containers/UserSettings'
 import Register from '../containers/Register'
@@ -55,6 +56,7 @@ export default function (store) {
         <Route path="history" component={UserHistory} />
         <Route path="info" component={UserInfo} />
         <Route path="settings" component={UserSettings} />
+        <Route path="payment-response" component={PaymentResponse} />
       </Route>
     </Route>
   )

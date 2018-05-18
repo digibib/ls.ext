@@ -172,6 +172,8 @@ services:
       KOHA_API_USER: "${KOHA_API_USER:-api}"
       KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
       RECAPTCHA_SECRET: "${RECAPTCHA_SECRET}"
+      NETS_MERCHANT_ID: "${NETS_MERCHANT_ID}"
+      NETS_TOKEN: "${NETS_TOKEN}"
     logging:
       driver: "json-file"
       options:

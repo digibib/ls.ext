@@ -291,17 +291,48 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderLoans () {
-    if ([ ...this.props.loansAndReservations.loans ].length > 0) {
+  renderLoansWithFines (loans, fineId) {
+    return (
+      <section className="loan">
+        <div className="loan-header">
+          <h1>
+            <FormattedMessage {...messages.yourLoansWithFine} />
+          </h1>
+          <p>
+            <FormattedMessage {...messages.payFineInformation} />
+          </p>
+          {this.renderPayFineButton(fineId)}
+          {this.renderRenewAllButton(true)}
+        </div>
+        <div className="loan fine">
+          {this.renderLoans(loans, true)}
+        </div>
+
+      </section>
+    )
+  }
+
+  renderLoansWithoutFines (loans, hasFines) {
+    return (
+      <section className="loan">
+        <div className="loan-header">
+          <h1>
+            <FormattedMessage {...messages.yourLoans} />
+          </h1>
+          {this.renderRenewAllButton(hasFines)}
+        </div>
+        <div className="loan">
+          {this.renderLoans(loans, hasFines)}
+        </div>
+      </section>
+    )
+  }
+
+  renderLoans (loans, withFines) {
+    if (loans.length > 0) {
       return (
-        <section className="loan">
-          <div className="loan-header">
-            <h1>
-              <FormattedMessage {...messages.yourLoans} />
-            </h1>
-            {this.renderRenewAllButton()}
-          </div>
-          {[ ...this.props.loansAndReservations.loans ].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).map(item => (
+        <div>
+          {loans.map(item => (
             <article key={item.id}
                      className="single-entry"
                      data-automation-id="UserLoans_loan"
@@ -321,26 +352,34 @@ class UserLoans extends React.Component {
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
-              <div className="flex-col due-date">
+              <div className={item.isFine ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
                 {item.renewalStatus === 'genericExtendLoanSuccess'
                   ? <span className="success">{this.renderDueDate(item)}</span>
                   : <span>{this.renderDueDate(item)}</span>}
               </div>
-              <div className="flex-col extend-msg">
-                {this.renderExtendLoanMessage(item)}
-              </div>
+              {item.isFine &&
+                <div className="flex-col extend-msg fine-info">
+                  <p>Knyttet til gebyr</p>
+                </div>
+              }
+              {!withFines &&
+                <div className="flex-col ">
+                  {this.renderExtendLoanMessage(item)}
+                </div>
+              }
+
               <div className="flex-col placeholder-column" />
               <div className="flex-col renew-button">
                 <ClickableElement onClickAction={this.props.loanActions.startExtendLoan}
                                   onClickArguments={item.id}>
-                  <button className="small-blue-btn" disabled={item.renewalStatus}>
+                  <button className="small-blue-btn" disabled={item.renewalStatus || withFines}>
                     <FormattedMessage {...messages.extendLoan} />
                   </button>
                 </ClickableElement>
               </div>
             </article>
           ))}
-        </section>
+        </div>
       )
     }
   }
@@ -388,13 +427,24 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderRenewAllButton () {
+  renderPayFineButton (fineId) {
+    return (
+      <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={fineId} >
+        <button className="small-blue-btn pay-fine-button"
+                data-automation-id="UserLoans_pay_fine_button">
+            <FormattedMessage {...messages.payFineButtonText} />
+        </button>
+      </ClickableElement>
+    )
+  }
+
+  renderRenewAllButton (withFines) {
     if ([ ...this.props.loansAndReservations.loans ].length > 0) {
       return (
         <ClickableElement onClickAction={this.props.loanActions.startExtendAllLoans}
                           onClickArguments={[this.props.loansAndReservations.loans]}>
           <button className="renew-all-button small-blue-btn"
-                  disabled={this.props.hasRequestedRenewAll}
+                  disabled={this.props.hasRequestedRenewAll || withFines}
                   data-automation-id="UserLoans_extend_all_loans_button">
               <FormattedMessage {...messages.renewAllLoans} />
           </button>
@@ -457,6 +507,17 @@ class UserLoans extends React.Component {
   }
 
   render () {
+    const loans = [ ...this.props.loansAndReservations.loans ]
+      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+      .filter(loan => loan.isFine !== true)
+    const loansWithFines = [ ...this.props.loansAndReservations.loans ]
+      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+      .filter(loan => loan.isFine === true)
+    let fineId = -1
+    if (loansWithFines.length > 0) {
+      fineId = loansWithFines[0].fineId
+    }
+    console.log('fineId', fineId)
     if (this.props.isRequestingLoansAndReservations) {
       return <div style={{textAlign: 'center'}}>
         <span data-automation-id="is_searching" className="loading-spinner">
@@ -469,10 +530,12 @@ class UserLoans extends React.Component {
     return (
       <div>
         {this.renderPickups()}
+        {loansWithFines.length > 0 &&
+           this.renderLoansWithFines(loansWithFines, fineId)}
+        {this.renderLoansWithoutFines(loans, loansWithFines.length > 0)}
+        {this.renderLoansFromRemoteLibraries()}
         {this.renderReservations()}
         {this.renderReservationsFromRemoteLibraries()}
-        {this.renderLoans()}
-        {this.renderLoansFromRemoteLibraries()}
       </div>
     )
   }
@@ -576,6 +639,11 @@ export const messages = defineMessages({
     description: 'The header over the current remote loans',
     defaultMessage: 'Your remote loans'
   },
+  yourLoansWithFine: {
+    id: 'UserLoans.yourLoansWithFine',
+    description: 'The header over the current loans with fine',
+    defaultMessage: 'Loans with fine'
+  },
   howToManageYourRemoteLoans: {
     id: 'UserLoans.howToManageYourRemoteLoans',
     description: 'Message explaining how to manage remote loans',
@@ -600,6 +668,16 @@ export const messages = defineMessages({
     id: 'UserLoans.renewAllLoans',
     description: 'The label for the renew all loans button',
     defaultMessage: 'Renew all loans'
+  },
+  payFineInformation: {
+    id: 'UserLoans.payFineInformation',
+    description: 'The label for the pay fine button',
+    defaultMessage: 'Pay fine'
+  },
+  payFineButtonText: {
+    id: 'UserLoans.payFineButtonText',
+    description: 'The label for the pay fine button',
+    defaultMessage: 'Pay fine 100-,'
   },
   approx: {
     id: 'UserLoans.approximately',

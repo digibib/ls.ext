@@ -81,3 +81,58 @@ export function extendLoan (checkoutId) {
     .catch(error => dispatch(extendLoanFailure(error, checkoutId)))
   }
 }
+
+export function requestStartPayFine (fineId) {
+  return {
+    type: types.REQUEST_START_PAY_FINE,
+    payload: {
+      fineId: fineId
+    }
+  }
+}
+
+export function startPayFineSuccess (fineId, transactionId, merchantId, terminalUrl) {
+  return dispatch => {
+    const url = `${terminalUrl}?merchantId=${merchantId}&transactionId=${transactionId}`
+    console.log('url ', url)
+    dispatch({
+      type: types.START_PAY_FINE_SUCCESS
+    })
+    window.location = url
+  }
+}
+
+export function startPayFineFailure (fineId, error) {
+  return dispatch => {
+    dispatch({
+      type: types.START_PAY_FINE_FAILURE,
+      payload: { message: error, fineId: fineId },
+      error: true
+    })
+  }
+}
+
+export function startPayFine (fineId) {
+  const url = '/api/v1/checkouts/start-pay-fine'
+  return dispatch => {
+    dispatch(requestStartPayFine(fineId))
+    return fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fineId: fineId })
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json().then(json => {
+          dispatch(startPayFineSuccess(fineId, json.transactionId, json.merchantId, json.terminalUrl))
+        })
+      } else {
+        dispatch(startPayFineFailure(fineId))
+      }
+    })
+    .catch(error => dispatch(startPayFineFailure(fineId, error)))
+  }
+}
