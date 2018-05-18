@@ -81,7 +81,7 @@ export function deleteHistory () {
       const newHistory = allLoadedHistory.filter(i => !ids.includes(i.id))
       dispatch(requestUpdateHistory(newHistory))
       dispatch(setCurrentLoadedNumber(newHistory.length))
-      dispatch(action(types.DELETE_HISTORY_SUCCESS))
+      dispatch(action(types.DELETE_HISTORY_SUCCESS, { numDeleted: ids.length }))
     }).catch(() => dispatch(deleteHistoryFailure(Errors.history.GENERIC_DELETE_HISTORY_ERROR)))
   }
 }

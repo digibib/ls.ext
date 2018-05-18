@@ -18,7 +18,8 @@ const broadcastableEvents = [
   types.REGISTRATION_SUCCESS,
   types.REGISTRATION_FAILURE,
   types.MANAGE_HISTORY_NOT_NOW,
-  types.REQUEST_MANAGE_HISTORY
+  types.REQUEST_MANAGE_HISTORY,
+  types.DELETE_HISTORY_SUCCESS
 ]
 
 const analytics = () => next => action => {
