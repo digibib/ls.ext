@@ -11,7 +11,7 @@ const ContentAdaptations = ({ contentAdaptations, intl }) => {
       <MetaItem label={messages.labelContentAdaptations} data-automation-id="work_contentAdaptations">
         <br />
         {contentAdaptations.map((contentAdaptation, index) =>
-          <span key={contentAdaptation.id}>
+          <span key={contentAdaptation}>
             <Link to={fieldQueryLink('tilpassetform', intl.formatMessage({id: contentAdaptation}))}>
               { intl.formatMessage({ id: contentAdaptation }) }
             </Link>

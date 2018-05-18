@@ -10,7 +10,7 @@ const FormatAdaptations = ({ formatAdaptations, intl }) => {
     return (
       <MetaItem label={messages.labelFormatAdaptations} data-automation-id="publication_formatAdaptations">
         {formatAdaptations.map((formatAdaptation, index) =>
-          <span key={formatAdaptation.id}>
+          <span key={formatAdaptation}>
             <Link to={fieldQueryLink('tilpassetform', intl.formatMessage({id: formatAdaptation}))}>
               { intl.formatMessage({ id: formatAdaptation }) }
             </Link>
