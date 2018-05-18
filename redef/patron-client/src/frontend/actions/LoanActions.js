@@ -102,7 +102,7 @@ export function startPayFineSuccess (fineId, transactionId, merchantId, terminal
   }
 }
 
-export function startPayFineFailure (fineId, error) {
+export function payFineFailure (fineId, error) {
   return dispatch => {
     dispatch({
       type: types.START_PAY_FINE_FAILURE,
@@ -130,9 +130,32 @@ export function startPayFine (fineId) {
           dispatch(startPayFineSuccess(fineId, json.transactionId, json.merchantId, json.terminalUrl))
         })
       } else {
-        dispatch(startPayFineFailure(fineId))
+        dispatch(payFineFailure(fineId))
       }
     })
     .catch(error => dispatch(startPayFineFailure(fineId, error)))
+  }
+}
+
+export function processFinePayment (transactionId) {
+  const url = '/api/v1/checkouts/process-fine-payment'
+  return dispatch => {
+    return fetch(url, {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ transactionId: transactionId })
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json().then(json => {
+          dispatch(processFinePaymentSuccess(json.transactionId, json.responseCode, json.authorizationId, json.batchNumber))
+        })
+      } else {
+        dispatch(payFineFailure(fineId))
+      }
+    })
   }
 }

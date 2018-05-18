@@ -63,7 +63,7 @@ module.exports = (app) => {
     const merchantId = process.env.NETS_MERCHANT_ID
     const token = process.env.NETS_TOKEN
     const netsUrl = process.env.NETS_URL
-    const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${request.body.fineId}&amount=100&CurrencyCode=NOK&redirectUrl=http://localhost:8000/profile/payment-response/`
+    const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${request.body.fineId}&amount=10000&CurrencyCode=NOK&redirectUrl=http://localhost:8000/profile/payment-response/`
     const terminalUrl = `${netsUrl}/Terminal/default.aspx`
     try {
       const res = await isofetch(registerUrl)
@@ -85,14 +85,15 @@ module.exports = (app) => {
   /**
   * Process transaction at Nets. Operation = SALE to capture instantly
   */
-  app.put('/api/v1/checkouts/process-fine', jsonParser, async (request, response) => {
+  app.put('/api/v1/checkouts/process-fine-payment', jsonParser, async (request, response) => {
     const merchantId = process.env.NETS_MERCHANT_ID
     const token = process.env.NETS_TOKEN
     const netsUrl = process.env.NETS_URL
-    const processUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&transactionId=${request.body.transactionId}&operation=SALE`
+    const processUrl = `${netsUrl}/Netaxept/Process.aspx?merchantId=${merchantId}&token=${token}&transactionId=${request.body.transactionId}&operation=SALE`
     try {
       const res = await isofetch(processUrl)
       const xmlResponse = await res.text()
+      console.log(xmlResponse)
       const jsonResponse = await xml2jsPromiseParser(xmlResponse)
       const authorizationId = jsonResponse.ProcessResponse.AuthorizationId
       const batchNumber = jsonResponse.ProcessResponse.BatchNumber

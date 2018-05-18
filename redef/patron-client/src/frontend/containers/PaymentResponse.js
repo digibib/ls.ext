@@ -1,9 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-// import {bindActionCreators} from 'redux'
+import {bindActionCreators} from 'redux'
 import {injectIntl} from 'react-intl'
 import QueryString from 'query-string'
+
+import * as LoanActions from '../actions/LoanActions'
 
 class PaymentResponse extends React.Component {
 
@@ -19,6 +21,7 @@ class PaymentResponse extends React.Component {
     const responseCode = QueryString.parse(this.props.location.search).responseCode
 
     // TODO action to save resonponse to backend -> backend will call nets with SALE process -> backend will save transaction status i Koha
+    this.props.loanActions.processFinePayment(transactionId)
   }
 
   render () {
@@ -40,7 +43,8 @@ class PaymentResponse extends React.Component {
 }
 
 PaymentResponse.propTypes = {
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
+  loanActions: PropTypes.object.isRequired,
 }
 
 function mapStateToProps (state) {
@@ -50,7 +54,8 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    dispatch: dispatch
+    dispatch: dispatch,
+    loanActions: bindActionCreators(LoanActions, dispatch)
   }
 }
 
