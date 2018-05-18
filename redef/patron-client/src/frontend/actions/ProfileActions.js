@@ -306,3 +306,5 @@ export function manageHistoryConsent (consent, previous) {
       .catch(error => dispatch(manageHistoryFailure(error)))
   }
 }
+
+export const notNow = () => action(types.MANAGE_HISTORY_NOT_NOW)
