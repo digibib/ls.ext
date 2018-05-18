@@ -26,13 +26,13 @@ class HistoryInfoModal extends React.Component {
   handleCancel (event) {
     event.preventDefault()
     this.props.profileActions.notNow()
-    this.props.profileActions.manageHistoryConsent(false)
+    this.props.profileActions.manageHistoryConsent(false, false, "popup")
     this.props.modalActions.hideModal()
   }
 
   handleKeepHistory (event) {
     event.preventDefault()
-    this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons)
+    this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons, "popup")
     this.props.modalActions.hideModal()
   }
 

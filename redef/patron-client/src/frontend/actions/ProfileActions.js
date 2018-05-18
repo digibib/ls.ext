@@ -251,7 +251,7 @@ export function fetchAllProfileData () {
   }
 }
 
-export const requestManageHistory = () => action(types.REQUEST_MANAGE_HISTORY)
+export const requestManageHistory = (payload) => action(types.REQUEST_MANAGE_HISTORY, payload)
 
 export const manageHistoryFailure = (error) => errorAction(types.MANAGE_HISTORY_FAILURE, error)
 
@@ -259,10 +259,10 @@ export function userHistory () {
   return requireLoginBeforeAction(showModal(ModalComponents.USER_HISTORY, { isSuccess: true }))
 }
 
-export function manageHistory (privacy, consent) {
+export function manageHistory (privacy, consent, origin) {
   const url = '/api/v1/profile/settings/history'
   return dispatch => {
-    dispatch(requestManageHistory())
+    dispatch(requestManageHistory({ keepHistory: privacy === 0, origin: origin}))
     return fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
@@ -283,10 +283,10 @@ export function manageHistory (privacy, consent) {
   }
 }
 
-export function manageHistoryConsent (consent, previous) {
+export function manageHistoryConsent (consent, previous, origin) {
   const url = '/api/v1/profile/settings/historyconsent'
   return dispatch => {
-    dispatch(requestManageHistory())
+    dispatch(requestManageHistory({ keepHistory: consent === true, origin: origin }))
     return fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
