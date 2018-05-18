@@ -29,6 +29,7 @@ CONSTRUCT {
                deich:recordId ?recordId ;
                deich:formatNo ?formatNo ;
                deich:formatAdaptation ?formatAdaptNo ;
+               deich:adaptation ?formatAdaptNo ;
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
                deich:nationality ?nationLabel ;

@@ -100,6 +100,7 @@
     "kd": "deichman:kd",
     "mt": "deichman:mt",
     "formatAdaptation": "deichman:formatAdaptation",
+    "adaptation": "deichman:adaptation",
     "writingSystem": "deichman:writingSystem",
     "desc": "deichman:desc",
     "origLang": "deichman:origLang",
