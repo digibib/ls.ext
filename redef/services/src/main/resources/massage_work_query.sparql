@@ -3,7 +3,6 @@ PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX  role: <http://data.deichman.no/role#>
 PREFIX  duo: <http://data.deichman.no/utility#>
 PREFIX  mediaType: <http://data.deichman.no/mediaType#>
-PREFIX  migration: <http://migration.deichman.no/>
 
 CONSTRUCT {
  <__WORKURI__> a deich:Work ;
@@ -78,21 +77,21 @@ WHERE {
         }
 
   # This union matches the following types: (General), Event
-  # Massage to the form: name[ ordinal][ date][ place][ date][ (specification)
+  # Massage to the form: name[ ordinal][ place][ date][ (specification)
   # emne:"Olympiske vinterleker 19 2002"
   UNION { <__WORKURI__> deich:subject ?subject .
             ?subject deich:prefLabel ?subjectNameStep1  .
             OPTIONAL { ?subject deich:ordinal ?subjectOrdinal }
             OPTIONAL { ?subject deich:specification ?subjectSpecification }
             OPTIONAL { ?subject deich:date ?subjectDate }
-            OPTIONAL { ?subject migration:place ?subjectPlace }
+            OPTIONAL { ?subject deich:place ?subjectPlace . ?subjectPlace deich:prefLabel ?placeLabel  }
 
             BIND(IF (BOUND(?subjectOrdinal),
                 CONCAT(?subjectNameStep1, " ", str(?subjectOrdinal)),
                 ?subjectNameStep1) as ?subjectNameStep2) .
 
-            BIND(IF (BOUND(?subjectPlace),
-                CONCAT(?subjectNameStep2, " ", str(?subjectPlace)),
+            BIND(IF (BOUND(?placeLabel),
+                CONCAT(?subjectNameStep2, " ", str(?placeLabel)),
                 ?subjectNameStep2) as ?subjectNameStep3) .
 
             BIND(IF (BOUND(?subjectDate),

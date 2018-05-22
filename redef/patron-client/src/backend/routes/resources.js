@@ -295,7 +295,7 @@ function getMassagedName (authority) {
   }
 
   if (authority.type === 'Event' && authority.place) {
-    name += ` ${authority['http://migration.deichman.no/place']}`
+    name += ` ${authority.place['prefLabel']}`
   }
 
   if (authority.type === 'Event' && authority.date) {
