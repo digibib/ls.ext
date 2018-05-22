@@ -116,7 +116,7 @@ export default {
   'PublicationInfo.notes': 'Noter:',
   'PublicationInfo.of': 'av',
   'PublicationInfo.onlyInhouse': 'Til bruk i biblioteket',
-  'PublicationInfo.parts': 'Deler av utgivelsen',
+  'PublicationInfo.parts': 'Innhold',
   'PublicationInfo.parts.extent': 'Omfang',
   'PublicationInfo.parts.mainEntry': 'Hovedansvarlig',
   'PublicationInfo.parts.pageNumber': 'Side',
