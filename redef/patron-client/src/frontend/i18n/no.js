@@ -121,6 +121,7 @@ export default {
   'PublicationInfo.parts.mainEntry': 'Hovedansvarlig',
   'PublicationInfo.parts.pageNumber': 'Side',
   'PublicationInfo.parts.title': 'Deltittel',
+  'PublicationInfo.parts.number': 'Delnummer',
   'PublicationInfo.publicationInfoMenu': 'Utgivelsesdetaljermeny',
   'PublicationInfo.shelfmark': 'Hylleplass',
   'PublicationInfo.status': 'Status',

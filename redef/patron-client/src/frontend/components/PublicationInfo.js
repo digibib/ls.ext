@@ -85,7 +85,7 @@ class PublicationInfo extends React.Component {
   }
 
   renderParts (parts) {
-    const sortPartsByWithDir = ((this.props.query || {}).sortPartsBy) || 'partTitle.asc'
+    const sortPartsByWithDir = ((this.props.query || {}).sortPartsBy) || 'partNumber.asc' || 'partTitle.asc'
     const sortBy = sortPartsByWithDir.split('.')
     const sortDir = sortBy[ 1 ] === 'asc' ? 1 : -1
     parts.sort((a, b) => {
@@ -100,6 +100,9 @@ class PublicationInfo extends React.Component {
       return 0
     })
 
+    const hasPartNumbers = parts.filter(pubPart => pubPart.partNumber).length > 0
+    const hasPageNumbers = parts.filter(pubPart => pubPart.startsAtPage || pubPart.endsAtPage).length > 0
+
     return (
       <NonIETransitionGroup
         transitionName="fade-in"
@@ -111,6 +114,13 @@ class PublicationInfo extends React.Component {
         className="test" >
         <thead>
         <tr>
+          {hasPartNumbers &&
+            <th>
+              <FormattedMessage {...messages.partNumber} />
+              <Sorter sortParameter={'sortPartsBy'} sortColumn={'partNumber'}
+                      sortOrder={PublicationInfo.sortOptions('partNumber')[ sortPartsByWithDir ]} />
+            </th>
+          }
           <th>
             <FormattedMessage {...messages.partTitle} />
             <Sorter sortParameter={'sortPartsBy'} sortColumn={'partTitle'}
@@ -121,21 +131,26 @@ class PublicationInfo extends React.Component {
             <Sorter sortParameter={'sortPartsBy'} sortColumn={'mainEntry'}
                     sortOrder={PublicationInfo.sortOptions('mainEntry')[ sortPartsByWithDir ]} />
           </th>
+
+          {hasPageNumbers &&
           <th>
             <FormattedMessage {...messages.pageNumber} />
             <Sorter sortParameter={'sortPartsBy'} sortColumn={'startsAtPage'}
                     sortOrder={PublicationInfo.sortOptions('startsAtPage')[ sortPartsByWithDir ]} />
           </th>
+          }
         </tr>
         </thead>
         <tbody data-automation-id="work_parts" >
         {parts.map((part, index) => {
           return (
             <tr key={index} >
+              {hasPartNumbers && <td data-automation-id="part_number" >{part.partNumber}</td> }
               <td data-automation-id="part_title" >{part.partTitle}</td>
               <td data-automation-id="part_main_entry" >{part.mainEntry}</td>
-              <td
-                data-automation-id="part_page_number" >{[ part.startsAtPage, part.endsAtPage ].filter(e => { return e !== undefined }).join('–') }</td>
+              {hasPageNumbers && <td data-automation-id="part_page_number">
+                {[ part.startsAtPage, part.endsAtPage ].filter(e => e !== undefined).join('–') }</td>
+              }
             </tr>
           )
         })}
@@ -266,6 +281,12 @@ export const messages = defineMessages({
     id: 'PublicationInfo.parts',
     description: 'Heading for parts',
     defaultMessage: 'Parts'
+  },
+
+  partNumber: {
+    id: 'PublicationInfo.parts.number',
+    description: 'Heading for part number',
+    defaultMessage: 'Part number'
   },
   partTitle: {
     id: 'PublicationInfo.parts.title',
