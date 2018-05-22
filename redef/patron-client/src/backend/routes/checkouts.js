@@ -70,7 +70,16 @@ module.exports = (app) => {
       const xmlResponse = await res.text()
       const jsonResponse = await xml2jsPromiseParser(xmlResponse)
       const transactionId = jsonResponse.RegisterResponse.TransactionId
-      // TODO Post transactionId to Koha here to persist it
+
+      const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          purreId: request.body.fineId,
+          netsId: transactionId
+        })
+      })
+      const kohaResJson = await kohaRes.json()
+      console.log('response from koha', kohaResJson)
       response.send({
         transactionId: transactionId,
         merchantId: merchantId,
@@ -98,7 +107,16 @@ module.exports = (app) => {
       const batchNumber = jsonResponse.ProcessResponse.BatchNumber
       const responseCode = jsonResponse.ProcessResponse.ResponseCode
       const transactionId = jsonResponse.ProcessResponse.TransactionId
-      // TODO Send response data to Koha for persisting, ie authorizationId, batchNumber, responseCode
+
+      const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          netsId: transactionId
+        })
+      })
+      const kohaResJson = await kohaRes.json()
+      console.log('response from koha', kohaResJson)
+
       response.send({
         transactionId: transactionId,
         responseCode: responseCode,
