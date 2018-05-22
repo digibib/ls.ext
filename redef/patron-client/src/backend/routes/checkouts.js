@@ -73,10 +73,11 @@ module.exports = (app) => {
 
       const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
         method: 'POST',
-        body: JSON.stringify({
-          purreId: request.body.fineId,
-          netsId: transactionId
-        })
+        headers: {
+          'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        },
+        body: `purre_id=${encodeURIComponent(request.body.fineId)}&nets_id=${encodeURIComponent(transactionId)}`
       })
       const kohaResJson = await kohaRes.json()
       console.log('response from koha', kohaResJson)
@@ -110,9 +111,11 @@ module.exports = (app) => {
 
       const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
         method: 'PUT',
-        body: JSON.stringify({
-          netsId: transactionId
-        })
+        headers: {
+          'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        },
+        body: `nets_id=${encodeURIComponent(transactionId)}`
       })
       const kohaResJson = await kohaRes.json()
       console.log('response from koha', kohaResJson)
