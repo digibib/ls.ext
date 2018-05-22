@@ -483,6 +483,7 @@ button {
   margin-right: 1em;
 }
 
+
 .grey-btn {
   padding: $rhythm2;
   padding-top: 0.5em;
@@ -514,10 +515,17 @@ button {
 
 .small-blue-btn:disabled {
   background: $mediumGreyColor;
+  cursor: not-allowed;
 }
 
 .small-blue-btn a, .small-blue-btn a:hover {
   text-decoration: none;
+}
+
+.pay-fine-button {
+  background: $red;
+  white-space: pre;
+  align-self: center;
 }
 
 // atoms - checkbox
@@ -2672,15 +2680,13 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 
 .loan .loan-header .renew-all-button {
   align-self: center;
+  white-space: pre;
   background-color: $green;
 }
 
 .loan .loan-header .renew-all-button:disabled {
   opacity: 0.4;
-}
-
-.loan .loan-header .renew-all-button:disabled {
-  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .loan .due-date h2 {

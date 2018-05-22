@@ -291,7 +291,7 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderLoansWithFines (loans, fineId) {
+  renderLoansWithKemner (loans) {
     return (
       <section className="loan">
         <div className="loan-header">
@@ -301,7 +301,26 @@ class UserLoans extends React.Component {
           <p>
             <FormattedMessage {...messages.payFineInformation} />
           </p>
-          {this.renderPayFineButton(fineId)}
+        </div>
+        <div className="loan fine">
+          {this.renderLoans(loans, true)}
+        </div>
+
+      </section>
+    )
+  }
+
+  renderLoansWithFines (loans, purreId) {
+    return (
+      <section className="loan">
+        <div className="loan-header">
+          <h1>
+            <FormattedMessage {...messages.yourLoansWithFine} />
+          </h1>
+          <p>
+            <FormattedMessage {...messages.payFineInformation} />
+          </p>
+          {this.renderPayFineButton(purreId)}
           {this.renderRenewAllButton(true)}
         </div>
         <div className="loan fine">
@@ -352,12 +371,12 @@ class UserLoans extends React.Component {
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
-              <div className={item.isFine ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
+              <div className={item.isPurresak ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
                 {item.renewalStatus === 'genericExtendLoanSuccess'
                   ? <span className="success">{this.renderDueDate(item)}</span>
                   : <span>{this.renderDueDate(item)}</span>}
               </div>
-              {item.isFine &&
+              {item.isPurresak &&
                 <div className="flex-col extend-msg fine-info">
                   <p>Knyttet til gebyr</p>
                 </div>
@@ -427,9 +446,9 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderPayFineButton (fineId) {
+  renderPayFineButton (purreId) {
     return (
-      <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={fineId} >
+      <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={purreId} >
         <button className="small-blue-btn pay-fine-button"
                 data-automation-id="UserLoans_pay_fine_button">
             <FormattedMessage {...messages.payFineButtonText} />
@@ -509,15 +528,19 @@ class UserLoans extends React.Component {
   render () {
     const loans = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-      .filter(loan => loan.isFine !== true)
+      .filter(loan => loan.isPurresak !== true)
     const loansWithFines = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-      .filter(loan => loan.isFine === true)
-    let fineId = -1
+      .filter(loan => loan.isPurresak === true)
+    const loansWithKemner = [ ...this.props.loansAndReservations.loans ]
+      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+      .filter(loan => loan.isKemner === true)
+
+    let purreId = -1
     if (loansWithFines.length > 0) {
-      fineId = loansWithFines[0].fineId
+      purreId = loansWithFines[0].purreId
     }
-    console.log('fineId', fineId)
+
     if (this.props.isRequestingLoansAndReservations) {
       return <div style={{textAlign: 'center'}}>
         <span data-automation-id="is_searching" className="loading-spinner">
@@ -530,8 +553,11 @@ class UserLoans extends React.Component {
     return (
       <div>
         {this.renderPickups()}
+        {loansWithKemner.length > 0 &&
+          this.renderLoansWithKemner(loansWithKemner)
+        }
         {loansWithFines.length > 0 &&
-           this.renderLoansWithFines(loansWithFines, fineId)}
+          this.renderLoansWithFines(loansWithFines, purreId)}
         {this.renderLoansWithoutFines(loans, loansWithFines.length > 0)}
         {this.renderLoansFromRemoteLibraries()}
         {this.renderReservations()}

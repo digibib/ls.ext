@@ -93,7 +93,6 @@ module.exports = (app) => {
     try {
       const res = await isofetch(processUrl)
       const xmlResponse = await res.text()
-      console.log(xmlResponse)
       const jsonResponse = await xml2jsPromiseParser(xmlResponse)
       const authorizationId = jsonResponse.ProcessResponse.AuthorizationId
       const batchNumber = jsonResponse.ProcessResponse.BatchNumber

@@ -174,8 +174,8 @@ module.exports = (app) => {
         const loans = json.loans
         loans.forEach(loan => {
           if (loan.id % 2 === 0) {
-            loan.isFine = true
-            loan.fineId = '12345'
+            loan.isPurresak = true
+            loan.purreId = '12345'
           }
         })
         response.send(json)

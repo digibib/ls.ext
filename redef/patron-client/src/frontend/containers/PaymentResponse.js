@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import {Redirect} from 'react-router'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {injectIntl} from 'react-intl'
@@ -19,13 +20,25 @@ class PaymentResponse extends React.Component {
   componentDidMount () {
     const transactionId = QueryString.parse(this.props.location.search).transactionId
     const responseCode = QueryString.parse(this.props.location.search).responseCode
-
     // TODO action to save resonponse to backend -> backend will call nets with SALE process -> backend will save transaction status i Koha
-    this.props.loanActions.processFinePayment(transactionId)
+    if('Ok' === responseCode) {
+      this.props.loanActions.processFinePayment(transactionId)
+    }
   }
 
   render () {
     const { transactionSaved } = this.state
+
+    const responseCode = QueryString.parse(this.props.location.search).responseCode
+
+    console.log('response code', responseCode)
+    if('Cancel' === responseCode) {
+      return (
+        <div>
+          Din betaling ble avbrutt
+        </div>
+      )
+    }
 
     if (!transactionSaved) {
       return (
@@ -36,7 +49,7 @@ class PaymentResponse extends React.Component {
     }
     return (
       <div>
-        Betaling ok!
+        Takk for betalingen!
       </div>
     )
   }
