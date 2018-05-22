@@ -41,7 +41,7 @@ const WorkRelations = ({ workRelations, intl }) => {
         {objArray.map(relationType => (
           <li key={relationType} data-automation-id="work_relations" >
             <p>
-              <span className="meta-label" >{intl.formatMessage({ id: relationType })}</span >:&nbsp;
+              <span className="meta-label">{intl.formatMessage({ id: relationType })}</span >:&nbsp;
               {workRelations[ relationType ].map(relation => {
                 let link = null
                 if (relation.type === 'WorkSeries') {
@@ -61,7 +61,7 @@ const WorkRelations = ({ workRelations, intl }) => {
                     to={relation.relativeUri} >
                     {relationLink(title(relation), mainContributorName(relation.contributors), relation.numberInRelation)}
                     {relation.literaryForms
-                      .map(litForm => "(" + intl.formatMessage({ id: litForm.id }) + ")")
+                      .map(litForm => `(${intl.formatMessage({ id: litForm.id })})`)
                       .join(',')}
                   </Link >
                 }
