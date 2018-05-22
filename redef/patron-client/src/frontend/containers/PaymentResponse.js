@@ -21,7 +21,7 @@ class PaymentResponse extends React.Component {
     const transactionId = QueryString.parse(this.props.location.search).transactionId
     const responseCode = QueryString.parse(this.props.location.search).responseCode
     // TODO action to save resonponse to backend -> backend will call nets with SALE process -> backend will save transaction status i Koha
-    if('Ok' === responseCode) {
+    if('OK' === responseCode) {
       this.props.loanActions.processFinePayment(transactionId)
     }
   }
