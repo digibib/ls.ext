@@ -296,7 +296,7 @@ class UserLoans extends React.Component {
       <section className="loan">
         <div className="loan-header">
           <h1>
-            <FormattedMessage {...messages.yourLoansWithFine} />
+            <FormattedMessage {...messages.yourLoansWithKemner} />
           </h1>
           <p>
             <FormattedMessage {...messages.payFineInformation} />
@@ -528,17 +528,23 @@ class UserLoans extends React.Component {
   render () {
     const loans = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-      .filter(loan => loan.isPurresak !== true)
+      .filter(loan => (loan.isPurresak !== true && loan.isKemnersak !== true))
     const loansWithFines = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
       .filter(loan => loan.isPurresak === true)
     const loansWithKemner = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
-      .filter(loan => loan.isKemner === true)
+      .filter(loan => loan.isKemnersak === true)
 
     let purreId = -1
+    let hasFine = false
+    let hasKemner = false
     if (loansWithFines.length > 0) {
       purreId = loansWithFines[0].purreId
+      hasFine = true
+    }
+    if (loansWithKemner.length > 0) {
+      hasKemner = true
     }
 
     if (this.props.isRequestingLoansAndReservations) {
@@ -664,6 +670,11 @@ export const messages = defineMessages({
     id: 'UserLoans.yourRemoteLoans',
     description: 'The header over the current remote loans',
     defaultMessage: 'Your remote loans'
+  },
+  yourLoansWithKemner: {
+    id: 'UserLoans.yourLoansWithKemner',
+    description: 'The header over the current loans with fine',
+    defaultMessage: 'Loans with kemnersak'
   },
   yourLoansWithFine: {
     id: 'UserLoans.yourLoansWithFine',

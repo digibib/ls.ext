@@ -370,6 +370,7 @@ export default {
   'UserLoans.weeks': 'uker',
   'UserLoans.yourLoans': 'Dine lån',
   'UserLoans.yourRemoteLoans': 'Lån fra andre bibliotek',
+  'UserLoans.yourLoansWithKemner': 'Lån med kemnersak',
   'UserLoans.yourLoansWithFine': 'Lån med gebyr',
   'UserLoans.payFineButtonText': 'Betal gebyr 100-,',
   'UserLoans.payFineInformation': 'Du har purregebyr på følgende lån og kontoen din er derfor sperret. Betal for å åpne kontoen.',

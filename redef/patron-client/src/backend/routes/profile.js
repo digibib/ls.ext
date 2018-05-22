@@ -171,6 +171,17 @@ module.exports = (app) => {
           throw Error(res.statusText)
         }
       }).then(json => {
+        const loans = json.loans
+        loans.forEach(loan => {
+          if (loan.id % 2 === 0) {
+            loan.isPurresak = true
+            loan.purreId = '12345'
+          }
+          if (loan.id % 3 === 0) {
+            loan.isKemnersak = true
+            loan.purreId = '12345'
+          }
+        })
         response.send(json)
       })
       .catch(error => {
