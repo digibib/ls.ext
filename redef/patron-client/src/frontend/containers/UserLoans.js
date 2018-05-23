@@ -299,8 +299,9 @@ class UserLoans extends React.Component {
             <FormattedMessage {...messages.yourLoansWithKemner} />
           </h1>
           <p>
-            <FormattedMessage {...messages.payFineInformation} />
+            <FormattedMessage {...messages.kemnerInformation} />
           </p>
+          {this.renderRenewAllButton(true)}
         </div>
         <div className="loan fine">
           {this.renderLoans(loans, true)}
@@ -331,23 +332,23 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderLoansWithoutFines (loans, hasFines) {
+  renderLoansWithoutFines (loans, hasFine, hasKemner) {
     return (
       <section className="loan">
         <div className="loan-header">
           <h1>
             <FormattedMessage {...messages.yourLoans} />
           </h1>
-          {this.renderRenewAllButton(hasFines)}
+          {this.renderRenewAllButton(hasFine || hasKemner)}
         </div>
         <div className="loan">
-          {this.renderLoans(loans, hasFines)}
+          {this.renderLoans(loans, hasFine, hasKemner)}
         </div>
       </section>
     )
   }
 
-  renderLoans (loans, withFines) {
+  renderLoans (loans, hasFine, hasKemner) {
     if (loans.length > 0) {
       return (
         <div>
@@ -371,27 +372,38 @@ class UserLoans extends React.Component {
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
-              <div className={item.isPurresak ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
+              <div className={(item.isPurresak || item.isKemnersak) ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
                 {item.renewalStatus === 'genericExtendLoanSuccess'
                   ? <span className="success">{this.renderDueDate(item)}</span>
                   : <span>{this.renderDueDate(item)}</span>}
               </div>
               {item.isPurresak &&
                 <div className="flex-col extend-msg fine-info">
-                  <p>Knyttet til gebyr</p>
+                  <p><FormattedMessage {...messages.loanWithFine} /></p>
                 </div>
               }
-              {!withFines &&
-                <div className="flex-col ">
+              {item.isKemnersak &&
+                <div className="flex-col extend-msg fine-info">
+                  <p>
+                    <FormattedMessage {...messages.loanWithKemner} />
+                    <Tooltip title={this.props.intl.formatMessage(messages.kemnerTooltip)} position="top">
+                      <button className="btn btn-default">
+                        <img className="icon" style={{ fontSize: 16, marginTop: '-5px' }} src="/images/question.svg" />
+                      </button>
+                    </Tooltip>
+                  </p>
+                </div>
+              }
+              {!hasFine && !hasKemner &&
+                <div className="flex-col extend-msg">
                   {this.renderExtendLoanMessage(item)}
                 </div>
               }
-
               <div className="flex-col placeholder-column" />
               <div className="flex-col renew-button">
                 <ClickableElement onClickAction={this.props.loanActions.startExtendLoan}
                                   onClickArguments={item.id}>
-                  <button className="small-blue-btn" disabled={item.renewalStatus || withFines}>
+                  <button className="small-blue-btn" disabled={item.renewalStatus || hasFine || hasKemner}>
                     <FormattedMessage {...messages.extendLoan} />
                   </button>
                 </ClickableElement>
@@ -457,13 +469,13 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderRenewAllButton (withFines) {
+  renderRenewAllButton (disabled) {
     if ([ ...this.props.loansAndReservations.loans ].length > 0) {
       return (
         <ClickableElement onClickAction={this.props.loanActions.startExtendAllLoans}
                           onClickArguments={[this.props.loansAndReservations.loans]}>
           <button className="renew-all-button small-blue-btn"
-                  disabled={this.props.hasRequestedRenewAll || withFines}
+                  disabled={this.props.hasRequestedRenewAll || disabled}
                   data-automation-id="UserLoans_extend_all_loans_button">
               <FormattedMessage {...messages.renewAllLoans} />
           </button>
@@ -564,7 +576,7 @@ class UserLoans extends React.Component {
         }
         {loansWithFines.length > 0 &&
           this.renderLoansWithFines(loansWithFines, purreId)}
-        {this.renderLoansWithoutFines(loans, loansWithFines.length > 0)}
+        {this.renderLoansWithoutFines(loans, hasFine, hasKemner)}
         {this.renderLoansFromRemoteLibraries()}
         {this.renderReservations()}
         {this.renderReservationsFromRemoteLibraries()}
@@ -711,10 +723,30 @@ export const messages = defineMessages({
     description: 'The label for the pay fine button',
     defaultMessage: 'Pay fine'
   },
+  loanWithFine: {
+    id: 'UserLoans.loanWithFine',
+    description: 'Fine text in table',
+    defaultMessage: 'The loan has a fine'
+  },
   payFineButtonText: {
     id: 'UserLoans.payFineButtonText',
     description: 'The label for the pay fine button',
     defaultMessage: 'Pay fine 100-,'
+  },
+  kemnerInformation: {
+    id: 'UserLoans.kemnerInformation',
+    description: 'The label for the pay fine button',
+    defaultMessage: 'Pay kemner'
+  },
+  loanWithKemner: {
+    id: 'UserLoans.loanWithKemner',
+    description: 'The kemner text in the table',
+    defaultMessage: 'This fine has been transferred to kemner'
+  },
+  kemnerTooltip: {
+    id: 'UserLoans.kemnerTooltip',
+    description: 'Kemner tooltip',
+    defaultMessage: 'You can still deliver the book back to us.'
   },
   approx: {
     id: 'UserLoans.approximately',
