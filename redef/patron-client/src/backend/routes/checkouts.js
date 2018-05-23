@@ -71,7 +71,7 @@ module.exports = (app) => {
       const jsonResponse = await xml2jsPromiseParser(xmlResponse)
       const transactionId = jsonResponse.RegisterResponse.TransactionId
 
-      const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
+      /*const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
@@ -81,6 +81,7 @@ module.exports = (app) => {
       })
       const kohaResJson = await kohaRes.json()
       console.log('response from koha', kohaResJson)
+      */
       response.send({
         transactionId: transactionId,
         merchantId: merchantId,
@@ -96,6 +97,17 @@ module.exports = (app) => {
   * Process transaction at Nets. Operation = SALE to capture instantly
   */
   app.put('/api/v1/checkouts/process-fine-payment', jsonParser, async (request, response) => {
+
+    /*
+    Flow:
+      Process the transaction at nets
+      If response from nets is ok, get all loans with fines from koha
+      Send extend request for all those loans
+      Keep the ids and results for all extend requests
+      Capture transaction in Koha
+      Send response with ids and results to frontend
+    */
+
     const merchantId = process.env.NETS_MERCHANT_ID
     const token = process.env.NETS_TOKEN
     const netsUrl = process.env.NETS_URL
@@ -109,6 +121,16 @@ module.exports = (app) => {
       const responseCode = jsonResponse.ProcessResponse.ResponseCode
       const transactionId = jsonResponse.ProcessResponse.TransactionId
 
+      // Get all loans from koha
+      //const loansRes = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/loansandreservations`)
+      //const loans = await loansRes.json()
+      // Extend all loans with isPurresak
+
+
+
+
+
+
       const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
         method: 'PUT',
         headers: {
@@ -119,7 +141,6 @@ module.exports = (app) => {
       })
       const kohaResJson = await kohaRes.json()
       console.log('response from koha', kohaResJson)
-
       response.send({
         transactionId: transactionId,
         responseCode: responseCode,

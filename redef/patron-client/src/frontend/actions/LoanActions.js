@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
 import { requireLoginBeforeAction } from './LoginActions'
+import { fetchProfileLoans } from './ProfileActions'
 import Errors from '../constants/Errors'
 
 export function startExtendLoan (checkoutId) {
@@ -94,7 +95,6 @@ export function requestStartPayFine (fineId) {
 export function startPayFineSuccess (fineId, transactionId, merchantId, terminalUrl) {
   return dispatch => {
     const url = `${terminalUrl}?merchantId=${merchantId}&transactionId=${transactionId}`
-    console.log('url ', url)
     dispatch({
       type: types.START_PAY_FINE_SUCCESS
     })
@@ -102,7 +102,7 @@ export function startPayFineSuccess (fineId, transactionId, merchantId, terminal
   }
 }
 
-export function payFineFailure (fineId, error) {
+export function startPayFineFailure (fineId, error) {
   return dispatch => {
     dispatch({
       type: types.START_PAY_FINE_FAILURE,
@@ -130,16 +130,52 @@ export function startPayFine (fineId) {
           dispatch(startPayFineSuccess(fineId, json.transactionId, json.merchantId, json.terminalUrl))
         })
       } else {
-        dispatch(payFineFailure(fineId))
+        dispatch(startPayFineFailure(fineId))
       }
     })
     .catch(error => dispatch(startPayFineFailure(fineId, error)))
   }
 }
 
+export function startProcessFinePayment (transactionId) {
+  return dispatch => {
+    dispatch({
+      type: types.REQUEST_START_PROCESS_PAYMENT,
+      payload: {
+        transactionId: transactionId
+      }
+    })
+  }
+}
+
+export function processFinePaymentSuccess (transactionId, responseCode, authorizationId, batchNumber) {
+  return dispatch => {
+    dispatch({
+      type: types.PAYMENT_SUCCESS,
+      payload: {
+        transactionId: transactionId,
+        responseCode: responseCode,
+        authorizationId: authorizationId,
+        batchNumber: batchNumber
+      }
+    })
+  }
+}
+
+export function processFinePaymentFailure (transactionId) {
+  return dispatch => {
+    dispatch({
+      type: types.PROCESS_PAYMENT_FAILURE,
+      payload: { message: error, transactionId: transactionId },
+      error: true
+    })
+  }
+}
+
 export function processFinePayment (transactionId) {
   const url = '/api/v1/checkouts/process-fine-payment'
   return dispatch => {
+    dispatch(startProcessFinePayment(transactionId))
     return fetch(url, {
       method: 'PUT',
       credentials: 'same-origin',
@@ -151,10 +187,11 @@ export function processFinePayment (transactionId) {
     .then(response => {
       if (response.status === 200) {
         response.json().then(json => {
+          dispatch(fetchProfileLoans())
           dispatch(processFinePaymentSuccess(json.transactionId, json.responseCode, json.authorizationId, json.batchNumber))
         })
       } else {
-        dispatch(payFineFailure(fineId))
+        dispatch(processFinePaymentFailure(transactionId))
       }
     })
   }

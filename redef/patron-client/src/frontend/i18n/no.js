@@ -378,6 +378,8 @@ export default {
   'UserLoans.loanWithKemner': 'Kravet har gått til kemner',
   'UserLoans.kemnerInformation': 'Du har kemnersak på følgende lån og kontoen din er derfor sperret. Du kan ikke forlenge eksisterende lån eller låne mer før saken er avsluttet.',
   'UserLoans.kemnerTooltip': 'Du kan fortsatt levere materialet hos oss. Erstatningskravet vil da bli trukket fra regningen hos kemner og du må kun betale eventuelle gebyr + omkostninger. Du kan dessverre ikke betale gebyr og erstatning hos oss når kravet har gått til Oslo Kemnerkontor.',
+  'UserLoans.paymentSuccessHeader': 'Takk for betalingen!',
+  'UserLoans.paymentSuccessText': 'Vi har nå forlenget de lånene som kunne forlenges. Lån som er reservert av andre kan ikke forlenges og må leveres så fort som mulig for å unngå kemnersak.',
   'UserSettings.alerts': 'Varslinger',
   'UserSettings.byEmail': 'På epost',
   'UserSettings.bySms': 'På SMS',
