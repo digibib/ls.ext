@@ -62,11 +62,13 @@ module.exports = (app) => {
       password: request.body.pin,
       branchcode: request.body.library,
       categorycode: categoryCode,
+      privacy: request.body.keepHistory ? 0 : 2,
       userid: `${Math.floor(Math.random() * (99 - 10) + 10)}-${Math.floor(Math.random() * (999 - 100) + 100)}` // TODO: Proper user ID
     }
     registerPatron(patron)
       .then(json => setDefaultMessagingSettings(json))
       .then(json => setDefaultSyncStatusAndAttributes(json))
+      .then(json => setHistoryConsent(json))
       .then(json => sendAccountDetailsByMail(json))
       .then(json => {
         response.status(201).send({ username: json.userid, categoryCode: categoryCode })
@@ -135,6 +137,26 @@ module.exports = (app) => {
     }).then(json => {
       patron.messageSettings = json
       return patron
+    })
+  }
+
+  function setHistoryConsent (patron) {
+    let attribute = patron.privacy === 0 ? 'yes' : 'no'
+    attribute += '_'
+    attribute += Date.now()
+
+    const params = {
+      code: 'hist_cons',
+      attribute: attribute
+    }
+    const url = `http://xkoha:8081/api/v1/patrons/${patron.borrowernumber}/attributes`
+    return fetch(url, {method: 'POST', body: JSON.stringify(params)})
+    .then(res => {
+      if (res.status === 201) {
+        return patron
+      } else {
+        return Promise.reject({ message: 'Could not set patron history consent', status: res.status })
+      }
     })
   }
 

@@ -292,6 +292,7 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: formName,
+  destroyOnUnmount: false,
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
   validate: validator(fields)

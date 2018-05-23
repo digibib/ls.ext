@@ -12,7 +12,7 @@ class OptInHistory extends React.Component {
 
   handleSaveClick (event) {
     event.preventDefault()
-    this.props.profileActions.manageHistoryConsent(true, this.props.personalAttributes.hist_cons, "history tab")
+    this.props.profileActions.manageHistoryConsent(true, this.props.personalAttributes.hist_cons, 'history tab')
   }
 
   render () {

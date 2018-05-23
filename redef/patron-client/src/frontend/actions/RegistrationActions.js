@@ -1,6 +1,18 @@
 import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
 
+export function formFilled () {
+  return {
+    type: types.REGISTRATION_FORM_FILLED
+  }
+}
+
+export function historySet () {
+  return {
+    type: types.REGISTRATION_HISTORY_SET
+  }
+}
+
 export function requestPostRegistration () {
   return {
     type: types.REQUEST_REGISTRATION
@@ -114,7 +126,8 @@ export function postRegistration (successAction) {
   return (dispatch, getState) => {
     const {
       registrationPartOne: { values: { firstName, lastName, day, month, year, ssn } },
-      registrationPartTwo: { values: { email, mobile, address, zipcode, city, country, /* gender, */ pin, repeatPin, library, acceptTerms } }
+      registrationPartTwo: { values: { email, mobile, address, zipcode, city, country, /* gender, */ pin, repeatPin, library, acceptTerms } },
+      registrationPartThree: { values: { keepHistory } }
     } = getState().form
     const registrationInfo = {
       firstName: firstName,
@@ -133,7 +146,8 @@ export function postRegistration (successAction) {
       pin: pin,
       repeatPin: repeatPin,
       library: library,
-      acceptTerms: acceptTerms
+      acceptTerms: acceptTerms,
+      keepHistory: keepHistory
     }
     dispatch(requestPostRegistration())
     return fetch(url, {

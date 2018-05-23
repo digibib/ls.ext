@@ -5,7 +5,10 @@ import {
   CHECK_FOR_EXISTING_USER_SUCCESS,
   CHECK_FOR_EXISTING_USER_FAILURE,
   REGISTRATION_SUCCESS,
-  REGISTRATION_FAILURE
+  REGISTRATION_FAILURE,
+  POST_PROFILE_SETTINGS_SUCCESS,
+  REGISTRATION_FORM_FILLED,
+  REGISTRATION_HISTORY_SET
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -14,6 +17,7 @@ const initialState = {
   isCheckingForExistingUser: false,
   checkForExistingUserSuccess: false,
   checkForExistingUserFailure: false,
+  stepNumber: 1,
   registrationError: null
 }
 
@@ -39,7 +43,11 @@ export default function registration (state = initialState, action) {
       }
     case CHECK_FOR_EXISTING_USER_SUCCESS:
       return {
-        ...state, checkForExistingUserSuccess: true, isCheckingForExistingUser: false, registrationError: null
+        ...state,
+        checkForExistingUserSuccess: true,
+        isCheckingForExistingUser: false,
+        registrationError: null,
+        stepNumber: 2
       }
     case CHECK_FOR_EXISTING_USER_FAILURE:
       return {
@@ -53,12 +61,27 @@ export default function registration (state = initialState, action) {
         ...state,
         isSuccess: action.payload.isSuccess,
         username: action.payload.username,
-        categoryCode: action.payload.categoryCode
+        categoryCode: action.payload.categoryCode,
+        stepNumber: 5
       }
     case REGISTRATION_FAILURE:
       return {
         ...state,
         isError: true
+      }
+    case POST_PROFILE_SETTINGS_SUCCESS:
+      return {
+        ...state
+      }
+    case REGISTRATION_FORM_FILLED:
+      return {
+        ...state,
+        stepNumber: 3
+      }
+    case REGISTRATION_HISTORY_SET:
+      return {
+        ...state,
+        stepNumber: 4
       }
     default:
       return state

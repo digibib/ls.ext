@@ -262,7 +262,7 @@ export function userHistory () {
 export function manageHistory (privacy, consent, origin) {
   const url = '/api/v1/profile/settings/history'
   return dispatch => {
-    dispatch(requestManageHistory({ keepHistory: privacy === 0, origin: origin}))
+    dispatch(requestManageHistory({ keepHistory: privacy === 0, origin: origin }))
     return fetch(url, {
       method: 'POST',
       credentials: 'same-origin',
@@ -286,7 +286,7 @@ export function manageHistory (privacy, consent, origin) {
 export function manageHistoryConsent (consent, previous, origin) {
   const url = '/api/v1/profile/settings/historyconsent'
   return dispatch => {
-    dispatch(requestManageHistory({ keepHistory: consent === true, origin: origin }))
+    dispatch(requestManageHistory({ keepHistory: consent === true, origin: origin }))
     return fetch(url, {
       method: 'POST',
       credentials: 'same-origin',

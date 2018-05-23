@@ -1,15 +1,22 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
+import { destroy } from 'redux-form'
 import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-intl'
+import FormPartOne from './forms/RegistrationFormPartOne'
 import FormPartTwo from './forms/RegistrationFormPartTwo'
-import NameAndSsnForm from './forms/RegistrationFormPartOne'
-import * as SearchActions from '../actions/SearchActions'
-import { bindActionCreators } from 'redux'
+import FormPartThree from './forms/RegistrationFormPartThree'
+import FormPartFour from './forms/RegistrationFormPartFour'
 
 class Register extends React.Component {
 
   renderSuccess () {
+    // Manually destroy registration forms
+    this.props.dispatch(destroy('registrationPartOne'))
+    this.props.dispatch(destroy('registrationPartTwo'))
+    this.props.dispatch(destroy('registrationPartThree'))
+    this.props.dispatch(destroy('registrationPartFour'))
+
     return (
       <div data-automation-id="registration_success_modal" className="default-form">
         <form>
@@ -50,14 +57,15 @@ class Register extends React.Component {
   render () {
     if (this.props.isError) {
       return this.renderError()
-    } else if (this.props.isSuccess) {
-      return this.renderSuccess()
     }
     return (
       <section className="register-page default-form">
         <div data-automation-id="registration_modal">
-          <NameAndSsnForm />
-          {this.props.checkForExistingUserSuccess ? <FormPartTwo /> : null}
+          {(this.props.stepNumber === 1 || this.props.stepNumber === 2) && <FormPartOne /> }
+          {this.props.stepNumber === 2 && <FormPartTwo /> }
+          {this.props.stepNumber === 3 && <FormPartThree /> }
+          {this.props.stepNumber === 4 && <FormPartFour /> }
+          {this.props.stepNumber === 5 && this.renderSuccess() }
         </div>
       </section>
     )
@@ -70,11 +78,11 @@ Register.propTypes = {
   message: PropTypes.string,
   isError: PropTypes.bool,
   isSuccess: PropTypes.bool,
+  stepNumber: PropTypes.number,
   isCheckingForExistingUser: PropTypes.bool,
   checkForExistingUserSuccess: PropTypes.bool,
   categoryCode: PropTypes.string,
-  intl: intlShape.isRequired,
-  searchActions: PropTypes.bool.isRequired
+  intl: intlShape.isRequired
 }
 
 const intlRegister = injectIntl(Register)
@@ -86,6 +94,7 @@ function mapStateToProps (state) {
     categoryCode: state.registration.categoryCode,
     isError: state.registration.isError,
     isSuccess: state.registration.isSuccess,
+    stepNumber: state.registration.stepNumber,
     isCheckingForExistingUser: state.registration.isCheckingForExistingUser,
     checkForExistingUserSuccess: state.registration.checkForExistingUserSuccess
   }
@@ -93,8 +102,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    dispatch: dispatch,
-    searchActions: bindActionCreators(SearchActions, dispatch)
+    dispatch: dispatch
   }
 }
 

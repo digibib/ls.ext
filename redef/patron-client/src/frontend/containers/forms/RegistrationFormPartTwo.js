@@ -40,7 +40,7 @@ class RegistrationFormPartTwo extends React.Component {
   }
 
   handleRegistration () {
-    this.props.registrationActions.postRegistration()
+    this.props.registrationActions.formFilled()
   }
 
   handleKey (event) {
@@ -179,7 +179,7 @@ export const messages = defineMessages({
   register: {
     id: 'RegistrationFormPartTwo.register',
     description: 'The register button text',
-    defaultMessage: 'Submit'
+    defaultMessage: 'Continue'
   },
   contactInfoLegend: {
     id: 'RegistrationFormPartTwo.contactInfoLegend',
@@ -273,6 +273,7 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: formName,
+  destroyOnUnmount: false,
   asyncValidate,
   asyncBlurFields: Object.keys(fields).filter(field => fields[ field ].asyncValidation),
   validate: validator(fields)

@@ -25,13 +25,13 @@ class KeepMyHistory extends React.Component {
   handleSaveClick (event) {
     const checked = this.keepMyHistoryCheckbox.checked
     if (checked) {
-      this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons, "settings tab")
+      this.props.profileActions.manageHistory(0, this.props.personalAttributes.hist_cons, 'settings tab')
     } else {
       if (this.props.historySize > 0) {
         this.props.profileActions.userHistory()
       } else {
         // user has no items in history, so we don't bother with popup
-        this.props.profileActions.manageHistory(2, this.props.personalAttributes.hist_cons, "settings tab")
+        this.props.profileActions.manageHistory(2, this.props.personalAttributes.hist_cons, 'settings tab')
       }
     }
   }
