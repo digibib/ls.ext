@@ -7,6 +7,7 @@ import {bindActionCreators} from 'redux'
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
 import QueryString from 'query-string'
 import {formatDate} from '../utils/dateFormatter'
+import {push} from 'react-router-redux'
 
 import * as LoanActions from '../actions/LoanActions'
 
@@ -15,9 +16,8 @@ class PaymentResponse extends React.Component {
   componentDidMount () {
     const transactionId = QueryString.parse(this.props.location.search).transactionId
     const responseCode = QueryString.parse(this.props.location.search).responseCode
-    if('OK' === responseCode) {
-      this.props.loanActions.processFinePayment(transactionId)
-    }
+    this.props.loanActions.processFinePayment(transactionId, responseCode)
+    window.history.replaceState({}, document.title, "/profile/" + "payment-response");
   }
 
   renderMainContributors (item) {
@@ -111,9 +111,6 @@ class PaymentResponse extends React.Component {
   }
 
   render () {
-
-    const responseCode = QueryString.parse(this.props.location.search).responseCode
-
     if(this.props.isSavingPayment || this.props.isRequestingLoansAndReservations) {
       return (
         <div style={{textAlign: 'center'}}>
@@ -123,6 +120,57 @@ class PaymentResponse extends React.Component {
         </div>
       )
     }
+
+    if(this.props.isPaymentCancelled) {
+      return (
+        <div>
+          <section className="loan">
+            <div className="loan-header">
+              <h1>
+                <FormattedMessage {...messages.paymentCancelledHeader} />
+              </h1>
+            </div>
+            <div className="payment-response-text">
+              <p>
+                <FormattedMessage {...messages.paymentCancelledText} />
+              </p>
+            </div>
+          </section>
+          <div>
+            <Link to="/profile/loans" >
+              <FormattedMessage {...messages.paymentReturnToMypage} />
+            </Link >
+          </div>
+        </div>
+      )
+    }
+
+    if(this.props.isPaymentFailed) {
+      return (
+        <div>
+          {this.props.isPaymentFailed}
+          <section className="loan">
+            <div className="loan-header">
+              <h1>
+                <FormattedMessage {...messages.paymentFailedHeader} />
+              </h1>
+            </div>
+            <div className="payment-response-text">
+              <p>
+                <FormattedMessage {...messages.paymentFailedText} />
+              </p>
+            </div>
+          </section>
+          <div>
+            <Link to="/profile/loans" >
+              <FormattedMessage {...messages.paymentReturnToMypage} />
+            </Link >
+          </div>
+        </div>
+      )
+    }
+
+
     const loans = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
       .filter(loan => {
@@ -142,14 +190,21 @@ class PaymentResponse extends React.Component {
           </p>
         </div>
         </section>
-        <section className="loan">
-          <div className="loan-header">
-            <h1>
-              Se over disse lånene
-            </h1>
-          </div>
-          {this.renderLoans(loans, this.props.successfulExtends, this.props.failedExtends)}
-        </section>
+        {loans.length > 0 &&
+          <section className="loan">
+            <div className="loan-header">
+              <h1>
+                Se over disse lånene
+              </h1>
+            </div>
+            {this.renderLoans(loans, this.props.successfulExtends, this.props.failedExtends)}
+          </section>
+        }
+        <div>
+          <Link to="/profile/loans" >
+            <FormattedMessage {...messages.paymentReturnToMypage} />
+          </Link >
+        </div>
       </div>
     )
   }
@@ -165,6 +220,31 @@ export const messages = defineMessages({
     id: 'UserLoans.paymentSuccessText',
     description: 'Information text for a successful payment',
     defaultMessage: 'We have extended your loans.'
+  },
+  paymentCancelledHeader: {
+    id: 'UserLoans.paymentCancelledHeader',
+    description: 'Header for a cancelled payment',
+    defaultMessage: 'Your payment was cancelled'
+  },
+  paymentCancelledText: {
+    id: 'UserLoans.paymentCancelledText',
+    description: 'Information text for a successful payment',
+    defaultMessage: 'Your payment was cancelled. Please return to My Page to initiate the payment again.'
+  },
+  paymentFailedHeader: {
+    id: 'UserLoans.paymentFailedHeader',
+    description: 'Header for a failed payment',
+    defaultMessage: 'Your payment failed'
+  },
+  paymentFailedText: {
+    id: 'UserLoans.paymentFailedText',
+    description: 'Information text for a successful payment',
+    defaultMessage: 'Your payment did not complete ok. Please return to My Page to initiate the payment again or contact your local branch.'
+  },
+  paymentReturnToMypage: {
+    id: 'UserLoans.paymentReturnToMypage',
+    description: 'Return to my page text',
+    defaultMessage: 'Return to My Page'
   },
   dueDate: {
     id: 'UserLoans.dueDate',
@@ -189,6 +269,8 @@ PaymentResponse.propTypes = {
   loansAndReservations: PropTypes.object.isRequired,
   isSavingPayment: PropTypes.bool.isRequired,
   isPaymentSaved: PropTypes.bool.isRequired,
+  isPaymentCancelled: PropTypes.bool.isRequired,
+  isPaymentFailed: PropTypes.bool.isRequired,
   successfulExtends: PropTypes.array.isRequired,
   failedExtends: PropTypes.array.isRequired
 }
@@ -198,6 +280,8 @@ function mapStateToProps (state) {
     loansAndReservations: state.profile.loansAndReservations,
     isSavingPayment: state.loan.isSavingPayment,
     isPaymentSaved: state.loan.isPaymentSaved,
+    isPaymentCancelled: state.loan.isPaymentCancelled,
+    isPaymentFailed: state.loan.isPaymentFailed,
     successfulExtends: state.loan.successfulExtends,
     failedExtends: state.loan.failedExtends
   }

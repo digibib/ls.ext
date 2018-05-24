@@ -165,6 +165,7 @@ export function processFinePaymentSuccess (transactionId, responseCode, authoriz
 }
 
 export function processFinePaymentFailure (transactionId, error) {
+  console.log('Oh noes')
   return dispatch => {
     dispatch({
       type: types.PROCESS_PAYMENT_FAILURE,
@@ -174,27 +175,42 @@ export function processFinePaymentFailure (transactionId, error) {
   }
 }
 
-export function processFinePayment (transactionId) {
+export function processFinePaymentCancelled (transactionId) {
+  return dispatch => {
+    dispatch({
+      type: types.PROCESS_PAYMENT_CANCELLED,
+      payload: { transactionId: transactionId }
+    })
+  }
+}
+
+export function processFinePayment (transactionId, responseCode) {
   const url = '/api/v1/checkouts/process-fine-payment'
   return dispatch => {
-    dispatch(startProcessFinePayment(transactionId))
-    return fetch(url, {
-      method: 'PUT',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ transactionId: transactionId })
-    })
-    .then(response => {
-      if (response.status === 200) {
-        response.json().then(json => {
-          dispatch(fetchProfileLoans())
-          dispatch(processFinePaymentSuccess(json.transactionId, json.responseCode, json.authorizationId, json.batchNumber, json.successfulExtends, json.failedExtends))
-        })
-      } else {
-        dispatch(processFinePaymentFailure(transactionId))
-      }
-    })
+    if('OK' === responseCode) {
+      dispatch(startProcessFinePayment(transactionId))
+      return fetch(url, {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ transactionId: transactionId })
+      })
+      .then(response => {
+        if (response.status === 200) {
+          response.json().then(json => {
+            dispatch(fetchProfileLoans())
+            dispatch(processFinePaymentSuccess(json.transactionId, json.responseCode, json.authorizationId, json.batchNumber, json.successfulExtends, json.failedExtends))
+          })
+        } else {
+          dispatch(processFinePaymentFailure(transactionId))
+        }
+      }).catch(error => dispatch(processFinePaymentFailure(transactionId, error)))
+    } else if ('Cancel' === responseCode) {
+      dispatch(processFinePaymentCancelled(transactionId))
+    } else {
+      dispatch(processFinePaymentFailure(transactionId))
+    }
   }
 }
