@@ -62,7 +62,7 @@ class PaymentResponse extends React.Component {
     }
   }
 
-  renderLoans (loans) {
+  renderLoans (loans, successfulExtends, failedExtends) {
     if (loans.length > 0) {
       return (
         <div>
@@ -92,7 +92,16 @@ class PaymentResponse extends React.Component {
                   : <span>{this.renderDueDate(item)}</span>}
               </div>
               <div className="flex-col extend-msg">
-                Hello
+                {successfulExtends.includes(item.id) &&
+                  <p>
+                    <FormattedMessage {...messages.genericExtendLoanSuccess} />
+                  </p>
+                }
+                {failedExtends.includes(item.id) &&
+                  <p>
+                    <FormattedMessage {...messages.genericExtendLoanError} />
+                  </p>
+                }
               </div>
             </article>
           ))}
@@ -104,7 +113,6 @@ class PaymentResponse extends React.Component {
   render () {
 
     const responseCode = QueryString.parse(this.props.location.search).responseCode
-    const loans = [ ...this.props.loansAndReservations.loans ].sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
 
     if(this.props.isSavingPayment || this.props.isRequestingLoansAndReservations) {
       return (
@@ -115,7 +123,11 @@ class PaymentResponse extends React.Component {
         </div>
       )
     }
-
+    const loans = [ ...this.props.loansAndReservations.loans ]
+      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+      .filter(loan => {
+        return (this.props.successfulExtends.includes(loan.id) || this.props.failedExtends.includes(loan.id))
+      })
     return (
       <div>
         <section>
@@ -136,7 +148,7 @@ class PaymentResponse extends React.Component {
               Se over disse lånene
             </h1>
           </div>
-          {this.renderLoans(loans)}
+          {this.renderLoans(loans, this.props.successfulExtends, this.props.failedExtends)}
         </section>
 
       </div>
@@ -159,7 +171,17 @@ export const messages = defineMessages({
     id: 'UserLoans.dueDate',
     description: 'The due date of a reservation',
     defaultMessage: 'Due date'
-  }
+  },
+  genericExtendLoanSuccess: {
+    id: 'UserLoans.genericExtendLoanSuccess',
+    description: 'A generic message for successful renewal.',
+    defaultMessage: 'Loan extended'
+  },
+  genericExtendLoanError: {
+    id: 'UserLoans.genericExtendLoanError',
+    description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
+    defaultMessage: 'Not able to extend - Please contact library for details'
+  },
 })
 
 PaymentResponse.propTypes = {
@@ -167,14 +189,18 @@ PaymentResponse.propTypes = {
   loanActions: PropTypes.object.isRequired,
   loansAndReservations: PropTypes.object.isRequired,
   isSavingPayment: PropTypes.bool.isRequired,
-  isPaymentSaved: PropTypes.bool.isRequired
+  isPaymentSaved: PropTypes.bool.isRequired,
+  successfulExtends: PropTypes.array.isRequired,
+  failedExtends: PropTypes.array.isRequired
 }
 
 function mapStateToProps (state) {
   return {
     loansAndReservations: state.profile.loansAndReservations,
     isSavingPayment: state.loan.isSavingPayment,
-    isPaymentSaved: state.loan.isPaymentSaved
+    isPaymentSaved: state.loan.isPaymentSaved,
+    successfulExtends: state.loan.successfulExtends,
+    failedExtends: state.loan.failedExtends
   }
 }
 

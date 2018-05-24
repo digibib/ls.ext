@@ -13,7 +13,9 @@ const initialState = {
   extendLoanError: false,
   hasRequestedRenewAll: false,
   isSavingPayment: false,
-  isPaymentSaved: false
+  isPaymentSaved: false,
+  successfulExtends: [],
+  failedExtends: []
 }
 
 export default function loan (state = initialState, action) {
@@ -29,7 +31,7 @@ export default function loan (state = initialState, action) {
     case REQUEST_START_PROCESS_PAYMENT:
       return { ...state, isSavingPayment: true, isPaymentSaved: false}
     case PAYMENT_SUCCESS:
-      return { ...state, isSavingPayment: false, isPaymentSaved: true}
+      return { ...state, isSavingPayment: false, isPaymentSaved: true, successfulExtends : action.payload.successfulExtends, failedExtends: action.payload.failedExtends}
     default:
       return state
   }
