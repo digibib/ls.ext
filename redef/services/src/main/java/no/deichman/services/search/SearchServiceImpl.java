@@ -95,6 +95,8 @@ public class SearchServiceImpl implements SearchService {
             SIXTY, TimeUnit.SECONDS,
             INDEX_QUEUE);
 
+    private static final String INDEX_NAME = "search";
+
     private static Map<EntityType, NameIndexer> nameIndexers = new HashMap<EntityType, NameIndexer>();
 
     public SearchServiceImpl(String elasticSearchBaseUrl, EntityService entityService) {
@@ -198,9 +200,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final Response clearIndex() {
-        clearIndex("a");
-        clearIndex("b");
-        toggleActiveIndex("a");
+        clearIndex(INDEX_NAME);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -337,31 +337,6 @@ public class SearchServiceImpl implements SearchService {
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private String getActiveIndex() {
-        // Check if index A is aliased to 'search'
-        try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = getIndexUriBuilder().setPath("/a/_alias/search").build();
-            try (CloseableHttpResponse res = httpclient.execute(new HttpGet(uri))) {
-                if (EntityUtils.toString(res.getEntity()).contains("search")) {
-                    return "a";
-                }
-            }
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
-        }
-        // Index A is not aliased to 'search', so it must be index B
-        return "b";
-    }
-
-    private String getInactiveIndex() {
-        if (getActiveIndex().equals("a")) {
-            return "b";
-        } else {
-            return "a";
         }
     }
 
@@ -608,45 +583,42 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public final void enqueueIndexingAllResources() {
-        THREADPOOL.execute(new Runnable() {
-            @Override
-            public void run() {
-                String newIndex = getInactiveIndex();
-                clearIndex(newIndex);
+        THREADPOOL.execute(() -> {
+            String newIndex = INDEX_NAME;
+            clearIndex();
 
-                for (EntityType type : EntityType.values()) {
-                    if (type.equals(EntityType.PUBLICATION)) {
-                        // Publications are indexed when the work they belong to are indexed
-                        continue;
-                    }
-                    entityService.retrieveAllWorkUris(type.getPath(), uri -> EXECUTOR_SERVICE.execute(() -> {
-                        try {
-                            XURI resource = new XURI(uri);
-                            if (resource.getTypeAsEntityType().equals(EntityType.WORK)) {
-                                indexWorkAndPublications(newIndex, resource);
-                            } else {
-                                indexOnly(newIndex, resource);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }));
+            for (EntityType type : EntityType.values()) {
+                if (type.equals(EntityType.PUBLICATION)) {
+                    // Publications are indexed when the work they belong to are indexed
+                    continue;
                 }
-
-                while (true) {
+                entityService.retrieveAllWorkUris(type.getPath(), uri -> EXECUTOR_SERVICE.execute(() -> {
                     try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        // no-op
+                        XURI resource = new XURI(uri);
+                        if (resource.getTypeAsEntityType().equals(EntityType.WORK)) {
+                            indexWorkAndPublications(newIndex, resource);
+                        } else {
+                            indexOnly(newIndex, resource);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    if (INDEX_QUEUE.size() == 0) {
-                        break;
-                    }
-                }
-
-                LOG.info("Done indexing all resources - setting active index: " + newIndex);
-                toggleActiveIndex(newIndex);
+                }));
             }
+
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // no-op
+                }
+                if (INDEX_QUEUE.size() == 0) {
+                    break;
+                }
+            }
+
+            LOG.info("Done indexing all resources - setting active index: " + newIndex);
+            toggleActiveIndex(newIndex);
         });
     }
 
