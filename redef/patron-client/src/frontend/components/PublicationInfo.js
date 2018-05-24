@@ -89,8 +89,8 @@ class PublicationInfo extends React.Component {
     const sortBy = sortPartsByWithDir.split('.')
     const sortDir = sortBy[ 1 ] === 'asc' ? 1 : -1
     parts.sort((a, b) => {
-      const keya = a[ sortBy[ 0 ] ]
-      const keyb = b[ sortBy[ 0 ] ]
+      const keya = parseInt(a[ sortBy[ 0 ] ]) ||  a[ sortBy[ 0 ] ]
+      const keyb = parseInt(b[ sortBy[ 0 ] ]) ||  b[ sortBy[ 0 ] ]
       if (keya > keyb) {
         return sortDir
       }
