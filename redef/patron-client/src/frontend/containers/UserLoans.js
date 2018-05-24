@@ -311,7 +311,7 @@ class UserLoans extends React.Component {
     )
   }
 
-  renderLoansWithFines (loans, purreId) {
+  renderLoansWithFines (loans, purreId, hasKemner) {
     return (
       <section className="loan">
         <div className="loan-header">
@@ -321,7 +321,7 @@ class UserLoans extends React.Component {
           <p>
             <FormattedMessage {...messages.payFineInformation} />
           </p>
-          {this.renderPayFineButton(purreId)}
+          {this.renderPayFineButton(purreId, hasKemner)}
           {this.renderRenewAllButton(true)}
         </div>
         <div className="loan fine">
@@ -458,10 +458,12 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderPayFineButton (purreId) {
+  renderPayFineButton (purreId, hasKemner) {
+    let location = window.location.origin
     return (
-      <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={purreId} >
+      <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={[purreId, location]} >
         <button className="small-blue-btn pay-fine-button"
+
                 data-automation-id="UserLoans_pay_fine_button">
             <FormattedMessage {...messages.payFineButtonText} />
         </button>
@@ -575,7 +577,7 @@ class UserLoans extends React.Component {
           this.renderLoansWithKemner(loansWithKemner)
         }
         {loansWithFines.length > 0 &&
-          this.renderLoansWithFines(loansWithFines, purreId)}
+          this.renderLoansWithFines(loansWithFines, purreId, hasKemner)}
         {this.renderLoansWithoutFines(loans, hasFine, hasKemner)}
         {this.renderLoansFromRemoteLibraries()}
         {this.renderReservations()}

@@ -112,7 +112,7 @@ export function startPayFineFailure (fineId, error) {
   }
 }
 
-export function startPayFine (fineId) {
+export function startPayFine (fineId, location) {
   const url = '/api/v1/checkouts/start-pay-fine'
   return dispatch => {
     dispatch(requestStartPayFine(fineId))
@@ -122,7 +122,7 @@ export function startPayFine (fineId) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ fineId: fineId })
+      body: JSON.stringify({ fineId: fineId, origin: location })
     })
     .then(response => {
       if (response.status === 200) {

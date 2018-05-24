@@ -63,7 +63,7 @@ module.exports = (app) => {
     const merchantId = process.env.NETS_MERCHANT_ID
     const token = process.env.NETS_TOKEN
     const netsUrl = process.env.NETS_URL
-    const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${request.body.fineId}&amount=10000&CurrencyCode=NOK&redirectUrl=http://localhost:8000/profile/payment-response/`
+    const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${request.body.fineId}&amount=10000&CurrencyCode=NOK&redirectUrl=${request.body.origin}/profile/payment-response/`
     const terminalUrl = `${netsUrl}/Terminal/default.aspx`
     try {
       const res = await isofetch(registerUrl)
@@ -117,6 +117,7 @@ module.exports = (app) => {
       const responseCode = jsonResponse.ProcessResponse.ResponseCode
       const transactionId = jsonResponse.ProcessResponse.TransactionId
 
+
       // Get all loans from koha
       const loansRes = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/loansandreservations`)
       const loans = await loansRes.json()
@@ -124,7 +125,7 @@ module.exports = (app) => {
       let successfulExtends = []
       let failedExtends = []
       for(let loan of loans.loans) {
-        if (loan.isPurresak || loan.id === '4') {
+        if (loan.isPurresak) {
           const extendRes = await fetch(`http://xkoha:8081/api/v1/checkouts/${loan.id}`, {
             method: 'PUT'
           })
@@ -150,6 +151,7 @@ module.exports = (app) => {
         body: `nets_id=${encodeURIComponent(transactionId)}`
       })
       const kohaResJson = await kohaRes.json()
+
       response.send({
         transactionId: transactionId,
         responseCode: responseCode,

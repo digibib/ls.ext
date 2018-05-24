@@ -130,8 +130,8 @@ class PaymentResponse extends React.Component {
       })
     return (
       <div>
-        <section>
-          <div className="payment-response-header">
+        <section className="loan">
+          <div className="loan-header">
             <h1>
               <FormattedMessage {...messages.paymentSuccessHeader} />
             </h1>
@@ -150,7 +150,6 @@ class PaymentResponse extends React.Component {
           </div>
           {this.renderLoans(loans, this.props.successfulExtends, this.props.failedExtends)}
         </section>
-
       </div>
     )
   }
