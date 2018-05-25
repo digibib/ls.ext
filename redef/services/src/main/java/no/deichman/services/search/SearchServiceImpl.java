@@ -280,66 +280,6 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    private void toggleActiveIndex(String idx) {
-        removeAliases();
-        addAlias(idx, "search");
-    }
-
-    private void addAlias(String from, String to) {
-        try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = getIndexUriBuilder().setPath("/" + from + "/_alias/" + to).build();
-            try (CloseableHttpResponse res = httpclient.execute(new HttpPut(uri))) {
-                int statusCode = res.getStatusLine().getStatusCode();
-                LOG.info("Create index alias returned status " + statusCode);
-                if (statusCode != HTTP_OK) {
-                    LOG.error("Creating index alias failed, cause: " + IOUtils.toString(res.getEntity().getContent(), StandardCharsets.UTF_8));
-                    throw new ServerErrorException("Failed to create index alias", HTTP_INTERNAL_ERROR);
-                }
-            }
-
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private boolean aliasExists(String aliasName) {
-        String logString = (aliasName.equals("*")) ? "Inspecting Elasticsearch while initialising shows at least one"
-                : "Inspecting Elasticsearch while initialising shows \"" + aliasName + "\"";
-        boolean searchAliasExists = false;
-        try (CloseableHttpClient closeableHttpClient = createDefault()) {
-            URI uri1 = getIndexUriBuilder().setPath("/_alias/" + aliasName).build();
-            try (CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(new HttpGet(uri1))) {
-                int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
-                if (statusCode == 200) {
-                    LOG.info(logString + " alias exists");
-                    searchAliasExists = true;
-                } else {
-                    LOG.info(" alias does not exist");
-                }
-            }
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
-        }
-        return searchAliasExists;
-    }
-
-    private void removeAliases() {
-        try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = getIndexUriBuilder().setPath("/_all/_aliases/search").build();
-            try (CloseableHttpResponse res = httpclient.execute(new HttpDelete(uri))) {
-                int statusCode = res.getStatusLine().getStatusCode();
-                LOG.info("Delete index aliases returned status " + statusCode);
-                if (statusCode != HTTP_OK && statusCode != HTTP_NOT_FOUND) {
-                    throw new ServerErrorException("Failed to delete index aliases", HTTP_INTERNAL_ERROR);
-                }
-            }
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
-        }
-    }
-
     private Response searchWithJson(String body, URIBuilder searchUriBuilder, Function<String, String>... jsonTranformer) {
         try {
             HttpPost httpPost = new HttpPost(searchUriBuilder.build());
@@ -617,8 +557,7 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
 
-            LOG.info("Done indexing all resources - setting active index: " + newIndex);
-            toggleActiveIndex(newIndex);
+            LOG.info("Done indexing all resources");
         });
     }
 
