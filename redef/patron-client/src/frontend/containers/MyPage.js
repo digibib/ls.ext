@@ -37,7 +37,8 @@ class MyPage extends React.Component {
     if (!this.props.isLoggedIn) {
       return this.renderNotLoggedIn()
     }
-    const tabList = [
+    const hideTabs = '/profile/payment-response/' === this.props.location.pathname
+    let tabList = [
       { label: this.props.intl.formatMessage(messages.loansAndReservations), path: '/profile/loans' },
       { label: this.props.intl.formatMessage(messages.personalInformation), path: '/profile/info' },
       { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' },
@@ -46,11 +47,15 @@ class MyPage extends React.Component {
     return (
       <main role="main" data-automation-id="profile_page" className="mypage-wrapper">
         <div className="wrapper" style={{padding: '1em'}}>
-          <Tabs label={this.props.intl.formatMessage(messages.profileMenuLabel)}
-                tabList={tabList}
-                currentPath={this.props.location.pathname}
-                push={this.props.routerActions.push} />
-          <hr />
+          {!hideTabs &&
+            <Tabs label={this.props.intl.formatMessage(messages.profileMenuLabel)}
+                  tabList={tabList}
+                  currentPath={this.props.location.pathname}
+                  push={this.props.routerActions.push} />
+          }
+          {!hideTabs &&
+            <hr />
+          }
           <div className="clearfix" />
           {this.props.children}
         </div>

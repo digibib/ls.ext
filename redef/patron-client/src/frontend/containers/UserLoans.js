@@ -463,7 +463,7 @@ class UserLoans extends React.Component {
     return (
       <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={[purreId, location]} >
         <button className="small-blue-btn pay-fine-button"
-
+                disabled={hasKemner}
                 data-automation-id="UserLoans_pay_fine_button">
             <FormattedMessage {...messages.payFineButtonText} />
         </button>
