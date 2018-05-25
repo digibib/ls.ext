@@ -23,7 +23,9 @@
           "@id": "_:0000000"
         },
         {
-          "deichman:isbn": "978-5-7793-2118-1",
+          "deichman:isbn": [
+            "978-5-7793-2118-1"
+          ],
           "deichman:hasEan": "9785779321181",
           "deichman:hasPlaceOfPublication": {
             "@id": "_:0000000"

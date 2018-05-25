@@ -72,7 +72,9 @@
         "@id": "_:0000000"
       },
       {
-        "deichman:isbn": "000-12-345-678-9",
+        "deichman:isbn": [
+          "000-12-345-678-9"
+        ],
         "deichman:binding": {
           "@id": "http://data.deichman.no/binding#innbundet"
         },

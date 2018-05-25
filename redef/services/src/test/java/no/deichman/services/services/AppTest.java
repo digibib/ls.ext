@@ -782,7 +782,7 @@ public class AppTest {
         String testData;
         switch (authorizedValue) {
             case FORMAT_ADAPTATION:
-                testData = "<http://data.deichman.no/formatAdaptation#capitalLetters> <http://www.w3.org/2000/01/rdf-schema#label> \"Capital letters only\"@en .";
+                testData = "<http://data.deichman.no/formatAdaptation#capitalLetters> <http://www.w3.org/2000/01/rdf-schema#label> \"Capital letters\"@en .";
                 break;
             case CONTENT_ADAPTATION:
                 testData = "<http://data.deichman.no/contentAdaptation#easyLanguage> <http://www.w3.org/2000/01/rdf-schema#label> \"Easy to read, easy language\"@en .";
@@ -800,7 +800,7 @@ public class AppTest {
                 testData = "<http://data.deichman.no/format#DVD> <http://www.w3.org/2000/01/rdf-schema#label> \"DVD\"@en .";
                 break;
             case ILLUSTRATIVE_MATTER:
-                testData = "<http://data.deichman.no/illustrativeMatter#illustrert> <http://www.w3.org/2000/01/rdf-schema#label> \"Illustration\"@en .";
+                testData = "<http://data.deichman.no/illustrativeMatter#illustrert> <http://www.w3.org/2000/01/rdf-schema#label> \"Illustrations\"@en .";
                 break;
             case LANGUAGE:
                 testData = "<http://lexvo.org/id/iso639-3/afr> <http://www.w3.org/2000/01/rdf-schema#label> \"Afrikaans\"@en .";
