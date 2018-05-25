@@ -38,7 +38,7 @@ class MyPage extends React.Component {
       return this.renderNotLoggedIn()
     }
     const hideTabs = '/profile/payment-response/' === this.props.location.pathname
-    let tabList = [
+    const tabList = [
       { label: this.props.intl.formatMessage(messages.loansAndReservations), path: '/profile/loans' },
       { label: this.props.intl.formatMessage(messages.personalInformation), path: '/profile/info' },
       { label: this.props.intl.formatMessage(messages.settings), path: '/profile/settings' },

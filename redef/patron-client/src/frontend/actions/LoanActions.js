@@ -165,7 +165,6 @@ export function processFinePaymentSuccess (transactionId, responseCode, authoriz
 }
 
 export function processFinePaymentFailure (transactionId, error) {
-  console.log('Oh noes')
   return dispatch => {
     dispatch({
       type: types.PROCESS_PAYMENT_FAILURE,
@@ -187,7 +186,7 @@ export function processFinePaymentCancelled (transactionId) {
 export function processFinePayment (transactionId, responseCode) {
   const url = '/api/v1/checkouts/process-fine-payment'
   return dispatch => {
-    if('OK' === responseCode) {
+    if ('OK' === responseCode) {
       dispatch(startProcessFinePayment(transactionId))
       return fetch(url, {
         method: 'PUT',

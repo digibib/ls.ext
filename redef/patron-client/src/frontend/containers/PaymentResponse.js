@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Redirect, Link} from 'react-router'
+import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl'
 import QueryString from 'query-string'
 import {formatDate} from '../utils/dateFormatter'
-import {push} from 'react-router-redux'
+import Constants from '../constants/Constants'
 
 import * as LoanActions from '../actions/LoanActions'
 
@@ -17,7 +17,7 @@ class PaymentResponse extends React.Component {
     const transactionId = QueryString.parse(this.props.location.search).transactionId
     const responseCode = QueryString.parse(this.props.location.search).responseCode
     this.props.loanActions.processFinePayment(transactionId, responseCode)
-    window.history.replaceState({}, document.title, "/profile/" + "payment-response");
+    window.history.replaceState({}, document.title, '/profile/payment-response')
   }
 
   renderMainContributors (item) {
@@ -111,7 +111,7 @@ class PaymentResponse extends React.Component {
   }
 
   render () {
-    if(this.props.isSavingPayment || this.props.isRequestingLoansAndReservations) {
+    if (this.props.isSavingPayment || this.props.isRequestingLoansAndReservations) {
       return (
         <div style={{textAlign: 'center'}}>
           <span data-automation-id="is_searching" className="loading-spinner">
@@ -121,7 +121,7 @@ class PaymentResponse extends React.Component {
       )
     }
 
-    if(this.props.isPaymentCancelled) {
+    if (this.props.isPaymentCancelled) {
       return (
         <div>
           <section className="loan">
@@ -145,7 +145,7 @@ class PaymentResponse extends React.Component {
       )
     }
 
-    if(this.props.isPaymentFailed) {
+    if (this.props.isPaymentFailed) {
       return (
         <div>
           {this.props.isPaymentFailed}
@@ -169,7 +169,6 @@ class PaymentResponse extends React.Component {
         </div>
       )
     }
-
 
     const loans = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
@@ -260,7 +259,7 @@ export const messages = defineMessages({
     id: 'UserLoans.genericExtendLoanError',
     description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
     defaultMessage: 'Not able to extend - Please contact library for details'
-  },
+  }
 })
 
 PaymentResponse.propTypes = {

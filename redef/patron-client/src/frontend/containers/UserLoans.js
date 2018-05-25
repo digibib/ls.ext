@@ -459,11 +459,11 @@ class UserLoans extends React.Component {
   }
 
   renderPayFineButton (purreId, hasKemner) {
-    let location = window.location.origin
+    const location = window.location.origin
     return (
       <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={[purreId, location]} >
         <button className="small-blue-btn pay-fine-button"
-                disabled={hasKemner}
+                disabled={false}
                 data-automation-id="UserLoans_pay_fine_button">
             <FormattedMessage {...messages.payFineButtonText} />
         </button>

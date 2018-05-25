@@ -33,15 +33,15 @@ export default function loan (state = initialState, action) {
     case REQUEST_EXTEND_ALL_LOANS:
       return { ...state, isRequestingExtendAllLoans: true, extendLoanError: false, hasRequestedRenewAll: true }
     case REQUEST_START_PROCESS_PAYMENT:
-      return { ...state, isSavingPayment: true, isPaymentSaved: false}
+      return { ...state, isSavingPayment: true, isPaymentSaved: false }
     case PAYMENT_SUCCESS:
-      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends : action.payload.successfulExtends, failedExtends: action.payload.failedExtends}
+      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends: action.payload.successfulExtends, failedExtends: action.payload.failedExtends }
     case PROCESS_PAYMENT_CANCELLED:
-      return { ...state, isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: true}
+      return { ...state, isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: true }
     case PROCESS_PAYMENT_FAILURE:
-        return Object.assign({}, state, {
-          isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: false, isPaymentFailed: true
-        });
+      return Object.assign({}, state, {
+        isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: false, isPaymentFailed: true
+      })
     default:
       return state
   }
