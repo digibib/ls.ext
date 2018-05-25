@@ -29,8 +29,8 @@ CONSTRUCT {
                deich:bio ?bio ;
                deich:country ?country ;
                deich:nationality ?nationLabel ;
-               deich:contentAdaptation ?contentAdaptationCode ;
-               deich:adaptation ?contentAdaptationCode ;
+               deich:contentAdaptation ?contentAdaptationNorwegianName ;
+               deich:adaptation ?contentAdaptationNorwegianName ;
                deich:series ?seriesTitle ;
                deich:totalNumItems ?totalNumItems ;
                deich:literaryForm ?litform ;
@@ -198,9 +198,11 @@ WHERE {
            FILTER(lang(?nLabel) = "no")
   }
   UNION { <__WORKURI__> deich:hasContentAdaptation ?contentAdaptation .
-           ?contentAdaptation duo:code ?contentAdaptationCode .
-           #?contentAdaptation duo:code ?adaptation .
-  }
+           ?contentAdaptation rdfs:label ?contentAdaptationLabel .
+           BIND(str(?contentAdaptationLabel) AS ?contentAdaptationNorwegianName)
+           FILTER(lang(?contentAdaptationLabel) = "no")
+        }
+
   UNION { <__WORKURI__> deich:isPartOfWorkSeries ?wsBnode .
           ?wsBnode deich:workSeries ?workSeries .
           ?workSeries ?seriesPred ?seriesTitle .
