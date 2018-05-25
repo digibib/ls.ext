@@ -318,12 +318,12 @@ class UserLoans extends React.Component {
           <h1>
             <FormattedMessage {...messages.yourLoansWithFine} />
           </h1>
-          <p>
-            <FormattedMessage {...messages.payFineInformation} />
-          </p>
           {this.renderPayFineButton(purreId, hasKemner)}
           {this.renderRenewAllButton(true)}
         </div>
+          <p className="fine-info">
+            <FormattedMessage {...messages.payFineInformation} />
+          </p>
         <div className="loan fine">
           {this.renderLoans(loans, true)}
         </div>
