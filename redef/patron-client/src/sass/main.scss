@@ -3812,7 +3812,7 @@ footer .social-icons {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(0, 0, 0, 0.7);
   overflow: scroll;
 }
 
@@ -3838,9 +3838,8 @@ footer .social-icons {
 
 
 .modal-content {
-  @include span(10);
-  @include push(1);
-  margin-top: $rhythm5;
+  @include span(12);
+  margin-top: 5em;
   border-radius: 0;
   overflow: visible;
   -webkit-overflow-scrolling: touch;
