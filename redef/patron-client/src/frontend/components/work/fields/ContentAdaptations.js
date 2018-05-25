@@ -12,7 +12,7 @@ const ContentAdaptations = ({ contentAdaptations, intl }) => {
         <br />
         {contentAdaptations.map((contentAdaptation, index) =>
           <span key={contentAdaptation}>
-            <Link to={fieldQueryLink('tilpassetform', intl.formatMessage({id: contentAdaptation}))}>
+            <Link to={fieldQueryLink('tilrettelagt', intl.formatMessage({id: contentAdaptation}))}>
               { intl.formatMessage({ id: contentAdaptation }) }
             </Link>
            {index + 1 === contentAdaptations.length ? '' : ', '}

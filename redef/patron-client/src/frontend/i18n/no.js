@@ -33,7 +33,7 @@ export default {
   'ContactDetailsForm.email': 'e-post',
   'ContactDetailsForm.mobile': 'mobilnummer',
   'ContactDetailsForm.verifyContactDetails': 'Vennligst sjekk/fyll ut kontaktinfo.',
-  'ContentAdaptations.labelContentAdaptations': 'Tilrettelagt innhold',
+  'ContentAdaptations.labelContentAdaptations': 'Tilrettelagt',
   'CountryOfOrigin.labelCountryOfOrigin': 'Opprinnelsesland',
   'DeweyNumber.labelDeweyNumber': 'Deweynr.',
   'Duration.duration': 'Spilletid',
