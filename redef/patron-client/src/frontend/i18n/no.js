@@ -373,7 +373,7 @@ export default {
   'UserLoans.yourLoansWithKemner': 'Lån med kemnersak',
   'UserLoans.yourLoansWithFine': 'Lån med gebyr',
   'UserLoans.loanWithFine': 'Knyttet til gebyr',
-  'UserLoans.payFineButtonText': 'Betal gebyr 100-,',
+  'UserLoans.payFineButtonText': 'Betal gebyr 100,-',
   'UserLoans.payFineInformation': 'Du har purregebyr på følgende lån og kontoen din er derfor sperret. Betal for å åpne kontoen.',
   'UserLoans.loanWithKemner': 'Kravet har gått til kemner',
   'UserLoans.kemnerInformation': 'Du har kemnersak på følgende lån og kontoen din er derfor sperret. Du kan ikke forlenge eksisterende lån eller låne mer før saken er avsluttet.',
