@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl'
 import * as ProfileActions from '../actions/ProfileActions'
 import * as HistoryActions from '../actions/HistoryActions'
+import Tooltip from 'react-tooltip-component'
 
 class KeepMyHistory extends React.Component {
 
@@ -40,7 +41,7 @@ class KeepMyHistory extends React.Component {
     return (
       <div key={Math.random()}>
         <div className="reminders-group">
-          <div className="reminder-item">
+          <div className="reminder-item history-setting">
             <input data-automation-id="UserSettings_keepMyHistory"
                    type="checkbox"
                    name="keep-my-history"
@@ -55,6 +56,11 @@ class KeepMyHistory extends React.Component {
                 </span>
                 <FormattedMessage {...messages.keepMyHistory} />
             </label>
+            <Tooltip title={this.props.intl.formatMessage(messages.extraInfo)} position="top">
+              <button className="btn btn-default">
+                <img className="icon" style={{ fontSize: 16, marginTop: '-5px' }} src="/images/question.svg" />
+              </button>
+            </Tooltip>
           </div>
 
           <div className="reminder-item">
@@ -114,6 +120,11 @@ export const messages = defineMessages({
     id: 'UserSettings.policyLink',
     description: 'Text for link to read about privacy policy',
     defaultMessage: 'Read about our privacy policy'
+  },
+  extraInfo: {
+    id: 'UserSettings.extraInfo',
+    description: 'Text from tooltip on history setting',
+    defaultMessage: 'Bla bla bla blu.'
   }
 })
 
