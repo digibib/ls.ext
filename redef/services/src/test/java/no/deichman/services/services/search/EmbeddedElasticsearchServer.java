@@ -64,14 +64,10 @@ public final class EmbeddedElasticsearchServer {
                 .withStartTimeout(2, TimeUnit.MINUTES)
                 .withEsJavaOpts("-Xms512m -Xmx512m")
                 .withPlugin(getenv().getOrDefault("ES_ICU_PLUGIN_URL", "analysis-icu"))
-                .withIndex("a", idx)
-                .withIndex("b", idx)
+                .withIndex("search", idx)
                 .build()
                 .start();
 
-        try (CloseableHttpClient httpclient = createDefault()) {
-            httpclient.execute(new HttpPut("http://localhost:" + embeddedElastic.getHttpPort() + "/a/_alias/search"));
-        }
     }
 
     public static EmbeddedElastic getClient() {
