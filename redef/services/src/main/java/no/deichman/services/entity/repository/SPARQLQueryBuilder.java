@@ -238,12 +238,27 @@ public final class SPARQLQueryBuilder {
         String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
         String add = getStringOfStatments(patches, "ADD", KEEP_BLANK_NODES);
 
+        //
+        // DEICH-1261: Operations of the type "del-optional" are automatically generated inverse relations that may
+        // or may not exist as relations in the triple store. They are thus wrapped as OPTIONAL in the WHERE-clause
+        // of the final query.
+        //
+        String optionalDelSelect = getStringOfStatementsWithVariables(patches, "DEL-OPTIONAL");
+
         if (del.length() > 0) {
             q.append("DELETE DATA {" + NEWLINE + del + "};" + NEWLINE);
         }
+
         if (delSelect.length() > 0) {
-            q.append("DELETE {" + NEWLINE + delSelect + "}" + NEWLINE + "WHERE {" + NEWLINE + delSelect + "};" + NEWLINE);
+            q.append("DELETE {" + NEWLINE + delSelect + NEWLINE + optionalDelSelect + "}" + NEWLINE + "WHERE {" + NEWLINE + delSelect);
+
+            if (optionalDelSelect.length() > 0) {
+                q.append(NEWLINE + "OPTIONAL {" + NEWLINE + optionalDelSelect + NEWLINE + "}" + NEWLINE);
+            }
+
+            q.append("};" + NEWLINE);
         }
+
         if (add.length() > 0) {
             q.append(INSERT + " DATA {" + NEWLINE + add + "};" + NEWLINE);
         }
@@ -252,7 +267,6 @@ public final class SPARQLQueryBuilder {
     }
 
     private String getStringOfStatementsWithVariables(List<Patch> patches, String operation) {
-
         String retVal = "";
 
         String bnodeSubjectCheck = patches.stream()

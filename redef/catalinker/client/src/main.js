@@ -3216,6 +3216,12 @@
                     inverseRelationOpSpec.alternativeValueFor[ inputChain.first().value().predicate ] = mappings[ valueBeforeMapping ]
                   }
                 })
+
+                // deich-1261: since there is no guarantee that the inverse relations produced by this patch actually
+                // exist, we introduce a new operation type so that the service layer can be warned...
+                if (inverseRelationOpSpec.operation == 'del') {
+                    inverseRelationOpSpec.operation = 'del-optional'
+                }
                 // make a delete existing inverse relation operation spec as well, to avoid duplicates if the inverse relation already exists
                 opsWithInverse.push(inverseRelationOpSpec)
                 if (opSpec.operation === 'add') {
