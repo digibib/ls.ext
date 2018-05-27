@@ -259,7 +259,7 @@ module.exports = {
     'title': '=ti',
     'tilrettelagt': { scope: 'Work', translation: 'contentAdaptation' },
     'tilpasning': { scope: 'Publication', translation: 'formatAdaptation' },
-    'tpf': '=tilpasset',
+    'tpf': '=tilpasning',
     'tpi': '=tilrettelagt',
     'tp': 'adaptation',
     'tittel': '=ti',
