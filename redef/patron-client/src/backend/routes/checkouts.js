@@ -117,14 +117,13 @@ module.exports = (app) => {
       const responseCode = jsonResponse.ProcessResponse.ResponseCode
       const transactionId = jsonResponse.ProcessResponse.TransactionId
 
-
       // Get all loans from koha
       const loansRes = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/loansandreservations`)
       const loans = await loansRes.json()
       // Extend all loans with isPurresak
-      let successfulExtends = []
-      let failedExtends = []
-      for(let loan of loans.loans) {
+      const successfulExtends = []
+      const failedExtends = []
+      for (const loan of loans.loans) {
         if (loan.isPurresak) {
           const extendRes = await fetch(`http://xkoha:8081/api/v1/checkouts/${loan.id}`, {
             method: 'PUT'
@@ -151,7 +150,7 @@ module.exports = (app) => {
         body: `nets_id=${encodeURIComponent(transactionId)}`
       })
       const kohaResJson = await kohaRes.json()
-
+      console.log(kohaResJson)
       response.send({
         transactionId: transactionId,
         responseCode: responseCode,

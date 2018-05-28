@@ -379,7 +379,12 @@ class UserLoans extends React.Component {
               </div>
               {item.isPurresak &&
                 <div className="flex-col extend-msg fine-info">
-                  <p><FormattedMessage {...messages.loanWithFine} /></p>
+                  <p>
+                    <FormattedMessage {...messages.loanWithFine} />
+                    {item.isReturned &&
+                      <span><br/>Levert</span>
+                    }
+                  </p>
                 </div>
               }
               {item.isKemnersak &&
@@ -463,7 +468,7 @@ class UserLoans extends React.Component {
     return (
       <ClickableElement onClickAction={this.props.loanActions.startPayFine} onClickArguments={[purreId, location]} >
         <button className="small-blue-btn pay-fine-button"
-                disabled={false}
+                disabled={hasKemner}
                 data-automation-id="UserLoans_pay_fine_button">
             <FormattedMessage {...messages.payFineButtonText} />
         </button>
