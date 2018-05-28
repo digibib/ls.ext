@@ -29,8 +29,6 @@ services:
     ports:
       - "8005:8005"
       - "5070:5070"
-    extra_hosts:
-      - "sibyl:10.172.3.100"
     environment:
       KOHA_MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
       KOHA_MYSQL_PASS: "${KOHA_ADMINPASS:-secret}"
@@ -44,8 +42,6 @@ services:
     volumes:
       - "${MOUNTPATH:-..}/redef/patron-client/src:/usr/src/app/src"
       - "${MOUNTPATH:-..}/redef/patron-client/test:/usr/src/app/test"
-    extra_hosts:
-      - "sibyl:10.172.3.100"
     ports:
       - "8000:8000"
       - "35729:35729"
@@ -136,6 +132,6 @@ services:
       - "-c"
       - "mkfifo pipe; while true ; do { read line<pipe;echo -e 'HTTP/1.1 200 OK\\r\\n' ; } | nc -l -p 9999 > pipe; done"
 
-  # koha_indexer:
-  #   ports:
-  #     - "8009:8009"
+  sibyl:
+    ports:
+      - "1666:1666"
