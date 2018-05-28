@@ -2,8 +2,6 @@ package no.deichman.services.services.search;
 
 import no.deichman.services.testutil.PortSelector;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.impl.client.CloseableHttpClient;
 import pl.allegro.tech.embeddedelasticsearch.EmbeddedElastic;
 import pl.allegro.tech.embeddedelasticsearch.IndexSettings;
 
@@ -13,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import static java.lang.ClassLoader.getSystemResourceAsStream;
 import static java.lang.System.getenv;
-import static org.apache.http.impl.client.HttpClients.createDefault;
 
 /**
  * Responsibility: An embedded elasticsearch server for test purposes.
