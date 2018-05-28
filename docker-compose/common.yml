@@ -112,7 +112,7 @@ services:
       SIBYL_PASSWORD: "${SIBYL_PASSWORD:-admin}"
     volumes:
       - "koha_mysql_data:/var/lib/mysql"
-      #- ./setup_sibyl.sql:/docker-entrypoint-initdb.d/setup_sibyl.sql
+      - ./setup_sibyl.sql:/docker-entrypoint-initdb.d/setup_sibyl.sql
     logging:
       driver: "json-file"
       options:
@@ -120,11 +120,18 @@ services:
         max-file: "2"
 
   sibyl:
+    container_name: sibyl
     depends_on:
       - koha_mysql
-    image: alpine
-    command:
-      - "sh -c 'sleep 100"
+    image: digibib/sibyl:test
+    networks:
+      - backend
+    environment:
+      SIBYL_USER: "${SIBYL_USER:-admin}"
+      SIBYL_PASSWORD: "${SIBYL_PASSWORD:-secret}"
+      KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
+      KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
+      KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
 
   catalinker:
     container_name: catalinker
