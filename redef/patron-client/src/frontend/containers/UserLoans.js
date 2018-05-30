@@ -582,8 +582,11 @@ class UserLoans extends React.Component {
           this.renderLoansWithKemner(loansWithKemner)
         }
         {loansWithFines.length > 0 &&
-          this.renderLoansWithFines(loansWithFines, purreId, hasKemner)}
-        {this.renderLoansWithoutFines(loans, hasFine, hasKemner)}
+          this.renderLoansWithFines(loansWithFines, purreId, hasKemner)
+        }
+        {loans.length > 0 &&
+          this.renderLoansWithoutFines(loans, hasFine, hasKemner)
+        }
         {this.renderLoansFromRemoteLibraries()}
         {this.renderReservations()}
         {this.renderReservationsFromRemoteLibraries()}
