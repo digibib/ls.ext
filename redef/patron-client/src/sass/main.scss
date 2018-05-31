@@ -36,6 +36,7 @@ $yellow: #FFFF00 !default;
 $blue: #0000FF !default;
 $headGreen: #25FFA3;
 $red: #FE2E64;
+$maroon: #CC2525;
 
 // Variables - rhythm (replacement for compass function)
 // --------------------------------------------------------
@@ -523,7 +524,7 @@ button {
 }
 
 .pay-fine-button {
-  background: $red;
+  background: $maroon;
   white-space: pre;
   align-self: center;
 }
@@ -2551,12 +2552,24 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   padding-top: 0.5em;
 }
 
+.entry-details h2 .disabled {
+  clear: both;
+  padding-top: 0.5em;
+  color: $darkGreyColor;
+}
+
 .entry-details .publication-title {
   text-decoration: none;
   font-weight: bold;
 }
 
-.pickup .single-entry, .reserve .single-entry, .loan .single-entry, .history .single-entry {
+.entry-details .publication-title-disabled {
+  text-decoration: none;
+  font-weight: bold;
+  color: $darkGreyColor;
+}
+
+.pickup .single-entry, .reserve .single-entry, .loan .single-entry, .history {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -2685,8 +2698,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .loan .loan-header .renew-all-button:disabled {
-  opacity: 0.4;
   cursor: not-allowed;
+  background-color: $mediumGreyColor;
 }
 
 .loan .due-date h2 {
@@ -2808,8 +2821,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .fine {
-  border: dashed 2px red;
-  background-color: #FBEFF5;
+  border: dashed 2px $maroon;
+  background-color: #fceeee;
   box-sizing: border-box;
 }
 
@@ -2818,7 +2831,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .fine-info {
-  color: red;
+  color: $maroon;
 }
 
 .loan-header button {

@@ -34,7 +34,7 @@ class UserLoans extends React.Component {
         )
       }
     } else if (item.author) {
-      return <span data-automation-id="UserLoans_author_name">{item.author}</span>
+      return <span className={(item.isPurresak && item.isReturned) ? 'disabled' : ''} data-automation-id="UserLoans_author_name">{item.author}</span>
     }
   }
 
@@ -291,13 +291,19 @@ class UserLoans extends React.Component {
     }
   }
 
-  renderLoansWithKemner (loans) {
+  renderLoansWithKemner (loans, purreId) {
     return (
       <section className="loan">
         <div className="loan-header">
           <h1>
             <FormattedMessage {...messages.yourLoansWithKemner} />
           </h1>
+          <Tooltip title={this.props.intl.formatMessage(messages.kemnerGeneralInfoTooltip)} position="top">
+            <button className="btn btn-default">
+              <img className="icon" style={{ fontSize: 16, marginTop: '-5px' }} src="/images/question.svg" />
+            </button>
+          </Tooltip>
+          {this.renderPayFineButton(purreId, true)}
           {this.renderRenewAllButton(true)}
         </div>
         <p className="fine-info">
@@ -366,25 +372,32 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <Link className="publication-title" to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
+                <Link className={(item.isPurresak && item.isReturned) ? 'publication-title-disabled' : 'publication-title'} to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
                   {item.title}
                 </Link>
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
-              <div className={(item.isPurresak || item.isKemnersak) ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
+              <div className={(item.isPurresak && !item.isReturned || item.isKemnersak) ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
                 {item.renewalStatus === 'genericExtendLoanSuccess'
                   ? <span className="success">{this.renderDueDate(item)}</span>
                   : <span>{this.renderDueDate(item)}</span>}
               </div>
               {item.isPurresak &&
                 <div className="flex-col extend-msg fine-info">
-                  <p>
-                    <FormattedMessage {...messages.loanWithFine} />
-                    {item.isReturned &&
-                      <span><br/>Levert</span>
-                    }
-                  </p>
+                  {item.isReturned ?
+                    (
+                      <p>
+                        <FormattedMessage {...messages.loanWithFineReturned} />
+                      </p>
+                    )
+                    : (
+                      <p>
+                        <FormattedMessage {...messages.loanWithFine} />
+                      </p>
+                    )
+                  }
+
                 </div>
               }
               {item.isKemnersak &&
@@ -502,7 +515,15 @@ class UserLoans extends React.Component {
   }
 
   renderDueDate (item) {
-    if (item.dueDate) {
+    if (item.isPurresak && item.isReturned) {
+      return (
+        <div>
+          <h2><FormattedMessage {...messages.dueDate} />:</h2>
+          <p>Levert</p>
+        </div>
+      )
+    }
+    else if (item.dueDate) {
       return (
       item.renewalStatus !== 'overdue'
         ? <div>
@@ -579,7 +600,7 @@ class UserLoans extends React.Component {
       <div>
         {this.renderPickups()}
         {loansWithKemner.length > 0 &&
-          this.renderLoansWithKemner(loansWithKemner)
+          this.renderLoansWithKemner(loansWithKemner, purreId)
         }
         {loansWithFines.length > 0 &&
           this.renderLoansWithFines(loansWithFines, purreId, hasKemner)
@@ -738,6 +759,11 @@ export const messages = defineMessages({
     description: 'Fine text in table',
     defaultMessage: 'The loan has a fine'
   },
+  loanWithFineReturned: {
+    id: 'UserLoans.loanWithFineReturned',
+    description: 'Fine text in table',
+    defaultMessage: 'Remaining fine'
+  },
   payFineButtonText: {
     id: 'UserLoans.payFineButtonText',
     description: 'The label for the pay fine button',
@@ -755,6 +781,11 @@ export const messages = defineMessages({
   },
   kemnerTooltip: {
     id: 'UserLoans.kemnerTooltip',
+    description: 'Kemner tooltip',
+    defaultMessage: 'You can still deliver the book back to us.'
+  },
+  kemnerGeneralInfoTooltip: {
+    id: 'UserLoans.kemnerGeneralInfoTooltip',
     description: 'Kemner tooltip',
     defaultMessage: 'You can still deliver the book back to us.'
   },
