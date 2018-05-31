@@ -34,7 +34,7 @@ class UserLoans extends React.Component {
         )
       }
     } else if (item.author) {
-      return <span className={(item.isPurresak && item.isReturned) ? 'disabled' : ''} data-automation-id="UserLoans_author_name">{item.author}</span>
+      return <span className={(item.isPurresak && item.returnedDate) ? 'disabled' : ''} data-automation-id="UserLoans_author_name">{item.author}</span>
     }
   }
 
@@ -372,20 +372,20 @@ class UserLoans extends React.Component {
                 }
               </div>
               <div className="flex-col entry-details">
-                <Link className={(item.isPurresak && item.isReturned) ? 'publication-title-disabled' : 'publication-title'} to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
+                <Link className={(item.isPurresak && item.returnedDate) ? 'publication-title-disabled' : 'publication-title'} to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
                   {item.title}
                 </Link>
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
-              <div className={(item.isPurresak && !item.isReturned || item.isKemnersak) ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
+              <div className={(item.isPurresak && !item.returnedDate || item.isKemnersak) ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
                 {item.renewalStatus === 'genericExtendLoanSuccess'
                   ? <span className="success">{this.renderDueDate(item)}</span>
                   : <span>{this.renderDueDate(item)}</span>}
               </div>
               {item.isPurresak &&
                 <div className="flex-col extend-msg fine-info">
-                  {item.isReturned ?
+                  {item.returnedDate ?
                     (
                       <p>
                         <FormattedMessage {...messages.loanWithFineReturned} />
@@ -515,7 +515,7 @@ class UserLoans extends React.Component {
   }
 
   renderDueDate (item) {
-    if (item.isPurresak && item.isReturned) {
+    if (item.isPurresak && item.returnedDate) {
       return (
         <div>
           <h2><FormattedMessage {...messages.dueDate} />:</h2>
