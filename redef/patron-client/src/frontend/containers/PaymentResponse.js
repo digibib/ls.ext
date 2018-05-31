@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import fieldQueryLink from '../utils/link'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {defineMessages, FormattedMessage, injectIntl} from 'react-intl'
+import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl'
 import QueryString from 'query-string'
 import {formatDate} from '../utils/dateFormatter'
 import Constants from '../constants/Constants'
@@ -38,19 +38,27 @@ class PaymentResponse extends React.Component {
     }
   }
 
-  renderDueDate (item) {
+  renderDueDate (item, successfulExtends, failedExtends) {
     if (item.dueDate) {
-      return (
-      item.renewalStatus !== 'overdue'
-        ? <div>
-          <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
-        </div>
-        : <div>
-          <h2><FormattedMessage {...messages.dueDate} />:</h2>
-          <p className="fail" data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
-        </div>
-      )
+      if (successfulExtends.includes(item.id)) {
+        return (
+          <div className="flex-col due-date">
+            <div>
+              <h2><FormattedMessage {...messages.newDueDate} />:</h2>
+              <p data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
+            </div>
+          </div>
+        )
+      } else if (failedExtends.includes(item.id)) {
+        return (
+          <div className="flex-col due-date fine-info">
+            <div>
+              <h2><FormattedMessage {...messages.dueDate} />:</h2>
+              <p className="fail" data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
+            </div>
+          </div>
+        )
+      }
     }
   }
 
@@ -86,11 +94,7 @@ class PaymentResponse extends React.Component {
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
-              <div className={(item.isPurresak || item.isKemnersak) ? 'flex-col due-date fine-info' : 'flex-col due-date'}>
-                {item.renewalStatus === 'genericExtendLoanSuccess'
-                  ? <span className="success">{this.renderDueDate(item)}</span>
-                  : <span>{this.renderDueDate(item)}</span>}
-              </div>
+              {this.renderDueDate(item, successfulExtends, failedExtends)}
               <div className="flex-col extend-msg">
                 {successfulExtends.includes(item.id) &&
                   <p>
@@ -98,8 +102,8 @@ class PaymentResponse extends React.Component {
                   </p>
                 }
                 {failedExtends.includes(item.id) &&
-                  <p>
-                    <FormattedMessage {...messages.genericExtendLoanError} />
+                  <p className="fail">
+                    <FormattedMessage {...messages[ this.props.failedExtends[item.id] ]} />
                   </p>
                 }
               </div>
@@ -173,7 +177,7 @@ class PaymentResponse extends React.Component {
     const loans = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
       .filter(loan => {
-        return (this.props.successfulExtends.includes(loan.id) || this.props.failedExtends.includes(loan.id))
+        return (this.props.successfulExtends.includes(loan.id) || Object.keys(this.props.failedExtends).includes(loan.id))
       })
     return (
       <div>
@@ -196,7 +200,7 @@ class PaymentResponse extends React.Component {
                 Se over disse lånene
               </h1>
             </div>
-            {this.renderLoans(loans, this.props.successfulExtends, this.props.failedExtends)}
+            {this.renderLoans(loans, this.props.successfulExtends, Object.keys(this.props.failedExtends))}
           </section>
         }
         <div>
@@ -250,6 +254,11 @@ export const messages = defineMessages({
     description: 'The due date of a reservation',
     defaultMessage: 'Due date'
   },
+  newDueDate: {
+    id: 'UserLoans.newDueDate',
+    description: 'The due date of a reservation',
+    defaultMessage: 'New due date'
+  },
   genericExtendLoanSuccess: {
     id: 'UserLoans.genericExtendLoanSuccess',
     description: 'A generic message for successful renewal.',
@@ -259,6 +268,31 @@ export const messages = defineMessages({
     id: 'UserLoans.genericExtendLoanError',
     description: 'A generic message when extending the loan goes wrong, which can be caused by server errors, network problems etc.',
     defaultMessage: 'Not able to extend - Please contact library for details'
+  },
+  too_soon: {
+    id: 'UserLoans.tooSoonToRenew',
+    description: 'Message when it is too early for renewing loan.',
+    defaultMessage: 'Too early to extend'
+  },
+  too_many: {
+    id: 'UserLoans.tooManyRenewals',
+    description: 'Message when material has reached maximum number of renewals.',
+    defaultMessage: 'Can not be extended anymore'
+  },
+  on_reserve: {
+    id: 'UserLoans.materialIsReserved',
+    description: 'Message when material is reserved and cannot be reserved.',
+    defaultMessage: 'Reserved - cannot extend'
+  },
+  restriction: {
+    id: 'UserLoans.patronHasRestriction',
+    description: 'Message when restricted patron is trying to renew material.',
+    defaultMessage: 'Not able to extend - Please contact library for details'
+  },
+  overdue: {
+    id: 'UserLoans.patronHasOverdue',
+    description: 'Message when patron with overdues is trying to renew material.',
+    defaultMessage: 'Overdue material - cannot renew.'
   }
 })
 
@@ -271,7 +305,10 @@ PaymentResponse.propTypes = {
   isPaymentCancelled: PropTypes.bool.isRequired,
   isPaymentFailed: PropTypes.bool.isRequired,
   successfulExtends: PropTypes.array.isRequired,
-  failedExtends: PropTypes.array.isRequired
+  failedExtends: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  intl: intlShape.isRequired,
+  isRequestingLoansAndReservations: PropTypes.bool.isRequired
 }
 
 function mapStateToProps (state) {
@@ -282,7 +319,8 @@ function mapStateToProps (state) {
     isPaymentCancelled: state.loan.isPaymentCancelled,
     isPaymentFailed: state.loan.isPaymentFailed,
     successfulExtends: state.loan.successfulExtends,
-    failedExtends: state.loan.failedExtends
+    failedExtends: state.loan.failedExtends,
+    isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations
   }
 }
 

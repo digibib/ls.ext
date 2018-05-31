@@ -45,8 +45,8 @@ module.exports = (app) => {
   }
 
   async function xml2jsPromiseParser (xml) {
-    return new Promise(function (resolve, reject) {
-      parseString(xml, function (err, result) {
+    return new Promise((resolve, reject) => {
+      parseString(xml, (err, result) => {
         if (err) {
           reject(err)
         } else {
@@ -65,10 +65,11 @@ module.exports = (app) => {
     const netsUrl = process.env.NETS_URL
     const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${request.body.fineId}&amount=10000&CurrencyCode=NOK&redirectUrl=${request.body.origin}/profile/payment-response/`
     const terminalUrl = `${netsUrl}/Terminal/default.aspx`
-    try {
+    try {
       const res = await isofetch(registerUrl)
       const xmlResponse = await res.text()
       const jsonResponse = await xml2jsPromiseParser(xmlResponse)
+      console.log(jsonResponse)
       const transactionId = jsonResponse.RegisterResponse.TransactionId
 
       const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
@@ -112,6 +113,7 @@ module.exports = (app) => {
       const res = await isofetch(processUrl)
       const xmlResponse = await res.text()
       const jsonResponse = await xml2jsPromiseParser(xmlResponse)
+      console.log(jsonResponse)
       const authorizationId = jsonResponse.ProcessResponse.AuthorizationId
       const batchNumber = jsonResponse.ProcessResponse.BatchNumber
       const responseCode = jsonResponse.ProcessResponse.ResponseCode
@@ -122,7 +124,7 @@ module.exports = (app) => {
       const loans = await loansRes.json()
       // Extend all loans with isPurresak
       const successfulExtends = []
-      const failedExtends = []
+      const failedExtends = Object.assign({})
       for (const loan of loans.loans) {
         if (loan.isPurresak) {
           const extendRes = await fetch(`http://xkoha:8081/api/v1/checkouts/${loan.id}`, {
@@ -136,11 +138,13 @@ module.exports = (app) => {
           } else if (extendRes.status === 403) {
             const extend = await extendRes.json()
             if (extend && extend.error) {
-              failedExtends.push(loan.id)
+              const msg = parseCheckoutErrorMsg(extend)
+              failedExtends[loan.id] = msg
             }
           }
         }
       }
+
       const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/`, {
         method: 'PUT',
         headers: {
@@ -151,6 +155,7 @@ module.exports = (app) => {
       })
       const kohaResJson = await kohaRes.json()
       console.log(kohaResJson)
+
       response.send({
         transactionId: transactionId,
         responseCode: responseCode,

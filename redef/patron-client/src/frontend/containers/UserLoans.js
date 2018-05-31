@@ -385,8 +385,8 @@ class UserLoans extends React.Component {
               </div>
               {item.isPurresak &&
                 <div className="flex-col extend-msg fine-info">
-                  {item.returnedDate ?
-                    (
+                  {item.returnedDate
+                  ? (
                       <p>
                         <FormattedMessage {...messages.loanWithFineReturned} />
                       </p>
@@ -522,8 +522,7 @@ class UserLoans extends React.Component {
           <p>Levert</p>
         </div>
       )
-    }
-    else if (item.dueDate) {
+    } else if (item.dueDate) {
       return (
       item.renewalStatus !== 'overdue'
         ? <div>

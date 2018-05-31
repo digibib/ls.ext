@@ -186,7 +186,7 @@ export function processFinePaymentCancelled (transactionId) {
 export function processFinePayment (transactionId, responseCode) {
   const url = '/api/v1/checkouts/process-fine-payment'
   return dispatch => {
-    if ('OK' === responseCode) {
+    if (responseCode === 'OK') {
       dispatch(startProcessFinePayment(transactionId))
       return fetch(url, {
         method: 'PUT',
@@ -206,7 +206,7 @@ export function processFinePayment (transactionId, responseCode) {
           dispatch(processFinePaymentFailure(transactionId))
         }
       }).catch(error => dispatch(processFinePaymentFailure(transactionId, error)))
-    } else if ('Cancel' === responseCode) {
+    } else if (responseCode === 'Cancel') {
       dispatch(processFinePaymentCancelled(transactionId))
     } else {
       dispatch(processFinePaymentFailure(transactionId))
