@@ -87,32 +87,46 @@ WHERE {
             OPTIONAL { ?subject deich:place ?subjectPlace . ?subjectPlace deich:prefLabel ?placeLabel  }
 
             BIND(IF (BOUND(?subjectOrdinal),
-                CONCAT(?subjectNameStep1, " ", str(?subjectOrdinal)),
+                CONCAT(?subjectNameStep1, " ", STR(?subjectOrdinal)),
                 ?subjectNameStep1) as ?subjectNameStep2) .
 
             BIND(IF (BOUND(?placeLabel),
-                CONCAT(?subjectNameStep2, " ", str(?placeLabel)),
+                CONCAT(?subjectNameStep2, " ", STR(?placeLabel)),
                 ?subjectNameStep2) as ?subjectNameStep3) .
 
             BIND(IF (BOUND(?subjectDate),
-                CONCAT(?subjectNameStep3, " ", str(?subjectDate)),
+                CONCAT(?subjectNameStep3, " ", STR(?subjectDate)),
                 ?subjectNameStep3) as ?subjectNameStep4) .
 
             BIND(IF (BOUND(?subjectSpecification),
-                CONCAT(?subjectNameStep4, " (", str(?subjectSpecification), ")"),
+                CONCAT(?subjectNameStep4, " (", STR(?subjectSpecification), ")"),
                 ?subjectNameStep4
                 ) as ?subjectName)
         }
 
   # subject types with mainTitle: Work, Place
   UNION { <__WORKURI__> deich:subject ?subject .
-            ?subject deich:mainTitle ?subjectNameString .
-            OPTIONAL { ?subject a deich:Work .
-                ?subject deich:partTitle ?subjectPT }
+            ?subject deich:mainTitle ?subjectNameStep1 .
+            OPTIONAL {?subject deich:specification ?subjectSpecification }
+            OPTIONAL {?subject deich:subtitle ?subjectSubtitle }
+            OPTIONAL {?subject deich:partNumber ?subjectPartNumber }
+            OPTIONAL {?subject deich:partTitle ?subjectPartTitle }
 
-            BIND(IF (BOUND(?subjectPT),
-                CONCAT(?subjectNameString, " ", ?subjectPT),
-                ?subjectNameString) as ?subjectName)  .
+            BIND(IF (BOUND(?subjectSpecification),
+                CONCAT(?subjectNameStep1, " (", STR(?subjectSpecification), ")"),
+                       ?subjectNameStep1) as ?subjectNameStep2) .
+
+            BIND(IF (BOUND(?subjectSubtitle),
+                CONCAT(?subjectNameStep2, " : ", STR(?subjectSubtitle)),
+                       ?subjectNameStep2) as ?subjectNameStep3) .
+
+            BIND(IF (BOUND(?subjectPartNumber),
+                CONCAT(?subjectNameStep3, ". ", STR(?subjectPartNumber)),
+                ?subjectNameStep3) as ?subjectNameStep4) .
+
+            BIND(IF (BOUND(?subjectPartTitle),
+                CONCAT(?subjectNameStep4, ". ", STR(?subjectPartTitle)),
+                       ?subjectNameStep4) as ?subjectName)
         }
   UNION { <__WORKURI__> deich:untranscribedTitle ?untranscribedTitle }
   UNION { <__WORKURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
@@ -132,16 +146,16 @@ WHERE {
             deich:agent ?contribAgent ;
             deich:role ?contribRoleURI .
 
-            ?contribAgent deich:name ?contribAgentNameString .
+            ?contribAgent deich:name ?contribAgentNameStep1 .
             OPTIONAL { ?contribAgent deich:ordinal ?agentOrdinal }
             OPTIONAL { ?contribAgent deich:specification ?agentSpecification }
 
+            BIND(IF (BOUND(?agentOrdinal),
+                        CONCAT(?contribAgentNameStep1, " ", STR(?agentOrdinal)),
+                               ?contribAgentNameStep1) as ?contribAgentNameStep2) .
             BIND(IF (BOUND(?agentSpecification),
-                CONCAT(?contribAgentNameString, " ", str(?agentOrdinal), " (", str(?agentSpecification), ")"),
-                CONCAT(?contribAgentNameString, " ", str(?agentOrdinal))
-            ) as ?agentNameWithOrdinal)  .
-
-            BIND(IF (BOUND(?agentNameWithOrdinal), ?agentNameWithOrdinal, ?contribAgentNameString) as ?contribAgentName)
+                           CONCAT(?contribAgentNameStep2, " (", STR(?agentSpecification), ")"),
+                               ?contribAgentNameStep2) as ?contribAgentName) .
 
          OPTIONAL {
               ?workContrib a deich:MainEntry.
@@ -154,6 +168,7 @@ WHERE {
 
          BIND (?contribAgentName AS ?name) .
          BIND (IF (BOUND(?mainEntry), ?contribAgentName, ?thisIsAlwaysUnbound) AS ?mainEntryName) .
+
          BIND(str(?contribRoleURI) AS ?role)
          OPTIONAL { ?contribAgent deich:birthYear ?birthYearO . BIND(str(?birthYearO) AS ?birthYear) }
          OPTIONAL { ?contribAgent deich:deathYear ?deathYearO . BIND(str(?deathYearO) AS ?deathYear) }
