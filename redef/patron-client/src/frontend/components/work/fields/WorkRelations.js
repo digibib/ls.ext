@@ -56,15 +56,17 @@ const WorkRelations = ({ workRelations, intl }) => {
                     {')'}
                     </span >
                 } else {
+                  const showLiteraryForms = relationType === 'http://data.deichman.no/relationType#relatedWork' && relation.literaryForms
+
                   link = <Link
                     data-automation-id="work_relation_link"
                     to={relation.relativeUri} >
                     {relationLink(title(relation), mainContributorName(relation.contributors), relation.numberInRelation)}
-                    {relation.literaryForms && ' ('}
-                    {relation.literaryForms && relation.literaryForms
+                    {showLiteraryForms && ' ('}
+                    {showLiteraryForms && relation.literaryForms
                       .map(litForm => intl.formatMessage({ id: litForm.id }))
                       .join(', ')}
-                    {relation.literaryForms && ')'}
+                    {showLiteraryForms && ')'}
                   </Link >
                 }
                 return (
