@@ -197,7 +197,7 @@ class PaymentResponse extends React.Component {
           <section className="loan">
             <div className="loan-header">
               <h1>
-                Se over disse lånene
+                <FormattedMessage {...messages.paymentLoansUpdatedHeader} />
               </h1>
             </div>
             {this.renderLoans(loans, this.props.successfulExtends, Object.keys(this.props.failedExtends))}
@@ -222,7 +222,7 @@ export const messages = defineMessages({
   paymentSuccessText: {
     id: 'UserLoans.paymentSuccessText',
     description: 'Information text for a successful payment',
-    defaultMessage: 'We have extended your loans.'
+    defaultMessage: 'We have now renewed those loaned items that were possible to renew. Items reserved by other users cannot be renewed, and must be returned as soon as possible in order to avoid replacement charge.'
   },
   paymentCancelledHeader: {
     id: 'UserLoans.paymentCancelledHeader',
@@ -237,7 +237,12 @@ export const messages = defineMessages({
   paymentFailedHeader: {
     id: 'UserLoans.paymentFailedHeader',
     description: 'Header for a failed payment',
-    defaultMessage: 'Your payment failed'
+    defaultMessage: 'Your payment did not complete ok. Please return to My Page to initiate the payment again or contact your local branch.'
+  },
+  paymentLoansUpdatedHeader: {
+    id: 'UserLoans.paymentLoansUpdatedHeader',
+    description: 'Header for updated loans info',
+    defaultMessage: 'Here is an overview of your loaned items'
   },
   paymentFailedText: {
     id: 'UserLoans.paymentFailedText',
@@ -262,7 +267,7 @@ export const messages = defineMessages({
   genericExtendLoanSuccess: {
     id: 'UserLoans.genericExtendLoanSuccess',
     description: 'A generic message for successful renewal.',
-    defaultMessage: 'Loan extended'
+    defaultMessage: 'The item is renewed'
   },
   genericExtendLoanError: {
     id: 'UserLoans.genericExtendLoanError',
@@ -282,7 +287,7 @@ export const messages = defineMessages({
   on_reserve: {
     id: 'UserLoans.materialIsReserved',
     description: 'Message when material is reserved and cannot be reserved.',
-    defaultMessage: 'Reserved - cannot extend'
+    defaultMessage: 'This item is reserved and must be returned as soon as possible in order to avoid replacement charge'
   },
   restriction: {
     id: 'UserLoans.patronHasRestriction',

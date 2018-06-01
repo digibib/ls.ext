@@ -721,12 +721,12 @@ export const messages = defineMessages({
   yourLoansWithKemner: {
     id: 'UserLoans.yourLoansWithKemner',
     description: 'The header over the current loans with fine',
-    defaultMessage: 'Loans with kemnersak'
+    defaultMessage: 'Loan with replacement charge'
   },
   yourLoansWithFine: {
     id: 'UserLoans.yourLoansWithFine',
     description: 'The header over the current loans with fine',
-    defaultMessage: 'Loans with fine'
+    defaultMessage: 'Item with overdue charge'
   },
   howToManageYourRemoteLoans: {
     id: 'UserLoans.howToManageYourRemoteLoans',
@@ -751,47 +751,47 @@ export const messages = defineMessages({
   renewAllLoans: {
     id: 'UserLoans.renewAllLoans',
     description: 'The label for the renew all loans button',
-    defaultMessage: 'Renew all loans'
+    defaultMessage: 'Renew all loaned items'
   },
   payFineInformation: {
     id: 'UserLoans.payFineInformation',
     description: 'The label for the pay fine button',
-    defaultMessage: 'Pay fine'
+    defaultMessage: 'You have overdue charges for the following items. Your account will be reactivated when overdue charges have been paid.'
   },
   loanWithFine: {
     id: 'UserLoans.loanWithFine',
     description: 'Fine text in table',
-    defaultMessage: 'The loan has a fine'
+    defaultMessage: 'Outstanding overdue charge'
   },
   loanWithFineReturned: {
     id: 'UserLoans.loanWithFineReturned',
     description: 'Fine text in table',
-    defaultMessage: 'Remaining fine'
+    defaultMessage: 'Outstanding overdue charge'
   },
   payFineButtonText: {
     id: 'UserLoans.payFineButtonText',
     description: 'The label for the pay fine button',
-    defaultMessage: 'Pay fine 100-,'
+    defaultMessage: 'Pay overdue charge NOK 100,-'
   },
   kemnerInformation: {
     id: 'UserLoans.kemnerInformation',
     description: 'The label for the pay fine button',
-    defaultMessage: 'Pay kemner'
+    defaultMessage: 'A replacement charge has been sent for the following loan(s), and your account is therefore frozen. You cannot renew items currently on loan or loan additional items until payment is received.'
   },
   loanWithKemner: {
     id: 'UserLoans.loanWithKemner',
     description: 'The kemner text in the table',
-    defaultMessage: 'This fine has been transferred to kemner'
+    defaultMessage: 'Replacement charge sent'
   },
   kemnerTooltip: {
     id: 'UserLoans.kemnerTooltip',
     description: 'Kemner tooltip',
-    defaultMessage: 'You can still deliver the book back to us.'
+    defaultMessage: 'You can still return loaned items to the library. Replacement charges will then be subtracted from the bill from the Oslo Tax Collection office. Overdue charges and administration fees must still be paid. It is unfortunately not possible to pay outstanding charges via the library system once the bill has been referred to the Oslo Tax Collection Office.'
   },
   kemnerGeneralInfoTooltip: {
     id: 'UserLoans.kemnerGeneralInfoTooltip',
     description: 'Kemner tooltip',
-    defaultMessage: 'You can still deliver the book back to us.'
+    defaultMessage: 'If no payment is received, your case will be referred to the Oslo Tax Collection Office. At that point it is no longer possible to pay outstanding charges via the library system.'
   },
   approx: {
     id: 'UserLoans.approximately',
