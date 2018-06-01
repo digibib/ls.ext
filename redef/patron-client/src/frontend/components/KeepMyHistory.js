@@ -124,7 +124,7 @@ export const messages = defineMessages({
   extraInfo: {
     id: 'UserSettings.extraInfo',
     description: 'Text from tooltip on history setting',
-    defaultMessage: 'Bla bla bla blu.'
+    defaultMessage: "By turning this setting on, you'll see under the History tab an overview of the loan history as you borrow and deliver. In addition, we get the opportunity to customize our services to you, for example, by giving you recommendations based on what you've borrowed earlier. It will be optional to use this type of service when they arrive. You can delete all or part of your history at any time, or deactivate the function here."
   }
 })
 
