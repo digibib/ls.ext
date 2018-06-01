@@ -67,7 +67,7 @@ export const messages = defineMessages({
   keep: {
     id: 'History.keep',
     description: 'The keep history button text',
-    defaultMessage: 'Keep my history'
+    defaultMessage: 'Preserve my borrowing history'
   },
   notNow: {
     id: 'History.notNow',

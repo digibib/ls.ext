@@ -44,7 +44,7 @@ export const messages = defineMessages({
   saveConsent: {
     id: 'UserSettings.saveConsent',
     description: 'The label for the save button',
-    defaultMessage: 'Keep my checkout history'
+    defaultMessage: 'Preserve my borrowing history'
   }
 })
 

@@ -75,7 +75,7 @@ export const messages = defineMessages({
   keepMyHistory: {
     id: 'UserSettings.keepMyHistory',
     description: 'Label for checkbox which manages keep/discard history',
-    defaultMessage: 'Keep my history'
+    defaultMessage: 'Preserve my borrowing history'
   },
   myHistory: {
     id: 'UserSettings.history',
