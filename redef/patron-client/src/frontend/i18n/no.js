@@ -336,6 +336,7 @@ export default {
   'UserLoans.dateFormat': 'dd.mm.åååå',
   'UserLoans.dueDate': 'Leveringsfrist',
   'UserLoans.newDueDate': 'Ny leveringsfrist',
+  'UserLoans.dueDatePassed': 'For sent levert',
   'UserLoans.enRoute': 'På vei',
   'UserLoans.expiry': 'Hentefrist',
   'UserLoans.extendLoan': 'Forleng lånet',
