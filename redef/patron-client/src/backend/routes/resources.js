@@ -381,13 +381,7 @@ function transformSubjects (subjects) {
         }
       }
 
-      let linkField = getMassagedName(subject)
-
-      if (subject.type === 'Work' && subject.contributors && subject.partTitle) {
-        linkField += `. ${subject.partTitle}`
-      }
-
-      subject.linkField = linkField
+      subject.linkField = label
       subject.linkLabel = label
 
       return subject
