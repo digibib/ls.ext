@@ -237,7 +237,7 @@ export const messages = defineMessages({
   paymentFailedHeader: {
     id: 'UserLoans.paymentFailedHeader',
     description: 'Header for a failed payment',
-    defaultMessage: 'Your payment did not complete ok. Please return to My Page to initiate the payment again or contact your local branch.'
+    defaultMessage: 'Your payment did not complete ok.'
   },
   paymentLoansUpdatedHeader: {
     id: 'UserLoans.paymentLoansUpdatedHeader',

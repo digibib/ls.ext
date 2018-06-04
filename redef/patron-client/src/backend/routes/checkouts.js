@@ -113,7 +113,11 @@ module.exports = (app) => {
       const res = await isofetch(processUrl)
       const xmlResponse = await res.text()
       const jsonResponse = await xml2jsPromiseParser(xmlResponse)
-      console.log(jsonResponse)
+      console.log(JSON.stringify(jsonResponse))
+
+      if(jsonResponse.Exception) {
+        throw "Transaction exception from Nets: " + JSON.stringify(jsonResponse.Exception)
+      }
       const authorizationId = jsonResponse.ProcessResponse.AuthorizationId
       const batchNumber = jsonResponse.ProcessResponse.BatchNumber
       const responseCode = jsonResponse.ProcessResponse.ResponseCode
