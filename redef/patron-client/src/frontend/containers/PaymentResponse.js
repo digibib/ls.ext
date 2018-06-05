@@ -161,15 +161,10 @@ class PaymentResponse extends React.Component {
             </div>
             <div className="payment-response-text">
               <p>
-                <FormattedMessage {...messages.paymentFailedText} />
+                <FormattedMessage {...messages.paymentFailedText} values={{ myPageLink: <Link to="/profile/loans" ><FormattedMessage {...messages.myProfile} /> </Link> }} />
               </p>
             </div>
           </section>
-          <div>
-            <Link to="/profile/loans" >
-              <FormattedMessage {...messages.paymentReturnToMypage} />
-            </Link >
-          </div>
         </div>
       )
     }
@@ -237,7 +232,12 @@ export const messages = defineMessages({
   paymentFailedHeader: {
     id: 'UserLoans.paymentFailedHeader',
     description: 'Header for a failed payment',
-    defaultMessage: 'Your payment did not complete ok.'
+    defaultMessage: 'Your payment failed'
+  },
+  myProfile: {
+    id: 'SearchHeader.myProfile',
+    description: 'My Page',
+    defaultMessage: 'My Page'
   },
   paymentLoansUpdatedHeader: {
     id: 'UserLoans.paymentLoansUpdatedHeader',
@@ -246,8 +246,8 @@ export const messages = defineMessages({
   },
   paymentFailedText: {
     id: 'UserLoans.paymentFailedText',
-    description: 'Information text for a successful payment',
-    defaultMessage: 'Your payment did not complete ok. Please return to My Page to initiate the payment again or contact your local branch.'
+    description: 'Information text for a failed payment',
+    defaultMessage: 'Please return to {myPageLink} to initiate the payment again, or contact your local library.'
   },
   paymentReturnToMypage: {
     id: 'UserLoans.paymentReturnToMypage',
