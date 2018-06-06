@@ -38,7 +38,7 @@ class PaymentResponse extends React.Component {
     }
   }
 
-  renderDueDate (item, successfulExtends, failedExtends) {
+  renderDueDate (item, successfulExtends) {
     if (item.dueDate) {
       if (successfulExtends.includes(item.id)) {
         return (
@@ -46,15 +46,6 @@ class PaymentResponse extends React.Component {
             <div>
               <h2><FormattedMessage {...messages.newDueDate} />:</h2>
               <p data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
-            </div>
-          </div>
-        )
-      } else if (failedExtends.includes(item.id)) {
-        return (
-          <div className="flex-col due-date fine-info">
-            <div>
-              <h2><FormattedMessage {...messages.dueDate} />:</h2>
-              <p className="fail" data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
             </div>
           </div>
         )
@@ -70,7 +61,7 @@ class PaymentResponse extends React.Component {
     }
   }
 
-  renderLoans (loans, successfulExtends, failedExtends) {
+  renderLoans (loans, successfulExtends) {
     if (loans.length > 0) {
       return (
         <div>
@@ -94,16 +85,11 @@ class PaymentResponse extends React.Component {
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
               </div>
-              {this.renderDueDate(item, successfulExtends, failedExtends)}
+              {this.renderDueDate(item, successfulExtends)}
               <div className="flex-col extend-msg">
                 {successfulExtends.includes(item.id) &&
                   <p>
                     <FormattedMessage {...messages.genericExtendLoanSuccess} />
-                  </p>
-                }
-                {failedExtends.includes(item.id) &&
-                  <p className="fail">
-                    <FormattedMessage {...messages[ this.props.failedExtends[item.id] ]} />
                   </p>
                 }
               </div>
@@ -172,7 +158,7 @@ class PaymentResponse extends React.Component {
     const loans = [ ...this.props.loansAndReservations.loans ]
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
       .filter(loan => {
-        return (this.props.successfulExtends.includes(loan.id) || Object.keys(this.props.failedExtends).includes(loan.id))
+        return (this.props.successfulExtends.includes(loan.id))
       })
     return (
       <div>
@@ -195,7 +181,7 @@ class PaymentResponse extends React.Component {
                 <FormattedMessage {...messages.paymentLoansUpdatedHeader} />
               </h1>
             </div>
-            {this.renderLoans(loans, this.props.successfulExtends, Object.keys(this.props.failedExtends))}
+            {this.renderLoans(loans, this.props.successfulExtends)}
           </section>
         }
         <div>
@@ -310,7 +296,6 @@ PaymentResponse.propTypes = {
   isPaymentCancelled: PropTypes.bool.isRequired,
   isPaymentFailed: PropTypes.bool.isRequired,
   successfulExtends: PropTypes.array.isRequired,
-  failedExtends: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   isRequestingLoansAndReservations: PropTypes.bool.isRequired
@@ -324,7 +309,6 @@ function mapStateToProps (state) {
     isPaymentCancelled: state.loan.isPaymentCancelled,
     isPaymentFailed: state.loan.isPaymentFailed,
     successfulExtends: state.loan.successfulExtends,
-    failedExtends: state.loan.failedExtends,
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations
   }
 }

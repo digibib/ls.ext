@@ -128,22 +128,15 @@ module.exports = (app) => {
       const loans = await loansRes.json()
       // Extend all loans with isPurresak
       const successfulExtends = []
-      const failedExtends = Object.assign({})
       for (const loan of loans.loans) {
         if (loan.isPurresak) {
-          const extendRes = await fetch(`http://xkoha:8081/api/v1/checkouts/${loan.id}`, {
+          const extendRes = await fetch(`http://xkoha:8081/api/v1/checkouts/${loan.id}?override_days=2`, {
             method: 'PUT'
           })
           if (extendRes.status === 200) {
             const extend = await extendRes.json()
-            if (extend && extend.dueDate) {
+            if (extend && extend.date_due) {
               successfulExtends.push(loan.id)
-            }
-          } else if (extendRes.status === 403) {
-            const extend = await extendRes.json()
-            if (extend && extend.error) {
-              const msg = parseCheckoutErrorMsg(extend)
-              failedExtends[loan.id] = msg
             }
           }
         }
@@ -165,8 +158,7 @@ module.exports = (app) => {
         responseCode: responseCode,
         authorizationId: authorizationId,
         batchNumber: batchNumber,
-        successfulExtends: successfulExtends,
-        failedExtends: failedExtends
+        successfulExtends: successfulExtends
       })
     } catch (error) {
       console.log(error)

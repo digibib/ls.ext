@@ -148,7 +148,7 @@ export function startProcessFinePayment (transactionId) {
   }
 }
 
-export function processFinePaymentSuccess (transactionId, responseCode, authorizationId, batchNumber, successfulExtends, failedExtends) {
+export function processFinePaymentSuccess (transactionId, responseCode, authorizationId, batchNumber, successfulExtends) {
   return dispatch => {
     dispatch({
       type: types.PAYMENT_SUCCESS,
@@ -157,8 +157,7 @@ export function processFinePaymentSuccess (transactionId, responseCode, authoriz
         responseCode: responseCode,
         authorizationId: authorizationId,
         batchNumber: batchNumber,
-        successfulExtends: successfulExtends,
-        failedExtends: failedExtends
+        successfulExtends: successfulExtends
       }
     })
   }
@@ -200,7 +199,7 @@ export function processFinePayment (transactionId, responseCode) {
         if (response.status === 200) {
           response.json().then(json => {
             dispatch(fetchProfileLoans())
-            dispatch(processFinePaymentSuccess(json.transactionId, json.responseCode, json.authorizationId, json.batchNumber, json.successfulExtends, json.failedExtends))
+            dispatch(processFinePaymentSuccess(json.transactionId, json.responseCode, json.authorizationId, json.batchNumber, json.successfulExtends))
           })
         } else {
           dispatch(processFinePaymentFailure(transactionId))

@@ -18,8 +18,7 @@ const initialState = {
   isPaymentSaved: false,
   isPaymentCancelled: false,
   isPaymentFailed: false,
-  successfulExtends: [],
-  failedExtends: []
+  successfulExtends: []
 }
 
 export default function loan (state = initialState, action) {
@@ -35,7 +34,7 @@ export default function loan (state = initialState, action) {
     case REQUEST_START_PROCESS_PAYMENT:
       return { ...state, isSavingPayment: true, isPaymentSaved: false }
     case PAYMENT_SUCCESS:
-      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends: action.payload.successfulExtends, failedExtends: action.payload.failedExtends }
+      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends: action.payload.successfulExtends }
     case PROCESS_PAYMENT_CANCELLED:
       return { ...state, isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: true }
     case PROCESS_PAYMENT_FAILURE:
