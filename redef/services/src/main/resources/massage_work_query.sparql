@@ -167,9 +167,15 @@ WHERE {
                            CONCAT(?contribAgentNameStep2, " (", STR(?agentSpecification), ")"),
                                ?contribAgentNameStep2) as ?contribAgentName) .
 
+
+         OPTIONAL {
+            ?workContrib a deich:MainEntry.
+            BIND(true AS ?mainEntry)
+         }
+
          OPTIONAL {
               ?workContrib a deich:MainEntry.
-              BIND(true AS ?mainEntry) .
+
               OPTIONAL { ?contribAgent deich:nationality ?nationality . ?nationality rdfs:label ?nationLabelLang .
                 BIND(str(?nationLabelLang) AS ?nationLabel)
                 FILTER(lang(?nationLabelLang) = "no")
