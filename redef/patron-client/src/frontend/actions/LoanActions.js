@@ -3,6 +3,7 @@ import * as types from '../constants/ActionTypes'
 import { requireLoginBeforeAction } from './LoginActions'
 import { fetchProfileLoans } from './ProfileActions'
 import Errors from '../constants/Errors'
+import { action, errorAction } from './GenericActions'
 
 export function startExtendLoan (checkoutId) {
   return requireLoginBeforeAction(extendLoan(checkoutId))
@@ -210,5 +211,44 @@ export function processFinePayment (transactionId, responseCode) {
     } else {
       dispatch(processFinePaymentFailure(transactionId))
     }
+  }
+}
+
+export const requestSendEmailReceipt = () => action(types.REQUEST_SEND_EMAIL_PAYMENT_RECEIPT)
+
+export const sendPaymentReceiptError = (error) => errorAction(types.SEND_PAYMENT_RECEIPT_ERROR, error)
+
+export const sendPaymentReceiptSuccess = () => action(types.SEND_PAYMENT_RECEIPT_SUCCESS)
+
+export function sendReceiptForm (successAction) {
+  return (dispatch, getState) => {
+    const { sendReceipt: { values: { email, transactionId } } } = getState().form
+    dispatch(sendEmailReceipt(email, transactionId, successAction))
+  }
+}
+
+export function sendEmailReceipt (email, transactionId, successAction) {
+  const url = '/api/v1/checkouts/email-receipt'
+  return dispatch => {
+    dispatch(requestSendEmailReceipt())
+    return fetch(url, {
+      method: 'put',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: email, transactionId: transactionId })
+    })
+      .then(response => {
+        if (response.status === 200) {
+          dispatch(sendPaymentReceiptSuccess())
+          if (successAction) {
+            dispatch(successAction)
+          }
+        } else {
+          throw Error(Errors.profile.SEND_PAYMENT_RECEIPT_ERROR)
+        }
+      })
+      .catch(error => dispatch(sendPaymentReceiptError(error)))
   }
 }

@@ -165,4 +165,36 @@ module.exports = (app) => {
       response.sendStatus(500)
     }
   })
+
+  app.put('/api/v1/checkouts/email-receipt', jsonParser, async (request, response) => {
+    const transactionId = request.body.transactionId
+    const email = request.body.email
+
+    try {
+      if (!/^[^@ ]+@[^@ ]+$/i.test(email)) {
+        const errors = Object.assign({})
+        errors['email'] = 'invalidEmail'
+        response.status(400).send({ errors: errors })
+        return
+      }
+
+      const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/payment-receipt`, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        },
+        body: `nets_id=${encodeURIComponent(transactionId)}`
+      })
+      const kohaResJson = await kohaRes.json()
+      console.log(kohaResJson)
+
+      response.send({
+
+      })
+    } catch (error) {
+      console.log(error)
+      response.sendStatus(500)
+    }
+  })
 }

@@ -6,7 +6,9 @@ import {
   REQUEST_START_PROCESS_PAYMENT,
   PAYMENT_SUCCESS,
   PROCESS_PAYMENT_CANCELLED,
-  PROCESS_PAYMENT_FAILURE
+  PROCESS_PAYMENT_FAILURE,
+  SEND_PAYMENT_RECEIPT_ERROR,
+  SEND_PAYMENT_RECEIPT_SUCCESS
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -18,7 +20,10 @@ const initialState = {
   isPaymentSaved: false,
   isPaymentCancelled: false,
   isPaymentFailed: false,
-  successfulExtends: []
+  sendPaymentReceiptSuccess: false,
+  sendPaymentReceiptError: null,
+  successfulExtends: [],
+  transactionId: null
 }
 
 export default function loan (state = initialState, action) {
@@ -34,13 +39,17 @@ export default function loan (state = initialState, action) {
     case REQUEST_START_PROCESS_PAYMENT:
       return { ...state, isSavingPayment: true, isPaymentSaved: false }
     case PAYMENT_SUCCESS:
-      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends: action.payload.successfulExtends }
+      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends: action.payload.successfulExtends, transactionId: action.payload.transactionId }
     case PROCESS_PAYMENT_CANCELLED:
       return { ...state, isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: true }
     case PROCESS_PAYMENT_FAILURE:
       return Object.assign({}, state, {
         isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: false, isPaymentFailed: true
       })
+    case SEND_PAYMENT_RECEIPT_SUCCESS:
+      return { ...state, sendPaymentReceiptSuccess: true, sendPaymentReceiptError: null }
+    case SEND_PAYMENT_RECEIPT_ERROR:
+      return { ...state, sendPaymentReceiptError: action.payload }
     default:
       return state
   }

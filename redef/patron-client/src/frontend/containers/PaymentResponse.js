@@ -8,6 +8,7 @@ import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-int
 import QueryString from 'query-string'
 import {formatDate} from '../utils/dateFormatter'
 import Constants from '../constants/Constants'
+import EmailReceiptForm from './forms/EmailReceiptForm'
 
 import * as LoanActions from '../actions/LoanActions'
 
@@ -185,6 +186,9 @@ class PaymentResponse extends React.Component {
           </section>
         }
         <div>
+          {/*
+            <EmailReceiptForm transactionId={this.props.transactionId} sendPaymentReceiptSuccess={this.props.sendPaymentReceiptSuccess} />
+          */}
           <Link to="/profile/loans" >
             <FormattedMessage {...messages.paymentReturnToMypage} />
           </Link >
@@ -284,6 +288,11 @@ export const messages = defineMessages({
     id: 'UserLoans.patronHasOverdue',
     description: 'Message when patron with overdues is trying to renew material.',
     defaultMessage: 'Overdue material - cannot renew.'
+  },
+  sendPaymentReceiptSuccess: {
+    id: 'UserLoans.sendPaymentReceiptSuccess',
+    description: 'Your receipt was sent.',
+    defaultMessage: 'Your receipt was sent.'
   }
 })
 
@@ -298,6 +307,7 @@ PaymentResponse.propTypes = {
   successfulExtends: PropTypes.array.isRequired,
   location: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
+  sendPaymentReceiptSuccess: PropTypes.bool.isRequired,
   isRequestingLoansAndReservations: PropTypes.bool.isRequired
 }
 
@@ -309,6 +319,7 @@ function mapStateToProps (state) {
     isPaymentCancelled: state.loan.isPaymentCancelled,
     isPaymentFailed: state.loan.isPaymentFailed,
     successfulExtends: state.loan.successfulExtends,
+    sendPaymentReceiptSuccess: state.loan.sendPaymentReceiptSuccess,
     isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations
   }
 }

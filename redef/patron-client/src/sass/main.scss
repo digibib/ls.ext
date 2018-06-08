@@ -2996,6 +2996,35 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   max-width: 4em;
 }
 
+.email-receipt-fields {
+  @include container;
+  @include span(12);
+  @include clearfix;
+  margin-top: $rhythm4;
+  margin-bottom: $rhythm4;
+}
+
+.email-receipt-fields .form-item {
+  @include container;
+  @include span(12);
+  @include clearfix;
+}
+
+.email-receipt-fields label {
+  @include container;
+  @include span(12);
+  margin-top: $rhythm2;
+}
+
+.email-receipt-fields input {
+  @include container;
+  @include span(12);
+  font-size: $rhythm3;
+  margin-top: $rhythm2;
+  max-width: 24em;
+  margin-bottom: $rhythm2;
+}
+
 @include breakpoint($small) {
 
   .user-settings footer .disclaimer {
