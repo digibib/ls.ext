@@ -111,6 +111,12 @@ WHERE {
             OPTIONAL {?subject deich:subtitle ?subjectSubtitle }
             OPTIONAL {?subject deich:partNumber ?subjectPartNumber }
             OPTIONAL {?subject deich:partTitle ?subjectPartTitle }
+            OPTIONAL {?subject deich:contributor ?contributor .
+                      ?contributor a deich:MainEntry .
+                      ?contributor a deich:Contribution ;
+                        deich:agent ?subjectWorkMainAgent .
+
+                      ?subjectWorkMainAgent deich:name ?subjectAgentName }
 
             BIND(IF (BOUND(?subjectSpecification),
                 CONCAT(?subjectNameStep1, " (", STR(?subjectSpecification), ")"),
@@ -126,7 +132,11 @@ WHERE {
 
             BIND(IF (BOUND(?subjectPartTitle),
                 CONCAT(?subjectNameStep4, ". ", STR(?subjectPartTitle)),
-                       ?subjectNameStep4) as ?subjectName)
+                       ?subjectNameStep4) as ?subjectNameStep5)
+
+            BIND(IF (BOUND(?subjectAgentName),
+                            CONCAT(?subjectNameStep5, " / ", STR(?subjectAgentName)),
+                                   ?subjectNameStep5) as ?subjectName) .
         }
   UNION { <__WORKURI__> deich:untranscribedTitle ?untranscribedTitle }
   UNION { <__WORKURI__> deich:created ?createdTime . BIND(str(?createdTime) AS ?created) }
