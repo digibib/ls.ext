@@ -178,13 +178,13 @@ module.exports = (app) => {
         return
       }
 
-      const kohaRes = await fetch(`http://xkoha:8081/api/v1/payments/payment-receipt`, {
+      const kohaRes = await fetch(`http://xkoha:8081/api/v1/messaging/payment-receipt/${request.session.borrowerNumber}`, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
           'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
         },
-        body: `nets_id=${encodeURIComponent(transactionId)}`
+        body: `nets_id=${encodeURIComponent(transactionId)}&email=${encodeURIComponent(email)}`
       })
       const kohaResJson = await kohaRes.json()
       console.log(kohaResJson)
