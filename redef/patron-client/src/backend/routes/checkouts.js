@@ -118,10 +118,10 @@ module.exports = (app) => {
       if (jsonResponse.Exception) {
         throw Error(`Transaction exception from Nets: ${JSON.stringify(jsonResponse.Exception)}`)
       }
-      const authorizationId = jsonResponse.ProcessResponse.AuthorizationId
-      const batchNumber = jsonResponse.ProcessResponse.BatchNumber
-      const responseCode = jsonResponse.ProcessResponse.ResponseCode
-      const transactionId = jsonResponse.ProcessResponse.TransactionId
+      const authorizationId = jsonResponse.ProcessResponse.AuthorizationId.join('')
+      const batchNumber = jsonResponse.ProcessResponse.BatchNumber.join('')
+      const responseCode = jsonResponse.ProcessResponse.ResponseCode.join('')
+      const transactionId = jsonResponse.ProcessResponse.TransactionId.join('')
 
       // Get all loans from koha
       const loansRes = await fetch(`http://xkoha:8081/api/v1/patrons/${request.session.borrowerNumber}/loansandreservations`)
@@ -130,7 +130,7 @@ module.exports = (app) => {
       const successfulExtends = []
       for (const loan of loans.loans) {
         if (loan.isPurresak) {
-          const extendRes = await fetch(`http://xkoha:8081/api/v1/checkouts/${loan.id}?override_days=2`, {
+          const extendRes = await fetch(`http://xkoha:8081/api/v1/checkouts/${loan.id}?override_days=3`, {
             method: 'PUT'
           })
           if (extendRes.status === 200) {
@@ -169,6 +169,9 @@ module.exports = (app) => {
   app.put('/api/v1/checkouts/email-receipt', jsonParser, async (request, response) => {
     const transactionId = request.body.transactionId
     const email = request.body.email
+    const authorizationId = request.body.authorizationId
+
+    console.log(request.body)
 
     try {
       if (!/^[^@ ]+@[^@ ]+$/i.test(email)) {
@@ -184,7 +187,7 @@ module.exports = (app) => {
           'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
           'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
         },
-        body: `nets_id=${encodeURIComponent(transactionId)}&email=${encodeURIComponent(email)}`
+        body: `nets_id=${encodeURIComponent(transactionId)}&email=${encodeURIComponent(email)}&authorizationId=${encodeURIComponent(authorizationId)}&successfulExtends=${encodeURIComponent(successfulExtends)}`
       })
       const kohaResJson = await kohaRes.json()
       console.log(kohaResJson)

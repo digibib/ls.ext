@@ -39,7 +39,7 @@ export default function loan (state = initialState, action) {
     case REQUEST_START_PROCESS_PAYMENT:
       return { ...state, isSavingPayment: true, isPaymentSaved: false }
     case PAYMENT_SUCCESS:
-      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends: action.payload.successfulExtends, transactionId: action.payload.transactionId }
+      return { ...state, isSavingPayment: false, isPaymentSaved: true, isPaymentCancelled: false, successfulExtends: action.payload.successfulExtends, transactionId: action.payload.transactionId, authorizationId: action.payload.authorizationId }
     case PROCESS_PAYMENT_CANCELLED:
       return { ...state, isSavingPayment: false, isPaymentSaved: false, isPaymentCancelled: true }
     case PROCESS_PAYMENT_FAILURE:

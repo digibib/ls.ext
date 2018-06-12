@@ -186,9 +186,13 @@ class PaymentResponse extends React.Component {
           </section>
         }
         <div>
-          {/*
-            <EmailReceiptForm transactionId={this.props.transactionId} sendPaymentReceiptSuccess={this.props.sendPaymentReceiptSuccess} />
-          */}
+
+            <EmailReceiptForm
+              transactionId={this.props.transactionId}
+              authorizationId={this.props.authorizationId}
+              sendPaymentReceiptSuccess={this.props.sendPaymentReceiptSuccess}
+              successfulExtends={this.props.successfulExtends}/>
+
           <Link to="/profile/loans" >
             <FormattedMessage {...messages.paymentReturnToMypage} />
           </Link >
@@ -308,7 +312,9 @@ PaymentResponse.propTypes = {
   location: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
   sendPaymentReceiptSuccess: PropTypes.bool.isRequired,
-  isRequestingLoansAndReservations: PropTypes.bool.isRequired
+  isRequestingLoansAndReservations: PropTypes.bool.isRequired,
+  transactionId: PropTypes.string.isRequired,
+  authorizationId: PropTypes.string.isRequired
 }
 
 function mapStateToProps (state) {
@@ -320,7 +326,9 @@ function mapStateToProps (state) {
     isPaymentFailed: state.loan.isPaymentFailed,
     successfulExtends: state.loan.successfulExtends,
     sendPaymentReceiptSuccess: state.loan.sendPaymentReceiptSuccess,
-    isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations
+    isRequestingLoansAndReservations: state.profile.isRequestingLoansAndReservations,
+    transactionId: state.loan.transactionId,
+    authorizationId: state.loan.authorizationId
   }
 }
 

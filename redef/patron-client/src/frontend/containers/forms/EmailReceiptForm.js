@@ -18,7 +18,7 @@ class EmailReceiptForm extends React.Component {
   }
 
   handleSendReceipt () {
-    this.props.loanActions.sendReceiptForm(reset('requestReceipt'))
+    this.props.loanActions.sendReceiptForm(reset('requestReceipt'), this.props.transactionId, this.props.authorizationId, this.props.successfulExtends)
   }
 
   getValidator (field) {
@@ -33,7 +33,7 @@ class EmailReceiptForm extends React.Component {
       handleSubmit
     } = this.props
     return (
-      <form onChange={this.handleChange} onSubmit={handleSubmit(this.handleSendReceipt)}>
+      <form initialValues={{foo: 'bar'}} onChange={this.handleChange} onSubmit={handleSubmit(this.handleSendReceipt)}>
         <section className="email-receipt">
           <div className="email-receipt-fields">
             <FormInputField name="email"
@@ -42,6 +42,8 @@ class EmailReceiptForm extends React.Component {
                             type="text"
                             formName={formName}
                             getValidator={this.getValidator} />
+
+
 
           {!this.props.sendPaymentReceiptSuccess &&
             <button className="blue-btn" type="submit" disabled={submitting} data-automation-id="emailReceiptForm_button">
@@ -99,7 +101,9 @@ EmailReceiptForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
   intl: intlShape.isRequired,
   sendPaymentReceiptError: PropTypes.object,
-  transactionId: PropTypes.string.isRequired
+  transactionId: PropTypes.string.isRequired,
+  authorizationId: PropTypes.string.isRequired,
+  successfulExtends: PropTypes.array.isRequired
 }
 
 function mapStateToProps (state) {

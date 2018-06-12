@@ -220,14 +220,14 @@ export const sendPaymentReceiptError = (error) => errorAction(types.SEND_PAYMENT
 
 export const sendPaymentReceiptSuccess = () => action(types.SEND_PAYMENT_RECEIPT_SUCCESS)
 
-export function sendReceiptForm (successAction) {
+export function sendReceiptForm (successAction, transactionId, authorizationId, successfulExtends) {
   return (dispatch, getState) => {
-    const { sendReceipt: { values: { email, transactionId } } } = getState().form
-    dispatch(sendEmailReceipt(email, transactionId, successAction))
+    const { sendReceipt: { values: { email } } } = getState().form
+    dispatch(sendEmailReceipt(email, transactionId, authorizationId, successfulExtends, successAction))
   }
 }
 
-export function sendEmailReceipt (email, transactionId, successAction) {
+export function sendEmailReceipt (email, transactionId, authorizationId, successfulExtends, successAction) {
   const url = '/api/v1/checkouts/email-receipt'
   return dispatch => {
     dispatch(requestSendEmailReceipt())
@@ -237,7 +237,7 @@ export function sendEmailReceipt (email, transactionId, successAction) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email: email, transactionId: transactionId })
+      body: JSON.stringify({ email: email, transactionId: transactionId, authorizationId: authorizationId, successfulExtends: successfulExtends })
     })
       .then(response => {
         if (response.status === 200) {
