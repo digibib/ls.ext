@@ -170,6 +170,7 @@ module.exports = (app) => {
     const transactionId = request.body.transactionId
     const email = request.body.email
     const authorizationId = request.body.authorizationId
+    const successfulExtends = request.body.successfulExtends
 
     console.log(request.body)
 
