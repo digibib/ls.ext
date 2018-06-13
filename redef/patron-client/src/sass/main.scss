@@ -2569,7 +2569,7 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   color: $darkGreyColor;
 }
 
-.pickup .single-entry, .reserve .single-entry, .loan .single-entry, .history {
+.pickup .single-entry, .reserve .single-entry, .loan .single-entry, .history .single-entry {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -2578,8 +2578,6 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
   float: none;
   border-bottom: 1px solid $blackColor;
   margin-bottom: 0.7em;
-  /* Column item */
-  /* Show cancel button and other buttons in one row */
 }
 
 .pickup .single-entry h1, .reserve .single-entry h1, .loan .single-entry h1, .history .single-entry h1, {
