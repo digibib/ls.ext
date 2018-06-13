@@ -887,7 +887,8 @@ module.exports = (app) => {
                 type: 'input-duration'
               },
               {
-                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book' ] },
+                includeOnlyWhen: { hasMediaType: [ 'Other', 'Book', 'SheetMusic', 'ComicBook', 'LanguageCourse', 'E-book', 'Film' ] },
+                esotericWhen: { hasMediaType: [ 'Film' ] },
                 rdfProperty: 'illustrativeMatter',
                 multiple: true
               },
