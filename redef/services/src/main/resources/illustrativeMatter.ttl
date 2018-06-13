@@ -3,8 +3,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 illustrativeMatter:illustrert a duo:IllustrativeMatter ;
   duo:code "ill" ;
-  rdfs:label "Illustrasjoner"@no ;
-  rdfs:label "Illustrations"@en .
+  rdfs:label "Illustrert"@no ;
+  rdfs:label "Illustrated"@en .
 illustrativeMatter:kolorerte_illustrasjoner a duo:IllustrativeMatter ;
   duo:code "kol. ill." ;
   rdfs:label "Fargeillustrasjoner"@no ;
@@ -34,7 +34,7 @@ illustrativeMatter:plansje a duo:IllustrativeMatter ;
   rdfs:label "Plansjer"@no ;
   rdfs:label "Plates"@en .
 illustrativeMatter:blackAndWhiteMovie a duo:IllustrativeMatter ;
-  duo:code "shv." ;
-  rdfs:label "Svart-hvitt-film"@no ;
-  rdfs:label "Black-and-white movie"@en .
+  duo:code "s./h." ;
+  rdfs:label "Svart-hvitt"@no ;
+  rdfs:label "Black-and-white"@en .
 
