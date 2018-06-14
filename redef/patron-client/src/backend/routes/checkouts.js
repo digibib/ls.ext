@@ -63,7 +63,7 @@ module.exports = (app) => {
     const merchantId = process.env.NETS_MERCHANT_ID
     const token = process.env.NETS_TOKEN
     const netsUrl = process.env.NETS_URL
-    const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${merchantId}&token=${token}&orderNumber=${request.body.fineId}&amount=10000&CurrencyCode=NOK&redirectUrl=${request.body.origin}/profile/payment-response/`
+    const registerUrl = `${netsUrl}/Netaxept/Register.aspx?merchantId=${encodeURIComponent(merchantId)}&token=${encodeURIComponent(token)}&orderNumber=${request.body.fineId}&amount=10000&CurrencyCode=NOK&redirectUrl=${request.body.origin}/profile/payment-response/`
     const terminalUrl = `${netsUrl}/Terminal/default.aspx`
     try {
       const res = await isofetch(registerUrl)
@@ -108,7 +108,7 @@ module.exports = (app) => {
     const merchantId = process.env.NETS_MERCHANT_ID
     const token = process.env.NETS_TOKEN
     const netsUrl = process.env.NETS_URL
-    const processUrl = `${netsUrl}/Netaxept/Process.aspx?merchantId=${merchantId}&token=${token}&transactionId=${request.body.transactionId}&operation=SALE`
+    const processUrl = `${netsUrl}/Netaxept/Process.aspx?merchantId=${encodeURIComponent(merchantId)}&token=${encodeURIComponent(token)}&transactionId=${request.body.transactionId}&operation=SALE`
     try {
       const res = await isofetch(processUrl)
       const xmlResponse = await res.text()
