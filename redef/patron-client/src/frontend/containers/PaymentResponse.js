@@ -105,9 +105,7 @@ class PaymentResponse extends React.Component {
     if (this.props.isSavingPayment || this.props.isRequestingLoansAndReservations) {
       return (
         <div style={{textAlign: 'center'}}>
-          <span data-automation-id="is_searching" className="loading-spinner">
-            <i className="icon-spin4 animate-spin" style={{color: 'red', fontSize: '2em'}} />
-          </span>
+          <span data-automation-id="is_searching" className="loading-spinner"></span>
         </div>
       )
     }
