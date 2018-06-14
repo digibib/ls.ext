@@ -3255,7 +3255,8 @@ input[type="checkbox"]:checked + label i.checkbox-unchecked {
 }
 
 .default-modal button {
-  margin-right: 1em
+  margin-right: 1em;
+  margin-bottom: 1em;
 }
 
 @include breakpoint($small) {
