@@ -73,7 +73,7 @@ export const messages = defineMessages({
   sendPaymentReceipt: {
     id: 'UserLoans.sendPaymentReceipt',
     description: 'Send payment receipt',
-    defaultMessage: 'Send receipt on email'
+    defaultMessage: 'Send receipt'
   },
   sendPaymentReceiptSuccess: {
     id: 'UserLoans.sendPaymentReceiptSuccess',

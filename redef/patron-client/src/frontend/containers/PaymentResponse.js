@@ -177,22 +177,15 @@ class PaymentResponse extends React.Component {
         </section>
         {loans.length > 0 &&
           <section className="loan">
-            <div className="loan-header">
-              <h1>
-                <FormattedMessage {...messages.paymentLoansUpdatedHeader} />
-              </h1>
-            </div>
             {this.renderLoans(loans, this.props.successfulExtends)}
           </section>
         }
         <div>
-
             <EmailReceiptForm
               transactionId={this.props.transactionId}
               authorizationId={this.props.authorizationId}
               sendPaymentReceiptSuccess={this.props.sendPaymentReceiptSuccess}
               successfulExtends={this.props.successfulExtends}/>
-
           <Link to="/profile/loans" >
             <FormattedMessage {...messages.paymentReturnToMypage} />
           </Link >
@@ -206,12 +199,12 @@ export const messages = defineMessages({
   paymentSuccessHeader: {
     id: 'UserLoans.paymentSuccessHeader',
     description: 'Header for a successful payment',
-    defaultMessage: 'Thank you for your payment!'
+    defaultMessage: 'Thank you for your payment'
   },
   paymentSuccessText: {
     id: 'UserLoans.paymentSuccessText',
     description: 'Information text for a successful payment',
-    defaultMessage: 'We have now renewed those loaned items that were possible to renew. Items reserved by other users cannot be renewed, and must be returned as soon as possible in order to avoid replacement charge.'
+    defaultMessage: 'We have extended the due date on your borrowed items. Items that have been reserved by others, or have been extended two times or more, have only been extended by 3 days and must be returned as soon as possible in order to avoid a new overdue charge.'
   },
   paymentCancelledHeader: {
     id: 'UserLoans.paymentCancelledHeader',
@@ -246,7 +239,7 @@ export const messages = defineMessages({
   paymentReturnToMypage: {
     id: 'UserLoans.paymentReturnToMypage',
     description: 'Return to my page text',
-    defaultMessage: 'Return to My Page'
+    defaultMessage: 'Return to the overview of loans and reservations.'
   },
   dueDate: {
     id: 'UserLoans.dueDate',

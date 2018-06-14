@@ -721,7 +721,7 @@ export const messages = defineMessages({
   yourLoansWithKemner: {
     id: 'UserLoans.yourLoansWithKemner',
     description: 'The header over the current loans with fine',
-    defaultMessage: 'Loan with replacement charge'
+    defaultMessage: 'Loan(s) with replacement charge'
   },
   yourLoansWithFine: {
     id: 'UserLoans.yourLoansWithFine',
@@ -751,7 +751,7 @@ export const messages = defineMessages({
   renewAllLoans: {
     id: 'UserLoans.renewAllLoans',
     description: 'The label for the renew all loans button',
-    defaultMessage: 'Renew all loaned items'
+    defaultMessage: 'Renew all borrowed items'
   },
   payFineInformation: {
     id: 'UserLoans.payFineInformation',
@@ -776,7 +776,7 @@ export const messages = defineMessages({
   kemnerInformation: {
     id: 'UserLoans.kemnerInformation',
     description: 'The label for the pay fine button',
-    defaultMessage: 'A replacement charge has been sent for the following loan(s), and your account is therefore frozen. You cannot renew items currently on loan or loan additional items until payment is received.'
+    defaultMessage: 'A replacement charge has been sent for the following loan(s), and your account is therefore frozen. You cannot renew items currently on loan or borrow additional items until payment is received.'
   },
   loanWithKemner: {
     id: 'UserLoans.loanWithKemner',
@@ -786,7 +786,7 @@ export const messages = defineMessages({
   kemnerTooltip: {
     id: 'UserLoans.kemnerTooltip',
     description: 'Kemner tooltip',
-    defaultMessage: 'You can still return loaned items to the library. Replacement charges will then be subtracted from the bill from the Oslo Tax Collection office. Overdue charges and administration fees must still be paid. It is unfortunately not possible to pay outstanding charges via the library system once the bill has been referred to the Oslo Tax Collection Office.'
+    defaultMessage: 'You can still return borrowed items to the library. Replacement charges will then be subtracted from the bill from the Oslo Tax Collection office. Overdue charges and administration fees must still be paid. It is unfortunately not possible to pay outstanding charges via the library system once the bill has been referred to the Oslo Tax Collection Office.'
   },
   kemnerGeneralInfoTooltip: {
     id: 'UserLoans.kemnerGeneralInfoTooltip',
