@@ -35,6 +35,6 @@ illustrativeMatter:plansje a duo:IllustrativeMatter ;
   rdfs:label "Plates"@en .
 illustrativeMatter:blackAndWhiteMovie a duo:IllustrativeMatter ;
   duo:code "s./h." ;
-  rdfs:label "Svart-hvitt"@no ;
-  rdfs:label "Black-and-white"@en .
+  rdfs:label "Svart-hvitt-film"@no ;
+  rdfs:label "Black-and-white movie"@en .
 
