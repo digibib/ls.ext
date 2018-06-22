@@ -87,8 +87,8 @@ class Login extends React.Component {
               Avbryt
             </Link>
           </p>
-          <h4>Er du ikke registrert?</h4>
-          <p><Link to="/register" data-automation-id="registration_link" title="register">Registrer deg</Link></p>
+          <h4><FormattedMessage {...messages.notRegistered} /></h4>
+          <p><Link to="/register" data-automation-id="registration_link" title="register"><FormattedMessage {...messages.registerAsLoaner} /></Link></p>
           <hr />
           <h4><FormattedMessage {...messages.forgotPin} /></h4>
           <p><FormattedMessage {...messages.forgotPinDesc} /></p>
@@ -158,6 +158,16 @@ export const messages = defineMessages({
     id: 'Login.forgotPinDesc',
     description: 'Forgot pin description',
     defaultMessage: 'If you have forgotten you PIN you have to come in to one of our libraries to have it reset. We are working on a better solution to this.'
+  },
+  notRegistered: {
+    id: 'Login.notRegistered',
+    description: 'Not registered heading',
+    defaultMessage: 'New user?'
+  },
+  registerAsLoaner: {
+    id: 'Login.registerAsLoaner',
+    description: 'Register as new loaner',
+    defaultMessage: 'Create account.'
   }
 })
 
