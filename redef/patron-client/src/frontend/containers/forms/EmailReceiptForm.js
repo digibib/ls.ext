@@ -43,8 +43,6 @@ class EmailReceiptForm extends React.Component {
                             formName={formName}
                             getValidator={this.getValidator} />
 
-
-
           {!this.props.sendPaymentReceiptSuccess &&
             <button className="blue-btn" type="submit" disabled={submitting} data-automation-id="emailReceiptForm_button">
               <FormattedMessage {...messages.sendPaymentReceipt} /><br />

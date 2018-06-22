@@ -10,6 +10,7 @@ class SearchHeader extends React.Component {
   constructor (props) {
     super(props)
     this.handleSearch = this.handleSearch.bind(this)
+    this.clearSearch = this.clearSearch.bind(this)
     this.handleLoginClick = this.handleLoginClick.bind(this)
     this.toggleMobileNav = this.toggleMobileNav.bind(this)
   }
@@ -36,6 +37,11 @@ class SearchHeader extends React.Component {
       this.props.dispatch(push({ pathname: '/search', query: this.props.locationQuery }))
       this.props.searchActions.search()
     }
+  }
+
+  clearSearch (event) {
+    event.preventDefault()
+    this.searchFieldInput.value = ''
   }
 
   handleLoginClick (event) {
@@ -275,11 +281,19 @@ class SearchHeader extends React.Component {
                 <div className="search-field" >
                   {this.renderSearchField()}
                 </div >
-                <div className="search-button" >
-                  <button onClick={this.handleSearch} type="button" className="search-submit"
-                          data-automation-id="search_button" >
-                  <img src="/images/search16.svg" />
-                  </button >
+                <div className="search-buttons-wrapper" >
+                  <div className="clear-search-button" >
+                    <button onClick={this.clearSearch} type="button" className="search-clear"
+                            data-automation-id="search_button" >
+                    <img src="/images/x.svg" />
+                    </button >
+                  </div >
+                  <div className="search-button" >
+                    <button onClick={this.handleSearch} type="button" className="search-submit"
+                            data-automation-id="search_button" >
+                    <img src="/images/search16.svg" />
+                    </button >
+                  </div >
                 </div >
               </div >
             </form >

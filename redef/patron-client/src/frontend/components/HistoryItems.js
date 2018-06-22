@@ -56,7 +56,7 @@ export const messages = defineMessages({
   noItems: {
     id: 'History.noItems',
     description: 'Message to show when user has no history items yet',
-    defaultMessage: "You don’t have any history yet. Check out and return something!"
+    defaultMessage: 'You don’t have any history yet. Check out and return something!'
   }
 })
 

@@ -4055,6 +4055,13 @@ footer .social-icons {
   height: 100%;
 }
 
+.clear-search-button button {
+  margin: 0;
+  padding: 0;
+  width: 50%;
+  height: 50%;
+}
+
 .search-box input {
   -webkit-appearance: none;
   background-position: 0.5em center;
@@ -4066,18 +4073,34 @@ footer .social-icons {
   width: 100%;
 }
 
+.search-buttons-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .search-button {
-  margin: 0.5em;
+  margin: 0.5em 0.5em 0.5em 0em;
   width: 32px;
   height: 32px;
   float: right;
+  flex-shrink: 0;
+}
+
+.clear-search-button {
+  margin: 0.6em 0em 0.5em 0.5em;
+  width: 32px;
+  height: 32px;
+  float: right;
+  flex-shrink: 0;
 }
 
 .search-box button:hover, .search-box button:active, .search-box button:focus {
   cursor: pointer;
 }
 
-
+.search-field {
+  @include span(9);
+}
 
 @include breakpoint($small) {
 
@@ -4116,14 +4139,14 @@ footer .social-icons {
   }
 }
 
-.search-field {
-  @include span(9);
-}
-
 @include breakpoint($small) {
 
   .search-button {
-    margin: 1em;
+    margin: 1em 1em 1em 0em;
+  }
+
+  .clear-search-button {
+    margin: 1.1em 0em 1em 1em;
   }
 
   .search-box {

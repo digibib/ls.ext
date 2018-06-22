@@ -183,7 +183,7 @@ class PaymentResponse extends React.Component {
               transactionId={this.props.transactionId}
               authorizationId={this.props.authorizationId}
               sendPaymentReceiptSuccess={this.props.sendPaymentReceiptSuccess}
-              successfulExtends={this.props.successfulExtends}/>
+              successfulExtends={this.props.successfulExtends} />
           <Link to="/profile/loans" >
             <FormattedMessage {...messages.paymentReturnToMypage} />
           </Link >
