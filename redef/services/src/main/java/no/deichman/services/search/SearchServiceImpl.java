@@ -486,6 +486,23 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public final void deletePublicationRecord(XURI publicationURI, XURI parentUri) {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            HttpDelete httpDelete = new HttpDelete(getIndexUriBuilder()
+                    .setPath(format("/search/%s/%s", publicationURI.getType(), encode(publicationURI.getUri(), UTF_8)))
+                    .setParameter("parent", encode(parentUri.getUri(), UTF_8))
+                    .build());
+            try (CloseableHttpResponse putResponse = httpclient.execute(httpDelete)) {
+                // no-op
+            }
+        } catch (Exception e) {
+            LOG.error(format("Failed to delete publication %s in elasticsearch", publicationURI.getUri()), e);
+            throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @Override
     public final Response sortedList(String type, String prefix, int minSize, String field) {
         EntityType entityType = EntityType.get(type);
         URIBuilder searchUriBuilder = getIndexUriBuilder().setPath("/search/" + type + "/_search").setParameter("size", Integer.toString(minSize));

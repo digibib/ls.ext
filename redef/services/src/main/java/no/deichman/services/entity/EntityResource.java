@@ -13,11 +13,13 @@ import no.deichman.services.uridefaults.BaseURI;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.NodeIterator;
-import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+
 import org.apache.jena.rdf.model.impl.Util;
 import org.apache.jena.riot.Lang;
 import org.slf4j.Logger;
@@ -266,12 +268,25 @@ public final class EntityResource extends ResourceBase {
                 }
                 log.error("Failed to delete biblio in Koha " + recordId, e);
             }
+
             getEntityService().delete(model);
             Set<String> connectedResources = getEntityService().retrieveResourcesConnectedTo(xuri);
             getEntityService().deleteIncomingRelations(xuri);
-            getSearchService().delete(xuri);
+
+            Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
+            Statement publicationOfStatement  = model.getProperty(null, publicationOfProperty);
+            XURI workURI = publicationOfStatement == null
+                    ? null : new XURI(publicationOfStatement.getObject().toString());
+
+            if (workURI == null) { // This deletion likely does nothing, but kept it as testing is tricky
+                getSearchService().delete(xuri);
+            } else {
+                getSearchService().deletePublicationRecord(xuri, workURI);
+            }
+
             getSearchService().enqueueIndexing(connectedResources, xuri);
             Iterator<RDFNode> sourceIterator = model.listObjectsOfProperty(ResourceFactory.createProperty(BaseURI.ontology("publicationOf")));
+
             while (sourceIterator.hasNext()) {
                 String publicationOf = sourceIterator.next().asResource().getURI();
                 try {
@@ -307,18 +322,43 @@ public final class EntityResource extends ResourceBase {
         if (!getEntityService().resourceExists(xuri)) {
             throw new NotFoundException();
         }
-        Model m;
+
+        Model originalModel = getEntityService().retrieveById(xuri);
+        Model patchedModel;
         try {
-            m = getEntityService().patch(xuri, jsonLd);
+            patchedModel = getEntityService().patch(xuri, jsonLd);
         } catch (PatchParserException e) {
             throw new BadRequestException(e);
         }
 
+        // DEICH-884
+        // When the publicationOf relation changes, any prior index record for the publication must be deleted.
+        // This is needed because ElasticSearch uses both the id and the parent to form the key to the record,
+        // and the indexer will hence create a new record while leaving the original one intact.
+        //
+        // NOTE: In Catalinker, changing the relation happens in two separate stages. If the cataloger removes the
+        // publicationOf relation and then omits adding a new one for whatever reason, there will be no easy way
+        // to resume work on it later. This code is submitted on the assumption that this would be an extremely
+        // rare scenario.
+        //
+
         if (xuri.getTypeAsEntityType() == PUBLICATION) {
             Property publicationOfProperty = ResourceFactory.createProperty(BaseURI.ontology("publicationOf"));
-            if (m.getProperty(null, publicationOfProperty) != null) {
-                String workUri = m.getProperty(null, publicationOfProperty).getObject().toString();
-                xuri = new XURI(workUri);
+
+            Statement originalPublicationOfStatement  = originalModel.getProperty(null, publicationOfProperty);
+            Statement patchedPublicationOfStatement  = patchedModel.getProperty(null, publicationOfProperty);
+
+            XURI originalWorkURI = originalPublicationOfStatement == null
+                    ? null : new XURI(originalPublicationOfStatement.getObject().toString());
+            XURI patchedWorkURI = patchedPublicationOfStatement == null
+                    ? null : new XURI(patchedPublicationOfStatement.getObject().toString());
+
+            if (originalWorkURI != null && originalWorkURI != patchedWorkURI) {
+                getSearchService().deletePublicationRecord(xuri, originalWorkURI);
+            }
+
+            if (patchedWorkURI != null) {
+                xuri = patchedWorkURI;
             }
         }
         try {
@@ -327,7 +367,7 @@ public final class EntityResource extends ResourceBase {
             log.error("Failed to index uri " + xuri.getUri(), e);
         }
 
-        return ok().entity(getJsonldCreator().asJSONLD(m)).build();
+        return ok().entity(getJsonldCreator().asJSONLD(patchedModel)).build();
     }
 
     @PUT
