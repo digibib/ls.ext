@@ -304,8 +304,8 @@ PaymentResponse.propTypes = {
   intl: intlShape.isRequired,
   sendPaymentReceiptSuccess: PropTypes.bool.isRequired,
   isRequestingLoansAndReservations: PropTypes.bool.isRequired,
-  transactionId: PropTypes.string.isRequired,
-  authorizationId: PropTypes.string.isRequired
+  transactionId: PropTypes.string,
+  authorizationId: PropTypes.string
 }
 
 function mapStateToProps (state) {

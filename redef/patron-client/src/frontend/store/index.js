@@ -19,7 +19,10 @@ const broadcastableEvents = [
   types.REGISTRATION_FAILURE,
   types.MANAGE_HISTORY_NOT_NOW,
   types.REQUEST_MANAGE_HISTORY,
-  types.DELETE_HISTORY_SUCCESS
+  types.DELETE_HISTORY_SUCCESS,
+  types.REQUEST_START_PAY_FINE,
+  types.PAYMENT_SUCCESS,
+  types.PROCESS_PAYMENT_CANCELLED
 ]
 
 const analytics = () => next => action => {

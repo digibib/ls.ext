@@ -33,7 +33,7 @@ class EmailReceiptForm extends React.Component {
       handleSubmit
     } = this.props
     return (
-      <form initialValues={{foo: 'bar'}} onChange={this.handleChange} onSubmit={handleSubmit(this.handleSendReceipt)}>
+      <form onChange={this.handleChange} onSubmit={handleSubmit(this.handleSendReceipt)}>
         <section className="email-receipt">
           <div className="email-receipt-fields">
             <FormInputField name="email"
