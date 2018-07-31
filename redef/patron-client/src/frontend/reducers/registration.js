@@ -62,7 +62,7 @@ export default function registration (state = initialState, action) {
         isSuccess: action.payload.isSuccess,
         username: action.payload.username,
         categoryCode: action.payload.categoryCode,
-        stepNumber: 5
+        stepNumber: 4
       }
     case REGISTRATION_FAILURE:
       return {
@@ -80,8 +80,7 @@ export default function registration (state = initialState, action) {
       }
     case REGISTRATION_HISTORY_SET:
       return {
-        ...state,
-        stepNumber: 4
+        ...state
       }
     default:
       return state

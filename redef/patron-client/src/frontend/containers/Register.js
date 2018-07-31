@@ -6,7 +6,6 @@ import { injectIntl, intlShape, defineMessages, FormattedMessage } from 'react-i
 import FormPartOne from './forms/RegistrationFormPartOne'
 import FormPartTwo from './forms/RegistrationFormPartTwo'
 import FormPartThree from './forms/RegistrationFormPartThree'
-import FormPartFour from './forms/RegistrationFormPartFour'
 
 class Register extends React.Component {
 
@@ -15,7 +14,6 @@ class Register extends React.Component {
     this.props.dispatch(destroy('registrationPartOne'))
     this.props.dispatch(destroy('registrationPartTwo'))
     this.props.dispatch(destroy('registrationPartThree'))
-    this.props.dispatch(destroy('registrationPartFour'))
 
     return (
       <div data-automation-id="registration_success_modal" className="default-form">
@@ -64,8 +62,7 @@ class Register extends React.Component {
           {(this.props.stepNumber === 1 || this.props.stepNumber === 2) && <FormPartOne /> }
           {this.props.stepNumber === 2 && <FormPartTwo /> }
           {this.props.stepNumber === 3 && <FormPartThree /> }
-          {this.props.stepNumber === 4 && <FormPartFour /> }
-          {this.props.stepNumber === 5 && this.renderSuccess() }
+          {this.props.stepNumber === 4 && this.renderSuccess() }
         </div>
       </section>
     )

@@ -20,11 +20,13 @@ class RegistrationFormPartThree extends React.Component {
   handleNo (event) {
     this.props.change('keepHistory', false)
     this.props.registrationActions.historySet()
+    this.props.registrationActions.postRegistration()
   }
 
   handleYes (event) {
     this.props.change('keepHistory', true)
     this.props.registrationActions.historySet()
+    this.props.registrationActions.postRegistration()
   }
 
   render () {

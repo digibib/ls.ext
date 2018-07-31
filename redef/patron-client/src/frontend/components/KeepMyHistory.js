@@ -92,7 +92,8 @@ KeepMyHistory.propTypes = {
   personalInformation: PropTypes.object.isRequired,
   personalAttributes: PropTypes.object.isRequired,
   postProfileSettingsSuccess: PropTypes.bool,
-  historySize: PropTypes.number.isRequired
+  historySize: PropTypes.number.isRequired,
+  intl: PropTypes.object.isRequired
 }
 
 export const messages = defineMessages({
