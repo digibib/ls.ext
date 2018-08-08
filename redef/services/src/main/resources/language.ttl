@@ -62,6 +62,10 @@ language:ben	a	lvont:Language ;
 	rdfs:label	"Bengali"@no ;
 	rdfs:label	"Bengali"@en .
 
+language:bet	a	lvont:Language ;
+	rdfs:label	"Bété"@no ;
+	rdfs:label	"Bété"@en .
+
 language:bos	a	lvont:Language ;
 	rdfs:label	"Bosnisk"@no ;
 	rdfs:label	"Bosnian"@en .
