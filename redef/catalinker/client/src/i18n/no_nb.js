@@ -46,6 +46,7 @@
     addAnotherISBN: 'Legg til nytt ISBN',
     addAnotherISMN: 'Legg til nytt ISMN',
     addAnotherEAN: 'Legg til nytt EAN',
+    addAnotherPublicationPlace: 'Legg til nytt utgivelsessted',
     addAnotherPublisher: 'Legg til ny utgiver',
     addAnotherSeries: 'Legg til ny serie',
     addAnotherRelation: 'Legg til en relasjon til',
