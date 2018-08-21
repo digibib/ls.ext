@@ -46,6 +46,7 @@
     addAnotherISBN: 'Add  another ISBN',
     addAnotherISMN: 'Add another ISMN',
     addAnotherEAN: 'Add another EAN',
+    addAnotherPublicationPlace: 'Add another publication place',
     addAnotherPublisher: 'Add another publisher',
     addAnotherSeries: 'Add  another series',
     addAnotherRelation: 'Add  another relation',
