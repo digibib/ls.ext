@@ -268,7 +268,7 @@ function transformPublications (publications) {
       numberOfPages: publication.numberOfPages || [],
       partNumber: publication.partNumber,
       partTitle: publication.partTitle,
-      placeOfPublication: publication.hasPlaceOfPublication ? publication.hasPlaceOfPublication.prefLabel : undefined,
+      placeOfPublication: publication.hasPlaceOfPublication || [],
       publicationParts: transformPublicationParts(publication.publicationParts),
       publicationYear: publication.publicationYear,
       publisher: publication.publishedBy ? publication.publishedBy.name : undefined,

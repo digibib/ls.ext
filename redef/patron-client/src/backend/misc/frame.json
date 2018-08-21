@@ -236,7 +236,8 @@
     },
     "hasPlaceOfPublication": {
       "@id": "deichman:hasPlaceOfPublication",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@set"
     },
     "publishedBy": {
       "@id": "deichman:publishedBy",

@@ -4,10 +4,10 @@ import { defineMessages } from 'react-intl'
 import MetaItem from '../../../MetaItem'
 
 const PlaceOfPublication = ({ placeOfPublication }) => {
-  if (placeOfPublication) {
+  if (placeOfPublication.length > 0) {
     return (
       <MetaItem label={messages.placeOfPublication} data-automation-id="publication_placeOfPublication">
-        {placeOfPublication}
+        {placeOfPublication.map(p => p.prefLabel).join(", ")}
       </MetaItem>
     )
   } else {
@@ -16,7 +16,7 @@ const PlaceOfPublication = ({ placeOfPublication }) => {
 }
 
 PlaceOfPublication.propTypes = {
-  placeOfPublication: PropTypes.string
+  placeOfPublication: PropTypes.array
 }
 
 export const messages = defineMessages({
