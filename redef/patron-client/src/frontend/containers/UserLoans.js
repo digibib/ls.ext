@@ -373,7 +373,7 @@ class UserLoans extends React.Component {
               </div>
               <div className="flex-col entry-details">
                 <Link className={(item.isPurresak && item.returnedDate) ? 'publication-title-disabled' : 'publication-title'} to={item.relativePublicationPath} data-automation-id="UserLoans_loan_title">
-                  {item.title}
+                  {item.volinfo ? `${item.title} (${item.volinfo})` : item.title}
                 </Link>
                 <h2>{this.renderMainContributors(item)}</h2>
                 <h2>{this.renderPublishedDate(item.publicationYear)}</h2>
