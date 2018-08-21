@@ -1010,6 +1010,8 @@ module.exports = (app) => {
               {
                 id: 'hasPlaceOfPublicationInput',
                 rdfProperty: 'hasPlaceOfPublication',
+                multiple: true,
+                addAnotherLabel: 'addAnotherPublicationPlace',
                 authority: true, // this indicates it is an authorized entity
                 nameProperties: [ 'prefLabel', 'specification' ], // these are property names used to label already connected entities
                 indexTypes: 'place', // this is the name of the elasticsearch index type from which authorities are searched within
