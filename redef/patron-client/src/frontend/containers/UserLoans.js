@@ -593,6 +593,17 @@ class UserLoans extends React.Component {
     } else if (this.props.loansAndReservationError) {
       return <FormattedMessage {...messages.loansAndReservationError} />
     }
+    if (loans.length === 0 &&
+        loansWithFines.length === 0 &&
+        loansWithKemner.length === 0 &&
+        [ ...this.props.loansAndReservations.pickups ].length === 0 &&
+        [ ...this.props.loansAndReservations.holds ].length === 0 &&
+        [ ...this.props.loansAndReservations.holds ].length === 0 &&
+        [ ...this.props.loansAndReservations.remoteloans ].length === 0 &&
+        [ ...this.props.loansAndReservations.remoteholds ].length === 0
+        ) {
+      return <div><p><FormattedMessage {...messages.noLoansOrReservations} /></p></div>
+    }
     return (
       <div>
         {this.renderPickups()}
@@ -650,6 +661,11 @@ export const messages = defineMessages({
     id: 'UserLoans.title',
     description: 'The label of the item title',
     defaultMessage: 'Title'
+  },
+  noLoansOrReservations: {
+    id: 'UserLoans.noLoansOrReservations',
+    description: 'Message stating patron has no loans or reservations',
+    defaultMessage: 'You have no loans or reservations'
   },
   publicationYear: {
     id: 'UserLoans.publicationYear',

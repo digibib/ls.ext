@@ -385,6 +385,7 @@ export default {
   'UserLoans.kemnerInformation': 'Det har blitt sendt ut erstatningskrav på følgende lån og kontoen din er derfor sperret. Du kan ikke forlenge eksisterende lån eller låne mer før saken er avsluttet.',
   'UserLoans.kemnerTooltip': 'Du kan fortsatt levere materialet hos oss. Erstatningskravet vil da bli trukket fra regningen hos Oslo kemnerkontor og du må kun betale eventuelle gebyr + omkostninger. Du kan dessverre ikke betale gebyr og erstatning hos oss når saken har gått til Oslo kemnerkontor.',
   'UserLoans.kemnerGeneralInfoTooltip': 'Dersom du ikke betaler erstatningskravet, går saken videre til Oslo kemnerkontor. Da kan du ikke lenger betale gebyrer i vårt system. Du kan heller ikke låne nye bøker før saken er gjort opp.',
+  'UserLoans.noLoansOrReservations': 'Du har ingen lån eller reservasjoner',
   'UserLoans.paymentSuccessHeader': 'Takk for betalingen',
   'UserLoans.paymentSuccessText': 'Lån knyttet til betalingen som ikke var levert har vi nå forlenget med en ny låneperiode. Lån som ikke kunne forlenges fordi de er reservert av andre lånere, eller har blitt forlenget to ganger har fått ny forfallsdato om tre dager. Disse må leveres snarest for å unngå nytt purregebyr.',
   'UserLoans.paymentCancelledHeader': 'Din betaling ble avbrutt',
