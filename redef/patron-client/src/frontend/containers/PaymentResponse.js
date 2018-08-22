@@ -202,7 +202,7 @@ export const messages = defineMessages({
   paymentSuccessText: {
     id: 'UserLoans.paymentSuccessText',
     description: 'Information text for a successful payment',
-    defaultMessage: 'We have extended the due date on your borrowed items. Items that have been reserved by others, or have been extended two times or more, have only been extended by 3 days and must be returned as soon as possible in order to avoid a new overdue charge.'
+    defaultMessage: 'We have now renewed the loans related to your payment, where that was possible. If someone else has placed a hold on the items, or you have already renewed the loan two times, their new due date will be in three days. Please deliver these items at your earliest convenience to avoid overdue/further fees.'
   },
   paymentCancelledHeader: {
     id: 'UserLoans.paymentCancelledHeader',

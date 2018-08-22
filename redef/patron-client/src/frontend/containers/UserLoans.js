@@ -517,9 +517,9 @@ class UserLoans extends React.Component {
   renderDueDate (item) {
     if (item.isPurresak && item.returnedDate) {
       return (
-        <div>
-          <h2><FormattedMessage {...messages.dueDatePassed} />:</h2>
-          <p data-automation-id="UserLoans_dueDate">{formatDate(item.dueDate)}</p>
+        <div style={{color: "gray"}} >
+          <h2><FormattedMessage {...messages.returned} />:</h2>
+          <p data-automation-id="UserLoans_dueDate">{formatDate(item.returnedDate)}</p>
         </div>
       )
     } else if (item.dueDate) {
@@ -696,6 +696,11 @@ export const messages = defineMessages({
     description: 'The due date of a reservation was passed',
     defaultMessage: 'Due date passed'
   },
+  returned: {
+    id: 'UserLoans.returned',
+    description: 'When an item is returned',
+    defaultMessage: 'Returned'
+  },
   extendLoan: {
     id: 'UserLoans.extendLoan',
     description: 'The label on the button to extend a loan',
@@ -764,7 +769,7 @@ export const messages = defineMessages({
   loanWithFineReturned: {
     id: 'UserLoans.loanWithFineReturned',
     description: 'Fine text in table',
-    defaultMessage: 'Outstanding overdue charge'
+    defaultMessage: 'Item received, outstanding fees'
   },
   payFineButtonText: {
     id: 'UserLoans.payFineButtonText',
