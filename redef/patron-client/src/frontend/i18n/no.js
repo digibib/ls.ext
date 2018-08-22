@@ -15,6 +15,7 @@ export default {
   'CancelReservationModal.headerTextError': 'Feilmelding',
   'CancelReservationModal.headerTextSuccess': 'Suksess!',
   'CancelReservationModal.messageSuccess': 'Reservasjonen er nå slettet.',
+  'ReservationModal.notForRemoteLoan': 'Ikke tilgjengelig for fjernlån',
   'ChangePinForm.changePin': 'Endre PIN-kode',
   'ChangePinForm.changePinSuccess': 'PIN-koden ble endret!',
   'ChangePinForm.currentPin': 'Nåværende PIN-kode',

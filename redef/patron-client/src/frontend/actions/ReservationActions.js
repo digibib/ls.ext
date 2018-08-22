@@ -111,7 +111,13 @@ export function chooseReservationDialogue (publication) {
     dispatch({ type: types.REQUEST_RESERVATION_DIALOGUE })
     const profile = getState().profile
     if (profile.category === 'IL') { // remote libraries with categorycode IL are remote libraries
-      dispatch(showModal(ModalComponents.REMOTE_RESERVATION, { publication: publication }))
+      const onlyAtRiksen = publication.items.every(i => i.branchcode === "frik")
+      console.log()
+      if (onlyAtRiksen) {
+        dispatch(reservePublicationFailure({message: "notForRemoteLoan"}, publication.recordId, "ill"))
+      } else {
+        dispatch(showModal(ModalComponents.REMOTE_RESERVATION, { publication: publication }))
+      }
     } else {
       dispatch(showModal(ModalComponents.RESERVATION, { publication: publication }))
     }

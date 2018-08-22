@@ -167,6 +167,11 @@ export const messages = defineMessages({
     description: 'The error message when the user is to young',
     defaultMessage: 'You are not old enough to borrow this item.'
   },
+  notForRemoteLoan: {
+    id: 'ReservationModal.notForRemoteLoan',
+    description: 'The error message when item is not for remote loan',
+    defaultMessage: 'This item is not available for remote loan'
+  },
   button: {
     id: 'ReservationModal.button',
     description: 'The button to exit the modal dialog',
