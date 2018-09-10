@@ -292,7 +292,7 @@ public class SPARQLQueryBuilderTest {
                 + "};\n"
                 + "DELETE {\n"
                 + "    ?b0 <http://example.com/c> \"another delete test\" .\n"
-                + "    <http://example.com/a> <http://example.com/b> ?b0 .\n"
+                + "    <http://example.com/a> <http://example.com/b> ?b0 .\n\n"
                 + "}\n"
                 + "WHERE {\n"
                 + "    ?b0 <http://example.com/c> \"another delete test\" .\n"

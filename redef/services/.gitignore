@@ -1,4 +1,8 @@
 /jamondata/local-saved.ser
+gradle/
+gradlew
+gradlew.bat
+out/
 target
 build
 nbactions.xml

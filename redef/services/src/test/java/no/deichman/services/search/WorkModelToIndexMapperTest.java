@@ -42,8 +42,6 @@ public class WorkModelToIndexMapperTest {
             + "        \"publicationYear\": \"1999\","
             + "        \"litform\": \"Roman\","
             + "        \"bio\": \"Biografisk innhold\",\n"
-            + "        \"contentAdaptation\": \"ta\",\n"
-            + "        \"adaptation\": \"ta\",\n"
             + "        \"country\": \"Norge\",\n"
             + "        \"totalNumItems\": 3,\n"
             + "        \"created\": \"2016-11-17T07:03:10.239Z\",\n"

@@ -800,7 +800,7 @@ public class AppTest {
                 testData = "<http://data.deichman.no/format#DVD> <http://www.w3.org/2000/01/rdf-schema#label> \"DVD\"@en .";
                 break;
             case ILLUSTRATIVE_MATTER:
-                testData = "<http://data.deichman.no/illustrativeMatter#illustrert> <http://www.w3.org/2000/01/rdf-schema#label> \"Illustrations\"@en .";
+                testData = "<http://data.deichman.no/illustrativeMatter#illustrert> <http://www.w3.org/2000/01/rdf-schema#label> \"Illustrated\"@en .";
                 break;
             case LANGUAGE:
                 testData = "<http://lexvo.org/id/iso639-3/afr> <http://www.w3.org/2000/01/rdf-schema#label> \"Afrikaans\"@en .";
