@@ -109,7 +109,7 @@ services:
       MYSQL_ROOT_PASSWORD: "${KOHA_ADMINPASS:-secret}"
       MYSQL_USER: "${KOHA_ADMINUSER:-admin}"
       SIBYL_USER: "${SIBYL_USER:-admin}"
-      SIBYL_PASSWORD: "${SIBYL_PASSWORD:-admin}"
+      SIBYL_PASSWORD: "${SIBYL_PASSWORD:-secret}"
     volumes:
       - "koha_mysql_data:/var/lib/mysql"
       - ./setup_sibyl.sql:/docker-entrypoint-initdb.d/setup_sibyl.sql
