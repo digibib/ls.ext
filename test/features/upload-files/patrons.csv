@@ -1,2 +1,0 @@
-old_id,surname,firstname,address,address2,zipcode,city,country,phone,categorycode,b_address,b_zipcode,b_city,dateofbirth,sex,borrowernotes,dateexpiry,branchcode,cardnumber,lost,gonenoaddress,email,contactname,phonepro,mobile,smsalertnumber,password,privacy,userid,fnr,patron_attributes
-20074572,D,K,"Deichmansgate 1",,0100,OSLO,no,45454545,V,,,,1980-01-01,F,,,hutl,N001903703,,,someemail@dummy.com,,,,45454545,1234,,N001903703,01018044444,"fnr:01018044444,old_id:20074572"

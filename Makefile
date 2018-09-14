@@ -32,10 +32,6 @@ endif
 wait_until_ready:					## Checks if koha is up and running
 	sudo docker exec -t xkoha ./wait_until_ready.py
 
-ifdef TESTPROFILE
-CUKE_PROFILE_ARG=--profile $(TESTPROFILE)
-endif
-
 ifeq ($(shell uname -s), Darwin)
 XHOST_PATH=/opt/X11/bin/
 endif
@@ -47,17 +43,7 @@ XHOST_REMOVE=$(XHOST_PATH)xhost -
 DISPLAY_ARG=-e DISPLAY=$(DOCKER_GW):0
 endif
 
-ifdef FEATURE
-CUKE_ARGS=-n \"$(FEATURE)\"
-endif
-
-test: test_patron_client test_catalinker cuke_test	## Run unit, module and cucumber tests.
-
-ifdef CUKE_PROFILE_ARG
-CUKE_PROFILE=$(CUKE_PROFILE_ARG)
-else
-CUKE_PROFILE=--profile default
-endif
+test: test_catalinker	## Run unit and module tests.
 
 ifdef FAIL_FAST
 FAIL_FAST_ARG=-e FAIL_FAST=1
@@ -80,56 +66,13 @@ rebuild_catalinker:					## Force rebuilds catalinker
 	@echo "======= FORCE RECREATING CATALINKER ======\n"
 	$(call rebuild,catalinker)
 
-rebuild_patron_client:					## Force rebuilds patron-client
-	@echo "======= FORCE RECREATING PATRON-CLIENT ======\n"
-ifeq ($(LSDEVMODE),ci)
-	$(DOCKER_COMPOSE_INIT) &&\
-	$(DOCKER_COMPOSE) stop build_patron_client || true &&\
-	$(DOCKER_COMPOSE) rm -f build_patron_client || true &&\
-	$(DOCKER_COMPOSE) build --no-cache build_patron_client &&\
-	$(DOCKER_COMPOSE) run build_patron_client
-endif
-	$(call rebuild,patron_client)
-
-rebuild_cuke_tests:					## Force rebuilds cuke_tests
-	@echo "======= FORCE RECREATING CUKE_TESTS ======\n"
-	$(call rebuild,cuke_tests)
-
-cuke_test:						## Run Cucumber tests
-	@$(XHOST_ADD)
-	$(DOCKER_COMPOSE_FULL) run --rm $(DISPLAY_ARG) $(BROWSER_ARG) $(FAIL_FAST_ARG) cuke_tests \
-		bash -c "ruby /tests/sanity-check.rb && \
-		cucumber --profile rerun `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS) || \
-		cucumber @report/rerun.txt `if [ -n \"$(CUKE_PROFILE)\" ]; then echo $(CUKE_PROFILE); else echo --profile default; fi` $(CUKE_ARGS)"
-	@$(XHOST_REMOVE)
-
-test_one:						## Run 'utlaan_via_superbruker'.
-	@$(XHOST_ADD)
-	$(DOCKER_COMPOSE_FULL) run --rm $(BROWSER_ARG) $(DISPLAY_ARG) cuke_tests cucumber $(CUKE_PROFILE_ARG) -n "Superbruker l.ner ut bok til Knut"
-	@$(XHOST_REMOVE)
-
-list_unused_steps:					## List unused cucumber steps
-	$(DOCKER_COMPOSE_FULL) run --rm cuke_tests cucumber --tags=~@ignore --tags=~@migration -d -f Unused
-
 rebuild_zebra:						## Rebuild Zebra index in Koha
 	sudo docker exec xkoha koha-rebuild-zebra -full -v -b name
 
 clean_report:						## Clean the cucumber report directory
 	rm test/report/*.* || true
 
-test_redef: test_patron_client test_catalinker cuke_redef	## Test only Redef (excluding services — this is tested during build)
-
-cuke_redef:						## Run redef cucumber tests
-	@$(XHOST_ADD)
-	rm -rf $(LSEXTPATH)/test/report/*.* && \
-	  $(DOCKER_COMPOSE_FULL) run --rm $(DISPLAY_ARG) $(BROWSER_ARG) cuke_tests \
-		bash -c "ruby /tests/sanity-check.rb && cucumber --profile rerun \
-		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS) || cucumber @report/rerun.txt \
-		`if [ -n \"$(CUKE_PROFILE_ARG)\" ]; then echo $(CUKE_PROFILE_ARG); else echo --profile default; fi` --tags @redef $(CUKE_ARGS)"
-	@$(XHOST_REMOVE)
-
-test_patron_client:					## Run unit and module-tests of patron-client
-	cd $(LSEXTPATH)/redef/patron-client && make test
+test_redef: test_catalinker	## Test only Redef (excluding services — this is tested during build)
 
 test_catalinker:					## Run unit and module-tests for catalinker
 	cd $(LSEXTPATH)/redef/catalinker && make test
@@ -138,8 +81,7 @@ login: 							## Login to docker, needs PASSWORD, USER env variables
 	@docker login --username=$(USER) --password=$(PASSWORD)
 
 TAG = "$(shell git rev-parse HEAD)"
-push:							## Push services,catalinker & patron-client containers to dockerhub
-	cd $(LSEXTPATH)/redef/patron-client && make push TAG=$(TAG)
+push:							## Push services and catalinker images to dockerhub
 	cd $(LSEXTPATH)/redef/services && make push TAG=$(TAG)
 	cd $(LSEXTPATH)/redef/catalinker && make push TAG=$(TAG)
 

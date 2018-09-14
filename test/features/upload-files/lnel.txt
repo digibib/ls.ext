@@ -1,4 +1,0 @@
-lnel_nr |20074572|
-lnel_epost |someemail@dummy.com|
-lnel_pin ||
-^
