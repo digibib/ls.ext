@@ -1,6 +1,0 @@
-public/dist/
-node_modules/
-npm-debug.log
-build/
-es5-compiled/
-.sass-cache/
