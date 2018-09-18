@@ -16,22 +16,6 @@ services:
       KOHA_MYSQL_DB: "koha_${KOHA_INSTANCE:-name}"
       KOHA_API_PASS_ENCRYPTED: "$$2a$$08$$7WnfE3Fyh5W0C28Xp2SWH.NfgqLEZzw9oZI4qZ3MHf.lQS8yvv6hC"
 
-  build_patron_client:
-    container_name: build_patron_client
-    build:
-      context: "${LSEXTPATH:-..}/redef/patron-client"
-      dockerfile: Dockerfile-build
-    volumes:
-      - "${LSEXTPATH:-..}/redef/patron-client/public:/usr/src/app/public"
-
-  patron_client:
-    build:
-      context: "${LSEXTPATH:-..}/redef/patron-client"
-      dockerfile: Dockerfile
-    depends_on:
-      - build_patron_client
-      - services
-
   catalinker:
     build:
       context: "${LSEXTPATH:-..}/redef/catalinker"

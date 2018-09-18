@@ -174,31 +174,6 @@ services:
         max-size: "1m"
         max-file: "2"
 
-  patron_client:
-    container_name: patron_client
-    image: "digibib/redef-patron-client:${GITREF}"
-    networks:
-      - backend
-    depends_on:
-      - services
-    ports:
-      - "8000:8000"
-    environment:
-      SERVICES_PORT: "http://services:${SERVICES_PORT:-8005}"
-      GITREF: "${GITREF:-0}"
-      BUILD_TAG: "${BUILD_TAG:-0}"
-      KOHA_API_USER: "${KOHA_API_USER:-api}"
-      KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
-      RECAPTCHA_SECRET: "${RECAPTCHA_SECRET}"
-      NETS_MERCHANT_ID: "${NETS_MERCHANT_ID}"
-      NETS_TOKEN: "${NETS_TOKEN}"
-      NETS_URL: "${NETS_URL}"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "2"
-
   elasticsearch:
     container_name: elasticsearch
     image: digibib/elasticsearch:9be13a2a600e3112430c2a54a4493373e73a94b3

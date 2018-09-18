@@ -35,17 +35,6 @@ services:
       KOHA_MYSQL_DB: "koha_${KOHA_INSTANCE:-name}"
       KOHA_API_PASS_ENCRYPTED: "$$2a$$08$$7WnfE3Fyh5W0C28Xp2SWH.NfgqLEZzw9oZI4qZ3MHf.lQS8yvv6hC"
 
-  patron_client:
-    build:
-      context: "${LSEXTPATH:-..}/redef/patron-client"
-      dockerfile: Dockerfile-dev
-    volumes:
-      - "${MOUNTPATH:-..}/redef/patron-client/src:/usr/src/app/src"
-      - "${MOUNTPATH:-..}/redef/patron-client/test:/usr/src/app/test"
-    ports:
-      - "8000:8000"
-      - "35729:35729"
-
   fuseki:
     ports:
       - "3030:3030"
