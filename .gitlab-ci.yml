@@ -1,6 +1,6 @@
-cuke:
+test:
   script:
-    - make rebuild_services rebuild_patron_client rebuild_catalinker docker_compose_up test
+    - make rebuild_services rebuild_catalinker docker_compose_up test
   only:
     - develop
   stage: test
@@ -9,7 +9,7 @@ cuke:
 
 build:
   script:
-    - LSDEVMODE=ci LSEXTPATH=$(pwd) make rebuild_services rebuild_patron_client rebuild_catalinker login push
+    - LSDEVMODE=ci LSEXTPATH=$(pwd) make rebuild_services rebuild_catalinker login push
   only:
     - tags
   stage: build
