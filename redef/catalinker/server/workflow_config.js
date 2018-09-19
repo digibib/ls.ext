@@ -1158,12 +1158,12 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'partNumber',
-                esotericWhen: { hasWorkType: [ 'Literature', 'Music', 'Film' ] },
+                esotericWhen: { hasWorkType: [ 'Literature', 'Music', 'Film', 'Superwork' ] },
                 id: 'workPartNumber'
               },
               {
                 rdfProperty: 'partTitle',
-                esotericWhen: { hasWorkType: [ 'Literature', 'Music', 'Film' ] },
+                esotericWhen: { hasWorkType: [ 'Literature', 'Music', 'Film', 'Superwork' ] },
                 id: 'workPartTitle'
               },
               {
@@ -1200,23 +1200,23 @@ module.exports = (app) => {
               },
               {
                 rdfProperty: 'literaryForm',
-                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Game' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Game', 'Superwork' ] },
                 multiple: true
               },
               {
-                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Superwork' ] },
                 rdfProperty: 'fictionNonfiction'
               },
               { rdfProperty: 'audience', multiple: true },
               {
-                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Superwork' ] },
                 rdfProperty: 'biography',
                 multiple: true
               },
               {
                 rdfProperty: 'hasContentAdaptation',
-                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Game' ] },
-                esotericWhen: { hasWorkType: [ 'Literature', 'Other', 'Film' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Other', 'Literature', 'Film', 'Game', 'Superwork' ] },
+                esotericWhen: { hasWorkType: [ 'Literature', 'Other', 'Film', 'Superwork' ] },
                 multiple: true
               },
               {
@@ -1398,7 +1398,7 @@ module.exports = (app) => {
             reportLabel: 'maintGeneralSubjectLabelPlur',
             inputs: [
               {
-                includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Music', 'Film', 'Superwork' ] },
                 esotericWhen: { hasWorkType: [ 'Film' ] },
                 rdfProperty: 'hasCompositionType',
                 multiple: true,
@@ -1421,12 +1421,12 @@ module.exports = (app) => {
                 }
               },
               {
-                includeOnlyWhen: { hasWorkType: 'Music' },
+                includeOnlyWhen: { hasWorkType: [ 'Music', 'Superwork' ] },
                 rdfProperty: 'inKey',
                 multiple: true
               },
               {
-                includeOnlyWhen: { hasWorkType: [ 'Music', 'Film' ] },
+                includeOnlyWhen: { hasWorkType: [ 'Music', 'Film', 'Superwork' ] },
                 esotericWhen: { hasWorkType: [ 'Film' ] },
                 label: 'instrumentationLabel',
                 multiple: true,
