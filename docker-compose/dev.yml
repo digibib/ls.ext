@@ -79,24 +79,6 @@ services:
         max-size: "1m"
         max-file: "2"
 
-  cuke_tests:
-    container_name: cuke_tests
-    build:
-      context: "${LSEXTPATH:-..}/test"
-    networks:
-      - backend
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - "${LSEXTPATH:-..}/test:/tests"
-      - "cuke_reports:/tests/report"
-    environment:
-      HOST: "${HOST}"
-      KOHA_ADMINPASS: "${KOHA_ADMINPASS:-secret}"
-      KOHA_ADMINUSER: "${KOHA_ADMINUSER:-admin}"
-      KOHA_INSTANCE: "${KOHA_INSTANCE:-name}"
-      KOHA_API_USER: "${KOHA_API_USER:-api}"
-      KOHA_API_PASS: "${KOHA_API_PASS:-secret}"
-
   nlsink: # Fake NL response, for testing
     container_name: nlsink
     image: "alpine:3.3"
