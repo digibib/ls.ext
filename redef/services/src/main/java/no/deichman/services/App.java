@@ -1,11 +1,11 @@
 package no.deichman.services;
 
 import no.deichman.services.datasource.Datasource;
+import no.deichman.services.entity.AuthorizedValuesResource;
 import no.deichman.services.entity.CirculationResource;
 import no.deichman.services.entity.EntityResource;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.marc.MarcResource;
-import no.deichman.services.ontology.AuthorizedValuesResource;
 import no.deichman.services.ontology.OntologyResource;
 import no.deichman.services.ontology.TemplateResource;
 import no.deichman.services.ontology.TranslationResource;
@@ -109,10 +109,10 @@ public final class App {
         // Tells the Jersey Servlet which REST service/class to load.
         jerseyServlet.setInitParameter(ServerProperties.PROVIDER_CLASSNAMES,
                 String.join(",", asList(
+                        AuthorizedValuesResource.class.getCanonicalName(),
                         EntityResource.class.getCanonicalName(),
                         OntologyResource.class.getCanonicalName(),
                         SearchResource.class.getCanonicalName(),
-                        AuthorizedValuesResource.class.getCanonicalName(),
                         MarcResource.class.getCanonicalName(),
                         CORSResponseFilter.class.getCanonicalName(),
                         VersionResource.class.getCanonicalName(),

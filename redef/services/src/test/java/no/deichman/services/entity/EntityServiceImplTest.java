@@ -59,6 +59,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 import static org.apache.jena.rdf.model.ResourceFactory.createStatement;
 import static org.apache.jena.riot.Lang.JSONLD;
+import static org.apache.jena.riot.Lang.NTRIPLES;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -160,20 +161,15 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_retrieve_work_by_id_with_language() throws Exception {
-        String testId = "test_retrieve_work_by_id_with_language";
-        String workData = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/publication/" + testId + "\",\n"
-                + "        \"@type\": \"deichman:Work\"\n,"
-                + "        \"deichman:language\": \"http://lexvo.org/id/iso639-3/eng\"\n"
-                + "    }\n"
-                + "}";
-        Model inputModel = modelFrom(workData, JSONLD);
+        String work = "<http://deichman.no/work/test_retrieve_work_by_id_with_language> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Work> . \n"
+                + "<http://deichman.no/work/test_retrieve_work_by_id_with_language> <http://data.deichman.no/ontology#language> <http://lexvo.org/id/iso639-3/eng> .";
+        String data = "<http://lexvo.org/id/iso639-3/eng> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lexvo.org/ontology#Language> .\n"
+                + "<http://lexvo.org/id/iso639-3/eng> <http://www.w3.org/2000/01/rdf-schema#label> \"Engelsk\"@no .\n"
+                + "<http://lexvo.org/id/iso639-3/eng> <http://www.w3.org/2000/01/rdf-schema#label> \"English\"@en .";
+        Model inputModel = modelFrom(work, NTRIPLES);
         String workId = service.create(WORK, inputModel);
+        InMemoryRepository repo = (InMemoryRepository) service.getRepo();
+        repo.addData(modelFrom(data, Lang.NTRIPLES));
         XURI xuri = new XURI(workId);
         Model test = service.retrieveWorkWithLinkedResources(xuri);
         assertTrue(
@@ -188,29 +184,25 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void test_retrieve_work_by_id_with_format() throws Exception {
-        String testId = "test_retrieve_work_by_id_with_format";
-        String workData = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/publication/" + testId + "\",\n"
-                + "        \"@type\": \"deichman:Work\"\n,"
-                + "        \"deichman:format\": \"http://data.deichman.no/format#CardGame\"\n"
-                + "    }\n"
-                + "}";
-        Model inputModel = modelFrom(workData, JSONLD);
+    public void test_retrieve_work_by_id_with_worktype() throws Exception {
+        String work = "<http://deichman.no/work/test_retrieve_work_by_id_with_worktype> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Work> . \n"
+                + "<http://deichman.no/work/test_retrieve_work_by_id_with_worktype> <http://data.deichman.no/ontology#hasWorkType> <http://data.deichman.no/workType#Game> .";
+
+        String data = "<http://data.deichman.no/workType#Game> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#WorkType> .\n"
+                     + "<http://data.deichman.no/workType#Game> <http://www.w3.org/2000/01/rdf-schema#label> \"Spill\"@no .\n"
+                     + "<http://data.deichman.no/workType#Game> <http://www.w3.org/2000/01/rdf-schema#label> \"Game\"@en .";
+        Model inputModel = modelFrom(work, NTRIPLES);
         String workId = service.create(WORK, inputModel);
+        InMemoryRepository repo = (InMemoryRepository) service.getRepo();
+        repo.addData(modelFrom(data, Lang.NTRIPLES));
         XURI xuri = new XURI(workId);
         Model test = service.retrieveWorkWithLinkedResources(xuri);
         assertTrue(
                 test.contains(
                         createStatement(
-                                createResource("http://data.deichman.no/format#CardGame"),
+                                createResource("http://data.deichman.no/workType#Game"),
                                 createProperty(RDFS.label.getURI()),
-                                createLangLiteral("Kortspill", "no")
+                                createLangLiteral("Spill", "no")
                         )
                 )
         );
@@ -218,20 +210,15 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_retrieve_person_by_id_with_nationality() throws Exception {
-        String testId = "test_retrieve_person_by_id_with_nationality";
-        String personData = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/person/" + testId + "\",\n"
-                + "        \"@type\": \"deichman:Person\"\n,"
-                + "        \"deichman:nationality\":  { \"@id\": \"http://data.deichman.no/nationality#eng\" } \n"
-                + "    }\n"
-                + "}";
-        Model inputModel = modelFrom(personData, JSONLD);
+        String data = "<http://data.deichman.no/nationality#eng> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Nationality> .\n"
+                    + "<http://data.deichman.no/nationality#eng> <http://www.w3.org/2000/01/rdf-schema#label> \"England\"@no .\n"
+                    + "<http://data.deichman.no/nationality#eng> <http://www.w3.org/2000/01/rdf-schema#label> \"England\"@en .";
+        String personData = "<http://deichman.no/person/test_retrieve_person_by_id_with_nationality> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Person> . \n"
+                          + "<http://deichman.no/person/test_retrieve_person_by_id_with_nationality> <http://data.deichman.no/ontology#nationality> <http://data.deichman.no/nationality#eng> .";
+        Model inputModel = modelFrom(personData, NTRIPLES);
         String personId = service.create(PERSON, inputModel);
+        InMemoryRepository repo = (InMemoryRepository) service.getRepo();
+        repo.addData(modelFrom(data, Lang.NTRIPLES));
         XURI xuri = new XURI(personId);
         Model test = service.retrievePersonWithLinkedResources(xuri);
         assertTrue(
@@ -247,20 +234,16 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_retrieve_corporation_by_id_with_nationality() throws Exception {
-        String testId = "test_retrieve_corporation_by_id_with_nationality";
-        String corporationData = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/corporation/" + testId + "\",\n"
-                + "        \"@type\": \"deichman:Corporation\"\n,"
-                + "        \"deichman:nationality\":  { \"@id\": \"http://data.deichman.no/nationality#n\" } \n"
-                + "    }\n"
-                + "}";
-        Model inputModel = modelFrom(corporationData, JSONLD);
+        String data = "<http://data.deichman.no/nationality#n> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Nationality> .\n"
+                + "<http://data.deichman.no/nationality#n> <http://www.w3.org/2000/01/rdf-schema#label> \"Norge\"@no .\n"
+                + "<http://data.deichman.no/nationality#n> <http://www.w3.org/2000/01/rdf-schema#label> \"Norway\"@en .";
+        String corporationData = "<http://deichman.no/corporation/test_retrieve_corporation_by_id_with_nationality> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Corporation> . \n"
+                               + "<http://deichman.no/corporation/test_retrieve_corporation_by_id_with_nationality> <http://data.deichman.no/ontology#nationality> <http://data.deichman.no/nationality#n> .";
+
+        Model inputModel = modelFrom(corporationData, NTRIPLES);
         String corporationId = service.create(CORPORATION, inputModel);
+        InMemoryRepository repo = (InMemoryRepository) service.getRepo();
+        repo.addData(modelFrom(data, Lang.NTRIPLES));
         XURI xuri = new XURI(corporationId);
         Model test = service.retrieveCorporationWithLinkedResources(xuri);
         assertTrue(
@@ -441,6 +424,12 @@ public class EntityServiceImplTest {
 
     @Test
     public void test_retrieve_work_by_creator() throws Exception {
+        String roleData = "<http://data.deichman.no/role#author> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Role> .\n"
+                        + "<http://data.deichman.no/role#author> <http://www.w3.org/2000/01/rdf-schema#label> \"Forfatter\"@no .\n"
+                        + "<http://data.deichman.no/role#author> <http://www.w3.org/2000/01/rdf-schema#label> \"Author\"@en .";
+        InMemoryRepository repo = (InMemoryRepository) service.getRepo();
+        repo.addData(modelFrom(roleData, Lang.NTRIPLES));
+
         String testId = "PERSON_THAT_SHOULD_HAVE_CREATED_WORK";
         String person = getTestJSON(testId, "person");
         Model personModel = modelFrom(person, JSONLD);
@@ -469,8 +458,8 @@ public class EntityServiceImplTest {
                 + "        \"@id\":\"%s\","
                 + "        \"name\": \"Work Name\""
                 + "      }, {\n"
-                + "        \"@id\" : \"deichman-role:author\",\n"
-                + "        \"@type\" : \"duo:Role\",\n"
+                + "        \"@id\" : \"http://data.deichman.no/role#author\",\n"
+                + "        \"@type\" : \"http://data.deichman.no/utility#Role\",\n"
                 + "        \"label\" : [ {\n"
                 + "          \"@language\" : \"en\",\n"
                 + "          \"@value\" : \"Author\"\n"

@@ -1,6 +1,7 @@
 package no.deichman.services.entity;
 
 import no.deichman.services.circulation.CirculationProfile;
+import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -73,4 +74,8 @@ public interface EntityService {
     void deleteIncomingRelations(XURI xuri);
 
     Model retrieveCompleteResourceById(XURI xuri);
+
+    Model retrieveAuthorizedValuesFor(String type);
+
+    RDFRepository getRepo();
 }

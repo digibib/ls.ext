@@ -34,7 +34,6 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResIterator;
@@ -90,19 +89,6 @@ public final class EntityServiceImpl implements EntityService {
 
     public static final Integer THREE = 3;
 
-    private static final String LANGUAGE_TTL_FILE = "language.ttl";
-    private static final String AUDIENCE_TTL_FILE = "audience.ttl";
-    private static final String FORMAT_TTL_FILE = "format.ttl";
-    private static final String NATIONALITY_TTL_FILE = "nationality.ttl";
-    private static final String MEDIATYPE_TTL_FILE = "mediaType.ttl";
-    private static final String WORKTYPE_TTL_FILE = "workType.ttl";
-    private static final String ROLE_TTL_FILE = "role.ttl";
-    private static final String LITERARYFORM_TTL_FILE = "literaryForm.ttl";
-    private static final String CONTENTADAPTATION_TTL_FILE = "contentAdaptation.ttl";
-    private static final String FORMATADAPTATION_TTL_FILE = "formatAdaptation.ttl";
-    private static final String WRITINGSYSTEM_TTL_FILE = "writingSystem.ttl";
-    private static final String BIOGRAPHY_TTL_FILE = "biography.ttl";
-    private static final String CATALOGUINGSOURCE_TTL_FILE = "cataloguingSource.ttl";
     private final RDFRepository repository;
     private final KohaAdapter kohaAdapter;
     private final Property mainTitleProperty;
@@ -186,86 +172,6 @@ public final class EntityServiceImpl implements EntityService {
         return stream(iterable.spliterator(), false);
     }
 
-    private Model getLinkedLexvoResource(Model input) {
-
-        NodeIterator objects = input.listObjects();
-        if (objects.hasNext()) {
-            Set<RDFNode> objectResources = objects.toSet();
-            objectResources.stream()
-                    .filter(node -> node.toString()
-                            .contains("http://lexvo.org/id/iso639-3/")).collect(toList())
-                    .forEach(lv -> {
-                        input.add(extractNamedResourceFromModel(lv.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(LANGUAGE_TTL_FILE), Lang.TURTLE));
-                    });
-        }
-
-        return input;
-    }
-
-    private Model getLinkedFormatResource(Model input) {
-        return getLinkedResource(input, "format", FORMAT_TTL_FILE);
-    }
-
-    private Model getLinkedAudienceResource(Model input) {
-        return getLinkedResource(input, "audience", AUDIENCE_TTL_FILE);
-    }
-
-    private Model getLinkedNationalityResource(Model input) {
-        return getLinkedResource(input, "nationality", NATIONALITY_TTL_FILE);
-    }
-
-    private Model getLinkedMediaTypeResource(Model input) {
-        return getLinkedResource(input, "mediaType", MEDIATYPE_TTL_FILE);
-    }
-
-    private Model getLinkedLiteraryFormResource(Model input) {
-        return getLinkedResource(input, "literaryForm", LITERARYFORM_TTL_FILE);
-    }
-
-    private Model getLinkedContentAdaptationResource(Model input) {
-        return getLinkedResource(input, "contentAdaptation", CONTENTADAPTATION_TTL_FILE);
-    }
-
-    private Model getLinkedFormatAdaptationResource(Model input) {
-        return getLinkedResource(input, "formatAdaptation", FORMATADAPTATION_TTL_FILE);
-    }
-
-    private Model getLinkedWorkTypeResource(Model input) {
-        return getLinkedResource(input, "workType", WORKTYPE_TTL_FILE);
-    }
-
-    private Model getLinkedWritingSystemResource(Model input) {
-        return getLinkedResource(input, "writingSystem", WRITINGSYSTEM_TTL_FILE);
-    }
-
-    private Model getLinkedBiographySystemResource(Model input) {
-        return getLinkedResource(input, "biography", BIOGRAPHY_TTL_FILE);
-    }
-
-    private Model getLinkedRoleResource(Model input) {
-        return getLinkedResource(input, "role", ROLE_TTL_FILE);
-    }
-
-    private Model getLinkedCataloguingSourceSystemResource(Model input) {
-        return getLinkedResource(input, "cataloguingSource", CATALOGUINGSOURCE_TTL_FILE);
-    }
-
-    private Model getLinkedResource(Model input, String path, String filename) {
-        NodeIterator objects = input.listObjects();
-        if (objects.hasNext()) {
-            Set<RDFNode> objectResources = objects.toSet();
-            objectResources.stream()
-                    .filter(node -> node.toString()
-                            .contains("http://data.deichman.no/" + path + "#")).collect(toList())
-                    .forEach(result -> {
-                        input.add(extractNamedResourceFromModel(result.toString(), EntityServiceImpl.class.getClassLoader().getResourceAsStream(filename), Lang.TURTLE)
-                        );
-                    });
-        }
-
-        return input;
-    }
-
     private Model extractNamedResourceFromModel(String resource, InputStream input, Lang lang) {
         Model tempModel = ModelFactory.createDefaultModel();
         RDFDataMgr.read(tempModel, input, lang);
@@ -299,19 +205,6 @@ public final class EntityServiceImpl implements EntityService {
         Model m = ModelFactory.createDefaultModel();
         m.add(repository.retrieveWorkAndLinkedResourcesByURI(xuri));
         m = addInversePublicationRelations(m, xuri);
-        m = getLinkedLexvoResource(m);
-        m = getLinkedFormatResource(m);
-        m = getLinkedAudienceResource(m);
-        m = getLinkedNationalityResource(m);
-        m = getLinkedMediaTypeResource(m);
-        m = getLinkedLiteraryFormResource(m);
-        m = getLinkedContentAdaptationResource(m);
-        m = getLinkedFormatAdaptationResource(m);
-        m = getLinkedWorkTypeResource(m);
-        m = getLinkedRoleResource(m);
-        m = getLinkedWritingSystemResource(m);
-        m = getLinkedBiographySystemResource(m);
-        m = getLinkedCataloguingSourceSystemResource(m);
         return m;
     }
 
@@ -330,18 +223,17 @@ public final class EntityServiceImpl implements EntityService {
 
     @Override
     public Model retrievePersonWithLinkedResources(XURI xuri) {
-        Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrievePersonAndLinkedResourcesByURI(xuri.getUri()));
-        m = getLinkedNationalityResource(m);
-        return m;
+        return repository.retrievePersonAndLinkedResourcesByURI(xuri.getUri());
     }
 
     @Override
     public Model retrieveCorporationWithLinkedResources(XURI xuri) {
-        Model m = ModelFactory.createDefaultModel();
-        m.add(repository.retrieveCorporationAndLinkedResourcesByURI(xuri.getUri()));
-        m = getLinkedNationalityResource(m);
-        return m;
+        return repository.retrieveCorporationAndLinkedResourcesByURI(xuri.getUri());
+    }
+
+    @Override
+    public Model retrieveAuthorizedValuesFor(String type) {
+        return repository.retrieveAuthorizedValuesFor(type);
     }
 
     @Override
@@ -696,11 +588,7 @@ public final class EntityServiceImpl implements EntityService {
 
     @Override
     public Model retrieveWorksByCreator(XURI xuri) {
-        Model m = ModelFactory.createDefaultModel();
-        m = repository.retrieveWorksByCreator(xuri);
-        m = getLinkedRoleResource(m);
-        m = getLinkedWorkTypeResource(m);
-        return m;
+        return repository.retrieveWorksByCreator(xuri);
     }
 
     @Override
@@ -969,6 +857,11 @@ public final class EntityServiceImpl implements EntityService {
 
     private boolean isNameStatement(Statement s, String[] predicates) {
         return stream(predicates).anyMatch(p -> s.getPredicate().equals(ResourceFactory.createResource(p)));
+    }
+
+    @Override
+    public RDFRepository getRepo() {
+        return repository;
     }
 
 
