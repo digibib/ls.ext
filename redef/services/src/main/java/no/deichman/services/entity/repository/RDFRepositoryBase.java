@@ -495,4 +495,20 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             ((QueryEngineHTTP) qexec).setAllowCompression(false);
         }
     }
+
+    @Override
+    public final Model retrieveTranslationResources() {
+        try (QueryExecution qexec = getQueryExecution(sqb.describeTranslationResources())) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
+
+    @Override
+    public final Model retrieveAuthorizedValuesFor(String type) {
+        try (QueryExecution qexec = getQueryExecution(sqb.retrieveAuthorizedValuesFor(type))) {
+            disableCompression(qexec);
+            return qexec.execDescribe();
+        }
+    }
 }

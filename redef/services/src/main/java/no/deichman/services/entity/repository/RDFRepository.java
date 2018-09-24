@@ -56,6 +56,8 @@ public interface RDFRepository {
 
     Model retrievePersonAndLinkedResourcesByURI(String uri);
 
+    Model retrieveTranslationResources();
+
     boolean askIfResourceExists(XURI xuri);
 
     boolean askIfStatementExists(Statement statement);
@@ -73,6 +75,8 @@ public interface RDFRepository {
     Optional<String> getResourceURIByBibliofilId(String id, String type);
 
     Model retrieveCorporationAndLinkedResourcesByURI(String uri);
+
+    Model retrieveAuthorizedValuesFor(String type);
 
     List<String> retrieveRecordIdsByWork(XURI xuri);
 

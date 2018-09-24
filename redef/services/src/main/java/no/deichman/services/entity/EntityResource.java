@@ -64,13 +64,7 @@ import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 import static no.deichman.services.entity.EntityType.PUBLICATION;
 import static no.deichman.services.entity.EntityType.WORK;
-import static no.deichman.services.restutils.MimeType.DEFAULT;
-import static no.deichman.services.restutils.MimeType.JSON;
-import static no.deichman.services.restutils.MimeType.LDPATCH_JSON;
-import static no.deichman.services.restutils.MimeType.LD_JSON;
-import static no.deichman.services.restutils.MimeType.NTRIPLES;
-import static no.deichman.services.restutils.MimeType.QS_0_7;
-import static no.deichman.services.restutils.MimeType.TURTLE;
+import static no.deichman.services.restutils.MimeType.*;
 
 /**
  * Responsibility: Expose entities as r/w REST resources.

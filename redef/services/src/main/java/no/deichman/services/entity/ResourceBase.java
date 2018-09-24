@@ -48,7 +48,7 @@ public abstract class ResourceBase {
 
     protected abstract ServletConfig getConfig();
 
-    protected final EntityService getEntityService() {
+    public final EntityService getEntityService() {
         if (entityService == null) {
             RDFRepository repository = getRdfRepository();
             entityService = new EntityServiceImpl(repository, getKohaAdapter());

@@ -762,7 +762,46 @@ public class AppTest {
 
     @Test
     public void get_authorized_values() throws Exception {
-
+        String data = "<http://data.deichman.no/formatAdaptation#capitalLetters> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#FormatAdaptation> . "
+                + "<http://data.deichman.no/formatAdaptation#capitalLetters> <http://www.w3.org/2000/01/rdf-schema#label> \"Capital letters\"@en ."
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#ContentAdaptation> ."
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> <http://www.w3.org/2000/01/rdf-schema#label> \"Easy to read, easy language\"@en ."
+                + "<http://data.deichman.no/audience#adult> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Audience> ."
+                + "<http://data.deichman.no/audience#adult> <http://www.w3.org/2000/01/rdf-schema#label> \"Adults\"@en ."
+                + "<http://data.deichman.no/binding#innbundet> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Binding> ."
+                + "<http://data.deichman.no/binding#innbundet> <http://www.w3.org/2000/01/rdf-schema#label> \"Hardback\"@en ."
+                + "<http://data.deichman.no/biography#biographicalContent> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Biography> ."
+                + "<http://data.deichman.no/biography#biographicalContent> <http://www.w3.org/2000/01/rdf-schema#label> \"Biographical content\"@en ."
+                + "<http://data.deichman.no/format#DVD> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Format> ."
+                + "<http://data.deichman.no/format#DVD> <http://www.w3.org/2000/01/rdf-schema#label> \"DVD\"@en ."
+                + "<http://data.deichman.no/illustrativeMatter#illustrert> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#IllustrativeMatter> ."
+                + "<http://data.deichman.no/illustrativeMatter#illustrert> <http://www.w3.org/2000/01/rdf-schema#label> \"Illustrated\"@en ."
+                + "<http://lexvo.org/id/iso639-3/afr> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lexvo.org/ontology#Language> ."
+                + "<http://lexvo.org/id/iso639-3/afr> <http://www.w3.org/2000/01/rdf-schema#label> \"Afrikaans\"@en ."
+                + "<http://data.deichman.no/literaryForm#poetry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#LiteraryForm> ."
+                + "<http://data.deichman.no/literaryForm#poetry> <http://www.w3.org/2000/01/rdf-schema#label> \"Poem\"@en ."
+                + "<http://data.deichman.no/mediaType#Book> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#MediaType> ."
+                + "<http://data.deichman.no/mediaType#Book> <http://www.w3.org/2000/01/rdf-schema#label> \"Book\"@en ."
+                + "<http://data.deichman.no/nationality#aborig> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Nationality> ."
+                + "<http://data.deichman.no/nationality#aborig> <http://www.w3.org/2000/01/rdf-schema#label> \"Aboriginal Australian\"@en ."
+                + "<http://data.deichman.no/role#scriptWriter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Role> ."
+                + "<http://data.deichman.no/role#scriptWriter> <http://www.w3.org/2000/01/rdf-schema#label> \"Script writer\"@en ."
+                + "<http://data.deichman.no/writingSystem#cyrillic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#WritingSystem> ."
+                + "<http://data.deichman.no/writingSystem#cyrillic> <http://www.w3.org/2000/01/rdf-schema#label> \"Cyrillic\"@en ."
+                + "<http://data.deichman.no/relationType#relatedWork> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#RelationType> ."
+                + "<http://data.deichman.no/relationType#relatedWork> <http://www.w3.org/2000/01/rdf-schema#label> \"Related to\"@en ."
+                + "<http://data.deichman.no/classificationSource#ddk5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#ClassificationSource> ."
+                + "<http://data.deichman.no/classificationSource#ddk5>  <http://www.w3.org/2000/01/rdf-schema#label> \"DDK 5\"@en ."
+                + "<http://data.deichman.no/key#cb_major> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#Key> ."
+                + "<http://data.deichman.no/key#cb_major> <http://www.w3.org/2000/01/rdf-schema#label> \"C♭-dur\"@no ."
+                + "<http://data.deichman.no/workType#Literature> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#WorkType> ."
+                + "<http://data.deichman.no/workType#Literature> <http://www.w3.org/2000/01/rdf-schema#label> \"Litteratur\"@no ."
+                + "<http://data.deichman.no/fictionNonfiction#nonfiction> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#FictionNonfiction> ."
+                + "<http://data.deichman.no/fictionNonfiction#nonfiction> <http://www.w3.org/2000/01/rdf-schema#label> \"Fag\"@no ."
+                + "<http://data.deichman.no/cataloguingSource#BS> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#CataloguingSource> ."
+                + "<http://data.deichman.no/cataloguingSource#BS>  <http://www.w3.org/2000/01/rdf-schema#label> \"Biblioteksentralen\"@no .";
+        InMemoryRepository repo = ResourceBase.getInMemoryRepository();
+        repo.addData(RDFModelUtil.modelFrom(data, Lang.NTRIPLES));
         for (AuthorizedValue authorizedValue : AuthorizedValue.values()) {
             HttpRequest authorizedValueRequest = Unirest
                     .get(appURI + "authorized_values/" + authorizedValue.getPath())

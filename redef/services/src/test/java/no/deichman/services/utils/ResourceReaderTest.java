@@ -21,7 +21,7 @@ public class ResourceReaderTest {
 
     @Test
     public void should_read_resource_file_as_string() {
-        String fileContents = new ResourceReader().readFile("format.ttl");
+        String fileContents = new ResourceReader().readFile("ontology.ttl");
         assertNotNull(fileContents); //Testing with arbitrary existing file that has content
         assertTrue(fileContents.length() > 0);
     }

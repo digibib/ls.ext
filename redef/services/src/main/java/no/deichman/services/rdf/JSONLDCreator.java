@@ -31,7 +31,7 @@ public final class JSONLDCreator {
 
         final Map<String, Object> ctx = new HashMap<>();
         DefaultPrefixes defaultPrefixes = new DefaultPrefixes(BaseURI.ontology());
-        ctx.put("@context", defaultPrefixes.getAll());
+        ctx.put("@context", defaultPrefixes.getForOntology());
 
         return asJSONLD(model, ctx);
     }

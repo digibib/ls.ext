@@ -43,6 +43,7 @@ import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
 import static no.deichman.services.entity.EntityType.SUBJECT;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFromString;
+import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
 import static org.apache.jena.query.QueryExecutionFactory.create;
 import static org.hamcrest.core.Is.is;
@@ -352,67 +353,39 @@ public class EntityResourceTest {
 
     @Test
     public void work_should_have_language_labels() throws Exception {
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/publication/work_should_have_language_labels\",\n"
-                + "        \"@type\": \"deichman:Work\"\n,"
-                + "        \"deichman:language\": \"http://lexvo.org/id/iso639-3/eng\"\n"
-                + "    }\n"
-                + "}";
-        Response createResponse = entityResource.createFromLDJSON(WORK, work);
+        String data = "<http://lexvo.org/id/iso639-3/eng> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://lexvo.org/ontology#Language> .\n"
+                + "<http://lexvo.org/id/iso639-3/eng> <http://www.w3.org/2000/01/rdf-schema#label> \"Engelsk\"@no .\n"
+                + "<http://lexvo.org/id/iso639-3/eng> <http://www.w3.org/2000/01/rdf-schema#label> \"English\"@en .";
+        String work = "<http://deichman.no/work/work_should_have_language_labels> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Work> . \n"
+                    + "<http://deichman.no/work/work_should_have_language_labels> <http://data.deichman.no/ontology#language> <http://lexvo.org/id/iso639-3/eng> .";
+        Response createResponse = entityResource.createFromNTriples(WORK, work);
         String workId = createResponse.getHeaderString(LOCATION).replaceAll(BaseURI.work(), "");
+        InMemoryRepository repo = (InMemoryRepository) entityResource.getEntityService().getRepo();
+        repo.addData(modelFrom(data, Lang.NTRIPLES));
         Response result = entityResource.get(WORK, workId);
 
-        String labelsComparison = "{\n"
-                + "    \"@id\" : \"http://lexvo.org/id/iso639-3/eng\",\n"
-                + "    \"@type\" : \"http://lexvo.org/ontology#Language\",\n"
-                + "    \"rdfs:label\" : [ {\n"
-                + "      \"@language\" : \"en\",\n"
-                + "      \"@value\" : \"English\"\n"
-                + "    }, {\n"
-                + "      \"@language\" : \"no\",\n"
-                + "      \"@value\" : \"Engelsk\"\n"
-                + "    } ]\n"
-                + "  }";
-
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(result.getEntity().toString().contains(labelsComparison));
+        assertTrue(result.getEntity().toString().contains("English"));
+        assertTrue(result.getEntity().toString().contains("Engelsk"));
     }
 
     @Test
-    public void work_should_have_format_labels() throws Exception {
-        String work = "{\n"
-                + "    \"@context\": {\n"
-                + "        \"rdfs\": \"http://www.w3.org/2000/01/rdf-schema#\",\n"
-                + "        \"deichman\": \"http://deichman.no/ontology#\"\n"
-                + "    },\n"
-                + "    \"@graph\": {\n"
-                + "        \"@id\": \"http://deichman.no/publication/work_should_have_language_labels\",\n"
-                + "        \"@type\": \"deichman:Work\"\n,"
-                + "        \"deichman:format\": \"http://data.deichman.no/format#CardGame\"\n"
-                + "    }\n"
-                + "}";
-        Response createResponse = entityResource.createFromLDJSON(WORK, work);
+    public void work_should_have_worktype_labels() throws Exception {
+        String data = "<http://data.deichman.no/workType#Literature> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/utility#WorkType> .\n"
+                + "<http://data.deichman.no/workType#Literature> <http://www.w3.org/2000/01/rdf-schema#label> \"Litteratur\"@no .\n"
+                + "<http://data.deichman.no/workType#Literature> <http://www.w3.org/2000/01/rdf-schema#label> \"Literature\"@en .";
+        String work = "<http://deichman.no/work/work_should_worktype_labels> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://data.deichman.no/ontology#Work> . \n"
+                    + "<http://deichman.no/work/work_should_worktype_labels> <http://data.deichman.no/ontology#hasWorkType> <http://data.deichman.no/workType#Literature> .";
+
+        Response createResponse = entityResource.createFromNTriples(WORK, work);
         String workId = createResponse.getHeaderString(LOCATION).replaceAll(BaseURI.work(), "");
+        InMemoryRepository repo = (InMemoryRepository) entityResource.getEntityService().getRepo();
+        repo.addData(modelFrom(data, Lang.NTRIPLES));
         Response result = entityResource.get(WORK, workId);
 
-        String labelsComparison = "{\n"
-                + "    \"@id\" : \"http://data.deichman.no/format#CardGame\",\n"
-                + "    \"@type\" : \"http://data.deichman.no/utility#Format\",\n"
-                + "    \"rdfs:label\" : [ {\n"
-                + "      \"@language\" : \"en\",\n"
-                + "      \"@value\" : \"Card Game\"\n"
-                + "    }, {\n"
-                + "      \"@language\" : \"no\",\n"
-                + "      \"@value\" : \"Kortspill\"\n"
-                + "    } ]\n"
-                + "  }";
         assertEquals(OK.getStatusCode(), result.getStatus());
-        assertTrue(result.getEntity().toString().contains(labelsComparison));
+        assertTrue(result.getEntity().toString().contains("Litteratur"));
+        assertTrue(result.getEntity().toString().contains("Literature"));
     }
 
     @Test
