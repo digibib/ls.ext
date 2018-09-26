@@ -735,6 +735,18 @@ public class SearchServiceImpl implements SearchService {
             LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
+        //triggerIndexingInEuler(idx, xuri);
+    }
+
+    private void triggerIndexingInEuler(String idx, XURI xuri) {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = new URI("http://euler:8080/api/authorities/"+xuri.getType()+"/"+xuri.getId()+"/index");
+            try (CloseableHttpResponse putResponse = httpclient.execute(new HttpPut(uri))) {
+                // no-op
+            }
+        } catch (Exception e) {
+            LOG.error(format("Failed to trigger indexing of %s in euler", xuri.getUri()), e);
+         }
     }
 
     private Response doSearch(String query, URIBuilder searchUriBuilder) {
