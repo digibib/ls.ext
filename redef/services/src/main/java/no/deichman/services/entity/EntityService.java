@@ -25,8 +25,6 @@ public interface EntityService {
 
     Model retrieveCorporationWithLinkedResources(XURI xuri);
 
-    XURI updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems, boolean deleted) throws Exception;
-
     Model retrieveWorkItemsByURI(XURI xuri);
 
     String create(EntityType type, Model inputModel) throws Exception;

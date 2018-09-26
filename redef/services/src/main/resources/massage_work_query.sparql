@@ -32,7 +32,6 @@ CONSTRUCT {
                deich:contentAdaptation ?contentAdaptationNorwegianName ;
                deich:adaptation ?contentAdaptationNorwegianName ;
                deich:series ?seriesTitle ;
-               deich:totalNumItems ?totalNumItems ;
                deich:literaryForm ?litform ;
                deich:created ?created ;
                deich:untranscribedTitle ?untranscribedTitle ;
@@ -240,20 +239,4 @@ WHERE {
           VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
   }
   UNION { <__WORKURI__> deich:hasTag ?hasTag }
-  UNION {
-    select ?totalNumItems
-    where {
-      {
-        select (sum(?items) as ?totalNumItems)
-        where {
-            ?publication deich:publicationOf <__WORKURI__> ;
-                         deich:hasNumItems ?items .
-                         optional {?publication deich:hasMediaType ?mediatype }
-            FILTER(!bound(?mediatype) || (bound(?mediatype) && ?mediatype != mediaType:Periodical))
-        }
-        having(sum(?items) > 0)
-      }
-      filter(?totalNumItems > 0)
-    }
-  }
 }

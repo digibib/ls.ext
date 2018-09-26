@@ -363,27 +363,6 @@ public class SPARQLQueryBuilderTest {
     }
 
     @Test
-    public void test_update_branches_query() throws Exception {
-        String recordId = "378";
-        String homeBranches = "hutl,fmaj,fgry";
-        String availableBranches = "fgry,fmaj";
-        int numItems = 8;
-        String expected = "PREFIX : <" + BaseURI.ontology() + ">\n"
-                + "DELETE { ?pub :hasHomeBranch ?homeBranch ; :hasAvailableBranch ?availBranch ; :hasNumItems ?numItems }\n"
-                + "INSERT { ?pub :hasHomeBranch \"" + StringUtils.join(homeBranches.split(","), "\",\"") + "\" .\n"
-                + "?pub :hasAvailableBranch \"" + StringUtils.join(availableBranches.split(","), "\",\"") + "\" .\n"
-                + "?pub :hasNumItems " + numItems + " }\n"
-                + "WHERE  { ?pub :recordId \"" + recordId + "\" .\n"
-                + "         OPTIONAL { ?pub :hasNumItems ?numItems }\n"
-                + "         OPTIONAL { ?pub :hasHomeBranch ?homeBranch }\n"
-                + "         OPTIONAL { ?pub :hasAvailableBranch ?availBranch }\n"
-                + "}\n";
-        SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String query = sqb.updateAvailabilityData(recordId, homeBranches, availableBranches, numItems);
-        assertEquals(expected, query);
-    }
-
-    @Test
     public void test_retrieve_record_ids_by_work_query() throws Exception {
         XURI xuri = new XURI("http://data.deichman.no/work/w234123");
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();

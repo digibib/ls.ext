@@ -374,35 +374,8 @@ public final class SPARQLQueryBuilder {
     public String deleteBiblioReferences(String recordId) {
         String q = format(""
                         + "PREFIX : <%s>\n"
-                        + "DELETE { ?pub :recordId \"%s\" ; :hasHomeBranch ?homeBranch ; :hasAvailableBranch ?availBranch ; :hasNumItems ?numItems }\n"
-                        + "WHERE  { ?pub :recordId \"%s\" .\n"
-                        + "         OPTIONAL { ?pub :hasNumItems ?numItems }\n"
-                        + "         OPTIONAL { ?pub :hasHomeBranch ?homeBranch }\n"
-                        + "         OPTIONAL { ?pub :hasAvailableBranch ?availBranch }\n"
-                        + "}\n",
-                BaseURI.ontology(), recordId, recordId);
-        return q;
-    }
-
-    public String updateAvailabilityData(String recordId, String homeBranches, String availableBranches, int numItems) {
-        List<String> inserts = newArrayList();
-        if (homeBranches != null && !homeBranches.equals("")) {
-            inserts.add("?pub :hasHomeBranch \"" + StringUtils.join(homeBranches.split(","), "\",\"") + "\"");
-        }
-        if (availableBranches != null && !availableBranches.equals("")) {
-            inserts.add("?pub :hasAvailableBranch \"" + StringUtils.join(availableBranches.split(","), "\",\"") + "\"");
-        }
-        inserts.add("?pub :hasNumItems " + numItems);
-        String q = format(""
-                        + "PREFIX : <%s>\n"
-                        + "DELETE { ?pub :hasHomeBranch ?homeBranch ; :hasAvailableBranch ?availBranch ; :hasNumItems ?numItems }\n"
-                        + "INSERT { %s }\n"
-                        + "WHERE  { ?pub :recordId \"%s\" .\n"
-                        + "         OPTIONAL { ?pub :hasNumItems ?numItems }\n"
-                        + "         OPTIONAL { ?pub :hasHomeBranch ?homeBranch }\n"
-                        + "         OPTIONAL { ?pub :hasAvailableBranch ?availBranch }\n"
-                        + "}\n",
-                BaseURI.ontology(), StringUtils.join(inserts, " .\n"), recordId);
+                        + "DELETE WHERE { ?pub :recordId \"%s\" }\n",
+                BaseURI.ontology(), recordId);
         return q;
     }
 
