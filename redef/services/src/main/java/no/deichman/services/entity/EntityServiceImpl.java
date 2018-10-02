@@ -440,6 +440,11 @@ public final class EntityServiceImpl implements EntityService {
             return marcRecord;
         }
 
+        if (System.getenv("GITREF") != null) {
+            // Impossible to fix tests to take this into account, so only run this bit in prod
+            marcRecord.addMarcField(MarcConstants.FIELD_099, MarcConstants.SUBFIELD_A, publication.getUri());
+        }
+
         MarcField field015 = MarcRecord.newDataField(MarcConstants.FIELD_015);
         MarcField field260 = MarcRecord.newDataField(MarcConstants.FIELD_260);
         MarcField field041 = MarcRecord.newDataField(MarcConstants.FIELD_041);

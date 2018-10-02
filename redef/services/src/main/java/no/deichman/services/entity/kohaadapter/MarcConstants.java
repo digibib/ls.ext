@@ -8,6 +8,7 @@ public final class MarcConstants {
     public static final String FIELD_015 = "015";
     public static final String FIELD_041 = "041";
     public static final String FIELD_090 = "090";
+    public static final String FIELD_099 = "099";
     public static final String FIELD_100 = "100";
     public static final String FIELD_110 = "110";
     public static final String FIELD_260 = "260";
