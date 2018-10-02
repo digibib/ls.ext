@@ -32,6 +32,7 @@ public final class DefaultPrefixes {
         authMapping.put("formatAdaptation","http://data.deichman.no/formatAdaptation#");
         authMapping.put("mediaType", "http://data.deichman.no/mediaType#");
         authMapping.put("label", "http://www.w3.org/2000/01/rdf-schema#label");
+        authMapping.put("language", "http://lexvo.org/id/iso639-3/");
         authMapping.put("rdfs", RDFS.getURI());
         authMapping.put("deichman", deichmanOntologyBaseUri);
     }
