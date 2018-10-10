@@ -98,6 +98,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final Model retrieveResourceByURI(XURI xuri, boolean withMigrationFilter) {
         log.debug("Attempting to retrieve resource <" + xuri.getUri() + ">");
+        //log.debug("GET RESOURCE BY ID QUERY:\n " + sqb.getGetResourceByIdQuery(xuri.getUri()) + "\n");
         try (QueryExecution qexec = getQueryExecution(sqb.getGetResourceByIdQuery(xuri.getUri()))) {
             disableCompression(qexec);
             if (withMigrationFilter) {
@@ -110,6 +111,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final Model retrieveWorkAndLinkedResourcesByURI(XURI xuri) {
         log.debug("Attempting to retrieve: <" + xuri.getUri() + ">");
+        //log.debug("QUERY GET WORK AND LINKS: \n" + sqb.describeWorkAndLinkedResources(xuri) + "\n");
         try (QueryExecution qexec = getQueryExecution(sqb.describeWorkAndLinkedResources(xuri))) {
             disableCompression(qexec);
             return qexec.execDescribe();
@@ -146,6 +148,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
 
     @Override
     public final void updateResource(String query) {
+        //log.debug("UPDATE QUERY:\n" + query + "\n");
         UpdateRequest updateRequest = UpdateFactory.create(query);
         executeUpdate(updateRequest);
     }
@@ -194,7 +197,9 @@ public abstract class RDFRepositoryBase implements RDFRepository {
             stream(additionalProperties).forEach(pair -> createModel.add(simpleStatement(pair.getKey(), pair.getValue())));
         }
         String uri = uriGenerator.getNewURI(type, this::askIfResourceExists);
+        log.debug("CREATE RESOURCE URI: " + uri + "\n");
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(uri), createModel);
+        //log.debug("CREATE RESOURCE QUERY:\n" + sqb.getCreateQueryString(createModel) + "\n");
         UpdateRequest updateRequest = UpdateFactory.create(sqb.getCreateQueryString(createModel));
         executeUpdate(updateRequest);
         return uri;
@@ -311,6 +316,7 @@ public abstract class RDFRepositoryBase implements RDFRepository {
     @Override
     public final void patch(List<Patch> patches, Resource subject) {
         ArrayList<Patch> copy = newArrayList(patches);
+        //log.debug("PATCHING:\n" + sqb.patch(copy, subject));
         copy.add(addPatch(modifiedStatement(subject), null));
         UpdateRequest updateRequest = UpdateFactory.create(sqb.patch(copy, subject));
         executeUpdate(updateRequest);
