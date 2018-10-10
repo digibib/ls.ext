@@ -5,6 +5,7 @@ import org.apache.http.impl.client.SystemDefaultHttpClient;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.WebContent;
 import org.apache.jena.riot.web.HttpOp;
 import org.apache.jena.sparql.modify.UpdateProcessRemote;
@@ -42,7 +43,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
     }
 
     @Override
-    protected void executeUpdate(UpdateRequest updateRequest) {
+    protected void executeUpdate(UpdateRequest updateRequest) throws HttpException {
         UpdateProcessRemote updateProcessRemote = new UpdateProcessRemote(updateRequest, triplestorePort + "/sparql", null){
             @Override
             public void execute() {
@@ -53,9 +54,26 @@ public final class RemoteRepository extends RDFRepositoryBase {
                     endpoint = endpoint.contains("?") ? endpoint + "&" + querystring : endpoint + "?" + querystring;
                 }
 
-                // Execution
-                String reqStr = this.getUpdateRequest().toString();
-                HttpOp.execHttpPost(endpoint, WebContent.contentTypeSPARQLUpdate, reqStr, httpClient, getHttpContext());
+                try {
+                    // Execution
+                    String reqStr = this.getUpdateRequest().toString();
+                    HttpOp.execHttpPost(endpoint, WebContent.contentTypeSPARQLUpdate, reqStr, httpClient, getHttpContext());
+                } catch (HttpException ex) {
+                    int responseCode = ex.getResponseCode();
+                    // retry on 404 as it might be hitting a checkpoint
+                    if (responseCode == 404) {
+                        try {
+                            Thread.sleep(3000);
+                            executeUpdate(updateRequest);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        throw new HttpException(responseCode, "Unexpected response on update query", ex.getMessage());
+                    }
+                } catch (Exception ex) {
+                    throw new HttpException(500, "Uncaught exception in update query", ex.getMessage());
+                }
             }
         };
         updateProcessRemote.execute();
