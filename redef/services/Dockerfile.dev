@@ -29,10 +29,6 @@ FROM java:8
 
 COPY --from=builder /services/build/libs/services-1.0-SNAPSHOT-standalone.jar /services-1.0-SNAPSHOT-standalone.jar
 
-RUN apt-get update && apt-get install -y \
-    mysql-client \
-    && rm -rf /var/lib/apt/lists/*
-
 ADD entrypoint.dev.sh /entrypoint.sh
 
 CMD /entrypoint.sh \
