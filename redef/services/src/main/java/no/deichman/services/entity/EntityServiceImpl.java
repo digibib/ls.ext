@@ -2,17 +2,6 @@ package no.deichman.services.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import no.deichman.services.circulation.CirculationObject;
-import no.deichman.services.circulation.CirculationProfile;
-import no.deichman.services.circulation.ExpandedRecord;
-import no.deichman.services.circulation.HoldsAndPickups;
-import no.deichman.services.circulation.Loan;
-import no.deichman.services.circulation.Pickup;
-import no.deichman.services.circulation.RawHold;
-import no.deichman.services.circulation.RawLoan;
-import no.deichman.services.circulation.Record;
-import no.deichman.services.circulation.Reservation;
 import no.deichman.services.entity.kohaadapter.KohaAdapter;
 import no.deichman.services.entity.kohaadapter.MarcConstants;
 import no.deichman.services.entity.kohaadapter.MarcField;
@@ -50,8 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.BadRequestException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -658,50 +645,6 @@ public final class EntityServiceImpl implements EntityService {
                 .collect(toSet()).stream().sorted().collect(toList());
     }
 
-    @Override
-    public CirculationProfile getProfile(String borrowerId) throws Exception {
-        CirculationProfile circulationProfile = new CirculationProfile();
-        circulationProfile.setLoans(getLoans(borrowerId));
-        HoldsAndPickups holdsAndPickups = getHolds(borrowerId);
-        circulationProfile.setPickups(holdsAndPickups.getPickups());
-        circulationProfile.setHolds(holdsAndPickups.getHolds());
-        return circulationProfile;
-    }
-
-    private CirculationObject rawHoldToCirculationObject(RawHold rawHold) {
-        CirculationObject circulationObject;
-        Expectation expectation = new Expectation();
-        if (Objects.equals(rawHold.getStatus(), HOLD_IS_FOUND)) {
-            Pickup pickup = new Pickup();
-            pickup.setExpirationDate(rawHold.getWaitingDate());
-            pickup.setPickupNumber(rawHold.getPickupNumber());
-            circulationObject = pickup;
-        } else {
-            Reservation reservation = new Reservation();
-            ExpandedRecord expandedRecord = GSON.fromJson(
-                    kohaAdapter.retrieveBiblioExpanded(rawHold.getRecordId()),
-                    new TypeToken<ExpandedRecord>() {}.getType());
-            Record record = expandedRecord.getRecord();
-            reservation.setEstimatedWait(
-                    expectation.estimate(
-                            Integer.parseInt(rawHold.getQueuePlace()),
-                            expandedRecord.getItems(),
-                            record.getBehindExpiditedUserAsBoolean()));
-            reservation.setQueuePlace(rawHold.getQueuePlace());
-            reservation.setSuspended(convertBooleanString(Optional.ofNullable(rawHold.getSuspended()).orElse("0")));
-            reservation.setOrderedDate(Optional.ofNullable(rawHold.getReserveDate()).orElse(null));
-            reservation.setSuspendUntil(Optional.ofNullable(rawHold.getSuspendUntil()).orElse(null));
-            reservation.setPickupNumber(Optional.ofNullable(rawHold.getPickupNumber()).orElse(null));
-            circulationObject = reservation;
-        }
-        circulationObject.setId(rawHold.getId());
-        circulationObject.setRecordId(rawHold.getRecordId());
-        circulationObject.setBranchCode(rawHold.getBranchCode());
-
-        return circulationObject;
-    }
-
-
     private boolean convertBooleanString(String string) {
         boolean returnValue = true;
         if (string.equals("0") || string.equals("false")) {
@@ -709,58 +652,6 @@ public final class EntityServiceImpl implements EntityService {
         }
         return returnValue;
     }
-
-    private HoldsAndPickups getHolds(String borrowerId) throws Exception {
-        HoldsAndPickups holdsAndPickups = new HoldsAndPickups();
-        Type rawHoldsArrayType = new TypeToken<ArrayList<RawHold>>() {
-        }.getType();
-        List<RawHold> rawHolds = GSON.fromJson(kohaAdapter.getHolds(borrowerId), rawHoldsArrayType);
-        List<Pickup> pickupsList = new ArrayList<>();
-        List<Reservation> holdsList = new ArrayList<>();
-
-        for (RawHold rawHold : rawHolds) {
-            CirculationObject circulationObject = rawHoldToCirculationObject(rawHold);
-            if (circulationObject instanceof Reservation) {
-                holdsList.add((Reservation) circulationObject);
-            } else {
-                pickupsList.add((Pickup) circulationObject);
-            }
-            circulationObject.decorateWithPublicationData(getPublicationMetadataByRecordId(rawHold.getRecordId()));
-        }
-        holdsAndPickups.setHolds(holdsList);
-        holdsAndPickups.setPickups(pickupsList);
-        return holdsAndPickups;
-    }
-
-    private List<Loan> getLoans(String borrowerId) throws Exception {
-        String checkouts = kohaAdapter.getCheckouts(borrowerId);
-        RawLoan[] rawLoans = GSON.fromJson(checkouts, RawLoan[].class);
-        List<Loan> loans = new ArrayList<>();
-        for (RawLoan rawLoan : rawLoans) {
-            Loan loan = new Loan();
-            loan.setId(rawLoan.getId());
-            loan.setItemNumber(rawLoan.getItemNumber());
-            loan.setBranchCode(rawLoan.getBranchCode());
-            loan.setBorrowerNumber(rawLoan.getBorrowerId());
-            loan.setDueDate(rawLoan.getDueDate());
-            loan.setItemNumber(rawLoan.getItemNumber());
-            Record loanRecord = getRecordIdFromLoan(loan);
-            String recordId = loanRecord.getId();
-            loan.setRecordId(recordId);
-            loan.decorateWithPublicationData(getPublicationMetadataByRecordId(recordId));
-            if (loan.getTitle() == null) {
-                loan.setTitle(Optional.of(loanRecord.getTitle()).orElse("No title/Uten tittel"));
-            }
-            loans.add(loan);
-        }
-        return loans;
-    }
-
-    private Record getRecordIdFromLoan(Loan loan) {
-        String data = kohaAdapter.getBiblioFromItemNumber(loan.getItemNumber());
-        return GSON.fromJson(data, Record.class);
-    }
-
 
     private Map<String, String> getPublicationMetadataByRecordId(String recordId) {
         Map<String, String> publicationMetadata = new HashMap<>();

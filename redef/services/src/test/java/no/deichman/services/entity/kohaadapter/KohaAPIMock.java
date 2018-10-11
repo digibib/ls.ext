@@ -123,18 +123,6 @@ public final class KohaAPIMock {
                 giveEmptyResponse().withStatus(OK.getStatusCode()));
     }
 
-    public void addGetCheckoutsExpectation(String borrowerNumber, String responseJSON) {
-
-        clientDriver.addExpectation(
-                onRequestTo("/api/v1/checkouts")
-                        .withParam("borrowernumber", borrowerNumber)
-                        .withMethod(GET)
-                        .withHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
-                giveResponse(responseJSON, "application/json; charset=utf8")
-        );
-    }
-
     public void addGetBiblioFromItemNumberExpectation(String itemNumber) {
         clientDriver.addExpectation(onRequestTo("/api/v1/items/" + itemNumber + "/biblio")
                         .withMethod(GET)
@@ -152,29 +140,6 @@ public final class KohaAPIMock {
                         .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
                 giveResponse(responseJson, "application/json; charset=utf8")
         );
-    }
-
-    public String generateCheckoutsJson(String borrowerNumber, String itemNumber) {
-        return String.format(""
-                        + "[{\n"
-                        + "  \"borrowernumber\": \"%1$s\",\n"
-                        + "  \"itemnumber\": \"%2$s\",\n"
-                        + "  \"return\": null,\n"
-                        + "  \"date_due\": \"%3$s\",\n"
-                        + "  \"renewals\": \"1\",\n"
-                        + "  \"timestamp\": \"%4$s\",\n"
-                        + "  \"returndate\": null,\n"
-                        + "  \"branchcode\": \"hutl\",\n"
-                        + "  \"auto_renew\": \"0\",\n"
-                        + "  \"lastreneweddate\": \"%4$s\",\n"
-                        + "  \"issue_id\": \"555\",\n"
-                        + "  \"onsite_checkout\": \"0\",\n"
-                        + "  \"issuedate\": \"%5$s\"\n"
-                        + "}]", borrowerNumber,
-                itemNumber,
-                KOHA_DATETIME_FORMAT.format(getDate(TWENTY_EIGHT)),
-                KOHA_DATETIME_FORMAT.format(getDate(0)),
-                KOHA_DATETIME_FORMAT.format(getDate(MINUS_TWENTY_SEVEN)));
     }
 
     private String generateRandomID() {
@@ -288,54 +253,6 @@ public final class KohaAPIMock {
         return calendar.getTime();
     }
 
-    public String generateHoldsJson(String userId, String recordId1, String recordId2) {
-        return String.format(""
-                + "[{\n"
-                + "  \"borrowernumber\": \"%1$s\",\n"
-                + "  \"suspend\": \"0\",\n"
-                + "  \"priority\": \"1\",\n"
-                + "  \"itemtype\": null,\n"
-                + "  \"expirationdate\": null,\n"
-                + "  \"reservedate\": \"2017-02-09\",\n"
-                + "  \"timestamp\": \"2017-02-09 11:47:15\",\n"
-                + "  \"lowestPriority\": \"0\",\n"
-                + "  \"branchcode\": \"hutl\",\n"
-                + "  \"suspend_until\": null,\n"
-                + "  \"waitingdate\": null,\n"
-                + "  \"pickupnumber\": null,\n"
-                + "  \"itemnumber\": null,\n"
-                + "  \"found\": null,\n"
-                + "  \"reserve_id\": \"%2$s\",\n"
-                + "  \"reminderdate\": null,\n"
-                + "  \"notificationdate\": null,\n"
-                + "  \"cancellationdate\": null,\n"
-                + "  \"reservenotes\": null,\n"
-                + "  \"biblionumber\": \"%3$s\"\n"
-                + "},{"
-                + "  \"borrowernumber\": \"%1$s\",\n"
-                + "  \"suspend\": \"0\",\n"
-                + "  \"priority\": \"1\",\n"
-                + "  \"itemtype\": null,\n"
-                + "  \"expirationdate\": null,\n"
-                + "  \"reservedate\": \"2017-02-09\",\n"
-                + "  \"timestamp\": \"2017-02-09 11:47:15\",\n"
-                + "  \"lowestPriority\": \"0\",\n"
-                + "  \"branchcode\": \"hutl\",\n"
-                + "  \"suspend_until\": null,\n"
-                + "  \"waitingdate\": \"2017-03-01\",\n"
-                + "  \"pickupnumber\": \"11/123\",\n"
-                + "  \"itemnumber\": null,\n"
-                + "  \"found\": \"W\",\n"
-                + "  \"reserve_id\": \"%2$s\",\n"
-                + "  \"reminderdate\": null,\n"
-                + "  \"notificationdate\": null,\n"
-                + "  \"cancellationdate\": null,\n"
-                + "  \"reservenotes\": null,\n"
-                + "  \"biblionumber\": \"%4$s\"\n"
-                + "}]"
-                + "", userId, generateRandomID(), recordId1, recordId2);
-    }
-
     public String generateBiblio(String recordNumber, String type) {
         return GSON.toJson(RandomRecord.populateRandom(recordNumber, false, 1));
     }
@@ -379,15 +296,4 @@ public final class KohaAPIMock {
         return items;
     }
 
-    public void addGetHoldsExpectation(String borrowerNumber, String responseJSON) {
-
-        clientDriver.addExpectation(
-                onRequestTo("/api/v1/holds")
-                        .withParam("borrowernumber", borrowerNumber)
-                        .withMethod(GET)
-                        .withHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                        .withHeader(HttpHeaders.COOKIE, Pattern.compile(".*CGISESSID=huh.*")),
-                giveResponse(responseJSON, "application/json; charset=utf8")
-        );
-    }
 }

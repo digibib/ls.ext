@@ -1,6 +1,5 @@
 package no.deichman.services.entity;
 
-import no.deichman.services.circulation.CirculationProfile;
 import no.deichman.services.entity.repository.RDFRepository;
 import no.deichman.services.uridefaults.XURI;
 import org.apache.jena.rdf.model.Model;
@@ -64,8 +63,6 @@ public interface EntityService {
     void mergeResource(XURI xuri, XURI replaceeUri);
 
     List<XURI> retrieveResourceRelationshipsUris(XURI uri);
-
-    CirculationProfile getProfile(String borrowerId) throws Exception;
 
     List<ResourceSummary> retrieveInverseRelations(XURI xuri, String predicate, List<String> projections);
 

@@ -2,7 +2,6 @@ package no.deichman.services;
 
 import no.deichman.services.datasource.Datasource;
 import no.deichman.services.entity.AuthorizedValuesResource;
-import no.deichman.services.entity.CirculationResource;
 import no.deichman.services.entity.EntityResource;
 import no.deichman.services.entity.ResourceBase;
 import no.deichman.services.marc.MarcResource;
@@ -118,7 +117,6 @@ public final class App {
                         VersionResource.class.getCanonicalName(),
                         TranslationResource.class.getCanonicalName(),
                         Datasource.class.getCanonicalName(),
-                        CirculationResource.class.getCanonicalName(),
                         ImmediateFeature.class.getCanonicalName(),
                         TemplateResource.class.getCanonicalName()
                 )));
