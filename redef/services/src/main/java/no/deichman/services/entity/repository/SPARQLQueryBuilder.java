@@ -36,7 +36,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
  */
 public final class SPARQLQueryBuilder {
 
-    public static final String DEFAULT_GRAPH = "<https://data.deichman.no>";
+    public static final String DEFAULT_GRAPH = "https://data.deichman.no";
     public static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
     public static final boolean KEEP_BLANK_NODES = true;
@@ -177,7 +177,7 @@ public final class SPARQLQueryBuilder {
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);
         String data = sw.toString();
         // virtuoso opensource doesnt support INSERT DATA with bnodes so we use INSERT WHERE
-        return "INSERT { GRAPH " + DEFAULT_GRAPH + " {\n"
+        return "INSERT { GRAPH <" + DEFAULT_GRAPH + "> {\n"
                 + data
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 }\n";
@@ -228,8 +228,8 @@ public final class SPARQLQueryBuilder {
         StringBuilder q = new StringBuilder();
         if (subject != null) {
             q.append(String.format(""
-                            + "DELETE { GRAPH %1$s { <%2$s> <%3$smodified> ?modified }\n}\n"
-                            + "WHERE { GRAPH %1$s { <%2$s> <%3$smodified> ?modified }\n};\n",
+                            + "DELETE { GRAPH <%1$s> { <%2$s> <%3$smodified> ?modified }\n}\n"
+                            + "WHERE { GRAPH <%1$s> { <%2$s> <%3$smodified> ?modified }\n};\n",
                     DEFAULT_GRAPH, subject.getURI(), BaseURI.ontology()));
         }
         String del = getStringOfStatments(patches, "DEL", SKIP_BLANK_NODES);
@@ -245,14 +245,14 @@ public final class SPARQLQueryBuilder {
 
         if (del.length() > 0) {
             // virtuoso opensource doesnt support DELETE DATA with bnodes so we use DELETE WHERE
-            q.append("DELETE { GRAPH " + DEFAULT_GRAPH + " {\n"+ del + "}\n}\n"
+            q.append("DELETE { GRAPH <" + DEFAULT_GRAPH + "> {\n"+ del + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n");
         }
 
         if (delSelect.length() > 0) {
-            q.append("DELETE { GRAPH " + DEFAULT_GRAPH + " {\n"
+            q.append("DELETE { GRAPH <" + DEFAULT_GRAPH + "> {\n"
                 + delSelect + NEWLINE + optionalDelSelect + "}\n}\n"
-                + "WHERE { GRAPH " + DEFAULT_GRAPH + " {\n"
+                + "WHERE { GRAPH <" + DEFAULT_GRAPH + "> {\n"
                 + delSelect);
 
             if (optionalDelSelect.length() > 0) {
@@ -264,7 +264,7 @@ public final class SPARQLQueryBuilder {
 
         if (add.length() > 0) {
             // virtuoso opensource doesnt support INSERT DATA with bnodes so we use INSERT WHERE
-            q.append("INSERT { GRAPH " + DEFAULT_GRAPH + " {\n" + add + "}\n}\n"
+            q.append("INSERT { GRAPH <" + DEFAULT_GRAPH + "> {\n" + add + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n");
         }
 
@@ -377,7 +377,7 @@ public final class SPARQLQueryBuilder {
     public String deleteBiblioReferences(String recordId) {
         String q = format(""
                         + "PREFIX : <%s>\n"
-                        + "DELETE WHERE { GRAPH %s {?pub :recordId \"%s\" }\n}\n",
+                        + "DELETE WHERE { GRAPH <%s> {?pub :recordId \"%s\" }\n}\n",
                 BaseURI.ontology(), DEFAULT_GRAPH, recordId);
         return q;
     }
@@ -887,12 +887,12 @@ public final class SPARQLQueryBuilder {
 
     public String mergeNodes(XURI xuri, XURI replaceeURI) {
         String queryString = format(""
-                + "INSERT { GRAPH %3$s {\n"
+                + "INSERT { GRAPH <%3$s> {\n"
                 + "  ?subj ?prop <%2$s> .\n"
                 + "}\n} WHERE {\n"
                 + "  ?subj ?prop <%1$s> .\n"
                 + "} ;\n"
-                + "DELETE { GRAPH %3$s {\n"
+                + "DELETE { GRAPH <%3$s> {\n"
                 + "    <%1$s> ?a ?b .\n"
                 + "    ?c ?d <%1$s> .\n"
                 + "}\n} WHERE {\n"
@@ -905,7 +905,7 @@ public final class SPARQLQueryBuilder {
 
     public String deleteIncomingRelations(XURI xuri) {
         String queryString = format(""
-                + "DELETE { GRAPH %2$s {\n"
+                + "DELETE { GRAPH <%2$s> {\n"
                 + "    ?a ?b <%1$s> .\n" // direct relations e.g. from work to subject
                 + "    ?bn ?c <%1$s> .\n" // triple in blank node pointing to related resource
                 + "    ?bn ?d ?e .\n" // blank node's other triples
@@ -1014,7 +1014,7 @@ public final class SPARQLQueryBuilder {
     public String removeTemplateMatchTriples() {
         return format(""
                 + "PREFIX duo: <%sutility#> \n"
-                + "DELETE { GRAPH %s { ?uri duo:templateMatch ?templateMatch . ?templateMatch ?condPred ?condObj }\n}\n"
+                + "DELETE { GRAPH <%s> { ?uri duo:templateMatch ?templateMatch . ?templateMatch ?condPred ?condObj }\n}\n"
                 + "WHERE { \n"
                 + "   ?uri duo:templateMatch ?templateMatch . ?templateMatch ?condPred ?condObj \n"
                 + "}\n", BaseURI.root(), DEFAULT_GRAPH);
