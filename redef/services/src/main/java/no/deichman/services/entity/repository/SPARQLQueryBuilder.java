@@ -177,9 +177,9 @@ public final class SPARQLQueryBuilder {
         RDFDataMgr.write(sw, work, Lang.NTRIPLES);
         String data = sw.toString();
         // virtuoso opensource doesnt support INSERT DATA with bnodes so we use INSERT WHERE
-        return "INSERT { GRAPH " + DEFAULT_GRAPH + "{\n"
+        return "INSERT { GRAPH " + DEFAULT_GRAPH + " {\n"
                 + data
-                + "\n} }\n"
+                + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 }\n";
     }
 
@@ -228,9 +228,9 @@ public final class SPARQLQueryBuilder {
         StringBuilder q = new StringBuilder();
         if (subject != null) {
             q.append(String.format(""
-                            + "DELETE { GRAPH %3$s { <%1$s> <%2$s> ?modified }\n}\n"
-                            + "WHERE { GRAPH %3$s { <%1$s> <%2$s> ?modified }\n};\n",
-                    subject.getURI(), BaseURI.ontology(), DEFAULT_GRAPH));
+                            + "DELETE { GRAPH %1$s { <%2$s> <%3$smodified> ?modified }\n}\n"
+                            + "WHERE { GRAPH %1$s { <%2$s> <%3$smodified> ?modified }\n};\n",
+                    DEFAULT_GRAPH, subject.getURI(), BaseURI.ontology()));
         }
         String del = getStringOfStatments(patches, "DEL", SKIP_BLANK_NODES);
         String delSelect = getStringOfStatementsWithVariables(patches, "DEL");
@@ -245,27 +245,27 @@ public final class SPARQLQueryBuilder {
 
         if (del.length() > 0) {
             // virtuoso opensource doesnt support DELETE DATA with bnodes so we use DELETE WHERE
-            q.append("DELETE { GRAPH " + DEFAULT_GRAPH + " { \n" + del + "\n}\n}\n"
+            q.append("DELETE { GRAPH " + DEFAULT_GRAPH + " {\n"+ del + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n");
         }
 
         if (delSelect.length() > 0) {
-            q.append("DELETE { GRAPH " + DEFAULT_GRAPH + " { \n"
+            q.append("DELETE { GRAPH " + DEFAULT_GRAPH + " {\n"
                 + delSelect + NEWLINE + optionalDelSelect + "}\n}\n"
                 + "WHERE { GRAPH " + DEFAULT_GRAPH + " {\n"
-                + delSelect + "\n");
+                + delSelect);
 
             if (optionalDelSelect.length() > 0) {
                 q.append(NEWLINE + "OPTIONAL {" + NEWLINE + optionalDelSelect + NEWLINE + "}" + NEWLINE);
             }
 
-            q.append("\n}\n};\n");
+            q.append("}\n};\n");
         }
 
         if (add.length() > 0) {
             // virtuoso opensource doesnt support INSERT DATA with bnodes so we use INSERT WHERE
             q.append("INSERT { GRAPH " + DEFAULT_GRAPH + " {\n" + add + "}\n}\n"
-                + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 }\n");
+                + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n");
         }
 
         return q.toString();
