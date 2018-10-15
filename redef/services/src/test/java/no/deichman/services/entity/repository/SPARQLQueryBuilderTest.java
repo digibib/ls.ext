@@ -51,7 +51,7 @@ public class SPARQLQueryBuilderTest {
     public void get_resource_by_id(){
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
-        String expected = "DESCRIBE <http://example.com/a>";
+        String expected = "DESCRIBE <http://example.com/a>\nFROM <https://data.deichman.no>";
         assertEquals(expected,query.toString().trim());
     }
 
@@ -136,7 +136,7 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_resource_existence_query() throws Exception {
         XURI uri = new XURI("http://deichman.no/work/w123");
-        String test = "ASK {<" + uri.getUri() + "> ?p ?o}";
+        String test = "ASK WHERE { GRAPH <https://data.deichman.no> { <" + uri.getUri() + "> ?p ?o} }";
         Query expected = QueryFactory.create(test);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         assertEquals(expected, sqb.checkIfResourceExists(uri));
@@ -146,7 +146,7 @@ public class SPARQLQueryBuilderTest {
     public void test_statement_exists() throws UnsupportedEncodingException{
         Statement s = getTestStatement();
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String test = "ASK {<" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . }";
+        String test = "ASK WHERE { GRAPH <https://data.deichman.no> { <" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . } }";
         Query expected = QueryFactory.create(test);
         assertEquals(expected, sqb.checkIfStatementExists(s));
     }
@@ -339,10 +339,12 @@ public class SPARQLQueryBuilderTest {
         String personId = "n12345";
         String expected = "SELECT  ?uri\n"
                 + "WHERE\n"
-                + "  { ?uri  <http://data.deichman.no/duo#bibliofilPersonId>  \"" + personId + "\" }\n";
+                + "  { GRAPH <https://data.deichman.no>\n"
+                + "      { ?uri  <http://data.deichman.no/duo#bibliofilPersonId>  \"" + personId + "\" }\n  }\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
 
-        assertEquals("Bibliofil person resource query did not match", expected, sqb.getBibliofilPersonResource(personId).toString());
+        String actual = sqb.getBibliofilPersonResource(personId).toString();
+        assertEquals("Bibliofil person resource query did not match", expected, actual);
     }
 
     @Test
@@ -350,7 +352,8 @@ public class SPARQLQueryBuilderTest {
         String placeId = "n12345";
         String expected = "SELECT  ?uri\n"
                 + "WHERE\n"
-                + "  { ?uri  <http://data.deichman.no/duo#bibliofilPlaceId>  \"" + placeId + "\" }\n";
+                + "  { GRAPH <https://data.deichman.no>\n"
+                + "      { ?uri  <http://data.deichman.no/duo#bibliofilPlaceId>  \"" + placeId + "\" }\n  }\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         assertEquals("Bibliofil place of publication resource query did not match", expected, sqb.getBibliofilPlaceResource(placeId).toString());
     }
@@ -359,10 +362,11 @@ public class SPARQLQueryBuilderTest {
     public void test_describe_publications_query() throws Exception {
         XURI xuri = new XURI("http://deichman.no/work/w123123");
         String test = "PREFIX deichman: <" + BaseURI.ontology() + ">\n"
-                + "DESCRIBE ?publication WHERE \n"
-                + "    {\n"
-                + "        ?publication deichman:publicationOf <"+ xuri.getUri() +">\n"
-                + "    }";
+                + "DESCRIBE ?publication WHERE {\n"
+                + "  GRAPH <https://data.deichman.no> {\n"
+                + "    ?publication deichman:publicationOf <"+ xuri.getUri() +">\n"
+                + "  }\n"
+                + "}";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         Query query = sqb.describeLinkedPublications(xuri);
         Query expected = QueryFactory.create(test);
@@ -376,8 +380,10 @@ public class SPARQLQueryBuilderTest {
         Query query = sqb.getRecordIdsByWork(xuri);
         String expected = "SELECT  ?recordId\n"
                 + "WHERE\n"
-                + "  { ?p  <http://data.deichman.no/ontology#publicationOf>  <" + xuri.getUri() + "> ;\n"
-                + "        <http://data.deichman.no/ontology#recordId>  ?recordId\n"
+                + "  { GRAPH <https://data.deichman.no>\n"
+                + "      { ?p  <http://data.deichman.no/ontology#publicationOf>  <" + xuri.getUri() + "> ;\n"
+                + "            <http://data.deichman.no/ontology#recordId>  ?recordId\n"
+                + "      }\n"
                 + "  }\n";
         assertEquals(expected, query.toString());
     }
