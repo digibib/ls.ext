@@ -4,8 +4,6 @@ test:
   only:
     - develop
   stage: test
-  tags:
-    - test
 
 build:
   script:
