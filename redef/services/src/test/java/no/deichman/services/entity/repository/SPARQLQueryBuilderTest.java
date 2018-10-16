@@ -51,7 +51,7 @@ public class SPARQLQueryBuilderTest {
     public void get_resource_by_id(){
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         Query query = sqb.getGetResourceByIdQuery("http://example.com/a");
-        String expected = "DESCRIBE <http://example.com/a>\nFROM <https://data.deichman.no>";
+        String expected = "DESCRIBE <http://example.com/a>\nFROM <https://katalog.deichman.no>";
         assertEquals(expected,query.toString().trim());
     }
 
@@ -62,7 +62,7 @@ public class SPARQLQueryBuilderTest {
         m.add(s);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String query = sqb.getUpdateWorkQueryString(m);
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "<http://example.com/a> <http://example.com/b> <http://example.com/c> .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 }\n";
@@ -96,7 +96,7 @@ public class SPARQLQueryBuilderTest {
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(newSubject), m);
         String query = sqb.getCreateQueryString(m);
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                            + "<http://example.com/z> <http://example.com/b> <http://example.com/c> .\n"
                            + "}\n}\n"
                            + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 }\n";
@@ -136,7 +136,7 @@ public class SPARQLQueryBuilderTest {
     @Test
     public void test_resource_existence_query() throws Exception {
         XURI uri = new XURI("http://deichman.no/work/w123");
-        String test = "ASK WHERE { GRAPH <https://data.deichman.no> { <" + uri.getUri() + "> ?p ?o} }";
+        String test = "ASK WHERE { GRAPH <https://katalog.deichman.no> { <" + uri.getUri() + "> ?p ?o} }";
         Query expected = QueryFactory.create(test);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         assertEquals(expected, sqb.checkIfResourceExists(uri));
@@ -146,7 +146,7 @@ public class SPARQLQueryBuilderTest {
     public void test_statement_exists() throws UnsupportedEncodingException{
         Statement s = getTestStatement();
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String test = "ASK WHERE { GRAPH <https://data.deichman.no> { <" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . } }";
+        String test = "ASK WHERE { GRAPH <https://katalog.deichman.no> { <" + s.getSubject().getURI() + "> <" + s.getPredicate().getURI()  + "> <" + s.getObject().toString() + "> . } }";
         Query expected = QueryFactory.create(test);
         assertEquals(expected, sqb.checkIfStatementExists(s));
     }
@@ -158,7 +158,7 @@ public class SPARQLQueryBuilderTest {
         Patch patch = new Patch("add", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n";
@@ -172,7 +172,7 @@ public class SPARQLQueryBuilderTest {
         Patch patch = new Patch("del", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "DELETE { GRAPH <https://data.deichman.no> {\n"
+        String expected = "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n";
@@ -192,12 +192,12 @@ public class SPARQLQueryBuilderTest {
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "DELETE { GRAPH <https://data.deichman.no> {\n"
+        String expected = "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n"
-                + "INSERT { GRAPH <https://data.deichman.no> {\n"
+                + "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n";
@@ -220,12 +220,12 @@ public class SPARQLQueryBuilderTest {
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "DELETE { GRAPH <https://data.deichman.no> {\n"
+        String expected = "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n"
-                + "INSERT { GRAPH <https://data.deichman.no> {\n"
+                + "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/farmhouse> \"Fiffle\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
                 + "}\n}\n"
@@ -248,7 +248,7 @@ public class SPARQLQueryBuilderTest {
         Patch patch2 = new Patch("add", s2, null);
         patches.add(patch2);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.org/a> <http://example.org/prop#a> <_:b0> .\n"
                 + "    <_:b0> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <_:b0> <http://example.com/ontology/test> \"json\" .\n"
@@ -291,19 +291,19 @@ public class SPARQLQueryBuilderTest {
 
 
         String actual = sqb.patch(patches).replaceAll("(\\?|_:)[A-Za-z0-9]+", "$1b0");
-        String expected = "DELETE { GRAPH <https://data.deichman.no> {\n"
+        String expected = "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/c> \"A delete test\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n"
-                + "DELETE { GRAPH <https://data.deichman.no> {\n"
+                + "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    ?b0 <http://example.com/c> \"another delete test\" .\n"
                 + "    <http://example.com/a> <http://example.com/b> ?b0 .\n"
                 + "\n}\n}\n"
-                + "WHERE { GRAPH <https://data.deichman.no> {\n"
+                + "WHERE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    ?b0 <http://example.com/c> \"another delete test\" .\n"
                 + "    <http://example.com/a> <http://example.com/b> ?b0 .\n"
                 + "}\n};\n"
-                + "INSERT { GRAPH <https://data.deichman.no> {\n"
+                + "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    _:b0 <http://example.com/c> \"another test\" .\n"
                 + "    <http://example.com/a> <http://example.com/c> \"A test\" .\n"
                 + "    <http://example.com/a> <http://example.com/b> _:b0 .\n"
@@ -339,7 +339,7 @@ public class SPARQLQueryBuilderTest {
         String personId = "n12345";
         String expected = "SELECT  ?uri\n"
                 + "WHERE\n"
-                + "  { GRAPH <https://data.deichman.no>\n"
+                + "  { GRAPH <https://katalog.deichman.no>\n"
                 + "      { ?uri  <http://data.deichman.no/duo#bibliofilPersonId>  \"" + personId + "\" }\n  }\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
 
@@ -352,7 +352,7 @@ public class SPARQLQueryBuilderTest {
         String placeId = "n12345";
         String expected = "SELECT  ?uri\n"
                 + "WHERE\n"
-                + "  { GRAPH <https://data.deichman.no>\n"
+                + "  { GRAPH <https://katalog.deichman.no>\n"
                 + "      { ?uri  <http://data.deichman.no/duo#bibliofilPlaceId>  \"" + placeId + "\" }\n  }\n";
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         assertEquals("Bibliofil place of publication resource query did not match", expected, sqb.getBibliofilPlaceResource(placeId).toString());
@@ -363,7 +363,7 @@ public class SPARQLQueryBuilderTest {
         XURI xuri = new XURI("http://deichman.no/work/w123123");
         String test = "PREFIX deichman: <" + BaseURI.ontology() + ">\n"
                 + "DESCRIBE ?publication WHERE {\n"
-                + "  GRAPH <https://data.deichman.no> {\n"
+                + "  GRAPH <https://katalog.deichman.no> {\n"
                 + "    ?publication deichman:publicationOf <"+ xuri.getUri() +">\n"
                 + "  }\n"
                 + "}";
@@ -380,7 +380,7 @@ public class SPARQLQueryBuilderTest {
         Query query = sqb.getRecordIdsByWork(xuri);
         String expected = "SELECT  ?recordId\n"
                 + "WHERE\n"
-                + "  { GRAPH <https://data.deichman.no>\n"
+                + "  { GRAPH <https://katalog.deichman.no>\n"
                 + "      { ?p  <http://data.deichman.no/ontology#publicationOf>  <" + xuri.getUri() + "> ;\n"
                 + "            <http://data.deichman.no/ontology#recordId>  ?recordId\n"
                 + "      }\n"
