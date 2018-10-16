@@ -21,7 +21,7 @@ RUN gradle dependencies
 COPY ./src /services/src
 COPY ./config /services/config
 
-RUN gradle --no-daemon -x test build oneJar
+RUN gradle --no-daemon -x testAppTest build oneJar
 
 
 
