@@ -62,7 +62,7 @@ public class SPARQLQueryBuilderTest {
         m.add(s);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
         String query = sqb.getUpdateWorkQueryString(m);
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "<http://example.com/a> <http://example.com/b> <http://example.com/c> .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 }\n";
@@ -96,7 +96,7 @@ public class SPARQLQueryBuilderTest {
 
         UpdateAction.parseExecute(sqb.getReplaceSubjectQueryString(newSubject), m);
         String query = sqb.getCreateQueryString(m);
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                            + "<http://example.com/z> <http://example.com/b> <http://example.com/c> .\n"
                            + "}\n}\n"
                            + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 }\n";
@@ -158,7 +158,7 @@ public class SPARQLQueryBuilderTest {
         Patch patch = new Patch("add", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n";
@@ -172,7 +172,7 @@ public class SPARQLQueryBuilderTest {
         Patch patch = new Patch("del", s, null);
         patches.add(patch);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "DELETE { GRAPH <https://data.deichman.no> {\n"
+        String expected = "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n";
@@ -192,12 +192,12 @@ public class SPARQLQueryBuilderTest {
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "DELETE { GRAPH <https://data.deichman.no> {\n"
+        String expected = "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n"
-                + "INSERT { GRAPH <https://data.deichman.no> {\n"
+                + "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n";
@@ -220,12 +220,12 @@ public class SPARQLQueryBuilderTest {
         Patch patch3 = new Patch("add", s3, null);
         patches.add(patch3);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "DELETE { GRAPH <https://data.deichman.no> {\n"
+        String expected = "DELETE { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/test> \"json\" .\n"
                 + "}\n}\n"
                 + "WHERE { SELECT * { OPTIONAL { ?s ?p ?o . } } LIMIT 1 };\n"
-                + "INSERT { GRAPH <https://data.deichman.no> {\n"
+                + "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.com/a> <http://example.com/ontology/farmhouse> \"Fiffle\" .\n"
                 + "    <http://example.com/a> <http://example.com/ontology/cress> \"false fish\" .\n"
                 + "}\n}\n"
@@ -248,7 +248,7 @@ public class SPARQLQueryBuilderTest {
         Patch patch2 = new Patch("add", s2, null);
         patches.add(patch2);
         SPARQLQueryBuilder sqb = new SPARQLQueryBuilder();
-        String expected = "INSERT { GRAPH <https://data.deichman.no> {\n"
+        String expected = "INSERT { GRAPH <https://katalog.deichman.no> {\n"
                 + "    <http://example.org/a> <http://example.org/prop#a> <_:b0> .\n"
                 + "    <_:b0> <http://example.com/ontology/name> \"json\" .\n"
                 + "    <_:b0> <http://example.com/ontology/test> \"json\" .\n"

@@ -43,6 +43,7 @@ import static no.deichman.services.entity.EntityServiceImplTest.modelForBiblio;
 import static no.deichman.services.entity.EntityType.SUBJECT;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFrom;
 import static no.deichman.services.entity.repository.InMemoryRepositoryTest.repositoryWithDataFromString;
+import static no.deichman.services.entity.repository.SPARQLQueryBuilder.DEFAULT_GRAPH;
 import static no.deichman.services.rdf.RDFModelUtil.modelFrom;
 import static no.deichman.services.testutil.TestJSON.assertValidJSON;
 import static org.apache.jena.query.QueryExecutionFactory.create;

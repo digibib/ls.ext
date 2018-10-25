@@ -13,6 +13,11 @@ import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.util.Arrays.*;
+import static no.deichman.services.entity.repository.SPARQLQueryBuilder.DEFAULT_GRAPH;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Responsibility: Remotely calling a sparql endpoint to do queries and updates.
  */
@@ -22,6 +27,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
     //private static final String TRIPLESTORE_PORT = "http://fuseki:3030";
     private static final String TRIPLESTORE_PORT = "http://virtuoso:8890";
     private final String triplestorePort;
+    private static final List<String> graphs = Arrays.asList(DEFAULT_GRAPH);
 
     RemoteRepository(String triplestorePort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder) {
         super(sparqlQueryBuilder, uriGenerator);
@@ -39,7 +45,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
     @Override
     protected QueryExecution getQueryExecution(Query query) {
         //return QueryExecutionFactory.sparqlService(triplestorePort + "/ds/sparql", query);
-        return QueryExecutionFactory.sparqlService(triplestorePort + "/sparql", query);
+        return QueryExecutionFactory.sparqlService(triplestorePort + "/sparql", query, graphs, null);
     }
 
     @Override
