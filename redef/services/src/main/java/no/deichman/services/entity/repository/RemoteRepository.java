@@ -27,7 +27,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
     //private static final String TRIPLESTORE_PORT = "http://fuseki:3030";
     private static final String TRIPLESTORE_PORT = "http://virtuoso:8890";
     private final String triplestorePort;
-    private static final List<String> graphs = Arrays.asList(DEFAULT_GRAPH);
+    private static final List<String> GRAPHS = Arrays.asList(DEFAULT_GRAPH);
 
     RemoteRepository(String triplestorePort, UniqueURIGenerator uriGenerator, SPARQLQueryBuilder sparqlQueryBuilder) {
         super(sparqlQueryBuilder, uriGenerator);
@@ -45,7 +45,7 @@ public final class RemoteRepository extends RDFRepositoryBase {
     @Override
     protected QueryExecution getQueryExecution(Query query) {
         //return QueryExecutionFactory.sparqlService(triplestorePort + "/ds/sparql", query);
-        return QueryExecutionFactory.sparqlService(triplestorePort + "/sparql", query, graphs, null);
+        return QueryExecutionFactory.sparqlService(triplestorePort + "/sparql", query, GRAPHS, null);
     }
 
     @Override
