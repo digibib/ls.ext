@@ -48,7 +48,7 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query getGetResourceByIdQuery(String id) {
-        String queryString = "DESCRIBE <" + id + "> FROM <" + DEFAULT_GRAPH + ">";
+        String queryString = "DESCRIBE <" + id + ">";
         return QueryFactory.create(queryString);
     }
 
@@ -61,58 +61,56 @@ public final class SPARQLQueryBuilder {
                 + "         ?pubContrib ?publicationContributor ?place ?publishedBy ?publicationPartValues \n"
                 + "         ?bio ?country ?contentAdaptation ?relatedWork ?workSeries ?workAsSubjectAgent ?subPlace ?relworkMainEntry\n"
                 + "WHERE {\n"
-                + "    GRAPH <" + DEFAULT_GRAPH + "> {\n"
-                + "          { <__WORKURI__> a deichman:Work }\n"
-                + "    UNION { <__WORKURI__> deichman:isRelatedTo ?related . \n"
-                + "            ?related deichman:work ?relatedWork . \n"
-                + "           OPTIONAL { ?relatedWork deichman:contributor ?relworkContrib .\n"
-                + "                 ?relworkContrib a deichman:MainEntry ;\n"
-                + "                                 deichman:agent ?relworkMainEntry . }\n"
-                + "          }\n"
-                + "    UNION {  <__WORKURI__> deichman:contributor ?workContrib .\n"
-                + "             ?workContrib a deichman:Contribution ;\n"
-                + "                 deichman:agent ?workContributor  \n"
-                + "             OPTIONAL { ?workContributor deichman:nationality ?nation }"
-                + "      }\n"
-                + "    UNION {  ?publication deichman:publicationOf <__WORKURI__> ; \n"
-                + "              a deichman:Publication . \n"
-                + "            OPTIONAL { ?publication deichman:format ?format }\n"
-                + "            OPTIONAL { ?publication deichman:hasMediaType ?mediaType }\n"
-                + "            OPTIONAL { ?publication deichman:contributor ?pubContrib. \n"
-                + "                    ?pubContrib a deichman:Contribution ;\n"
-                + "                      deichman:agent ?publicationContributor . }\n"
-                + "            OPTIONAL { ?publication deichman:inSerial ?serialIssue . \n"
-                + "                     ?serialIssue deichman:serial ?serial . }\n"
-                + "            OPTIONAL { ?publication deichman:hasPlaceOfPublication ?place }\n"
-                + "            OPTIONAL { ?publication deichman:publishedBy ?publishedBy }\n"
-                + "            OPTIONAL { ?publication deichman:language ?pubLang }\n"
-                + "            OPTIONAL { ?publication deichman:hasPublicationPart ?hasPublicationPart ."
-                + "                       ?hasPublicationPart a deichman:PublicationPart;"
-                + "                                    ?publicationPartProperties ?publicationPartValues ."
-                + " }  \n"
-                + "      }\n"
-                + "    UNION { <__WORKURI__> deichman:subject ?subject .\n"
-                + "            OPTIONAL { ?subject deichman:place ?subPlace .\n"
-                + "                       ?subPlace a deichman:Place \n"
-                + "                     }\n"
-                + "            OPTIONAL { ?subject deichman:contributor ?subContrib .\n"
-                + "                       ?subContrib a deichman:Contribution ;\n"
-                + "                          deichman:agent ?workAsSubjectAgent } }\n"
-                + "    UNION { <__WORKURI__> deichman:hasInstrumentation ?instrumentation .\n"
-                + "         ?instrumentation deichman:hasInstrument ?instrument     }\n"
-                + "    UNION { <__WORKURI__> deichman:genre ?genre }\n"
-                + "    UNION { <__WORKURI__> deichman:literaryForm ?litform }\n"
-                + "    UNION { <__WORKURI__> deichman:hasWorkType ?workType }\n"
-                + "    UNION { <__WORKURI__> deichman:hasCompositionType ?compType }\n"
-                + "    UNION { <__WORKURI__> deichman:biography ?bio }\n"
-                + "    UNION { <__WORKURI__> deichman:language ?language }\n"
-                + "    UNION { <__WORKURI__> deichman:nationality ?country }\n"
-                + "    UNION { <__WORKURI__> deichman:fictionNonfiction ?fictionNonfiction }\n"
-                + "    UNION { <__WORKURI__> deichman:contentAdaptation ?contentAdaptation }\n"
-                + "    UNION { <__WORKURI__> deichman:isPartOfWorkSeries ?workSeriesPart . \n"
-                + "            ?workSeriesPart a deichman:WorkSeriesPart ;\n"
-                + "                            deichman:workSeries ?workSeries .\n"
-                + "    }"
+                + "        { <__WORKURI__> a deichman:Work }\n"
+                + "  UNION { <__WORKURI__> deichman:isRelatedTo ?related . \n"
+                + "          ?related deichman:work ?relatedWork . \n"
+                + "         OPTIONAL { ?relatedWork deichman:contributor ?relworkContrib .\n"
+                + "               ?relworkContrib a deichman:MainEntry ;\n"
+                + "                               deichman:agent ?relworkMainEntry . }\n"
+                + "        }\n"
+                + "  UNION {  <__WORKURI__> deichman:contributor ?workContrib .\n"
+                + "           ?workContrib a deichman:Contribution ;\n"
+                + "               deichman:agent ?workContributor  \n"
+                + "           OPTIONAL { ?workContributor deichman:nationality ?nation }"
+                + "    }\n"
+                + "  UNION {  ?publication deichman:publicationOf <__WORKURI__> ; \n"
+                + "            a deichman:Publication . \n"
+                + "          OPTIONAL { ?publication deichman:format ?format }\n"
+                + "          OPTIONAL { ?publication deichman:hasMediaType ?mediaType }\n"
+                + "          OPTIONAL { ?publication deichman:contributor ?pubContrib. \n"
+                + "                  ?pubContrib a deichman:Contribution ;\n"
+                + "                    deichman:agent ?publicationContributor . }\n"
+                + "          OPTIONAL { ?publication deichman:inSerial ?serialIssue . \n"
+                + "                   ?serialIssue deichman:serial ?serial . }\n"
+                + "          OPTIONAL { ?publication deichman:hasPlaceOfPublication ?place }\n"
+                + "          OPTIONAL { ?publication deichman:publishedBy ?publishedBy }\n"
+                + "          OPTIONAL { ?publication deichman:language ?pubLang }\n"
+                + "          OPTIONAL { ?publication deichman:hasPublicationPart ?hasPublicationPart ."
+                + "                     ?hasPublicationPart a deichman:PublicationPart;"
+                + "                                  ?publicationPartProperties ?publicationPartValues ."
+                + " }\n"
+                + "    }\n"
+                + "  UNION { <__WORKURI__> deichman:subject ?subject .\n"
+                + "          OPTIONAL { ?subject deichman:place ?subPlace .\n"
+                + "                     ?subPlace a deichman:Place \n"
+                + "                   }\n"
+                + "          OPTIONAL { ?subject deichman:contributor ?subContrib .\n"
+                + "                     ?subContrib a deichman:Contribution ;\n"
+                + "                        deichman:agent ?workAsSubjectAgent } }\n"
+                + "  UNION { <__WORKURI__> deichman:hasInstrumentation ?instrumentation .\n"
+                + "       ?instrumentation deichman:hasInstrument ?instrument     }\n"
+                + "  UNION { <__WORKURI__> deichman:genre ?genre }\n"
+                + "  UNION { <__WORKURI__> deichman:literaryForm ?litform }\n"
+                + "  UNION { <__WORKURI__> deichman:hasWorkType ?workType }\n"
+                + "  UNION { <__WORKURI__> deichman:hasCompositionType ?compType }\n"
+                + "  UNION { <__WORKURI__> deichman:biography ?bio }\n"
+                + "  UNION { <__WORKURI__> deichman:language ?language }\n"
+                + "  UNION { <__WORKURI__> deichman:nationality ?country }\n"
+                + "  UNION { <__WORKURI__> deichman:fictionNonfiction ?fictionNonfiction }\n"
+                + "  UNION { <__WORKURI__> deichman:contentAdaptation ?contentAdaptation }\n"
+                + "  UNION { <__WORKURI__> deichman:isPartOfWorkSeries ?workSeriesPart . \n"
+                + "          ?workSeriesPart a deichman:WorkSeriesPart ;\n"
+                + "                          deichman:workSeries ?workSeries .\n"
                 + "  }"
                 + "}";
         queryString = queryString.replaceAll("__WORKURI__", xuri.getUri());
@@ -125,16 +123,14 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "DESCRIBE <%2$s> ?name ?birth ?death ?personTitle ?nationality ?work ?role\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
                 + "    <%2$s> a deichman:Person .\n"
                 + "    optional { <%2$s> deichman:name ?name . }\n"
                 + "    optional { <%2$s> deichman:birthYear ?birth . }\n"
                 + "    optional { <%2$s> deichman:deathYear ?death . }\n"
                 + "    optional { <%2$s> deichman:personTitle ?personTitle . }\n"
                 + "    optional { <%2$s> deichman:nationality ?nationality . }\n"
-                + "    optional { ?work a deichman:Work ; deichman:contributor [ a deichman:Contribution ; deichman:agent <%2$s> ; deichman:role ?role ] }\n"
-                + "  }\n"
-                + "}", BaseURI.ontology(), personId, DEFAULT_GRAPH);
+                + "  optional { ?work a deichman:Work ; deichman:contributor [ a deichman:Contribution ; deichman:agent <%2$s> ; deichman:role ?role ] }\n"
+                + "}", BaseURI.ontology(), personId);
         return QueryFactory.create(queryString);
     }
 
@@ -144,7 +140,6 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "DESCRIBE <%2$s> ?nationality ?place\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
                 + "     {\n"
                 + "      <%2$s> a deichman:Corporation .\n"
                 + "      optional { <%2$s> deichman:nationality ?nationality }\n"
@@ -155,7 +150,7 @@ public final class SPARQLQueryBuilder {
                 + "      <%2$s> deichman:place ?place . \n"
                 + "  }\n"
                 + "  UNION { ?work a deichman:Work ; deichman:contributor [ a deichman:Contribution ; deichman:agent <%2$s> ] }\n"
-                + "}}", BaseURI.ontology(), corporationId, DEFAULT_GRAPH);
+                + "}", BaseURI.ontology(), corporationId);
         return QueryFactory.create(queryString);
     }
 
@@ -211,13 +206,13 @@ public final class SPARQLQueryBuilder {
     }
 
     public Query checkIfResourceExists(XURI xuri) {
-        String q = "ASK WHERE { GRAPH <" + DEFAULT_GRAPH + "> { <" + xuri.getUri() + "> ?p ?o} }";
+        String q = "ASK {<" + xuri.getUri() + "> ?p ?o}";
         return QueryFactory.create(q);
     }
 
     public Query checkIfStatementExists(Statement statement) throws UnsupportedEncodingException {
         String triple = statementToN3(statement);
-        String q = "ASK WHERE { GRAPH <" + DEFAULT_GRAPH + "> {" + triple + "} }";
+        String q = "ASK {" + triple + "}";
         return QueryFactory.create(q);
     }
 
@@ -325,31 +320,22 @@ public final class SPARQLQueryBuilder {
 
     public Query getImportedResourceById(String id, String type) {
         String q = "SELECT ?uri "
-                + "WHERE {\n"
-                + "  GRAPH <" + DEFAULT_GRAPH + "> {\n"
-                + "    ?uri <http://data.deichman.no/duo#bibliofil" + type + "Id> \"" + id + "\"\n"
-                + "  }\n"
-                + "}\n";
+                + "WHERE "
+                + "  { ?uri <http://data.deichman.no/duo#bibliofil" + type + "Id> \"" + id + "\" }";
         return QueryFactory.create(q);
     }
 
     public Query getBibliofilPersonResource(String personId) {
         String q = "SELECT ?uri "
-                + "WHERE {\n"
-                + "  GRAPH <" + DEFAULT_GRAPH + "> {\n"
-                + "    ?uri <http://data.deichman.no/duo#bibliofilPersonId> \"" + personId + "\"\n"
-                + "  }\n"
-                + "}\n";
+                + "WHERE "
+                + "  { ?uri <http://data.deichman.no/duo#bibliofilPersonId> \"" + personId + "\" }";
         return QueryFactory.create(q);
     }
 
     public Query getBibliofilPlaceResource(String id) {
         String q = "SELECT ?uri "
-                + "WHERE {\n"
-                + "  GRAPH <" + DEFAULT_GRAPH + "> {\n"
-                + "    ?uri <http://data.deichman.no/duo#bibliofilPlaceId> \"" + id + "\"\n"
-                + "  }\n"
-                + "}\n";
+                + "WHERE "
+                + "  { ?uri <http://data.deichman.no/duo#bibliofilPlaceId> \"" + id + "\" }";
         return QueryFactory.create(q);
     }
 
@@ -361,51 +347,47 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
                 + "DESCRIBE ?work <%2$s> ?role\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
                 + "      ?work a deichman:Work ;\n"
                 + "            deichman:contributor ?contrib .\n"
                 + "      ?contrib deichman:agent <%2$s> ; deichman:role ?role .\n"
-                + "  }\n"
-                + "}", BaseURI.ontology(), xuri.getUri(), DEFAULT_GRAPH);
+                + "}", BaseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }
 
     public Query describeLinkedPublications(XURI xuri) {
         String q = format(""
-                + "PREFIX deichman: <%1$s>\n"
-                + "DESCRIBE ?publication WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
-                + "    ?publication deichman:publicationOf <%2$s>\n"
-                + "  }\n"
-                + "}", BaseURI.ontology(), xuri.getUri(), DEFAULT_GRAPH);
+                + "PREFIX deichman: <%s>\n"
+                + "DESCRIBE ?publication WHERE \n"
+                + "    {\n"
+                + "        ?publication deichman:publicationOf <%s>\n"
+                + "    }", BaseURI.ontology(), xuri.getUri());
         return QueryFactory.create(q);
     }
 
     public Query selectAllUrisOfType(String type) {
         String q = format(""
-                + "PREFIX deichman: <%1$s>\n"
-                + "SELECT ?uri WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
-                + "      ?uri a deichman:%2$s .\n"
-                + "  }\n"
-                + "}", BaseURI.ontology(), capitalize(type), DEFAULT_GRAPH);
+                + "PREFIX deichman: <%s>\n"
+                + "SELECT ?uri WHERE \n"
+                + "    {\n"
+                + "        ?uri a deichman:%s .\n"
+                + "    }", BaseURI.ontology(), capitalize(type));
         return QueryFactory.create(q);
     }
 
     public String deleteBiblioReferences(String recordId) {
         String q = format(""
-                        + "PREFIX : <%1$s>\n"
-                        + "DELETE WHERE { GRAPH <%3$s> {?pub :recordId \"%2$s\" }\n}\n",
-                BaseURI.ontology(), recordId, DEFAULT_GRAPH);
+                        + "PREFIX : <%s>\n"
+                        + "DELETE WHERE { GRAPH <%s> {?pub :recordId \"%s\" }\n}\n",
+                BaseURI.ontology(), DEFAULT_GRAPH, recordId);
         return q;
     }
 
     public Query getPublicationByRecordId(String recordId) {
         String q = format(""
-                        + "PREFIX : <%1$s>\n"
+                        + "PREFIX : <%s>\n"
                         + "SELECT ?pub\n"
-                        + "WHERE { GRAPH <%3$s> {?pub :recordId \"%2$s\" . } }\n",
-                BaseURI.ontology(), recordId, DEFAULT_GRAPH);
+                        + "WHERE { ?pub :recordId \"%s\" . }\n",
+                BaseURI.ontology(), recordId);
         return QueryFactory.create(q);
     }
 
@@ -426,25 +408,23 @@ public final class SPARQLQueryBuilder {
                 + "       ?mediaType\n"
                 + "       ?role\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
-                + "    ?publicationUri :recordId \"%s\" ;\n"
-                + "                    :publicationOf ?workUri .\n"
-                + "    OPTIONAL { ?publicationUri :mainTitle ?mainTitle }\n"
-                + "    OPTIONAL { ?publicationUri :partTitle ?partTitle }\n"
-                + "    OPTIONAL { ?publicationUri :partNumber ?partNumber }\n"
-                + "    OPTIONAL { ?publicationUri :subtitle ?subtitle }\n"
-                + "    OPTIONAL { ?publicationUri :publicationYear ?year }\n"
-                + "    OPTIONAL { ?publicationUri :hasMediaType ?mediaType }\n"
-                + "    OPTIONAL { ?workUri :contributor ?contribution .\n"
-                + "               ?contribution a :MainEntry, :Contribution ;\n"
-                + "                            :agent ?agentUri ;\n"
-                + "                            :role ?role .\n"
-                + "               ?agentUri :name ?contributorName .\n"
-                + "               OPTIONAL { ?agentUri :nationality ?contributorNationality }\n"
-                + "     }\n"
-                + "     OPTIONAL { ?publicationUri :hasImage ?publicationImage }\n"
-                + "  }\n"
-                + "}", BaseURI.ontology(), recordId, DEFAULT_GRAPH);
+                + "  ?publicationUri :recordId \"%s\" ;\n"
+                + "                  :publicationOf ?workUri .\n"
+                + "  OPTIONAL { ?publicationUri :mainTitle ?mainTitle }\n"
+                + "  OPTIONAL { ?publicationUri :partTitle ?partTitle }\n"
+                + "  OPTIONAL { ?publicationUri :partNumber ?partNumber }\n"
+                + "  OPTIONAL { ?publicationUri :subtitle ?subtitle }\n"
+                + "  OPTIONAL { ?publicationUri :publicationYear ?year }\n"
+                + "  OPTIONAL { ?publicationUri :hasMediaType ?mediaType }\n"
+                + "  OPTIONAL { ?workUri :contributor ?contribution .\n"
+                + "             ?contribution a :MainEntry, :Contribution ;\n"
+                + "                          :agent ?agentUri ;\n"
+                + "                          :role ?role .\n"
+                + "             ?agentUri :name ?contributorName .\n"
+                + "             OPTIONAL { ?agentUri :nationality ?contributorNationality }\n"
+                + "   }\n"
+                + "   OPTIONAL { ?publicationUri :hasImage ?publicationImage }\n"
+                + "}", BaseURI.ontology(), recordId);
         return QueryFactory.create(query);
     }
 
@@ -453,12 +433,10 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX deichman: <%1$s>\n"
                 + "SELECT ?work\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
-                + "    ?work a deichman:Work ;\n"
-                + "      deichman:contributor ?contrib .\n"
-                + "    ?contrib  deichman:agent <%2$s> .\n"
-                + "  }\n"
-                + "}", BaseURI.ontology(), agent.getUri(), DEFAULT_GRAPH);
+                + "  ?work a deichman:Work ;\n"
+                + "    deichman:contributor ?contrib .\n"
+                + "  ?contrib  deichman:agent <%2$s> .\n"
+                + "}", BaseURI.ontology(), agent.getUri());
         return QueryFactory.create(q);
     }
 
@@ -593,10 +571,8 @@ public final class SPARQLQueryBuilder {
     public Query getRecordIdsByWork(XURI xuri) {
         String queryString = "SELECT ?recordId\n"
                 + "WHERE {\n"
-                + "  GRAPH <" + DEFAULT_GRAPH + "> {\n"
-                + "    ?p <http://data.deichman.no/ontology#publicationOf> <" + xuri.getUri() + "> ;\n"
-                + "       <http://data.deichman.no/ontology#recordId> ?recordId\n"
-                + "  }\n"
+                + "  ?p <http://data.deichman.no/ontology#publicationOf> <" + xuri.getUri() + "> ;\n"
+                + "     <http://data.deichman.no/ontology#recordId> ?recordId\n"
                 + "}\n";
         return QueryFactory.create(queryString);
     }
@@ -613,14 +589,12 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX migration: <http://migration.deichman.no/>\n"
                 + "SELECT ?type (COUNT(?a) as ?references)\n"
                 + "WHERE {\n"
-                + "  GRAPH <%2$s> {\n"
-                + "    ?a ?relation <%1$s> ;\n"
-                + "       a ?type .\n"
-                + "    FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
-                + "    FILTER(?relation != migration:clonedFrom)"
-                + "  }\n"
+                + "  ?a ?relation <%s> ;\n"
+                + "     a ?type .\n"
+                + "  FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
+                + "  FILTER(?relation != migration:clonedFrom)"
                 + "}\n"
-                + "GROUP BY ?type ", xuri.getUri(), DEFAULT_GRAPH);
+                + "GROUP BY ?type ", xuri.getUri());
         return QueryFactory.create(queryString);
     }
 
@@ -639,10 +613,9 @@ public final class SPARQLQueryBuilder {
 
         Stream<String> where = of("}\n"
                 + "where {"
-                + "  GRAPH <" + DEFAULT_GRAPH + "> {\n"
                 + "     ?uri a ?type .\n ");
 
-        Stream<String> end = newArrayList("}}\n").stream();
+        Stream<String> end = newArrayList("}\n").stream();
         String query = concat(start, concat(projections, concat(where, concat(type, concat(conditionals, concat(selects, end)))))).collect(joining("\n"));
         return QueryFactory.create(query);
     }
@@ -653,13 +626,11 @@ public final class SPARQLQueryBuilder {
         String queryString = format("PREFIX deichman: <%1$s>\n"
                 + "DESCRIBE ?uri\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {"
                 + "    VALUES ?isbnInput { \'%2$s\' }\n"
                 + "     ?uri deichman:isbn ?isbn .\n"
                 + "     BIND( SUBSTR(REPLACE( REPLACE (?isbn, \'" + VALID_ISBN_CHARS + "\', ''), \"" + STARTSWITH_NINE_SEVEN_EIGHT + "\", ''), 1,9) AS ?isbnCore)\n"
                 + "     FILTER( ?isbnCore = ?isbnInput )\n"
-                + "  }\n"
-                + "}", BaseURI.ontology(), parsedIsbnCore, DEFAULT_GRAPH);
+                + "}", BaseURI.ontology(), parsedIsbnCore);
         return QueryFactory.create(queryString);
     }
 
@@ -673,14 +644,12 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "DESCRIBE <%2$s> ?place\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {"
-                + "     { <%2$s> a deichman:Event . }\n"
-                + "    UNION {"
-                + "        <%2$s> deichman:place ?place . \n"
-                + "        ?place a deichman:Place .\n"
-                + "    }\n"
+                + "   { <%2$s> a deichman:Event . }\n"
+                + "  UNION {"
+                + "      <%2$s> deichman:place ?place . \n"
+                + "      ?place a deichman:Place .\n"
                 + "  }\n"
-                + "}", BaseURI.ontology(), eventUri, DEFAULT_GRAPH);
+                + "}", BaseURI.ontology(), eventUri);
         return QueryFactory.create(queryString);
     }
 
@@ -690,18 +659,16 @@ public final class SPARQLQueryBuilder {
                 + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
                 + "DESCRIBE <%2$s> ?publisher ?publisherPlace\n"
                 + "WHERE {\n"
-                + "  GRAPH <%3$s> {"
-                + "     { <%2$s> a deichman:Serial . }\n"
-                + "    UNION {"
-                + "        <%2$s> deichman:publishedBy ?publisher . \n"
-                + "    }\n"
-                + "    UNION {"
-                + "        <%2$s> deichman:publishedBy ?publisher . \n"
-                + "        ?publisher deichman:place ?publisherPlace . \n"
-                + "        ?publisherPlace a deichman:Place .\n"
-                + "    }\n"
+                + "   { <%2$s> a deichman:Serial . }\n"
+                + "  UNION {"
+                + "      <%2$s> deichman:publishedBy ?publisher . \n"
                 + "  }\n"
-                + "}", BaseURI.ontology(), serialUri, DEFAULT_GRAPH);
+                + "  UNION {"
+                + "      <%2$s> deichman:publishedBy ?publisher . \n"
+                + "      ?publisher deichman:place ?publisherPlace . \n"
+                + "      ?publisherPlace a deichman:Place .\n"
+                + "  }\n"
+                + "}", BaseURI.ontology(), serialUri);
         return QueryFactory.create(queryString);
     }
 
@@ -712,7 +679,6 @@ public final class SPARQLQueryBuilder {
                 + "prefix role: <%2$s>\n"
                 + "select distinct ?relation ?targetUri ?mainTitle ?subtitle ?partTitle ?partNumber ?publicationYear ?type ?isMainEntry ?isRole\n"
                 + "where {\n"
-                + " GRAPH <%4$s>\n {"
                 + "  {\n"
                 + "    ?publication     deich:publicationOf       <%3$s> ;\n"
                 + "                     deich:mainTitle          ?mainTitle ;\n"
@@ -915,7 +881,7 @@ public final class SPARQLQueryBuilder {
                 + "                     bind(?publWithPlace      as ?targetUri) . \n"
                 + "  }\n"
                 + "  FILTER(STRSTARTS(STR(?type), \"http://data.deichman.no/ontology#\"))"
-                + "}} order by ?relation", BaseURI.ontology(), BaseURI.role(), uri.getUri(), DEFAULT_GRAPH);
+                + "} order by ?relation", BaseURI.ontology(), BaseURI.role(), uri.getUri());
         return QueryFactory.create(queryString);
     }
 
@@ -924,18 +890,14 @@ public final class SPARQLQueryBuilder {
                 + "INSERT { GRAPH <%3$s> {\n"
                 + "  ?subj ?prop <%2$s> .\n"
                 + "}\n} WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
-                + "    ?subj ?prop <%1$s> .\n"
-                + "  }\n"
+                + "  ?subj ?prop <%1$s> .\n"
                 + "} ;\n"
                 + "DELETE { GRAPH <%3$s> {\n"
                 + "    <%1$s> ?a ?b .\n"
                 + "    ?c ?d <%1$s> .\n"
                 + "}\n} WHERE {\n"
-                + "  GRAPH <%3$s> {\n"
                 + "    <%1$s> ?a ?b .\n"
                 + "    ?c ?d <%1$s> .\n"
-                + "  }\n"
                 + "}\n"
                 + "\n", replaceeURI, xuri.getUri(), DEFAULT_GRAPH);
         return queryString;
@@ -949,15 +911,13 @@ public final class SPARQLQueryBuilder {
                 + "    ?bn ?d ?e .\n" // blank node's other triples
                 + "    ?f ?g ?bn .\n" //
                 + "}\n} WHERE {\n"
-                + "  GRAPH <%2$s> {\n"
-                + "    {\n"
-                + "      ?a ?b <%1$s> .\n"
-                + "    } UNION { \n"
-                + "      ?bn ?c <%1$s> .\n"
-                + "      ?bn ?d ?e .\n"
-                + "      ?f ?g ?bn .\n"
-                + "      filter(isBlank(?bn)) .\n"
-                + "    }\n"
+                + "  {\n"
+                + "    ?a ?b <%1$s> .\n"
+                + "  } UNION { \n"
+                + "    ?bn ?c <%1$s> .\n"
+                + "    ?bn ?d ?e .\n"
+                + "    ?f ?g ?bn .\n"
+                + "    filter(isBlank(?bn)) .\n"
                 + "  }\n"
                 + "}\n"
                 + "\n", xuri.getUri(), DEFAULT_GRAPH);
@@ -967,14 +927,13 @@ public final class SPARQLQueryBuilder {
     public Query getGetInverselyRelatedResourceByPredicate(String id, String predicate) {
         String queryString = format("prefix deich: <http://data.deichman.no/ontology#>\n"
                 + "DESCRIBE ?related \n"
-                + "WHERE { GRAPH <%3$s> { ?related deich:%1$s <%2$s> } }", predicate, id, DEFAULT_GRAPH);
+                + "WHERE {?related deich:%1$s <%2$s> }", predicate, id);
         return QueryFactory.create(queryString);
     }
 
     public Query relatedResourcesFor(XURI xuri) {
         String queryString = "PREFIX : <http://data.deichman.no/ontology#>\n"
-                + "SELECT DISTINCT ?resource WHERE { "
-                + "GRAPH <" + DEFAULT_GRAPH + "> {\n";
+                + "SELECT DISTINCT ?resource WHERE {\n";
 
         switch (xuri.getTypeAsEntityType()) {
             case PERSON:
@@ -1027,7 +986,7 @@ public final class SPARQLQueryBuilder {
                 break;
         }
 
-        queryString += "\nFILTER(isIRI(?resource)) } }\n";
+        queryString += "\nFILTER(isIRI(?resource)) }\n";
 
         return QueryFactory.create(queryString.replaceAll("__URI__", xuri.getUri()));
     }
@@ -1064,25 +1023,23 @@ public final class SPARQLQueryBuilder {
     public Query describeTranslationResources() {
         return  QueryFactory.create("PREFIX : <http://data.deichman.no/utility#>\n"
                 + "DESCRIBE ?r WHERE {\n"
-                + "\tGRAPH <" + DEFAULT_GRAPH +"> {\n"
-                + "\t\t?r a ?class .\n"
-                + "\t\tVALUES ?class {\n"
-                + "\t\t\t:Binding\n"
-                + "\t\t\t:Format\n"
-                + "\t\t\t<http://lexvo.org/ontology#Language>\n"
-                + "\t\t\t:Audience\n"
-                + "\t\t\t:Nationality\n"
-                + "\t\t\t:LiteraryForm\n"
-                + "\t\t\t:Biography\n"
-                + "\t\t\t:Key\n"
-                + "\t\t\t:Role\n"
-                + "\t\t\t:Branch\n"
-                + "\t\t\t:MediaType\n"
-                + "\t\t\t:FictionNonfiction\n"
-                + "\t\t\t:ContentAdaptation\n"
-                + "\t\t\t:FormatAdaptation\n"
-                + "\t\t\t:RelationType\n"
-                + "\t\t}\n"
+                + "\t?r a ?class .\n"
+                + "\tVALUES ?class {\n"
+                + "\t\t:Binding\n"
+                + "\t\t:Format\n"
+                + "\t\t<http://lexvo.org/ontology#Language>\n"
+                + "\t\t:Audience\n"
+                + "\t\t:Nationality\n"
+                + "\t\t:LiteraryForm\n"
+                + "\t\t:Biography\n"
+                + "\t\t:Key\n"
+                + "\t\t:Role\n"
+                + "\t\t:Branch\n"
+                + "\t\t:MediaType\n"
+                + "\t\t:FictionNonfiction\n"
+                + "\t\t:ContentAdaptation\n"
+                + "\t\t:FormatAdaptation\n"
+                + "\t\t:RelationType\n"
                 + "\t}\n"
                 + "}");
     }
@@ -1090,10 +1047,8 @@ public final class SPARQLQueryBuilder {
     public Query retrieveAuthorizedValuesFor(String type) {
         return  QueryFactory.create(format("PREFIX : <http://data.deichman.no/utility#>\n"
                 + "DESCRIBE ?r WHERE {\n"
-                + "\tGRAPH <%2$s> {\n"
-                + "\t\t{?r a <http://data.deichman.no/utility#%1$s>. } UNION \n"
-                + "\t\t{?r a <http://lexvo.org/ontology#%1$s>. } \n"
-                + "\t}"
-                + "}", type, DEFAULT_GRAPH));
+                + "\t{?r a <http://data.deichman.no/utility#%s>. } UNION \n"
+                + "\t{?r a <http://lexvo.org/ontology#%s>. } \n"
+                + "}", type, type));
     }
 }
