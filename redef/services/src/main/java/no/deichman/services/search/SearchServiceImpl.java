@@ -735,7 +735,7 @@ public class SearchServiceImpl implements SearchService {
             LOG.error(format("Failed to index %s in elasticsearch", xuri.getUri()), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
-        //triggerIndexingInEuler(idx, xuri);
+        triggerIndexingInEuler(idx, xuri);
     }
 
     private void triggerIndexingInEuler(String idx, XURI xuri) {
