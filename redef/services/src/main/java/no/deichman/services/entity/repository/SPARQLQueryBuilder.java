@@ -36,7 +36,7 @@ import static org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral;
  */
 public final class SPARQLQueryBuilder {
 
-    public static final String DEFAULT_GRAPH = "https://data.deichman.no";
+    public static final String DEFAULT_GRAPH = "https://katalog.deichman.no";
     public static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
     public static final boolean KEEP_BLANK_NODES = true;
