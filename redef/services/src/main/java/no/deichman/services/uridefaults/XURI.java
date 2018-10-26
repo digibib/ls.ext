@@ -70,7 +70,7 @@ public class XURI implements Comparable {
 
 
     private boolean testId(String id) {
-        String pattern = "(w|p|h|g|c|s|e|m|i|t|v)[a-zA-Z0-9_]+";
+        String pattern = "[a-zA-Z0-9_\\-]+";
         return id.matches(pattern);
     }
 

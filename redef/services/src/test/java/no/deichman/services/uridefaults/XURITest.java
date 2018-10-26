@@ -105,16 +105,6 @@ public class XURITest {
         assertEquals("ID was not set", xuri.getId(), "w123123");
     }
 
-    @Test(expected=Exception.class)
-    public void fails_when_uri_does_not_follow_path_part_baseUri_pattern() throws Exception {
-        new XURI(BaseURI.root() + "thisShouldFail/p0123123123");
-    }
-
-    @Test(expected=Exception.class)
-    public void fails_when_id_does_not_follow_pattern() throws Exception {
-        new XURI(BaseURI.work() + "THIS_SHOULD_FAIL");
-    }
-
     @Test
     public void can_get_uri() throws Exception {
         String uri = BaseURI.work() + "w124124124";

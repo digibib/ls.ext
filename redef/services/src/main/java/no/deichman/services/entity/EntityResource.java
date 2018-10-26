@@ -171,7 +171,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: [a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_\\-]+}")
     @Produces(LD_JSON + MimeType.UTF_8 + DEFAULT)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         Model model;
@@ -191,7 +191,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: [a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_\\-]+}")
     @Produces({NTRIPLES + MimeType.UTF_8 + QS_0_7, TURTLE + MimeType.UTF_8 + QS_0_7})
     public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id, @HeaderParam("Accept") String acceptHeader) throws Exception {
         Model model;
@@ -239,7 +239,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @DELETE
-    @Path("/{id: [a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_\\-]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
 
@@ -302,7 +302,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PATCH
-    @Path("/{id: [a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_\\-]+}")
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
@@ -375,7 +375,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{workId: w[a-zA-Z0-9_]+}/items")
+    @Path("/{workId: w[a-zA-Z0-9_\\-]+}/items")
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response getWorkItems(@PathParam("workId") String workId, @PathParam("type") String type) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), EntityType.WORK.getPath(), workId);
@@ -383,7 +383,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PUT
-    @Path("{id: [a-zA-Z0-9_]+}/index")
+    @Path("{id: [a-zA-Z0-9_\\-]+}/index")
     public Response index(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         getSearchService().index(xuri);
@@ -391,7 +391,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PUT
-    @Path("{id: (p|w|h)[a-zA-Z0-9_]+}/sync")
+    @Path("{id: (p|w|h)[a-zA-Z0-9_\\-]+}/sync")
     public Response sync(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         getEntityService().synchronizeKoha(xuri);
@@ -417,14 +417,14 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{creatorId: h[a-zA-Z0-9_]+}/works")
+    @Path("{creatorId: h[a-zA-Z0-9_\\-]+}/works")
     public Response getWorksByCreator(@PathParam("type") String type, @PathParam("creatorId") String creatorId) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, creatorId);
         return zeroOrMoreResponseFromModel(getEntityService().retrieveWorksByCreator(xuri));
     }
 
     @GET
-    @Path("{id: (g|w|h|e|c|s)[a-zA-Z0-9_]+}/asSubjectOfWorks")
+    @Path("{id: (g|w|h|e|c|s)[a-zA-Z0-9_\\-]+}/asSubjectOfWorks")
     public Response getWorksWhereUriIsSubject(@PathParam("type") final String type,
                                               @PathParam("id") String id,
                                               @QueryParam("maxSize") @DefaultValue("100") int maxSize) throws Exception {
@@ -445,7 +445,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: w[a-zA-Z0-9_]+}/listRecordIds")
+    @Path("{id: w[a-zA-Z0-9_\\-]+}/listRecordIds")
     @Produces(JSON + MimeType.UTF_8)
     public Response getWorkRecordIds(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
@@ -455,7 +455,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: [a-zA-Z0-9_]+}/references")
+    @Path("{id: [a-zA-Z0-9_\\-]+}/references")
     @Produces(JSON + MimeType.UTF_8)
     public Response getNumberOfRelationsForResource(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
@@ -481,7 +481,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: [a-zA-Z0-9_]+}/relations")
+    @Path("{id: [a-zA-Z0-9_\\-]+}/relations")
     @Produces(JSON)
     public Response retriveResourceParticipations(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
@@ -490,7 +490,7 @@ public final class EntityResource extends ResourceBase {
 
     @PUT
     @Consumes(JSON)
-    @Path("{id: [a-zA-Z0-9_]+}/merge")
+    @Path("{id: [a-zA-Z0-9_\\-]+}/merge")
     public Response mergeNodes(@PathParam("type") String type, @PathParam("id") String id, String jsonReplacee) throws Exception {
         XURI outgoing;
         XURI staying = new XURI(BaseURI.root(), type, id);
@@ -523,7 +523,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: [a-zA-Z0-9_]+}/inverseRelationsBy/{predicate}")
+    @Path("{id: [a-zA-Z0-9_\\-]+}/inverseRelationsBy/{predicate}")
     @Produces(JSON)
     public Response retrieveInverseRelationsBy(@PathParam("type") String type,
                                                @PathParam("id") String id,
@@ -539,14 +539,14 @@ public final class EntityResource extends ResourceBase {
     }
 
     @POST
-    @Path("{id: [a-zA-Z0-9_]+}/clone")
+    @Path("{id: [a-zA-Z0-9_\\-]+}/clone")
     public Response cloneResource(@PathParam("type") String type,
                                   @PathParam("id") String id) {
         return splitOrCopyResource(type, id, "http://migration.deichman.no/clonedFrom");
     }
 
     @POST
-    @Path("{id: [a-zA-Z0-9_]+}/split")
+    @Path("{id: [a-zA-Z0-9_\\-]+}/split")
     public Response splitResource(@PathParam("type") String type,
                                   @PathParam("id") String id) {
         return splitOrCopyResource(type, id, "http://migration.deichman.no/splitFrom");
