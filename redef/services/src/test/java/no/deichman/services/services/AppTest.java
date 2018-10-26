@@ -47,6 +47,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1446,6 +1447,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void test_merges_resources() throws Exception {
 
         XURI replacee = new XURI("http://data.deichman.no/person/h1");

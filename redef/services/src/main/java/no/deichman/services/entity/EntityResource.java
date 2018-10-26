@@ -76,7 +76,6 @@ public final class EntityResource extends ResourceBase {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public static final String RESOURCE_TYPE_PREFIXES_PATTERN = "p|w|h|g|c|s|e|m|i|t|v";
     @Context
     private ServletConfig servletConfig;
     public static final Map<String, String> PREFIX_MAP = newHashMap();
@@ -172,7 +171,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_]+}")
     @Produces(LD_JSON + MimeType.UTF_8 + DEFAULT)
     public Response get(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         Model model;
@@ -192,7 +191,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_]+}")
     @Produces({NTRIPLES + MimeType.UTF_8 + QS_0_7, TURTLE + MimeType.UTF_8 + QS_0_7})
     public Response getNtriples(@PathParam("type") String type, @PathParam("id") String id, @HeaderParam("Accept") String acceptHeader) throws Exception {
         Model model;
@@ -240,7 +239,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @DELETE
-    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_]+}")
     public Response delete(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
 
@@ -303,7 +302,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PATCH
-    @Path("/{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}")
+    @Path("/{id: [a-zA-Z0-9_]+}")
     @Consumes(LDPATCH_JSON)
     @Produces(LD_JSON + MimeType.UTF_8)
     public Response patch(@PathParam("type") String type, @PathParam("id") String id, String jsonLd) throws Exception {
@@ -384,7 +383,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @PUT
-    @Path("{id: (p|h|w|)[a-zA-Z0-9_]+}/index")
+    @Path("{id: [a-zA-Z0-9_]+}/index")
     public Response index(@PathParam("type") final String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
         getSearchService().index(xuri);
@@ -456,7 +455,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/references")
+    @Path("{id: [a-zA-Z0-9_]+}/references")
     @Produces(JSON + MimeType.UTF_8)
     public Response getNumberOfRelationsForResource(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
@@ -482,7 +481,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/relations")
+    @Path("{id: [a-zA-Z0-9_]+}/relations")
     @Produces(JSON)
     public Response retriveResourceParticipations(@PathParam("type") String type, @PathParam("id") String id) throws Exception {
         XURI xuri = new XURI(BaseURI.root(), type, id);
@@ -491,7 +490,7 @@ public final class EntityResource extends ResourceBase {
 
     @PUT
     @Consumes(JSON)
-    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/merge")
+    @Path("{id: [a-zA-Z0-9_]+}/merge")
     public Response mergeNodes(@PathParam("type") String type, @PathParam("id") String id, String jsonReplacee) throws Exception {
         XURI outgoing;
         XURI staying = new XURI(BaseURI.root(), type, id);
@@ -524,7 +523,7 @@ public final class EntityResource extends ResourceBase {
     }
 
     @GET
-    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/inverseRelationsBy/{predicate}")
+    @Path("{id: [a-zA-Z0-9_]+}/inverseRelationsBy/{predicate}")
     @Produces(JSON)
     public Response retrieveInverseRelationsBy(@PathParam("type") String type,
                                                @PathParam("id") String id,
@@ -540,14 +539,14 @@ public final class EntityResource extends ResourceBase {
     }
 
     @POST
-    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/clone")
+    @Path("{id: [a-zA-Z0-9_]+}/clone")
     public Response cloneResource(@PathParam("type") String type,
                                   @PathParam("id") String id) {
         return splitOrCopyResource(type, id, "http://migration.deichman.no/clonedFrom");
     }
 
     @POST
-    @Path("{id: (" + RESOURCE_TYPE_PREFIXES_PATTERN + ")[a-zA-Z0-9_]+}/split")
+    @Path("{id: [a-zA-Z0-9_]+}/split")
     public Response splitResource(@PathParam("type") String type,
                                   @PathParam("id") String id) {
         return splitOrCopyResource(type, id, "http://migration.deichman.no/splitFrom");
