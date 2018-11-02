@@ -108,7 +108,7 @@ public final class SPARQLQueryBuilder {
                 + "  UNION { <__WORKURI__> deichman:language ?language }\n"
                 + "  UNION { <__WORKURI__> deichman:nationality ?country }\n"
                 + "  UNION { <__WORKURI__> deichman:fictionNonfiction ?fictionNonfiction }\n"
-                + "  UNION { <__WORKURI__> deichman:hasContentAdaptation ?- }\n"
+                + "  UNION { <__WORKURI__> deichman:hasContentAdaptation ?contentAdaptation }\n"
                 + "  UNION { <__WORKURI__> deichman:isPartOfWorkSeries ?workSeriesPart . \n"
                 + "          ?workSeriesPart a deichman:WorkSeriesPart ;\n"
                 + "                          deichman:workSeries ?workSeries .\n"
