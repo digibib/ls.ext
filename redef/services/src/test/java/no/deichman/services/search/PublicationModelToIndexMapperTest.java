@@ -48,7 +48,7 @@ public class PublicationModelToIndexMapperTest {
             + "    \"format\": \"E-bok\",\n"
             + "    \"created\": \"2016-11-17T07:03:10.239Z\",\n"
             + "    \"formatAdaptation\": \"Storskrift\",\n"
-            + "    \"adaptation\": \"Storskrift\",\n"
+            + "    \"adaptation\": [\"Lettlest, enkelt språk\", \"Storskrift\"],\n"
             + "    \"formats\": [\n"
             + "        \"http://data.deichman.no/format#E-Book\"\n"
             + "    ],\n"
@@ -253,7 +253,7 @@ public class PublicationModelToIndexMapperTest {
                 + "\n"
                 + "<http://data.deichman.no/biography#biographicalContent> rdfs:label \"Biografisk innhold\"@no, \"Biographical content\"@en ."
                 + "\n"
-                + "<http://data.deichman.no/contentAdaptation#easyLanguage> ns1:code \"ta\" ."
+                + "<http://data.deichman.no/contentAdaptation#easyLanguage> rdfs:label \"Lettlest, enkelt språk\"@no ; ns1:code \"ta\" ."
                 + "\n"
                 + "<http://data.deichman.no/workSeries/s1> a ns2:WorkSeries ; "
                 + "    ns2:mainTitle \"workSeriesMainTitle\" ; ns2:partTitle \"workSeriesPartTitle\" .";

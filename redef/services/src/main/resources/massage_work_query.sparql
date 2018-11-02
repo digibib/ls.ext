@@ -30,7 +30,6 @@ CONSTRUCT {
                deich:country ?country ;
                deich:nationality ?nationLabel ;
                deich:contentAdaptation ?contentAdaptationNorwegianName ;
-               deich:adaptation ?contentAdaptationNorwegianName ;
                deich:series ?seriesTitle ;
                deich:literaryForm ?litform ;
                deich:created ?created ;

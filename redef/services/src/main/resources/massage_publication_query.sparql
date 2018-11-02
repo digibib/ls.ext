@@ -27,6 +27,7 @@ CONSTRUCT {
                deich:formatNo ?formatNo ;
                deich:formatAdaptation ?formatAdaptNo ;
                deich:adaptation ?formatAdaptNo ;
+               deich:adaptation ?contentAdaptNo ;
                deich:ageLimit ?ageLimit ;
                deich:series ?seriesTitle ;
                deich:nationality ?nationLabel ;
@@ -119,6 +120,13 @@ WHERE {
            ?work a deich:Work ; deich:language ?wLangO .
            BIND(str(?wLangO) AS ?wLang) .
            BIND(afn:substr(?wLang, 29) AS ?origLang) }
+
+  UNION { <__PUBLICATIONURI__> deich:publicationOf ?work .
+            ?work a deich:Work ;
+            deich:hasContentAdaptation ?contentAdaptation .
+             ?contentAdaptation rdfs:label ?contentAdaptNoLang .
+             BIND(str(?contentAdaptNoLang) AS ?contentAdaptNo)
+             FILTER(lang(?contentAdaptNoLang) = "no") }
 
   # 4. Information from contributions on both publication and work:
 
