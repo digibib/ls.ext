@@ -888,15 +888,15 @@ public final class SPARQLQueryBuilder {
 
     public String mergeNodes(XURI xuri, XURI replaceeURI) {
         String queryString = format(""
-                + "INSERT { GRAPH <%3$s> {\n"
+                + "WITH <%3$s> INSERT {\n"
                 + "  ?subj ?prop <%2$s> .\n"
-                + "}\n} WHERE {\n"
+                + "\n} WHERE {\n"
                 + "  ?subj ?prop <%1$s> .\n"
                 + "} ;\n"
-                + "DELETE { GRAPH <%3$s> {\n"
+                + "WITH <%3$s> DELETE { \n"
                 + "    <%1$s> ?a ?b .\n"
                 + "    ?c ?d <%1$s> .\n"
-                + "}\n} WHERE {\n"
+                + "} WHERE {\n"
                 + "    <%1$s> ?a ?b .\n"
                 + "    ?c ?d <%1$s> .\n"
                 + "}\n"
@@ -906,12 +906,12 @@ public final class SPARQLQueryBuilder {
 
     public String deleteIncomingRelations(XURI xuri) {
         String queryString = format(""
-                + "DELETE { GRAPH <%2$s> {\n"
+                + "WITH <%2$s> DELETE {\n"
                 + "    ?a ?b <%1$s> .\n" // direct relations e.g. from work to subject
                 + "    ?bn ?c <%1$s> .\n" // triple in blank node pointing to related resource
                 + "    ?bn ?d ?e .\n" // blank node's other triples
                 + "    ?f ?g ?bn .\n" //
-                + "}\n} WHERE {\n"
+                + "\n} WHERE {\n"
                 + "  {\n"
                 + "    ?a ?b <%1$s> .\n"
                 + "  } UNION { \n"
