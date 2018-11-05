@@ -752,7 +752,7 @@ public class SearchServiceImpl implements SearchService {
 
     private void triggerRemoveFromEuler(XURI xuri) {
         try (CloseableHttpClient httpclient = createDefault()) {
-            URI uri = new URI("http://euler:8080/api/authorities/"+xuri.getType()+"/"+xuri.getId()+"/index");
+            URI uri = new URI("http://sibyl:1666/authority/"+xuri.getType()+"/"+xuri.getId());
             try (CloseableHttpResponse delResponse = httpclient.execute(new HttpDelete(uri))) {
                 // no-op
             }
