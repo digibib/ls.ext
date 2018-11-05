@@ -898,7 +898,7 @@ public final class SPARQLQueryBuilder {
                 + "    ?c ?d <%1$s> .\n"
                 + "} WHERE {\n"
                 + "    <%1$s> ?a ?b .\n"
-                + "    ?c ?d <%1$s> .\n"
+                + "    OPTIONAL { ?c ?d <%1$s> }\n"
                 + "}\n"
                 + "\n", replaceeURI, xuri.getUri(), DEFAULT_GRAPH);
         return queryString;
