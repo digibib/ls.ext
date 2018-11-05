@@ -52,11 +52,8 @@ module.exports = (app) => {
   }))
 
   function cacheableRequestsFilter (req, res) {
-    return (req.method === 'GET' || req.method === 'HEAD') &&
-      !/^\/search\/.*$/.test(req.url) &&
-      !/^.*\/relations$/.test(req.url) &&
-      !/^.*\/references$/.test(req.url) &&
-      !/^.*\/inverseRelationsBy\/.*$/.test(req.url) &&
-      !(URI.parseQuery(URI.parse(req.url).query).format === 'TURTLE')
+    // Disable caching, as resources may be updated from another application (euler),
+    // with no means of invalidating Catalinker's cache.
+    return false
   }
 }
