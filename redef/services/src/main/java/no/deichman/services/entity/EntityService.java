@@ -60,7 +60,7 @@ public interface EntityService {
 
     StmtIterator statementsInModelAbout(XURI xuri, Model indexModel, String... predicates);
 
-    void mergeResource(XURI xuri, XURI replaceeUri);
+    void mergeResource(XURI xuri, XURI replaceeUri) throws Exception;
 
     List<XURI> retrieveResourceRelationshipsUris(XURI uri);
 

@@ -96,7 +96,7 @@ public interface RDFRepository {
 
     ResultSet retrieveResourceRelationships(XURI xuri);
 
-    void mergeResource(XURI xuri, XURI replaceeUri);
+    void mergeResource(XURI xuri, XURI replaceeUri) throws Exception;
 
     void deleteIncomingRelations(XURI xuri);
 

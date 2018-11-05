@@ -728,8 +728,9 @@ public final class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public void mergeResource(XURI xuri, XURI replaceeUri) {
+    public void mergeResource(XURI xuri, XURI replaceeUri) throws Exception {
         repository.mergeResource(xuri, replaceeUri);
+        synchronizeKoha(xuri);
     }
 
     private boolean isAboutRelevantType(Statement s, Model model, XURI xuri) {
