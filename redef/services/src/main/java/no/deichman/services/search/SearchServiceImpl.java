@@ -398,6 +398,7 @@ public class SearchServiceImpl implements SearchService {
             LOG.error(format("Failed to delete %s in elasticsearch", xuri.getUri()), e);
             throw new ServerErrorException(e.getMessage(), INTERNAL_SERVER_ERROR);
         }
+        triggerRemoveFromEuler(xuri);
     }
 
     @Override
@@ -747,6 +748,17 @@ public class SearchServiceImpl implements SearchService {
         } catch (Exception e) {
             LOG.error(format("Failed to trigger indexing of %s in euler", xuri.getUri()), e);
          }
+    }
+
+    private void triggerRemoveFromEuler(XURI xuri) {
+        try (CloseableHttpClient httpclient = createDefault()) {
+            URI uri = new URI("http://euler:8080/api/authorities/"+xuri.getType()+"/"+xuri.getId()+"/index");
+            try (CloseableHttpResponse delResponse = httpclient.execute(new HttpDelete(uri))) {
+                // no-op
+            }
+        } catch (Exception e) {
+            LOG.error(format("Failed to remove doc %s from euler index", xuri.getUri()), e);
+        }
     }
 
     private Response doSearch(String query, URIBuilder searchUriBuilder) {
