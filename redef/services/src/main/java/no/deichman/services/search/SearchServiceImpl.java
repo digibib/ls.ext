@@ -709,7 +709,9 @@ public class SearchServiceImpl implements SearchService {
             // as Catalinker has no need for them.
             return;
         }
+
         if (doc.containsKey("displayLine1")) {
+            removeFromLocalIndex(xuri);
             addIndexedName(
                     xuri.getTypeAsEntityType(),
                     doc.get("displayLine1").toString(),
