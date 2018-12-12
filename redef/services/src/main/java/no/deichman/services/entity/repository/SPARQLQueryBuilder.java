@@ -858,7 +858,7 @@ public final class SPARQLQueryBuilder {
 
     public Query relatedResourcesFor(XURI xuri) {
         String queryString = "PREFIX : <http://data.deichman.no/ontology#>\n"
-                + "SELECT DISTINCT ?resource WHERE {\n";
+                + "SELECT DISTINCT ?resource FROM <https://katalog.deichman.no> WHERE {\n";
 
         switch (xuri.getTypeAsEntityType()) {
             case PERSON:
