@@ -96,6 +96,7 @@
     "desc": "deichman:desc",
     "origLang": "deichman:origLang",
     "created": "deichman:created",
-    "untranscribedTitle": "deichman:untranscribedTitle"
+    "untranscribedTitle": "deichman:untranscribedTitle",
+    "alternativeNames": "deichman:alternativeNames"
   }
 }

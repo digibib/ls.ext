@@ -49,7 +49,8 @@ CONSTRUCT {
                deich:kd ?locDewey ;
                deich:writingSystem ?wsNo ;
                deich:origLang ?origLang ;
-               deich:created ?created .
+               deich:created ?created ;
+               deich:alternativeNames ?contribAgentAlternativeName .
   ?mediaType a deich:Mediatype ;
                deich:format ?mtFormat .
     ?contrib a deich:Contribution ;
@@ -138,6 +139,7 @@ WHERE {
                  deich:role ?contribRoleURI .
         ?contribAgent deich:name ?contribAgentOnlyName .
         OPTIONAL { ?contribAgent deich:specification ?contribSpec }
+        OPTIONAL { ?contribAgent deich:alternativeName ?contribAgentAlternativeName }
         BIND(IF(BOUND(?contribSpec), CONCAT(?contribAgentOnlyName, " (", ?contribSpec, ")"), ?contribAgentOnlyName) AS ?contribAgentName)
         BIND(str(?contribRoleURI) AS ?contribRole)
          # strictly, main entry does not belong to publication index document, but is kept in order to generate a displayLine
