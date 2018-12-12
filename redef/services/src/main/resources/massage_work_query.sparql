@@ -34,7 +34,12 @@ CONSTRUCT {
                deich:literaryForm ?litform ;
                deich:created ?created ;
                deich:untranscribedTitle ?untranscribedTitle ;
-               deich:hasTag ?hasTag .
+               deich:hasTag ?hasTag ;
+               deich:alternativeNames ?subjectAlternativeName ;
+               deich:alternativeNames ?contribAgentAlternativeName ;
+               deich:alternativeNames ?compTypeAlternativeName ;
+               deich:alternativeNames ?instrumentAlternativeName ;
+               deich:alternativeNames ?genreAlternativeName .
 ?workContrib a deich:Contribution ;
                deich:role ?role ;
                deich:mainEntry ?mainEntry ;
@@ -59,6 +64,7 @@ WHERE {
                 OPTIONAL { ?subject deich:ordinal ?subjectOrdinal }
                 OPTIONAL { ?subject deich:subdivision ?subjectSubdivision }
                 OPTIONAL { ?subject deich:specification ?subjectSpecification }
+                OPTIONAL { ?subject deich:alternativeName ?subjectAlternativeName }
 
                 BIND(IF (BOUND(?subjectOrdinal),
                     CONCAT(?subjectNameStep1, " ", str(?subjectOrdinal)),
@@ -83,6 +89,7 @@ WHERE {
             OPTIONAL { ?subject deich:specification ?subjectSpecification }
             OPTIONAL { ?subject deich:date ?subjectDate }
             OPTIONAL { ?subject deich:place ?subjectPlace . ?subjectPlace deich:prefLabel ?placeLabel  }
+            OPTIONAL { ?subject deich:alternativeName ?subjectAlternativeName }
 
             BIND(IF (BOUND(?subjectOrdinal),
                 CONCAT(?subjectNameStep1, " ", STR(?subjectOrdinal)),
@@ -157,6 +164,7 @@ WHERE {
             ?contribAgent deich:name ?contribAgentNameStep1 .
             OPTIONAL { ?contribAgent deich:ordinal ?agentOrdinal }
             OPTIONAL { ?contribAgent deich:specification ?agentSpecification }
+            OPTIONAL { ?contribAgent deich:alternativeName ?contribAgentAlternativeName }
 
             BIND(IF (BOUND(?agentOrdinal),
                         CONCAT(?contribAgentNameStep1, " ", STR(?agentOrdinal)),
@@ -193,12 +201,14 @@ WHERE {
       ?genre a deich:Genre ;
             deich:prefLabel ?genreName  .
       OPTIONAL { <__WORKURI__> deich:genre ?genre. ?genre deich:specification ?genreSpec }
+      OPTIONAL { <__WORKURI__> deich:genre ?genre. ?genre deich:alternativeName ?genreAlternativeName }
       BIND(IF(BOUND(?genreSpec), CONCAT(?genreName, " (", ?genreSpec, ")"), ?genreName) AS ?genreLabel)
   }
   UNION {  <__WORKURI__> deich:hasCompositionType ?compType .
            ?compType deich:prefLabel ?compTypeString .
 
            OPTIONAL { ?compType deich:specification ?compTypeSpec }
+           OPTIONAL { ?compType deich:alternativeName ?compTypeAlternativeName}
            BIND(IF(BOUND(?compTypeSpec), CONCAT(?compTypeString, " (", ?compTypeSpec, ")"), ?compTypeString) AS ?compTypeLabel)
   }
   UNION { <__WORKURI__>  deich:fictionNonfiction ?ficturi .
@@ -214,6 +224,7 @@ WHERE {
            ?instrumentation deich:hasInstrument ?instrument .
            ?instrument deich:prefLabel ?instName
            OPTIONAL { ?instrument deich:specification ?instrumentSpec }
+           OPTIONAL { ?instrument deich:alternativeName ?instrumentAlternativeName }
            BIND(IF(BOUND(?instrumentSpec), CONCAT(?instName, " (", ?instrumentSpec, ")"), ?instName) AS ?inst)
   }
   UNION { <__WORKURI__> deich:biography ?b .

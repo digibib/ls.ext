@@ -98,6 +98,7 @@
     "fictionNonfiction": "deichman:fictionNonfiction",
     "created": "deichman:created",
     "untranscribedTitle": "deichman:untranscribedTitle",
-    "tag": "deichman:hasTag"
+    "tag": "deichman:hasTag",
+    "altNames": "deichman:alternativeNames"
   }
 }
