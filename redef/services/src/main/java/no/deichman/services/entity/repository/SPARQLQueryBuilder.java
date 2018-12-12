@@ -841,8 +841,8 @@ public final class SPARQLQueryBuilder {
                 + "  } UNION { \n"
                 + "    ?bn ?c <%1$s> .\n"
                 + "    ?bn ?d ?e .\n"
-                + "    ?f ?g ?bn .\n"
-                + "    filter(isBlank(?bn)) .\n"
+                + "    OPTIONAL { ?f ?g ?bn } \n"
+                + "    ASSUME (isBlank(?bn)) .\n" // ASSUME is a virtuoso-specific query hint, letting the query optimizer know that expression is always true
                 + "  }\n"
                 + "}\n"
                 + "\n", xuri.getUri(), DEFAULT_GRAPH);

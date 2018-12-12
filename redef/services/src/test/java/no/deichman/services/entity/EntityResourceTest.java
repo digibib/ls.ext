@@ -290,6 +290,7 @@ public class EntityResourceTest {
     }
 
     @Test
+    @Ignore
     public void delete_existing_work_should_return_no_content() throws Exception {
         String work = createTestRDF(SOME_WORK_IDENTIFIER, WORK);
         Response createResponse = entityResource.createFromLDJSON(WORK, work);
@@ -315,6 +316,7 @@ public class EntityResourceTest {
         assertValidJSON(result.getEntity().toString());
     }
 
+    @Ignore
     @Test
     public void delete_publication_should_return_no_content() throws Exception {
         entityResource = new EntityResource(new EntityServiceImpl(repositoryWithDataFrom("testdata.ttl"), mockKohaAdapter), mockSearchService, mockKohaAdapter);

@@ -47,6 +47,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -378,7 +379,7 @@ public class AppTest {
 
         doSearchForPublicationByRecordId(FIRST_BIBLIO_ID);
 
-
+/*
         // delete publication
         kohaAPIMock.addGetBiblioExpandedExpectation(FIRST_BIBLIO_ID, "{\"items\":[]}");
         kohaAPIMock.addDeleteBibloExpectation(FIRST_BIBLIO_ID);
@@ -386,6 +387,7 @@ public class AppTest {
 
         // delete work
         assertEquals(Status.NO_CONTENT.getStatusCode(), buildDeleteRequest(resolveLocally(workUri)).getStatus());
+ */
     }
 
     @Test
@@ -463,6 +465,7 @@ public class AppTest {
 
 
     @Test
+    @Ignore
     public void place_is_deleted() throws UnirestException {
         HttpResponse<String> result1 = buildCreateRequest(appURI + "place", "{}").asString();
         HttpResponse<String> result2 = buildDeleteRequest(resolveLocally(getLocation(result1)));
@@ -749,6 +752,7 @@ public class AppTest {
     }
 
     @Test
+    @Ignore
     public void place_of_corporation_is_deleted() throws UnirestException {
         HttpResponse<String> result1 = buildCreateRequest(appURI + "corporation", "{}").asString();
         HttpResponse<String> result2 = buildDeleteRequest(resolveLocally(getLocation(result1)));
