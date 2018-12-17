@@ -31,6 +31,7 @@ CONSTRUCT {
                deich:nationality ?nationLabel ;
                deich:contentAdaptation ?contentAdaptationNorwegianName ;
                deich:series ?seriesTitle ;
+               deich:series ?seriesNumber ;
                deich:literaryForm ?litform ;
                deich:created ?created ;
                deich:untranscribedTitle ?untranscribedTitle ;
@@ -245,6 +246,7 @@ WHERE {
 
   UNION { <__WORKURI__> deich:isPartOfWorkSeries ?wsBnode .
           ?wsBnode deich:workSeries ?workSeries .
+          OPTIONAL { ?wsBnode deich:partNumber ?seriesNumber }
           ?workSeries ?seriesPred ?seriesTitle .
           VALUES ?seriesPred { deich:mainTitle deich:subtitle deich:partNumber deich:partTitle }
   }
